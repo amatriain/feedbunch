@@ -17,3 +17,4 @@ pickle-email-*.html
 config/database.yml
 config/initializers/secret_token.rb
 .idea/*
+coverage/*

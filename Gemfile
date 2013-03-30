@@ -54,6 +54,11 @@ group :test, :development do
   gem 'factory_girl_rails'
 end
 
+group :test do
+  # Code coverage
+  gem 'simplecov', :require => false
+end
+
 group :staging, :production do
   # Postgresql database for staging and production
   gem 'pg'

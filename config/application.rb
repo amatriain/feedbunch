@@ -60,6 +60,8 @@ module Openreader
     config.assets.version = '1.0'
 
     # Rails generators generate FactoryGirl factories instead of fixtures
-    g.fixture_replacement :factory_girl
+    config.generators do |g|
+      g.fixture_replacement :factory_girl
+    end
   end
 end
