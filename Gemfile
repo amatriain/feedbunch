@@ -64,6 +64,9 @@ group :test do
 
   # To be able to open the browser during debugging of acceptance tests
   gem 'launchy'
+
+  # To empty the database between acceptance tests
+  gem 'database_cleaner'
 end
 
 group :staging, :production do
