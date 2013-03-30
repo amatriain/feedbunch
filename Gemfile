@@ -57,6 +57,13 @@ end
 group :test do
   # Code coverage
   gem 'simplecov', :require => false
+
+  # To simulate a user's browser during acceptance testing
+  gem 'capybara'
+  gem 'capybara-webkit'
+
+  # To be able to open the browser during debugging of acceptance tests
+  gem 'launchy'
 end
 
 group :staging, :production do
