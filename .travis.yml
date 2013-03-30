@@ -2,7 +2,7 @@ language: ruby
 rvm:
   - "1.9.3"
 script:
-  - brakeman
+  - "brakeman -z"
   - rake
 env: RAILS_ENV=test
 before_install:
