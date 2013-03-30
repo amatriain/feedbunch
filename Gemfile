@@ -7,9 +7,6 @@ gem 'rails', '3.2.13'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
-
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -44,6 +41,9 @@ group :development do
 end
 
 group :test, :development do
+  # Sqlite database for testing and development
+  gem 'sqlite3'
+
   # Static code vulnerability scanner
   gem 'brakeman', :require => false
 
@@ -52,4 +52,9 @@ group :test, :development do
 
   # Factories instead of DB fixtures during testing
   gem 'factory_girl_rails'
+end
+
+group :staging, :production do
+  # Postgresql database for staging and production
+  gem 'pg'
 end
