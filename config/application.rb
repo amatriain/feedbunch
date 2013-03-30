@@ -58,5 +58,8 @@ module Openreader
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Rails generators generate FactoryGirl factories instead of fixtures
+    g.fixture_replacement :factory_girl
   end
 end
