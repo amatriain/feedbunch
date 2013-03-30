@@ -36,3 +36,8 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'debugger'
+
+group :development do
+  # Static code vulnerability scanner
+  gem 'brakeman', :require => false
+end
