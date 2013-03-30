@@ -61,6 +61,13 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.6.2)
+    colorize (0.5.8)
+    coveralls (0.6.3)
+      colorize
+      multi_json (~> 1.3)
+      rest-client
+      simplecov (>= 0.7)
+      thor
     database_cleaner (0.9.1)
     diff-lcs (1.2.1)
     erubis (2.7.0)
@@ -119,6 +126,8 @@ GEM
     rake (10.0.4)
     rdoc (3.12.2)
       json (~> 1.4)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
     rspec-core (2.13.1)
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
@@ -183,6 +192,7 @@ DEPENDENCIES
   capybara
   capybara-webkit
   coffee-rails (~> 3.2.1)
+  coveralls
   database_cleaner
   factory_girl_rails
   jquery-rails
@@ -191,6 +201,5 @@ DEPENDENCIES
   rails (= 3.2.13)
   rspec-rails (~> 2.0)
   sass-rails (~> 3.2.3)
-  simplecov
   sqlite3
   uglifier (>= 1.0.3)

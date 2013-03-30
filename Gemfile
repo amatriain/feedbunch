@@ -56,7 +56,7 @@ end
 
 group :test do
   # Code coverage
-  gem 'simplecov', :require => false
+  gem 'coveralls', require: false
 
   # To simulate a user's browser during acceptance testing
   gem 'capybara'
