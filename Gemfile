@@ -40,11 +40,16 @@ gem 'jquery-rails'
 # gem 'debugger'
 
 group :development do
-  # Static code vulnerability scanner
-  gem 'brakeman', :require => false
+
 end
 
 group :test, :development do
+  # Static code vulnerability scanner
+  gem 'brakeman', :require => false
+
+  # Testing framework
   gem 'rspec-rails', '~> 2.0'
+
+  # Factories instead of DB fixtures during testing
   gem 'factory_girl_rails'
 end
