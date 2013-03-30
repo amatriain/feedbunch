@@ -41,3 +41,7 @@ group :development do
   # Static code vulnerability scanner
   gem 'brakeman', :require => false
 end
+
+group :test, :development do
+  gem 'rspec-rails', '~> 2.0'
+end
