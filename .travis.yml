@@ -1,8 +1,9 @@
 language: ruby
 rvm:
   - "1.9.3"
-# uncomment this line if your project needs to run something other than `rake`:
-# script: bundle exec rspec spec
+script:
+  - brakeman
+  - rake
 env: RAILS_ENV=test
 before_install:
   - "export DISPLAY=:99.0"
