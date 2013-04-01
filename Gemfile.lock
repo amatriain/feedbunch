@@ -82,6 +82,7 @@ GEM
     ffi (1.6.0)
     haml (4.0.1)
       tilt
+    high_voltage (1.2.2)
     highline (1.6.16)
     hike (1.2.1)
     i18n (0.6.1)
@@ -195,6 +196,7 @@ DEPENDENCIES
   coveralls
   database_cleaner
   factory_girl_rails
+  high_voltage
   jquery-rails
   launchy
   pg

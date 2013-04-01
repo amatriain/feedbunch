@@ -36,9 +36,8 @@ gem 'jquery-rails'
 # To use debugger
 # gem 'debugger'
 
-group :development do
-
-end
+# To more easily serve static pages
+gem 'high_voltage'
 
 group :test, :development do
   # Sqlite database for testing and development
