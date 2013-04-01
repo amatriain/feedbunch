@@ -34,4 +34,7 @@ Openreader::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  # Links in emails will point to this host
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 end

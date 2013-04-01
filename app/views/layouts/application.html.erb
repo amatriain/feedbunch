@@ -8,6 +8,14 @@
 </head>
 <body>
 
+<% if  notice.present? %>
+  <p class="notice"><%= notice %></p>
+<% end %>
+
+<% if  alert.present? %>
+  <p class="alert"><%= alert %></p>
+<% end %>
+
 <%= yield %>
 
 </body>

@@ -39,6 +39,9 @@ gem 'jquery-rails'
 # To more easily serve static pages
 gem 'high_voltage'
 
+# User authentication
+gem 'devise'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'
