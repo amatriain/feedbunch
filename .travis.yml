@@ -3,7 +3,8 @@ rvm:
   - "1.9.3"
 script:
   - "brakeman -z  --skip-files config/initializers/secret_token.rb"
-  - rake
+  - "rake db:migrate"
+  - "rake"
 env: RAILS_ENV=test
 before_install:
   - "export DISPLAY=:99.0"
