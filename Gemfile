@@ -42,6 +42,9 @@ gem 'high_voltage'
 # User authentication
 gem 'devise'
 
+# Feed parser
+gem 'feedzirra'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'
