@@ -26,7 +26,7 @@
           <div class="controls">
             <% if devise_mapping.rememberable? -%>
               <%= f.label :remember_me, class: 'checkbox' do %>
-                <%= f.check_box :remember_me, class: 'checkbox' %>
+                <%= f.check_box :remember_me, checked:true, class: 'checkbox' %>
                 Remember me
               <% end %>
             <% end -%>
@@ -37,7 +37,7 @@
       <% end %>
     </div>
 
-    <div class="span3">
+    <div class="span4">
       <%= render "devise/shared/links" %>
     </div>
   </div>
