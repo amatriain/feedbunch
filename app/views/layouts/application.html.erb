@@ -9,11 +9,21 @@
 <body>
 
 <% if  notice.present? %>
-  <p class="notice"><%= notice %></p>
+  <div class="row-fluid">
+    <div class="span10 offset1 alert">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p><%= notice %></p>
+    </div>
+  </div>
 <% end %>
 
 <% if  alert.present? %>
-  <p class="alert"><%= alert %></p>
+  <div class="row-fluid">
+    <div class="span10 offset1 alert alert-error">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p><%= alert %></p>
+    </div>
+  </div>
 <% end %>
 
 <%= yield %>
