@@ -45,6 +45,9 @@ gem 'devise'
 # Feed parser
 gem 'feedzirra'
 
+# Bootstrap goodness!
+gem 'bootstrap-sass', '~> 2.3.1.0'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'
