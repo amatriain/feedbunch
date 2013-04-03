@@ -22,6 +22,7 @@ es:
     sessions:
       signed_in: 'Iniciaste sesión correctamente.'
       signed_out: 'Cerraste sesión correctamente.'
+      sign_in: "Acceso"
     passwords:
       send_instructions: 'Recibirás un email con instrucciones para reiniciar tu contraseña en unos minutos.'
       updated: 'Tu contraseña fue cambiada correctamente. Has iniciado sesión.'
