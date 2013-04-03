@@ -8,5 +8,10 @@ FactoryGirl.define do
     email {generate :user_email_sequence}
     password {generate :user_password_sequence}
     remember_me true
+    confirmed_at Time.now
+
+    factory :user_unconfirmed do
+      confirmed_at nil
+    end
   end
 end
