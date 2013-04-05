@@ -9,7 +9,14 @@ if defined?(Bundler)
   # Bundler.require(:default, :assets, Rails.env)
 end
 
+##
+# Main module of the Openreader application. Most classes will be namespaced inside
+# this module.
+
 module Openreader
+
+  ##
+  # Main class of the Openreader application. Global settings are set here.
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
