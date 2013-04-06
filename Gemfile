@@ -48,6 +48,9 @@ gem 'feedzirra'
 # Bootstrap goodness!
 gem 'bootstrap-sass', '~> 2.3.1.0'
 
+# Better logging
+gem 'log4r'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'

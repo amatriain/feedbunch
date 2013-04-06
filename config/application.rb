@@ -75,4 +75,7 @@ module Openreader
       g.fixture_replacement :factory_girl
     end
   end
+
+  # Use Log4r instead of the default Rails logger
+  require File.join(File.dirname(__FILE__), 'log4r_init.rb')
 end
