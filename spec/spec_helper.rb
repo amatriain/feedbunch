@@ -12,6 +12,9 @@ require 'capybara/rspec'
 Capybara.javascript_driver = :webkit
 require 'database_cleaner'
 
+# Factories instead of database fixtures
+require 'factory_girl'
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
