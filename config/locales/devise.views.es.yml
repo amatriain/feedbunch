@@ -3,3 +3,6 @@ es:
     views:
       sign_in: "Acceso"
       language: "Idioma"
+      email: "Email"
+      password: "Contraseña"
+      remember_me: "Recuérdame"

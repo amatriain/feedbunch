@@ -3,3 +3,6 @@ en:
     views:
       sign_in: "Sign in"
       language: "Language"
+      email: "Email"
+      password: "Password"
+      remember_me: "Remember me"

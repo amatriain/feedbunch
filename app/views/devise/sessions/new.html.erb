@@ -7,14 +7,14 @@ Openreader - <%= t 'devise.views.sign_in' %>
     <div class="span8">
       <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), html: {class: 'form-horizontal'}) do |f| %>
         <div class="control-group">
-          <%= f.label :email, class: 'control-label' %>
+          <%= f.label t('devise.views.email'), class: 'control-label' %>
           <div class="controls">
             <%= f.email_field :email, :autofocus => true %>
           </div>
         </div>
 
         <div class="control-group">
-          <%= f.label :password, class: 'control-label' %>
+          <%= f.label t('devise.views.password'), class: 'control-label' %>
           <div class="controls">
             <%= f.password_field :password %>
           </div>
@@ -23,13 +23,13 @@ Openreader - <%= t 'devise.views.sign_in' %>
         <div class="control-group">
           <div class="controls">
             <% if devise_mapping.rememberable? -%>
-              <%= f.label :remember_me, class: 'checkbox' do %>
+              <%= f.label t('devise.views.remember_me'), class: 'checkbox' do %>
                 <%= f.check_box :remember_me, checked:true, class: 'checkbox' %>
-                Remember me
+                <%= t 'devise.views.remember_me' %>
               <% end %>
             <% end -%>
 
-            <%= f.submit "Sign in", class: 'btn' %>
+            <%= f.submit t('devise.views.sign_in'), class: 'btn' %>
           </div>
         </div>
       <% end %>
