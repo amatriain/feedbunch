@@ -13,7 +13,7 @@ Capybara.javascript_driver = :webkit
 require 'database_cleaner'
 
 # Factories instead of database fixtures
-require 'factory_girl'
+require 'factory_girl_rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
