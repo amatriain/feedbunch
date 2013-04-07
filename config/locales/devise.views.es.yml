@@ -2,6 +2,11 @@ es:
   devise:
     views:
       sign_in: "Acceso"
+      sign_up: "¿Aún no tienes una cuenta?"
+      forgot_password: "¿Olvidaste tu contraseña?"
+      new_confirmation: "¿No recibiste un email de confirmación?"
+      unlock: "¿Necesitas desbloquear tu cuenta?"
+      sign_in_with: "Acceder con %{provider}"
       language: "Idioma"
       email: "Email"
       password: "Contraseña"
