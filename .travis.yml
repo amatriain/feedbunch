@@ -4,7 +4,7 @@ rvm:
 script:
   - "brakeman -z  --skip-files config/initializers/secret_token.rb"
   - "rake db:migrate"
-  - "rake"
+  - "rake spec"
 env: RAILS_ENV=ci
 before_install:
   - "export DISPLAY=:99.0"
