@@ -1,3 +1,5 @@
 en:
   devise:
-    sign_in: "Sign in"
+    views:
+      sign_in: "Sign in"
+      language: "Language"

@@ -1,3 +1,5 @@
 es:
   devise:
-    sign_in: "Acceso"
+    views:
+      sign_in: "Acceso"
+      language: "Idioma"

@@ -26,20 +26,41 @@
   </div>
 <% end %>
 
-<div class="row-fluid">
-  <div class="span2 offset9">
-    <%= link_to locale: 'en' do %>
-      <%= image_tag '/assets/flags/us.png' %>
-      English
-    <% end %>
-    <%= link_to locale: 'es' do %>
-      <%= image_tag '/assets/flags/es.png' %>
-      Spanish
-    <% end %>
-
+<div class="row-fluid page-header">
+  <div class="span11 offset1">
+    <h1>
+      <img src="/assets/feed128x128.png">
+      <%= yield :heading %>
+    </h1>
+  </div>
 </div>
 
 <%= yield %>
+
+<div class="row-fluid">
+  <div class="span2 offset9">
+    <div class="btn-group">
+      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+        <%= t 'devise.views.language' %>
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+        <li>
+          <%= link_to locale: 'en' do %>
+            <%= image_tag '/assets/flags/us.png' %>
+            English
+          <% end %>
+        </li>
+        <li>
+          <%= link_to locale: 'es' do %>
+            <%= image_tag '/assets/flags/es.png' %>
+            Español
+          <% end %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <%= javascript_include_tag "application" %>
 
