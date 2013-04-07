@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Openreader</title>
+  <%= favicon_link_tag %>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<% if  notice.present? %>
+  <div class="row-fluid">
+    <div class="span10 offset1 alert">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p><%= notice %></p>
+    </div>
+  </div>
+<% end %>
+
+<% if  alert.present? %>
+  <div class="row-fluid">
+    <div class="span10 offset1 alert alert-error">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p><%= alert %></p>
+    </div>
+  </div>
+<% end %>
+
+<%= yield %>
+
+<%= javascript_include_tag "application" %>
+
+</body>
+</html>
