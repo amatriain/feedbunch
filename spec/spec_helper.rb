@@ -10,6 +10,7 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
 Capybara.javascript_driver = :webkit
+require 'database_cleaner'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
