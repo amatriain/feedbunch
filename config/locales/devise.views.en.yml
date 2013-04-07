@@ -2,6 +2,7 @@ en:
   devise:
     views:
       sign_in: "Sign in"
+      sign_in_link: "Do you want to sign in with your account?"
       sign_up: "You don't have an account yet?"
       forgot_password: "Forgot your password?"
       new_confirmation: "You didn't receive a confirmation email?"
