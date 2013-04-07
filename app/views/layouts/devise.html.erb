@@ -26,6 +26,19 @@
   </div>
 <% end %>
 
+<div class="row-fluid">
+  <div class="span2 offset9">
+    <%= link_to locale: 'en' do %>
+      <%= image_tag '/assets/flags/us.png' %>
+      English
+    <% end %>
+    <%= link_to locale: 'es' do %>
+      <%= image_tag '/assets/flags/es.png' %>
+      Spanish
+    <% end %>
+
+</div>
+
 <%= yield %>
 
 <%= javascript_include_tag "application" %>
