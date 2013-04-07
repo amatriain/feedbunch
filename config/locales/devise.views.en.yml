@@ -11,3 +11,4 @@ en:
       email: "Email"
       password: "Password"
       remember_me: "Remember me"
+      resend_confirmation: "Confirm email address"
