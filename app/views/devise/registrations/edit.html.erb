@@ -14,17 +14,23 @@
         <div class="control-group">
           <%= f.label t('devise.views.email'), class: 'control-label' %>
           <div class="controls">
-            <%= f.email_field :email, :autofocus => true %>
-            <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-              <div><em><%= t 'devise.views.unconfirmed_email', email: resource.unconfirmed_email %></em></div>
-            <% end %>
+            <div class="input-prepend">
+              <span class="add-on"><i class="icon-envelope"></i></span>
+              <%= f.email_field :email, :autofocus => true %>
+              <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                <div><em><%= t 'devise.views.unconfirmed_email', email: resource.unconfirmed_email %></em></div>
+              <% end %>
+            </div>
           </div>
         </div>
 
         <div class="control-group">
           <%= f.label t('devise.views.password'), class: 'control-label' %>
           <div class="controls">
-            <%= f.password_field :password, :autocomplete => 'off' %>
+            <div class="input-prepend">
+              <span class="add-on"><i class="icon-key"></i></span>
+              <%= f.password_field :password, :autocomplete => 'off' %>
+            </div>
             <div><em><%= t 'devise.views.blank_password' %></em></div>
           </div>
         </div>
@@ -32,14 +38,20 @@
         <div class="control-group">
           <%= f.label t('devise.views.password_confirmation'), class: 'control-label' %>
           <div class="controls">
-            <%= f.password_field :password_confirmation %>
+            <div class="input-prepend">
+              <span class="add-on"><i class="icon-key"></i></span>
+              <%= f.password_field :password_confirmation %>
+            </div>
           </div>
         </div>
 
         <div class="control-group">
           <%= f.label t('devise.views.current_password'), class: 'control-label' %>
           <div class="controls">
-            <%= f.password_field :current_password %>
+            <div class="input-prepend">
+              <span class="add-on"><i class="icon-key"></i></span>
+              <%= f.password_field :current_password %>
+            </div>
             <div><em><%= t 'devise.views.current_password_needed' %></em></div>
           </div>
         </div>
