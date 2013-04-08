@@ -1,16 +1,43 @@
-<h2>Change your password</h2>
-
-<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
-  <%= devise_error_messages! %>
-  <%= f.hidden_field :reset_password_token %>
-
-  <div><%= f.label :password, "New password" %><br />
-  <%= f.password_field :password, :autofocus => true %></div>
-
-  <div><%= f.label :password_confirmation, "Confirm new password" %><br />
-  <%= f.password_field :password_confirmation %></div>
-
-  <div><%= f.submit "Change my password" %></div>
+<% content_for :heading do %>
+  Openreader - <%= t 'devise.views.change_password' %>
 <% end %>
 
-<%= render "devise/shared/links" %>
+<div class="row-fluid">
+  <div class="span10 offset1 well">
+    <div class="span8">
+      <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), html: {:method => :put, class: 'form-horizontal'}) do |f| %>
+        <%= f.hidden_field :reset_password_token %>
+
+        <div class="control-group">
+          <%= f.label t('devise.views.new_password'), class: 'control-label' %>
+          <div class="controls">
+            <div class="input-prepend">
+              <span class="add-on"><i class="icon-key"></i></span>
+              <%= f.password_field :password, :autofocus => true %>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <%= f.label t('devise.views.password_confirmation'), class: 'control-label' %>
+          <div class="controls">
+            <div class="input-prepend">
+              <span class="add-on"><i class="icon-key"></i></span>
+              <%= f.password_field :password_confirmation %>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            <%= f.submit t('devise.views.change_password'), class: 'btn' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="span4">
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div>

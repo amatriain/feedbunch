@@ -28,3 +28,5 @@ es:
       cancel_account_text: "¿Estás seguro de que quieres cancelar tu cuenta? ¡Esto borrará TODOS tus datos!"
       cancel_account_confirm: "¿Estás seguro?"
       return: "Volver a Openreader"
+      change_password: "Cambia tu contraseña"
+      new_password: "Nueva contraseña"
