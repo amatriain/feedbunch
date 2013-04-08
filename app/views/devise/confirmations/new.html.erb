@@ -8,7 +8,7 @@
     <div class="span8">
       <%= form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), html: {:method => :post, class: 'form-horizontal'}) do |f| %>
         <div class="control-group">
-          <%= f.label t('devise.views.email'), class: 'control-label' %>
+          <%= f.label :email, t('devise.views.email'), class: 'control-label' %>
           <div class="controls">
             <div class="input-prepend">
               <span class="add-on"><i class="icon-envelope"></i></span>

@@ -9,7 +9,7 @@
         <%= f.hidden_field :reset_password_token %>
 
         <div class="control-group">
-          <%= f.label t('devise.views.new_password'), class: 'control-label' %>
+          <%= f.label :password, t('devise.views.new_password'), class: 'control-label' %>
           <div class="controls">
             <div class="input-prepend">
               <span class="add-on"><i class="icon-key"></i></span>
@@ -19,7 +19,7 @@
         </div>
 
         <div class="control-group">
-          <%= f.label t('devise.views.password_confirmation'), class: 'control-label' %>
+          <%= f.label :password_confirmation, t('devise.views.password_confirmation'), class: 'control-label' %>
           <div class="controls">
             <div class="input-prepend">
               <span class="add-on"><i class="icon-key"></i></span>

@@ -8,7 +8,7 @@ Openreader - <%= t 'devise.views.sign_in' %>
       <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), html: {class: 'form-horizontal'}) do |f| %>
 
         <div class="control-group">
-          <%= f.label t('devise.views.email'), class: 'control-label' %>
+          <%= f.label :email, t('devise.views.email'), class: 'control-label' %>
           <div class="controls">
             <div class="input-prepend">
               <span class="add-on"><i class="icon-envelope"></i></span>
@@ -18,7 +18,7 @@ Openreader - <%= t 'devise.views.sign_in' %>
         </div>
 
         <div class="control-group">
-          <%= f.label t('devise.views.password'), class: 'control-label' %>
+          <%= f.label :password, t('devise.views.password'), class: 'control-label' %>
           <div class="controls">
             <div class="input-prepend">
               <span class="add-on"><i class="icon-key"></i></span>
@@ -30,7 +30,7 @@ Openreader - <%= t 'devise.views.sign_in' %>
         <div class="control-group">
           <div class="controls">
             <% if devise_mapping.rememberable? -%>
-              <%= f.label t('devise.views.remember_me'), class: 'checkbox' do %>
+              <%= f.label :remember_me, t('devise.views.remember_me'), class: 'checkbox' do %>
                 <%= f.check_box :remember_me, checked:true, class: 'checkbox' %>
                 <%= t 'devise.views.remember_me' %>
               <% end %>
