@@ -8,8 +8,8 @@ require 'rspec/rails'
 
 # For acceptance testing
 require 'rspec/autorun'
+require 'capybara/rails'
 require 'capybara/rspec'
-Capybara.javascript_driver = :webkit
 require 'database_cleaner'
 
 # Factories instead of database fixtures

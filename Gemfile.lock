@@ -52,9 +52,6 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 1.0.0)
-    capybara-webkit (0.14.2)
-      capybara (~> 2.0, >= 2.0.2)
-      json
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     coffee-rails (3.2.2)
@@ -222,7 +219,6 @@ DEPENDENCIES
   bootstrap-sass (~> 2.3.1.0)
   brakeman
   capybara
-  capybara-webkit
   coffee-rails (~> 3.2.1)
   coveralls
   database_cleaner
