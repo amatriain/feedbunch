@@ -1,29 +1,70 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<div class="row-fluid">
+  <div class="span10 offset1">
+    <i class="icon-backward"></i> <%= link_to t('devise.views.return'), feeds_path %>
+  </div>
+</div>
 
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
-  <%= devise_error_messages! %>
-
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, :autofocus => true %></div>
-
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <div><%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-  <%= f.password_field :password, :autocomplete => "off" %></div>
-
-  <div><%= f.label :password_confirmation %><br />
-  <%= f.password_field :password_confirmation %></div>
-
-  <div><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-  <%= f.password_field :current_password %></div>
-
-  <div><%= f.submit "Update" %></div>
+<% content_for :heading do %>
+  Openreader - <%= t 'devise.views.edit_account' %>
 <% end %>
 
-<h3>Cancel my account</h3>
+<div class="row-fluid">
+  <div class="span10 offset1 well">
+    <div class="span8">
+      <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), html: {:method => :put, class: 'form-horizontal'}) do |f| %>
+        <div class="control-group">
+          <%= f.label t('devise.views.email'), class: 'control-label' %>
+          <div class="controls">
+            <%= f.email_field :email, :autofocus => true %>
+            <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+              <div><em><%= t 'devise.views.unconfirmed_email', email: resource.unconfirmed_email %></em></div>
+            <% end %>
+          </div>
+        </div>
 
-<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %>.</p>
+        <div class="control-group">
+          <%= f.label t('devise.views.password'), class: 'control-label' %>
+          <div class="controls">
+            <%= f.password_field :password, :autocomplete => 'off' %>
+            <div><em><%= t 'devise.views.blank_password' %></em></div>
+          </div>
+        </div>
 
-<%= link_to "Back", :back %>
+        <div class="control-group">
+          <%= f.label t('devise.views.password_confirmation'), class: 'control-label' %>
+          <div class="controls">
+            <%= f.password_field :password_confirmation %>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <%= f.label t('devise.views.current_password'), class: 'control-label' %>
+          <div class="controls">
+            <%= f.password_field :current_password %>
+            <div><em><%= t 'devise.views.current_password_needed' %></em></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            <%= f.submit t('devise.views.update_account'), class: 'btn' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="span4">
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span10 offset1 well">
+    <h2><%= t 'devise.views.cancel_account' %></h2>
+    <p><%= t 'devise.views.cancel_account_text' %></p>
+    <%= button_to t('devise.views.cancel_account'), registration_path(resource_name),
+                  :data => { :confirm => t('devise.views.cancel_account_confirm') }, :method => :delete,
+                  class: 'btn btn-danger' %>
+  </div>
+</div>
