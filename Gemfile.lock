@@ -99,6 +99,9 @@ GEM
       rdoc (~> 3.8)
       sax-machine (~> 0.0.20)
     ffi (1.6.0)
+    font-awesome-sass-rails (3.0.2.2)
+      railties (>= 3.1.1)
+      sass-rails (>= 3.1.1)
     haml (4.0.1)
       tilt
     high_voltage (1.2.2)
@@ -226,6 +229,7 @@ DEPENDENCIES
   devise
   factory_girl_rails
   feedzirra
+  font-awesome-sass-rails
   high_voltage
   jquery-rails
   launchy

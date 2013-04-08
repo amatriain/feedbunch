@@ -48,6 +48,9 @@ gem 'feedzirra'
 # Bootstrap goodness!
 gem 'bootstrap-sass', '~> 2.3.1.0'
 
+# Better glyphicons from FontAwesome
+gem 'font-awesome-sass-rails'
+
 # Better logging
 gem 'log4r'
 
