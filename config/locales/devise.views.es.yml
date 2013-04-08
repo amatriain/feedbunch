@@ -17,3 +17,4 @@ es:
       remember_me: "Recuérdame"
       resend_confirmation: "Confirmar dirección de email"
       send_password_reset: "Enviar email de cambio de contraseña"
+      send_unlock: "Enviar email de desbloqueo"

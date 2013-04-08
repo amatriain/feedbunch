@@ -17,3 +17,4 @@ en:
       remember_me: "Remember me"
       resend_confirmation: "Confirm email address"
       send_password_reset: "Send password change email"
+      send_unlock: "Send unlock email"
