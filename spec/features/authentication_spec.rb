@@ -10,17 +10,17 @@ describe 'authentication' do
 
     it 'shows a login link in the main page' do
       visit '/'
-      page.should have_css 'a#sign_in[href*="/users/sign_in"]'
+      page.should have_css "a#sign_in[href*=\"#{new_user_session_path}\"]"
     end
 
     it 'shows a signup link in the main page' do
       visit '/'
-      page.should have_css 'a#sign_up[href*="/users/sign_up"]'
+      page.should have_css "a#sign_up[href*=\"#{new_user_registration_path}\"]"
     end
 
     it 'redirects user to feeds page after a successful login' do
       login_user_for_feature @user
-      current_path.should eq '/feeds'
+      current_path.should eq feeds_path
     end
 
     it 'stays on the login page after a failed login attempt' do
@@ -28,7 +28,7 @@ describe 'authentication' do
       fill_in 'Email', with: @user.email
       fill_in 'Password', with: 'wrong password!!!'
       click_on 'Sign in'
-      current_path.should eq '/users/sign_in'
+      current_path.should eq new_user_session_path
     end
 
     it 'does not show navbar' do
@@ -46,11 +46,11 @@ describe 'authentication' do
     end
 
     it 'does not show the login link in the main page' do
-      page.should_not have_css 'a#sign_in[href*="/users/sign_in"]'
+      page.should_not have_css "a#sign_in[href*=\"#{new_user_session_path}\"]"
     end
 
     it 'does not show the signup link in the main page' do
-      page.should_not have_css 'a#sign_up[href*="/users/sign_up"]'
+      page.should_not have_css "a#sign_up[href*=\"#{new_user_registration_path}\"]"
     end
 
     it 'shows navbar' do
@@ -58,8 +58,9 @@ describe 'authentication' do
     end
 
     it 'shows link to main page in the navbar' do
+      page.should have_css 'div.navbar div.navbar-inner a.brand'
       find('div.navbar div.navbar-inner a.brand').click
-      current_path.should eq '/'
+      current_path.should eq root_path
     end
 
     it 'shows logout link in the navbar' do
@@ -68,7 +69,7 @@ describe 'authentication' do
 
     it 'logs out user and redirects to main page' do
       find('div.navbar div.navbar-inner ul li a#sign_out').click
-      current_path.should eq '/'
+      current_path.should eq root_path
       page.should_not have_css 'div.navbar'
     end
 
