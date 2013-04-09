@@ -62,11 +62,11 @@ describe 'authentication' do
       current_path.should eq '/'
     end
 
-    it 'shows signout link in the navbar' do
+    it 'shows logout link in the navbar' do
       page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
     end
 
-    it 'signs out user and redirects to main page' do
+    it 'logs out user and redirects to main page' do
       find('div.navbar div.navbar-inner ul li a#sign_out').click
       current_path.should eq '/'
       page.should_not have_css 'div.navbar'
@@ -74,25 +74,44 @@ describe 'authentication' do
 
     it 'shows link to feeds page in the navbar' do
       page.should have_css 'div.navbar div.navbar-inner ul li a#feeds'
-    end
-
-    it 'shows the feeds page when clicking on the Feeds link' do
       find('div.navbar div.navbar-inner ul li a#feeds').click
       current_path.should eq feeds_path
     end
 
     it 'shows account details link in the navbar' do
       page.should have_css 'div.navbar div.navbar-inner ul li a#my_account'
-    end
-
-    it 'shows the account details page when clicking on the My Account link' do
       find('div.navbar div.navbar-inner ul li a#my_account').click
       current_path.should eq edit_user_registration_path
     end
 
     context 'edit account' do
 
-      it 'saves new email'
+      before :each do
+        visit '/users/edit'
+      end
+
+      it 'shows link to go to feeds list' do
+        page.should have_css 'a#return'
+        find('a#return').click
+        current_path.should eq feeds_path
+      end
+
+      it 'saves new email' do
+        pending
+        new_email = 'new_email@test.com'
+        fill_in 'Email', with: new_email
+        click_on 'Update account'
+        click_on 'Logout'
+
+        # test that I cannot login with the old email
+        login_user_for_feature @user
+        page.should have_css 'a#sign_in[href*="/users/sign_in"]'
+
+        # test that I can login with the new email
+        @user.email = new_email
+        login_user_for_feature @user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+      end
 
       it 'saves new password'
 

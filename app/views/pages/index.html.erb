@@ -11,6 +11,8 @@
           <%= link_to t('.sign_up'), new_user_registration_path, class: 'btn btn-primary btn-large', id: 'sign_up' %>
           <%= t '.or' %> <%= link_to t('.sign_in'), new_user_session_path, id: 'sign_in' %>
         </p>
+      <% else %>
+        <%= link_to t('.feeds'), feeds_path, class: 'btn btn-primary btn-large' %>
       <% end %>
     </div>
   </div>

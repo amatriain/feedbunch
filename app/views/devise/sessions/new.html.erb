@@ -35,9 +35,11 @@ Openreader - <%= t 'devise.views.sign_in' %>
                 <%= t 'devise.views.remember_me' %>
               <% end %>
             <% end -%>
-
-            <%= f.submit t('devise.views.sign_in'), class: 'btn btn-primary' %>
           </div>
+        </div>
+
+        <div class="form-actions">
+          <%= f.submit t('devise.views.sign_in'), class: 'btn btn-primary btn-large' %>
         </div>
       <% end %>
     </div>

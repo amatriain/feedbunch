@@ -24,7 +24,7 @@ es:
       current_password: "Contraseña actual"
       current_password_needed: "(tu contraseña actual es necesaria para confirmar los cambios)"
       update_account: "Actualizar cuenta"
-      cancel_account: "Cancelar mi cuenta"
+      cancel_account: "Cancelar cuenta"
       cancel_account_text: "¿Estás seguro de que quieres cancelar tu cuenta? ¡Esto borrará TODOS tus datos!"
       cancel_account_confirm: "¿Estás seguro?"
       return: "Volver a Openreader"

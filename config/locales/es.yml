@@ -6,6 +6,7 @@ es:
       or: "o"
       sign_in: "Accede con tu cuenta"
       github: "Visítanos en Github"
+      feeds: "Ir a tus feeds"
   layouts:
     application:
       logout: "Salir"
