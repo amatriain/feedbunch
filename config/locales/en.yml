@@ -2,3 +2,10 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  pages:
+    index:
+      tagline: "An open-source feed reader"
+      sign_up: "Sign up"
+      or: "or"
+      sign_in: "Sign in"
+      github: "Visit us on Github"

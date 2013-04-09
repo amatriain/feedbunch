@@ -1,0 +1,8 @@
+es:
+  pages:
+    index:
+      tagline: "Un lector de feeds de código abierto"
+      sign_up: "Date de alta"
+      or: "o"
+      sign_in: "Accede con tu cuenta"
+      github: "Visítanos en Github"
