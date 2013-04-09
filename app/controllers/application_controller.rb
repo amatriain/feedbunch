@@ -35,4 +35,11 @@ class ApplicationController < ActionController::Base
     return { locale: I18n.locale }
   end
 
+  ##
+  # After a successful login, a user is redirected to the feeds list
+
+  def after_sign_in_path_for(resource)
+    feeds_path
+  end
+
 end
