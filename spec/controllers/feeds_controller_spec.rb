@@ -3,7 +3,7 @@ require 'spec_helper'
 describe FeedsController do
   before :each do
     @feed = FactoryGirl.create :feed
-    login_user
+    login_user_for_unit
   end
 
   context 'GET index' do

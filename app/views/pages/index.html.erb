@@ -6,10 +6,12 @@
     </div>
     <div class="span9 offset1">
       <p class="lead"><%= t '.tagline' %></p>
-      <p>
-        <%= link_to t('.sign_up'), new_user_registration_path, class: 'btn btn-primary btn-large', id: 'sign_up' %>
-        <%= t '.or' %> <%= link_to t('.sign_in'), new_user_session_path, id: 'sign_in' %>
-      </p>
+      <% if !user_signed_in? %>
+        <p>
+          <%= link_to t('.sign_up'), new_user_registration_path, class: 'btn btn-primary btn-large', id: 'sign_up' %>
+          <%= t '.or' %> <%= link_to t('.sign_in'), new_user_session_path, id: 'sign_in' %>
+        </p>
+      <% end %>
     </div>
   </div>
 </div>
