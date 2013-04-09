@@ -54,6 +54,9 @@ gem 'font-awesome-sass-rails'
 # Better logging
 gem 'log4r'
 
+# Form generator compatible with Bootstrap
+gem 'simple_form'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'
