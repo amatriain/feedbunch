@@ -13,7 +13,9 @@
         <%= f.input :password, as: :password_icon %>
         <%= f.input :password_confirmation, as: :password_icon %>
         <div class="form-actions">
-          <%= f.button :submit, value: t('devise.views.sign_up'), class: 'btn-primary btn-large' %>
+          <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>
+            <i class="icon-plus-sign"></i> <%= t'devise.views.sign_up' %>
+          <% end %>
         </div>
     <% end %>
     </div>
