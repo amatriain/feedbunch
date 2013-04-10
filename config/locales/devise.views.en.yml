@@ -11,9 +11,6 @@ en:
       unlock: "You need to unlock your account?"
       sign_in_with: "Sign in with %{provider}"
       language: "Language"
-      email: "Email"
-      password: "Password"
-      password_confirmation: "Confirm password"
       remember_me: "Remember me"
       resend_confirmation: "Confirm email address"
       send_password_reset: "Send password change email"
@@ -30,3 +27,4 @@ en:
       return: "Return to Openreader"
       change_password: "Change your password"
       new_password: "New password"
+

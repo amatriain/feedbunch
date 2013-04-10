@@ -5,40 +5,15 @@
 <div class="row-fluid">
   <div class="span10 offset1 well">
     <div class="span8">
-      <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), html: {class: 'form-horizontal'}) do |f| %>
-
-        <div class="control-group">
-          <%= f.label :email, t('devise.views.email'), class: 'control-label' %>
-          <div class="controls">
-            <div class="input-prepend">
-              <span class="add-on"><i class="icon-envelope"></i></span>
-              <%= f.email_field :email, :autofocus => true %>
-            </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <%= f.label :password, t('devise.views.password'), class: 'control-label' %>
-          <div class="controls">
-            <div class="input-prepend">
-              <span class="add-on"><i class="icon-key"></i></span>
-              <%= f.password_field :password %>
-            </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <%= f.label :password_confirmation, t('devise.views.password_confirmation'), class: 'control-label' %>
-          <div class="controls">
-            <div class="input-prepend">
-              <span class="add-on"><i class="icon-key"></i></span>
-              <%= f.password_field :password_confirmation %>
-            </div>
-          </div>
-        </div>
-
+      <%= simple_form_for resource, :as => resource_name,
+                          :url => registration_path(resource_name),
+                          html: {class: 'form-horizontal'},
+                          wrapper: :prepend do |f| %>
+        <%= f.input :email, as: :email_icon, autofocus: true %>
+        <%= f.input :password, as: :password_icon %>
+        <%= f.input :password_confirmation, as: :password_icon %>
         <div class="form-actions">
-          <%= f.submit t('devise.views.sign_up'), class: 'btn btn-primary btn-large' %>
+          <%= f.button :submit, value: t('devise.views.sign_up'), class: 'btn-primary btn-large' %>
         </div>
     <% end %>
     </div>

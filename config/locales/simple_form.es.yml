@@ -1,0 +1,25 @@
+es:
+  simple_form:
+    "yes": 'Sí'
+    "no": 'No'
+    required:
+      text: 'obligatorio'
+      mark: '*'
+      # You can uncomment the line below if you need to overwrite the whole required html.
+      # When using html, text and mark won't be used.
+      # html: '<abbr title="required">*</abbr>'
+    error_notification:
+      default_message: "Por favor revisa los siguientes problemas:"
+    labels:
+      user:
+        email: "Email"
+        password: "Contraseña"
+        password_confirmation: "Confirmar contraseña"
+    hints:
+      user:
+        password: "Tu contraseña debe tener entre 8 y 128 caracteres"
+    placeholders:
+      user:
+        email: "Tu dirección de email"
+        password: "Tu contraseña"
+        password_confirmation: "Confirma tu contraseña"

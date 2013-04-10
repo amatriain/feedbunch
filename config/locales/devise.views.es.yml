@@ -11,9 +11,6 @@ es:
       unlock: "¿Necesitas desbloquear tu cuenta?"
       sign_in_with: "Acceder con %{provider}"
       language: "Idioma"
-      email: "Email"
-      password: "Contraseña"
-      password_confirmation: "Confirmar contraseña"
       remember_me: "Recuérdame"
       resend_confirmation: "Confirmar dirección de email"
       send_password_reset: "Enviar email de cambio de contraseña"
@@ -30,3 +27,4 @@ es:
       return: "Volver a Openreader"
       change_password: "Cambia tu contraseña"
       new_password: "Nueva contraseña"
+
