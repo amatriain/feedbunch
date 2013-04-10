@@ -6,24 +6,16 @@
 <div class="row-fluid">
   <div class="span10 offset1 well">
     <div class="span8">
-      <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), html: {:method => :post, class: 'form-horizontal'}) do |f| %>
-        <div class="control-group">
-          <%= f.label :email, t('devise.views.email'), class: 'control-label' %>
-          <div class="controls">
-            <div class="input-prepend">
-              <span class="add-on"><i class="icon-envelope"></i></span>
-              <%= f.email_field :email, :autofocus => true %>
-            </div>
-          </div>
-        </div>
-        <div class="control-group">
-          <div class="controls">
-
-          </div>
-        </div>
+      <%= simple_form_for resource, :as => resource_name,
+                          :url => password_path(resource_name),
+                          html: {:method => :post, class: 'form-horizontal'},
+                          wrapper: :prepend do |f| %>
+        <%= f.input :email, as: :email_icon, autofocus:true %>
 
         <div class="form-actions">
-          <%= f.submit t('devise.views.send_password_reset'), class: 'btn btn-primary btn-large' %>
+          <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>
+            <i class="icon-share-alt"></i> <%= t 'devise.views.send_password_reset' %>
+          <% end %>
         </div>
       <% end %>
     </div>
