@@ -6,7 +6,7 @@
 <div class="row-fluid">
   <div class="span10 offset1 well">
     <div class="span8">
-      <%= form_for(resource, :as => resource_name, :url => unlock_path(resource_name), html: {:method => :post, class: 'form-horizontal'}) do |f| %>
+      <%= simple_form_for(resource, :as => resource_name, :url => unlock_path(resource_name), html: {:method => :post, class: 'form-horizontal'}) do |f| %>
 
         <div class="control-group">
           <%= f.label :email, t('devise.views.email'), class: 'control-label' %>

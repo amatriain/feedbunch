@@ -15,9 +15,12 @@ es:
         email: "Email"
         password: "Contraseña"
         password_confirmation: "Confirmar contraseña"
+        current_password: "Contraseña actual"
     hints:
       user:
         password: "Tu contraseña debe tener entre 8 y 128 caracteres"
+        current_password: "(tu contraseña actual es necesaria para confirmar los cambios)"
+        blank_password: "(déjala en blanco si no quieres cambiarla)"
     placeholders:
       user:
         email: "Tu dirección de email"

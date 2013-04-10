@@ -15,9 +15,12 @@ en:
         email: "Email"
         password: "Password"
         password_confirmation: "Confirm password"
+        current_password: "Current password"
     hints:
       user:
         password: "Password length must be between 8 and 128 characters"
+        current_password: "(we need your current password to confirm your changes)"
+        blank_password: "(leave blank if you don't want to change it)"
     placeholders:
       user:
         email: "Your email address"

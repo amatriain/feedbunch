@@ -5,41 +5,28 @@ Openreader - <%= t 'devise.views.sign_in' %>
 <div class="row-fluid">
   <div class="span10 offset1 well">
     <div class="span8">
-      <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), html: {class: 'form-horizontal'}) do |f| %>
+      <%= simple_form_for resource, :as => resource_name,
+                          :url => session_path(resource_name),
+                          html: {class: 'form-horizontal'},
+                          wrapper: :prepend do |f| %>
+        <%= f.input :email, as: :email_icon, autofocus: true %>
+        <%= f.input :password, as: :password_icon, hint: false %>
 
-        <div class="control-group">
-          <%= f.label :email, t('devise.views.email'), class: 'control-label' %>
-          <div class="controls">
-            <div class="input-prepend">
-              <span class="add-on"><i class="icon-envelope"></i></span>
-              <%= f.email_field :email, :autofocus => true %>
-            </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <%= f.label :password, t('devise.views.password'), class: 'control-label' %>
-          <div class="controls">
-            <div class="input-prepend">
-              <span class="add-on"><i class="icon-key"></i></span>
-              <%= f.password_field :password %>
-            </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <div class="controls">
-            <% if devise_mapping.rememberable? -%>
+        <% if devise_mapping.rememberable? %>
+          <div class="control-group">
+            <div class="controls">
               <%= f.label :remember_me, t('devise.views.remember_me'), class: 'checkbox' do %>
                 <%= f.check_box :remember_me, checked:true, class: 'checkbox' %>
                 <%= t 'devise.views.remember_me' %>
               <% end %>
-            <% end -%>
+            </div>
           </div>
-        </div>
+        <% end -%>
 
         <div class="form-actions">
-          <%= f.submit t('devise.views.sign_in'), class: 'btn btn-primary btn-large' %>
+          <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>
+            <i class="icon-signin"></i> <%= t 'devise.views.sign_in' %>
+          <% end %>
         </div>
       <% end %>
     </div>
