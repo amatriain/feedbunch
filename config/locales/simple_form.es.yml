@@ -27,3 +27,4 @@ es:
         password: "Tu contraseña"
         password_confirmation: "Confirma tu contraseña"
         current_password: "Tu contraseña actual"
+        new_password: "Tu nueva contraseña"

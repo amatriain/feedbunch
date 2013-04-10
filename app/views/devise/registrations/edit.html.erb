@@ -14,7 +14,9 @@
                         html: {:method => :put, class: 'form-horizontal'},
                         wrapper: :prepend do |f| %>
       <%= f.input :email, as: :email_icon, autofocus:true %>
-      <%= f.input :password, as: :password_icon, hint: t('simple_form.hints.user.blank_password') %>
+      <%= f.input :password, as: :password_icon, hint: t('simple_form.hints.user.blank_password'),
+                  label: t('devise.views.new_password'),
+                  placeholder: t('simple_form.placeholders.user.new_password') %>
       <%= f.input :password_confirmation, as: :password_icon,
                   placeholder: t('simple_form.placeholders.user.password_confirmation') %>
       <%= f.input :current_password, as: :password_icon, placeholder: t('simple_form.placeholders.user.current_password') %>

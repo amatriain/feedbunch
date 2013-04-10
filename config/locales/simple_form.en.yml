@@ -27,3 +27,4 @@ en:
         password: "Your password"
         password_confirmation: "Confirm your password"
         current_password: "Your current password"
+        new_password: "Your new password"
