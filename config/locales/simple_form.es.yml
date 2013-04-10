@@ -26,3 +26,4 @@ es:
         email: "Tu dirección de email"
         password: "Tu contraseña"
         password_confirmation: "Confirma tu contraseña"
+        current_password: "Tu contraseña actual"

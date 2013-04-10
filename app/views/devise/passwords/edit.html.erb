@@ -12,7 +12,8 @@
         <%= f.hidden_field :reset_password_token %>
 
         <%= f.input :password, as: :password_icon, autofocus: true %>
-        <%= f.input :password_confirmation, as: :password_icon, autofocus: true %>
+        <%= f.input :password_confirmation, as: :password_icon,
+                    placeholder: t('simple_form.placeholders.user.password_confirmation') %>
 
         <div class="form-actions">
           <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>

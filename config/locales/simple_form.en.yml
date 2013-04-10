@@ -26,3 +26,4 @@ en:
         email: "Your email address"
         password: "Your password"
         password_confirmation: "Confirm your password"
+        current_password: "Your current password"

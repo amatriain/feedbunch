@@ -15,8 +15,9 @@
                         wrapper: :prepend do |f| %>
       <%= f.input :email, as: :email_icon, autofocus:true %>
       <%= f.input :password, as: :password_icon, hint: t('simple_form.hints.user.blank_password') %>
-      <%= f.input :password_confirmation, as: :password_icon %>
-      <%= f.input :current_password, as: :password_icon %>
+      <%= f.input :password_confirmation, as: :password_icon,
+                  placeholder: t('simple_form.placeholders.user.password_confirmation') %>
+      <%= f.input :current_password, as: :password_icon, placeholder: t('simple_form.placeholders.user.current_password') %>
 
       <div class="form-actions">
         <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>
