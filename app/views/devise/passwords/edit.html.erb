@@ -5,31 +5,19 @@
 <div class="row-fluid">
   <div class="span10 offset1 well">
     <div class="span8">
-      <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), html: {:method => :put, class: 'form-horizontal'}) do |f| %>
+      <%= simple_form_for resource, :as => resource_name,
+                          :url => password_path(resource_name),
+                          html: {:method => :put, class: 'form-horizontal'},
+                          wrapper: :prepend do |f| %>
         <%= f.hidden_field :reset_password_token %>
 
-        <div class="control-group">
-          <%= f.label :password, t('devise.views.new_password'), class: 'control-label' %>
-          <div class="controls">
-            <div class="input-prepend">
-              <span class="add-on"><i class="icon-key"></i></span>
-              <%= f.password_field :password, :autofocus => true %>
-            </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <%= f.label :password_confirmation, t('devise.views.password_confirmation'), class: 'control-label' %>
-          <div class="controls">
-            <div class="input-prepend">
-              <span class="add-on"><i class="icon-key"></i></span>
-              <%= f.password_field :password_confirmation %>
-            </div>
-          </div>
-        </div>
+        <%= f.input :password, as: :password_icon, autofocus: true %>
+        <%= f.input :password_confirmation, as: :password_icon, autofocus: true %>
 
         <div class="form-actions">
-          <%= f.submit t('devise.views.change_password'), class: 'btn btn-primary btn-large' %>
+          <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>
+            <i class="icon-key"></i> <%= t 'devise.views.change_password' %>
+          <% end %>
         </div>
       <% end %>
     </div>
