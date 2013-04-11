@@ -130,7 +130,23 @@ describe 'authentication' do
         page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
       end
 
-      it 'saves new password'
+      it 'allows password change' do
+        new_password = 'new_password'
+        fill_in "New password", with: new_password
+        fill_in "Confirm password", with: new_password
+        fill_in 'Current password', with: @user.password
+        click_on 'Update account'
+        click_on 'Logout'
+
+        # test that I cannot login with the old password
+        login_user_for_feature @user
+        page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+
+        # test that after confirmation I can login with the new password
+        @user.password = new_password
+        login_user_for_feature @user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+      end
 
       it 'deletes account'
     end
