@@ -10,7 +10,7 @@
 <div class="row-fluid">
   <div class="span10 offset1 well">
     <%= simple_form_for resource, :as => resource_name,
-                        :url => registration_path(resource_name),
+                        :url => profile_path,
                         html: {:method => :put, class: 'form-horizontal', autocomplete: 'off'},
                         wrapper: :prepend do |f| %>
       <%= f.input :email, as: :email_icon, autofocus:true, input_html: {autocomplete: 'off'} %>
@@ -38,7 +38,7 @@
   <div class="span10 offset1 well">
     <h2><%= t 'devise.views.cancel_account' %></h2>
     <p><%= t 'devise.views.cancel_account_text' %></p>
-    <%= link_to registration_path(resource_name),
+    <%= link_to profile_cancel_path,
                   :data => { :confirm => t('devise.views.cancel_account_confirm') }, :method => :delete,
                   class: 'btn btn-danger' do %>
       <i class="icon-trash"></i>

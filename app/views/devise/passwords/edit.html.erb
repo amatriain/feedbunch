@@ -6,7 +6,7 @@
   <div class="span10 offset1 well">
     <div class="span8">
       <%= simple_form_for resource, :as => resource_name,
-                          :url => password_path(resource_name),
+                          :url => password_edit_path,
                           html: {:method => :put, class: 'form-horizontal', autocomplete: 'off'},
                           wrapper: :prepend do |f| %>
         <%= f.hidden_field :reset_password_token %>

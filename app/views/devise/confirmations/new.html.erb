@@ -7,7 +7,7 @@
   <div class="span10 offset1 well">
     <div class="span8">
       <%= simple_form_for resource, :as => resource_name,
-                          :url => confirmation_path(resource_name),
+                          :url => user_confirmation_path,
                           html: {:method => :post, class: 'form-horizontal'},
                           wrapper: :prepend do |f| %>
         <%= f.input :email, as: :email_icon, autofocus: true %>
