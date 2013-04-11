@@ -42,7 +42,10 @@ describe 'authentication' do
 
     before :each do
       login_user_for_feature @user
-      visit '/'
+    end
+
+    it 'redirects to feeds list after a successful login' do
+      current_path.should eq feeds_path
     end
 
     it 'does not show the login link in the main page' do
@@ -97,18 +100,31 @@ describe 'authentication' do
         current_path.should eq feeds_path
       end
 
-      it 'saves new email' do
-        pending
+      it 'allows email change' do
         new_email = 'new_email@test.com'
         fill_in 'Email', with: new_email
+        fill_in 'Current password', with: @user.password
         click_on 'Update account'
         click_on 'Logout'
 
-        # test that I cannot login with the old email
-        login_user_for_feature @user
-        page.should have_css 'a#sign_in[href*="/users/sign_in"]'
+        # test that a confirmation email is sent
+        email = ActionMailer::Base.deliveries.pop
+        email.to.first.should eq new_email
+        emailBody = Nokogiri::HTML email.body.to_s
+        confirmation_link = emailBody.at_css "a[href*=\"#{user_confirmation_path}\"]"
+        confirmation_link.present?.should be_true
 
-        # test that I can login with the new email
+        # test that before confirmation I can login with the old email
+        login_user_for_feature @user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+        click_on 'Logout'
+
+        # test that after confirmation I cannot login with the old email
+        visit confirmation_link[:href]
+        login_user_for_feature @user
+        page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+
+        # test that after confirmation I can login with the new email
         @user.email = new_email
         login_user_for_feature @user
         page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'

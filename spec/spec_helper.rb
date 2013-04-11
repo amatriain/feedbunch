@@ -11,6 +11,7 @@ require 'rspec/autorun'
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'database_cleaner'
+require 'nokogiri'
 
 # Factories instead of database fixtures
 require 'factory_girl_rails'
