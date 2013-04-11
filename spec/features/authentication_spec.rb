@@ -95,6 +95,10 @@ describe 'authentication' do
         visit edit_user_registration_path
       end
 
+      it 'shows navbar' do
+        page.should have_css 'div.navbar'
+      end
+
       it 'shows link to go to feeds list' do
         page.should have_css 'a#return'
         find('a#return').click
@@ -110,6 +114,7 @@ describe 'authentication' do
 
         # test that a confirmation email is sent
         email = ActionMailer::Base.deliveries.pop
+        email.present?.should be_true
         email.to.first.should eq new_email
         emailBody = Nokogiri::HTML email.body.to_s
         confirmation_link = emailBody.at_css "a[href*=\"#{user_confirmation_path}\"]"
@@ -131,10 +136,41 @@ describe 'authentication' do
         page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
       end
 
+      it 'does not allow email change if current password is left blank' do
+        new_email = 'new_email@test.com'
+        fill_in 'Email', with: new_email
+        click_on 'Update account'
+        click_on 'Logout'
+
+        # test that a confirmation email is not sent
+        ActionMailer::Base.deliveries.blank?.should be_true
+
+        # test that I can login with the old email
+        login_user_for_feature @user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+        click_on 'Logout'
+      end
+
+      it 'does not allow email change if current password is filled with wrong password' do
+        new_email = 'new_email@test.com'
+        fill_in 'Email', with: new_email
+        fill_in 'Current password', with: 'wrong_password'
+        click_on 'Update account'
+        click_on 'Logout'
+
+        # test that a confirmation email is not sent
+        ActionMailer::Base.deliveries.blank?.should be_true
+
+        # test that I can login with the old email
+        login_user_for_feature @user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+        click_on 'Logout'
+      end
+
       it 'allows password change' do
         new_password = 'new_password'
-        fill_in "New password", with: new_password
-        fill_in "Confirm password", with: new_password
+        fill_in 'New password', with: new_password
+        fill_in 'Confirm password', with: new_password
         fill_in 'Current password', with: @user.password
         click_on 'Update account'
         click_on 'Logout'
@@ -143,8 +179,46 @@ describe 'authentication' do
         login_user_for_feature @user
         page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
 
-        # test that after confirmation I can login with the new password
+        # test that I can login with the new password
         @user.password = new_password
+        login_user_for_feature @user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+      end
+
+      it 'does not allow password change if current password is left blank' do
+        new_password = 'new_password'
+        fill_in 'New password', with: new_password
+        fill_in 'Confirm password', with: new_password
+        click_on 'Update account'
+        click_on 'Logout'
+
+        # test that I can login with the old password
+        login_user_for_feature @user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+      end
+
+      it 'does not allow password change if current password is filled with wrong password' do
+        new_password = 'new_password'
+        fill_in 'New password', with: new_password
+        fill_in 'Confirm password', with: new_password
+        fill_in 'Current password', with: 'wrong_password'
+        click_on 'Update account'
+        click_on 'Logout'
+
+        # test that I can login with the old password
+        login_user_for_feature @user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+      end
+
+      it 'does not allow password change if both password fields do not match' do
+        new_password = 'new_password'
+        fill_in 'New password', with: new_password
+        fill_in 'Confirm password', with: 'different_new_password'
+        fill_in 'Current password', with: @user.password
+        click_on 'Update account'
+        click_on 'Logout'
+
+        # test that I can login with the old password
         login_user_for_feature @user
         page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
       end
@@ -155,6 +229,8 @@ describe 'authentication' do
         end
         User.all.blank?.should be_true
       end
+
+      it 'changes user language'
 
     end
   end
