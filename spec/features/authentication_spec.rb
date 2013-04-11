@@ -91,7 +91,7 @@ describe 'authentication' do
     context 'edit account' do
 
       before :each do
-        visit '/users/edit'
+        visit edit_user_registration_path
       end
 
       it 'shows link to go to feeds list' do
@@ -148,8 +148,13 @@ describe 'authentication' do
         page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
       end
 
-      it 'deletes account'
-    end
+      it 'deletes account', js: true do
+        handle_js_confirm do
+          click_on 'Cancel account'
+        end
+        User.all.blank?.should be_true
+      end
 
+    end
   end
 end
