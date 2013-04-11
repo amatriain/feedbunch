@@ -83,6 +83,9 @@ group :test do
 
   # To empty the database between acceptance tests
   gem 'database_cleaner'
+
+  # To parse html in emails sent during testing
+  gem 'nokogiri'
 end
 
 group :staging, :production do

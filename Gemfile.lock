@@ -233,6 +233,7 @@ DEPENDENCIES
   jquery-rails
   launchy
   log4r
+  nokogiri
   pg
   rails (= 3.2.13)
   rspec-rails (~> 2.0)
