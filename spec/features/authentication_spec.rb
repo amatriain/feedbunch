@@ -78,6 +78,7 @@ describe 'authentication' do
 
     it 'shows link to feeds page in the navbar' do
       page.should have_css 'div.navbar div.navbar-inner ul li a#feeds'
+      visit '/'
       find('div.navbar div.navbar-inner ul li a#feeds').click
       current_path.should eq feeds_path
     end
