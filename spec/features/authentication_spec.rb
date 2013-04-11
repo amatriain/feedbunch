@@ -24,7 +24,7 @@ describe 'authentication' do
     end
 
     it 'stays on the login page after a failed login attempt' do
-      visit '/users/sign_in'
+      visit new_user_session_path
       fill_in 'Email', with: @user.email
       fill_in 'Password', with: 'wrong password!!!'
       click_on 'Sign in'
@@ -117,7 +117,7 @@ describe 'authentication' do
         email.present?.should be_true
         email.to.first.should eq new_email
         emailBody = Nokogiri::HTML email.body.to_s
-        confirmation_link = emailBody.at_css "a[href*=\"#{user_confirmation_path}\"]"
+        confirmation_link = emailBody.at_css "a[href*=\"#{confirmation_path}\"]"
         confirmation_link.present?.should be_true
 
         # test that before confirmation I can login with the old email
