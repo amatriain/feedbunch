@@ -89,7 +89,7 @@ describe 'authentication' do
       current_path.should eq edit_user_registration_path
     end
 
-    context 'edit account' do
+    context 'edit profile' do
 
       before :each do
         visit edit_user_registration_path
