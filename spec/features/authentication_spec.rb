@@ -52,20 +52,14 @@ describe 'authentication' do
         click_on 'Sign up'
 
         # test that a confirmation email is sent
-        email = ActionMailer::Base.deliveries.pop
-        email.present?.should be_true
-        email.to.first.should eq user.email
-        emailBody = Nokogiri::HTML email.body.to_s
-        confirmation_link = emailBody.at_css "a[href*=\"#{confirmation_path}\"]"
-        confirmation_link.present?.should be_true
-
+        confirmation_link = mail_should_be_sent path: confirmation_path, to: user.email
 
         # Test that user cannot login before confirming the email address
         login_user_for_feature user
         user_should_not_be_logged_in
 
         # Follow link received by email, user should get logged in
-        visit confirmation_link[:href]
+        visit confirmation_link
         user_should_be_logged_in
         click_on 'Logout'
 
@@ -83,8 +77,7 @@ describe 'authentication' do
         click_on 'Sign up'
 
         # test that a confirmation email is not sent
-        email = ActionMailer::Base.deliveries.pop
-        email.blank?.should be_true
+        mail_should_not_be_sent
 
         # Test that user cannot login
         login_user_for_feature user
@@ -101,8 +94,7 @@ describe 'authentication' do
         click_on 'Sign up'
 
         # test that a confirmation email is not sent
-        email = ActionMailer::Base.deliveries.pop
-        email.blank?.should be_true
+        mail_should_not_be_sent
 
         # Test that user cannot login
         login_user_for_feature user
@@ -122,15 +114,10 @@ describe 'authentication' do
         click_on 'Send password change email'
 
         # test that a confirmation email is sent
-        email = ActionMailer::Base.deliveries.pop
-        email.present?.should be_true
-        email.to.first.should eq @user.email
-        emailBody = Nokogiri::HTML email.body.to_s
-        email_change_link = emailBody.at_css "a[href*=\"#{edit_user_password_path}\"]"
-        email_change_link.present?.should be_true
+        email_change_link = mail_should_be_sent path: edit_user_password_path, to: @user.email
 
         # follow link received by email
-        visit email_change_link[:href]
+        visit email_change_link
         current_path.should eq edit_user_password_path
 
         # submit password change form
@@ -159,15 +146,10 @@ describe 'authentication' do
         click_on 'Send password change email'
 
         # test that a confirmation email is sent
-        email = ActionMailer::Base.deliveries.pop
-        email.present?.should be_true
-        email.to.first.should eq @user.email
-        emailBody = Nokogiri::HTML email.body.to_s
-        email_change_link = emailBody.at_css "a[href*=\"#{edit_user_password_path}\"]"
-        email_change_link.present?.should be_true
+        email_change_link = mail_should_be_sent path: edit_user_password_path, to: @user.email
 
         # follow link received by email
-        visit email_change_link[:href]
+        visit email_change_link
         current_path.should eq edit_user_password_path
 
         # submit password change form
@@ -195,8 +177,7 @@ describe 'authentication' do
         click_on 'Send password change email'
 
         # test that a confirmation email is not sent
-        email = ActionMailer::Base.deliveries.pop
-        email.blank?.should be_true
+        mail_should_not_be_sent
       end
 
     end
@@ -278,12 +259,7 @@ describe 'authentication' do
         click_on 'Logout'
 
         # test that a confirmation email is sent
-        email = ActionMailer::Base.deliveries.pop
-        email.present?.should be_true
-        email.to.first.should eq new_email
-        emailBody = Nokogiri::HTML email.body.to_s
-        confirmation_link = emailBody.at_css "a[href*=\"#{confirmation_path}\"]"
-        confirmation_link.present?.should be_true
+        confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
 
         # test that before confirmation I can login with the old email
         login_user_for_feature @user
@@ -291,7 +267,7 @@ describe 'authentication' do
         click_on 'Logout'
 
         # test that after confirmation I cannot login with the old email
-        visit confirmation_link[:href]
+        visit confirmation_link
         login_user_for_feature @user
         user_should_not_be_logged_in
 
@@ -308,7 +284,7 @@ describe 'authentication' do
         click_on 'Logout'
 
         # test that a confirmation email is not sent
-        ActionMailer::Base.deliveries.blank?.should be_true
+        mail_should_not_be_sent
 
         # test that I can login with the old email
         login_user_for_feature @user
@@ -323,7 +299,7 @@ describe 'authentication' do
         click_on 'Logout'
 
         # test that a confirmation email is not sent
-        ActionMailer::Base.deliveries.blank?.should be_true
+        mail_should_not_be_sent
 
         # test that I can login with the old email
         login_user_for_feature @user
