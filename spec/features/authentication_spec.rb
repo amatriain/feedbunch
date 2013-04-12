@@ -62,16 +62,16 @@ describe 'authentication' do
 
         # Test that user cannot login before confirming the email address
         login_user_for_feature user
-        user_should_not_be_logged
+        user_should_not_be_logged_in
 
         # Follow link received by email, user should get logged in
         visit confirmation_link[:href]
-        user_should_be_logged
+        user_should_be_logged_in
         click_on 'Logout'
 
         # Test that user can login
         login_user_for_feature user
-        user_should_be_logged
+        user_should_be_logged_in
       end
 
       it 'does not sign up user if email already registered' do
@@ -88,7 +88,7 @@ describe 'authentication' do
 
         # Test that user cannot login
         login_user_for_feature user
-        user_should_not_be_logged
+        user_should_not_be_logged_in
       end
 
       it 'does not sign up user if both password fields do not match' do
@@ -106,7 +106,7 @@ describe 'authentication' do
 
         # Test that user cannot login
         login_user_for_feature user
-        user_should_not_be_logged
+        user_should_not_be_logged_in
       end
 
     end
@@ -141,17 +141,17 @@ describe 'authentication' do
 
         # after password change, user should be logged in
         current_path.should eq feeds_path
-        user_should_be_logged
+        user_should_be_logged_in
         click_on 'Logout'
 
         # test that user cannot login with old password
         login_user_for_feature @user
-        user_should_not_be_logged
+        user_should_not_be_logged_in
 
         # test that user can login with new password
         @user.password = new_password
         login_user_for_feature @user
-        user_should_be_logged
+        user_should_be_logged_in
       end
 
       it 'does not allow password change if both fields do not match' do
@@ -177,17 +177,17 @@ describe 'authentication' do
         click_on 'Change your password'
 
         # after submit, user should NOT be logged in
-        user_should_not_be_logged
+        user_should_not_be_logged_in
 
         # test that user can login with old password
         login_user_for_feature @user
-        user_should_be_logged
+        user_should_be_logged_in
         click_on 'Logout'
 
         # test that user cannot login with new password
         @user.password = new_password
         login_user_for_feature @user
-        user_should_not_be_logged
+        user_should_not_be_logged_in
       end
 
       it 'does not send password change email to an unregistered address' do
@@ -238,7 +238,7 @@ describe 'authentication' do
     it 'logs out user and redirects to main page' do
       find('div.navbar div.navbar-inner ul li a#sign_out').click
       current_path.should eq root_path
-      user_should_not_be_logged
+      user_should_not_be_logged_in
     end
 
     it 'shows link to feeds page in the navbar' do
@@ -287,18 +287,18 @@ describe 'authentication' do
 
         # test that before confirmation I can login with the old email
         login_user_for_feature @user
-        user_should_be_logged
+        user_should_be_logged_in
         click_on 'Logout'
 
         # test that after confirmation I cannot login with the old email
         visit confirmation_link[:href]
         login_user_for_feature @user
-        user_should_not_be_logged
+        user_should_not_be_logged_in
 
         # test that after confirmation I can login with the new email
         @user.email = new_email
         login_user_for_feature @user
-        user_should_be_logged
+        user_should_be_logged_in
       end
 
       it 'does not allow email change if current password is left blank' do
@@ -312,7 +312,7 @@ describe 'authentication' do
 
         # test that I can login with the old email
         login_user_for_feature @user
-        user_should_be_logged
+        user_should_be_logged_in
       end
 
       it 'does not allow email change if current password is filled with wrong password' do
@@ -327,7 +327,7 @@ describe 'authentication' do
 
         # test that I can login with the old email
         login_user_for_feature @user
-        user_should_be_logged
+        user_should_be_logged_in
         click_on 'Logout'
       end
 
@@ -341,12 +341,12 @@ describe 'authentication' do
 
         # test that I cannot login with the old password
         login_user_for_feature @user
-        user_should_not_be_logged
+        user_should_not_be_logged_in
 
         # test that I can login with the new password
         @user.password = new_password
         login_user_for_feature @user
-        user_should_be_logged
+        user_should_be_logged_in
       end
 
       it 'does not allow password change if current password is left blank' do
@@ -358,7 +358,7 @@ describe 'authentication' do
 
         # test that I can login with the old password
         login_user_for_feature @user
-        user_should_be_logged
+        user_should_be_logged_in
       end
 
       it 'does not allow password change if current password is filled with wrong password' do
@@ -371,7 +371,7 @@ describe 'authentication' do
 
         # test that I can login with the old password
         login_user_for_feature @user
-        user_should_be_logged
+        user_should_be_logged_in
       end
 
       it 'does not allow password change if both password fields do not match' do
@@ -384,7 +384,7 @@ describe 'authentication' do
 
         # test that I can login with the old password
         login_user_for_feature @user
-        user_should_be_logged
+        user_should_be_logged_in
       end
 
       it 'deletes account', js: true do

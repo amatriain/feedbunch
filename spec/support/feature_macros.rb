@@ -15,7 +15,7 @@ end
 #
 # To see if the user is logged in, we check the presence of a "Logout" link in the navbar.
 
-def user_should_be_logged
+def user_should_be_logged_in
   page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
 end
 
@@ -24,6 +24,9 @@ end
 #
 # To see if the user is not logged in, we check the absence of a "Logout" link in the navbar.
 
-def user_should_not_be_logged
+def user_should_not_be_logged_in
   page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
 end
+
+##
+#
