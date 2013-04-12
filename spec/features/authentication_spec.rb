@@ -4,6 +4,8 @@ describe 'authentication' do
 
   before :each do
     @user = FactoryGirl.create :user
+    # Remove emails stil in the mail queue
+    ActionMailer::Base.deliveries.clear
   end
 
   context 'unauthenticated visitors' do
