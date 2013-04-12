@@ -182,6 +182,166 @@ describe 'authentication' do
 
     end
 
+    context 'resend confirmation email' do
+
+      it 'sends confirmation email to unconfirmed user' do
+        # sign up new user
+        visit new_user_registration_path
+        new_email = 'new_email@test.com'
+        new_password = 'new_password'
+        user = FactoryGirl.build :user, email: new_email, password: new_password
+        fill_in 'Email', with: new_email
+        fill_in 'Password', with: new_password
+        fill_in 'Confirm password', with: new_password
+        click_on 'Sign up'
+
+        # Remove confirmation mails sent on signup from mail queue
+        ActionMailer::Base.deliveries.clear
+
+        # Ask for resend of confirmation email
+        visit new_user_confirmation_path
+        fill_in 'Email', with: new_email
+        click_on 'Confirm email address'
+
+        # Check that confirmation email is sent
+        confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
+
+        # Check that user cannot log in before confirming
+        login_user_for_feature user
+        user_should_not_be_logged_in
+
+        # Confirm email, user should be logged in automatically
+        visit confirmation_link
+        user_should_be_logged_in
+
+        # Check that user can log in
+        click_on 'Logout'
+        visit new_user_session_path
+        login_user_for_feature user
+        user_should_be_logged_in
+      end
+
+      it 'does not send confirmation email to a confirmed user' do
+        # sign up new user
+        visit new_user_registration_path
+        new_email = 'new_email@test.com'
+        new_password = 'new_password'
+        user = FactoryGirl.build :user, email: new_email, password: new_password
+        fill_in 'Email', with: new_email
+        fill_in 'Password', with: new_password
+        fill_in 'Confirm password', with: new_password
+        click_on 'Sign up'
+
+        # Confirm email
+        confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
+        visit confirmation_link
+        click_on 'Logout'
+
+        # Ask for resend of confirmation email
+        visit new_user_confirmation_path
+        fill_in 'Email', with: new_email
+        click_on 'Confirm email address'
+
+        # Check that no email is sent
+        mail_should_not_be_sent
+      end
+
+      it 'does not send confirmation email to an unregistered user' do
+        unregistered_email = 'unregistered@test.com'
+
+        # Ask for resend of confirmation email
+        visit new_user_confirmation_path
+        fill_in 'Email', with: unregistered_email
+        click_on 'Confirm email address'
+
+        # Check that no email is sent
+        mail_should_not_be_sent
+      end
+
+    end
+
+    context 'user locking' do
+
+      it 'locks user after too many failed authentication attempts' do
+        # lock user after 5 failed authentication attempts
+        @user.password = 'wrong_password'
+        (1..5).each do
+          login_user_for_feature @user
+        end
+
+        # Check that user is locked
+        login_user_for_feature @user
+        user_should_not_be_logged_in
+      end
+
+      it 'automatically sends unlock email to a locked user' do
+        # Lock user after 5 failed authentication attempts
+        # The next authentication attempt the app sends an unlock email to
+        # notify the user and give him the chance to unlock his account.
+        correct_password = @user.password
+        @user.password = 'wrong_password'
+        (1..6).each do
+          login_user_for_feature @user
+        end
+
+        # Check that unlock email is sent
+        unlock_link = mail_should_be_sent path: unlock_account_path, to: @user.email
+
+        # Check that can log in after following unlock link
+        visit unlock_link
+        @user.password = correct_password
+        login_user_for_feature @user
+        user_should_be_logged_in
+      end
+
+      it 'resends unlock email to a locked user' do
+        # lock user after 5 failed authentication attempts
+        correct_password = @user.password
+        @user.password = 'wrong_password'
+        (1..6).each do
+          login_user_for_feature @user
+        end
+
+        # Remove aumatically sent email from queue
+        ActionMailer::Base.deliveries.clear
+
+        # Ask for an unlock email to be sent again
+        visit new_user_unlock_path
+        fill_in 'Email', with: @user.email
+        click_on 'Send unlock email'
+
+        # Check that unlock email is sent
+        unlock_link = mail_should_be_sent path: unlock_account_path, to: @user.email
+
+        # Check that can log in after following unlock link
+        visit unlock_link
+        @user.password = correct_password
+        login_user_for_feature @user
+        user_should_be_logged_in
+      end
+
+      it 'does not send unlock email to an unlocked user' do
+        # Ask for an unlock email to be sent
+        visit new_user_unlock_path
+        fill_in 'Email', with: @user.email
+        click_on 'Send unlock email'
+
+        # Check that unlock email is not sent
+        mail_should_not_be_sent
+      end
+
+      it 'does not send unlock email to an unregistered user' do
+        # Ask for an unlock email to be sent
+        visit new_user_unlock_path
+        fill_in 'Email', with: 'unregistered@test.com'
+        click_on 'Send unlock email'
+
+        # Check that unlock email is not sent
+        mail_should_not_be_sent
+      end
+
+    end
+
   end
 
   context 'authenticated users' do
