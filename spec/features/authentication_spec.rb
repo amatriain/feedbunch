@@ -36,6 +36,171 @@ describe 'authentication' do
       page.should_not have_css 'div.navbar'
     end
 
+    context 'sign up' do
+
+      before :each do
+        visit new_user_registration_path
+      end
+
+      it 'signs up new user' do
+        new_email = 'new_email@test.com'
+        new_password = 'new_password'
+        user = FactoryGirl.build :user, email: new_email, password: new_password
+        fill_in 'Email', with: new_email
+        fill_in 'Password', with: new_password
+        fill_in 'Confirm password', with: new_password
+        click_on 'Sign up'
+
+        # test that a confirmation email is sent
+        email = ActionMailer::Base.deliveries.pop
+        email.present?.should be_true
+        email.to.first.should eq user.email
+        emailBody = Nokogiri::HTML email.body.to_s
+        confirmation_link = emailBody.at_css "a[href*=\"#{confirmation_path}\"]"
+        confirmation_link.present?.should be_true
+
+
+        # Test that user cannot login before confirming the email address
+        login_user_for_feature user
+        page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+
+        # Follow link received by email, user should get logged in
+        visit confirmation_link[:href]
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+        click_on 'Logout'
+
+        # Test that user can login
+        login_user_for_feature user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+      end
+
+      it 'does not sign up user if email already registered' do
+        new_password = 'new_password'
+        user = FactoryGirl.build :user, email: @user.email, password: new_password
+        fill_in 'Email', with: @user.email
+        fill_in 'Password', with: new_password
+        fill_in 'Confirm password', with: new_password
+        click_on 'Sign up'
+
+        # test that a confirmation email is not sent
+        email = ActionMailer::Base.deliveries.pop
+        email.blank?.should be_true
+
+        # Test that user cannot login
+        login_user_for_feature user
+        page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+      end
+
+      it 'does not sign up user if both password fields do not match' do
+        new_email = 'new_email@test.com'
+        new_password = 'new_password'
+        user = FactoryGirl.build :user, email: new_email, password: new_password
+        fill_in 'Email', with: @user.email
+        fill_in 'Password', with: new_password
+        fill_in 'Confirm password', with: 'different_password'
+        click_on 'Sign up'
+
+        # test that a confirmation email is not sent
+        email = ActionMailer::Base.deliveries.pop
+        email.blank?.should be_true
+
+        # Test that user cannot login
+        login_user_for_feature user
+        page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+      end
+
+    end
+
+    context 'reset password' do
+
+      before :each do
+        visit new_user_password_path
+      end
+
+      it 'allows password reset' do
+        fill_in 'Email', with: @user.email
+        click_on 'Send password change email'
+
+        # test that a confirmation email is sent
+        email = ActionMailer::Base.deliveries.pop
+        email.present?.should be_true
+        email.to.first.should eq @user.email
+        emailBody = Nokogiri::HTML email.body.to_s
+        email_change_link = emailBody.at_css "a[href*=\"#{edit_user_password_path}\"]"
+        email_change_link.present?.should be_true
+
+        # follow link received by email
+        visit email_change_link[:href]
+        current_path.should eq edit_user_password_path
+
+        # submit password change form
+        new_password = 'new_password'
+        fill_in 'New password', with: new_password
+        fill_in 'Confirm password', with: new_password
+        click_on 'Change your password'
+
+        # after password change, user should be logged in
+        current_path.should eq feeds_path
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+        click_on 'Logout'
+
+        # test that user cannot login with old password
+        login_user_for_feature @user
+        page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+
+        # test that user can login with new password
+        @user.password = new_password
+        login_user_for_feature @user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+      end
+
+      it 'does not allow password change if both fields do not match' do
+        fill_in 'Email', with: @user.email
+        click_on 'Send password change email'
+
+        # test that a confirmation email is sent
+        email = ActionMailer::Base.deliveries.pop
+        email.present?.should be_true
+        email.to.first.should eq @user.email
+        emailBody = Nokogiri::HTML email.body.to_s
+        email_change_link = emailBody.at_css "a[href*=\"#{edit_user_password_path}\"]"
+        email_change_link.present?.should be_true
+
+        # follow link received by email
+        visit email_change_link[:href]
+        current_path.should eq edit_user_password_path
+
+        # submit password change form
+        new_password = 'new_password'
+        fill_in 'New password', with: new_password
+        fill_in 'Confirm password', with: 'different_password'
+        click_on 'Change your password'
+
+        # after submit, user should NOT be logged in
+        page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+
+        # test that user can login with old password
+        login_user_for_feature @user
+        page.should have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+        click_on 'Logout'
+
+        # test that user cannot login with new password
+        @user.password = new_password
+        login_user_for_feature @user
+        page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+      end
+
+      it 'does not send password change email to an unregistered address' do
+        fill_in 'Email', with: 'unregistered_email@test.com'
+        click_on 'Send password change email'
+
+        # test that a confirmation email is not sent
+        email = ActionMailer::Base.deliveries.pop
+        email.blank?.should be_true
+      end
+
+    end
+
   end
 
   context 'authenticated users' do
