@@ -42,9 +42,6 @@ gem 'high_voltage'
 # User authentication
 gem 'devise'
 
-# Feed parser
-gem 'feedzirra', git: 'git://github.com/pauldix/feedzirra.git'
-
 # Bootstrap goodness!
 gem 'bootstrap-sass', '~> 2.3.1.0'
 
