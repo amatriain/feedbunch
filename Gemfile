@@ -43,7 +43,7 @@ gem 'high_voltage'
 gem 'devise'
 
 # Feed parser
-gem 'feedzirra'
+gem 'feedzirra', git: 'git://github.com/pauldix/feedzirra.git'
 
 # Bootstrap goodness!
 gem 'bootstrap-sass', '~> 2.3.1.0'
