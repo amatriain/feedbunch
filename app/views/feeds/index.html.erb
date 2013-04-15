@@ -7,7 +7,9 @@
   <div class="span9">
     <%# TODO make the "feed" variable dynamically use the currently selected feed %>
     <% feed = Feed.first %>
-    <h2><%= feed.title %></h2>
+    <% if feed.present? %>
+      <h2><%= feed.title %></h2>
+    <% end %>
   </div>
 
 </div>
