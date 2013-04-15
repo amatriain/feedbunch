@@ -8,8 +8,33 @@
     <%# TODO make the "feed" variable dynamically use the currently selected feed %>
     <% feed = Feed.first %>
     <% if feed.present? %>
-      <h2><%= feed.title %></h2>
-    <% end %>
-  </div>
+      <div class="page-header">
+        <h1><%= feed.title %></h1>
+      </div>
 
+      <ul class="nav nav-tabs nav-stacked">
+        <% feed.items.each do |item| %>
+          <% item_id = "item#{(Random.rand * 100000000).round}" %>
+          <li>
+            <a href="#" data-toggle="collapse" data-target="#<%= item_id %>">
+              <%= item.title %>
+              <span class="pull-right"><%= l item.pubDate, format: :short %></span>
+            </a>
+
+            <div class="collapse" id="<%= item_id %>">
+              <div class="item-content">
+                <p class="lead">
+                  <%= link_to item.title, item.link, target: '_blank' %>
+                  <span class="pull-right"><%= link_to item.link, target: '_blank', title: t('.open_new_tab'), alt: t('.open_new_tab') do %><i class="icon-external-link"></i><% end %></span>
+                </p>
+
+                <p class="hidden"><%= item.guid.content %></p>
+                <%= sanitize item.description %>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
 </div>

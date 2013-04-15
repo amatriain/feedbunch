@@ -27,7 +27,7 @@ class Feed < ActiveRecord::Base
   # return items in the feed
 
   def items
-    feed_xml = open @url
+    feed_xml = open self.url
     parsed_feed = RSS::Parser.parse feed_xml
     items = parsed_feed.try :items
     return items

@@ -12,3 +12,6 @@ es:
       logout: "Salir"
       my_account: "Mi cuenta"
       my_feeds: "Mis feeds"
+  feeds:
+    index:
+      open_new_tab: "Abrir en una nueva pestaña"
