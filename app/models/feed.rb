@@ -1,3 +1,6 @@
+require 'open-uri'
+require 'rss'
+
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which a user is suscribed.
 #
@@ -19,4 +22,14 @@ class Feed < ActiveRecord::Base
   has_and_belongs_to_many :users
   validates :url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
   validates :title, presence: true
+
+  ##
+  # return items in the feed
+
+  def items
+    feed_xml = open @url
+    parsed_feed = RSS::Parser.parse feed_xml
+    items = parsed_feed.try :items
+    return items
+  end
 end
