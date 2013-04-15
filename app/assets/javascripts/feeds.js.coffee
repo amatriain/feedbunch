@@ -4,4 +4,5 @@
 
 $(document).ready ->
   $(".menu-level1").click ->
-    $(this).parent().toggleClass("active")
+    $(this).children("i.arrow").toggleClass "icon-chevron-right"
+    $(this).children("i.arrow").toggleClass "icon-chevron-down"
