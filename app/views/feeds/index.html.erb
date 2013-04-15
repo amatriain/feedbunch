@@ -1,10 +1,10 @@
 <div class="row-fluid">
 
-  <div class="span3">
+  <div class="span2">
     <%= render 'sidebar' %>
   </div>
 
-  <div class="span9">
+ <div class="span10">
     <%# TODO make the "feed" variable dynamically use the currently selected feed %>
     <% feed = Feed.first %>
     <% if feed.present? %>
