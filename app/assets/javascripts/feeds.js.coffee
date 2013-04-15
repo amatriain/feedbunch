@@ -6,3 +6,5 @@ $(document).ready ->
   $(".menu-level1").click ->
     $(this).children("i.arrow").toggleClass "icon-chevron-right"
     $(this).children("i.arrow").toggleClass "icon-chevron-down"
+    $(this).children("i.folder").toggleClass "icon-folder-close-alt"
+    $(this).children("i.folder").toggleClass "icon-folder-open-alt"
