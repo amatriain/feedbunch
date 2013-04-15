@@ -8,7 +8,7 @@ class FeedsController < ApplicationController
   ##
   # list all feeds a user is suscribed to
   def index
-    @feeds = Feed.all
-    respond_with(@feeds = Feed.all)
+    @feeds = current_user.feeds
+    respond_with(@feeds)
   end
 end
