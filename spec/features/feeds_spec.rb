@@ -10,9 +10,11 @@ describe 'feeds' do
 
     before :each do
       @user = FactoryGirl.create :user
-      @feed1 = FactoryGirl.create :feed
-      @feed2 = FactoryGirl.create :feed
+      @feed1 = FactoryGirl.create :feed, url: 'http://www.meneame.net/rss2.php'
+      @feed2 = FactoryGirl.create :feed, url: 'http://reddit.com/.rss'
       @user.feeds << @feed1
+
+      # TODO no real HTTP calls should be made here!!!
 
       login_user_for_feature @user
       visit feeds_path

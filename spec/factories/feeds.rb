@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   sequence(:feed_title_sequence) {|n| "some_title_#{n}"}
-  sequence(:feed_url_sequence) {|n| "http://some_url_#{n}.com"}
+  sequence(:feed_url_sequence) {|n| "http://some.url.#{n}.com"}
 
   factory :feed do
     title {generate :feed_title_sequence}
