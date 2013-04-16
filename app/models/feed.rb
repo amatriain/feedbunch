@@ -44,6 +44,11 @@ class Feed < ActiveRecord::Base
     # calls during testing, but we can always use the real parser even during testing.
     feed_parsed = Feedzirra::Feed.parse feed_xml
     feed_parsed.sanitize_entries!
+
+    # It seems Feedzirra doesn't sanitize the URL of entries for some reason. It's a field as susceptible of injection
+    # as any other, so we sanitize it ourselves
+    feed_parsed.entries.each {|entry| entry.url = sanitize entry.url}
+
     return feed_parsed.entries
   end
 end

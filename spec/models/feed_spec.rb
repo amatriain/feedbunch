@@ -100,7 +100,6 @@ describe Feed do
 FEED_XML
 
       @feed_fetcher = double 'feedzirra', fetch_raw: feed_xml
-
       @feed.feed_fetcher = @feed_fetcher
     end
 
@@ -153,7 +152,119 @@ FEED_XML
 </rss>
 FEED_XML
 
-      @feed.stub(:open).and_return feed_xml
+      @feed_fetcher = double 'feedzirra', fetch_raw: feed_xml
+      @feed.feed_fetcher = @feed_fetcher
+
+      sanitized_item={}
+      sanitized_item[:title] = 'Silence'
+      sanitized_item[:url] = 'http://xkcd.com/1199/'
+      sanitized_item[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
+      sanitized_item[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
+      sanitized_item[:entry_id] = 'http://xkcd.com/1199/'
+
+      items = @feed.entries
+      feed_item = items[0]
+      feed_item.title.should eq sanitized_item[:title]
+      feed_item.url.should eq sanitized_item[:url]
+      feed_item.summary.should eq CGI.unescapeHTML(sanitized_item[:summary])
+    end
+
+  end
+
+  context 'atom' do
+
+    before :each do
+      @item1={}
+      @item1[:title] = 'Silence'
+      @item1[:url] = 'http://xkcd.com/1199/'
+      @item1[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
+      @item1[:published ]= '2013-04-15T00:00:00Z'
+      @item1[:entry_id] = 'http://xkcd.com/1199/'
+
+      @item2={}
+      @item2[:title] = 'Geologist'
+      @item2[:url] = 'http://xkcd.com/1198/'
+      @item2[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;"&gt;}
+      @item2[:published ]= '2013-04-12T00:00:00Z'
+      @item2[:entry_id] = 'http://xkcd.com/1198/'
+
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>xkcd.com</title>
+  <link href="http://xkcd.com/" rel="alternate" />
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+  <entry>
+    <title>#{@item1[:title]}</title>
+    <link href="#{@item1[:url]}" rel="alternate" />
+    <updated>#{@item1[:published ]}</updated>
+    <id>#{@item1[:entry_id]}</id>
+    <summary type="html">#{@item1[:summary]}</summary>
+  </entry>
+  <entry>
+    <title>#{@item2[:title]}</title>
+    <link href="#{@item2[:url]}" rel="alternate" />
+    <updated>#{@item2[:published ]}</updated>
+    <id>#{@item2[:entry_id]}</id>
+    <summary type="html">#{@item2[:summary]}</summary>
+  </entry>
+</feed>
+FEED_XML
+
+      @feed_fetcher = double 'feedzirra', fetch_raw: feed_xml
+      @feed.feed_fetcher = @feed_fetcher
+    end
+
+    it 'downloads the feed XML' do
+      @feed_fetcher.should_receive(:fetch_raw).with @feed.url
+      @feed.entries
+    end
+
+    it 'returns the right items' do
+      items = @feed.entries
+      items.size.should eq 2
+
+      items[0].title.should eq @item1[:title]
+      items[0].url.should eq @item1[:url]
+      items[0].summary.should eq CGI.unescapeHTML(@item1[:summary])
+      items[0].published.should eq @item1[:published]
+      items[0].entry_id.should eq @item1[:entry_id]
+
+      items[1].title.should eq @item2[:title]
+      items[1].url.should eq @item2[:url]
+      items[1].summary.should eq CGI.unescapeHTML(@item2[:summary])
+      items[1].published.should eq @item2[:published]
+      items[1].entry_id.should eq @item2[:entry_id]
+    end
+
+    it 'sanitizes items' do
+      item={}
+      item[:title] = 'Silence&lt;script&gt;alert("pwned!");&lt;/script&gt;'
+      item[:url] = 'http://xkcd.com/1199/&lt;script&gt;alert(quot;pwned!quot;);&lt;/script&gt;'
+      item[:summary] = %{&lt;script&gt;alert("pwned!");&lt;/script&gt;&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
+      item[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
+      item[:entry_id] = '&lt;script&gt;alert("pwned!");&lt;/script&gt;http://xkcd.com/1199/'
+
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>xkcd.com</title>
+  <link href="http://xkcd.com/" rel="alternate" />
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+  <entry>
+    <title>#{item[:title]}</title>
+    <link href="#{item[:url]}" rel="alternate" />
+    <updated>#{item[:published ]}</updated>
+    <id>#{item[:entry_id]}</id>
+    <summary type="html">#{item[:summary]}</summary>
+  </entry>
+</feed>
+FEED_XML
+
+      @feed_fetcher = double 'feedzirra', fetch_raw: feed_xml
+      @feed.feed_fetcher = @feed_fetcher
 
       sanitized_item={}
       sanitized_item[:title] = 'Silence'
