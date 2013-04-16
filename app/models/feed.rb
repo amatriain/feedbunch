@@ -18,18 +18,36 @@ require 'rss'
 #   /\Ahttps?:\/\/.+\..+\z/
 
 class Feed < ActiveRecord::Base
+  include ActionView::Helpers::SanitizeHelper
+
   attr_accessible :url
   has_and_belongs_to_many :users
   validates :url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
   validates :title, presence: true
 
   ##
-  # return items in the feed
+  # Return items in the feed.
+  #
+  # The following fields of each item are sanitized using ActionView::Helpers::SanitizeHelper :
+  #
+  # - title
+  # - link
+  # - description
+  # - guid
 
   def items
     feed_xml = open self.url
     parsed_feed = RSS::Parser.parse feed_xml
     items = parsed_feed.try :items
+
+    # Sanitize relevant item fields
+    items.each do |item|
+      item.title = sanitize item.title
+      item.link = sanitize item.link
+      item.description = sanitize item.description
+      item.guid.content = sanitize item.guid.content
+    end
+
     return items
   end
 end

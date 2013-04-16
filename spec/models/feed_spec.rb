@@ -120,5 +120,49 @@ FEED_XML
       items[1].guid.content.should eq @item2[:guid]
     end
 
+    it 'sanitizes items' do
+      item={}
+      item[:title] = 'Silence&lt;script&gt;alert("pwned!");&lt;/script&gt;'
+      item[:link] = 'http://xkcd.com/1199/&lt;script&gt;alert("pwned!");&lt;/script&gt;'
+      item[:description] = %{&lt;script&gt;alert("pwned!");&lt;/script&gt;&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." /&gt;}
+      item[:pubDate ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
+      item[:guid] = '&lt;script&gt;alert("pwned!");&lt;/script&gt;http://xkcd.com/1199/'
+
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>xkcd.com</title>
+    <link>http://xkcd.com/</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{item[:title]}</title>
+      <link>#{item[:link]}</link>
+      <description>#{item[:description]}</description>
+      <pubDate>#{item[:pubDate]}</pubDate>
+      <guid>#{item[:guid]}</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+
+      @feed.stub(:open).and_return feed_xml
+
+      sanitized_item={}
+      sanitized_item[:title] = 'Silence'
+      sanitized_item[:link] = 'http://xkcd.com/1199/'
+      sanitized_item[:description] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." /&gt;}
+      sanitized_item[:pubDate ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
+      sanitized_item[:guid] = 'http://xkcd.com/1199/'
+
+      items = @feed.items
+      feed_item = items[0]
+      feed_item.title.should eq sanitized_item[:title]
+      feed_item.link.should eq sanitized_item[:link]
+      feed_item.description.should eq CGI.unescapeHTML(sanitized_item[:description])
+      feed_item.guid.content.should eq sanitized_item[:guid]
+    end
+
   end
 end
