@@ -25,8 +25,8 @@ class Feed < ActiveRecord::Base
   validates :title, presence: true
 
   # Class to be used for feed downloading an parsing. It defaults to Feedzirra::Feed.
-  # During unit testing it can be switched with a mock object.
-  attr_writer :feed_reader
+  # During unit testing it can be switched with a mock object, so that no actual HTTP calls are made.
+  attr_writer :feed_fetcher
 
   ##
   # Return entries in the feed.
@@ -34,12 +34,16 @@ class Feed < ActiveRecord::Base
   # All fields are sanitized before returning them
 
   def entries
-    # feed_reader defaults to Feedzirra::Feed, except if it's already been given another value (which happens
+    # feed_fetcher defaults to Feedzirra::Feed, except if it's already been given another value (which happens
     # during unit testing)
-    feed_reader = @feed_reader || Feedzirra::Feed
+    feed_fetcher = @feed_fetcher || Feedzirra::Feed
+    feed_xml = feed_fetcher.fetch_raw self.url
 
-    feed = feed_reader.fetch_and_parse self.url
-    feed.sanitize_entries!
-    return feed.entries
+    # We use the actual Feedzirra::Feed class to parse, never a mock.
+    # The motivation behind using a mock for fetching the XML during unit testing is not making HTTP
+    # calls during testing, but we can always use the real parser even during testing.
+    feed_parsed = Feedzirra::Feed.parse feed_xml
+    feed_parsed.sanitize_entries!
+    return feed_parsed.entries
   end
 end
