@@ -4,17 +4,31 @@ describe Feed do
   before :each do
     @item1={}
     @item1[:title] = 'Silence'
-    @item1[:link] = 'http://xkcd.com/1199/'
-    @item1[:description] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." /&gt;}
-    @item1[:pubDate ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
-    @item1[:guid] = 'http://xkcd.com/1199/'
+    @item1[:url] = 'http://xkcd.com/1199/'
+    @item1[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." /&gt;}
+    @item1[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
+    @item1[:entry_id] = 'http://xkcd.com/1199/'
+
+    @entry1 = double 'entry'
+    @entry1.stub(:title).and_return @item1[:title]
+    @entry1.stub(:url).and_return @item1[:url]
+    @entry1.stub(:summary).and_return @item1[:summary]
+    @entry1.stub(:published).and_return @item1[:published]
+    @entry1.stub(:entry_id).and_return @item1[:entry_id]
 
     @item2={}
     @item2[:title] = 'Geologist'
-    @item2[:link] = 'http://xkcd.com/1198/'
-    @item2[:description] = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" /&gt;}
-    @item2[:pubDate ]= 'Fri, 12 Apr 2013 04:00:00 -0000'
-    @item2[:guid] = 'http://xkcd.com/1198/'
+    @item2[:url] = 'http://xkcd.com/1198/'
+    @item2[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" /&gt;}
+    @item2[:published ]= 'Fri, 12 Apr 2013 04:00:00 -0000'
+    @item2[:entry_id] = 'http://xkcd.com/1198/'
+
+    @entry2 = double 'entry'
+    @entry2.stub(:title).and_return @item2[:title]
+    @entry2.stub(:url).and_return @item2[:url]
+    @entry2.stub(:summary).and_return @item2[:summary]
+    @entry2.stub(:published).and_return @item2[:published]
+    @entry2.stub(:entry_id).and_return @item2[:entry_id]
 
     feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -26,24 +40,28 @@ describe Feed do
     <language>en</language>
     <item>
       <title>#{@item1[:title]}</title>
-      <link>#{@item1[:link]}</link>
+      <link>#{@item1[:url]}</link>
       <description>#{@item1[:description]}</description>
-      <pubDate>#{@item1[:pubDate]}</pubDate>
-      <guid>#{@item1[:guid]}</guid>
+      <pubDate>#{@item1[:summary]}</pubDate>
+      <guid>#{@item1[:entry_id]}</guid>
     </item>
     <item>
       <title>#{@item2[:title]}</title>
-      <link>#{@item2[:link]}</link>
-      <description>#{@item2[:description]}</description>
-      <pubDate>#{@item2[:pubDate]}</pubDate>
-      <guid>#{@item2[:guid]}</guid>
+      <link>#{@item2[:url]}</link>
+      <description>#{@item2[:summary]}</description>
+      <pubDate>#{@item2[:published]}</pubDate>
+      <guid>#{@item2[:entry_id]}</guid>
     </item>
   </channel>
 </rss>
 FEED_XML
 
+    @parsed_feed = double 'feed', entries: [@entry1, @entry2]
+    @parsed_feed.stub :sanitize_entries!
+    @feed_reader = double 'feedzirra', fetch_and_parse: @parsed_feed
+
     @feed = FactoryGirl.create :feed
-    @feed.stub(:open).and_return feed_xml
+    @feed.feed_reader = @feed_reader
   end
 
   context 'user suscriptions' do
@@ -99,34 +117,34 @@ FEED_XML
   context 'rss' do
 
     it 'downloads the feed XML' do
-      @feed.should_receive(:open)
-      @feed.items
+      @feed_reader.should_receive(:fetch_and_parse).with @feed.url
+      @feed.entries
     end
 
     it 'returns the right items' do
-      items = @feed.items
+      items = @feed.entries
       items.size.should eq 2
 
       items[0].title.should eq @item1[:title]
-      items[0].link.should eq @item1[:link]
-      items[0].description.should eq CGI.unescapeHTML(@item1[:description])
-      items[0].pubDate.should eq @item1[:pubDate]
-      items[0].guid.content.should eq @item1[:guid]
+      items[0].url.should eq @item1[:url]
+      items[0].summary.should eq @item1[:summary]
+      items[0].published.should eq @item1[:published]
+      items[0].entry_id.should eq @item1[:entry_id]
 
       items[1].title.should eq @item2[:title]
-      items[1].link.should eq @item2[:link]
-      items[1].description.should eq CGI.unescapeHTML(@item2[:description])
-      items[1].pubDate.should eq @item2[:pubDate]
-      items[1].guid.content.should eq @item2[:guid]
+      items[1].url.should eq @item2[:url]
+      items[1].summary.should eq @item2[:summary]
+      items[1].published.should eq @item2[:published]
+      items[1].entry_id.should eq @item2[:entry_id]
     end
 
     it 'sanitizes items' do
       item={}
       item[:title] = 'Silence&lt;script&gt;alert("pwned!");&lt;/script&gt;'
-      item[:link] = 'http://xkcd.com/1199/&lt;script&gt;alert("pwned!");&lt;/script&gt;'
-      item[:description] = %{&lt;script&gt;alert("pwned!");&lt;/script&gt;&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." /&gt;}
-      item[:pubDate ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
-      item[:guid] = '&lt;script&gt;alert("pwned!");&lt;/script&gt;http://xkcd.com/1199/'
+      item[:url] = 'http://xkcd.com/1199/&lt;script&gt;alert("pwned!");&lt;/script&gt;'
+      item[:summary] = %{&lt;script&gt;alert("pwned!");&lt;/script&gt;&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." /&gt;}
+      item[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
+      item[:entry_id] = '&lt;script&gt;alert("pwned!");&lt;/script&gt;http://xkcd.com/1199/'
 
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -138,10 +156,10 @@ FEED_XML
     <language>en</language>
     <item>
       <title>#{item[:title]}</title>
-      <link>#{item[:link]}</link>
-      <description>#{item[:description]}</description>
-      <pubDate>#{item[:pubDate]}</pubDate>
-      <guid>#{item[:guid]}</guid>
+      <link>#{item[:url]}</link>
+      <description>#{item[:summary]}</description>
+      <pubDate>#{item[:published]}</pubDate>
+      <guid>#{item[:entry_id]}</guid>
     </item>
   </channel>
 </rss>
@@ -151,17 +169,16 @@ FEED_XML
 
       sanitized_item={}
       sanitized_item[:title] = 'Silence'
-      sanitized_item[:link] = 'http://xkcd.com/1199/'
-      sanitized_item[:description] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." /&gt;}
-      sanitized_item[:pubDate ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
-      sanitized_item[:guid] = 'http://xkcd.com/1199/'
+      sanitized_item[:url] = 'http://xkcd.com/1199/'
+      sanitized_item[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." /&gt;}
+      sanitized_item[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
+      sanitized_item[:entry_id] = 'http://xkcd.com/1199/'
 
-      items = @feed.items
+      items = @feed.entries
       feed_item = items[0]
       feed_item.title.should eq sanitized_item[:title]
-      feed_item.link.should eq sanitized_item[:link]
-      feed_item.description.should eq CGI.unescapeHTML(sanitized_item[:description])
-      feed_item.guid.content.should eq sanitized_item[:guid]
+      feed_item.url.should eq sanitized_item[:url]
+      feed_item.summary.should eq sanitized_item[:summary]
     end
 
   end

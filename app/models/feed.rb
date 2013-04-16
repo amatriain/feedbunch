@@ -1,5 +1,4 @@
-require 'open-uri'
-require 'rss'
+require 'feedzirra'
 
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which a user is suscribed.
@@ -25,29 +24,22 @@ class Feed < ActiveRecord::Base
   validates :url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
   validates :title, presence: true
 
+  # Class to be used for feed downloading an parsing. It defaults to Feedzirra::Feed.
+  # During unit testing it can be switched with a mock object.
+  attr_writer :feed_reader
+
   ##
-  # Return items in the feed.
+  # Return entries in the feed.
   #
-  # The following fields of each item are sanitized using ActionView::Helpers::SanitizeHelper :
-  #
-  # - title
-  # - link
-  # - description
-  # - guid
+  # All fields are sanitized before returning them
 
-  def items
-    feed_xml = open self.url
-    parsed_feed = RSS::Parser.parse feed_xml
-    items = parsed_feed.try :items
+  def entries
+    # feed_reader defaults to Feedzirra::Feed, except if it's already been given another value (which happens
+    # during unit testing)
+    feed_reader = @feed_reader || Feedzirra::Feed
 
-    # Sanitize relevant item fields
-    items.each do |item|
-      item.title = sanitize item.title
-      item.link = sanitize item.link
-      item.description = sanitize item.description
-      item.guid.content = sanitize item.guid.content
-    end
-
-    return items
+    feed = feed_reader.fetch_and_parse self.url
+    feed.sanitize_entries!
+    return feed.entries
   end
 end

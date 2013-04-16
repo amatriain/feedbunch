@@ -13,23 +13,23 @@
       </div>
 
       <ul class="nav nav-tabs nav-stacked">
-        <% feed.items.each do |item| %>
+        <% feed.entries.each do |entry| %>
           <% item_id = "item#{(Random.rand * 100000000).round}" %>
           <li>
             <a href="#" data-toggle="collapse" data-target="#<%= item_id %>">
-              <%= item.title %>
-              <span class="pull-right"><%= l item.pubDate, format: :short %></span>
+              <%= entry.title %>
+              <span class="pull-right"><%= l entry.published, format: :short %></span>
             </a>
 
             <div class="collapse" id="<%= item_id %>">
               <div class="item-content">
                 <p class="lead">
-                  <%= link_to item.title, item.link, target: '_blank' %>
-                  <span class="pull-right"><%= link_to item.link, target: '_blank', title: t('.open_new_tab'), alt: t('.open_new_tab') do %><i class="icon-external-link"></i><% end %></span>
+                  <%= link_to entry.title, entry.url, target: '_blank' %>
+                  <span class="pull-right"><%= link_to entry.url, target: '_blank', title: t('.open_new_tab'), alt: t('.open_new_tab') do %><i class="icon-external-link"></i><% end %></span>
                 </p>
 
-                <p class="hidden"><%= item.guid.content %></p>
-                <%= item.description %>
+                <p class="hidden"><%= entry.entry_id %></p>
+                <%= raw entry.summary %>
               </div>
             </div>
           </li>
