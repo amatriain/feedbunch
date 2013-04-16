@@ -54,6 +54,9 @@ gem 'log4r'
 # Form generator compatible with Bootstrap
 gem 'simple_form'
 
+# RSS/Atom parser
+gem 'feedzirra', git: 'git://github.com/pauldix/feedzirra.git', tag: 'v0.2.0.rc2'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'
