@@ -25,7 +25,7 @@ class Feed < ActiveRecord::Base
   validates :url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
   validates :title, presence: true
 
-  # Class to be used for feed downloading an parsing. It defaults to Feedzirra::Feed.
+  # Class to be used for feed downloading and parsing. It defaults to RestClient.
   # During unit testing it can be switched with a mock object, so that no actual HTTP calls are made.
   attr_writer :http_client
 
@@ -35,7 +35,7 @@ class Feed < ActiveRecord::Base
   # All fields are sanitized before returning them
 
   def entries
-    # feed_fetcher defaults to RestClient, except if it's already been given another value (which happens
+    # http_client defaults to RestClient, except if it's already been given another value (which happens
     # during unit testing, in which a mocked is used instead of the real class)
     http_client = @http_client || RestClient
     feed_xml = http_client.get self.url
