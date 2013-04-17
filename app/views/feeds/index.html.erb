@@ -13,7 +13,7 @@
       </div>
 
       <ul class="nav nav-tabs nav-stacked">
-        <% feed.entries.each do |entry| %>
+        <% feed.fetchEntries.each do |entry| %>
           <% item_id = "item#{(Random.rand * 100000000).round}" %>
           <li>
             <a href="#" data-toggle="collapse" data-target="#<%= item_id %>">

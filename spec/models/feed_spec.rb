@@ -37,6 +37,19 @@ describe Feed do
     end
   end
 
+  context 'feed entries' do
+    it 'deletes entries when deleting a feed' do
+      entry1 = FactoryGirl.create :entry
+      entry2 = FactoryGirl.create :entry
+      @feed.entries << entry1 << entry2
+
+      Entry.count.should eq 2
+
+      @feed.destroy
+      Entry.count.should eq 0
+    end
+  end
+
   context 'user suscriptions' do
     before :each do
       @user1 = FactoryGirl.create :user
@@ -105,11 +118,11 @@ FEED_XML
 
     it 'downloads the feed XML' do
       @http_client.should_receive(:get).with @feed.url
-      @feed.entries
+      @feed.fetchEntries
     end
 
     it 'returns the right items' do
-      items = @feed.entries
+      items = @feed.fetchEntries
       items.size.should eq 2
 
       items[0].title.should eq @item1[:title]
@@ -162,7 +175,7 @@ FEED_XML
       sanitized_item[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
       sanitized_item[:entry_id] = 'http://xkcd.com/1199/'
 
-      items = @feed.entries
+      items = @feed.fetchEntries
       feed_item = items[0]
       feed_item.title.should eq sanitized_item[:title]
       feed_item.url.should eq sanitized_item[:url]
@@ -218,11 +231,11 @@ FEED_XML
 
     it 'downloads the feed XML' do
       @http_client.should_receive(:get).with @feed.url
-      @feed.entries
+      @feed.fetchEntries
     end
 
     it 'returns the right items' do
-      items = @feed.entries
+      items = @feed.fetchEntries
       items.size.should eq 2
 
       items[0].title.should eq @item1[:title]
@@ -273,7 +286,7 @@ FEED_XML
       sanitized_item[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
       sanitized_item[:entry_id] = 'http://xkcd.com/1199/'
 
-      items = @feed.entries
+      items = @feed.fetchEntries
       feed_item = items[0]
       feed_item.title.should eq sanitized_item[:title]
       feed_item.url.should eq sanitized_item[:url]

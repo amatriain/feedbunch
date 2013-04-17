@@ -7,6 +7,8 @@ require 'rest_client'
 # Many users can be suscribed to a single feed, and a single user can be suscribed to many feeds (many-to-many
 # relationship).
 #
+# Each user can have many entries.
+#
 # Each feed, identified by its URL, can be present at most once in the database. Different feeds can have the same
 # title, as long as they have different URLs.
 #
@@ -21,7 +23,10 @@ class Feed < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
   attr_accessible :url
+
   has_and_belongs_to_many :users
+  has_many :entries, dependent: :destroy
+
   validates :url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
   validates :title, presence: true
 
@@ -30,11 +35,11 @@ class Feed < ActiveRecord::Base
   attr_writer :http_client
 
   ##
-  # Return entries in the feed.
+  # Fetch and return all entries currently in the feed.
   #
   # All fields are sanitized before returning them
 
-  def entries
+  def fetchEntries
     # http_client defaults to RestClient, except if it's already been given another value (which happens
     # during unit testing, in which a mocked is used instead of the real class)
     http_client = @http_client || RestClient
