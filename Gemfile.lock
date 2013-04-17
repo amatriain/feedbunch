@@ -239,6 +239,7 @@ DEPENDENCIES
   nokogiri
   pg
   rails (= 3.2.13)
+  rest-client
   rspec-rails (~> 2.0)
   sass-rails (~> 3.2.3)
   selenium-webdriver

@@ -1,4 +1,5 @@
 require 'feedzirra'
+require 'rest_client'
 
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which a user is suscribed.
@@ -26,7 +27,7 @@ class Feed < ActiveRecord::Base
 
   # Class to be used for feed downloading an parsing. It defaults to Feedzirra::Feed.
   # During unit testing it can be switched with a mock object, so that no actual HTTP calls are made.
-  attr_writer :feed_fetcher
+  attr_writer :http_client
 
   ##
   # Return entries in the feed.
@@ -34,10 +35,10 @@ class Feed < ActiveRecord::Base
   # All fields are sanitized before returning them
 
   def entries
-    # feed_fetcher defaults to Feedzirra::Feed, except if it's already been given another value (which happens
-    # during unit testing)
-    feed_fetcher = @feed_fetcher || Feedzirra::Feed
-    feed_xml = feed_fetcher.fetch_raw self.url
+    # feed_fetcher defaults to RestClient, except if it's already been given another value (which happens
+    # during unit testing, in which a mocked is used instead of the real class)
+    http_client = @http_client || RestClient
+    feed_xml = http_client.get self.url
 
     # We use the actual Feedzirra::Feed class to parse, never a mock.
     # The motivation behind using a mock for fetching the XML during unit testing is not making HTTP

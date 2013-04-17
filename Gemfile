@@ -57,6 +57,9 @@ gem 'simple_form'
 # RSS/Atom parser
 gem 'feedzirra', git: 'git://github.com/pauldix/feedzirra.git', tag: 'v0.2.0.rc2'
 
+# HTTP client
+gem 'rest-client'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'

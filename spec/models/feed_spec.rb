@@ -99,12 +99,12 @@ describe Feed do
 </rss>
 FEED_XML
 
-      @feed_fetcher = double 'feedzirra', fetch_raw: feed_xml
-      @feed.feed_fetcher = @feed_fetcher
+      @http_client = double 'restclient', get: feed_xml
+      @feed.http_client = @http_client
     end
 
     it 'downloads the feed XML' do
-      @feed_fetcher.should_receive(:fetch_raw).with @feed.url
+      @http_client.should_receive(:get).with @feed.url
       @feed.entries
     end
 
@@ -152,8 +152,8 @@ FEED_XML
 </rss>
 FEED_XML
 
-      @feed_fetcher = double 'feedzirra', fetch_raw: feed_xml
-      @feed.feed_fetcher = @feed_fetcher
+      @http_client = double 'restclient', get: feed_xml
+      @feed.http_client = @http_client
 
       sanitized_item={}
       sanitized_item[:title] = 'Silence'
@@ -212,12 +212,12 @@ FEED_XML
 </feed>
 FEED_XML
 
-      @feed_fetcher = double 'feedzirra', fetch_raw: feed_xml
-      @feed.feed_fetcher = @feed_fetcher
+      @http_client = double 'restclient', get: feed_xml
+      @feed.http_client = @http_client
     end
 
     it 'downloads the feed XML' do
-      @feed_fetcher.should_receive(:fetch_raw).with @feed.url
+      @http_client.should_receive(:get).with @feed.url
       @feed.entries
     end
 
@@ -263,8 +263,8 @@ FEED_XML
 </feed>
 FEED_XML
 
-      @feed_fetcher = double 'feedzirra', fetch_raw: feed_xml
-      @feed.feed_fetcher = @feed_fetcher
+      @http_client = double 'restclient', get: feed_xml
+      @feed.http_client = @http_client
 
       sanitized_item={}
       sanitized_item[:title] = 'Silence'
