@@ -25,7 +25,7 @@ class Feed < ActiveRecord::Base
   validates :url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
   validates :title, presence: true
 
-  # Class to be used for feed downloading and parsing. It defaults to RestClient.
+  # Class to be used for feed downloading. It defaults to RestClient.
   # During unit testing it can be switched with a mock object, so that no actual HTTP calls are made.
   attr_writer :http_client
 
