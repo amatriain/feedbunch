@@ -10,7 +10,11 @@
     <% if feed.present? %>
       <div class="page-header">
         <h1>
-          <%= sanitize link_to(feed.title, feed.url) %>
+          <% if feed.url.present? %>
+            <%= sanitize link_to(feed.title, feed.url, target:'_blank') %>
+          <% else %>
+            <%= sanitize feed.title %>
+          <% end %>
         </h1>
       </div>
 
@@ -26,7 +30,7 @@
             <div class="collapse" id="<%= item_id %>">
               <div class="item-content">
                 <p class="lead">
-                  <%= sanitize link_to entry.title, entry.url, target: '_blank' %>
+                  <%= sanitize link_to(entry.title, entry.url, target: '_blank') %>
                   <span class="pull-right">
                     <%= sanitize link_to( content_tag(:i, '', class:'icon-external-link'),
                                           entry.url,

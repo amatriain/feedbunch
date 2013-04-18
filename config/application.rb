@@ -74,6 +74,12 @@ module Openreader
     config.generators do |g|
       g.fixture_replacement :factory_girl
     end
+
+    # Add "target" html attribute to the whitelist when using the sanitize helpers.
+    # This is necessary because otherwise all "target" attributes are filtered out, which means that the app cannot
+    # create links with target="_blank" that open in a new tab.
+    # We really want links in feed entries to open in a new tab!
+    config.action_view.sanitized_allowed_attributes = %w(target)
   end
 
   # Use Log4r instead of the default Rails logger

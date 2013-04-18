@@ -8,7 +8,7 @@ describe Feed do
 
   context 'validations' do
     it 'accepts valid URLs' do
-      @feed.url = 'http://www.xkcd.com/rss.xml'
+      @feed.url = 'http://www.xkcd.com'
       @feed.valid?.should be_true
     end
 
@@ -17,11 +17,38 @@ describe Feed do
       @feed.valid?.should be_false
     end
 
-    it 'does not accept an empty URL' do
+    it 'accepts an empty URL' do
       @feed.url = ''
-      @feed.valid?.should be_false
+      @feed.valid?.should be_true
       @feed.url = nil
+      @feed.valid?.should be_true
+    end
+
+    it 'accepts duplicate URLs' do
+      feed_dupe = FactoryGirl.build :feed, url: @feed.url
+      feed_dupe.valid?.should be_true
+    end
+
+    it 'accepts valid fetch URLs' do
+      @feed.fetch_url = 'http://www.xkcd.com/rss.xml'
+      @feed.valid?.should be_true
+    end
+
+    it 'does not accept invalid fetch URLs' do
+      @feed.fetch_url = 'invalid_url'
       @feed.valid?.should be_false
+    end
+
+    it 'does not accept an empty fetch URL' do
+      @feed.fetch_url = ''
+      @feed.valid?.should be_false
+      @feed.fetch_url = nil
+      @feed.valid?.should be_false
+    end
+
+    it 'does not accept duplicate fetch URLs' do
+      feed_dupe = FactoryGirl.build :feed, fetch_url: @feed.fetch_url
+      feed_dupe.valid?.should be_false
     end
 
     it 'does not accept an empty title' do
@@ -31,10 +58,7 @@ describe Feed do
       @feed.valid?.should be_false
     end
 
-    it 'does not accept duplicate URLs' do
-      feed_dupe = FactoryGirl.build :feed, url: @feed.url
-      feed_dupe.valid?.should be_false
-    end
+
   end
 
   context 'sanitization' do
@@ -46,11 +70,18 @@ describe Feed do
       feed.title.should eq sanitized_title
     end
 
-    it 'sanitized url' do
+    it 'sanitizes url' do
       unsanitized_url = "http://xkcd.com<script>alert('pwned!');</script>"
       sanitized_url = 'http://xkcd.com'
       feed = FactoryGirl.create :feed, url: unsanitized_url
       feed.url.should eq sanitized_url
+    end
+
+    it 'sanitizes fetch url' do
+      unsanitized_url = "http://xkcd.com<script>alert('pwned!');</script>"
+      sanitized_url = 'http://xkcd.com'
+      feed = FactoryGirl.create :feed, fetch_url: unsanitized_url
+      feed.fetch_url.should eq sanitized_url
     end
 
   end
@@ -135,7 +166,7 @@ FEED_XML
     end
 
     it 'downloads the feed XML' do
-      @http_client.should_receive(:get).with @feed.url
+      @http_client.should_receive(:get).with @feed.fetch_url
       @feed.fetchEntries
     end
 
@@ -248,7 +279,7 @@ FEED_XML
     end
 
     it 'downloads the feed XML' do
-      @http_client.should_receive(:get).with @feed.url
+      @http_client.should_receive(:get).with @feed.fetch_url
       @feed.fetchEntries
     end
 
