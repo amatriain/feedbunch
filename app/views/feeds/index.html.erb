@@ -19,7 +19,8 @@
       </div>
 
       <ul class="nav nav-tabs nav-stacked">
-        <% feed.fetch.each do |entry| %>
+        <% feed.fetch %>
+        <% feed.entries.each do |entry| %>
           <% item_id = "item#{(Random.rand * 100000000).round}" %>
           <li>
             <a href="#" data-toggle="collapse" data-target="#<%= item_id %>">
@@ -40,7 +41,7 @@
                   </span>
                 </p>
 
-                <p class="hidden"><%= sanitize entry.entry_id %></p>
+                <p class="hidden"><%= sanitize entry.guid %></p>
                 <%= sanitize entry.summary %>
               </div>
             </div>

@@ -50,26 +50,30 @@ class Feed < ActiveRecord::Base
     http_client = @http_client || RestClient
     feed_xml = http_client.get self.fetch_url
 
-    # We use the actual Feedzirra::Feed class to parse, never a mock.
-    # The motivation behind using a mock for fetching the XML during unit testing is not making HTTP
-    # calls during testing, but we can always use the real parser even during testing.
-    feed_parsed = Feedzirra::Feed.parse feed_xml
+    if feed_xml.present?
+      # We use the actual Feedzirra::Feed class to parse, never a mock.
+      # The motivation behind using a mock for fetching the XML during unit testing is not making HTTP
+      # calls during testing, but we can always use the real parser even during testing.
+      feed_parsed = Feedzirra::Feed.parse feed_xml
 
-    # Save entries in the database
-    feed_parsed.entries.each do |f|
-      e = Entry.new
-      e.title = f.title
-      e.url = f.url
-      e.author = f.author
-      e.content = f.content
-      e.summary = f.summary
-      e.published = f.published
-      e.guid = f.entry_id
-      self.entries << e
+      # Save entries in the database
+      feed_parsed.entries.each do |f|
+        e = Entry.new
+        e.title = f.title
+        e.url = f.url
+        e.author = f.author
+        e.content = f.content
+        e.summary = f.summary
+        e.published = f.published
+        e.guid = f.entry_id
+        self.entries << e
+      end
+
+    else
+      Rails.logger.warn "Could not download feed from URL: #{self.fetch_url}"
     end
+
     return true
-  rescue
-    return false
   end
 
   private

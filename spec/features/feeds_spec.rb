@@ -10,8 +10,8 @@ describe 'feeds' do
 
     before :each do
       @user = FactoryGirl.create :user
-      @feed1 = FactoryGirl.create :feed, url: 'http://www.meneame.net/rss2.php'
-      @feed2 = FactoryGirl.create :feed, url: 'http://reddit.com/.rss'
+      @feed1 = FactoryGirl.create :feed, fetch_url: 'http://www.meneame.net/rss2.php'
+      @feed2 = FactoryGirl.create :feed, fetch_url: 'http://reddit.com/.rss'
       @user.feeds << @feed1
 
       # TODO no real HTTP calls should be made here!!!
