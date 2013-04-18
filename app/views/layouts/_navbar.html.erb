@@ -6,7 +6,7 @@
         <li>
           <%= link_to feeds_path, id: 'feeds' do %>
             <i class="icon-rss"></i>
-            <%= t '.my_feeds' %>
+            <%= t 'layouts.application.my_feeds' %>
           <% end %>
         </li>
       </ul>
@@ -14,13 +14,13 @@
         <li>
           <%=  link_to edit_user_registration_path, id: 'my_account' do %>
             <i class="icon-user"></i>
-            <%= t '.my_account' %>
+            <%= t 'layouts.application.my_account' %>
           <% end %>
         </li>
         <li class="divider-vertical"></li>
         <li>
           <%= link_to destroy_user_session_path, :method => :delete, id: 'sign_out' do %>
-            <%= t '.logout' %>
+            <%= t 'layouts.application.logout' %>
             <i class="icon-signout"></i>
           <% end %>
         </li>
