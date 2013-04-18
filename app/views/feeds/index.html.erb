@@ -9,7 +9,9 @@
     <% feed = Feed.first %>
     <% if feed.present? %>
       <div class="page-header">
-        <h1><%= feed.title %></h1>
+        <h1>
+          <%= sanitize link_to(feed.title, feed.url) %>
+        </h1>
       </div>
 
       <ul class="nav nav-tabs nav-stacked">
@@ -17,19 +19,25 @@
           <% item_id = "item#{(Random.rand * 100000000).round}" %>
           <li>
             <a href="#" data-toggle="collapse" data-target="#<%= item_id %>">
-              <%= entry.title %>
+              <%= sanitize entry.title %>
               <span class="pull-right"><%= l entry.published, format: :short %></span>
             </a>
 
             <div class="collapse" id="<%= item_id %>">
               <div class="item-content">
                 <p class="lead">
-                  <%= link_to entry.title, entry.url, target: '_blank' %>
-                  <span class="pull-right"><%= link_to entry.url, target: '_blank', title: t('.open_new_tab'), alt: t('.open_new_tab') do %><i class="icon-external-link"></i><% end %></span>
+                  <%= sanitize link_to entry.title, entry.url, target: '_blank' %>
+                  <span class="pull-right">
+                    <%= sanitize link_to( content_tag(:i, '', class:'icon-external-link'),
+                                          entry.url,
+                                          target: '_blank',
+                                          title: t('.open_new_tab'),
+                                          alt: t('.open_new_tab')) %>
+                  </span>
                 </p>
 
-                <p class="hidden"><%= entry.entry_id %></p>
-                <%= raw entry.summary %>
+                <p class="hidden"><%= sanitize entry.entry_id %></p>
+                <%= sanitize entry.summary %>
               </div>
             </div>
           </li>
