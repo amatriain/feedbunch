@@ -37,6 +37,24 @@ describe Feed do
     end
   end
 
+  context 'sanitization' do
+
+    it 'sanitizes title' do
+      unsanitized_title = '<script>alert("pwned!");</script>title'
+      sanitized_title = 'title'
+      feed = FactoryGirl.create :feed, title: unsanitized_title
+      feed.title.should eq sanitized_title
+    end
+
+    it 'sanitized url' do
+      unsanitized_url = "http://xkcd.com<script>alert('pwned!');</script>"
+      sanitized_url = 'http://xkcd.com'
+      feed = FactoryGirl.create :feed, url: unsanitized_url
+      feed.url.should eq sanitized_url
+    end
+
+  end
+
   context 'feed entries' do
     it 'deletes entries when deleting a feed' do
       entry1 = FactoryGirl.create :entry

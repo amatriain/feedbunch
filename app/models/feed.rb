@@ -18,6 +18,8 @@ require 'rest_client'
 #
 # Both title and URL are mandatory. URLs are validated with the following regex:
 #   /\Ahttps?:\/\/.+\..+\z/
+#
+# Title and URL are sanitized (with ActionView::Helpers::SanitizeHelper) before validation.
 
 class Feed < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -33,6 +35,8 @@ class Feed < ActiveRecord::Base
   # Class to be used for feed downloading. It defaults to RestClient.
   # During unit testing it can be switched with a mock object, so that no actual HTTP calls are made.
   attr_writer :http_client
+
+  before_validation :sanitize_fields
 
   ##
   # Fetch and return all entries currently in the feed.
@@ -56,5 +60,12 @@ class Feed < ActiveRecord::Base
     feed_parsed.entries.each {|entry| entry.url = sanitize entry.url}
 
     return feed_parsed.entries
+  end
+
+  private
+
+  def sanitize_fields
+    self.title = sanitize self.title
+    self.url = sanitize self.url
   end
 end

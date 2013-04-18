@@ -50,4 +50,13 @@ describe Entry do
       entry_dupe.should_not be_valid
     end
   end
+
+  context 'sanitization' do
+    it 'sanitizes title'
+    it 'sanitizes url'
+    it 'sanitizes author'
+    it 'sanitizes content'
+    it 'sanitizes summary'
+    it 'sanitizes guid'
+  end
 end
