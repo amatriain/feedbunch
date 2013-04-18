@@ -118,23 +118,34 @@ describe Feed do
 
   end
 
-  context 'rss' do
+  context 'fetching' do
 
     before :each do
-      @item1={}
-      @item1[:title] = 'Silence'
-      @item1[:url] = 'http://xkcd.com/1199/'
-      @item1[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
-      @item1[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
-      @item1[:entry_id] = 'http://xkcd.com/1199/'
+      @entry1 = FactoryGirl.build :entry
+      @entry1.title = 'Silence'
+      @entry1.url = 'http://xkcd.com/1199/'
+      @entry1.summary = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
+      @entry1.published = 'Mon, 15 Apr 2013 04:00:00 -0000'
+      @entry1.guid = 'http://xkcd.com/1199/'
 
-      @item2={}
-      @item2[:title] = 'Geologist'
-      @item2[:url] = 'http://xkcd.com/1198/'
-      @item2[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;"&gt;}
-      @item2[:published ]= 'Fri, 12 Apr 2013 04:00:00 -0000'
-      @item2[:entry_id] = 'http://xkcd.com/1198/'
+      @entry2 = FactoryGirl.build :entry
+      @entry2.title = 'Geologist'
+      @entry2.url = 'http://xkcd.com/1198/'
+      @entry2.summary = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;"&gt;}
+      @entry2.published = 'Fri, 12 Apr 2013 04:00:00 -0000'
+      @entry2.guid = 'http://xkcd.com/1198/'
 
+      @http_client = double 'restclient'
+      @http_client.stub :get
+      @feed.http_client = @http_client
+    end
+
+    it 'downloads the feed XML' do
+      @http_client.should_receive(:get).with @feed.fetch_url
+      @feed.fetch
+    end
+
+    it 'fetches the right items from an RSS 2.0 feed' do
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
@@ -144,112 +155,48 @@ describe Feed do
     <description>xkcd.com: A webcomic of romance and math humor.</description>
     <language>en</language>
     <item>
-      <title>#{@item1[:title]}</title>
-      <link>#{@item1[:url]}</link>
-      <description>#{@item1[:summary]}</description>
-      <pubDate>#{@item1[:published]}</pubDate>
-      <guid>#{@item1[:entry_id]}</guid>
+      <title>#{@entry1.title}</title>
+      <link>#{@entry1.url}</link>
+      <description>#{@entry1.summary}</description>
+      <pubDate>#{@entry1.published}</pubDate>
+      <guid>#{@entry1.guid}</guid>
     </item>
     <item>
-      <title>#{@item2[:title]}</title>
-      <link>#{@item2[:url]}</link>
-      <description>#{@item2[:summary]}</description>
-      <pubDate>#{@item2[:published]}</pubDate>
-      <guid>#{@item2[:entry_id]}</guid>
+      <title>#{@entry2.title}</title>
+      <link>#{@entry2.url}</link>
+      <description>#{@entry2.summary}</description>
+      <pubDate>#{@entry2.published}</pubDate>
+      <guid>#{@entry2.guid}</guid>
     </item>
   </channel>
 </rss>
 FEED_XML
 
-      @http_client = double 'restclient', get: feed_xml
-      @feed.http_client = @http_client
+      @http_client.stub get: feed_xml
+
+      @feed.fetch
+      @feed.entries.count.should eq 2
+      
+      entry1 = @feed.entries[0]
+      entry1.title.should eq @entry1.title
+      entry1.url.should eq @entry1.url
+      entry1.author.should eq @entry1.author
+      entry1.content.should eq @entry1.content
+      entry1.summary.should eq CGI.unescapeHTML(@entry1.summary)
+      entry1.published.should eq @entry1.published
+      entry1.guid.should eq @entry1.guid
+
+      entry2 = @feed.entries[1]
+      entry2.title.should eq @entry2.title
+      entry2.url.should eq @entry2.url
+      entry2.author.should eq @entry2.author
+      entry2.content.should eq @entry2.content
+      entry2.summary.should eq CGI.unescapeHTML(@entry2.summary)
+      entry2.published.should eq @entry2.published
+      entry2.guid.should eq @entry2.guid
     end
 
-    it 'downloads the feed XML' do
-      @http_client.should_receive(:get).with @feed.fetch_url
-      @feed.fetchEntries
-    end
-
-    it 'returns the right items' do
-      items = @feed.fetchEntries
-      items.size.should eq 2
-
-      items[0].title.should eq @item1[:title]
-      items[0].url.should eq @item1[:url]
-      items[0].summary.should eq CGI.unescapeHTML(@item1[:summary])
-      items[0].published.should eq @item1[:published]
-      items[0].entry_id.should eq @item1[:entry_id]
-
-      items[1].title.should eq @item2[:title]
-      items[1].url.should eq @item2[:url]
-      items[1].summary.should eq CGI.unescapeHTML(@item2[:summary])
-      items[1].published.should eq @item2[:published]
-      items[1].entry_id.should eq @item2[:entry_id]
-    end
-
-    it 'sanitizes items' do
-      item={}
-      item[:title] = 'Silence&lt;script&gt;alert("pwned!");&lt;/script&gt;'
-      item[:url] = 'http://xkcd.com/1199/&lt;script&gt;alert("pwned!");&lt;/script&gt;'
-      item[:summary] = %{&lt;script&gt;alert("pwned!");&lt;/script&gt;&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
-      item[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
-      item[:entry_id] = '&lt;script&gt;alert("pwned!");&lt;/script&gt;http://xkcd.com/1199/'
-
-      feed_xml = <<FEED_XML
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0">
-  <channel>
-    <title>xkcd.com</title>
-    <link>http://xkcd.com/</link>
-    <description>xkcd.com: A webcomic of romance and math humor.</description>
-    <language>en</language>
-    <item>
-      <title>#{item[:title]}</title>
-      <link>#{item[:url]}</link>
-      <description>#{item[:summary]}</description>
-      <pubDate>#{item[:published]}</pubDate>
-      <guid>#{item[:entry_id]}</guid>
-    </item>
-  </channel>
-</rss>
-FEED_XML
-
-      @http_client = double 'restclient', get: feed_xml
-      @feed.http_client = @http_client
-
-      sanitized_item={}
-      sanitized_item[:title] = 'Silence'
-      sanitized_item[:url] = 'http://xkcd.com/1199/'
-      sanitized_item[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
-      sanitized_item[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
-      sanitized_item[:entry_id] = 'http://xkcd.com/1199/'
-
-      items = @feed.fetchEntries
-      feed_item = items[0]
-      feed_item.title.should eq sanitized_item[:title]
-      feed_item.url.should eq sanitized_item[:url]
-      feed_item.summary.should eq CGI.unescapeHTML(sanitized_item[:summary])
-    end
-
-  end
-
-  context 'atom' do
-
-    before :each do
-      @item1={}
-      @item1[:title] = 'Silence'
-      @item1[:url] = 'http://xkcd.com/1199/'
-      @item1[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
-      @item1[:published ]= '2013-04-15T00:00:00Z'
-      @item1[:entry_id] = 'http://xkcd.com/1199/'
-
-      @item2={}
-      @item2[:title] = 'Geologist'
-      @item2[:url] = 'http://xkcd.com/1198/'
-      @item2[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;"&gt;}
-      @item2[:published ]= '2013-04-12T00:00:00Z'
-      @item2[:entry_id] = 'http://xkcd.com/1198/'
-
+    it 'fetches the right items from an Atom feed' do
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
@@ -258,89 +205,50 @@ FEED_XML
   <id>http://xkcd.com/</id>
   <updated>2013-04-15T00:00:00Z</updated>
   <entry>
-    <title>#{@item1[:title]}</title>
-    <link href="#{@item1[:url]}" rel="alternate" />
-    <updated>#{@item1[:published ]}</updated>
-    <id>#{@item1[:entry_id]}</id>
-    <summary type="html">#{@item1[:summary]}</summary>
+    <title>#{@entry1.title}</title>
+    <link href="#{@entry1.url}" rel="alternate" />
+    <updated>#{@entry1.published}</updated>
+    <id>#{@entry1.guid}</id>
+    <summary type="html">#{@entry1.summary}</summary>
   </entry>
   <entry>
-    <title>#{@item2[:title]}</title>
-    <link href="#{@item2[:url]}" rel="alternate" />
-    <updated>#{@item2[:published ]}</updated>
-    <id>#{@item2[:entry_id]}</id>
-    <summary type="html">#{@item2[:summary]}</summary>
+    <title>#{@entry2.title}</title>
+    <link href="#{@entry2.url}" rel="alternate" />
+    <updated>#{@entry2.published}</updated>
+    <id>#{@entry2.guid}</id>
+    <summary type="html">#{@entry2.summary}</summary>
   </entry>
 </feed>
 FEED_XML
 
-      @http_client = double 'restclient', get: feed_xml
-      @feed.http_client = @http_client
+      @http_client.stub get: feed_xml
+
+      @feed.fetch
+      @feed.entries.count.should eq 2
+
+      entry1 = @feed.entries[0]
+      entry1.title.should eq @entry1.title
+      entry1.url.should eq @entry1.url
+      entry1.author.should eq @entry1.author
+      entry1.content.should eq @entry1.content
+      entry1.summary.should eq CGI.unescapeHTML(@entry1.summary)
+      entry1.published.should eq @entry1.published
+      entry1.guid.should eq @entry1.guid
+
+      entry2 = @feed.entries[1]
+      entry2.title.should eq @entry2.title
+      entry2.url.should eq @entry2.url
+      entry2.author.should eq @entry2.author
+      entry2.content.should eq @entry2.content
+      entry2.summary.should eq CGI.unescapeHTML(@entry2.summary)
+      entry2.published.should eq @entry2.published
+      entry2.guid.should eq @entry2.guid
     end
 
-    it 'downloads the feed XML' do
-      @http_client.should_receive(:get).with @feed.fetch_url
-      @feed.fetchEntries
-    end
+    it 'tries to cache data using an etag'
 
-    it 'returns the right items' do
-      items = @feed.fetchEntries
-      items.size.should eq 2
+    it 'tries to cache data using last-modified'
 
-      items[0].title.should eq @item1[:title]
-      items[0].url.should eq @item1[:url]
-      items[0].summary.should eq CGI.unescapeHTML(@item1[:summary])
-      items[0].published.should eq @item1[:published]
-      items[0].entry_id.should eq @item1[:entry_id]
-
-      items[1].title.should eq @item2[:title]
-      items[1].url.should eq @item2[:url]
-      items[1].summary.should eq CGI.unescapeHTML(@item2[:summary])
-      items[1].published.should eq @item2[:published]
-      items[1].entry_id.should eq @item2[:entry_id]
-    end
-
-    it 'sanitizes items' do
-      item={}
-      item[:title] = 'Silence&lt;script&gt;alert("pwned!");&lt;/script&gt;'
-      item[:url] = 'http://xkcd.com/1199/&lt;script&gt;alert(quot;pwned!quot;);&lt;/script&gt;'
-      item[:summary] = %{&lt;script&gt;alert("pwned!");&lt;/script&gt;&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
-      item[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
-      item[:entry_id] = '&lt;script&gt;alert("pwned!");&lt;/script&gt;http://xkcd.com/1199/'
-
-      feed_xml = <<FEED_XML
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
-  <title>xkcd.com</title>
-  <link href="http://xkcd.com/" rel="alternate" />
-  <id>http://xkcd.com/</id>
-  <updated>2013-04-15T00:00:00Z</updated>
-  <entry>
-    <title>#{item[:title]}</title>
-    <link href="#{item[:url]}" rel="alternate" />
-    <updated>#{item[:published ]}</updated>
-    <id>#{item[:entry_id]}</id>
-    <summary type="html">#{item[:summary]}</summary>
-  </entry>
-</feed>
-FEED_XML
-
-      @http_client = double 'restclient', get: feed_xml
-      @feed.http_client = @http_client
-
-      sanitized_item={}
-      sanitized_item[:title] = 'Silence'
-      sanitized_item[:url] = 'http://xkcd.com/1199/'
-      sanitized_item[:summary] = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
-      sanitized_item[:published ]= 'Mon, 15 Apr 2013 04:00:00 -0000'
-      sanitized_item[:entry_id] = 'http://xkcd.com/1199/'
-
-      items = @feed.fetchEntries
-      feed_item = items[0]
-      feed_item.title.should eq sanitized_item[:title]
-      feed_item.url.should eq sanitized_item[:url]
-      feed_item.summary.should eq CGI.unescapeHTML(sanitized_item[:summary])
-    end
-
+    it 'updates entry if it is received again'
   end
 end

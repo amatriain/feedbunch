@@ -42,11 +42,9 @@ class Feed < ActiveRecord::Base
   before_validation :sanitize_fields
 
   ##
-  # Fetch and return all entries currently in the feed.
-  #
-  # All fields are sanitized before returning them
+  # Fetch the feed and save entries in the database.
 
-  def fetchEntries
+  def fetch
     # http_client defaults to RestClient, except if it's already been given another value (which happens
     # during unit testing, in which a mocked is used instead of the real class)
     http_client = @http_client || RestClient
@@ -56,13 +54,22 @@ class Feed < ActiveRecord::Base
     # The motivation behind using a mock for fetching the XML during unit testing is not making HTTP
     # calls during testing, but we can always use the real parser even during testing.
     feed_parsed = Feedzirra::Feed.parse feed_xml
-    feed_parsed.sanitize_entries!
 
-    # It seems Feedzirra doesn't sanitize the URL of entries for some reason. It's a field as susceptible of injection
-    # as any other, so we sanitize it ourselves
-    feed_parsed.entries.each {|entry| entry.url = sanitize entry.url}
-
-    return feed_parsed.entries
+    # Save entries in the database
+    feed_parsed.entries.each do |f|
+      e = Entry.new
+      e.title = f.title
+      e.url = f.url
+      e.author = f.author
+      e.content = f.content
+      e.summary = f.summary
+      e.published = f.published
+      e.guid = f.entry_id
+      self.entries << e
+    end
+    return true
+  rescue
+    return false
   end
 
   private
