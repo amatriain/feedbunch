@@ -18,3 +18,4 @@ en:
   feeds:
     index:
       open_new_tab: "Open in new tab"
+      refresh: "Refresh"
