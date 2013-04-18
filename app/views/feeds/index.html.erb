@@ -6,7 +6,7 @@
 
  <div class="span10">
     <%# TODO make the "feed" variable dynamically use the currently selected feed %>
-    <% feed = Feed.first %>
+    <% feed = @feeds.first %>
     <% if feed.present? %>
       <div class="page-header">
         <h1>
@@ -19,7 +19,6 @@
       </div>
 
       <ul class="nav nav-tabs nav-stacked">
-        <% feed.fetch %>
         <% feed.entries.each do |entry| %>
           <% item_id = "item#{(Random.rand * 100000000).round}" %>
           <li>
