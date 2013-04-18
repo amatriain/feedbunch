@@ -19,8 +19,13 @@
 #
 # Title, url and guid are mandatory. Urls are validated with this regex:
 #   /\Ahttps?:\/\/.+\..+\z/
+#
+# All fields except "published" are sanitized before validation; this is, before saving/updating each
+# instance in the database.
 
 class Entry < ActiveRecord::Base
+  include ActionView::Helpers::SanitizeHelper
+
   attr_accessible #none
 
   belongs_to :feed
@@ -29,4 +34,23 @@ class Entry < ActiveRecord::Base
   validates :title, presence: true
   validates :url, presence: true, format: {with: /\Ahttps?:\/\/.+\..+\z/}
   validates :guid, presence: true, uniqueness: {case_sensitive: false}
+
+  before_validation :sanitize_fields
+
+  private
+
+  ##
+  # Sanitize the title, url, author, content, summary and guid of the entry.
+  #
+  # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
+  # Better paranoid than sorry!
+
+  def sanitize_fields
+    self.title = sanitize self.title
+    self.url = sanitize self.url
+    self.author = sanitize self.author
+    self.content = sanitize self.content
+    self.summary = sanitize self.summary
+    self.guid = sanitize self.guid
+  end
 end

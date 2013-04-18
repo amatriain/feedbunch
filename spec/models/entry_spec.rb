@@ -52,11 +52,47 @@ describe Entry do
   end
 
   context 'sanitization' do
-    it 'sanitizes title'
-    it 'sanitizes url'
-    it 'sanitizes author'
-    it 'sanitizes content'
-    it 'sanitizes summary'
-    it 'sanitizes guid'
+
+    it 'sanitizes title' do
+      unsanitized_title = '<script>alert("pwned!");</script>title'
+      sanitized_title = 'title'
+      entry = FactoryGirl.create :entry, title: unsanitized_title
+      entry.title.should eq sanitized_title
+    end
+
+    it 'sanitizes url' do
+      unsanitized_url = 'http://xkcd.com<script>alert("pwned!");</script>'
+      sanitized_url = 'http://xkcd.com'
+      entry = FactoryGirl.create :entry, url: unsanitized_url
+      entry.url.should eq sanitized_url
+    end
+
+    it 'sanitizes author' do
+      unsanitized_author = '<script>alert("pwned!");</script>author'
+      sanitized_author = 'author'
+      entry = FactoryGirl.create :entry, author: unsanitized_author
+      entry.author.should eq sanitized_author
+    end
+
+    it 'sanitizes content' do
+      unsanitized_content = '<script>alert("pwned!");</script>content'
+      sanitized_content = 'content'
+      entry = FactoryGirl.create :entry, content: unsanitized_content
+      entry.content.should eq sanitized_content
+    end
+
+    it 'sanitizes summary' do
+      unsanitized_summary = '<script>alert("pwned!");</script>summary'
+      sanitized_summary = 'summary'
+      entry = FactoryGirl.create :entry, summary: unsanitized_summary
+      entry.summary.should eq sanitized_summary
+    end
+
+    it 'sanitizes guid' do
+      unsanitized_guid = '<script>alert("pwned!");</script>guid'
+      sanitized_guid = 'guid'
+      entry = FactoryGirl.create :entry, guid: unsanitized_guid
+      entry.guid.should eq sanitized_guid
+    end
   end
 end

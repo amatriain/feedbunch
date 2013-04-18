@@ -19,7 +19,8 @@ require 'rest_client'
 # Both title and URL are mandatory. URLs are validated with the following regex:
 #   /\Ahttps?:\/\/.+\..+\z/
 #
-# Title and URL are sanitized (with ActionView::Helpers::SanitizeHelper) before validation.
+# Title and URL are sanitized (with ActionView::Helpers::SanitizeHelper) before validation; this is,
+# before saving/updating each instance in the database.
 
 class Feed < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -63,6 +64,12 @@ class Feed < ActiveRecord::Base
   end
 
   private
+
+  ##
+  # Sanitize the title and URL of the feed.
+  #
+  # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
+  # Better paranoid than sorry!
 
   def sanitize_fields
     self.title = sanitize self.title
