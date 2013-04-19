@@ -34,7 +34,7 @@
           <% feed.entries.all(order: 'published DESC').each do |entry| %>
             <% item_id = "item#{(Random.rand * 100000000).round}" %>
             <li>
-              <a data-toggle="collapse" data-target="#<%= item_id %>">
+              <a data-toggle="collapse" data-target="#<%= item_id %>" class="feed-entry">
                 <%= sanitize entry.title %>
                 <span class="pull-right"><%= l entry.published, format: :short %></span>
               </a>
