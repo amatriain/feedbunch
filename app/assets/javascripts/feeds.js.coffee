@@ -8,6 +8,6 @@ $(document).ready ->
     $(this).children("i.arrow").toggleClass "icon-chevron-down"
     $(this).children("i.folder").toggleClass "icon-folder-close-alt"
     $(this).children("i.folder").toggleClass "icon-folder-open-alt"
-  $(".feed").click ->
-    $(".feed").parent().removeClass "active"
+  $("[data-feed]").click ->
+    $("[data-feed]").parent().removeClass "active"
     $(this).parent().addClass "active"
