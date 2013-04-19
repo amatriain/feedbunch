@@ -3,17 +3,51 @@ require 'spec_helper'
 describe FeedsController do
   before :each do
     @user = FactoryGirl.create :user
-    login_user_for_unit @user
+
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
     @user.feeds << @feed1
+
+    @entry1 = FactoryGirl.create :entry
+    @entry2 = FactoryGirl.create :entry
+    @entry3 = FactoryGirl.create :entry
+    @feed1.entries << @entry1 << @entry2
+
+    login_user_for_unit @user
   end
 
   context 'GET index' do
-    it 'assigns to @feeds only feeds the user is suscribed to' do
+
+    it 'returns success' do
       get :index
       response.should be_success
+    end
+
+    it 'assigns to @feeds only feeds the user is suscribed to' do
+      get :index
       assigns(:feeds).should eq [@feed1]
+    end
+
+    it 'does not respond to requests for JSON content' do
+      get :index, format: :json
+      response.status.should eq 406 # HTTP error code - Not Acceptable
+    end
+  end
+
+  context 'GET show' do
+    it 'assigns to @feed the correct object' do
+      get :show, id: @feed1.id, format: :json
+      assigns(:feed).should eq @feed1
+    end
+
+    it 'does not respond to requests for HTML content' do
+      get :show, id: @feed1.id
+      response.status.should eq 406
+    end
+
+    it 'returns nothing for a feed the user is not suscribed to' do
+      expect { get :show, id: @feed2.id, format: :json }.to raise_error ActiveRecord::RecordNotFound
+      assigns(:feed).should be_blank
     end
   end
 end
