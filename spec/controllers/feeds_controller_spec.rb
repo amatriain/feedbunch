@@ -27,22 +27,12 @@ describe FeedsController do
       get :index
       assigns(:feeds).should eq [@feed1]
     end
-
-    it 'does not respond to requests for JSON content' do
-      get :index, format: :json
-      response.status.should eq 406 # HTTP error code - Not Acceptable
-    end
   end
 
   context 'GET show' do
     it 'assigns to @feed the correct object' do
-      get :show, id: @feed1.id, format: :json
-      assigns(:feed).should eq @feed1
-    end
-
-    it 'does not respond to requests for HTML content' do
       get :show, id: @feed1.id
-      response.status.should eq 406
+      assigns(:feed).should eq @feed1
     end
 
     it 'returns nothing for a feed the user is not suscribed to' do
