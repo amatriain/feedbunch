@@ -1,38 +1,38 @@
 require 'spec_helper'
 
 describe FeedClient do
-  context 'fetching' do
+  before :each do
+    @feed_client = FeedClient.new
+
+    @feed = FactoryGirl.create :feed
+
+    @entry1 = FactoryGirl.build :entry
+    @entry1.title = 'Silence'
+    @entry1.url = 'http://xkcd.com/1199/'
+    @entry1.summary = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
+    @entry1.published = 'Mon, 15 Apr 2013 04:00:00 -0000'
+    @entry1.guid = 'http://xkcd.com/1199/'
+
+    @entry2 = FactoryGirl.build :entry
+    @entry2.title = 'Geologist'
+    @entry2.url = 'http://xkcd.com/1198/'
+    @entry2.summary = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;"&gt;}
+    @entry2.published = 'Fri, 12 Apr 2013 04:00:00 -0000'
+    @entry2.guid = 'http://xkcd.com/1198/'
+
+    @http_client = double 'restclient'
+    @http_client.stub :get
+    @feed_client.http_client = @http_client
+  end
+
+  it 'downloads the feed XML' do
+    @http_client.should_receive(:get).with @feed.fetch_url
+    @feed_client.fetch @feed.id
+  end
+
+  context 'RSS 2.0 feeds' do
 
     before :each do
-      @feed_client = FeedClient.new
-
-      @feed = FactoryGirl.create :feed
-
-      @entry1 = FactoryGirl.build :entry
-      @entry1.title = 'Silence'
-      @entry1.url = 'http://xkcd.com/1199/'
-      @entry1.summary = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
-      @entry1.published = 'Mon, 15 Apr 2013 04:00:00 -0000'
-      @entry1.guid = 'http://xkcd.com/1199/'
-
-      @entry2 = FactoryGirl.build :entry
-      @entry2.title = 'Geologist'
-      @entry2.url = 'http://xkcd.com/1198/'
-      @entry2.summary = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;"&gt;}
-      @entry2.published = 'Fri, 12 Apr 2013 04:00:00 -0000'
-      @entry2.guid = 'http://xkcd.com/1198/'
-
-      @http_client = double 'restclient'
-      @http_client.stub :get
-      @feed_client.http_client = @http_client
-    end
-
-    it 'downloads the feed XML' do
-      @http_client.should_receive(:get).with @feed.fetch_url
-      @feed_client.fetch @feed.id
-    end
-
-    it 'fetches the right items from an RSS 2.0 feed' do
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
@@ -60,7 +60,9 @@ describe FeedClient do
 FEED_XML
 
       @http_client.stub get: feed_xml
+    end
 
+    it 'fetches the right entries' do
       @feed_client.fetch @feed.id
       @feed.entries.count.should eq 2
 
@@ -82,8 +84,10 @@ FEED_XML
       entry2.published.should eq @entry2.published
       entry2.guid.should eq @entry2.guid
     end
+  end
 
-    it 'fetches the right items from an Atom feed' do
+  context 'Atom feeds' do
+    before :each do
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
@@ -109,7 +113,9 @@ FEED_XML
 FEED_XML
 
       @http_client.stub get: feed_xml
+    end
 
+    it 'fetches the right entries' do
       @feed_client.fetch @feed.id
       @feed.entries.count.should eq 2
 
@@ -131,11 +137,11 @@ FEED_XML
       entry2.published.should eq @entry2.published
       entry2.guid.should eq @entry2.guid
     end
-
-    it 'tries to cache data using an etag'
-
-    it 'tries to cache data using last-modified'
-
-    it 'updates entry if it is received again'
   end
+
+  it 'tries to cache data using an etag'
+
+  it 'tries to cache data using last-modified'
+
+  it 'updates entry if it is received again'
 end
