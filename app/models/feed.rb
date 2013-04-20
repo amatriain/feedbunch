@@ -1,6 +1,3 @@
-require 'feedzirra'
-require 'rest_client'
-
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which a user is suscribed.
 #

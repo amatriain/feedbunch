@@ -1,3 +1,6 @@
+require 'feedzirra'
+require 'rest_client'
+
 ##
 # This class can fetch feeds and parse them. It also takes care of caching, sending HTTP headers
 # that indicate the server to send only new entries.
@@ -25,6 +28,12 @@ class FeedClient
       # calls during testing, but we can always use the real parser even during testing.
       feed_parsed = Feedzirra::Feed.parse feed_xml
 
+      # Save the feed title and url.
+      # Warning: don't confuse url (the url of the website generating the feed) with fetch_url (the url from which the
+      # XML of the feed is fetched).
+      feed.title = feed_parsed.title
+      feed.url = feed_parsed.url
+
       # Save entries in the database
       feed_parsed.entries.each do |f|
         e = Entry.new
@@ -37,6 +46,8 @@ class FeedClient
         e.guid = f.entry_id
         feed.entries << e
       end
+
+      feed.save
 
     else
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"

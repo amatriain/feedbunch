@@ -4,7 +4,10 @@ describe FeedClient do
   before :each do
     @feed_client = FeedClient.new
 
-    @feed = FactoryGirl.create :feed
+    @feed = FactoryGirl.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
+
+    @feed_title = 'xkcd.com'
+    @feed_url = 'http://xkcd.com/'
 
     @entry1 = FactoryGirl.build :entry
     @entry1.title = 'Silence'
@@ -37,8 +40,8 @@ describe FeedClient do
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
-    <title>xkcd.com</title>
-    <link>http://xkcd.com/</link>
+    <title>#{@feed_title}</title>
+    <link>#{@feed_url}</link>
     <description>xkcd.com: A webcomic of romance and math humor.</description>
     <language>en</language>
     <item>
@@ -62,7 +65,7 @@ FEED_XML
       @http_client.stub get: feed_xml
     end
 
-    it 'fetches the right entries' do
+    it 'fetches the right entries and saves them in the database' do
       @feed_client.fetch @feed.id
       @feed.entries.count.should eq 2
 
@@ -84,15 +87,26 @@ FEED_XML
       entry2.published.should eq @entry2.published
       entry2.guid.should eq @entry2.guid
     end
+
+    it 'retrieves the feed title and saves it in the database' do
+      @feed_client.fetch @feed.id
+      Feed.find(@feed.id).title.should eq @feed_title
+    end
+
+    it 'retrieves the feed URL and saves it in the database' do
+      @feed_client.fetch @feed.id
+      Feed.find(@feed.id).url.should eq @feed_url
+    end
   end
 
   context 'Atom feeds' do
+
     before :each do
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
-  <title>xkcd.com</title>
-  <link href="http://xkcd.com/" rel="alternate" />
+  <title>#{@feed_title}</title>
+  <link href="#{@feed_url}" rel="alternate" />
   <id>http://xkcd.com/</id>
   <updated>2013-04-15T00:00:00Z</updated>
   <entry>
@@ -115,7 +129,7 @@ FEED_XML
       @http_client.stub get: feed_xml
     end
 
-    it 'fetches the right entries' do
+    it 'fetches the right entries and saves them in the database' do
       @feed_client.fetch @feed.id
       @feed.entries.count.should eq 2
 
@@ -136,6 +150,16 @@ FEED_XML
       entry2.summary.should eq CGI.unescapeHTML(@entry2.summary)
       entry2.published.should eq @entry2.published
       entry2.guid.should eq @entry2.guid
+    end
+
+    it 'retrieves the feed title and saves it in the database' do
+      @feed_client.fetch @feed.id
+      Feed.find(@feed.id).title.should eq @feed_title
+    end
+
+    it 'retrieves the feed URL and saves it in the database' do
+      @feed_client.fetch @feed.id
+      Feed.find(@feed.id).url.should eq @feed_url
     end
   end
 
