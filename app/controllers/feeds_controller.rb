@@ -4,8 +4,7 @@
 class FeedsController < ApplicationController
   before_filter :authenticate_user!
 
-  respond_to :html, only: :index
-  respond_to :json, only: :show
+  respond_to :html
 
   ##
   # list all feeds the currently authenticated is suscribed to
@@ -20,6 +19,6 @@ class FeedsController < ApplicationController
 
   def show
     @feed = current_user.feeds.find params[:id]
-    respond_with @feed.entries.order('published DESC').to_json except: [:feed_id, :created_at, :updated_at]
+    respond_with @feed, layout: false
   end
 end

@@ -18,9 +18,7 @@ $(document).ready ->
 
   # Load new feed entries when clicking on the Refresh button
   $("[data-refresh]").click ->
-    $.get "/feeds/1.json", null, insert_entries, 'json'
-
-  # Function to insert new entries in the list
-  insert_entries = (entries) ->
-    $.each entries, (i, entry)->
-      alert entry.title + " - " + entry.summary
+    # Function to insert new entries in the list
+    insert_entries = (entries) ->
+      $("#feed-entries").children(":first").before entries
+    $.get "/feeds/1", null, insert_entries
