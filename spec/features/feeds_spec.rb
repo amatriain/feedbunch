@@ -10,11 +10,13 @@ describe 'feeds' do
 
     before :each do
       @user = FactoryGirl.create :user
-      @feed1 = FactoryGirl.create :feed, fetch_url: 'http://www.meneame.net/rss2.php'
-      @feed2 = FactoryGirl.create :feed, fetch_url: 'http://reddit.com/.rss'
+      @feed1 = FactoryGirl.create :feed
+      @feed2 = FactoryGirl.create :feed
       @user.feeds << @feed1
 
-      # TODO no real HTTP calls should be made here!!!
+      # Ensure no actual HTTP calls are made
+      FeedClient.any_instance.stub :fetch
+      RestClient.stub :get
 
       login_user_for_feature @user
       visit feeds_path
