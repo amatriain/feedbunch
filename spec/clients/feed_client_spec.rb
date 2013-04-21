@@ -68,6 +68,7 @@ FEED_XML
 
     it 'fetches the right entries and saves them in the database' do
       @feed_client.fetch @feed.id
+      @feed.reload
       @feed.entries.count.should eq 2
 
       entry1 = @feed.entries[0]
@@ -91,12 +92,14 @@ FEED_XML
 
     it 'retrieves the feed title and saves it in the database' do
       @feed_client.fetch @feed.id
-      Feed.find(@feed.id).title.should eq @feed_title
+      @feed.reload
+      @feed.title.should eq @feed_title
     end
 
     it 'retrieves the feed URL and saves it in the database' do
       @feed_client.fetch @feed.id
-      Feed.find(@feed.id).url.should eq @feed_url
+      @feed.reload
+      @feed.url.should eq @feed_url
     end
   end
 
@@ -133,6 +136,7 @@ FEED_XML
 
     it 'fetches the right entries and saves them in the database' do
       @feed_client.fetch @feed.id
+      @feed.reload
       @feed.entries.count.should eq 2
 
       entry1 = @feed.entries[0]
@@ -156,12 +160,14 @@ FEED_XML
 
     it 'retrieves the feed title and saves it in the database' do
       @feed_client.fetch @feed.id
-      Feed.find(@feed.id).title.should eq @feed_title
+      @feed.reload
+      @feed.title.should eq @feed_title
     end
 
     it 'retrieves the feed URL and saves it in the database' do
       @feed_client.fetch @feed.id
-      Feed.find(@feed.id).url.should eq @feed_url
+      @feed.reload
+      @feed.url.should eq @feed_url
     end
   end
 
@@ -187,8 +193,9 @@ FEED_XML
 
     it 'saves etag and last-modified headers if they are in the response' do
       @feed_client.fetch @feed.id
-      Feed.find(@feed.id).etag.should eq @etag
-      Feed.find(@feed.id).last_modified.to_i.should eq @last_modified.to_i
+      @feed.reload
+      @feed.etag.should eq @etag
+      @feed.last_modified.to_i.should eq @last_modified.to_i
     end
 
     it 'sets etag to nil in the database if the header is not present' do
@@ -198,7 +205,8 @@ FEED_XML
       @feed_xml.stub(:headers).and_return @headers
 
       @feed_client.fetch @feed.id
-      Feed.find(@feed.id).etag.should be_nil
+      @feed.reload
+      @feed.etag.should be_nil
     end
 
     it 'sets last-modified to nil in the database if the header is not present' do
@@ -208,7 +216,8 @@ FEED_XML
       @feed_xml.stub(:headers).and_return @headers
 
       @feed_client.fetch @feed.id
-      Feed.find(@feed.id).last_modified.should be_nil
+      @feed.reload
+      @feed.last_modified.should be_nil
     end
 
     it 'tries to cache data using an etag'
