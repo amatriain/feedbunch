@@ -20,19 +20,25 @@ class FeedClient
     # http_client defaults to RestClient, except if it's already been given another value (which happens
     # during unit testing, in which a mocked is used instead of the real class)
     http_client = @http_client || RestClient
-    feed_xml = http_client.get feed.fetch_url
+    feed_response = http_client.get feed.fetch_url
 
-    if feed_xml.present?
+    if feed_response.present?
       # We use the actual Feedzirra::Feed class to parse, never a mock.
       # The motivation behind using a mock for fetching the XML during unit testing is not making HTTP
       # calls during testing, but we can always use the real parser even during testing.
-      feed_parsed = Feedzirra::Feed.parse feed_xml
+      feed_parsed = Feedzirra::Feed.parse feed_response
 
       # Save the feed title and url.
       # Warning: don't confuse url (the url of the website generating the feed) with fetch_url (the url from which the
       # XML of the feed is fetched).
       feed.title = feed_parsed.title
       feed.url = feed_parsed.url
+
+      # Save the etag and last_modified headers. If one of these headers is not present, save a null in the database.
+      if feed_response.headers.present?
+        feed.etag = feed_response.headers[:etag]
+        feed.last_modified = feed_response.headers[:last_modified]
+      end
 
       # Save entries in the database
       feed_parsed.entries.each do |f|

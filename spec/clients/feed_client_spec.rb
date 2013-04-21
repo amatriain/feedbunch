@@ -62,6 +62,7 @@ describe FeedClient do
 </rss>
 FEED_XML
 
+      feed_xml.stub(:headers).and_return {}
       @http_client.stub get: feed_xml
     end
 
@@ -126,6 +127,7 @@ FEED_XML
 </feed>
 FEED_XML
 
+      feed_xml.stub(:headers).and_return {}
       @http_client.stub get: feed_xml
     end
 
@@ -163,9 +165,56 @@ FEED_XML
     end
   end
 
-  it 'tries to cache data using an etag'
+  context 'caching' do
 
-  it 'tries to cache data using last-modified'
+    before :each do
+      @feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>#{@feed_title}</title>
+  <link href="#{@feed_url}" rel="alternate" />
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+</feed>
+FEED_XML
 
-  it 'updates entry if it is received again'
+      @etag = "\"3648649162\""
+      @last_modified = DateTime.now
+      @headers = {etag: @etag, last_modified: @last_modified}
+      @feed_xml.stub(:headers).and_return @headers
+      @http_client.stub(:get).and_return @feed_xml
+    end
+
+    it 'saves etag and last-modified headers if they are in the response' do
+      @feed_client.fetch @feed.id
+      Feed.find(@feed.id).etag.should eq @etag
+      Feed.find(@feed.id).last_modified.to_i.should eq @last_modified.to_i
+    end
+
+    it 'sets etag to nil in the database if the header is not present' do
+      @feed = FactoryGirl.create :feed, etag:'some_etag'
+      @feed.etag.should_not be_nil
+      @headers = {last_modified: @last_modified}
+      @feed_xml.stub(:headers).and_return @headers
+
+      @feed_client.fetch @feed.id
+      Feed.find(@feed.id).etag.should be_nil
+    end
+
+    it 'sets last-modified to nil in the database if the header is not present' do
+      @feed = FactoryGirl.create :feed, last_modified: DateTime.now
+      @feed.last_modified.should_not be_nil
+      @headers = {etag: @etag}
+      @feed_xml.stub(:headers).and_return @headers
+
+      @feed_client.fetch @feed.id
+      Feed.find(@feed.id).last_modified.should be_nil
+    end
+
+    it 'tries to cache data using an etag'
+
+    it 'tries to cache data using last-modified'
+
+    it 'updates entry if it is received again'
+  end
 end

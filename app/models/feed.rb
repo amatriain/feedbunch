@@ -13,6 +13,8 @@
 # - title
 # - fetch_url (URL to fetch the feed XML)
 # - url (URL to which the user will be linked; usually the website that originated this feed)
+# - etag (etag http header received last time the feed was fetched, used for caching)
+# - last_modified (last-modified http header received last time the feed was fetched, user for caching)
 #
 # Both title and fetch_url are mandatory. url and fetch_url are validated with the following regex:
 #   /\Ahttps?:\/\/.+\..+\z/
