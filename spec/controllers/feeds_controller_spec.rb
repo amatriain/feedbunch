@@ -14,6 +14,9 @@ describe FeedsController do
     @feed1.entries << @entry1 << @entry2
 
     login_user_for_unit @user
+
+    # Ensure no actual HTTP calls are done
+    FeedClient.any_instance.stub :fetch
   end
 
   context 'GET index' do
@@ -38,6 +41,11 @@ describe FeedsController do
     it 'returns nothing for a feed the user is not suscribed to' do
       expect { get :show, id: @feed2.id, format: :json }.to raise_error ActiveRecord::RecordNotFound
       assigns(:feed).should be_blank
+    end
+
+    it 'fetches new entries in the feed before returning' do
+      FeedClient.any_instance.should_receive(:fetch).with @feed1.id
+      get :show, id: @feed1.id
     end
   end
 end
