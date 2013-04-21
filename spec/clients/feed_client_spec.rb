@@ -29,7 +29,7 @@ describe FeedClient do
   end
 
   it 'downloads the feed XML' do
-    @http_client.should_receive(:get).with @feed.fetch_url, anything
+    @http_client.should_receive(:get).with @feed.fetch_url
     @feed_client.fetch @feed.id
   end
 
@@ -290,17 +290,13 @@ FEED_XML
       @feed_client.fetch @feed.id
     end
 
-    it 'tries to cache data using etag and last-modified if both are present' do
+    it 'tries to cache data using etag, not last-modified, if both are present' do
       # Fetch the feed a first time, so the last-modified is saved
       @feed_client.fetch @feed.id
 
       # Next time the feed is fetched, the last-modified from the last time will be sent in the if-modified-since header
       @feed.reload
-      @http_client.should_receive(:get).with do |url, headers|
-        url.should eq @feed.fetch_url
-        headers.should include(if_none_match: @feed.etag)
-        headers.should include(if_modified_since: @feed.last_modified)
-      end
+      @http_client.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag}
       @feed_client.fetch @feed.id
     end
   end

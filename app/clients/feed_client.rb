@@ -12,7 +12,15 @@ class FeedClient
 
   ##
   # Fetch a feed, parse it and save the entries in the database.
-  # It sends if-none-match and if-modified-since HTTP headers to indicate the server to send only new entries.
+  #
+  # The method tries to use the last received etag with the if-none-match header to indicate the server to send only new
+  # entries.
+  #
+  # If no etag was received last time the feed was fetched, it tries to use the last received last-modified header with the
+  # if-modified-since request header to indicate the server to send only new entries.
+  #
+  # If the last time the feed was fetched no etag and no last-modified headers were in the response, this method fetches
+  # the full feed without sending caching headers.
 
   def fetch(feed_id)
     feed = Feed.find feed_id
@@ -20,11 +28,24 @@ class FeedClient
     # http_client defaults to RestClient, except if it's already been given another value (which happens
     # during unit testing, in which a mocked is used instead of the real class)
     http_client = @http_client || RestClient
-    Rails.logger.info "Fetching feed XML from: #{feed.fetch_url} with etag: #{feed.etag} - last-modified: #{feed.last_modified}"
-    headers = {}
-    headers[:if_none_match] = feed.etag if feed.etag.present?
-    headers[:if_modified_since] = feed.last_modified if feed.last_modified.present?
-    feed_response = http_client.get feed.fetch_url, headers
+
+    # Prefer to use etag for cache control
+    if feed.etag.present?
+      Rails.logger.info "Fetching feed XML from: #{feed.fetch_url} with etag: #{feed.etag}"
+      headers = {if_none_match: feed.etag}
+    # If etag is not saved, try to use last-modified for cache control
+    elsif feed.last_modified.present?
+      Rails.logger.info "Fetching feed XML from: #{feed.fetch_url} with last-modified: #{feed.last_modified}"
+      headers = {if_modified_since: feed.last_modified}
+    else
+      Rails.logger.info "Fetching feed XML from: #{feed.fetch_url} with no cache control headers"
+    end
+
+    if headers.present?
+      feed_response = http_client.get feed.fetch_url, headers
+    else
+      feed_response = http_client.get feed.fetch_url
+    end
 
     if feed_response.present?
       # We use the actual Feedzirra::Feed class to parse, never a mock.

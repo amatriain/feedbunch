@@ -15,10 +15,16 @@ class FeedsController < ApplicationController
   end
 
   ##
-  # return JSON with all entries for a given feed, as long as the currently authenticated user is suscribed to it
+  # Return HTML with all entries for a given feed, as long as the currently authenticated user is suscribed to it.
+  # Before returning entries, feed is fetched and any new entries saved in the database.
 
   def show
     @feed = current_user.feeds.find params[:id]
-    respond_with @feed, layout: false
+    if @feed.present?
+      feed_client = FeedClient.new
+      feed_client.fetch @feed.id
+      @feed.reload
+      respond_with @feed, layout: false
+    end
   end
 end
