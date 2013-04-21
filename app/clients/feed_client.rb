@@ -98,5 +98,8 @@ class FeedClient
     end
 
     return true
+  rescue RestClient::NotModified => e
+    Rails.logger.info "Feed #{feed.fetch_url} returned 304 - not modified"
+    return true
   end
 end

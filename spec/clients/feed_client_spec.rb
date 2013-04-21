@@ -299,5 +299,10 @@ FEED_XML
       @http_client.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag}
       @feed_client.fetch @feed.id
     end
+
+    it 'does not raise errors if the server responds with 304-not modified' do
+      @http_client.stub(:get).and_raise RestClient::NotModified.new
+      expect {@feed_client.fetch @feed.id}.to_not raise_error
+    end
   end
 end
