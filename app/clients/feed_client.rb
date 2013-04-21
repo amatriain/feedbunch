@@ -48,7 +48,16 @@ class FeedClient
 
       # Save entries in the database
       feed_parsed.entries.each do |f|
-        e = Entry.new
+        # If entry is already in the database, update it
+        if Entry.exists? guid: f.entry_id
+          e = Entry.where(guid: f.entry_id).first
+          Rails.logger.info "Updating already saved entry for feed #{feed.fetch_url} - title: #{f.title} - guid: #{f.entry_id}"
+        # Otherwise, save a new entry in the DB
+        else
+          e = Entry.new
+          Rails.logger.info "Saving in the database new entry for feed #{feed.fetch_url} - title: #{f.title} - guid: #{f.entry_id}"
+        end
+
         e.title = f.title
         e.url = f.url
         e.author = f.author
@@ -56,7 +65,8 @@ class FeedClient
         e.summary = f.summary
         e.published = f.published
         e.guid = f.entry_id
-        Rails.logger.info "Saving in the database new entry for feed #{feed.fetch_url} - title: #{e.title} - guid: #{e.guid}"
+        e.save
+
         feed.entries << e
       end
 

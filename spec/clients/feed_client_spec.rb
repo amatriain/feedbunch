@@ -90,7 +90,28 @@ FEED_XML
       entry2.guid.should eq @entry2.guid
     end
 
-    it 'updates entry if it is received again'
+    it 'updates entry if it is received again' do
+      # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
+      # fields with different values
+      entry = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
+                                 url: 'http://origina.url.com', author: 'Original author',
+                                 content: 'Original content', summary: 'Original summary',
+                                 published: DateTime.iso8601('2013-01-01T00:00:00'),
+                                 guid: @entry1.guid
+
+      # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
+      @feed_client.fetch @feed.id
+      # After fetching, relevant fields should be updated with the values received in the XML
+      entry.reload
+      entry.feed_id.should eq @feed.id
+      entry.title.should eq @entry1.title
+      entry.url.should eq @entry1.url
+      entry.author.should eq @entry1.author
+      entry.content.should eq @entry1.content
+      entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
+      entry.published.should eq @entry1.published
+      entry.guid.should eq @entry1.guid
+    end
 
     it 'retrieves the feed title and saves it in the database' do
       @feed_client.fetch @feed.id
@@ -160,7 +181,28 @@ FEED_XML
       entry2.guid.should eq @entry2.guid
     end
 
-    it 'updates entry if it is received again'
+    it 'updates entry if it is received again' do
+      # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
+      # fields with different values
+      entry = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
+                                 url: 'http://origina.url.com', author: 'Original author',
+                                 content: 'Original content', summary: 'Original summary',
+                                 published: DateTime.iso8601('2013-01-01T00:00:00'),
+                                 guid: @entry1.guid
+
+      # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
+      @feed_client.fetch @feed.id
+      # After fetching, relevant fields should be updated with the values received in the XML
+      entry.reload
+      entry.feed_id.should eq @feed.id
+      entry.title.should eq @entry1.title
+      entry.url.should eq @entry1.url
+      entry.author.should eq @entry1.author
+      entry.content.should eq @entry1.content
+      entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
+      entry.published.should eq @entry1.published
+      entry.guid.should eq @entry1.guid
+    end
 
     it 'retrieves the feed title and saves it in the database' do
       @feed_client.fetch @feed.id
