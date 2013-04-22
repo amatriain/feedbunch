@@ -4,6 +4,10 @@
 
 $(document).ready ->
 
+##########################################################
+# DYNAMIC STYLES
+##########################################################
+
   # Dynamic styling when clicking on the sidebar folders
   $(".menu-level1").click ->
     $(this).children("i.arrow").toggleClass "icon-chevron-right"
@@ -16,11 +20,14 @@ $(document).ready ->
     $("[data-feed]").parent().removeClass "active"
     $(this).parent().addClass "active"
 
+##########################################################
+# AJAX
+##########################################################
+
   # Load new feed entries when clicking on the Refresh button
   $("[data-refresh]").click ->
     $("> i.icon-repeat", this).addClass "icon-spin"
     # Function to insert new entries in the list
     insert_entries = (entries) ->
-      $("#feed-entries").prepend entries
       $("[data-refresh] > i.icon-repeat").removeClass "icon-spin"
-    $.get "/feeds/1", null, insert_entries
+    $("#feed-entries").load "/feeds/1", null, insert_entries
