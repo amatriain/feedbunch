@@ -16,3 +16,6 @@ es:
     index:
       open_new_tab: "Abrir en una nueva pestaña"
       refresh: "Actualizar"
+      all_feeds: "Todos los feeds"
+      all_entries: "Leer todos los feeds"
+      all_feeds_in_folder: "Todos los feeds en esta carpeta"

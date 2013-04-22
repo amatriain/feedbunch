@@ -19,3 +19,6 @@ en:
     index:
       open_new_tab: "Open in new tab"
       refresh: "Refresh"
+      all_feeds: "All feeds"
+      all_entries: "Read all feeds"
+      all_feeds_in_folder: "All feeds in this folder"
