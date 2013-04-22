@@ -31,6 +31,6 @@ $(document).ready ->
     insert_entries = (entries, status, xhr) ->
       $("[data-refresh] > i.icon-repeat").removeClass "icon-spin"
       if status in ["error", "timeout", "abort", "parsererror"]
-        $("#alert p").text "There has been an error refreshing the feed. Please try again later"
+        $("#alert p").text "There has been a problem refreshing the feed. Please try again later"
         $("#alert").removeClass "hidden"
     $("#feed-entries").load "/feeds/1", null, insert_entries
