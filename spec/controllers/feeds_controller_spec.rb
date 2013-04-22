@@ -43,9 +43,26 @@ describe FeedsController do
       assigns(:feed).should be_blank
     end
 
+    it 'does not fetch new entries in the feed' do
+      FeedClient.any_instance.should_not_receive(:fetch).with @feed1.id
+      get :show, id: @feed1.id
+    end
+  end
+
+  context 'GET refresh' do
+    it 'assigns to @feed the correct object' do
+      get :refresh, id: @feed1.id
+      assigns(:feed).should eq @feed1
+    end
+
+    it 'returns nothing for a feed the user is not suscribed to' do
+      expect { get :refresh, id: @feed2.id, format: :json }.to raise_error ActiveRecord::RecordNotFound
+      assigns(:feed).should be_blank
+    end
+
     it 'fetches new entries in the feed before returning' do
       FeedClient.any_instance.should_receive(:fetch).with @feed1.id
-      get :show, id: @feed1.id
+      get :refresh, id: @feed1.id
     end
   end
 end

@@ -33,4 +33,4 @@ $(document).ready ->
       if status in ["error", "timeout", "abort", "parsererror"]
         $("#alert p").text "There has been a problem refreshing the feed. Please try again later"
         $("#alert").removeClass "hidden"
-    $("#feed-entries").load "/feeds/1", null, insert_entries
+    $("#feed-entries").load "/feeds/1/refresh", null, insert_entries
