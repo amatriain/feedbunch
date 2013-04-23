@@ -29,7 +29,7 @@ describe FeedClient do
   end
 
   it 'downloads the feed XML' do
-    @http_client.should_receive(:get).with @feed.fetch_url
+    @http_client.should_receive(:get).with @feed.fetch_url, anything
     @feed_client.fetch @feed.id
   end
 
