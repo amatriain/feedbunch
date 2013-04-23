@@ -13,7 +13,7 @@
     <ul class="nav nav-list collapse" id="all">
       <% @feeds.each do |feed| %>
         <li>
-          <a data-feed>
+          <a data-feed="<%= feed.id %>">
             <i class="icon-rss"></i> <%= feed.title %>
           </a>
         </li>
@@ -28,7 +28,7 @@
     <ul class="nav nav-list collapse" id="tech">
       <% @feeds.each do |feed| %>
         <li>
-          <a data-feed>
+          <a data-feed="<%= feed.id %>">
             <i class="icon-rss"></i> <%= feed.title %>
           </a>
         </li>
@@ -43,7 +43,7 @@
     <ul class="nav nav-list collapse" id="webcomics">
       <% @feeds.each do |feed| %>
         <li>
-          <a data-feed>
+          <a data-feed="<%= feed.id %>">
             <i class="icon-rss"></i> <%= feed.title %>
           </a>
         </li>
@@ -58,7 +58,7 @@
     <ul class="nav nav-list collapse" id="politics">
       <% @feeds.each do |feed| %>
         <li>
-          <a data-feed>
+          <a data-feed="<%= feed.id %>">
             <i class="icon-rss"></i> <%= feed.title %>
           </a>
         </li>
