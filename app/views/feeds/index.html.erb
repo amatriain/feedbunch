@@ -20,7 +20,7 @@
     <% feed = @feeds.first %>
     <% if feed.present? %>
       <div>
-        <strong class="lead">
+        <strong class="lead" id="feed-title">
           <% if feed.url.present? %>
             <%= sanitize link_to(feed.title, feed.url, target: '_blank') %>
           <% else %>

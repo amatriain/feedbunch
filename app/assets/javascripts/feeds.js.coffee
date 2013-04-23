@@ -16,8 +16,8 @@ $(document).ready ->
     $(this).children("i.folder").toggleClass "icon-folder-open-alt"
 
   # Dynamid styling when clicking on a feed in the sidebar
-  $("[data-feed]").click ->
-    $("[data-feed]").parent().removeClass "active"
+  $("[data-feed-id]").click ->
+    $("[data-feed-id]").parent().removeClass "active"
     $(this).parent().addClass "active"
 
 ##########################################################
@@ -39,13 +39,18 @@ $(document).ready ->
       $("#feed-entries").load "/feeds/#{feed_id}/refresh", null, insert_entries
 
   # Load current feed entries when clicking on a feed in the sidebar
-  $("[data-feed]").click ->
+  $("[data-feed-id]").click ->
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
       if status in ["error", "timeout", "abort", "parsererror"]
         $("#alert p").text "There has been a problem refreshing the feed. Please try again later"
         $("#alert").removeClass "hidden"
-    feed_id = $(this).attr "data-feed"
-    $("#feed-entries").load "/feeds/#{feed_id}", null, insert_entries
+    feed_id = $(this).attr "data-feed-id"
     # The refresh button now refreshes the feed_id feed
     $("[data-refresh-feed]").attr "data-refresh-feed", feed_id
+    # Show the feed title
+    feed_title = $(this).attr "data-feed-title"
+    $("#feed-title").text feed_title
+    # Empty the entries list before loading
+    $("#feed-entries > li").empty()
+    $("#feed-entries").load "/feeds/#{feed_id}", null, insert_entries
