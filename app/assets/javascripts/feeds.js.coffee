@@ -43,6 +43,7 @@ $(document).ready ->
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
       $(".icon-spin").removeClass("icon-spin").addClass "hidden"
+      $("#loading").addClass "hidden"
       if status in ["error", "timeout", "abort", "parsererror"]
         $("#alert p").text "There has been a problem refreshing the feed. Please try again later"
         $("#alert").removeClass "hidden"
@@ -57,6 +58,8 @@ $(document).ready ->
     $("#feed-title a").attr("href", feed_url)
     # Empty the entries list before loading
     $("#feed-entries > li").empty()
+    # Show "loading" message
+    $("#loading").removeClass "hidden"
     # Show a spinning icon while loading
     $(".icon-spinner", this).addClass("icon-spin").removeClass "hidden"
     $("#feed-entries").load "/feeds/#{feed_id}", null, insert_entries

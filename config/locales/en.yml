@@ -22,3 +22,4 @@ en:
       all_feeds: "All feeds"
       all_entries: "Read all feeds"
       all_feeds_in_folder: "All feeds in this folder"
+      loading: "Loading..."

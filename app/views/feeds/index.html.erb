@@ -25,6 +25,8 @@
         </strong>
         <hr>
 
+        <div id="loading" class="offset1 hidden"><%= t '.loading' %></div>
+
         <ul class="nav nav-tabs nav-stacked" id="feed-entries">
           <% feed.entries.all(order: 'published DESC').each do |entry| %>
             <% item_id = "item#{(Random.rand * 100000000).round}" %>
