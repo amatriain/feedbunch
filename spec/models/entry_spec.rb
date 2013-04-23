@@ -9,7 +9,7 @@ describe Entry do
 
   context 'validations' do
 
-    it 'always belong to a feed' do
+    it 'always belongs to a feed' do
       entry = FactoryGirl.build :entry, feed_id: nil
       entry.should_not be_valid
     end

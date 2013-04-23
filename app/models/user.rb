@@ -30,4 +30,6 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
   has_and_belongs_to_many :feeds
+
+  has_many :folders, dependent: :destroy
 end

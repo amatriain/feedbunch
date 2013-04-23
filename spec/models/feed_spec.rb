@@ -88,8 +88,8 @@ describe Feed do
 
   context 'feed entries' do
     it 'deletes entries when deleting a feed' do
-      entry1 = FactoryGirl.create :entry
-      entry2 = FactoryGirl.create :entry
+      entry1 = FactoryGirl.build :entry
+      entry2 = FactoryGirl.build :entry
       @feed.entries << entry1 << entry2
 
       Entry.count.should eq 2
@@ -101,20 +101,37 @@ describe Feed do
 
   context 'user suscriptions' do
     before :each do
-      @user1 = FactoryGirl.create :user
-      @user2 = FactoryGirl.create :user
-      @user3 = FactoryGirl.create :user
+      @user1 = FactoryGirl.build :user
+      @user2 = FactoryGirl.build :user
+      @user3 = FactoryGirl.build :user
       @feed.users << @user1 << @user2
     end
 
     it 'returns user suscribed to the feed' do
-      @feed.users.include?(@user1).should be_true
-      @feed.users.include?(@user2).should be_true
+      @feed.users.should include @user1
+      @feed.users.should include @user2
     end
 
     it 'does not return users not suscribed to the feed' do
-      @feed.users.include?(@user3).should be_false
+      @feed.users.should_not include @user3
+    end
+  end
+
+  context 'association with folders' do
+    before :each do
+      @folder1 = FactoryGirl.build :folder
+      @folder2 = FactoryGirl.build :folder
+      @folder3 = FactoryGirl.build :folder
+      @feed.folders << @folder1 << @folder2
     end
 
+    it 'returns folders to which this feed is associated' do
+      @feed.folders.should include @folder1
+      @feed.folders.should include @folder2
+    end
+
+    it 'does not return folders to which this feed is not associated' do
+      @feed.folders.should_not include @folder3
+    end
   end
 end

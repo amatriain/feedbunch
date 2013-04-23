@@ -28,6 +28,7 @@ class Feed < ActiveRecord::Base
   attr_accessible :fetch_url
 
   has_and_belongs_to_many :users
+  has_and_belongs_to_many :folders
   has_many :entries, dependent: :destroy
 
   validates :fetch_url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
