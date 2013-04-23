@@ -8,10 +8,9 @@ describe FeedsController do
     @feed2 = FactoryGirl.create :feed
     @user.feeds << @feed1
 
-    @entry1 = FactoryGirl.create :entry
-    @entry2 = FactoryGirl.create :entry
-    @entry3 = FactoryGirl.create :entry
-    @feed1.entries << @entry1 << @entry2
+    @folder1 = FactoryGirl.build :folder, user_id: @user.id
+    @folder2 = FactoryGirl.create :folder
+    @user.folders << @folder1
 
     login_user_for_unit @user
 
@@ -29,6 +28,11 @@ describe FeedsController do
     it 'assigns to @feeds only feeds the user is suscribed to' do
       get :index
       assigns(:feeds).should eq [@feed1]
+    end
+
+    it 'assigns to @folders only folders that belong to the user' do
+      get :index
+      assigns(:folders).should eq [@folder1]
     end
   end
 

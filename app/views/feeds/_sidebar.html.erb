@@ -6,64 +6,10 @@
 
 <ul class="nav nav-tabs nav-stacked">
 
-  <li>
-    <a data-toggle="collapse" data-target="#all" class="menu-level1">
-      <i class="folder icon-folder-close-alt"></i> <%= t 'feeds.index.all_feeds' %><i class="arrow icon-chevron-right pull-right"></i>
-    </a>
-    <ul class="nav nav-list collapse" id="all">
-      <% @feeds.each do |feed| %>
-        <li>
-          <a data-feed-id="<%= feed.id %>" data-feed-title="<%= feed.title %>" data-feed-url="<%= feed.url %>">
-            <i class="icon-rss"></i> <%= feed.title %> <i class="icon-spinner hidden"></i>
-          </a>
-        </li>
-      <% end %>
-    </ul>
-  </li>
+  <%= render 'feeds/sidebar_folder', feeds: @feeds, title: t('feeds.index.all_feeds') %>
 
-  <li>
-    <a data-toggle="collapse" data-target="#tech" class="menu-level1">
-      <i class="folder icon-folder-close-alt"></i> Tech<i class="arrow icon-chevron-right pull-right"></i>
-    </a>
-    <ul class="nav nav-list collapse" id="tech">
-      <% @feeds.each do |feed| %>
-        <li>
-          <a data-feed-id="<%= feed.id %>" data-feed-title="<%= feed.title %>" data-feed-url="<%= feed.url %>">
-            <i class="icon-rss"></i> <%= feed.title %> <i class="icon-spinner hidden"></i>
-          </a>
-        </li>
-      <% end %>
-    </ul>
-  </li>
-
-  <li>
-    <a data-toggle="collapse" data-target="#webcomics" class="menu-level1">
-      <i class="folder icon-folder-close-alt"></i> Webcomics<i class="arrow icon-chevron-right pull-right"></i>
-    </a>
-    <ul class="nav nav-list collapse" id="webcomics">
-      <% @feeds.each do |feed| %>
-        <li>
-          <a data-feed-id="<%= feed.id %>" data-feed-title="<%= feed.title %>" data-feed-url="<%= feed.url %>">
-            <i class="icon-rss"></i> <%= feed.title %> <i class="icon-spinner hidden"></i>
-          </a>
-        </li>
-      <% end %>
-    </ul>
-  </li>
-
-  <li>
-    <a data-toggle="collapse" data-target="#politics" class="menu-level1">
-      <i class="folder icon-folder-close-alt"></i> Politics<i class="arrow icon-chevron-right pull-right"></i>
-    </a>
-    <ul class="nav nav-list collapse" id="politics">
-      <% @feeds.each do |feed| %>
-        <li>
-          <a data-feed-id="<%= feed.id %>" data-feed-title="<%= feed.title %>" data-feed-url="<%= feed.url %>">
-            <i class="icon-rss"></i> <%= feed.title %> <i class="icon-spinner hidden"></i>
-          </a>
-        </li>
-      <% end %>
-    </ul>
-  </li>
+  <% @folders.each do |folder| %>
+    <%= render 'feeds/sidebar_folder', feeds: folder.feeds, title: folder.title %>
+  <% end %>
 
 </ul>

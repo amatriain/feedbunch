@@ -11,7 +11,8 @@ class FeedsController < ApplicationController
 
   def index
     @feeds = current_user.feeds
-    respond_with @feeds
+    @folders = current_user.folders
+    respond_with @feeds, @folders
   end
 
   ##
