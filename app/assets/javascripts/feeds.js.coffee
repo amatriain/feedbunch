@@ -45,7 +45,7 @@ $(document).ready ->
       $(".icon-spin").removeClass("icon-spin").addClass "hidden"
       $("#loading").addClass "hidden"
       if status in ["error", "timeout", "abort", "parsererror"]
-        $("#alert p").text "There has been a problem refreshing the feed. Please try again later"
+        $("#alert p").text "There has been a problem loading the feed. Please try again later"
         $("#alert").removeClass "hidden"
     feed_id = $(this).attr "data-feed-id"
     # The refresh button now refreshes this feed
