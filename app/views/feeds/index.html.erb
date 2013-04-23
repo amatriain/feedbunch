@@ -21,11 +21,7 @@
     <% if feed.present? %>
       <div>
         <strong class="lead" id="feed-title">
-          <% if feed.url.present? %>
-            <%= sanitize link_to(feed.title, feed.url, target: '_blank') %>
-          <% else %>
-            <%= sanitize feed.title %>
-          <% end %>
+          <%= sanitize link_to(feed.title, feed.url, target: '_blank') %>
         </strong>
         <hr>
 

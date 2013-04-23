@@ -50,7 +50,10 @@ $(document).ready ->
     $("[data-refresh-feed]").attr "data-refresh-feed", feed_id
     # Show the feed title
     feed_title = $(this).attr "data-feed-title"
-    $("#feed-title").text feed_title
+    $("#feed-title a").text feed_title
+    # The feed title links to the feed url
+    feed_url = $(this).attr "data-feed-url"
+    $("#feed-title a").attr("href", feed_url)
     # Empty the entries list before loading
     $("#feed-entries > li").empty()
     $("#feed-entries").load "/feeds/#{feed_id}", null, insert_entries
