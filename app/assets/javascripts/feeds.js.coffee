@@ -42,11 +42,12 @@ $(document).ready ->
   $("[data-feed-id]").click ->
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
+      $(".icon-spin").removeClass("icon-spin").addClass "hidden"
       if status in ["error", "timeout", "abort", "parsererror"]
         $("#alert p").text "There has been a problem refreshing the feed. Please try again later"
         $("#alert").removeClass "hidden"
     feed_id = $(this).attr "data-feed-id"
-    # The refresh button now refreshes the feed_id feed
+    # The refresh button now refreshes this feed
     $("[data-refresh-feed]").attr "data-refresh-feed", feed_id
     # Show the feed title
     feed_title = $(this).attr "data-feed-title"
@@ -56,4 +57,6 @@ $(document).ready ->
     $("#feed-title a").attr("href", feed_url)
     # Empty the entries list before loading
     $("#feed-entries > li").empty()
+    # Show a spinning icon while loading
+    $(".icon-spinner", this).addClass("icon-spin").removeClass "hidden"
     $("#feed-entries").load "/feeds/#{feed_id}", null, insert_entries
