@@ -24,6 +24,12 @@ $(document).ready ->
     $("[data-feed-id]").parent().removeClass "active"
     $(this).parent().addClass "active"
 
+  #-------------------------------------------------------
+  # Give focus to the text input field when showing the "Add feed" modal.
+  #-------------------------------------------------------
+  $("#suscribe-feed").on 'shown',  ->
+    $("#subscription_rss", this).focus()
+
 ##########################################################
 # AJAX
 ##########################################################

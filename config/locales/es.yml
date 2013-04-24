@@ -20,4 +20,5 @@ es:
       all_entries: "Leer todos los feeds"
       all_feeds_in_folder: "Todos los feeds en esta carpeta"
       loading: "Cargando..."
-      suscribe: "Añadir feed"
+      suscribe_button: "Añadir feed"
+      suscribe_title: "Suscribirse a un nuevo feed"

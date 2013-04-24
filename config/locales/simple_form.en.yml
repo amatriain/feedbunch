@@ -16,11 +16,15 @@ en:
         password: "Password"
         password_confirmation: "Confirm password"
         current_password: "Current password"
+      subscription:
+        rss: "Feed"
     hints:
       user:
         password: "Password length must be between 8 and 128 characters"
         current_password: "(we need your current password to confirm your changes)"
         blank_password: "(leave blank if you don't want to change it)"
+      subscription:
+        rss: "Introduce a webpage URL, a feed URL, or search terms"
     placeholders:
       user:
         email: "Your email address"
@@ -28,3 +32,5 @@ en:
         password_confirmation: "Confirm your password"
         current_password: "Your current password"
         new_password: "Your new password"
+      subscription:
+        rss: "URL or search terms"

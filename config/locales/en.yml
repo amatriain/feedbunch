@@ -23,4 +23,5 @@ en:
       all_entries: "Read all feeds"
       all_feeds_in_folder: "All feeds in this folder"
       loading: "Loading..."
-      suscribe: "Add feed"
+      suscribe_button: "Add feed"
+      suscribe_title: "Suscribe to new feed"
