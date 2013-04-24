@@ -25,3 +25,5 @@ en:
       loading: "Loading..."
       suscribe_button: "Add feed"
       suscribe_title: "Suscribe to new feed"
+      close: "Cancel"
+      suscribe_submit: "Search"

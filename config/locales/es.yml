@@ -22,3 +22,5 @@ es:
       loading: "Cargando..."
       suscribe_button: "Añadir feed"
       suscribe_title: "Suscribirse a un nuevo feed"
+      close: "Cancelar"
+      suscribe_submit: "Buscar"
