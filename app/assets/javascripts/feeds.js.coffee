@@ -25,9 +25,9 @@ $(document).ready ->
     $(this).parent().addClass "active"
 
   #-------------------------------------------------------
-  # Give focus to the text input field when showing the "Add feed" modal.
+  # Give focus to the text input field when showing the "Add subscription" modal.
   #-------------------------------------------------------
-  $("#suscribe-feed").on 'shown',  ->
+  $("#subscribe-feed").on 'shown',  ->
     $("#subscription_rss", this).focus()
 
 ##########################################################
@@ -42,18 +42,21 @@ $(document).ready ->
     # Only refresh if the data-refresh-feed attribute has a reference to a feed id
     if feed_id?.length
       $("> i.icon-repeat", this).addClass "icon-spin"
+
       # Function to insert new entries in the list
       insert_entries = (entries, status, xhr) ->
         $("#refresh-feed > i.icon-repeat").removeClass "icon-spin"
         if status in ["error", "timeout", "abort", "parsererror"]
           $("#alert p").text "There has been a problem refreshing the feed. Please try again later"
           $("#alert").removeClass "hidden"
+
       $("#feed-entries").load "/feeds/#{feed_id}/refresh", null, insert_entries
 
   #-------------------------------------------------------
   # Load current feed entries when clicking on a feed in the sidebar
   #-------------------------------------------------------
   $("[data-feed-id]").click ->
+
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
       $(".icon-spin").removeClass("icon-spin").addClass "hidden"
@@ -62,20 +65,60 @@ $(document).ready ->
       if status in ["error", "timeout", "abort", "parsererror"]
         $("#alert p").text "There has been a problem loading the feed. Please try again later"
         $("#alert").removeClass "hidden"
-    feed_id = $(this).attr "data-feed-id"
+
     # The refresh button now refreshes this feed
+    feed_id = $(this).attr "data-feed-id"
     $("#refresh-feed").attr "data-refresh-feed", feed_id
+
     # Show the feed title
     feed_title = $(this).attr "data-feed-title"
     $("#feed-title a").text feed_title
     $("#feed-title").removeClass "hidden"
+
     # The feed title links to the feed url
     feed_url = $(this).attr "data-feed-url"
     $("#feed-title a").attr("href", feed_url)
+
     # Empty the entries list before loading
     $("#feed-entries > li").empty()
+
     # Show "loading" message
     $("#loading").removeClass "hidden"
+
     # Show a spinning icon while loading
     $(".icon-spinner", this).addClass("icon-spin").removeClass "hidden"
+
+    # Load the entries via Ajax
     $("#feed-entries").load "/feeds/#{feed_id}", null, insert_entries
+
+  #-------------------------------------------------------
+  # Submit the "add subscription" form when clicking on the "Add" button
+  #-------------------------------------------------------
+  $("#subscribe-submit").click ->
+    $("#form-subscription").submit()
+
+  #-------------------------------------------------------
+  # Submit the "add subscription" form via Ajax
+  #-------------------------------------------------------
+  $("#form-subscription").on "submit", ->
+
+    # Function to handle result returned by the server
+    subscription_result = (data, status, xhr) ->
+      alert status
+      $("#subscribe-feed").modal 'hide'
+
+    # POST the form values via ajax
+    form_url = $("#form-subscription").attr "action"
+    post_data = $(this).serialize()
+    $.post(form_url, post_data, subscription_result)
+    .fail ->
+      $("#subscribe-feed").modal 'hide'
+      $("#alert p").text "There has been a problem adding a subscription. Please try again later"
+      $("#alert").removeClass "hidden"
+
+    # Clean textfield
+    $("#subscription_rss").val('')
+
+    # prevent default POST submit
+    return false
+

@@ -85,7 +85,7 @@ Openreader::Application.routes.draw do
 
   root :to => 'high_voltage/pages#show', id: 'index'
 
-  resources :feeds, only: [:index, :show]
+  resources :feeds, only: [:index, :show, :create]
 
   match '/feeds/:id/refresh' => 'feeds#refresh', via: :get
 end
