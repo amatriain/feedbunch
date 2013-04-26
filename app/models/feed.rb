@@ -67,8 +67,8 @@ class Feed < ActiveRecord::Base
       feed = Feed.where(fetch_url: feed_url).first
       user = User.find user_id
       Rails.logger.info "Subscribing user #{user_id} (#{user.email}) to feed #{feed_url}"
-      user.feeds << feed
-      return true
+      user.feeds << feed.reload
+      return feed
     else
       Rails.logger.info "Feed #{feed_url} not in the database, trying to fetch it"
       feed = Feed.create! fetch_url: feed_url, title: feed_url
@@ -77,7 +77,7 @@ class Feed < ActiveRecord::Base
         Rails.logger.info "New feed #{feed_url} successfully fetched. Subscribing user #{user_id}"
         user = User.find user_id
         user.feeds << feed
-        return true
+        return feed.reload
       else
         Rails.logger.info "URL #{feed_url} is not a valid feed URL"
         feed.destroy

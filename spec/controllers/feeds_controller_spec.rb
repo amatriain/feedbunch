@@ -69,4 +69,14 @@ describe FeedsController do
       get :refresh, id: @feed1.id
     end
   end
+
+  context 'POST create' do
+    it 'returns 304 if the user is already subscribed to the feed' do
+      post :create, format: :json, subscription: {rss: @feed1.fetch_url}
+      response.status.should eq 304
+
+      post :create, subscription: {rss: @feed1.url}
+      response.status.should eq 304
+    end
+  end
 end

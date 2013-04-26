@@ -105,6 +105,9 @@ $(document).ready ->
     # Function to handle result returned by the server
     subscription_result = (data, status, xhr) ->
       $("#subscribe-feed").modal 'hide'
+      if xhr.status == 304
+        $("#notice p").text "You are already subscribed to this feed"
+        $("#notice").removeClass "hidden"
 
     # If the user has written something in the form, POST the value via ajax
     if $("#subscription_rss").val()

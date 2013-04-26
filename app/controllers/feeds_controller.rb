@@ -47,12 +47,19 @@ class FeedsController < ApplicationController
   # If the param is not the URL of a valid feed, search among known feeds and return HTML with any matches.
 
   def create
-    subscription_success = Feed.subscribe params[:subscription][:rss], current_user.id
-    if subscription_success
-      #TODO respond with html for successful subscription
+    feed_url = params[:subscription][:rss]
+    # If user is already subscribed to the feed, return 304
+    if current_user.feeds.where(fetch_url: feed_url).present? || current_user.feeds.where(url: feed_url).present?
+      head status: 304
     else
-      #TODO respond with html for search results
-      head status: 404
+      # User is not yet subscribed to the feed
+      @feed = Feed.subscribe feed_url, current_user.id
+      if @feed
+        respond_with @feed
+      else
+        #TODO respond with html for search results
+        head status: 404
+      end
     end
   end
 end
