@@ -134,4 +134,58 @@ describe Feed do
       @feed.folders.should_not include @folder3
     end
   end
+
+  context 'add subscription' do
+
+    before :each do
+      @user = FactoryGirl.create :user
+      FeedClient.stub :fetch
+    end
+
+    it 'rejects non-valid URLs' do
+      invalid_url = 'not-an-url'
+      result = Feed.subscribe invalid_url, @user.id
+      result.should be_false
+      @user.feeds.where(fetch_url: invalid_url).should be_blank
+      @user.feeds.where(url: invalid_url).should be_blank
+    end
+
+    it 'subscribes user to feed already in the database' do
+      # At first the user is not subscribed to the feed
+      @user.feeds.where(fetch_url: @feed.fetch_url).should be_blank
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      result = Feed.subscribe @feed.fetch_url, @user.id
+      result.should be_true
+      @user.feeds.where(fetch_url: @feed.fetch_url).should be_present
+    end
+
+    it 'adds new feed to the database and subscribes user to it' do
+      feed_url = 'http://new.feed.url.com'
+      FeedClient.stub :fetch do
+        feed = Feed.where(fetch_url: feed_url).first
+        entry1 = FactoryGirl.create :entry, feed_id: feed.id
+        entry2 = FactoryGirl.create :entry, feed_id: feed.id
+        true
+      end
+
+      # At first the user is not subscribed to the feed
+      @user.feeds.where(fetch_url: feed_url).should be_blank
+
+      result = Feed.subscribe feed_url, @user.id
+      result.should be_true
+      @user.feeds.where(fetch_url: feed_url).should be_present
+      @user.feeds.where(fetch_url: feed_url).first.entries.count.should eq 2
+    end
+
+    it 'scans webpage for feed, adds it to the database and subscribes user to it'
+
+    it 'returns false if it cannot find a feed to subscribe the user'
+
+  end
 end

@@ -4,7 +4,8 @@
 class FeedsController < ApplicationController
   before_filter :authenticate_user!
 
-  respond_to :html
+  respond_to :html, only: [:index, :show, :refresh]
+  respond_to :json, only: [:create]
 
   ##
   # list all feeds the currently authenticated is suscribed to
@@ -33,29 +34,25 @@ class FeedsController < ApplicationController
   def refresh
     @feed = current_user.feeds.find params[:id]
     if @feed.present?
-      feed_client = FeedClient.new
-      feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       @feed.reload
       respond_with @feed, layout: false
     end
   end
 
   ##
-  # Add a subscription to a feed for the currently authenticated user.
+  # Subscribe the authenticated user to the feed passed in the params[:subscribe][:rss] param.
+  # If successful, return HTML with the entries of the feed.
   #
-  # First it checks if the user wrote the URL of a feed already in the database. If so, the user is subscribed to the feed.
-  #
-  # Otherwise, it checks if the user wrote a URL which points to a valid feed. If so, the feed is fetched, saved in the database
-  # and the user is subscribed to it.
-  #
-  # Otherwise, it checks if the user wrote the URL of a web page with a feed linked in the header. If the feed is in the
-  # database already, the user is subscribed to it; otherwise the feed is fetched, saved in the database and the user
-  # subscribed to it.
-  #
-  # Otherwise, it assumes the user has written a list of search terms, which are searched in the database. If any feeds
-  # match, the list of matches is returned to the user so he can choose which one to suscribe to.
+  # If the param is not the URL of a valid feed, search among known feeds and return HTML with any matches.
 
   def create
-    respond_with nil, layout: false
+    subscription_success = Feed.subscribe params[:subscription][:rss], current_user.id
+    if subscription_success
+      #TODO respond with html for successful subscription
+    else
+      #TODO respond with html for search results
+      head status: 404
+    end
   end
 end

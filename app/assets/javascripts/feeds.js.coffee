@@ -104,21 +104,25 @@ $(document).ready ->
 
     # Function to handle result returned by the server
     subscription_result = (data, status, xhr) ->
-      alert status
       $("#subscribe-feed").modal 'hide'
 
-    # POST the form values via ajax
-    form_url = $("#form-subscription").attr "action"
-    post_data = $(this).serialize()
-    $.post(form_url, post_data, subscription_result)
-    .fail ->
+    # If the user has written something in the form, POST the value via ajax
+    if $("#subscription_rss").val()
+      form_url = $("#form-subscription").attr "action"
+      post_data = $(this).serialize()
+      $.post(form_url, post_data, subscription_result)
+      .fail ->
+        $("#subscribe-feed").modal 'hide'
+        $("#alert p").text "There has been a problem adding a subscription. Please try again later"
+        $("#alert").removeClass "hidden"
+
+      # Clean textfield
+      $("#subscription_rss").val('')
+
+    # If the form is blank, close the popup and do nothing else
+    else
       $("#subscribe-feed").modal 'hide'
-      $("#alert p").text "There has been a problem adding a subscription. Please try again later"
-      $("#alert").removeClass "hidden"
 
-    # Clean textfield
-    $("#subscription_rss").val('')
-
-    # prevent default POST submit
+    # prevent default form submit
     return false
 

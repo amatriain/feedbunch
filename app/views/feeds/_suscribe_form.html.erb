@@ -4,7 +4,7 @@
     <h3><%= t 'feeds.index.subscribe_title' %></h3>
   </div>
   <div class="modal-body">
-    <%= simple_form_for :subscription, url: feeds_path,
+    <%= simple_form_for :subscription, url: feeds_path(format: :json),
                         html: {:method => :post, class: 'form-horizontal', id: 'form-subscription'},
                         wrapper: :prepend do |f| %>
       <%= f.input :rss, as: :rss_icon, required: false%>

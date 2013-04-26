@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe FeedClient do
   before :each do
-    @feed_client = FeedClient.new
-
     @feed = FactoryGirl.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
 
     @feed_title = 'xkcd.com'
@@ -23,14 +21,13 @@ describe FeedClient do
     @entry2.published = 'Fri, 12 Apr 2013 04:00:00 -0000'
     @entry2.guid = 'http://xkcd.com/1198/'
 
-    @http_client = double 'restclient'
-    @http_client.stub :get
-    @feed_client.http_client = @http_client
+    # Ensure no HTTP calls are made
+    RestClient.stub :get
   end
 
   it 'downloads the feed XML' do
-    @http_client.should_receive(:get).with @feed.fetch_url, anything
-    @feed_client.fetch @feed.id
+    RestClient.should_receive(:get).with @feed.fetch_url, anything
+    FeedClient.fetch @feed.id
   end
 
   context 'RSS 2.0 feeds' do
@@ -63,11 +60,11 @@ describe FeedClient do
 FEED_XML
 
       feed_xml.stub(:headers).and_return {}
-      @http_client.stub get: feed_xml
+      RestClient.stub get: feed_xml
     end
 
     it 'fetches the right entries and saves them in the database' do
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       @feed.reload
       @feed.entries.count.should eq 2
 
@@ -100,7 +97,7 @@ FEED_XML
                                  guid: @entry1.guid
 
       # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       # After fetching, relevant fields should be updated with the values received in the XML
       entry.reload
       entry.feed_id.should eq @feed.id
@@ -114,13 +111,13 @@ FEED_XML
     end
 
     it 'retrieves the feed title and saves it in the database' do
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       @feed.reload
       @feed.title.should eq @feed_title
     end
 
     it 'retrieves the feed URL and saves it in the database' do
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       @feed.reload
       @feed.url.should eq @feed_url
     end
@@ -154,11 +151,11 @@ FEED_XML
 FEED_XML
 
       feed_xml.stub(:headers).and_return {}
-      @http_client.stub get: feed_xml
+      RestClient.stub get: feed_xml
     end
 
     it 'fetches the right entries and saves them in the database' do
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       @feed.reload
       @feed.entries.count.should eq 2
 
@@ -191,7 +188,7 @@ FEED_XML
                                  guid: @entry1.guid
 
       # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       # After fetching, relevant fields should be updated with the values received in the XML
       entry.reload
       entry.feed_id.should eq @feed.id
@@ -205,13 +202,13 @@ FEED_XML
     end
 
     it 'retrieves the feed title and saves it in the database' do
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       @feed.reload
       @feed.title.should eq @feed_title
     end
 
     it 'retrieves the feed URL and saves it in the database' do
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       @feed.reload
       @feed.url.should eq @feed_url
     end
@@ -234,11 +231,11 @@ FEED_XML
       @last_modified = DateTime.now
       @headers = {etag: @etag, last_modified: @last_modified}
       @feed_xml.stub(:headers).and_return @headers
-      @http_client.stub(:get).and_return @feed_xml
+      RestClient.stub(:get).and_return @feed_xml
     end
 
     it 'saves etag and last-modified headers if they are in the response' do
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       @feed.reload
       @feed.etag.should eq @etag
       @feed.last_modified.to_i.should eq @last_modified.to_i
@@ -250,7 +247,7 @@ FEED_XML
       @headers = {last_modified: @last_modified}
       @feed_xml.stub(:headers).and_return @headers
 
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       @feed.reload
       @feed.etag.should be_nil
     end
@@ -261,7 +258,7 @@ FEED_XML
       @headers = {etag: @etag}
       @feed_xml.stub(:headers).and_return @headers
 
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
       @feed.reload
       @feed.last_modified.should be_nil
     end
@@ -270,39 +267,39 @@ FEED_XML
       @headers = {etag: @etag}
       @feed_xml.stub(:headers).and_return @headers
       # Fetch the feed a first time, so the etag is saved
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
 
       # Next time the feed is fetched, the etag from the last time will be sent in the if-none-match header
       @feed.reload
-      @http_client.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag}
-      @feed_client.fetch @feed.id
+      RestClient.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag}
+      FeedClient.fetch @feed.id
     end
 
     it 'tries to cache data using last-modified' do
       @headers = {last_modified: @last_modified}
       @feed_xml.stub(:headers).and_return @headers
       # Fetch the feed a first time, so the last-modified is saved
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
 
       # Next time the feed is fetched, the last-modified from the last time will be sent in the if-modified-since header
       @feed.reload
-      @http_client.should_receive(:get).with @feed.fetch_url, {if_modified_since: @feed.last_modified}
-      @feed_client.fetch @feed.id
+      RestClient.should_receive(:get).with @feed.fetch_url, {if_modified_since: @feed.last_modified}
+      FeedClient.fetch @feed.id
     end
 
     it 'tries to cache data using etag, not last-modified, if both are present' do
       # Fetch the feed a first time, so the last-modified is saved
-      @feed_client.fetch @feed.id
+      FeedClient.fetch @feed.id
 
       # Next time the feed is fetched, the last-modified from the last time will be sent in the if-modified-since header
       @feed.reload
-      @http_client.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag}
-      @feed_client.fetch @feed.id
+      RestClient.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag}
+      FeedClient.fetch @feed.id
     end
 
     it 'does not raise errors if the server responds with 304-not modified' do
-      @http_client.stub(:get).and_raise RestClient::NotModified.new
-      expect {@feed_client.fetch @feed.id}.to_not raise_error
+      RestClient.stub(:get).and_raise RestClient::NotModified.new
+      expect {FeedClient.fetch @feed.id}.to_not raise_error
     end
   end
 end

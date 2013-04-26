@@ -6,12 +6,9 @@ require 'rest_client'
 # that indicate the server to send only new entries.
 
 class FeedClient
-  # Class to be used for feed downloading. It defaults to RestClient.
-  # During unit testing it can be switched with a mock object, so that no actual HTTP calls are made.
-  attr_writer :http_client
 
   ##
-  # Fetch a feed, parse it and save the entries in the database.
+  # Fetch a feed, parse it and save the entries in the database. This is a class method.
   #
   # The method tries to use the last received etag with the if-none-match header to indicate the server to send only new
   # entries.
@@ -22,18 +19,14 @@ class FeedClient
   # If the last time the feed was fetched no etag and no last-modified headers were in the response, this method fetches
   # the full feed without sending caching headers.
 
-  def fetch(feed_id)
+  def self.fetch(feed_id)
     feed = Feed.find feed_id
-
-    # http_client defaults to RestClient, except if it's already been given another value (which happens
-    # during unit testing, in which a mocked is used instead of the real class)
-    http_client = @http_client || RestClient
 
     # Calculate HTTP headers to be used for fetching
     headers = fetch_headers feed
 
     # GET the feed
-    feed_response = http_client.get feed.fetch_url, headers
+    feed_response = RestClient.get feed.fetch_url, headers
 
     if feed_response.present?
       # We use the actual Feedzirra::Feed class to parse, never a mock.
@@ -73,7 +66,7 @@ class FeedClient
   private
 
   ##
-  # Save feed entries in the database.
+  # Save feed entries in the database. This is a class method.
   # For each entry, if an entry with the same guid already exists in the database, update it with
   # the values passed as argument to this method. Otherwise save it as a new entry in the database.
   #
@@ -81,7 +74,7 @@ class FeedClient
   # - the feed to which the entries belong (an instance of the Feed model)
   # - an Enumerable with the feed entries to save.
 
-  def save_entries(feed, entries)
+  def self.save_entries(feed, entries)
     entries.each do |f|
       # If entry is already in the database, update it
       if Entry.exists? guid: f.entry_id
@@ -107,6 +100,7 @@ class FeedClient
 
   ##
   # Return the HTTP headers to be used for fetching a feed, in order to cache content as much as possible.
+  # This is a class method.
   #
   # It receives as an argument the feed that is going to be fetched
   #
@@ -119,7 +113,7 @@ class FeedClient
   # If the last time the feed was fetched no etag and no last-modified headers were in the response, this method fetches
   # the full feed without sending caching headers.
 
-  def fetch_headers(feed)
+  def self.fetch_headers(feed)
     headers = {}
     # Prefer to use etag for cache control
     if feed.etag.present?

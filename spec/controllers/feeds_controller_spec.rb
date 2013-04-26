@@ -15,7 +15,7 @@ describe FeedsController do
     login_user_for_unit @user
 
     # Ensure no actual HTTP calls are done
-    FeedClient.any_instance.stub :fetch
+    FeedClient.stub :fetch
   end
 
   context 'GET index' do
@@ -48,7 +48,7 @@ describe FeedsController do
     end
 
     it 'does not fetch new entries in the feed' do
-      FeedClient.any_instance.should_not_receive(:fetch).with @feed1.id
+      FeedClient.should_not_receive(:fetch).with @feed1.id
       get :show, id: @feed1.id
     end
   end
@@ -65,7 +65,7 @@ describe FeedsController do
     end
 
     it 'fetches new entries in the feed before returning' do
-      FeedClient.any_instance.should_receive(:fetch).with @feed1.id
+      FeedClient.should_receive(:fetch).with @feed1.id
       get :refresh, id: @feed1.id
     end
   end
