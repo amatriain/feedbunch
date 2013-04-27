@@ -59,12 +59,54 @@ describe 'feeds' do
       page.should_not have_content @folder2.title
     end
 
-    it 'has an All Feeds folder with all feeds' do
-      pending
-      within '#sidebar' do
+    it 'has an All Feeds folder with all feeds', js: true do
+      within 'ul#sidebar' do
         page.should have_content 'All feeds'
-        click_on 'All feeds'
+
+        within 'li#folder-all' do
+          page.should have_css "a[data-target='#feeds-all']"
+
+          # "All feeds" folder should be closed (class "in" not present)
+          page.should_not have_css 'ul#feeds-all.in'
+
+          # Open "All feeds" folder (should acquire class "in")
+          find("a[data-target='#feeds-all']").click
+          page.should have_css 'ul#feeds-all.in'
+
+          # Should have all the feeds inside
+          within 'ul#feeds-all' do
+            page.should have_css "li#feed-#{@feed1.id}"
+            page.should have_css "li#feed-#{@feed2.id}"
+          end
+        end
       end
     end
+
+    it 'has a link to read all subscriptions inside the All Feeds folder'
+
+    it 'has folders containing their respective feeds', js: true do
+      within 'ul#sidebar' do
+        page.should have_content @folder1.title
+
+        within "li#folder-#{@folder1.id}" do
+          page.should have_css "a[data-target='#feeds-#{@folder1.id}']"
+
+          # Folder should be closed (class "in" not present)
+          page.should_not have_css "ul#feeds-#{@folder1.id}.in"
+
+          # Open folder (should acquire class "in")
+          find("a[data-target='#feeds-#{@folder1.id}']").click
+          page.should have_css "ul#feeds-#{@folder1.id}.in"
+
+          # Should have inside only those feeds associated to the folder
+          within "ul#feeds-#{@folder1.id}" do
+            page.should have_css "li#feed-#{@feed1.id}"
+            page.should_not have_css "li#feed-#{@feed2.id}"
+          end
+        end
+      end
+    end
+
+    it 'has a link to read all feeds inside each folder'
   end
 end

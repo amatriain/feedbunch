@@ -1,10 +1,10 @@
-<li>
-  <a data-toggle="collapse" data-target="#<%= folder_id %>" class="menu-level1">
+<li id="folder-<%= folder_id %>">
+  <a data-toggle="collapse" data-target="#feeds-<%= folder_id %>" class="menu-level1">
     <i class="folder icon-folder-close-alt"></i> <%= title %><i class="arrow icon-chevron-right pull-right"></i>
   </a>
-  <ul class="nav nav-list collapse" id="<%= folder_id %>">
+  <ul class="nav nav-list collapse" id="feeds-<%= folder_id %>">
     <% feeds.each do |feed| %>
-      <li>
+      <li id="feed-<%= feed.id %>">
         <a data-feed-id="<%= feed.id %>" data-feed-title="<%= feed.title %>" data-feed-url="<%= feed.url %>">
           <i class="icon-rss"></i> <%= feed.title %> <i class="icon-spinner hidden"></i>
         </a>
