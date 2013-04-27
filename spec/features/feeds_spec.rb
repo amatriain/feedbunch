@@ -15,7 +15,7 @@ describe 'feeds' do
       @user.feeds << @feed1
 
       # Ensure no actual HTTP calls are made
-      FeedClient.any_instance.stub :fetch
+      FeedClient.stub :fetch
       RestClient.stub :get
 
       login_user_for_feature @user
