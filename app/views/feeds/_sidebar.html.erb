@@ -1,9 +1,3 @@
-<ul class="nav nav-list">
-  <li class="disabled"><a><i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></a></li>
-</ul>
-
-<hr>
-
 <ul class="nav nav-tabs nav-stacked" id="sidebar">
 
   <%= render 'feeds/sidebar_folder', feeds: @feeds, title: t('feeds.index.all_feeds'), folder_id: 'all' %>

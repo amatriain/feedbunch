@@ -15,6 +15,12 @@
 # Openreader establishes a relationship between User and Feed models. Each user can be suscribed to many
 # feeds and many users can be suscribed to a single feed (many-to-many relationship).
 #
+# A relationship is also established between User and Folder models. Each user can have many folders and eah folder
+# belongs to a single user (one-to-many relationship).
+#
+# A relationship is also established between User and Entry models, through the Feed model. This enables us to retrieve
+# all entries for all feeds a user is suscribed to.
+#
 # It is not mandatory that a user be suscribed to any feeds (in fact when a user first signs up he won't
 # have any suscriptions).
 
@@ -30,6 +36,6 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
   has_and_belongs_to_many :feeds
-
   has_many :folders, dependent: :destroy
+  has_many :entries, through: :feeds
 end

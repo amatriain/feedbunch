@@ -63,8 +63,12 @@ $(document).ready ->
       $("#loading").addClass "hidden"
       $("#refresh-feed").removeClass "disabled"
       if status in ["error", "timeout", "abort", "parsererror"]
-        $("#alert p").text "There has been a problem loading the feed. Please try again later"
-        $("#alert").removeClass "hidden"
+        if xhr.status == 404
+          $("#notice p").text "No entries found for this feed."
+          $("#notice").removeClass "hidden"
+        else
+          $("#alert p").text "There has been a problem loading the feed. Please try again later"
+          $("#alert").removeClass "hidden"
 
     # The refresh button now refreshes this feed
     feed_id = $(this).attr "data-feed-id"

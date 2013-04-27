@@ -12,7 +12,7 @@ describe 'feeds' do
     current_path.should eq new_user_session_path
   end
 
-  context 'subscribed feeds' do
+  context 'subscription to feeds' do
 
     before :each do
       @user = FactoryGirl.create :user
@@ -31,6 +31,10 @@ describe 'feeds' do
     it 'does not show feeds the user is not subscribed to' do
       page.should_not have_content @feed2.title
     end
+
+    it 'subscribes to a feed'
+
+    it 'unsubscribes from a feed'
   end
 
   context 'folders' do
@@ -47,21 +51,25 @@ describe 'feeds' do
       @user.feeds << @feed1 << @feed2
       @folder1.feeds << @feed1
 
+      @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @entry1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @entry2_1 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @feed1.entries << @entry1_1 << @entry1_2
+      @feed2.entries << @entry2_1 << @entry2_2
+
       login_user_for_feature @user
       visit feeds_path
     end
 
-    it 'shows folders that belong to the user' do
+    it 'shows only folders that belong to the user' do
       page.should have_content @folder1.title
-    end
-
-    it 'does not show folders that do not belong to the user' do
       page.should_not have_content @folder2.title
     end
 
-    it 'has an All Feeds folder with all feeds', js: true do
+    it 'shows an All Subscriptions folder with all feeds subscribed to', js: true do
       within 'ul#sidebar' do
-        page.should have_content 'All feeds'
+        page.should have_content 'All subscriptions'
 
         within 'li#folder-all' do
           page.should have_css "a[data-target='#feeds-all']"
@@ -82,9 +90,7 @@ describe 'feeds' do
       end
     end
 
-    it 'has a link to read all subscriptions inside the All Feeds folder'
-
-    it 'has folders containing their respective feeds', js: true do
+    it 'shows folders containing their respective feeds', js: true do
       within 'ul#sidebar' do
         page.should have_content @folder1.title
 
@@ -107,6 +113,74 @@ describe 'feeds' do
       end
     end
 
-    it 'has a link to read all feeds inside each folder'
+    it 'shows entries for a feed in the All Subscriptions folder', js: true do
+      within 'ul#sidebar li#folder-all' do
+        # Open "All feeds" folder
+        find("a[data-target='#feeds-all']").click
+
+        # click on feed
+        find("li#feed-#{@feed2.id} > a").click
+      end
+
+      # Only entries for the clicked feed should appear
+      page.should have_content @entry2_1.title
+      page.should have_content @entry2_2.title
+      page.should_not have_content @entry1_1.title
+      page.should_not have_content @entry1_2.title
+    end
+
+    it 'shows entries for a feed inside a user folder'
+
+    it 'shows a link to read entries for all subscriptions inside the All Subscriptions folder', js: true do
+      within 'ul#sidebar li#folder-all' do
+        # Open "All feeds" folder
+        find("a[data-target='#feeds-all']").click
+
+        page.should have_css 'li#folder-all-all-feeds'
+
+        # Click on link to read all feeds
+        find('li#folder-all-all-feeds > a').click
+      end
+
+      page.should have_content @entry1_1.title
+      page.should have_content @entry1_2.title
+      page.should have_content @entry2_1.title
+      page.should have_content @entry2_2.title
+    end
+
+    it 'shows a link to read all entries for all subscriptions inside a folder'
+
+    it 'shows a notice if the feed clicked has no entries'
+
+    it 'adds a feed to a new folder'
+
+    it 'adds a feed to an existing folder'
+
+    it 'removes a feed from a folder'
+
+    it 'totally removes a folder when it has no feeds under it'
+  end
+
+  context 'refresh' do
+
+    it 'refreshes a single feed'
+
+    it 'refreshes all subscribed feeds'
+
+    it 'refreshes all subscribed feeds inside a folder'
+  end
+
+  context 'entries' do
+
+    it 'opens an entry'
+
+    it 'closes other entries when opening an entry'
+
+    it 'marks as read an entry when opening it'
+
+    it 'marks all entries as read'
+
+    it 'marks an entry as unread'
+
   end
 end
