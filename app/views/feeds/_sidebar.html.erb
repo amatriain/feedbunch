@@ -6,10 +6,10 @@
 
 <ul class="nav nav-tabs nav-stacked" id="sidebar">
 
-  <%= render 'feeds/sidebar_folder', feeds: @feeds, title: t('feeds.index.all_feeds') %>
+  <%= render 'feeds/sidebar_folder', feeds: @feeds, title: t('feeds.index.all_feeds'), folder_id: 'all_feeds' %>
 
   <% @folders.each do |folder| %>
-    <%= render 'feeds/sidebar_folder', feeds: folder.feeds, title: folder.title %>
+    <%= render 'feeds/sidebar_folder', feeds: folder.feeds, title: folder.title, folder_id: folder.id %>
   <% end %>
 
 </ul>
