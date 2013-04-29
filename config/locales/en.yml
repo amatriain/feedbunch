@@ -27,3 +27,4 @@ en:
       subscribe_title: "Add feed subscription"
       close: "Cancel"
       subscribe_submit: "Add"
+      no_entries: "No entries for this subscription"

@@ -226,7 +226,29 @@ describe 'feeds' do
       page.should_not have_content @entry2_2.title
     end
 
-    it 'shows a notice if the feed clicked has no entries'
+    it 'shows a notice if the feed clicked has no entries', js: true do
+      feed3 = FactoryGirl.create :feed
+      @user.feeds << feed3
+      visit feeds_path
+
+      within 'ul#sidebar li#folder-all' do
+        # Open "All feeds" folder
+        find("a[data-target='#feeds-all']").click
+
+        page.should have_css "li#feed-#{feed3.id}"
+
+        # Click on feed to read its entries
+        find("li#feed-#{feed3.id} > a").click
+      end
+
+      # A "no entries" alert should be shown
+      page.should have_css 'div#no-entries'
+      page.should_not have_css 'div#no-entries.hidden', visible: false
+
+      # It should close automatically after 5 seconds
+      sleep 5
+      page.should have_css 'div#no-entries.hidden', visible: false
+    end
 
     it 'adds a feed to a new folder'
 

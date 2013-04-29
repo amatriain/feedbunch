@@ -1,7 +1,3 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
-
 $(document).ready ->
 
 ##########################################################
@@ -29,6 +25,73 @@ $(document).ready ->
   #-------------------------------------------------------
   $("#subscribe-feed").on 'shown',  ->
     $("#subscription_rss", this).focus()
+
+##########################################################
+# ALERTS
+##########################################################
+
+  #-------------------------------------------------------
+  # Hide Rails notices with a timer
+  #-------------------------------------------------------
+  if $("#notice").length
+    seconds = 5
+    updateNoticeTimer = ->
+      seconds -= 1
+      $("#notice span[data-timer]").text seconds
+      if seconds == 0
+        clearInterval timerNotice
+        $("#notice").alert "close"
+    $("#notice span[data-timer]").text seconds
+    timerNotice = setInterval updateNoticeTimer, 1000
+
+  #-------------------------------------------------------
+  # Hide Rails alerts with a timer
+  #-------------------------------------------------------
+  if $("#alert").length
+    seconds = 5
+    updateAlertTimer = ->
+      seconds -= 1
+      $("#alert span[data-timer]").text seconds
+      if seconds == 0
+        clearInterval timerAlert
+        $("#alert").alert "close"
+    $("#alert span[data-timer]").text seconds
+    timerAlert = setInterval updateAlertTimer, 1000
+
+  #-------------------------------------------------------
+  # Hide Devise errors with a timer
+  #-------------------------------------------------------
+  if $("#devise-error").length
+    seconds = 5
+    updateDeviseTimer = ->
+      seconds -= 1
+      $("#devise-error span[data-timer]").text seconds
+      if seconds == 0
+        clearInterval timerDevise
+        $("#devise-error").alert "close"
+    $("#devise-error span[data-timer]").text seconds
+    timerDevise = setInterval updateDeviseTimer, 1000
+
+  #-------------------------------------------------------
+  # Hide alerts when clicking the close button
+  #-------------------------------------------------------
+  $("button[data-hide]").click ->
+    $(this).parent().parent().addClass 'hidden'
+
+  #-------------------------------------------------------
+  # Show "no entries" alert, close it with a timer
+  #-------------------------------------------------------
+  showNoEntriesAlert = ->
+    $("div#no-entries").removeClass "hidden"
+    seconds = 5
+    updateNoEntriesTimer = ->
+      seconds -= 1
+      $("#no-entries span[data-timer]").text seconds
+      if seconds == 0
+        clearInterval timerNoEntries
+        $("#no-entries").addClass 'hidden'
+    $("#no-entries span[data-timer]").text seconds
+    timerNoEntries = setInterval updateNoEntriesTimer, 1000
 
 ##########################################################
 # AJAX
@@ -64,8 +127,7 @@ $(document).ready ->
       $("#refresh-feed").removeClass "disabled"
       if status in ["error", "timeout", "abort", "parsererror"]
         if xhr.status == 404
-          $("#notice p").text "No entries found for this feed."
-          $("#notice").removeClass "hidden"
+          showNoEntriesAlert()
         else
           $("#alert p").text "There has been a problem loading the feed. Please try again later"
           $("#alert").removeClass "hidden"
@@ -133,4 +195,3 @@ $(document).ready ->
 
     # prevent default form submit
     return false
-

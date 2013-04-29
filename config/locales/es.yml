@@ -24,3 +24,4 @@ es:
       subscribe_title: "Añadir suscripción a un feed"
       close: "Cancelar"
       subscribe_submit: "Añadir"
+      no_entries: "No hay entradas para esta suscripción"
