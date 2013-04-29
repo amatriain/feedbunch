@@ -21,33 +21,18 @@
   </div>
 </div>
 
-<% if  notice.present? %>
-  <div class="row-fluid">
-    <div class="span10 offset1 alert">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <p><%= notice %></p>
-    </div>
-  </div>
-<% end %>
-
-<% if  alert.present? %>
-  <div class="row-fluid">
-    <div class="span10 offset1 alert alert-error">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <p><%= alert %></p>
-    </div>
-  </div>
-<% end %>
+<%= render 'layouts/alerts' %>
 
 <% if  devise_error_messages!.present? %>
   <div class="row-fluid">
-    <div class="span10 offset1 alert alert-error">
+    <div id="devise-error" class="span10 offset1 alert alert-error fade in">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       <ul>
         <% resource.errors.full_messages.each do |m| %>
           <li><%= m %></li>
         <% end %>
       </ul>
+      <p><%= t 'layouts.application.closing_timer_html' %></p>
     </div>
   </div>
 <% end %>

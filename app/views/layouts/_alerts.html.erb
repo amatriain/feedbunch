@@ -1,0 +1,19 @@
+<% if  notice.present? %>
+  <div class="row-fluid">
+    <div id="notice" class="span10 offset1 alert fade in">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p><%= notice %></p>
+      <p><%= t 'layouts.application.closing_timer_html' %></p>
+    </div>
+  </div>
+<% end %>
+
+<% if  alert.present? %>
+  <div class="row-fluid">
+    <div id="alert" class="span10 offset1 alert alert-error fade in">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p><%= alert %></p>
+      <p><%= t 'layouts.application.closing_timer_html' %></p>
+    </div>
+  </div>
+<% end %>

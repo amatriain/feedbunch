@@ -15,6 +15,7 @@ en:
       logout: "Logout"
       my_account: "My account"
       my_feeds: "My feeds"
+      closing_timer_html: "closing in <span data-timer></span>"
   feeds:
     index:
       open_new_tab: "Open in new tab"

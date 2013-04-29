@@ -10,37 +10,7 @@
 
 <%= render 'layouts/navbar' %>
 
-<%# If there is a notice or alert in the flash, show it. Otherwise add the class "hidden"
- so that the div is invisible but present, and can be manipulated with javascript %>
-<%
-   if notice.present?
-     class_notice = 'row-fluid'
-   else
-     class_notice = 'row-fluid hidden'
-   end
-%>
-
-<div id="notice" class="<%= class_notice %>">
-  <div class="span10 offset1 alert">
-    <button type="button" class="close">&times;</button>
-    <p><%= notice if notice.present? %></p>
-  </div>
-</div>
-
-<%
-   if alert.present?
-     class_alert = 'row-fluid'
-   else
-     class_alert = 'row-fluid hidden'
-   end
-%>
-
-<div id="alert" class="<%= class_alert %>">
-  <div class="span10 offset1 alert alert-error">
-    <button type="button" class="close">&times;</button>
-    <p><%= alert if alert.present? %></p>
-  </div>
-</div>
+<%= render 'layouts/alerts' %>
 
 <%= yield %>
 
