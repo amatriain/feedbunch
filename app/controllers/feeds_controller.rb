@@ -19,20 +19,10 @@ class FeedsController < ApplicationController
   ##
   # Return HTML with all entries for a given feed, as long as the currently authenticated user is suscribed to it.
   #
-  # If the param :id is "all", all entries for all feeds subscribed by the current user will be returned.
-  #
   # If the requests asks for a feed the current user is not suscribed to, the response is a 404 error code (Not Found).
 
   def show
-    feed_id = params[:id]
-
-    # If asked for feed_id="all", respond with entries of all feeds
-    if feed_id == 'all'
-      @entries = current_user.entries
-    else
-      # If asked for a feed id, respond with entries for this feed
-      @entries = current_user.feeds.find(feed_id).entries
-    end
+    @entries = current_user.feeds.find(params[:id]).entries
 
     if @entries.present?
       respond_with @entries, layout: false

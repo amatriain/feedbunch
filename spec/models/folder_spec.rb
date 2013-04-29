@@ -52,6 +52,24 @@ describe Folder do
     end
   end
 
+  context 'association with entries' do
+    it 'retrieves all entries for all feeds in a folder' do
+      feed1 = FactoryGirl.create :feed
+      feed2 = FactoryGirl.create :feed
+      @folder.feeds << feed1 << feed2
+      entry1 = FactoryGirl.build :entry, feed_id: feed1.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed1.id
+      entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+      feed1.entries << entry1 << entry2
+      feed2.entries << entry3
+
+      @folder.entries.count.should eq 3
+      @folder.entries.should include entry1
+      @folder.entries.should include entry2
+      @folder.entries.should include entry3
+    end
+  end
+
   context 'sanitization' do
     it 'sanitizes title' do
       title_unsanitized = '<script>alert("pwned!");</script>folder_title'

@@ -129,7 +129,21 @@ describe 'feeds' do
       page.should_not have_content @entry1_2.title
     end
 
-    it 'shows entries for a feed inside a user folder'
+    it 'shows entries for a feed inside a user folder', js: true do
+      within "ul#sidebar li#folder-#{@folder1.id}" do
+        # Open folder @folder1
+        find("a[data-target='#feeds-#{@folder1.id}']").click
+
+        # Click on feed
+        find("li#feed-#{@feed1.id} > a").click
+      end
+
+      # Only entries for the clicked feed should appear
+      page.should have_content @entry1_1.title
+      page.should have_content @entry1_2.title
+      page.should_not have_content @entry2_1.title
+      page.should_not have_content @entry2_2.title
+    end
 
     it 'shows a link to read entries for all subscriptions inside the All Subscriptions folder', js: true do
       within 'ul#sidebar li#folder-all' do
@@ -148,7 +162,32 @@ describe 'feeds' do
       page.should have_content @entry2_2.title
     end
 
-    it 'shows a link to read all entries for all subscriptions inside a folder'
+    it 'shows a link to read all entries for all subscriptions inside a folder', js: true do
+      # Add a second feed inside @folder1
+      feed3 = FactoryGirl.create :feed
+      @user.feeds << feed3
+      @folder1.feeds << feed3
+      entry3_1 = FactoryGirl.build :entry, feed_id: feed3.id
+      entry3_2 = FactoryGirl.build :entry, feed_id: feed3.id
+      feed3.entries << entry3_1 << entry3_2
+
+      within "ul#sidebar li#folder-#{@folder1.id}" do
+        # Open folder
+        find("a[data-target='#feeds-#{@folder1.id}']").click
+
+        page.should have_css "li#folder-#{@folder1.id}-all-feeds"
+
+        # Click on link to read all feeds
+        find("li#folder-#{@folder1.id}-all-feeds > a").click
+      end
+
+      page.should have_content @entry1_1.title
+      page.should have_content @entry1_2.title
+      page.should have_content entry3_1.title
+      page.should have_content entry3_2.title
+      page.should_not have_content @entry2_1.title
+      page.should_not have_content @entry2_2.title
+    end
 
     it 'shows a notice if the feed clicked has no entries'
 

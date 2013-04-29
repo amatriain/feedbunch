@@ -20,8 +20,8 @@ $(document).ready ->
   #-------------------------------------------------------
   # Dynamic styling when clicking on a feed in the sidebar
   #-------------------------------------------------------
-  $("[data-feed-id]").click ->
-    $("[data-feed-id]").parent().removeClass "active"
+  $("[data-feed-path]").click ->
+    $("[data-feed-path]").parent().removeClass "active"
     $(this).parent().addClass "active"
 
   #-------------------------------------------------------
@@ -55,7 +55,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Load current feed entries when clicking on a feed in the sidebar
   #-------------------------------------------------------
-  $("[data-feed-id]").click ->
+  $("[data-feed-path]").click ->
 
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
@@ -71,8 +71,8 @@ $(document).ready ->
           $("#alert").removeClass "hidden"
 
     # The refresh button now refreshes this feed
-    feed_id = $(this).attr "data-feed-id"
-    $("#refresh-feed").attr "data-refresh-feed", feed_id
+    feed_path = $(this).attr "data-feed-path"
+    $("#refresh-feed").attr "data-refresh-feed", feed_path
 
     # Show the feed title
     feed_title = $(this).attr "data-feed-title"
@@ -93,7 +93,8 @@ $(document).ready ->
     $(".icon-spinner", this).addClass("icon-spin").removeClass "hidden"
 
     # Load the entries via Ajax
-    $("#feed-entries").load "/feeds/#{feed_id}", null, insert_entries
+
+    $("#feed-entries").load "#{feed_path}", null, insert_entries
 
   #-------------------------------------------------------
   # Submit the "add subscription" form when clicking on the "Add" button

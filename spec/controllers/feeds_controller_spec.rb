@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe FeedsController do
+
   before :each do
     @user = FactoryGirl.create :user
 
@@ -16,6 +17,7 @@ describe FeedsController do
 
     # Ensure no actual HTTP calls are done
     FeedClient.stub :fetch
+    RestClient.stub :get
   end
 
   context 'GET index' do
@@ -49,20 +51,6 @@ describe FeedsController do
       assigns(:entries).count.should eq 2
       assigns(:entries).should include @entry_1_1
       assigns(:entries).should include @entry_1_2
-    end
-
-    it 'assigns to @entries the entries for all subscribed feeds' do
-      # Create a second feed subscribed, with just one entry
-      feed3 = FactoryGirl.create :feed
-      @user.feeds << feed3
-      entry_3_1 = FactoryGirl.build :entry, feed_id: feed3.id
-      feed3.entries << entry_3_1
-
-      get :show, id: 'all'
-      assigns(:entries).count.should eq 3
-      assigns(:entries).should include @entry_1_1
-      assigns(:entries).should include @entry_1_2
-      assigns(:entries).should include entry_3_1
     end
 
     it 'returns a 404 for a feed the user is not suscribed to' do

@@ -1,18 +1,26 @@
 <li id="folder-<%= folder_id %>">
+
+  <%# Link to open the folder (initialy it's closed) %>
   <a data-toggle="collapse" data-target="#feeds-<%= folder_id %>" class="menu-level1">
     <i class="folder icon-folder-close-alt"></i> <%= title %><i class="arrow icon-chevron-right pull-right"></i>
   </a>
+
+  <%# Content of the folder (initially hidden) %>
   <ul class="nav nav-list collapse" id="feeds-<%= folder_id %>">
+
+    <%# Link to read all feeds in the folder in a single list of entries %>
     <% if feeds.present? %>
       <li id="folder-<%= folder_id %>-all-feeds">
-        <a data-feed-id="all" data-feed-title="<%= t 'feeds.index.all_entries' %>">
+        <a data-feed-path="/folders/<%= folder_id %>" data-feed-title="<%= t 'feeds.index.all_entries' %>">
           <em><strong><i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></strong></em> <i class="icon-spinner hidden"></i>
         </a>
       </li>
     <% end %>
+
+    <%# Links to read each individual feed in the folder %>
     <% feeds.each do |feed| %>
       <li id="feed-<%= feed.id %>">
-        <a data-feed-id="<%= feed.id %>" data-feed-title="<%= feed.title %>" data-feed-url="<%= feed.url %>">
+        <a data-feed-path="/feeds/<%= feed.id %>" data-feed-title="<%= feed.title %>" data-feed-url="<%= feed.url %>">
           <i class="icon-rss"></i> <%= feed.title %> <i class="icon-spinner hidden"></i>
         </a>
       </li>
