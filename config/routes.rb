@@ -91,6 +91,7 @@ Openreader::Application.routes.draw do
 
   #TODO - change this to a resourceful route
   match '/feeds/:id/refresh' => 'feeds#refresh', via: :get
+  match '/folders/:id/refresh' => 'folders#refresh', via: :get
 
   # Resourceful route to get all entries for all feeds inside a folder
   resources :folders, only: [:show]

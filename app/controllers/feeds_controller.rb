@@ -38,15 +38,17 @@ class FeedsController < ApplicationController
   ##
   # Fetch a feed and save in the database any new entries, as long as the currently authenticated user is suscribed to it.
   #
-  # After that it does exactly the same as the show action: return HTML with all entries for the feed
+  # After that it does exactly the same as the show action: return HTML with all entries for the feed.
+  #
+  # If the request asks to refresh a folder the user is not suscribed to, the response is a 404 error code (Not Found).
 
   def refresh
-    @feed = current_user.feeds.find params[:id]
-    if @feed.present?
-      FeedClient.fetch @feed.id
-      @feed.reload
-      @entries = @feed.entries
-      respond_with @entries, layout: false
+    feed = current_user.feeds.find params[:id]
+    if feed.present?
+      FeedClient.fetch feed.id
+      feed.reload
+      @entries = feed.entries
+      respond_with @entries, template: 'feeds/show', layout: false
     else
       head status: 404
     end

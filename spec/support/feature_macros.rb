@@ -72,7 +72,7 @@ end
 
 def read_feed(feed_id)
   within 'ul#sidebar li#folder-all' do
-    # Open "All feeds" folder
+    # Open "All subscriptions" folder
     find("a[data-target='#feeds-all']").click
 
     page.should have_css "li#feed-#{feed_id}"
