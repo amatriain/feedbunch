@@ -73,4 +73,11 @@ describe FoldersController do
 
   end
 
+  context 'GET refresh' do
+
+    # TODO implement tests for this context
+    it 'works'
+
+  end
+
 end

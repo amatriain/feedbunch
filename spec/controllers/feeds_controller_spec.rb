@@ -13,6 +13,10 @@ describe FeedsController do
     @folder2 = FactoryGirl.create :folder
     @user.folders << @folder1
 
+    @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @feed1.entries << @entry1 << @entry2
+
     login_user_for_unit @user
 
     # Ensure no actual HTTP calls are done
@@ -70,9 +74,10 @@ describe FeedsController do
   end
 
   context 'GET refresh' do
-    it 'assigns to @feed the correct object' do
+
+    it 'assigns to @entries the correct list of entries' do
       get :refresh, id: @feed1.id
-      assigns(:feed).should eq @feed1
+      assigns(:entries).should eq @feed1.entries
     end
 
     it 'returns a 404 for a feed the user is not suscribed to' do
