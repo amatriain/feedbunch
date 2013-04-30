@@ -230,16 +230,7 @@ describe 'feeds' do
       feed3 = FactoryGirl.create :feed
       @user.feeds << feed3
       visit feeds_path
-
-      within 'ul#sidebar li#folder-all' do
-        # Open "All feeds" folder
-        find("a[data-target='#feeds-all']").click
-
-        page.should have_css "li#feed-#{feed3.id}"
-
-        # Click on feed to read its entries
-        find("li#feed-#{feed3.id} > a").click
-      end
+      read_feed feed3.id
 
       # A "no entries" alert should be shown
       page.should have_css 'div#no-entries'
@@ -270,9 +261,51 @@ describe 'feeds' do
 
   context 'entries' do
 
-    it 'opens an entry'
+    before :each do
+      @user = FactoryGirl.create :user
+      @feed = FactoryGirl.create :feed
+      @user.feeds << @feed
+      @entry1 = FactoryGirl.build :entry, feed_id: @feed.id
+      @entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+      @feed.entries << @entry1 << @entry2
 
-    it 'closes other entries when opening an entry'
+      login_user_for_feature @user
+      visit feeds_path
+      read_feed @feed.id
+    end
+
+    it 'opens an entry', js: true do
+      within 'ul#feed-entries' do
+        # Entry summary should not be visible
+        page.should_not have_content @entry1.summary
+
+        # Open entry
+        find("li#entry-#{@entry1.id} > a").click
+
+        # Summary should appear
+        page.should have_content @entry1.summary
+      end
+    end
+
+    it 'closes other entries when opening an entry', js: true do
+      within 'ul#feed-entries' do
+        # Open first entry, give it some time for open animation
+        find("li#entry-#{@entry1.id} > a").click
+        sleep 1
+
+        # Only summary of first entry should be visible
+        page.should have_content @entry1.summary
+        page.should_not have_content @entry2.summary
+
+        # Open second entry, give it some time for open animation
+        find("li#entry-#{@entry2.id} > a").click
+        sleep 1
+
+        # Only summary of second entry should be visible
+        page.should_not have_content @entry1.summary
+        page.should have_content @entry2.summary
+      end
+    end
 
     it 'marks as read an entry when opening it'
 

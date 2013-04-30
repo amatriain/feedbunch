@@ -66,3 +66,18 @@ def mail_should_not_be_sent
   email = ActionMailer::Base.deliveries.pop
   email.present?.should be_false
 end
+
+##
+# Click on a feed to read its entries during acceptance testing
+
+def read_feed(feed_id)
+  within 'ul#sidebar li#folder-all' do
+    # Open "All feeds" folder
+    find("a[data-target='#feeds-all']").click
+
+    page.should have_css "li#feed-#{feed_id}"
+
+    # Click on feed to read its entries
+    find("li#feed-#{feed_id} > a").click
+  end
+end
