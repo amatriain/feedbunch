@@ -252,7 +252,42 @@ describe 'feeds' do
 
   context 'refresh' do
 
-    it 'refreshes a single feed'
+    before :each do
+      @user = FactoryGirl.create :user
+      @feed = FactoryGirl.create :feed
+      @user.feeds << @feed
+      @entry1 = FactoryGirl.build :entry, feed_id: @feed.id
+      @feed.entries << @entry1
+
+      login_user_for_feature @user
+      visit feeds_path
+      read_feed @feed.id
+    end
+
+    it 'disables refresh button until a feed is selected', js: true do
+      visit feeds_path
+      page.should have_css 'a#refresh-feed.disabled'
+    end
+
+    it 'enables refresh button when a feed is selected', js: true do
+      page.should_not have_css 'a#refresh-feed.disabled'
+      page.should have_css 'a#refresh-feed'
+    end
+
+    it 'refreshes a single feed', js: true do
+      # Page should have current entries for the feed
+      page.should have_content @entry1.title
+
+      # Refresh feed
+      entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+      FeedClient.should_receive(:fetch).with @feed.id
+      @feed.entries << entry2
+      find('a#refresh-feed').click
+
+      # Page shouls have the new entries for the feed
+      page.should have_content @entry1.title
+      page.should have_content entry2.title
+    end
 
     it 'refreshes all subscribed feeds'
 

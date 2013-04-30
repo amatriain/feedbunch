@@ -45,7 +45,8 @@ class FeedsController < ApplicationController
     if @feed.present?
       FeedClient.fetch @feed.id
       @feed.reload
-      respond_with @feed, layout: false
+      @entries = @feed.entries
+      respond_with @entries, layout: false
     else
       head status: 404
     end

@@ -101,9 +101,9 @@ $(document).ready ->
   # Load new feed entries when clicking on the Refresh button
   #-------------------------------------------------------
   $("#refresh-feed").click ->
-    feed_id = $(this).attr "data-refresh-feed"
+    feed_path = $(this).attr "data-refresh-feed"
     # Only refresh if the data-refresh-feed attribute has a reference to a feed id
-    if feed_id?.length
+    if feed_path?.length
       $("> i.icon-repeat", this).addClass "icon-spin"
 
       # Function to insert new entries in the list
@@ -113,7 +113,7 @@ $(document).ready ->
           $("#alert p").text "There has been a problem refreshing the feed. Please try again later"
           $("#alert").removeClass "hidden"
 
-      $("#feed-entries").load "/feeds/#{feed_id}/refresh", null, insert_entries
+      $("#feed-entries").load "#{feed_path}/refresh", null, insert_entries
 
   #-------------------------------------------------------
   # Load current feed entries when clicking on a feed in the sidebar
