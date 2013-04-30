@@ -13,10 +13,6 @@ describe FeedsController do
     @folder2 = FactoryGirl.create :folder
     @user.folders << @folder1
 
-    @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @feed1.entries << @entry1 << @entry2
-
     login_user_for_unit @user
 
     # Ensure no actual HTTP calls are done
@@ -76,6 +72,10 @@ describe FeedsController do
   context 'GET refresh' do
 
     it 'assigns to @entries the correct list of entries' do
+      entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+      entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @feed1.entries << entry1 << entry2
+
       get :refresh, id: @feed1.id
       assigns(:entries).should eq @feed1.entries
     end
