@@ -75,8 +75,9 @@ describe FoldersController do
 
   context 'GET refresh' do
 
-    # TODO implement tests for this context
-    it 'works'
+    it 'assigns to @entries the correct list of entries' do
+
+    end
 
   end
 

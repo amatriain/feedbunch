@@ -71,10 +71,12 @@ describe FeedsController do
 
   context 'GET refresh' do
 
-    it 'assigns to @entries the correct list of entries' do
-      entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-      entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @feed1.entries << entry1 << entry2
+    it 'assigns to @entries the new entries of a feed' do
+      FeedClient.stub :fetch do
+        entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+        entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
+        @feed1.entries << entry1 << entry2
+      end
 
       get :refresh, id: @feed1.id
       assigns(:entries).should eq @feed1.entries
