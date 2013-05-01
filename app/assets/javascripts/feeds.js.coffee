@@ -93,6 +93,21 @@ $(document).ready ->
     $("#no-entries span[data-timer]").text seconds
     timerNoEntries = setInterval updateNoEntriesTimer, 1000
 
+  #-------------------------------------------------------
+  # Show "problem refreshing" alert, close it with a timer
+  #-------------------------------------------------------
+  showProblemRefreshingAlert = ->
+    $("div#problem-refreshing").removeClass "hidden"
+    seconds = 5
+    updateProblemRefreshingTimer = ->
+      seconds -= 1
+      $("#problem-refreshing span[data-timer]").text seconds
+      if seconds == 0
+        clearInterval timerProblemRefreshing
+        $("#problem-refreshing").addClass 'hidden'
+    $("#problem-refreshing span[data-timer]").text seconds
+    timerProblemRefreshing = setInterval updateProblemRefreshingTimer, 1000
+
 ##########################################################
 # AJAX
 ##########################################################
@@ -113,8 +128,7 @@ $(document).ready ->
         $("#refresh-feed > i.icon-repeat").removeClass "icon-spin"
         $("#loading").addClass "hidden"
         if status in ["error", "timeout", "abort", "parsererror"]
-          $("#alert p").text "There has been a problem refreshing the feed. Please try again later"
-          $("#alert").removeClass "hidden"
+          showProblemRefreshingAlert()
 
       $("#feed-entries").empty().load "#{feed_path}/refresh", null, insert_entries
 

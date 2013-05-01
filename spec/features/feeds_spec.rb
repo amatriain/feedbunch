@@ -74,7 +74,7 @@ describe 'feeds' do
       find('#add-subscription').click
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: @feed2.fetch_url
-        find("#subscribe-submit").click
+        find('#subscribe-submit').click
       end
 
       # Open "all subscriptions" folder
@@ -242,7 +242,7 @@ describe 'feeds' do
       page.should_not have_content @entry2_2.title
     end
 
-    it 'shows a notice if the feed clicked has no entries', js: true do
+    it 'shows an alert if the feed clicked has no entries', js: true do
       feed3 = FactoryGirl.create :feed
       @user.feeds << feed3
       visit feeds_path
@@ -376,6 +376,20 @@ describe 'feeds' do
       page.should have_content entry2.title
       page.should have_content entry3.title
       page.should have_content entry4.title
+    end
+
+    it 'shows an alert if there is a problem refreshing a feed', js: true do
+      FeedClient.stub(:fetch).and_raise ActiveRecord::RecordNotFound.new
+      # Refresh feed
+      find('a#refresh-feed').click
+
+      # A "problem refreshing feed" alert should be shown
+      page.should have_css 'div#problem-refreshing'
+      page.should_not have_css 'div#problem-refreshing.hidden', visible: false
+
+      # It should close automatically after 5 seconds
+      sleep 5
+      page.should have_css 'div#problem-refreshing.hidden', visible: false
     end
   end
 

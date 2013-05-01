@@ -25,3 +25,4 @@ es:
       close: "Cancelar"
       subscribe_submit: "Añadir"
       no_entries: "No hay entradas para esta suscripción"
+      problem_refreshing: "There has been a problem refreshing the feed. Please try again later"

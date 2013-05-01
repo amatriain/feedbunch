@@ -6,3 +6,12 @@
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
+
+<%# Alert displayed when there is a problem refreshing feeds %>
+<div id="problem-refreshing" class="row-fluid hidden">
+  <div class="span10 offset1 alert alert-error">
+    <button type="button" class="close" data-hide>&times;</button>
+    <p><%= t 'feeds.index.problem_refreshing' %></p>
+    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
+  </div>
+</div>
