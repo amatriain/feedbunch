@@ -23,7 +23,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Give focus to the text input field when showing the "Add subscription" modal.
   #-------------------------------------------------------
-  $("#subscribe-feed").on 'shown',  ->
+  $("#subscribe-feed-popup").on 'shown',  ->
     $("#subscription_rss", this).focus()
 
 ##########################################################
@@ -174,7 +174,7 @@ $(document).ready ->
 
     # Function to handle result returned by the server
     subscription_result = (data, status, xhr) ->
-      $("#subscribe-feed").modal 'hide'
+      $("#subscribe-feed-popup").modal 'hide'
       if xhr.status == 304
         $("#notice p").text "You are already subscribed to this feed"
         $("#notice").removeClass "hidden"
@@ -185,7 +185,7 @@ $(document).ready ->
       post_data = $(this).serialize()
       $.post(form_url, post_data, subscription_result)
       .fail ->
-        $("#subscribe-feed").modal 'hide'
+        $("#subscribe-feed-popup").modal 'hide'
         $("#alert p").text "There has been a problem adding a subscription. Please try again later"
         $("#alert").removeClass "hidden"
 
@@ -194,7 +194,7 @@ $(document).ready ->
 
     # If the form is blank, close the popup and do nothing else
     else
-      $("#subscribe-feed").modal 'hide'
+      $("#subscribe-feed-popup").modal 'hide'
 
     # prevent default form submit
     return false

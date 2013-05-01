@@ -4,6 +4,9 @@ describe Feed do
 
   before :each do
     @feed = FactoryGirl.create :feed
+
+    # ensure no actual HTTP calls are made
+    RestClient.stub :get
   end
 
   context 'validations' do
@@ -150,7 +153,7 @@ describe Feed do
       @user.feeds.where(url: invalid_url).should be_blank
     end
 
-    it 'subscribes user to feed already in the database' do
+    it 'subscribes user to feed already in the database, given its fetch_url' do
       # At first the user is not subscribed to the feed
       @user.feeds.where(fetch_url: @feed.fetch_url).should be_blank
 
@@ -163,6 +166,22 @@ describe Feed do
       result = Feed.subscribe @feed.fetch_url, @user.id
       result.should be_true
       @user.feeds.where(fetch_url: @feed.fetch_url).should be_present
+    end
+
+    it 'subscribes user to feed already in the database, given its url' do
+      pending 'not yet working'
+      # At first the user is not subscribed to the feed
+      @user.feeds.where(url: @feed.url).should be_blank
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      result = Feed.subscribe @feed.url, @user.id
+      result.should be_true
+      @user.feeds.where(url: @feed.url).should be_present
     end
 
     it 'adds new feed to the database and subscribes user to it' do

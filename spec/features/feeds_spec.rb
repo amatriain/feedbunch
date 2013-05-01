@@ -69,7 +69,23 @@ describe 'feeds' do
       page.should_not have_content @feed2.title
     end
 
-    it 'subscribes to a feed'
+    it 'subscribes to a feed already in the database, given the feed URL', js: true do
+      pending 'not fully implemented yet'
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: @feed2.fetch_url
+        find("#subscribe-submit").click
+      end
+
+      # Open "all subscriptions" folder
+      find('ul#sidebar li#folder-all').click
+
+      # Both the old and new feeds should be there
+      page.should have_css "ul#sidebar li#folder-#{@feed1.id}"
+      page.should have_css "ul#sidebar li#folder-#{@feed2.id}"
+    end
+
+    it 'subscribes to a feed already in the database, given the website URL'
 
     it 'unsubscribes from a feed'
   end
