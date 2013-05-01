@@ -63,6 +63,7 @@ class FoldersController < ApplicationController
 
       # If asked for folder_id="all", respond with entries of all feeds user is subscribed to
       if folder_id == 'all'
+        current_user.reload
         @entries = current_user.entries
       else
         # If asked for a folder_id, respond with entries for the feeds inside this folder
