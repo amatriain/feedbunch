@@ -88,6 +88,10 @@ describe 'feeds' do
     it 'subscribes to a feed already in the database, given the website URL'
 
     it 'unsubscribes from a feed'
+
+    it 'shows an alert if there is a problem subscribing to a feed'
+
+    it 'shows an alert if the user is already subscribed to the feed'
   end
 
   context 'folders' do
@@ -255,6 +259,22 @@ describe 'feeds' do
       # It should close automatically after 5 seconds
       sleep 5
       page.should have_css 'div#no-entries.hidden', visible: false
+    end
+
+    it 'shows an alert if there is a problem loading a feed', js: true do
+      pending 'it seems I cannot rescue errors raised in the controller. Test pending until I find a solution.'
+
+      User.any_instance.stub(:feeds).and_raise StandardError.new
+      # Try to read feed
+      read_feed @feed1.id
+
+      # A "problem loading feed" alert should be shown
+      page.should have_css 'div#problem-loading'
+      page.should_not have_css 'div#problem-loading.hidden', visible: false
+
+      # It should close automatically after 5 seconds
+      sleep 5
+      page.should have_css 'div#problem-loading.hidden', visible: false
     end
 
     it 'adds a feed to a new folder'

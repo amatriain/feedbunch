@@ -15,3 +15,30 @@
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
+
+<%# Alert displayed when there is a problem loading feeds %>
+<div id="problem-loading" class="row-fluid hidden">
+  <div class="span10 offset1 alert alert-error">
+    <button type="button" class="close" data-hide>&times;</button>
+    <p><%= t 'feeds.index.problem_loading' %></p>
+    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
+  </div>
+</div>
+
+<%# Alert displayed when there is a problem adding a subscription %>
+<div id="problem-subscribing" class="row-fluid hidden">
+  <div class="span10 offset1 alert alert-error">
+    <button type="button" class="close" data-hide>&times;</button>
+    <p><%= t 'feeds.index.problem_subscribing' %></p>
+    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
+  </div>
+</div>
+
+<%# Alert displayed when the user tries to subscribe to a feed he's already subscribed to %>
+<div id="already-subscribed" class="row-fluid hidden">
+  <div class="span10 offset1 alert">
+    <button type="button" class="close" data-hide>&times;</button>
+    <p><%= t 'feeds.index.already_subscribed' %></p>
+    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
+  </div>
+</div>

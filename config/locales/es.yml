@@ -25,4 +25,7 @@ es:
       close: "Cancelar"
       subscribe_submit: "Añadir"
       no_entries: "No hay entradas para esta suscripción"
-      problem_refreshing: "There has been a problem refreshing the feed. Please try again later"
+      problem_refreshing: "Ha habido un problema refrescando el feed. Por favor inténtelo de nuevo más tarde."
+      problem_loading: "Ha habido un problema cargando el feed. Por favor inténtelo de nuevo más tarde."
+      problem_subscribing: "Ha habido un problema añadiendo la suscripción. Por favor inténtelo de nuevo más tarde."
+      already_subscribed: "Ya estás suscrito a este feed."

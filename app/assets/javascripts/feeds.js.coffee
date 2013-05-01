@@ -108,6 +108,51 @@ $(document).ready ->
     $("#problem-refreshing span[data-timer]").text seconds
     timerProblemRefreshing = setInterval updateProblemRefreshingTimer, 1000
 
+  #-------------------------------------------------------
+  # Show "problem loading" alert, close it with a timer
+  #-------------------------------------------------------
+  showProblemLoadingAlert = ->
+    $("div#problem-loading").removeClass "hidden"
+    seconds = 5
+    updateProblemLoadingTimer = ->
+      seconds -= 1
+      $("#problem-loading span[data-timer]").text seconds
+      if seconds == 0
+        clearInterval timerProblemLoading
+        $("#problem-loading").addClass 'hidden'
+    $("#problem-loading span[data-timer]").text seconds
+    timerProblemLoading = setInterval updateProblemLoadingTimer, 1000
+
+  #-------------------------------------------------------
+  # Show "problem subscribing" alert, close it with a timer
+  #-------------------------------------------------------
+  showProblemSubscribingAlert = ->
+    $("div#problem-subscribing").removeClass "hidden"
+    seconds = 5
+    updateProblemSubscribingTimer = ->
+      seconds -= 1
+      $("#problem-subscribing span[data-timer]").text seconds
+      if seconds == 0
+        clearInterval timerProblemSubscribing
+        $("#problem-subscribing").addClass 'hidden'
+    $("#problem-subscribing span[data-timer]").text seconds
+    timerProblemSubscribing = setInterval updateProblemSubscribingTimer, 1000
+
+  #-------------------------------------------------------
+  # Show "already subscribed" alert, close it with a timer
+  #-------------------------------------------------------
+  showAlreadySubscribedAlert = ->
+    $("div#already-subscribed").removeClass "hidden"
+    seconds = 5
+    updateAlreadySubscribedTimer = ->
+      seconds -= 1
+      $("#already-subscribed span[data-timer]").text seconds
+      if seconds == 0
+        clearInterval timerAlreadySubscribed
+        $("#already-subscribed").addClass 'hidden'
+    $("#already-subscribed span[data-timer]").text seconds
+    timerAlreadySubscribed = setInterval updateAlreadySubscribedTimer, 1000
+
 ##########################################################
 # AJAX
 ##########################################################
@@ -146,8 +191,7 @@ $(document).ready ->
         if xhr.status == 404
           showNoEntriesAlert()
         else
-          $("#alert p").text "There has been a problem loading the feed. Please try again later"
-          $("#alert").removeClass "hidden"
+          showProblemLoadingAlert()
 
     # The refresh button now refreshes this feed
     feed_path = $(this).attr "data-feed-path"
@@ -190,8 +234,7 @@ $(document).ready ->
     subscription_result = (data, status, xhr) ->
       $("#subscribe-feed-popup").modal 'hide'
       if xhr.status == 304
-        $("#notice p").text "You are already subscribed to this feed"
-        $("#notice").removeClass "hidden"
+        showAlreadySubscribedAlert()
 
     # If the user has written something in the form, POST the value via ajax
     if $("#subscription_rss").val()
@@ -200,8 +243,7 @@ $(document).ready ->
       $.post(form_url, post_data, subscription_result)
       .fail ->
         $("#subscribe-feed-popup").modal 'hide'
-        $("#alert p").text "There has been a problem adding a subscription. Please try again later"
-        $("#alert").removeClass "hidden"
+        showProblemSubscribingAlert()
 
       # Clean textfield
       $("#subscription_rss").val('')
