@@ -83,6 +83,8 @@ class Feed < ActiveRecord::Base
       if fetch_result
         Rails.logger.info "New feed #{feed_url} successfully fetched. Subscribing user #{user_id}"
         user = User.find user_id
+        # We have to reload the feed because the title has likely changed value to the real one when first fetching it
+        feed.reload
         user.feeds << feed
         return feed
       else

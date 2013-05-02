@@ -3,7 +3,6 @@ require 'spec_helper'
 describe 'feeds' do
   before :each do
     # Ensure no actual HTTP calls are made
-    FeedClient.stub :fetch
     RestClient.stub :get
   end
 
@@ -105,7 +104,48 @@ describe 'feeds' do
       page.should have_content entry.title
     end
 
-    it 'subscribes to a feed not in the database, given the feed URL'
+    it 'subscribes to a feed not in the database, given the feed URL', js: true do
+      # Fetching a feed returns a mock response
+      fetch_url = 'http://some.fetch.url'
+      feed_title = 'new feed title'
+      entry_title = 'some entry title'
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>http://xkcd.com</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{entry_title}</title>
+      <link>http://xkcd.com/1203/</link>
+      <description>entry summary</description>
+      <pubDate>#{DateTime.new}</pubDate>
+      <guid>http://xkcd.com/1203/</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub(:headers).and_return {}
+      RestClient.stub get: feed_xml
+
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: fetch_url
+        find('#subscribe-submit').click
+      end
+
+      # Both the old and new feeds should be there, the new feed should be selected
+      within 'ul#sidebar li#folder-all ul#feeds-all' do
+        page.should have_content @feed1.title
+        within 'li.active' do
+          page.should have_content feed_title
+        end
+      end
+      # The entries for the just subscribed feed should be visible
+      page.should have_content entry_title
+    end
 
     it 'subscribes to a feed not in the database, gitven the website URL'
 

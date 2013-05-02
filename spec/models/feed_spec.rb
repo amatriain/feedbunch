@@ -184,11 +184,14 @@ describe Feed do
     end
 
     it 'adds new feed to the database and subscribes user to it' do
-      feed_url = 'http://new.feed.url.com'
+      feed_url = 'http://a.new.feed.url.com'
+      entry_title1 = 'an entry title'
+      entry_title2 = 'another entry title'
       FeedClient.stub :fetch do
         feed = Feed.where(fetch_url: feed_url).first
-        entry1 = FactoryGirl.create :entry, feed_id: feed.id
-        entry2 = FactoryGirl.create :entry, feed_id: feed.id
+        entry1 = FactoryGirl.build :entry, feed_id: feed.id, title: entry_title1
+        entry2 = FactoryGirl.build :entry, feed_id: feed.id, title: entry_title2
+        feed.entries << entry1 << entry2
         true
       end
 
@@ -199,9 +202,13 @@ describe Feed do
       result.should be_true
       @user.feeds.where(fetch_url: feed_url).should be_present
       @user.feeds.where(fetch_url: feed_url).first.entries.count.should eq 2
+      @user.feeds.where(fetch_url: feed_url).first.entries.where(title: entry_title1).should be_present
+      @user.feeds.where(fetch_url: feed_url).first.entries.where(title: entry_title2).should be_present
     end
 
     it 'scans webpage for feed, adds it to the database and subscribes user to it'
+
+    it 'does not save in the database if the url does not actually point to a feed or a webpage with a feed'
 
     it 'returns false if it cannot find a feed to subscribe the user'
 
