@@ -63,10 +63,17 @@ class Feed < ActiveRecord::Base
     end
 
     if Feed.exists? fetch_url: feed_url
-      Rails.logger.info "Feed #{feed_url} already in the database"
+      Rails.logger.info "Feed with fetch_url #{feed_url} already in the database"
       feed = Feed.where(fetch_url: feed_url).first
       user = User.find user_id
-      Rails.logger.info "Subscribing user #{user_id} (#{user.email}) to feed #{feed_url}"
+      Rails.logger.info "Subscribing user #{user_id} (#{user.email}) to feed with fetch_url #{feed_url}"
+      user.feeds << feed
+      return feed
+    elsif Feed.exists? url: feed_url
+      Rails.logger.info "Feed with url #{feed_url} already in the database"
+      feed = Feed.where(url: feed_url).first
+      user = User.find user_id
+      Rails.logger.info "Subscribing user #{user_id} (#{user.email}) to feed with url #{feed_url}"
       user.feeds << feed
       return feed
     else

@@ -169,7 +169,6 @@ describe Feed do
     end
 
     it 'subscribes user to feed already in the database, given its url' do
-      pending 'not yet working'
       # At first the user is not subscribed to the feed
       @user.feeds.where(url: @feed.url).should be_blank
 
@@ -180,8 +179,8 @@ describe Feed do
       FeedClient.should_not_receive :fetch
 
       result = Feed.subscribe @feed.url, @user.id
-      result.should be_true
-      @user.feeds.where(url: @feed.url).should be_present
+      result.should eq @feed
+      @user.feeds.where(url: @feed.url).first.should eq @feed
     end
 
     it 'adds new feed to the database and subscribes user to it' do
