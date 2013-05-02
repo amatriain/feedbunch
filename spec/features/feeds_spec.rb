@@ -105,6 +105,10 @@ describe 'feeds' do
       page.should have_content entry.title
     end
 
+    it 'subscribes to a feed not in the database, given the feed URL'
+
+    it 'subscribes to a feed not in the database, gitven the website URL'
+
     it 'unsubscribes from a feed'
 
     it 'shows an alert if there is a problem subscribing to a feed'
