@@ -164,8 +164,8 @@ describe Feed do
       FeedClient.should_not_receive :fetch
 
       result = Feed.subscribe @feed.fetch_url, @user.id
-      result.should be_true
-      @user.feeds.where(fetch_url: @feed.fetch_url).should be_present
+      result.should eq @feed
+      @user.feeds.where(fetch_url: @feed.fetch_url).first.should eq @feed
     end
 
     it 'subscribes user to feed already in the database, given its url' do
