@@ -87,7 +87,23 @@ describe 'feeds' do
       page.should have_content entry.title
     end
 
-    it 'subscribes to a feed already in the database, given the website URL'
+    it 'subscribes to a feed already in the database, given the website URL', js: true do
+      # User is not yet subscribed to @feed2
+      entry = FactoryGirl.build :entry, feed_id: @feed2.id
+      @feed2.entries << entry
+
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: @feed2.url
+        find('#subscribe-submit').click
+      end
+
+      # Both the old and new feeds should be there, the new feed should be selected
+      page.should have_css "ul#sidebar li#feed-#{@feed1.id}"
+      page.should have_css "ul#sidebar li#feed-#{@feed2.id}.active"
+      # The entries for the just subscribed feed should be visible
+      page.should have_content entry.title
+    end
 
     it 'unsubscribes from a feed'
 
