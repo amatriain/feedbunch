@@ -47,11 +47,11 @@ class Feed < ActiveRecord::Base
   # Otherwise, it checks if the feed can be fetched. If so, the feed is fetched, saved in the database
   # and the user is subscribed to it.
   #
-  # Otherwise, it checks if the URL corresponds to a web page with a feed linked in the header. If the feed is in the
-  # database already, the user is subscribed to it; otherwise the feed is fetched, saved in the database and the user
-  # subscribed to it.
+  # Otherwise, it checks if the URL corresponds to a web page with a feed linked in the header. In this
+  # case the feed is fetched, saved in the database and the user subscribed to it.
   #
-  # If the end result is that the user is suscribed to a new feed, returns true. Otherwise returns false.
+  # If the end result is that the user is suscribed to a new feed, returns the feed object.
+  # Otherwise returns false.
 
   def self.subscribe(feed_url, user_id)
     Rails.logger.info "User #{user_id} submitted Subscribe form with value #{feed_url}"
@@ -67,7 +67,7 @@ class Feed < ActiveRecord::Base
       feed = Feed.where(fetch_url: feed_url).first
       user = User.find user_id
       Rails.logger.info "Subscribing user #{user_id} (#{user.email}) to feed #{feed_url}"
-      user.feeds << feed.reload
+      user.feeds << feed
       return feed
     else
       Rails.logger.info "Feed #{feed_url} not in the database, trying to fetch it"
@@ -77,7 +77,7 @@ class Feed < ActiveRecord::Base
         Rails.logger.info "New feed #{feed_url} successfully fetched. Subscribing user #{user_id}"
         user = User.find user_id
         user.feeds << feed
-        return feed.reload
+        return feed
       else
         Rails.logger.info "URL #{feed_url} is not a valid feed URL"
         feed.destroy

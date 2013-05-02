@@ -7,7 +7,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Dynamic styling when clicking on the sidebar folders
   #-------------------------------------------------------
-  $(".menu-level1").click ->
+  $(".menu-level1").on "click", ->
     $(this).children("i.arrow").toggleClass "icon-chevron-right"
     $(this).children("i.arrow").toggleClass "icon-chevron-down"
     $(this).children("i.folder").toggleClass "icon-folder-close-alt"
@@ -16,7 +16,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Dynamic styling when clicking on a feed in the sidebar
   #-------------------------------------------------------
-  $("[data-feed-path]").click ->
+  $("body").on "click", "[data-feed-path]", ->
     $("[data-feed-path]").parent().removeClass "active"
     $(this).parent().addClass "active"
 
@@ -75,7 +75,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Hide alerts when clicking the close button
   #-------------------------------------------------------
-  $("button[data-hide]").click ->
+  $("button[data-hide]").on "click", ->
     $(this).parent().parent().addClass 'hidden'
 
   #-------------------------------------------------------
@@ -160,7 +160,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Load new feed entries when clicking on the Refresh button
   #-------------------------------------------------------
-  $("#refresh-feed").click ->
+  $("#refresh-feed").on "click", ->
     feed_path = $(this).attr "data-refresh-feed"
     # Only refresh if the data-refresh-feed attribute has a reference to a feed id
     if feed_path?.length
@@ -180,7 +180,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Load current feed entries when clicking on a feed in the sidebar
   #-------------------------------------------------------
-  $("[data-feed-path]").click ->
+  $("body").on "click", "[data-feed-path]", ->
 
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
@@ -222,7 +222,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Submit the "add subscription" form when clicking on the "Add" button
   #-------------------------------------------------------
-  $("#subscribe-submit").click ->
+  $("#subscribe-submit").on "click", ->
     $("#form-subscription").submit()
 
   #-------------------------------------------------------
@@ -235,6 +235,13 @@ $(document).ready ->
       $("#subscribe-feed-popup").modal 'hide'
       if xhr.status == 304
         showAlreadySubscribedAlert()
+      else
+        # Insert the new feed in the "all subscriptions" list
+        $("#folder-all-all-feeds").after data
+        # Open the "all subscriptions" folder if not already open
+        $("#feeds-all").not(".in").prev("a").click()
+        # Select the new feed
+        $("#folder-all-all-feeds").next().find("a").click()
 
     # If the user has written something in the form, POST the value via ajax
     if $("#subscription_rss").val()
