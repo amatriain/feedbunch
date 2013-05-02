@@ -18,6 +18,8 @@ class FeedClient
   #
   # If the last time the feed was fetched no etag and no last-modified headers were in the response, this method fetches
   # the full feed without sending caching headers.
+  #
+  # Returns true if fetch is successful, false otherwise.
 
   def self.fetch(feed_id)
     feed = Feed.find feed_id
@@ -29,9 +31,6 @@ class FeedClient
     feed_response = RestClient.get feed.fetch_url, headers
 
     if feed_response.present?
-      # We use the actual Feedzirra::Feed class to parse, never a mock.
-      # The motivation behind using a mock for fetching the XML during unit testing is not making HTTP
-      # calls during testing, but we can always use the real parser even during testing.
       feed_parsed = Feedzirra::Feed.parse feed_response
 
       # Save the feed title and url.
@@ -61,6 +60,10 @@ class FeedClient
   rescue RestClient::NotModified => e
     Rails.logger.info "Feed #{feed.fetch_url} returned 304 - not modified"
     return true
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    return false
   end
 
   private

@@ -30,7 +30,7 @@ describe FeedClient do
     FeedClient.fetch @feed.id
   end
 
-  context 'RSS 2.0 feeds' do
+  context 'RSS 2.0 feed fetching' do
 
     before :each do
       feed_xml = <<FEED_XML
@@ -61,6 +61,11 @@ FEED_XML
 
       feed_xml.stub(:headers).and_return {}
       RestClient.stub get: feed_xml
+    end
+
+    it 'returns true if successful' do
+      success = FeedClient.fetch @feed.id
+      success.should be_true
     end
 
     it 'fetches the right entries and saves them in the database' do
@@ -123,7 +128,7 @@ FEED_XML
     end
   end
 
-  context 'Atom feeds' do
+  context 'Atom feed fetching' do
 
     before :each do
       feed_xml = <<FEED_XML
@@ -152,6 +157,11 @@ FEED_XML
 
       feed_xml.stub(:headers).and_return {}
       RestClient.stub get: feed_xml
+    end
+
+    it 'returns true if successful' do
+      success = FeedClient.fetch @feed.id
+      success.should be_true
     end
 
     it 'fetches the right entries and saves them in the database' do
@@ -212,6 +222,36 @@ FEED_XML
       @feed.reload
       @feed.url.should eq @feed_url
     end
+  end
+
+  context 'RSS 2.0 feed autodiscovery' do
+
+    it 'updates fetch_url of the feed in the database'
+
+    it 'fetches feed'
+
+    it 'uses first feed available for autodiscovery'
+
+  end
+
+  context 'Atom feed autodiscovery' do
+
+    it 'updates fetch_url of the feed in the database'
+
+    it 'fetches feed'
+
+    it 'uses first feed available for autodiscovery'
+
+  end
+
+  context 'generic feed autodiscovery' do
+
+    it 'updates fetch_url of the feed in the database'
+
+    it 'fetches feed'
+
+    it 'uses first feed available for autodiscovery'
+    
   end
 
   context 'caching' do
@@ -300,6 +340,38 @@ FEED_XML
     it 'does not raise errors if the server responds with 304-not modified' do
       RestClient.stub(:get).and_raise RestClient::NotModified.new
       expect {FeedClient.fetch @feed.id}.to_not raise_error
+    end
+  end
+
+  context 'error handling' do
+
+    it 'returns false if trying to fetch non-existing feed' do
+      success = FeedClient.fetch 1234567890
+      success.should be_false
+    end
+
+    it 'returns false if trying to fetch from an unreachable URL' do
+      RestClient.stub(:get).and_raise SocketError.new
+      success = FeedClient.fetch @feed.id
+      success.should be_false
+    end
+
+    it 'returns false if trying to fetch from a webpage that does not have feed autodiscovery enabled' do
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+      RestClient.stub get: webpage_html
+
+      success = FeedClient.fetch @feed.id
+      success.should be_false
     end
   end
 end
