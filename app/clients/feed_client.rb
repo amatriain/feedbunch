@@ -1,5 +1,6 @@
 require 'feedzirra'
 require 'rest_client'
+require 'nokogiri'
 
 ##
 # This class can fetch feeds and parse them. It also takes care of caching, sending HTTP headers
@@ -28,29 +29,48 @@ class FeedClient
     headers = fetch_headers feed
 
     # GET the feed
+    Rails.logger.info "Fetching from URL #{feed.fetch_url}"
     feed_response = RestClient.get feed.fetch_url, headers
 
     if feed_response.present?
-      feed_parsed = Feedzirra::Feed.parse feed_response
+      begin
+        # Try to parse the response as a feed
+        feed_parsed = Feedzirra::Feed.parse feed_response
+        Rails.logger.info "Correctly parsed feed from url #{feed.fetch_url}"
 
-      # Save the feed title and url.
-      # Warning: don't confuse url (the url of the website generating the feed) with fetch_url (the url from which the
-      # XML of the feed is fetched).
-      Rails.logger.info "Fetched from: #{feed.fetch_url} - title: #{feed_parsed.title} - url: #{feed_parsed.url}"
-      feed.title = feed_parsed.title
-      feed.url = feed_parsed.url
+        # Save the feed title and url.
+        # Warning: don't confuse url (the url of the website generating the feed) with fetch_url (the url from which the
+        # XML of the feed is fetched).
+        Rails.logger.info "Fetched from: #{feed.fetch_url} - title: #{feed_parsed.title} - url: #{feed_parsed.url}"
+        feed.title = feed_parsed.title
+        feed.url = feed_parsed.url
 
-      # Save the etag and last_modified headers. If one of these headers is not present, save a null in the database.
-      if feed_response.headers.present?
-        Rails.logger.info "HTTP headers in the response from #{feed.fetch_url} - etag: #{feed_response.headers[:etag]} - last-modified: #{feed_response.headers[:last_modified]}"
-        feed.etag = feed_response.headers[:etag]
-        feed.last_modified = feed_response.headers[:last_modified]
+        # Save the etag and last_modified headers. If one of these headers is not present, save a null in the database.
+        if feed_response.headers.present?
+          Rails.logger.info "HTTP headers in the response from #{feed.fetch_url} - etag: #{feed_response.headers[:etag]} - last-modified: #{feed_response.headers[:last_modified]}"
+          feed.etag = feed_response.headers[:etag]
+          feed.last_modified = feed_response.headers[:last_modified]
+        end
+
+        # Save entries in the database
+        save_entries feed, feed_parsed.entries
+
+        feed.save
+      rescue
+        Rails.logger.info "Could not parse feed from url #{feed.fetch_url}. Trying to perform feed autodiscovery"
+        # If there was a problem parsing the feed assume we've downloaded a webpage, try to perform feed autodiscovery
+        doc = Nokogiri::HTML feed_response
+        feed_href = doc.xpath('//head//link[@rel="alternate"][@type="application/rss+xml"]').attr('href').to_s
+        if feed_href.present?
+          Rails.logger.info "Autodiscovered feed with url #{feed_href}. Updating feed in the database."
+          feed.fetch_url = feed_href
+          feed.save!
+          return FeedClient.fetch feed.id
+        else
+          Rails.logger.warn "Feed autodiscovery failed for #{feed.fetch_url}"
+          return false
+        end
       end
-
-      # Save entries in the database
-      save_entries feed, feed_parsed.entries
-
-      feed.save
 
     else
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"

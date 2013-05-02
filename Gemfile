@@ -60,6 +60,9 @@ gem 'feedzirra', git: 'git://github.com/pauldix/feedzirra.git', tag: 'v0.2.0.rc2
 # HTTP client
 gem 'rest-client'
 
+# To parse html
+gem 'nokogiri'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'
@@ -87,9 +90,6 @@ group :test do
 
   # To empty the database between acceptance tests
   gem 'database_cleaner'
-
-  # To parse html in emails sent during testing
-  gem 'nokogiri'
 end
 
 group :staging, :production do

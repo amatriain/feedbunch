@@ -226,7 +226,37 @@ FEED_XML
 
   context 'RSS 2.0 feed autodiscovery' do
 
-    it 'updates fetch_url of the feed in the database'
+    it 'updates fetch_url of the feed with autodiscovery full URL' do
+      feed_url = 'http://webpage.com/feed'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/rss+xml" href="#{feed_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      RestClient.stub :get do |url|
+        if url==feed_url
+          raise RestClient::NotModified.new
+        else
+          webpage_html
+        end
+      end
+
+      @feed.fetch_url.should_not eq feed_url
+      FeedClient.fetch @feed.id
+      @feed.reload
+      @feed.fetch_url.should eq feed_url
+    end
+
+    it 'updates fetch_url of the feed with autodiscovery relative URL'
 
     it 'fetches feed'
 
@@ -236,7 +266,9 @@ FEED_XML
 
   context 'Atom feed autodiscovery' do
 
-    it 'updates fetch_url of the feed in the database'
+    it 'updates fetch_url of the feed with autodiscovery full URL'
+
+    it 'updates fetch_url of the feed with autodiscovery relative URL'
 
     it 'fetches feed'
 
@@ -246,7 +278,9 @@ FEED_XML
 
   context 'generic feed autodiscovery' do
 
-    it 'updates fetch_url of the feed in the database'
+    it 'updates fetch_url of the feed with autodiscovery full URL'
+
+    it 'updates fetch_url of the feed with autodiscovery relative URL'
 
     it 'fetches feed'
 
