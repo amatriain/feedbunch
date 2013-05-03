@@ -60,7 +60,11 @@ class FeedClient
         Rails.logger.info "Could not parse feed from url #{feed.fetch_url}. Trying to perform feed autodiscovery"
         # If there was a problem parsing the feed assume we've downloaded a webpage, try to perform feed autodiscovery
         doc = Nokogiri::HTML feed_response
-        feed_href = doc.xpath('//head//link[@rel="alternate"][@type="application/rss+xml"]').attr('href').to_s
+        xpath_atom = '//head//link[@rel="alternate"][@type="application/atom+xml"]'
+        xpath_rss = '//head//link[@rel="alternate"][@type="application/rss+xml"]'
+        feed_link = doc.at_xpath xpath_atom
+        feed_link ||= doc.at_xpath xpath_rss
+        feed_href = feed_link.try(:attr, 'href').try(:to_s)
         if feed_href.present?
           Rails.logger.info "Autodiscovered feed with url #{feed_href}. Updating feed in the database."
           feed.fetch_url = feed_href

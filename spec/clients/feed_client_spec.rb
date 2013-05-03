@@ -266,7 +266,35 @@ WEBPAGE_HTML
 
   context 'Atom feed autodiscovery' do
 
-    it 'updates fetch_url of the feed with autodiscovery full URL'
+    it 'updates fetch_url of the feed with autodiscovery full URL' do
+      feed_url = 'http://webpage.com/feed'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{feed_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      RestClient.stub :get do |url|
+        if url==feed_url
+          raise RestClient::NotModified.new
+        else
+          webpage_html
+        end
+      end
+
+      @feed.fetch_url.should_not eq feed_url
+      FeedClient.fetch @feed.id
+      @feed.reload
+      @feed.fetch_url.should eq feed_url
+    end
 
     it 'updates fetch_url of the feed with autodiscovery relative URL'
 
@@ -407,5 +435,7 @@ WEBPAGE_HTML
       success = FeedClient.fetch @feed.id
       success.should be_false
     end
+
+    it 'returns false if trying to perform feed autodiscovery on a malformed webpage'
   end
 end
