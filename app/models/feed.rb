@@ -78,7 +78,7 @@ class Feed < ActiveRecord::Base
       return feed
     else
       Rails.logger.info "Feed #{feed_url} not in the database, trying to fetch it"
-      feed = Feed.create! fetch_url: feed_url, url: feed_url, title: feed_url
+      feed = Feed.create! fetch_url: feed_url, title: feed_url
       fetch_result = FeedClient.fetch feed.id
       if fetch_result
         Rails.logger.info "New feed #{feed_url} successfully fetched. Subscribing user #{user_id}"
