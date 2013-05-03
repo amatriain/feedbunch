@@ -464,6 +464,13 @@ WEBPAGE_HTML
       success.should be_false
     end
 
-    it 'returns false if trying to perform feed autodiscovery on a malformed webpage'
+    it 'returns false if trying to perform feed autodiscovery on a malformed webpage' do
+      webpage_html = '<!DOCTYPE html><html NOT A VALID HTML AFTER ALL'
+      webpage_html.stub headers: {}
+      RestClient.stub get: webpage_html
+
+      success = FeedClient.fetch @feed.id
+      success.should be_false
+    end
   end
 end
