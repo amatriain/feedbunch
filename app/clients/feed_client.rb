@@ -35,51 +35,20 @@ class FeedClient
     if feed_response.present?
       begin
         # Try to parse the response as a feed
-        feed_parsed = Feedzirra::Feed.parse feed_response
-        Rails.logger.info "Correctly parsed feed from url #{feed.fetch_url}"
-
-        # Save the feed title and url.
-        # Warning: don't confuse url (the url of the website generating the feed) with fetch_url (the url from which the
-        # XML of the feed is fetched).
-        Rails.logger.info "Fetched from: #{feed.fetch_url} - title: #{feed_parsed.title} - url: #{feed_parsed.url}"
-        feed.title = feed_parsed.title
-        feed.url = feed_parsed.url
-
-        # Save the etag and last_modified headers. If one of these headers is not present, save a null in the database.
-        if feed_response.headers.present?
-          Rails.logger.info "HTTP headers in the response from #{feed.fetch_url} - etag: #{feed_response.headers[:etag]} - last-modified: #{feed_response.headers[:last_modified]}"
-          feed.etag = feed_response.headers[:etag]
-          feed.last_modified = feed_response.headers[:last_modified]
-        end
-
-        # Save entries in the database
-        save_entries feed, feed_parsed.entries
-
-        feed.save
+        feed_parse feed, feed_response
       rescue
-        Rails.logger.info "Could not parse feed from url #{feed.fetch_url}. Trying to perform feed autodiscovery"
-        # If there was a problem parsing the feed assume we've downloaded a webpage, try to perform feed autodiscovery
-        doc = Nokogiri::HTML feed_response
-        xpath_atom = '//head//link[@rel="alternate"][@type="application/atom+xml"]'
-        xpath_rss = '//head//link[@rel="alternate"][@type="application/rss+xml"]'
-        xpath_feed = '//head//link[@rel="feed"]'
-        feed_link = doc.at_xpath xpath_atom
-        feed_link ||= doc.at_xpath xpath_rss
-        feed_link ||= doc.at_xpath xpath_feed
-        feed_href = feed_link.try(:attr, 'href').try(:to_s)
-        if feed_href.present?
-          Rails.logger.info "Autodiscovered feed with url #{feed_href}. Updating feed in the database."
-          feed.fetch_url = feed_href
-          feed.save!
+        # If there was a problem parsing the feed assume we've downloaded an HTML webpage, try to perform feed autodiscovery
+        feed = feed_autodiscovery feed, feed_response
+        if feed.present?
+          # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
           return FeedClient.fetch feed.id
         else
-          Rails.logger.warn "Feed autodiscovery failed for #{feed.fetch_url}"
           return false
         end
       end
-
     else
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
+      return false
     end
 
     return true
@@ -157,5 +126,86 @@ class FeedClient
     end
 
     return headers
+  end
+
+  ##
+  # Try to parse an HTTP response as a feed (RSS, Atom or other formats supported by Feedzirra). This is a class method.
+  #
+  # If successful:
+  # - saves in the database the title and URL for the feed.
+  # - saves in the database the etag and last-modified headers (to be used the next time the feed is fetched).
+  # - saves the fetched feed entries in the database.
+  #
+  # Any errors raised are bubbled to be handled higher up the call chain. In particular, if the response being parsed
+  # is not a feed, it's likely that it's an HTML webpage, possibly with feed autodiscovery enabled. In this case
+  # this function will raise an error and it's the responability of the calling function to capture this error and
+  # handle feed autodiscovery on the HTML.
+  #
+  # Receives as arguments the feed object corresponding to the feed being fetched and the response to be parsed.
+  #
+  # Returns the updated feed object.
+
+  def self.feed_parse(feed, feed_response)
+    feed_parsed = Feedzirra::Feed.parse feed_response
+    Rails.logger.info "Correctly parsed feed from url #{feed.fetch_url}"
+
+    # Save the feed title and url.
+    # Warning: don't confuse url (the url of the website generating the feed) with fetch_url (the url from which the
+    # XML of the feed is fetched).
+    Rails.logger.info "Fetched from: #{feed.fetch_url} - title: #{feed_parsed.title} - url: #{feed_parsed.url}"
+    feed.title = feed_parsed.title
+    feed.url = feed_parsed.url
+
+    # Save the etag and last_modified headers. If one of these headers is not present, save a null in the database.
+    if feed_response.headers.present?
+      Rails.logger.info "HTTP headers in the response from #{feed.fetch_url} - etag: #{feed_response.headers[:etag]} - last-modified: #{feed_response.headers[:last_modified]}"
+      feed.etag = feed_response.headers[:etag]
+      feed.last_modified = feed_response.headers[:last_modified]
+    end
+
+    # Save entries in the database
+    save_entries feed, feed_parsed.entries
+
+    feed.save!
+    return feed
+  end
+
+  ##
+  # Try to perform feed autodiscovery on an HTTP response, with the assumption that it's an HTML document.
+  # This is a class method.
+  #
+  # If successful, save the new feed in the database and return it. At this point:
+  # - there are no entries in the database for the feed.
+  # - the feed fetch_url and title fields both have the same value, the URL retrieved from the HTML.
+  # - the feed has no url.
+  #
+  # It's the responsability of the calling function to fetch the feed afterwards, to populate entries, title, URL etc.
+  #
+  # Receives as arguments the feed object to be associated with the discovered feed, and the response with the HTML document.
+  #
+  # Any errors raised are bubbled to be handled higher up the call chain. In particular, if the response on which
+  # autodiscovery is being performed is not an HTML document, an error will be raised.
+  #
+  # Returns the updated feed object if autodiscovery is successful, or nil if the HTML didn't have a feed associated.
+
+  def self.feed_autodiscovery(feed, feed_response)
+    Rails.logger.info "Could not parse feed from url #{feed.fetch_url}. Trying to perform feed autodiscovery"
+    doc = Nokogiri::HTML feed_response
+    xpath_atom = '//head//link[@rel="alternate"][@type="application/atom+xml"]'
+    xpath_rss = '//head//link[@rel="alternate"][@type="application/rss+xml"]'
+    xpath_feed = '//head//link[@rel="feed"]'
+    feed_link = doc.at_xpath xpath_atom
+    feed_link ||= doc.at_xpath xpath_rss
+    feed_link ||= doc.at_xpath xpath_feed
+    feed_href = feed_link.try(:attr, 'href').try(:to_s)
+    if feed_href.present?
+      Rails.logger.info "Autodiscovered feed with url #{feed_href}. Updating feed in the database."
+      feed.fetch_url = feed_href
+      feed.save!
+      return feed
+    else
+      Rails.logger.warn "Feed autodiscovery failed for #{feed.fetch_url}"
+      return nil
+    end
   end
 end
