@@ -340,7 +340,41 @@ FEED_XML
       @feed.entries.where(guid: @entry1.guid).should be_present
    end
 
-    it 'uses first feed available for autodiscovery'
+    it 'uses first feed available for autodiscovery' do
+      rss_url = 'http://webpage.com/rss'
+      atom_url = 'http://webpage.com/atom'
+      feed_url = 'http://webpage.com/feed'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/rss+xml" href="#{rss_url}">
+  <link rel="alternate" type="application/atom+xml" href="#{atom_url}">
+  <link rel="feed" href="#{feed_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      webpage_url = @feed.fetch_url
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      RestClient.stub :get do |url|
+        if url==webpage_url
+          webpage_html
+        else
+          raise RestClient::NotModified.new
+
+        end
+      end
+
+      @feed.fetch_url.should_not eq rss_url
+      FeedClient.fetch @feed.id
+      @feed.reload
+      @feed.fetch_url.should eq rss_url
+    end
 
   end
 
@@ -458,7 +492,41 @@ FEED_XML
       @feed.entries.where(guid: @entry1.guid).should be_present
     end
 
-    it 'uses first feed available for autodiscovery'
+    it 'uses first feed available for autodiscovery' do
+      rss_url = 'http://webpage.com/rss'
+      atom_url = 'http://webpage.com/atom'
+      feed_url = 'http://webpage.com/feed'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{atom_url}">
+  <link rel="alternate" type="application/rss+xml" href="#{rss_url}">
+  <link rel="feed" href="#{feed_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      webpage_url = @feed.fetch_url
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      RestClient.stub :get do |url|
+        if url==webpage_url
+          webpage_html
+        else
+          raise RestClient::NotModified.new
+
+        end
+      end
+
+      @feed.fetch_url.should_not eq atom_url
+      FeedClient.fetch @feed.id
+      @feed.reload
+      @feed.fetch_url.should eq atom_url
+    end
 
   end
 
@@ -576,7 +644,41 @@ FEED_XML
       @feed.entries.where(guid: @entry1.guid).should be_present
     end
 
-    it 'uses first feed available for autodiscovery'
+    it 'uses first feed available for autodiscovery' do
+      rss_url = 'http://webpage.com/rss'
+      atom_url = 'http://webpage.com/atom'
+      feed_url = 'http://webpage.com/feed'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="feed" href="#{feed_url}">
+  <link rel="alternate" type="application/atom+xml" href="#{atom_url}">
+  <link rel="alternate" type="application/rss+xml" href="#{rss_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      webpage_url = @feed.fetch_url
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      RestClient.stub :get do |url|
+        if url==webpage_url
+          webpage_html
+        else
+          raise RestClient::NotModified.new
+
+        end
+      end
+
+      @feed.fetch_url.should_not eq feed_url
+      FeedClient.fetch @feed.id
+      @feed.reload
+      @feed.fetch_url.should eq feed_url
+    end
     
   end
 
@@ -708,5 +810,7 @@ WEBPAGE_HTML
       success = FeedClient.fetch @feed.id
       success.should be_false
     end
+
+    it 'does not enter an infinite loop during autodiscovery if the feed linked is actually an HTML webpage with feed autodiscovery enabled'
   end
 end
