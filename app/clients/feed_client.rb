@@ -1,6 +1,7 @@
 require 'feedzirra'
 require 'rest_client'
 require 'nokogiri'
+require 'uri'
 
 ##
 # This class can fetch feeds and parse them. It also takes care of caching, sending HTTP headers
@@ -191,14 +192,27 @@ class FeedClient
   def self.feed_autodiscovery(feed, feed_response)
     Rails.logger.info "Could not parse feed from url #{feed.fetch_url}. Trying to perform feed autodiscovery"
     doc = Nokogiri::HTML feed_response
+
+    # In this order, give preference to Atom, then to RSS, then to generic "feed" links
     xpath_atom = '//head//link[@rel="alternate"][@type="application/atom+xml"]'
     xpath_rss = '//head//link[@rel="alternate"][@type="application/rss+xml"]'
     xpath_feed = '//head//link[@rel="feed"]'
     feed_link = doc.at_xpath xpath_atom
     feed_link ||= doc.at_xpath xpath_rss
     feed_link ||= doc.at_xpath xpath_feed
+
     feed_href = feed_link.try(:attr, 'href').try(:to_s)
     if feed_href.present?
+      # If the href is a path without fqdn, i.e. "/feeds.php", prepend it with the scheme and fqdn of the webpage
+      uri = URI feed_href
+      if uri.host.blank?
+        uri_webpage = URI feed.fetch_url
+        uri.scheme = uri_webpage.scheme
+        uri.host = uri_webpage.host
+        Rails.logger.info "Retrieved feed path #{feed_href}, converted to full URL #{uri.to_s}"
+        feed_href = uri.to_s
+      end
+
       Rails.logger.info "Autodiscovered feed with url #{feed_href}. Updating feed in the database."
       feed.fetch_url = feed_href
       feed.save!

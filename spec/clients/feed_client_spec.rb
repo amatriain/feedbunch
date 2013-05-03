@@ -256,7 +256,39 @@ WEBPAGE_HTML
       @feed.fetch_url.should eq feed_url
     end
 
-    it 'updates fetch_url of the feed with autodiscovery relative URL'
+    it 'updates fetch_url of the feed with autodiscovery relative URL' do
+      feed_fetch_url = 'http://webpage.com/feed'
+      feed_path = '/feed'
+      feed_url = 'http://webpage.com'
+      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/rss+xml" href="#{feed_path}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      RestClient.stub :get do |url|
+        if url==feed_fetch_url
+          raise RestClient::NotModified.new
+        else
+          webpage_html
+        end
+      end
+
+      feed.fetch_url.should_not eq feed_fetch_url
+      FeedClient.fetch feed.id
+      feed.reload
+      feed.fetch_url.should eq feed_fetch_url
+    end
 
     it 'fetches feed' do
       feed_url = 'http://webpage.com/feed'
@@ -344,7 +376,39 @@ WEBPAGE_HTML
       @feed.fetch_url.should eq feed_url
     end
 
-    it 'updates fetch_url of the feed with autodiscovery relative URL'
+    it 'updates fetch_url of the feed with autodiscovery relative URL' do
+      feed_fetch_url = 'http://webpage.com/feed'
+      feed_path = '/feed'
+      feed_url = 'http://webpage.com'
+      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{feed_path}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      RestClient.stub :get do |url|
+        if url==feed_fetch_url
+          raise RestClient::NotModified.new
+        else
+          webpage_html
+        end
+      end
+
+      feed.fetch_url.should_not eq feed_fetch_url
+      FeedClient.fetch feed.id
+      feed.reload
+      feed.fetch_url.should eq feed_fetch_url
+    end
 
     it 'fetches feed' do
       feed_url = 'http://webpage.com/feed'
@@ -430,7 +494,39 @@ WEBPAGE_HTML
       @feed.fetch_url.should eq feed_url
     end
 
-    it 'updates fetch_url of the feed with autodiscovery relative URL'
+    it 'updates fetch_url of the feed with autodiscovery relative URL' do
+      feed_fetch_url = 'http://webpage.com/feed'
+      feed_path = '/feed'
+      feed_url = 'http://webpage.com'
+      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="feed" href="#{feed_path}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      RestClient.stub :get do |url|
+        if url==feed_fetch_url
+          raise RestClient::NotModified.new
+        else
+          webpage_html
+        end
+      end
+
+      feed.fetch_url.should_not eq feed_fetch_url
+      FeedClient.fetch feed.id
+      feed.reload
+      feed.fetch_url.should eq feed_fetch_url
+    end
 
     it 'fetches feed' do
       feed_url = 'http://webpage.com/feed'
