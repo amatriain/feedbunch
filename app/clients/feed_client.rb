@@ -62,8 +62,10 @@ class FeedClient
         doc = Nokogiri::HTML feed_response
         xpath_atom = '//head//link[@rel="alternate"][@type="application/atom+xml"]'
         xpath_rss = '//head//link[@rel="alternate"][@type="application/rss+xml"]'
+        xpath_feed = '//head//link[@rel="feed"]'
         feed_link = doc.at_xpath xpath_atom
         feed_link ||= doc.at_xpath xpath_rss
+        feed_link ||= doc.at_xpath xpath_feed
         feed_href = feed_link.try(:attr, 'href').try(:to_s)
         if feed_href.present?
           Rails.logger.info "Autodiscovered feed with url #{feed_href}. Updating feed in the database."
