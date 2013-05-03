@@ -258,7 +258,55 @@ WEBPAGE_HTML
 
     it 'updates fetch_url of the feed with autodiscovery relative URL'
 
-    it 'fetches feed'
+    it 'fetches feed' do
+      feed_url = 'http://webpage.com/feed'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/rss+xml" href="#{feed_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{@feed_title}</title>
+    <link>#{@feed_url}</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{@entry1.title}</title>
+      <link>#{@entry1.url}</link>
+      <description>#{@entry1.summary}</description>
+      <pubDate>#{@entry1.published}</pubDate>
+      <guid>#{@entry1.guid}</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub headers: {}
+
+      # First fetch the webpage; then, when fetching the actual feed URL, return an RSS 2.0 XML with one entry
+      RestClient.stub :get do |url|
+        if url==feed_url
+          feed_xml
+        else
+          webpage_html
+        end
+      end
+
+      @feed.entries.should be_blank
+      FeedClient.fetch @feed.id
+      @feed.entries.count.should eq 1
+      @feed.entries.where(guid: @entry1.guid).should be_present
+   end
 
     it 'uses first feed available for autodiscovery'
 
@@ -298,7 +346,53 @@ WEBPAGE_HTML
 
     it 'updates fetch_url of the feed with autodiscovery relative URL'
 
-    it 'fetches feed'
+    it 'fetches feed' do
+      feed_url = 'http://webpage.com/feed'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{feed_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>#{@feed_title}</title>
+  <link href="#{@feed_url}" rel="alternate" />
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+  <entry>
+    <title>#{@entry1.title}</title>
+    <link href="#{@entry1.url}" rel="alternate" />
+    <updated>#{@entry1.published}</updated>
+    <id>#{@entry1.guid}</id>
+    <summary type="html">#{@entry1.summary}</summary>
+  </entry>
+</feed>
+FEED_XML
+      feed_xml.stub headers: {}
+
+      # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
+      RestClient.stub :get do |url|
+        if url==feed_url
+          feed_xml
+        else
+          webpage_html
+        end
+      end
+
+      @feed.entries.should be_blank
+      FeedClient.fetch @feed.id
+      @feed.entries.count.should eq 1
+      @feed.entries.where(guid: @entry1.guid).should be_present
+    end
 
     it 'uses first feed available for autodiscovery'
 
@@ -338,7 +432,53 @@ WEBPAGE_HTML
 
     it 'updates fetch_url of the feed with autodiscovery relative URL'
 
-    it 'fetches feed'
+    it 'fetches feed' do
+      feed_url = 'http://webpage.com/feed'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="feed" href="#{feed_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>#{@feed_title}</title>
+  <link href="#{@feed_url}" rel="alternate" />
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+  <entry>
+    <title>#{@entry1.title}</title>
+    <link href="#{@entry1.url}" rel="alternate" />
+    <updated>#{@entry1.published}</updated>
+    <id>#{@entry1.guid}</id>
+    <summary type="html">#{@entry1.summary}</summary>
+  </entry>
+</feed>
+FEED_XML
+      feed_xml.stub headers: {}
+
+      # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
+      RestClient.stub :get do |url|
+        if url==feed_url
+          feed_xml
+        else
+          webpage_html
+        end
+      end
+
+      @feed.entries.should be_blank
+      FeedClient.fetch @feed.id
+      @feed.entries.count.should eq 1
+      @feed.entries.where(guid: @entry1.guid).should be_present
+    end
 
     it 'uses first feed available for autodiscovery'
     
