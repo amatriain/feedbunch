@@ -12,6 +12,12 @@ class FeedClient
   ##
   # Fetch a feed, parse it and save the entries in the database. This is a class method.
   #
+  # Receives as argument the id of the feed to fetch. It must already be saved in the database and its
+  # fetch_url field must have value.
+  #
+  # Optionally receives as argument a boolean that tells the method whether to perform feed autodiscovery. It
+  # defaults to true.
+  #
   # The method tries to use the last received etag with the if-none-match header to indicate the server to send only new
   # entries.
   #
@@ -21,9 +27,14 @@ class FeedClient
   # If the last time the feed was fetched no etag and no last-modified headers were in the response, this method fetches
   # the full feed without sending caching headers.
   #
+  # If the response to the GET is not a feed but an HTML document and the "perform_autodiscovery" argument is
+  # true, it tries to autodiscover a feed from the HTML. If a feed is autodiscovered, it is immediately
+  # fetched but passing a false to the "perform_autodiscovery" argument, to avoid entering an infinite loop of
+  # HTTP GETs.
+  #
   # Returns true if fetch is successful, false otherwise.
 
-  def self.fetch(feed_id)
+  def self.fetch(feed_id, perform_autodiscovery=true)
     feed = Feed.find feed_id
 
     # Calculate HTTP headers to be used for fetching
@@ -38,12 +49,18 @@ class FeedClient
         # Try to parse the response as a feed
         feed_parse feed, feed_response
       rescue
-        # If there was a problem parsing the feed assume we've downloaded an HTML webpage, try to perform feed autodiscovery
-        feed = feed_autodiscovery feed, feed_response
-        if feed.present?
-          # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
-          return FeedClient.fetch feed.id
+        if perform_autodiscovery
+          # If there was a problem parsing the feed assume we've downloaded an HTML webpage, try to perform feed autodiscovery
+          feed = feed_autodiscovery feed, feed_response
+          if feed.present?
+            # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
+            # This second fetch will not try to perform autodiscovery, to avoid entering an infinite loop.
+            return FeedClient.fetch feed.id, false
+          else
+            return false
+          end
         else
+          Rails.logger.warn "Tried to fetch #{feed.fetch_url} after feed autodiscovery, but the response is not a parseable feed"
           return false
         end
       end

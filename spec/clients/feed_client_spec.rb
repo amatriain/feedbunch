@@ -811,6 +811,24 @@ WEBPAGE_HTML
       success.should be_false
     end
 
-    it 'does not enter an infinite loop during autodiscovery if the feed linked is actually an HTML webpage with feed autodiscovery enabled'
+    it 'does not enter an infinite loop during autodiscovery if the feed linked is not actually a feed' do
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="feed" href="http://webpage.com">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+      RestClient.stub get: webpage_html
+
+      RestClient.should_receive(:get).twice
+      success = FeedClient.fetch @feed.id
+      success.should be_false
+    end
   end
 end
