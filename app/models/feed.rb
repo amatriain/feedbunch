@@ -57,9 +57,9 @@ class Feed < ActiveRecord::Base
     Rails.logger.info "User #{user_id} submitted Subscribe form with value #{feed_url}"
     # Check if the argument passed is actually a URI
     uri = URI.parse feed_url
-    if !uri.kind_of? URI::HTTP
-      Rails.logger.info "Value #{feed_url} submitted by user #{user_id} is not a valid URL"
-      return false
+    if !uri.kind_of?(URI::HTTP) && !uri.kind_of?(URI::HTTPS)
+      Rails.logger.info "Value #{feed_url} submitted by user #{user_id} has no URI scheme, trying to add http:// scheme"
+      feed_url = URI::HTTP.new('http', nil, feed_url, nil, nil, nil, nil, nil, nil).to_s
     end
 
     if Feed.exists? fetch_url: feed_url
@@ -94,7 +94,7 @@ class Feed < ActiveRecord::Base
       end
     end
 
-  rescue URI::InvalidURIError => e
+  rescue => e
     return false
   end
 

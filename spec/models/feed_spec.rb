@@ -142,7 +142,7 @@ describe Feed do
 
     before :each do
       @user = FactoryGirl.create :user
-      FeedClient.stub :fetch
+      FeedClient.stub fetch: true
     end
 
     it 'rejects non-valid URLs' do
@@ -151,6 +151,13 @@ describe Feed do
       result.should be_false
       @user.feeds.where(fetch_url: invalid_url).should be_blank
       @user.feeds.where(url: invalid_url).should be_blank
+    end
+
+    it 'accepts URLs without scheme, defaults to http://' do
+      url = 'xkcd.com'
+      result = Feed.subscribe url, @user.id
+      result.should be_true
+      @user.feeds.where(fetch_url: 'http://'+url).should be_present
     end
 
     it 'subscribes user to feed already in the database, given its fetch_url' do
