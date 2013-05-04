@@ -24,7 +24,7 @@ en:
       all_entries: "Read all subscriptions"
       loading: "Loading..."
       subscribe_button: "Add subscription"
-      subscribe_title: "Add feed subscription"
+      subscribe_title: "Add new subscription"
       close: "Cancel"
       subscribe_submit: "Add"
       no_entries: "No entries for this subscription."

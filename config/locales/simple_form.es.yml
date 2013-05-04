@@ -24,7 +24,7 @@ es:
         current_password: "(tu contraseña actual es necesaria para confirmar los cambios)"
         blank_password: "(déjala en blanco si no quieres cambiarla)"
       subscription:
-        rss: "Introduce la URL de una página web, de un feed, o palabras clave a buscar"
+        rss: "Introduce la URL de una página web o un feed"
     placeholders:
       user:
         email: "Tu dirección de email"
@@ -33,4 +33,4 @@ es:
         current_password: "Tu contraseña actual"
         new_password: "Tu nueva contraseña"
       subscription:
-        rss: "URL o términos de búsqueda"
+        rss: "URL"

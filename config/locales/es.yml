@@ -21,7 +21,7 @@ es:
       all_entries: "Leer todas las suscripciones"
       loading: "Cargando..."
       subscribe_button: "Añadir suscripción"
-      subscribe_title: "Añadir suscripción a un feed"
+      subscribe_title: "Añadir nueva suscripción"
       close: "Cancelar"
       subscribe_submit: "Añadir"
       no_entries: "No hay entradas para esta suscripción"
