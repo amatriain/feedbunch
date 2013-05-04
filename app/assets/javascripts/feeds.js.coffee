@@ -232,7 +232,7 @@ $(document).ready ->
 
     # Function to handle result returned by the server
     subscription_result = (data, status, xhr) ->
-      $("#subscribe-feed-popup").modal 'hide'
+      $("#loading").addClass "hidden"
       if xhr.status == 304
         showAlreadySubscribedAlert()
       else
@@ -247,17 +247,16 @@ $(document).ready ->
     if $("#subscription_rss").val()
       form_url = $("#form-subscription").attr "action"
       post_data = $(this).serialize()
+      # Show "loading" message
+      $("#loading").removeClass "hidden"
       $.post(form_url, post_data, subscription_result)
       .fail ->
-        $("#subscribe-feed-popup").modal 'hide'
+        $("#loading").addClass "hidden"
         showProblemSubscribingAlert()
 
-      # Clean textfield
-      $("#subscription_rss").val('')
-
-    # If the form is blank, close the popup and do nothing else
-    else
-      $("#subscribe-feed-popup").modal 'hide'
+    # Clean textfield and close modal
+    $("#subscription_rss").val('')
+    $("#subscribe-feed-popup").modal 'hide'
 
     # prevent default form submit
     return false
