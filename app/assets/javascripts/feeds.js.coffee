@@ -250,6 +250,7 @@ $(document).ready ->
       # Show "loading" message
       $("#loading").removeClass "hidden"
       $("#feed-entries").empty()
+      $("#feed-title").addClass "hidden"
       $.post(form_url, post_data, subscription_result)
       .fail ->
         $("#loading").addClass "hidden"
