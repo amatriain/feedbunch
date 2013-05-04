@@ -249,6 +249,7 @@ $(document).ready ->
       post_data = $(this).serialize()
       # Show "loading" message
       $("#loading").removeClass "hidden"
+      $("#feed-entries").empty()
       $.post(form_url, post_data, subscription_result)
       .fail ->
         $("#loading").addClass "hidden"
