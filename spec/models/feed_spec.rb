@@ -198,19 +198,34 @@ describe Feed do
       # At first the user is not subscribed to the feed
       @user.feeds.where(fetch_url: feed_url).should be_blank
 
-      result = Feed.subscribe feed_url, @user.id
-      result.should be_true
+      Feed.subscribe feed_url, @user.id
       @user.feeds.where(fetch_url: feed_url).should be_present
       @user.feeds.where(fetch_url: feed_url).first.entries.count.should eq 2
       @user.feeds.where(fetch_url: feed_url).first.entries.where(title: entry_title1).should be_present
       @user.feeds.where(fetch_url: feed_url).first.entries.where(title: entry_title2).should be_present
     end
 
-    it 'scans webpage for feed, adds it to the database and subscribes user to it'
+    it 'does not save in the database if there is a problem fetching the feed' do
+      feed_url = 'http://a.new.feed.url.com'
+      FeedClient.stub fetch: false
 
-    it 'does not save in the database if the url does not actually point to a feed or a webpage with a feed'
+      # At first the user is not subscribed to any feed
+      @user.feeds.should be_blank
+      Feed.subscribe feed_url, @user.id
+      # User should still be subscribed to no feeds, and the feed should not be saved in the database
+      @user.feeds.should be_blank
+      Feed.where(fetch_url: feed_url).should be_blank
+      Feed.where(url: feed_url).should be_blank
+    end
 
-    it 'returns false if it cannot find a feed to subscribe the user'
+    it 'returns false if it cannot fetch the feed' do
+      feed_url = 'http://a.new.feed.url.com'
+      FeedClient.stub fetch: false
+
+      # At first the user is not subscribed to any feed
+      success = Feed.subscribe feed_url, @user.id
+      success.should be_false
+    end
 
   end
 end
