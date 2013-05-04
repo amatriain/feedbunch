@@ -147,7 +147,71 @@ FEED_XML
       page.should have_content entry_title
     end
 
-    it 'subscribes to a feed not in the database, gitven the website URL'
+    it 'subscribes to a feed not in the database, given the website URL', js: true do
+      # Fetching a feed returns an HTML document with feed autodiscovery
+      webpage_url = 'http://some.webpage.url'
+      fetch_url = 'http://some.webpage.url/feed.php'
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      feed_title = 'new feed title'
+      entry_title = 'some entry title'
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>http://xkcd.com</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{entry_title}</title>
+      <link>http://xkcd.com/1203/</link>
+      <description>entry summary</description>
+      <pubDate>#{DateTime.new}</pubDate>
+      <guid>http://xkcd.com/1203/</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub(:headers).and_return {}
+
+      RestClient.stub :get do |url|
+        if url == webpage_url
+          webpage_html
+        elsif url == fetch_url
+          feed_xml
+        end
+
+      end
+
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: webpage_url
+        find('#subscribe-submit').click
+      end
+
+      # Both the old and new feeds should be there, the new feed should be selected
+      within 'ul#sidebar li#folder-all ul#feeds-all' do
+        page.should have_content @feed1.title
+        within 'li.active' do
+          page.should have_content feed_title
+        end
+      end
+      # The entries for the just subscribed feed should be visible
+      page.should have_content entry_title
+    end
 
     it 'unsubscribes from a feed'
 
