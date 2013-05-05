@@ -378,8 +378,8 @@ FEED_XML
       page.should_not have_css 'div#already-subscribed.hidden', visible: false
 
       # It should close automatically after 5 seconds
-      #sleep 5
-      #page.should have_css 'div#already-subscribed.hidden', visible: false
+      sleep 5
+      page.should have_css 'div#already-subscribed.hidden', visible: false
     end
   end
 

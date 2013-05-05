@@ -31,127 +31,63 @@ $(document).ready ->
 ##########################################################
 
   #-------------------------------------------------------
-  # Hide Rails notices with a timer
-  #-------------------------------------------------------
-  if $("#notice").length
-    seconds = 5
-    updateNoticeTimer = ->
-      seconds -= 1
-      $("#notice span[data-timer]").text seconds
-      if seconds == 0
-        clearInterval timerNotice
-        $("#notice").alert "close"
-    $("#notice span[data-timer]").text seconds
-    timerNotice = setInterval updateNoticeTimer, 1000
-
-  #-------------------------------------------------------
-  # Hide Rails alerts with a timer
-  #-------------------------------------------------------
-  if $("#alert").length
-    seconds = 5
-    updateAlertTimer = ->
-      seconds -= 1
-      $("#alert span[data-timer]").text seconds
-      if seconds == 0
-        clearInterval timerAlert
-        $("#alert").alert "close"
-    $("#alert span[data-timer]").text seconds
-    timerAlert = setInterval updateAlertTimer, 1000
-
-  #-------------------------------------------------------
-  # Hide Devise errors with a timer
-  #-------------------------------------------------------
-  if $("#devise-error").length
-    seconds = 5
-    updateDeviseTimer = ->
-      seconds -= 1
-      $("#devise-error span[data-timer]").text seconds
-      if seconds == 0
-        clearInterval timerDevise
-        $("#devise-error").alert "close"
-    $("#devise-error span[data-timer]").text seconds
-    timerDevise = setInterval updateDeviseTimer, 1000
-
-  #-------------------------------------------------------
   # Hide alerts when clicking the close button
   #-------------------------------------------------------
   $("button[data-hide]").on "click", ->
     $(this).parent().parent().addClass 'hidden'
 
   #-------------------------------------------------------
-  # Show "no entries" alert, close it with a timer
+  # Close the alert div passed as argument after 5 seconds.
+  # Only works for Rails and Devise alerts.
   #-------------------------------------------------------
-  showNoEntriesAlert = ->
-    $("div#no-entries").removeClass "hidden"
+  alertTimedClose = (alert_div) ->
     seconds = 5
-    updateNoEntriesTimer = ->
+    updateTimer = ->
       seconds -= 1
-      $("#no-entries span[data-timer]").text seconds
+      $("span[data-timer]", alert_div).text seconds
       if seconds == 0
-        clearInterval timerNoEntries
-        $("#no-entries").addClass 'hidden'
-    $("#no-entries span[data-timer]").text seconds
-    timerNoEntries = setInterval updateNoEntriesTimer, 1000
+        clearInterval timerAlert
+        alert_div.alert "close"
+    $("span[data-timer]", alert_div).text seconds
+    timerAlert = setInterval updateTimer, 1000
 
   #-------------------------------------------------------
-  # Show "problem refreshing" alert, close it with a timer
+  # Show the alert div passed as argument and hide it after 5 seconds.
+  # Only works for alerts caused by AJAX events.
   #-------------------------------------------------------
-  showProblemRefreshingAlert = ->
-    $("div#problem-refreshing").removeClass "hidden"
+  alertTimedShowHide = (alert_div) ->
+    alert_div.removeClass "hidden"
     seconds = 5
-    updateProblemRefreshingTimer = ->
-      seconds -= 1
-      $("#problem-refreshing span[data-timer]").text seconds
-      if seconds == 0
-        clearInterval timerProblemRefreshing
-        $("#problem-refreshing").addClass 'hidden'
-    $("#problem-refreshing span[data-timer]").text seconds
-    timerProblemRefreshing = setInterval updateProblemRefreshingTimer, 1000
+    updateTimer = ->
+      # If the countdown has an unexpected value, another timer is running. Clear this one.
+      if $("span[data-timer]", alert_div).text() != seconds.toString()
+        clearInterval timerAlert
+      else
+        seconds -= 1
+        $("span[data-timer]", alert_div).text seconds
+        if seconds == 0
+          clearInterval timerAlert
+          alert_div.addClass "hidden"
+    $("span[data-timer]", alert_div).text seconds
+    timerAlert = setInterval updateTimer, 1000
 
   #-------------------------------------------------------
-  # Show "problem loading" alert, close it with a timer
+  # Hide Rails notices with a timer
   #-------------------------------------------------------
-  showProblemLoadingAlert = ->
-    $("div#problem-loading").removeClass "hidden"
-    seconds = 5
-    updateProblemLoadingTimer = ->
-      seconds -= 1
-      $("#problem-loading span[data-timer]").text seconds
-      if seconds == 0
-        clearInterval timerProblemLoading
-        $("#problem-loading").addClass 'hidden'
-    $("#problem-loading span[data-timer]").text seconds
-    timerProblemLoading = setInterval updateProblemLoadingTimer, 1000
+  if $("#notice").length
+    alertTimedClose $("#notice")
 
   #-------------------------------------------------------
-  # Show "problem subscribing" alert, close it with a timer
+  # Hide Rails alerts with a timer
   #-------------------------------------------------------
-  showProblemSubscribingAlert = ->
-    $("div#problem-subscribing").removeClass "hidden"
-    seconds = 5
-    updateProblemSubscribingTimer = ->
-      seconds -= 1
-      $("#problem-subscribing span[data-timer]").text seconds
-      if seconds == 0
-        clearInterval timerProblemSubscribing
-        $("#problem-subscribing").addClass 'hidden'
-    $("#problem-subscribing span[data-timer]").text seconds
-    timerProblemSubscribing = setInterval updateProblemSubscribingTimer, 1000
+  if $("#alert").length
+    alertTimedClose $("#alert")
 
   #-------------------------------------------------------
-  # Show "already subscribed" alert, close it with a timer
+  # Hide Devise errors with a timer
   #-------------------------------------------------------
-  showAlreadySubscribedAlert = ->
-    $("div#already-subscribed").removeClass "hidden"
-    seconds = 5
-    updateAlreadySubscribedTimer = ->
-      seconds -= 1
-      $("#already-subscribed span[data-timer]").text seconds
-      if seconds == 0
-        clearInterval timerAlreadySubscribed
-        $("#already-subscribed").addClass 'hidden'
-    $("#already-subscribed span[data-timer]").text seconds
-    timerAlreadySubscribed = setInterval updateAlreadySubscribedTimer, 1000
+  if $("#devise-error").length
+    alertTimedClose $("#devise-error")
 
 ##########################################################
 # AJAX
@@ -173,7 +109,7 @@ $(document).ready ->
         $("#refresh-feed > i.icon-repeat").removeClass "icon-spin"
         $("#loading").addClass "hidden"
         if status in ["error", "timeout", "abort", "parsererror"]
-          showProblemRefreshingAlert()
+          alertTimedShowHide $("#problem-refreshing")
 
       $("#feed-entries").empty().load "#{feed_path}/refresh", null, insert_entries
 
@@ -189,9 +125,9 @@ $(document).ready ->
       $("#refresh-feed").removeClass "disabled"
       if status in ["error", "timeout", "abort", "parsererror"]
         if xhr.status == 404
-          showNoEntriesAlert()
+          alertTimedShowHide $("#no-entries")
         else
-          showProblemLoadingAlert()
+          alertTimedShowHide $("#problem-loading")
 
     # The refresh button now refreshes this feed
     feed_path = $(this).attr "data-feed-path"
@@ -234,7 +170,7 @@ $(document).ready ->
     subscription_result = (data, status, xhr) ->
       $("#loading").addClass "hidden"
       if xhr.status == 304
-        showAlreadySubscribedAlert()
+        alertTimedShowHide $("#already-subscribed")
       else
         # Insert the new feed in the "all subscriptions" list
         $("#folder-all-all-feeds").after data
@@ -254,7 +190,7 @@ $(document).ready ->
       $.post(form_url, post_data, subscription_result)
       .fail ->
         $("#loading").addClass "hidden"
-        showProblemSubscribingAlert()
+        alertTimedShowHide $("#problem-subscribing")
 
     # Clean textfield and close modal
     $("#subscription_rss").val('')
