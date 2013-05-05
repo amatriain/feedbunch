@@ -233,7 +233,22 @@ FEED_XML
       page.should have_css 'div#problem-subscribing.hidden', visible: false
     end
 
-    it 'shows an alert if the user is already subscribed to the feed'
+    it 'shows an alert if the user is already subscribed to the feed', js: true do
+      # Try to subscribe to feed again
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: @feed1.fetch_url
+        find('#subscribe-submit').click
+      end
+
+      # A "you're already subscribed to feed" alert should be shown
+      page.should have_css 'div#already-subscribed'
+      page.should_not have_css 'div#already-subscribed.hidden', visible: false
+
+      # It should close automatically after 5 seconds
+      sleep 5
+      page.should have_css 'div#already-subscribed.hidden', visible: false
+    end
   end
 
   context 'folders and feeds' do
