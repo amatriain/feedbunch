@@ -29,13 +29,16 @@ class FoldersController < ApplicationController
       # entries passed to it.
       respond_with @entries, template: 'feeds/show', layout: false
     else
+      Rails.logger.warn "No entries found for folder #{params[:id]}, user #{current_user.id}"
       head status: 404
     end
 
     return
   rescue ActiveRecord::RecordNotFound
     head status: 404
-  rescue
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
     head 500
   end
 
@@ -73,11 +76,14 @@ class FoldersController < ApplicationController
       end
       respond_with @entries, template: 'feeds/show', layout: false
     else
+      Rails.error "Found no feeds to refresh in folder #{params[:id]}, user #{current_user.id}, returning a 404"
       head status: 404
     end
   rescue ActiveRecord::RecordNotFound
     head status: 404
-  rescue
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
     head 500
   end
 end

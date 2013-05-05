@@ -15,7 +15,9 @@ class FeedsController < ApplicationController
     respond_with @feeds, @folders
   rescue ActiveRecord::RecordNotFound
     head status: 404
-  rescue
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
     head 500
   end
 
@@ -30,13 +32,16 @@ class FeedsController < ApplicationController
     if @entries.present?
       respond_with @entries, layout: false
     else
+      Rails.logger.warn "Feed #{params[:id]} has no entries or the user is not subscribed to it, returning a 404"
       head status: 404
     end
 
     return
   rescue ActiveRecord::RecordNotFound
     head status: 404
-  rescue
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
     head 500
   end
 
@@ -55,11 +60,14 @@ class FeedsController < ApplicationController
       @entries = feed.entries
       respond_with @entries, template: 'feeds/show', layout: false
     else
+      Rails.logger.warn "Feed #{params[:id]} does not belong to the user or does not exist, returning a 404"
       head status: 404
     end
   rescue ActiveRecord::RecordNotFound
     head status: 404
-  rescue
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
     head 500
   end
 
@@ -70,9 +78,12 @@ class FeedsController < ApplicationController
   # If the param is not the URL of a valid feed, search among known feeds and return HTML with any matches.
 
   def create
-    feed_url = params[:subscription][:rss]
+    url = params[:subscription][:rss]
+    # Ensure the passed URL has a schema (defaults to http://)
+    feed_url = Feed.ensure_schema url
     # If user is already subscribed to the feed, return 304
     if current_user.feeds.where(fetch_url: feed_url).present? || current_user.feeds.where(url: feed_url).present?
+      Rails.logger.warn "User #{current_user.id} tried to subscribed again to feed #{params[:subscription][:rss]}, returning a 304"
       head status: 304
     else
       # User is not yet subscribed to the feed
@@ -80,13 +91,16 @@ class FeedsController < ApplicationController
       if @feed
         respond_with @feed, layout: false
       else
+        Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
         #TODO respond with html for search results, for instance with head status:300 (Multiple Choices)
         head status: 404
       end
     end
   rescue ActiveRecord::RecordNotFound
     head status: 404
-  rescue
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
     head 500
   end
 end

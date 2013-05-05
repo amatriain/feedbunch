@@ -53,14 +53,10 @@ class Feed < ActiveRecord::Base
   # If the end result is that the user is suscribed to a new feed, returns the feed object.
   # Otherwise returns false.
 
-  def self.subscribe(feed_url, user_id)
-    Rails.logger.info "User #{user_id} submitted Subscribe form with value #{feed_url}"
-    # Check if the argument passed is actually a URI
-    uri = URI.parse feed_url
-    if !uri.kind_of?(URI::HTTP) && !uri.kind_of?(URI::HTTPS)
-      Rails.logger.info "Value #{feed_url} submitted by user #{user_id} has no URI scheme, trying to add http:// scheme"
-      feed_url = URI::HTTP.new('http', nil, feed_url, nil, nil, nil, nil, nil, nil).to_s
-    end
+  def self.subscribe(url, user_id)
+    Rails.logger.info "User #{user_id} submitted Subscribe form with value #{url}"
+    # Ensure the url has a schema (defaults to http:// if none is passed)
+    feed_url = ensure_schema url
 
     if Feed.exists? fetch_url: feed_url
       Rails.logger.info "Feed with fetch_url #{feed_url} already in the database"
@@ -98,6 +94,26 @@ class Feed < ActiveRecord::Base
     return false
   end
 
+  ##
+  # Ensure that the URL passed as argument has an http:// or https://schema. This is a class method.
+  #
+  # Receives as argument an URL.
+  #
+  # If the URL has no schema it is returned prepended with http://
+  #
+  # If the URL has an http:// or https:// schema, it is returned untouched.
+
+  def self.ensure_schema(url)
+    uri = URI.parse url
+    if !uri.kind_of?(URI::HTTP) && !uri.kind_of?(URI::HTTPS)
+      Rails.logger.info "Value #{url} has no URI scheme, trying to add http:// scheme"
+      fixed_url = URI::HTTP.new('http', nil, url, nil, nil, nil, nil, nil, nil).to_s
+    else
+      fixed_url = url
+    end
+    return fixed_url
+  end
+
   private
 
   ##
@@ -111,4 +127,5 @@ class Feed < ActiveRecord::Base
     self.fetch_url = sanitize self.fetch_url
     self.url = sanitize self.url
   end
+
 end
