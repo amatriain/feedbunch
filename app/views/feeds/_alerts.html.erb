@@ -1,6 +1,6 @@
 <%# Alert displayed when the feed selected has no entries %>
-<div id="no-entries" class="row-fluid hidden">
-  <div class="span10 offset1 alert">
+<div id="no-entries" class="row-fluid hidden bottom-alert">
+  <div class="span10 offset2 alert">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.no_entries' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -8,8 +8,8 @@
 </div>
 
 <%# Alert displayed when there is a problem refreshing feeds %>
-<div id="problem-refreshing" class="row-fluid hidden">
-  <div class="span10 offset1 alert alert-error">
+<div id="problem-refreshing" class="row-fluid hidden bottom-alert">
+  <div class="span10 offset2 alert alert-error">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_refreshing' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -17,8 +17,8 @@
 </div>
 
 <%# Alert displayed when there is a problem loading feeds %>
-<div id="problem-loading" class="row-fluid hidden">
-  <div class="span10 offset1 alert alert-error">
+<div id="problem-loading" class="row-fluid hidden bottom-alert">
+  <div class="span10 offset2 alert alert-error">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_loading' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -26,8 +26,8 @@
 </div>
 
 <%# Alert displayed when there is a problem adding a subscription %>
-<div id="problem-subscribing" class="row-fluid hidden">
-  <div class="span10 offset1 alert alert-error">
+<div id="problem-subscribing" class="row-fluid hidden bottom-alert">
+  <div class="span10 offset2 alert alert-error">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_subscribing' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -35,8 +35,8 @@
 </div>
 
 <%# Alert displayed when the user tries to subscribe to a feed he's already subscribed to %>
-<div id="already-subscribed" class="row-fluid hidden">
-  <div class="span10 offset1 alert">
+<div id="already-subscribed" class="row-fluid hidden bottom-alert">
+  <div class="span10 offset2 alert">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.already_subscribed' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
