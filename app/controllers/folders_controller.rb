@@ -35,6 +35,8 @@ class FoldersController < ApplicationController
     return
   rescue ActiveRecord::RecordNotFound
     head status: 404
+  rescue
+    head 500
   end
 
   ##
@@ -75,5 +77,7 @@ class FoldersController < ApplicationController
     end
   rescue ActiveRecord::RecordNotFound
     head status: 404
+  rescue
+    head 500
   end
 end

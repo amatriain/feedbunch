@@ -13,6 +13,10 @@ class FeedsController < ApplicationController
     @feeds = current_user.feeds
     @folders = current_user.folders
     respond_with @feeds, @folders
+  rescue ActiveRecord::RecordNotFound
+    head status: 404
+  rescue
+    head 500
   end
 
   ##
@@ -32,6 +36,8 @@ class FeedsController < ApplicationController
     return
   rescue ActiveRecord::RecordNotFound
     head status: 404
+  rescue
+    head 500
   end
 
   ##
@@ -53,6 +59,8 @@ class FeedsController < ApplicationController
     end
   rescue ActiveRecord::RecordNotFound
     head status: 404
+  rescue
+    head 500
   end
 
   ##
@@ -76,5 +84,9 @@ class FeedsController < ApplicationController
         head status: 404
       end
     end
+  rescue ActiveRecord::RecordNotFound
+    head status: 404
+  rescue
+    head 500
   end
 end
