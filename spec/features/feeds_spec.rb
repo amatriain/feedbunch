@@ -104,6 +104,69 @@ describe 'feeds' do
       page.should have_content entry.title
     end
 
+    it 'subscribes to a feed already in the database, given the website URL with an added trailing slash', js: true do
+      # User is not yet subscribed to feed
+      website_url = 'http://some.website'
+      url_slash = 'http://some.website/'
+      feed = FactoryGirl.create :feed, url: website_url
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: url_slash
+        find('#subscribe-submit').click
+      end
+
+      # Both the old and new feeds should be there, the new feed should be selected
+      page.should have_css "ul#sidebar li#feed-#{@feed1.id}"
+      page.should have_css "ul#sidebar li#feed-#{feed.id}.active"
+      # The entries for the just subscribed feed should be visible
+      page.should have_content entry.title
+    end
+
+    it 'subscribes to a feed already in the database, given the website URL missing a trailing slash', js: true do
+      # User is not yet subscribed to feed
+      website_url = 'http://some.website/'
+      url_no_slash = 'http://some.website'
+      feed = FactoryGirl.create :feed, url: website_url
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: url_no_slash
+        find('#subscribe-submit').click
+      end
+
+      # Both the old and new feeds should be there, the new feed should be selected
+      page.should have_css "ul#sidebar li#feed-#{@feed1.id}"
+      page.should have_css "ul#sidebar li#feed-#{feed.id}.active"
+      # The entries for the just subscribed feed should be visible
+      page.should have_content entry.title
+    end
+
+    it 'subscribes to a feed already in the database, given the website URL without URI scheme', js: true do
+      # User is not yet subscribed to feed
+      website_url = 'http://some.website'
+      url_no_scheme = 'some.website'
+      feed = FactoryGirl.create :feed, url: website_url
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: url_no_scheme
+        find('#subscribe-submit').click
+      end
+
+      # Both the old and new feeds should be there, the new feed should be selected
+      page.should have_css "ul#sidebar li#feed-#{@feed1.id}"
+      page.should have_css "ul#sidebar li#feed-#{feed.id}.active"
+      # The entries for the just subscribed feed should be visible
+      page.should have_content entry.title
+    end
+
     it 'subscribes to a feed not in the database, given the feed URL', js: true do
       # Fetching a feed returns a mock response
       fetch_url = 'http://some.fetch.url'

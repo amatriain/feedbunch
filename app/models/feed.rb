@@ -61,7 +61,7 @@ class Feed < ActiveRecord::Base
     user = User.find user_id
 
     # Check if there is a feed with that URL already in the database
-    known_feed = Feed.url_feed feed_url
+    known_feed = Feed.url_variants_feed feed_url
     if known_feed.present?
       Rails.logger.info "Subscribing user #{user_id} (#{user.email}) to pre-existing feed #{known_feed.id} - #{known_feed.fetch_url}"
       user.feeds << known_feed
@@ -121,6 +121,39 @@ class Feed < ActiveRecord::Base
     self.title = sanitize self.title
     self.fetch_url = sanitize self.fetch_url
     self.url = sanitize self.url
+  end
+
+  ##
+  # Check if a feed exists in the database matching a given URL. This is a class method.
+  #
+  # Receives as argument a URL.
+  #
+  # It checks several variants of the passed URL to see if there's a matching feed:
+  #
+  # - First it checks with the passed URL as-is.
+  # - If the passed URL has a trailing slash, it checks with the slash removed.
+  # - If the passed URL does not have a trailing slash, it checks with an added trailing slash.
+  #
+  # In all three cases it invokes the Feed.url_feed method to check if there's a matching feed.
+  #
+  # If a matching feed is found, it is returned. Otherwise returns nil.
+
+  def self.url_variants_feed(url)
+    # Remove leading and trailing whitespace, to avoid confusion when detecting trailing slashes
+    stripped_url = url.strip
+    Rails.logger.info "Searching for mathing feeds for url #{stripped_url}"
+    matching_feed = Feed.url_feed stripped_url
+    if matching_feed.blank? && stripped_url =~ /.*[^\/]$/
+      Rails.logger.info "No matching feed found for #{stripped_url}, adding trailing slash to search again for url"
+      url_slash = stripped_url + '/'
+      matching_feed = Feed.url_feed url_slash
+    elsif matching_feed.blank? && stripped_url =~ /.*\/$/
+      Rails.logger.info "No matching feed found for #{stripped_url}, removing trailing slash to search again for url"
+      url_no_slash = stripped_url.chop
+      matching_feed = Feed.url_feed url_no_slash
+    end
+
+    return matching_feed
   end
 
   ##

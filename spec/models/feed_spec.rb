@@ -175,6 +175,42 @@ describe Feed do
       @user.feeds.where(fetch_url: @feed.fetch_url).first.should eq @feed
     end
 
+    it 'subscribes user to feed already in the database, given its fetch_url with added trailing slash' do
+      url = 'http://some.host/feed'
+      url_slash = 'http://some.host/feed/'
+      # At first the user is not subscribed to the feed
+      feed = FactoryGirl.create :feed, fetch_url: url
+      @user.feeds.where(fetch_url: feed.fetch_url).should be_blank
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      result = Feed.subscribe url_slash, @user.id
+      result.should eq feed
+      @user.feeds.where(fetch_url: feed.fetch_url).first.should eq feed
+    end
+
+    it 'subscribes user to feed already in the database, given its fetch_url missing a trailing slash' do
+      url = 'http://some.host/feed/'
+      url_no_slash = 'http://some.host/feed'
+      # At first the user is not subscribed to the feed
+      feed = FactoryGirl.create :feed, fetch_url: url
+      @user.feeds.where(fetch_url: feed.fetch_url).should be_blank
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      result = Feed.subscribe url_no_slash, @user.id
+      result.should eq feed
+      @user.feeds.where(fetch_url: feed.fetch_url).first.should eq feed
+    end
+
     it 'subscribes user to feed already in the database, given its url' do
       # At first the user is not subscribed to the feed
       @user.feeds.where(url: @feed.url).should be_blank
@@ -188,6 +224,42 @@ describe Feed do
       result = Feed.subscribe @feed.url, @user.id
       result.should eq @feed
       @user.feeds.where(url: @feed.url).first.should eq @feed
+    end
+
+    it 'subscribes user to feed already in the database, given its url with added trailing slash' do
+      url = 'http://some.host/feed'
+      url_slash = 'http://some.host/feed/'
+      # At first the user is not subscribed to the feed
+      feed = FactoryGirl.create :feed, url: url
+      @user.feeds.where(url: feed.fetch_url).should be_blank
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      result = Feed.subscribe url_slash, @user.id
+      result.should eq feed
+      @user.feeds.where(url: feed.url).first.should eq feed
+    end
+
+    it 'subscribes user to feed already in the database, given its url missing a trailing slash' do
+      url = 'http://some.host/feed/'
+      url_no_slash = 'http://some.host/feed'
+      # At first the user is not subscribed to the feed
+      feed = FactoryGirl.create :feed, url: url
+      @user.feeds.where(url: feed.fetch_url).should be_blank
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      result = Feed.subscribe url_no_slash, @user.id
+      result.should eq feed
+      @user.feeds.where(url: feed.url).first.should eq feed
     end
 
     it 'adds new feed to the database and subscribes user to it' do
