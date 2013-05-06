@@ -118,6 +118,15 @@ describe Feed do
     it 'does not return users not suscribed to the feed' do
       @feed.users.should_not include @user3
     end
+
+    it 'does not allow subscribing the same user more than once' do
+      @feed.users.count.should eq 2
+      @feed.users.where(id: @user1.id).count.should eq 1
+
+      @feed.users << @user1
+      @feed.users.count.should eq 2
+      @feed.users.where(id: @user1.id).count.should eq 1
+    end
   end
 
   context 'association with folders' do

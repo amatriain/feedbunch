@@ -29,7 +29,7 @@ class Feed < ActiveRecord::Base
 
   attr_accessible :fetch_url, :title
 
-  has_and_belongs_to_many :users
+  has_and_belongs_to_many :users, uniq: true
   has_and_belongs_to_many :folders
   has_many :entries, dependent: :destroy
 
