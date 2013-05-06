@@ -100,6 +100,15 @@ describe Feed do
       @feed.destroy
       Entry.count.should eq 0
     end
+
+    it 'does not allow the same entry more than once' do
+      entry = FactoryGirl.build :entry, feed_id: @feed.id
+      @feed.entries << entry
+      @feed.entries << entry
+
+      @feed.entries.count.should eq 1
+      @feed.entries.where(id: entry.id).count.should eq 1
+    end
   end
 
   context 'user suscriptions' do

@@ -31,7 +31,7 @@ class Feed < ActiveRecord::Base
 
   has_and_belongs_to_many :users, uniq: true
   has_and_belongs_to_many :folders, uniq: true
-  has_many :entries, dependent: :destroy
+  has_many :entries, dependent: :destroy, uniq: true
 
   validates :fetch_url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
   validates :url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, allow_blank: true
