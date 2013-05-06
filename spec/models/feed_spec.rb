@@ -145,6 +145,15 @@ describe Feed do
     it 'does not return folders to which this feed is not associated' do
       @feed.folders.should_not include @folder3
     end
+
+    it 'does not allow associating with the same folder more than once' do
+      @feed.folders.count.should eq 2
+      @feed.folders.where(id: @folder1.id).count.should eq 1
+
+      @feed.folders << @folder1
+      @feed.folders.count.should eq 2
+      @feed.folders.where(id: @folder1.id).count.should eq 1
+    end
   end
 
   context 'add subscription' do
