@@ -50,6 +50,15 @@ describe Folder do
     it 'does not return feeds not associated with this folder' do
       @folder.feeds.should_not include @feed3
     end
+
+    it 'does not allow associating the same feed more than once' do
+      @folder.feeds.count.should eq 2
+      @folder.feeds.where(id: @feed1.id).count.should eq 1
+
+      @folder.feeds << @feed1
+      @folder.feeds.count.should eq 2
+      @folder.feeds.where(id: @feed1.id).count.should eq 1
+    end
   end
 
   context 'association with entries' do

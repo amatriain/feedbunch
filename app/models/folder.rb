@@ -21,7 +21,7 @@ class Folder < ActiveRecord::Base
 
   belongs_to :user
   validates :user_id, presence: true
-  has_and_belongs_to_many :feeds
+  has_and_belongs_to_many :feeds, uniq: true
   has_many :entries, through: :feeds
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
