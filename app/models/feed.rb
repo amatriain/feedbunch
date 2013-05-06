@@ -58,27 +58,20 @@ class Feed < ActiveRecord::Base
     # Ensure the url has a schema (defaults to http:// if none is passed)
     feed_url = ensure_schema url
 
-    if Feed.exists? fetch_url: feed_url
-      Rails.logger.info "Feed with fetch_url #{feed_url} already in the database"
-      feed = Feed.where(fetch_url: feed_url).first
-      user = User.find user_id
-      Rails.logger.info "Subscribing user #{user_id} (#{user.email}) to feed with fetch_url #{feed_url}"
-      user.feeds << feed
-      return feed
-    elsif Feed.exists? url: feed_url
-      Rails.logger.info "Feed with url #{feed_url} already in the database"
-      feed = Feed.where(url: feed_url).first
-      user = User.find user_id
-      Rails.logger.info "Subscribing user #{user_id} (#{user.email}) to feed with url #{feed_url}"
-      user.feeds << feed
-      return feed
+    user = User.find user_id
+
+    # Check if there is a feed with that URL already in the database
+    known_feed = Feed.url_feed feed_url
+    if known_feed.present?
+      Rails.logger.info "Subscribing user #{user_id} (#{user.email}) to pre-existing feed #{known_feed.id} - #{known_feed.fetch_url}"
+      user.feeds << known_feed
+      return known_feed
     else
       Rails.logger.info "Feed #{feed_url} not in the database, trying to fetch it"
       feed = Feed.create! fetch_url: feed_url, title: feed_url
       fetch_result = FeedClient.fetch feed.id
       if fetch_result
         Rails.logger.info "New feed #{feed_url} successfully fetched. Subscribing user #{user_id}"
-        user = User.find user_id
         # We have to reload the feed because the title has likely changed value to the real one when first fetching it
         feed.reload
         user.feeds << feed
@@ -91,6 +84,8 @@ class Feed < ActiveRecord::Base
     end
 
   rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
     return false
   end
 
@@ -126,6 +121,27 @@ class Feed < ActiveRecord::Base
     self.title = sanitize self.title
     self.fetch_url = sanitize self.fetch_url
     self.url = sanitize self.url
+  end
+
+  ##
+  # Check if a feed exists in the database with a given a URL. This is a class method.
+  #
+  # Receives as argument a URL.
+  #
+  # If there is a feed in the database which "url" or "fetch_url" field matches with
+  # the url passed as argument, returns the feed object; returns nil otherwise.
+
+  def self.url_feed(url)
+    if Feed.exists? fetch_url: url
+      Rails.logger.info "Feed with fetch_url #{url} already exists in the database"
+      return Feed.where(fetch_url: url).first
+    elsif Feed.exists? url: url
+      Rails.logger.info "Feed with url #{url} already exists in the database"
+      return Feed.where(url: url).first
+    else
+      Rails.logger.info "Feed #{url} does not exist in the database"
+      return nil
+    end
   end
 
 end
