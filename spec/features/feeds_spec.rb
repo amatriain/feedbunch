@@ -380,7 +380,137 @@ FEED_XML
       page.should have_css 'div#already-subscribed.hidden', visible: false
     end
 
-    it 'shows an alert if the user is already subscribed to the feed and submits an URL without schema', js: true do
+    it 'shows an alert if the user is already subscribed to the feed and submits the URL with an added trailing slash', js: true do
+      # Fetching a feed returns an HTML document with feed autodiscovery
+      webpage_url = 'http://some.webpage.url'
+      url_slash = 'http://some.webpage.url/'
+      fetch_url = 'http://some.webpage.url/feed.php'
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      feed_title = 'new feed title'
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>#{webpage_url}</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub(:headers).and_return {}
+
+      RestClient.stub :get do |url|
+        if url == webpage_url
+          webpage_html
+        elsif url == fetch_url
+          feed_xml
+        end
+
+      end
+
+      # Subscribe to feed
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: webpage_url
+        find('#subscribe-submit').click
+      end
+
+      # Try to subscribe to feed again submitting the URL without scheme
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: url_slash
+        find('#subscribe-submit').click
+      end
+
+      # A "you're already subscribed to feed" alert should be shown
+      page.should have_css 'div#already-subscribed'
+      page.should_not have_css 'div#already-subscribed.hidden', visible: false
+
+      # It should close automatically after 5 seconds
+      sleep 5
+      page.should have_css 'div#already-subscribed.hidden', visible: false
+    end
+
+    it 'shows an alert if the user is already subscribed to the feed and submits the URL missing a trailing slash', js: true do
+      # Fetching a feed returns an HTML document with feed autodiscovery
+      webpage_url = 'http://some.webpage.url/'
+      url_no_slash = 'http://some.webpage.url'
+      fetch_url = 'http://some.webpage.url/feed.php'
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      feed_title = 'new feed title'
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>#{webpage_url}</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub(:headers).and_return {}
+
+      RestClient.stub :get do |url|
+        if url == webpage_url
+          webpage_html
+        elsif url == fetch_url
+          feed_xml
+        end
+
+      end
+
+      # Subscribe to feed
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: webpage_url
+        find('#subscribe-submit').click
+      end
+
+      # Try to subscribe to feed again submitting the URL without scheme
+      find('#add-subscription').click
+      within '#subscribe-feed-popup' do
+        fill_in 'Feed', with: url_no_slash
+        find('#subscribe-submit').click
+      end
+
+      # A "you're already subscribed to feed" alert should be shown
+      page.should have_css 'div#already-subscribed'
+      page.should_not have_css 'div#already-subscribed.hidden', visible: false
+
+      # It should close automatically after 5 seconds
+      sleep 5
+      page.should have_css 'div#already-subscribed.hidden', visible: false
+    end
+
+    it 'shows an alert if the user is already subscribed to the feed and submits the URL without schema', js: true do
       # Fetching a feed returns an HTML document with feed autodiscovery
       webpage_url = 'http://some.webpage.url'
       url_no_schema = 'some.webpage.url'

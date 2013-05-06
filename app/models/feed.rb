@@ -42,19 +42,37 @@ class Feed < ActiveRecord::Base
   ##
   # Subscribe a user to a feed. This is a class method.
   #
-  # First it checks if the feed is already in the database. If so, the user is subscribed to the feed.
+  # First it checks if the feed is already in the database. In this case:
   #
-  # Otherwise, it checks if the feed can be fetched. If so, the feed is fetched, saved in the database
-  # and the user is subscribed to it.
+  # - If the user is already subscribed to the feed, an AlreadySubscribedError is raised.
+  # - Otherwise, the user is subscribed to the feed. The feed is not fetched (it is assumed its entries are
+  # fresh enough).
   #
-  # Otherwise, it checks if the URL corresponds to a web page with a feed linked in the header. In this
-  # case the feed is fetched, saved in the database and the user subscribed to it.
+  # If the feed is not in the database, it checks if the feed can be fetched. If so, the feed is fetched,
+  # parsed, saved in the database and the user is subscribed to it.
   #
-  # If the end result is that the user is suscribed to a new feed, returns the feed object.
+  # If parsing the fetched response fails, it checks if the URL corresponds to an HTML page with feed autodiscovery
+  # enabled. In this case the actual feed is fetched, saved in the database and the user subscribed to it.
+  #
+  # If the end result is that the user has a new subscription, returns the feed object.
+  # If the user is already subscribed to the feed, raises an AlreadySubscribedError.
   # Otherwise returns false.
+  #
+  # Note,- When searching for feeds in the database (to see if there is a feed with a matching URL, and whether the
+  # user is already subscribed to it), this method is insensitive to trailing slashes, and if no URI-scheme is
+  # present an "http://" scheme is assumed.
+  #
+  # E.g. if the user is subscribed to a feed with url "http://xkcd.com/", the following URLs would cause an
+  # AlreadySubscribedError to be raised:
+  #
+  # - "http://xkcd.com/"
+  # - "http://xkcd.com"
+  # - "xkcd.com/"
+  # - "xkcd.com"
 
   def self.subscribe(url, user_id)
     Rails.logger.info "User #{user_id} submitted Subscribe form with value #{url}"
+
     # Ensure the url has a schema (defaults to http:// if none is passed)
     feed_url = ensure_schema url
 
@@ -63,6 +81,11 @@ class Feed < ActiveRecord::Base
     # Check if there is a feed with that URL already in the database
     known_feed = Feed.url_variants_feed feed_url
     if known_feed.present?
+      # Check if the user is already subscribed to the feed
+      if user.feeds.include? known_feed
+        Rails.logger.info "User #{user_id} (#{user.email}) is already subscribed to feed #{known_feed.id} - #{known_feed.fetch_url}"
+        raise AlreadySubscribedError.new
+      end
       Rails.logger.info "Subscribing user #{user_id} (#{user.email}) to pre-existing feed #{known_feed.id} - #{known_feed.fetch_url}"
       user.feeds << known_feed
       return known_feed
@@ -83,11 +106,16 @@ class Feed < ActiveRecord::Base
       end
     end
 
+  rescue AlreadySubscribedError => e
+    # AlreadySubscribedError is re-raised to be handled in the controller
+    raise e
   rescue => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
     return false
   end
+
+  private
 
   ##
   # Ensure that the URL passed as argument has an http:// or https://schema. This is a class method.
@@ -108,8 +136,6 @@ class Feed < ActiveRecord::Base
     end
     return fixed_url
   end
-
-  private
 
   ##
   # Sanitize the title and URL of the feed.

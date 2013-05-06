@@ -187,6 +187,67 @@ describe Feed do
       @user.feeds.where(fetch_url: 'http://'+url).should be_present
     end
 
+    it 'raises an error if user tries to subscribe twice to a feed, given its fetch_url' do
+      # User is already subscribed to the feed
+      @user.feeds << @feed
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      expect{Feed.subscribe @feed.fetch_url, @user.id}.to raise_error AlreadySubscribedError
+    end
+
+    it 'raises an error if user tries to subscribe twice to a feed, given its fetch_url missing a trailing slash' do
+      feed_url = 'http://some.host/feed/'
+      url_no_slash = 'http://some.host/feed'
+      feed = FactoryGirl.create :feed, fetch_url: feed_url
+      # User is already subscribed to the feed
+      @user.feeds << feed
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      expect{Feed.subscribe url_no_slash, @user.id}.to raise_error AlreadySubscribedError
+    end
+
+    it 'raises an error if user tries to subscribe twice to a feed, given its fetch_url with an added trailing slash' do
+      feed_url = 'http://some.host/feed'
+      url_slash = 'http://some.host/feed/'
+      feed = FactoryGirl.create :feed, fetch_url: feed_url
+      # User is already subscribed to the feed
+      @user.feeds << feed
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      expect{Feed.subscribe url_slash, @user.id}.to raise_error AlreadySubscribedError
+    end
+
+    it 'raises an error if user tries to subscribe twice to a feed, given its fetch_url without URI-scheme' do
+      feed_url = 'http://some.host/feed/'
+      url_no_scheme = 'some.host/feed/'
+      feed = FactoryGirl.create :feed, fetch_url: feed_url
+      # User is already subscribed to the feed
+      @user.feeds << feed
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      expect{Feed.subscribe url_no_scheme, @user.id}.to raise_error AlreadySubscribedError
+    end
+
     it 'subscribes user to feed already in the database, given its fetch_url' do
       # At first the user is not subscribed to the feed
       @user.feeds.where(fetch_url: @feed.fetch_url).should be_blank
@@ -238,6 +299,85 @@ describe Feed do
       @user.feeds.where(fetch_url: feed.fetch_url).first.should eq feed
     end
 
+    it 'subscribes user to feed already in the database, given its fetch_url without uri-scheme' do
+      url = 'http://some.host/feed/'
+      url_no_scheme = 'some.host/feed/'
+      # At first the user is not subscribed to the feed
+      feed = FactoryGirl.create :feed, fetch_url: url
+      @user.feeds.where(fetch_url: feed.fetch_url).should be_blank
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      result = Feed.subscribe url_no_scheme, @user.id
+      result.should eq feed
+      @user.feeds.where(fetch_url: feed.fetch_url).first.should eq feed
+    end
+
+    it 'raises an error if user tries to subscribe twice to a feed, given its url' do
+      # User is already subscribed to the feed
+      @user.feeds << @feed
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      expect{Feed.subscribe @feed.url, @user.id}.to raise_error AlreadySubscribedError
+    end
+
+    it 'raises an error if user tries to subscribe twice to a feed, given its url missing a trailing slash' do
+      feed_url = 'http://some.host/feed/'
+      url_no_slash = 'http://some.host/feed'
+      feed = FactoryGirl.create :feed, url: feed_url
+      # User is already subscribed to the feed
+      @user.feeds << feed
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      expect{Feed.subscribe url_no_slash, @user.id}.to raise_error AlreadySubscribedError
+    end
+
+    it 'raises an error if user tries to subscribe twice to a feed, given its url with an added trailing slash' do
+      feed_url = 'http://some.host/feed'
+      url_slash = 'http://some.host/feed/'
+      feed = FactoryGirl.create :feed, url: feed_url
+      # User is already subscribed to the feed
+      @user.feeds << feed
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      expect{Feed.subscribe url_slash, @user.id}.to raise_error AlreadySubscribedError
+    end
+
+    it 'raises an error if user tries to subscribe twice to a feed, given its url without URI-scheme' do
+      feed_url = 'http://some.host/feed/'
+      url_no_scheme = 'some.host/feed/'
+      feed = FactoryGirl.create :feed, url: feed_url
+      # User is already subscribed to the feed
+      @user.feeds << feed
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      expect{Feed.subscribe url_no_scheme, @user.id}.to raise_error AlreadySubscribedError
+    end
+
     it 'subscribes user to feed already in the database, given its url' do
       # At first the user is not subscribed to the feed
       @user.feeds.where(url: @feed.url).should be_blank
@@ -285,6 +425,24 @@ describe Feed do
       FeedClient.should_not_receive :fetch
 
       result = Feed.subscribe url_no_slash, @user.id
+      result.should eq feed
+      @user.feeds.where(url: feed.url).first.should eq feed
+    end
+
+    it 'subscribes user to feed already in the database, given its url without uri-scheme' do
+      url = 'http://some.host/feed/'
+      url_no_scheme = 'some.host/feed/'
+      # At first the user is not subscribed to the feed
+      feed = FactoryGirl.create :feed, url: url
+      @user.feeds.where(url: feed.fetch_url).should be_blank
+
+      # The feed is already in the database, no attempt to save it should happen
+      Feed.any_instance.should_not_receive :save
+
+      # Feed already should have entries in the database, no attempt to fetch it should happen
+      FeedClient.should_not_receive :fetch
+
+      result = Feed.subscribe url_no_scheme, @user.id
       result.should eq feed
       @user.feeds.where(url: feed.url).first.should eq feed
     end

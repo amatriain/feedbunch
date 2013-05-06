@@ -79,24 +79,21 @@ class FeedsController < ApplicationController
 
   def create
     url = params[:subscription][:rss]
-    # Ensure the passed URL has a schema (defaults to http://)
-    feed_url = Feed.ensure_schema url
-    # If user is already subscribed to the feed, return 304
-    if current_user.feeds.where(fetch_url: feed_url).present? || current_user.feeds.where(url: feed_url).present?
-      Rails.logger.warn "User #{current_user.id} tried to subscribed again to feed #{params[:subscription][:rss]}, returning a 304"
-      head status: 304
+
+    @feed = Feed.subscribe url, current_user.id
+    if @feed
+      respond_with @feed, layout: false
     else
-      # User is not yet subscribed to the feed
-      @feed = Feed.subscribe feed_url, current_user.id
-      if @feed
-        respond_with @feed, layout: false
-      else
-        Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
-        #TODO respond with html for search results, for instance with head status:300 (Multiple Choices)
-        head status: 404
-      end
+      Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
+      #TODO respond with html for search results, for instance with head status:300 (Multiple Choices)
+      head status: 404
     end
+
+  rescue AlreadySubscribedError
+    # If user is already subscribed to the feed, return 304
+    head status: 304
   rescue ActiveRecord::RecordNotFound
+    # This should not happen normally
     head status: 404
   rescue => e
     Rails.logger.error e.message
