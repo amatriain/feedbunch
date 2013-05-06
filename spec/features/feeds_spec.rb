@@ -74,6 +74,7 @@ describe 'feeds' do
       @feed2.entries << entry
 
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: @feed2.fetch_url
         find('#subscribe-submit').click
@@ -92,6 +93,7 @@ describe 'feeds' do
       @feed2.entries << entry
 
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: @feed2.url
         find('#subscribe-submit').click
@@ -113,6 +115,7 @@ describe 'feeds' do
       feed.entries << entry
 
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: url_slash
         find('#subscribe-submit').click
@@ -134,6 +137,7 @@ describe 'feeds' do
       feed.entries << entry
 
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: url_no_slash
         find('#subscribe-submit').click
@@ -155,6 +159,7 @@ describe 'feeds' do
       feed.entries << entry
 
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: url_no_scheme
         find('#subscribe-submit').click
@@ -194,6 +199,7 @@ FEED_XML
       RestClient.stub get: feed_xml
 
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: fetch_url
         find('#subscribe-submit').click
@@ -260,6 +266,7 @@ FEED_XML
       end
 
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: webpage_url
         find('#subscribe-submit').click
@@ -327,6 +334,7 @@ FEED_XML
       end
 
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: url_no_schema
         find('#subscribe-submit').click
@@ -349,6 +357,7 @@ FEED_XML
       User.any_instance.stub(:feeds).and_raise StandardError.new
       # Try to subscribe to feed (already in the database, for simplicity)
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: @feed2.fetch_url
         find('#subscribe-submit').click
@@ -366,6 +375,7 @@ FEED_XML
     it 'shows an alert if the user is already subscribed to the feed', js: true do
       # Try to subscribe to feed again
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: @feed1.fetch_url
         find('#subscribe-submit').click
@@ -424,13 +434,17 @@ FEED_XML
 
       # Subscribe to feed
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: webpage_url
         find('#subscribe-submit').click
       end
 
+      sleep 1
+
       # Try to subscribe to feed again submitting the URL without scheme
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: url_slash
         find('#subscribe-submit').click
@@ -489,13 +503,17 @@ FEED_XML
 
       # Subscribe to feed
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: webpage_url
         find('#subscribe-submit').click
       end
 
+      sleep 1
+
       # Try to subscribe to feed again submitting the URL without scheme
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: url_no_slash
         find('#subscribe-submit').click
@@ -554,13 +572,17 @@ FEED_XML
 
       # Subscribe to feed
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: url_no_schema
         find('#subscribe-submit').click
       end
 
+      sleep 1
+
       # Try to subscribe to feed again submitting the URL without scheme
       find('#add-subscription').click
+      sleep 1
       within '#subscribe-feed-popup' do
         fill_in 'Feed', with: url_no_schema
         find('#subscribe-submit').click
