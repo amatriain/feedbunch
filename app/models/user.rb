@@ -36,6 +36,6 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
   has_and_belongs_to_many :feeds, uniq: true
-  has_many :folders, dependent: :destroy
+  has_many :folders, dependent: :destroy, uniq: true
   has_many :entries, through: :feeds
 end

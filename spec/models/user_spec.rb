@@ -50,11 +50,19 @@ describe User do
     @user.entries.should include entry3
   end
 
-  it 'does not allow subscribing to the same feed twice' do
+  it 'does not allow subscribing to the same feed more than once' do
     feed = FactoryGirl.create :feed
     @user.feeds << feed
     @user.feeds << feed
     @user.feeds.count.should eq 1
     @user.feeds.first.should eq feed
+  end
+
+  it 'does not allow associating to the same folder more than once' do
+    folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder
+    @user.folders << folder
+    @user.folders.count.should eq 1
+    @user.folders.first.should eq folder
   end
 end
