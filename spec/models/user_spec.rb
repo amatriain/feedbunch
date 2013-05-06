@@ -49,4 +49,12 @@ describe User do
     @user.entries.should include entry2
     @user.entries.should include entry3
   end
+
+  it 'does not allow subscribing to the same feed twice' do
+    feed = FactoryGirl.create :feed
+    @user.feeds << feed
+    @user.feeds << feed
+    @user.feeds.count.should eq 1
+    @user.feeds.first.should eq feed
+  end
 end
