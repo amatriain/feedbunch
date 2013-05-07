@@ -20,6 +20,7 @@ en:
     index:
       open_new_tab: "Open in new tab"
       refresh: "Refresh"
+      unsubscribe: "Unsubscribe"
       all_feeds: "All subscriptions"
       all_entries: "Read all subscriptions"
       loading: "Loading..."

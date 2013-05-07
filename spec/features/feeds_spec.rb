@@ -802,13 +802,13 @@ FEED_XML
       read_feed @feed1.id
     end
 
-    it 'disables refresh button until a feed is selected', js: true do
+    it 'hides refresh button until a feed is selected', js: true do
       visit feeds_path
-      page.should have_css 'a#refresh-feed.disabled'
+      page.should have_css 'a#refresh-feed.hidden', visible: false
     end
 
-    it 'enables refresh button when a feed is selected', js: true do
-      page.should_not have_css 'a#refresh-feed.disabled'
+    it 'shows refresh button when a feed is selected', js: true do
+      page.should_not have_css 'a#refresh-feed.hidden', visible: false
       page.should have_css 'a#refresh-feed'
     end
 

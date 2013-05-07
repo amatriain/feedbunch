@@ -6,8 +6,13 @@
   </div>
 
   <div class="span2">
-    <a id="refresh-feed" class="btn btn-primary disabled" data-refresh-feed>
+    <a id="refresh-feed" class="btn btn-primary hidden" data-refresh-feed>
       <i class="icon-repeat"></i> <%= t 'feeds.index.refresh' %>
+    </a>
+  </div>
+  <div class="span2">
+    <a id="unsubscribe-feed" class="btn btn-danger disabled" data-refresh-feed>
+      <i class="icon-remove-sign"></i> <%= t 'feeds.index.unsubscribe' %>
     </a>
   </div>
 </div>

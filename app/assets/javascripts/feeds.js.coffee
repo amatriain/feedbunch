@@ -122,16 +122,16 @@ $(document).ready ->
     insert_entries = (entries, status, xhr) ->
       $(".icon-spin").removeClass("icon-spin").addClass "hidden"
       $("#loading").addClass "hidden"
-      $("#refresh-feed").removeClass "disabled"
+      $("#refresh-feed").removeClass("hidden").removeClass("disabled")
       if status in ["error", "timeout", "abort", "parsererror"]
         if xhr.status == 404
           alertTimedShowHide $("#no-entries")
         else
           alertTimedShowHide $("#problem-loading")
 
-    # The refresh button now refreshes this feed
+    # The refresh button now refreshes this feed; it's disabled while the feed loads
     feed_path = $(this).attr "data-feed-path"
-    $("#refresh-feed").attr "data-refresh-feed", feed_path
+    $("#refresh-feed").attr("data-refresh-feed", feed_path).addClass "disabled"
 
     # Show the feed title
     feed_title = $(this).attr "data-feed-title"

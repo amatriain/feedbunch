@@ -17,6 +17,7 @@ es:
     index:
       open_new_tab: "Abrir en una nueva pestaña"
       refresh: "Actualizar"
+      unsubscribe: "Anular suscripción"
       all_feeds: "Todas las suscripciones"
       all_entries: "Leer todas las suscripciones"
       loading: "Cargando..."
