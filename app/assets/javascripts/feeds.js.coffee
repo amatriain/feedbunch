@@ -122,7 +122,9 @@ $(document).ready ->
     insert_entries = (entries, status, xhr) ->
       $(".icon-spin").removeClass("icon-spin").addClass "hidden"
       $("#loading").addClass "hidden"
+      # Show and enable Refresh, Unsubscribe buttons
       $("#refresh-feed").removeClass("hidden").removeClass("disabled")
+      $("#unsubscribe-feed").removeClass("hidden").removeClass("disabled")
       if status in ["error", "timeout", "abort", "parsererror"]
         if xhr.status == 404
           alertTimedShowHide $("#no-entries")
@@ -132,6 +134,9 @@ $(document).ready ->
     # The refresh button now refreshes this feed; it's disabled while the feed loads
     feed_path = $(this).attr "data-feed-path"
     $("#refresh-feed").attr("data-refresh-feed", feed_path).addClass "disabled"
+
+    # The unsubscribe button is disabled while the feed loads
+    $("#unsubscribe-feed").addClass "disabled"
 
     # Show the feed title
     feed_title = $(this).attr "data-feed-title"

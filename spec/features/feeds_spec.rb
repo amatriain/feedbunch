@@ -970,4 +970,29 @@ FEED_XML
     it 'marks an entry as unread'
 
   end
+
+  context 'unsubscribe feed' do
+
+    before :each do
+      @user = FactoryGirl.create :user
+      @feed1 = FactoryGirl.create :feed
+      @user.feeds << @feed1
+      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @feed1.entries << @entry1
+
+      login_user_for_feature @user
+      visit feeds_path
+      read_feed @feed1.id
+    end
+
+    it 'hides unsubscribe button until a feed is selected', js: true do
+      visit feeds_path
+      page.should have_css 'a#unsubscribe-feed.hidden', visible: false
+    end
+
+    it 'shows unsubscribe button when a feed is selected', js: true do
+      page.should_not have_css 'a#unsubscribe-feed.hidden', visible: false
+      page.should have_css 'a#unsubscribe-feed'
+    end
+  end
 end
