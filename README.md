@@ -4,6 +4,8 @@ Openreader
 
 [Latest documentation at rdoc.info](http://rubydoc.info/github/amatriain/openreader/frames/file/README.md)
 
+Licensed under the MIT license (see LICENSE.txt file in the root directory for details).
+
 As you probably know, Google has recently announced its decision to [discontinue Google Reader on July 1, 2013](http://googlereader.blogspot.ca/2013/03/powering-down-google-reader.html).
 
 If you didn't know: first of all, where have you been living lately? Second: yes I know, it's a damn shame, what is Google thinking about, curse them and their "do no evil", all that jazz. Third, you should make a backup of your Google Reader data, specially your suscribed feeds. Go to [Google Takeout](https://www.google.com/takeout/?pli=1#custom:reader), make a backup and save it somewhere safe. Preferably make copies in different hard drives, better safe than sorry. Go on, I'll be waiting here.
