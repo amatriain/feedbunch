@@ -74,8 +74,6 @@ class FeedsController < ApplicationController
   ##
   # Subscribe the authenticated user to the feed passed in the params[:subscribe][:rss] param.
   # If successful, return JSON containing HTML with the entries of the feed.
-  #
-  # If the param is not the URL of a valid feed, search among known feeds and return HTML with any matches.
 
   def create
     url = params[:subscription][:rss]
