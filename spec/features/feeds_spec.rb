@@ -81,8 +81,8 @@ describe 'feeds' do
       end
 
       # Both the old and new feeds should be there, the new feed should be selected
-      page.should have_css "ul#sidebar li#feed-#{@feed1.id}"
-      page.should have_css "ul#sidebar li#feed-#{@feed2.id}.active"
+      page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
+      page.should have_css "ul#sidebar li.active > a[data-feed-id='#{@feed2.id}']"
       # The entries for the just subscribed feed should be visible
       page.should have_content entry.title
     end
@@ -100,8 +100,8 @@ describe 'feeds' do
       end
 
       # Both the old and new feeds should be there, the new feed should be selected
-      page.should have_css "ul#sidebar li#feed-#{@feed1.id}"
-      page.should have_css "ul#sidebar li#feed-#{@feed2.id}.active"
+      page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
+      page.should have_css "ul#sidebar li.active > a[data-feed-id='#{@feed2.id}']"
       # The entries for the just subscribed feed should be visible
       page.should have_content entry.title
     end
@@ -122,8 +122,8 @@ describe 'feeds' do
       end
 
       # Both the old and new feeds should be there, the new feed should be selected
-      page.should have_css "ul#sidebar li#feed-#{@feed1.id}"
-      page.should have_css "ul#sidebar li#feed-#{feed.id}.active"
+      page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
+      page.should have_css "ul#sidebar li.active > a[data-feed-id='#{feed.id}']"
       # The entries for the just subscribed feed should be visible
       page.should have_content entry.title
     end
@@ -144,8 +144,8 @@ describe 'feeds' do
       end
 
       # Both the old and new feeds should be there, the new feed should be selected
-      page.should have_css "ul#sidebar li#feed-#{@feed1.id}"
-      page.should have_css "ul#sidebar li#feed-#{feed.id}.active"
+      page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
+      page.should have_css "ul#sidebar li.active > a[data-feed-id='#{feed.id}']"
       # The entries for the just subscribed feed should be visible
       page.should have_content entry.title
     end
@@ -166,8 +166,8 @@ describe 'feeds' do
       end
 
       # Both the old and new feeds should be there, the new feed should be selected
-      page.should have_css "ul#sidebar li#feed-#{@feed1.id}"
-      page.should have_css "ul#sidebar li#feed-#{feed.id}.active"
+      page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
+      page.should have_css "ul#sidebar li.active > a[data-feed-id='#{feed.id}']"
       # The entries for the just subscribed feed should be visible
       page.should have_content entry.title
     end
@@ -642,8 +642,8 @@ FEED_XML
 
           # Should have all the feeds inside
           within 'ul#feeds-all' do
-            page.should have_css "li#feed-#{@feed1.id}"
-            page.should have_css "li#feed-#{@feed2.id}"
+            page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
+            page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed2.id}']"
           end
         end
       end
@@ -665,8 +665,8 @@ FEED_XML
 
           # Should have inside only those feeds associated to the folder
           within "ul#feeds-#{@folder1.id}" do
-            page.should have_css "li#feed-#{@feed1.id}"
-            page.should_not have_css "li#feed-#{@feed2.id}"
+            page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
+            page.should_not have_css "ul#sidebar li > a[data-feed-id='#{@feed2.id}']"
           end
         end
       end
@@ -678,7 +678,7 @@ FEED_XML
         find("a[data-target='#feeds-all']").click
 
         # click on feed
-        find("li#feed-#{@feed2.id} > a").click
+        find("ul#sidebar li > a[data-feed-id='#{@feed2.id}']").click
       end
 
       # Only entries for the clicked feed should appear
@@ -694,7 +694,7 @@ FEED_XML
         find("a[data-target='#feeds-#{@folder1.id}']").click
 
         # Click on feed
-        find("li#feed-#{@feed1.id} > a").click
+        find("ul#sidebar li > a[data-feed-id='#{@feed1.id}']").click
       end
 
       # Only entries for the clicked feed should appear
@@ -1005,8 +1005,8 @@ FEED_XML
       find('#unsubscribe-submit').click
 
       # Only @feed2 should be present, @feed1 has been unsubscribed
-      page.should_not have_css "ul#sidebar li#feed-#{@feed1.id}", visible: false
-      page.should have_css "ul#sidebar li#feed-#{@feed2.id}.active", visible: false
+      page.should_not have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']", visible: false
+      page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed2.id}']", visible: false
     end
 
     it 'shows an alert if there is a problem unsubscribing from a feed'
