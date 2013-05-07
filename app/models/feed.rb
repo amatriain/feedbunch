@@ -62,13 +62,13 @@ class Feed < ActiveRecord::Base
   # user is already subscribed to it), this method is insensitive to trailing slashes, and if no URI-scheme is
   # present an "http://" scheme is assumed.
   #
-  # E.g. if the user is subscribed to a feed with url "http://xkcd.com/", the following URLs would cause an
+  # E.g. if the user is subscribed to a feed with url "\http://xkcd.com/", the following URLs would cause an
   # AlreadySubscribedError to be raised:
   #
-  # - "http://xkcd.com/"
-  # - "http://xkcd.com"
-  # - "xkcd.com/"
-  # - "xkcd.com"
+  # - "\http://xkcd.com/"
+  # - "\http://xkcd.com"
+  # - "\xkcd.com/"
+  # - "\xkcd.com"
 
   def self.subscribe(url, user_id)
     Rails.logger.info "User #{user_id} submitted Subscribe form with value #{url}"
@@ -109,6 +109,26 @@ class Feed < ActiveRecord::Base
   rescue AlreadySubscribedError => e
     # AlreadySubscribedError is re-raised to be handled in the controller
     raise e
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    return false
+  end
+
+  ##
+  # Unsubscribes a user from a feed. This is a class method.
+  #
+  # Receives as arguments the id of the feed to unsubscribe, and the id of the user doing the unsuscribing.
+  #
+  # Returns true if succesfully unsuscribed, false otherwise.
+
+  def self.unsubscribe(feed_id, user_id)
+    user = User.find user_id
+    feed = user.feeds.find feed_id
+
+    Rails.logger.info "unsubscribing user #{user.id} - #{user.email} from feed #{feed.id} - #{feed.fetch_url}"
+    user.feeds.delete feed
+    return true
   rescue => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace

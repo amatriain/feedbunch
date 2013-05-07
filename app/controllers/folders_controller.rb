@@ -39,7 +39,7 @@ class FoldersController < ApplicationController
   rescue => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    head 500
+    head status: 500
   end
 
   ##
@@ -84,6 +84,6 @@ class FoldersController < ApplicationController
   rescue => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    head 500
+    head status: 500
   end
 end

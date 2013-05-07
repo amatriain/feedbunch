@@ -131,12 +131,13 @@ $(document).ready ->
         else
           alertTimedShowHide $("#problem-loading")
 
-    # The refresh button now refreshes this feed; it's disabled while the feed loads
     feed_path = $(this).attr "data-feed-path"
+    # The refresh button now refreshes this feed; it's disabled while the feed loads
     $("#refresh-feed").attr("data-refresh-feed", feed_path).addClass "disabled"
 
-    # The unsubscribe button is disabled while the feed loads
-    $("#unsubscribe-feed").addClass "disabled"
+    feed_id = $(this).attr "data-feed-id"
+    # The unsubscribe button now unsubscribes from this feed; it's disabled while the feed loads
+    $("#unsubscribe-feed").attr("data-unsubscribe-feed", feed_id).attr("data-unsubscribe-path", feed_path).addClass "disabled"
 
     # Show the feed title
     feed_title = $(this).attr "data-feed-title"
@@ -203,3 +204,25 @@ $(document).ready ->
 
     # prevent default form submit
     return false
+
+  #-------------------------------------------------------
+  # Unsubscribe from feed via Ajax
+  #-------------------------------------------------------
+  $("#unsubscribe-submit").on "click", ->
+    $("#unsubscribe-feed-popup").modal 'hide'
+    unsubscribe_path = $("#unsubscribe-feed").attr("data-unsubscribe-path")
+    unsubscribe_feed = $("#unsubscribe-feed").attr("data-unsubscribe-feed")
+
+    # Function to handle result returned by the server
+    unsubscribe_result = (data, status, xhr) ->
+      # Remove the feed from the sidebar
+      $("[data-feed-id=#{unsubscribe_feed}]").parent().remove()
+
+    $.post(unsubscribe_path, {"_method":"delete"}, unsubscribe_result)
+      .fail ->
+        alert "UNIMPLEMENTED"
+
+    # Open the "all subscriptions" folder if not already open
+    $("#feeds-all").not(".in").prev("a").click()
+    # Click on "read all subscriptions"
+    $("#feeds-all #folder-all-all-feeds a").click()

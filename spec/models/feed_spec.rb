@@ -490,6 +490,51 @@ describe Feed do
       success = Feed.subscribe feed_url, @user.id
       success.should be_false
     end
+  end
+
+  context 'unsubscribe from feed' do
+
+    before :each do
+      @user = FactoryGirl.create :user
+      @user.feeds << @feed
+    end
+
+    it 'unsubscribes a user from a feed' do
+      @user.feeds.find(@feed.id).should be_present
+      Feed.unsubscribe @feed.id, @user.id
+      expect{@user.feeds.find(@feed.id)}.to raise_error ActiveRecord::RecordNotFound
+    end
+
+    it 'returns true if successful' do
+      @user.feeds.find(@feed.id).should be_present
+      success = Feed.unsubscribe @feed.id, @user.id
+      success.should be_true
+    end
+
+    it 'returns false if the user is not subscribed to the feed' do
+      feed2 = FactoryGirl.create :feed
+      success = Feed.unsubscribe feed2.id, @user.id
+      success.should be_false
+    end
+
+    it 'returns false if there is a problem unsubscribing' do
+      User.any_instance.stub(:feeds).and_raise StandardError.new
+      success = Feed.unsubscribe @feed.id, @user.id
+      success.should be_false
+    end
+
+    it 'does not change subscriptions to the feed by other users' do
+      user2 = FactoryGirl.create :user
+      user2.feeds << @feed
+
+      @user.feeds.find(@feed.id).should be_present
+      user2.feeds.find(@feed.id).should be_present
+
+      success = Feed.unsubscribe @feed.id, @user.id
+      expect{@user.feeds.find(@feed.id)}.to raise_error ActiveRecord::RecordNotFound
+      user2.feeds.find(@feed.id).should be_present
+      success.should be_true
+    end
 
   end
 end

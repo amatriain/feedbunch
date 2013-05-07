@@ -87,7 +87,7 @@ Openreader::Application.routes.draw do
   root :to => 'high_voltage/pages#show', id: 'index'
 
   # Resourceful routes for feeds
-  resources :feeds, only: [:index, :show, :create]
+  resources :feeds, only: [:index, :show, :create, :destroy]
 
   #TODO - change this to a resourceful route
   match '/feeds/:id/refresh' => 'feeds#refresh', via: :get

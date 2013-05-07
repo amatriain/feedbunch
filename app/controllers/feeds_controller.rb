@@ -18,7 +18,7 @@ class FeedsController < ApplicationController
   rescue => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    head 500
+    head status: 500
   end
 
   ##
@@ -42,7 +42,7 @@ class FeedsController < ApplicationController
   rescue => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    head 500
+    head status: 500
   end
 
   ##
@@ -68,7 +68,7 @@ class FeedsController < ApplicationController
   rescue => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    head 500
+    head status: 500
   end
 
   ##
@@ -96,6 +96,30 @@ class FeedsController < ApplicationController
   rescue => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    head 500
+    head status: 500
+  end
+
+  ##
+  # Unsubscribe the authenticated user from the feed passed in the params[:id] param.
+
+  def destroy
+    @feed = current_user.feeds.find params[:id]
+    if @feed.present?
+      success = Feed.unsubscribe @feed.id, current_user.id
+      if success
+        head status: 200
+      else
+        head status: 500
+      end
+    else
+      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to unsubscribe from feed #{params[:id]} to which he's not subscribed"
+      head status: 404
+    end
+  rescue ActiveRecord::RecordNotFound
+    head status: 404
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    head status: 500
   end
 end

@@ -121,4 +121,28 @@ describe FeedsController do
       assigns(:feed).should eq @feed2
     end
   end
+
+  context 'DELETE destroy' do
+    it 'returns 404 if the feed does not exist' do
+      delete :destroy, id: 1234567890
+      response.status.should eq 404
+    end
+
+    it 'returns 404 if the user is not subscribed to the feed' do
+      delete :destroy, id: @feed2.id
+      response.status.should eq 404
+    end
+
+    it 'returns 200 if the user is successfully unsubscribed' do
+      Feed.stub unsubscribe: true
+      delete :destroy, id: @feed1.id
+      response.status.should eq 200
+    end
+
+    it 'returns 500 if there is a problem unsubscribing' do
+      Feed.stub unsubscribe: false
+      delete :destroy, id: @feed1.id
+      response.status.should eq 500
+    end
+  end
 end

@@ -351,8 +351,6 @@ FEED_XML
       page.should have_content entry_title
     end
 
-    it 'unsubscribes from a feed'
-
     it 'shows an alert if there is a problem subscribing to a feed', js: true do
       User.any_instance.stub(:feeds).and_raise StandardError.new
       # Try to subscribe to feed (already in the database, for simplicity)
@@ -971,12 +969,13 @@ FEED_XML
 
   end
 
-  context 'unsubscribe feed' do
+  context 'unsubscribe from feed' do
 
     before :each do
       @user = FactoryGirl.create :user
       @feed1 = FactoryGirl.create :feed
-      @user.feeds << @feed1
+      @feed2 = FactoryGirl.create :feed
+      @user.feeds << @feed1 << @feed2
       @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1
 
@@ -994,5 +993,30 @@ FEED_XML
       page.should_not have_css 'a#unsubscribe-feed.hidden', visible: false
       page.should have_css 'a#unsubscribe-feed'
     end
+
+    it 'shows a confirmation popup', js: true do
+      find('#unsubscribe-feed').click
+      page.should have_css '#unsubscribe-feed-popup'
+    end
+
+    it 'unsubscribes from a feed', js: true do
+      find('#unsubscribe-feed').click
+      sleep 1
+      find('#unsubscribe-submit').click
+
+      # Only @feed2 should be present, @feed1 has been unsubscribed
+      page.should_not have_css "ul#sidebar li#feed-#{@feed1.id}", visible: false
+      page.should have_css "ul#sidebar li#feed-#{@feed2.id}.active", visible: false
+    end
+
+    it 'shows an alert if there is a problem unsubscribing from a feed'
+
+    it 'deletes a feed if there are no users subscribed to it'
+
+    it 'disables unsubscribe button when reading a whole folder'
+
+    it 'makes feed disappear from folders'
+
+    it 'shows main statistics page after unsubscribing'
   end
 end
