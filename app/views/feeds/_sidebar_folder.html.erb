@@ -10,7 +10,7 @@
 
     <%# Link to read all feeds in the folder in a single list of entries %>
     <li id="folder-<%= folder_id %>-all-feeds">
-    <a data-feed-path="/folders/<%= folder_id %>" data-feed-title="<%= t 'feeds.index.all_entries' %>">
+    <a data-feed-id="all" data-feed-path="/folders/<%= folder_id %>" data-feed-title="<%= t 'feeds.index.all_entries' %>" data-folder>
       <em><strong><i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></strong></em> <i class="icon-spinner hidden"></i>
     </a>
 </li>

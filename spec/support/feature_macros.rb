@@ -75,9 +75,9 @@ def read_feed(feed_id)
     # Open "All subscriptions" folder
     find("a[data-target='#feeds-all']").click
 
-    page.should have_css "li > a[data-feed-id='#{feed_id}'][data-feed-path='/feeds/#{feed_id}']"
+    page.should have_css "li > a[data-feed-id='#{feed_id}']"
 
     # Click on feed to read its entries
-    find("li > a[data-feed-id='#{feed_id}'][data-feed-path='/feeds/#{feed_id}']").click
+    find("li > a[data-feed-id='#{feed_id}']").click
   end
 end

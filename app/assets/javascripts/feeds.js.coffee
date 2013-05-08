@@ -94,24 +94,25 @@ $(document).ready ->
 ##########################################################
 
   #-------------------------------------------------------
-  # Load new feed entries when clicking on the Refresh button
+  # Load new feed entries when clicking on the Refresh button (only if button enabled)
   #-------------------------------------------------------
   $("#refresh-feed").on "click", ->
-    feed_path = $(this).attr "data-refresh-feed"
-    # Only refresh if the data-refresh-feed attribute has a reference to a feed id
-    if feed_path?.length
-      $("> i.icon-repeat", this).addClass "icon-spin"
-      # Show "loading" message
-      $("#loading").removeClass "hidden"
+    if $(this).hasClass("disabled") == false
+      feed_path = $(this).attr "data-refresh-feed"
+      # Only refresh if the data-refresh-feed attribute has a reference to a feed id
+      if feed_path?.length
+        $("> i.icon-repeat", this).addClass "icon-spin"
+        # Show "loading" message
+        $("#loading").removeClass "hidden"
 
-      # Function to insert new entries in the list
-      insert_entries = (entries, status, xhr) ->
-        $("#refresh-feed > i.icon-repeat").removeClass "icon-spin"
-        $("#loading").addClass "hidden"
-        if status in ["error", "timeout", "abort", "parsererror"]
-          alertTimedShowHide $("#problem-refreshing")
+        # Function to insert new entries in the list
+        insert_entries = (entries, status, xhr) ->
+          $("#refresh-feed > i.icon-repeat").removeClass "icon-spin"
+          $("#loading").addClass "hidden"
+          if status in ["error", "timeout", "abort", "parsererror"]
+            alertTimedShowHide $("#problem-refreshing")
 
-      $("#feed-entries").empty().load "#{feed_path}/refresh", null, insert_entries
+        $("#feed-entries").empty().load "#{feed_path}/refresh", null, insert_entries
 
   #-------------------------------------------------------
   # Load current feed entries when clicking on a feed in the sidebar
@@ -122,9 +123,13 @@ $(document).ready ->
     insert_entries = (entries, status, xhr) ->
       $(".icon-spin").removeClass("icon-spin").addClass "hidden"
       $("#loading").addClass "hidden"
-      # Show and enable Refresh, Unsubscribe buttons
+      # Show and enable Refresh button
       $("#refresh-feed").removeClass("hidden").removeClass("disabled")
-      $("#unsubscribe-feed").removeClass("hidden").removeClass("disabled")
+      # Unsubscribe button is shown and enabled only if reading a single feed
+      if feed_id=="all"
+        $("#unsubscribe-feed").addClass("hidden").addClass("disabled")
+      else
+        $("#unsubscribe-feed").removeClass("hidden").removeClass("disabled")
       if status in ["error", "timeout", "abort", "parsererror"]
         if xhr.status == 404
           alertTimedShowHide $("#no-entries")
@@ -158,7 +163,6 @@ $(document).ready ->
     $(".icon-spinner", this).addClass("icon-spin").removeClass "hidden"
 
     # Load the entries via Ajax
-
     $("#feed-entries").load "#{feed_path}", null, insert_entries
 
   #-------------------------------------------------------
@@ -204,6 +208,13 @@ $(document).ready ->
 
     # prevent default form submit
     return false
+
+  #-------------------------------------------------------
+  # Show unsubscribe confirmation popup (only if button enabled)
+  #-------------------------------------------------------
+
+  $("#unsubscribe-feed").on "click", ->
+    $("#unsubscribe-feed-popup").modal "show" if $(this).hasClass("disabled")==false
 
   #-------------------------------------------------------
   # Unsubscribe from feed via Ajax

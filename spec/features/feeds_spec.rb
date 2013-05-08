@@ -991,7 +991,16 @@ FEED_XML
 
     it 'shows unsubscribe button when a feed is selected', js: true do
       page.should_not have_css 'a#unsubscribe-feed.hidden', visible: false
+      page.should_not have_css 'a#unsubscribe-feed.disabled', visible: false
       page.should have_css 'a#unsubscribe-feed'
+    end
+
+    it 'hides unsubscribe button when reading a whole folder', js: true do
+      read_feed 'all'
+      sleep 1
+      page.should have_css 'a#unsubscribe-feed.hidden', visible: false
+      page.should have_css 'a#unsubscribe-feed.disabled', visible: false
+      page.should_not have_css 'a#unsubscribe-feed'
     end
 
     it 'shows a confirmation popup', js: true do
@@ -1035,8 +1044,6 @@ FEED_XML
 
       Feed.exists?(@feed1.id).should be_false
     end
-
-    it 'disables unsubscribe button when reading a whole folder'
 
     it 'makes feed disappear from folders'
 
