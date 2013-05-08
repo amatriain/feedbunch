@@ -18,6 +18,7 @@ en:
       closing_timer_html: "closing in <span data-timer></span>"
   feeds:
     index:
+      start: "Start"
       open_new_tab: "Open in new tab"
       refresh: "Refresh"
       unsubscribe: "Unsubscribe"

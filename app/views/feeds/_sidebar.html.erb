@@ -1,5 +1,10 @@
 <ul class="nav nav-tabs nav-stacked" id="sidebar">
 
+  <ul class="nav nav-list">
+    <li class="active"><a id="start-page"><%= t 'feeds.index.start' %></a></li>
+  </ul>
+  <hr>
+
   <%= render 'feeds/sidebar_folder', feeds: @feeds, title: t('feeds.index.all_feeds'), folder_id: 'all' %>
 
   <% @folders.each do |folder| %>

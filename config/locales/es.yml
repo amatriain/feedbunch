@@ -15,6 +15,7 @@ es:
       closing_timer_html: "cerrando en <span data-timer></span>"
   feeds:
     index:
+      start: "Inicio"
       open_new_tab: "Abrir en una nueva pestaña"
       refresh: "Actualizar"
       unsubscribe: "Anular suscripción"

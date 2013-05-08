@@ -14,9 +14,17 @@ $(document).ready ->
     $(this).children("i.folder").toggleClass "icon-folder-open-alt"
 
   #-------------------------------------------------------
+  # Dynamic styling when clicking on the "Start" link in the sidebar
+  #-------------------------------------------------------
+  $("body").on "click", "#start-page", ->
+    $("[data-feed-path]").parent().removeClass "active"
+    $(this).parent().addClass "active"
+
+  #-------------------------------------------------------
   # Dynamic styling when clicking on a feed in the sidebar
   #-------------------------------------------------------
   $("body").on "click", "[data-feed-path]", ->
+    $("#start-page").parent().removeClass "active"
     $("[data-feed-path]").parent().removeClass "active"
     $(this).parent().addClass "active"
 
@@ -94,6 +102,19 @@ $(document).ready ->
 ##########################################################
 
   #-------------------------------------------------------
+  # Show the start page when clicking on the "Start" link
+  #-------------------------------------------------------
+  $("#start-page").on "click", ->
+    # Hide feed entries, title, and buttons
+    $("#feed-entries").empty().addClass "hidden"
+    $("#feed-title a").text ""
+    $("#feed-title").addClass "hidden"
+    $("#unsubscribe-feed").addClass("hidden").addClass("disabled")
+    $("#refresh-feed").addClass("hidden").addClass("disabled")
+    # Show the start page
+    $("#start-info").removeClass "hidden"
+
+  #-------------------------------------------------------
   # Load new feed entries when clicking on the Refresh button (only if button enabled)
   #-------------------------------------------------------
   $("#refresh-feed").on "click", ->
@@ -123,6 +144,7 @@ $(document).ready ->
     insert_entries = (entries, status, xhr) ->
       $(".icon-spin").removeClass("icon-spin").addClass "hidden"
       $("#loading").addClass "hidden"
+      $("#feed-entries").removeClass "hidden"
       # Show and enable Refresh button
       $("#refresh-feed").removeClass("hidden").removeClass("disabled")
       # Unsubscribe button is shown and enabled only if reading a single feed
@@ -154,7 +176,10 @@ $(document).ready ->
     $("#feed-title a").attr("href", feed_url)
 
     # Empty the entries list before loading
-    $("#feed-entries > li").empty()
+    $("#feed-entries").empty().addClass "hidden"
+
+    # Hide the start page
+    $("#start-info").addClass "hidden"
 
     # Show "loading" message
     $("#loading").removeClass "hidden"
@@ -195,7 +220,8 @@ $(document).ready ->
       post_data = $(this).serialize()
       # Show "loading" message
       $("#loading").removeClass "hidden"
-      $("#feed-entries").empty()
+      $("#feed-entries").empty().addClass "hidden"
+      $("#feed-title a").text ""
       $("#feed-title").addClass "hidden"
       $.post(form_url, post_data, subscription_result)
       .fail ->
@@ -233,7 +259,5 @@ $(document).ready ->
       .fail ->
         alertTimedShowHide $("#problem-unsubscribing")
 
-    # Open the "all subscriptions" folder if not already open
-    $("#feeds-all").not(".in").prev("a").click()
-    # Click on "read all subscriptions"
-    $("#feeds-all #folder-all-all-feeds a").click()
+    # Show the start page
+    $("#start-page").click()
