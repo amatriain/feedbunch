@@ -1045,10 +1045,33 @@ FEED_XML
       Feed.exists?(@feed1.id).should be_false
     end
 
-    it 'makes feed disappear from folders'
+    it 'makes feed disappear from folders', js: true do
+      folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder
+      folder.feeds << @feed1
+      visit feeds_path
+      read_feed @feed1.id
+
+      # Feed should be in the folder and in the "all subscriptions" folder
+      page.should have_css "ul#sidebar > li#folder-all li > a[data-feed-id='#{@feed1.id}']", visible: false
+      page.should have_css "ul#sidebar > li#folder-#{folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
+
+      find('#unsubscribe-feed').click
+      sleep 1
+      find('#unsubscribe-submit').click
+      sleep 1
+
+      # Feed should disappear completely from both folders
+      page.should_not have_css "ul#sidebar > li#folder-all li > a[data-feed-id='#{@feed1.id}']", visible: false
+      page.should_not have_css "ul#sidebar > li#folder-#{folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
+    end
 
     it 'shows main statistics page after unsubscribing'
 
     it 'still shows the feed for other subscribed users'
+
+    it 'still shows folders with feeds'
+
+    it 'makes disappear folders without feeds'
   end
 end
