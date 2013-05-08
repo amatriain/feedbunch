@@ -1009,14 +1009,39 @@ FEED_XML
       page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed2.id}']", visible: false
     end
 
-    it 'shows an alert if there is a problem unsubscribing from a feed'
+    it 'shows an alert if there is a problem unsubscribing from a feed', js: true do
+      User.any_instance.stub(:feeds).and_raise StandardError.new
 
-    it 'deletes a feed if there are no users subscribed to it'
+      find('#unsubscribe-feed').click
+      sleep 1
+      find('#unsubscribe-submit').click
+
+      # A "problem refreshing feed" alert should be shown
+      page.should have_css 'div#problem-unsubscribing'
+      page.should_not have_css 'div#problem-unsubscribing.hidden', visible: false
+
+      # It should close automatically after 5 seconds
+      sleep 5
+      page.should have_css 'div#problem-unsubscribing.hidden', visible: false
+    end
+
+    it 'deletes a feed if there are no users subscribed to it', js: true do
+      pending
+      Feed.exists?(@feed1.id).should be_true
+
+      find('#unsubscribe-feed').click
+      sleep 1
+      find('#unsubscribe-submit').click
+
+      Feed.exists?(@feed1.id).should be_false
+    end
 
     it 'disables unsubscribe button when reading a whole folder'
 
     it 'makes feed disappear from folders'
 
     it 'shows main statistics page after unsubscribing'
+
+    it 'still shows the feed for other subscribed users'
   end
 end

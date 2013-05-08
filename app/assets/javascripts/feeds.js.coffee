@@ -220,7 +220,7 @@ $(document).ready ->
 
     $.post(unsubscribe_path, {"_method":"delete"}, unsubscribe_result)
       .fail ->
-        alert "UNIMPLEMENTED"
+        alertTimedShowHide $("#problem-unsubscribing")
 
     # Open the "all subscriptions" folder if not already open
     $("#feeds-all").not(".in").prev("a").click()

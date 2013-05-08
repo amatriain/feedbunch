@@ -37,3 +37,4 @@ en:
       problem_loading: "There has been a problem loading the feed. Please try again later."
       problem_subscribing: "There has been a problem adding the subscription. Please try again later."
       already_subscribed: "You are already subscribed to this feed."
+      problem_unsubscribing: "There has been a problem unsubscribing from the feed. Please try again later."
