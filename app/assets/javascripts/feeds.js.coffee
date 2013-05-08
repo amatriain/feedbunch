@@ -223,9 +223,11 @@ $(document).ready ->
       $("#feed-entries").empty().addClass "hidden"
       $("#feed-title a").text ""
       $("#feed-title").addClass "hidden"
+      $("#start-info").addClass "hidden"
       $.post(form_url, post_data, subscription_result)
       .fail ->
         $("#loading").addClass "hidden"
+        $("#start-page").click()
         alertTimedShowHide $("#problem-subscribing")
 
     # Clean textfield and close modal
