@@ -1026,12 +1026,12 @@ FEED_XML
     end
 
     it 'deletes a feed if there are no users subscribed to it', js: true do
-      pending
       Feed.exists?(@feed1.id).should be_true
 
       find('#unsubscribe-feed').click
       sleep 1
       find('#unsubscribe-submit').click
+      sleep 1
 
       Feed.exists?(@feed1.id).should be_false
     end

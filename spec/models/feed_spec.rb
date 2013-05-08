@@ -500,13 +500,13 @@ describe Feed do
     end
 
     it 'unsubscribes a user from a feed' do
-      @user.feeds.find(@feed.id).should be_present
+      @user.feeds.exists?(@feed.id).should be_true
       Feed.unsubscribe @feed.id, @user.id
-      expect{@user.feeds.find(@feed.id)}.to raise_error ActiveRecord::RecordNotFound
+      @user.feeds.exists?(@feed.id).should be_false
     end
 
     it 'returns true if successful' do
-      @user.feeds.find(@feed.id).should be_present
+      @user.feeds.exists?(@feed.id).should be_true
       success = Feed.unsubscribe @feed.id, @user.id
       success.should be_true
     end
@@ -527,13 +527,22 @@ describe Feed do
       user2 = FactoryGirl.create :user
       user2.feeds << @feed
 
-      @user.feeds.find(@feed.id).should be_present
-      user2.feeds.find(@feed.id).should be_present
+      @user.feeds.exists?(@feed.id).should be_true
+      user2.feeds.exists?(@feed.id).should be_true
 
       success = Feed.unsubscribe @feed.id, @user.id
-      expect{@user.feeds.find(@feed.id)}.to raise_error ActiveRecord::RecordNotFound
-      user2.feeds.find(@feed.id).should be_present
+      Feed.exists?(@feed.id).should be_true
+      @user.feeds.exists?(@feed.id).should be_false
+      user2.feeds.exists?(@feed.id).should be_true
       success.should be_true
+    end
+
+    it 'completely deletes feed if there are no more users subscribed' do
+      Feed.exists?(@feed.id).should be_true
+
+      Feed.unsubscribe @feed.id, @user.id
+
+      Feed.exists?(@feed.id).should be_false
     end
 
   end

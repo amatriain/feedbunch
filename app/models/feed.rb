@@ -128,6 +128,12 @@ class Feed < ActiveRecord::Base
 
     Rails.logger.info "unsubscribing user #{user.id} - #{user.email} from feed #{feed.id} - #{feed.fetch_url}"
     user.feeds.delete feed
+
+    if feed.users.blank?
+      Rails.logger.warn "no more users subscribed to feed #{feed.id} - #{feed.fetch_url} . Removing it from the database"
+      feed.destroy
+    end
+
     return true
   rescue => e
     Rails.logger.error e.message
