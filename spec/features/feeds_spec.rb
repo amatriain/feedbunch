@@ -1077,7 +1077,21 @@ FEED_XML
       page.should have_css '#start-info'
     end
 
-    it 'still shows the feed for other subscribed users'
+    it 'still shows the feed for other subscribed users', js: true do
+      user2 = FactoryGirl.create :user
+      user2.feeds << @feed1
+
+      # Unsubscribe @user from @feed1 and logout
+      find('#unsubscribe-feed').click
+      sleep 1
+      find('#unsubscribe-submit').click
+      sleep 1
+      find('#sign_out').click
+
+      # user2 should still see the feed in his own list
+      login_user_for_feature user2
+      page.should have_css "li#folder-all ul#feeds-all a[data-feed-id='#{@feed1.id}']", visible: false
+    end
 
     it 'still shows folders with feeds'
 
