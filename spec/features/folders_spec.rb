@@ -138,9 +138,24 @@ describe 'folders and feeds' do
       end
     end
 
-    it 'adds a feed to a new folder'
+    it 'adds a feed to an existing folder', js: true do
+      pending
+      read_feed @feed2.id
+      find('#folder-management').click
+      within '#folder-management-dropdown ul.dropdown-menu' do
+        # While reading a feed that is not in a folder, click on an existing folder in the dropdown menu
+        find("li[data-folder-id='#{@folder1.id}'] > a").click
+      end
 
-    it 'adds a feed to an existing folder'
+      # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
+      # is now inside @folder1
+      page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
+
+      # the feed should have exactly the same link in the sidebar under the @feed1 folder
+      page.should have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
+    end
+
+    it 'adds a feed to a new folder'
 
     it 'removes a feed from a folder'
 
