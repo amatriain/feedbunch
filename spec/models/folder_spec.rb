@@ -5,6 +5,7 @@ describe Folder do
     @user = FactoryGirl.create :user
     @folder = FactoryGirl.build :folder
     @user.folders << @folder
+    @folder.reload
   end
 
   context 'validations' do
@@ -58,6 +59,21 @@ describe Folder do
       @folder.feeds << @feed1
       @folder.feeds.count.should eq 2
       @folder.feeds.where(id: @feed1.id).count.should eq 1
+    end
+
+    it 'allows associating a feed with at most one folder for a single user' do
+      user = FactoryGirl.create :user
+      feed = FactoryGirl.create :feed
+      folder1 = FactoryGirl.build :folder, user_id: user.id
+      folder2 = FactoryGirl.build :folder, user_id: user.id
+      user.folders << folder1 << folder2
+
+      folder1.feeds << feed
+      feed.reload
+      folder2.feeds << feed
+
+      folder1.feeds.should include feed
+      folder2.feeds.should_not include feed
     end
   end
 

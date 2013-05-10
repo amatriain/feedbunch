@@ -111,6 +111,7 @@ $(document).ready ->
     $("#feed-title").addClass "hidden"
     $("#unsubscribe-feed").addClass("hidden").addClass("disabled")
     $("#refresh-feed").addClass("hidden").addClass("disabled")
+    $("#folder-management").addClass("hidden").addClass("disabled")
     # Show the start page
     $("#start-info").removeClass "hidden"
 
@@ -125,11 +126,17 @@ $(document).ready ->
         $("> i.icon-repeat", this).addClass "icon-spin"
         # Show "loading" message
         $("#loading").removeClass "hidden"
+        $(this).addClass "disabled"
+        $("#unsubscribe-feed").addClass "disabled"
+        $("#folder-management").addClass "disabled"
 
         # Function to insert new entries in the list
         insert_entries = (entries, status, xhr) ->
           $("#refresh-feed > i.icon-repeat").removeClass "icon-spin"
           $("#loading").addClass "hidden"
+          $("#refresh-feed").removeClass "disabled"
+          $("#unsubscribe-feed").removeClass "disabled"
+          $("#folder-management").removeClass "disabled"
           if status in ["error", "timeout", "abort", "parsererror"]
             alertTimedShowHide $("#problem-refreshing")
 
@@ -147,11 +154,14 @@ $(document).ready ->
       $("#feed-entries").removeClass "hidden"
       # Show and enable Refresh button
       $("#refresh-feed").removeClass("hidden").removeClass("disabled")
-      # Unsubscribe button is shown and enabled only if reading a single feed
+      # Unsubscribe and Folder Management buttons are shown and enabled only if reading a single feed
       if feed_id=="all"
         $("#unsubscribe-feed").addClass("hidden").addClass("disabled")
+        $("#folder-management").addClass("hidden").addClass("disabled")
       else
         $("#unsubscribe-feed").removeClass("hidden").removeClass("disabled")
+        $("#folder-management").removeClass("hidden").removeClass("disabled")
+
       if status in ["error", "timeout", "abort", "parsererror"]
         if xhr.status == 404
           alertTimedShowHide $("#no-entries")
@@ -165,6 +175,15 @@ $(document).ready ->
     feed_id = $(this).attr "data-feed-id"
     # The unsubscribe button now unsubscribes from this feed; it's disabled while the feed loads
     $("#unsubscribe-feed").attr("data-unsubscribe-feed", feed_id).attr("data-unsubscribe-path", feed_path).addClass "disabled"
+
+    # The Folder Management button is disabled while the feed loads
+    $("#folder-management").addClass "disabled"
+
+    folder_id = $(this).attr "data-folder-id"
+    folder_id ||= "none"
+    # Mark with a tick the folder in the dropdown
+    $("#folder-management-dropdown li[data-folder-id] i.icon-ok").addClass "hidden"
+    $("#folder-management-dropdown li[data-folder-id='#{folder_id}'] i.icon-ok").removeClass "hidden"
 
     # Show the feed title
     feed_title = $(this).attr "data-feed-title"

@@ -79,11 +79,72 @@ describe 'folders and feeds' do
     end
   end
 
-  it 'adds a feed to a new folder'
+  context 'folder management' do
 
-  it 'adds a feed to an existing folder'
+    before :each do
+      read_feed @feed1.id
+    end
 
-  it 'removes a feed from a folder'
+    it 'hides folder management button until a feed is selected', js: true do
+      visit feeds_path
+      page.should have_css 'a#folder-management.hidden', visible: false
+    end
 
-  it 'totally removes a folder when it has no feeds under it'
+    it 'shows folder management button when a feed is selected', js: true do
+      page.should_not have_css 'a#folder-management.hidden', visible: false
+      page.should_not have_css 'a#folder-management.disabled', visible: false
+      page.should have_css 'a#folder-management'
+    end
+
+    it 'hides folder management button when reading a whole folder', js: true do
+      read_feed 'all'
+      sleep 1
+      page.should have_css 'a#folder-management.hidden', visible: false
+      page.should have_css 'a#folder-management.disabled', visible: false
+      page.should_not have_css 'a#folder-management'
+    end
+
+    it 'drops down a list of all user folders', js: true do
+      find('#folder-management').click
+      within '#folder-management-dropdown' do
+        page.should have_content @folder1.title
+      end
+    end
+
+    it 'has No Folder and New Folder links in the dropdown', js: true do
+      find('#folder-management').click
+      within '#folder-management-dropdown' do
+        page.should have_css 'a#no-folder'
+        page.should have_css 'a#new-folder'
+      end
+    end
+
+    it 'shows a tick besides No Folder when the feed is not in a folder', js: true do
+      read_feed @feed2.id
+      find('#folder-management').click
+      within '#folder-management-dropdown' do
+        # tick should be only besides No Folder
+        page.should have_css 'li[data-folder-id="none"] a > i.icon-ok'
+        page.should_not have_css "li[data-folder-id='#{@folder1.id}'] a > i.icon-ok"
+      end
+    end
+
+    it 'shows a tick besides the folder name when the feed is in a folder', js: true do
+      find('#folder-management').click
+      within '#folder-management-dropdown' do
+        # tick should be only besides @folder1
+        page.should_not have_css 'li[data-folder-id="none"] a > i.icon-ok'
+        page.should have_css "li[data-folder-id='#{@folder1.id}'] a > i.icon-ok"
+      end
+    end
+
+    it 'adds a feed to a new folder'
+
+    it 'adds a feed to an existing folder'
+
+    it 'removes a feed from a folder'
+
+    it 'totally removes a folder when it has no feeds under it'
+  end
+
 end

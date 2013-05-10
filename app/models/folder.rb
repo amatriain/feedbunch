@@ -3,8 +3,9 @@
 #
 # Each folder belongs to a single user, and each user can have many folders (one-to-many relationship).
 #
-# Each folder can be associated with many feeds, and each feed can be associated with many folders (many-to-many relationship,
-# through the feed_folders table).
+# Each folder can be associated with many feeds, and each feed can be associated with many folders as long as they
+# belong to different users (many-to-many relationship, through the feed_folders table). However a feed can be
+# associated with at most one folder belonging to a single user.
 #
 # A relationship is also established between Folder and Entry models, through the Feed model. This enables us to retrieve
 # all entries for all feeds inside a folder.
@@ -21,7 +22,7 @@ class Folder < ActiveRecord::Base
 
   belongs_to :user
   validates :user_id, presence: true
-  has_and_belongs_to_many :feeds, uniq: true
+  has_and_belongs_to_many :feeds, uniq: true, before_add: :single_user_folder
   has_many :entries, through: :feeds
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
@@ -38,5 +39,15 @@ class Folder < ActiveRecord::Base
 
   def sanitize_fields
     self.title = sanitize self.title
+  end
+
+  ##
+  # Before adding a feed to a folder, ensure that the feed is not already in other folders that belong
+  # to the same user. In this case, raise a rollback error.
+
+  def single_user_folder(feed)
+    if feed.folders.present?
+      raise ActiveRecord::Rollback if feed.folders.where(user_id: self.user_id).exists?
+    end
   end
 end

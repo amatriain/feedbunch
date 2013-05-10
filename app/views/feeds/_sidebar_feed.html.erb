@@ -1,5 +1,12 @@
 <li>
-  <a data-feed-id="<%= feed.id %>" data-feed-path="/feeds/<%= feed.id %>" data-feed-title="<%= feed.title %>" data-feed-url="<%= feed.url %>">
+  <a data-feed-id="<%= feed.id %>"
+     data-feed-path="/feeds/<%= feed.id %>"
+     data-feed-title="<%= feed.title %>"
+     data-feed-url="<%= feed.url %>"
+     <% if feed.user_folder(current_user).present? %>
+      data-folder-id="<%= feed.user_folder current_user %>"
+     <% end %>
+  >
     <i class="icon-rss"></i> <%= feed.title %> <i class="icon-spinner hidden"></i>
   </a>
 </li>

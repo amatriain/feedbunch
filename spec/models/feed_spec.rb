@@ -163,6 +163,35 @@ describe Feed do
       @feed.folders.count.should eq 2
       @feed.folders.where(id: @folder1.id).count.should eq 1
     end
+
+    it 'allows associating with at most one folder for a single user' do
+      user = FactoryGirl.create :user
+      folder1 = FactoryGirl.build :folder, user_id: user.id
+      folder2 = FactoryGirl.build :folder, user_id: user.id
+      user.folders << folder1 << folder2
+
+      @feed.folders << folder1
+      @feed.folders << folder2
+
+      @feed.folders.should include folder1
+      @feed.folders.should_not include folder2
+    end
+
+    it 'returns the id of the folder to which a feed belongs, given a user id' do
+      user = FactoryGirl.create :user
+      folder = FactoryGirl.build :folder, user_id: user.id
+      user.folders << folder
+      user.feeds << @feed
+      folder.feeds << @feed
+
+      @feed.user_folder(user).should eq folder.id
+    end
+
+    it 'returns nil if the feed belongs to no folder for that user' do
+      user = FactoryGirl.create :user
+      user.feeds << @feed
+      @feed.user_folder(user).should be_nil
+    end
   end
 
   context 'add subscription' do

@@ -6,7 +6,11 @@ require 'uri'
 # Many users can be suscribed to a single feed, and a single user can be suscribed to many feeds (many-to-many
 # relationship).
 #
-# Each user can have many entries.
+# Feeds can be associated with folders. Each feed can be in many folders (as long as they belong to different users),
+# and each folder can have many feeds (many-to-many association). However a single feed cannot be associated with
+# more than one folder from the same user.
+#
+# Each feed can have many entries.
 #
 # Each feed, identified by its fetch_url, can be present at most once in the database. Different feeds can have the same
 # title, as long as they have different fetch_url.
@@ -30,7 +34,7 @@ class Feed < ActiveRecord::Base
   attr_accessible :fetch_url, :title
 
   has_and_belongs_to_many :users, uniq: true
-  has_and_belongs_to_many :folders, uniq: true
+  has_and_belongs_to_many :folders, uniq: true, before_add: :single_user_folder
   has_many :entries, dependent: :destroy, uniq: true
 
   validates :fetch_url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
@@ -141,7 +145,39 @@ class Feed < ActiveRecord::Base
     return false
   end
 
+  ##
+  # Find the id of the folder to which a feed belongs, for a given user.
+  #
+  # Receives as argument a user.
+  #
+  # A feed can belong to many folders that belong to many users, but only to a single folder for a given user.
+  # This method searches among the folders to which this feed belongs, trying to find one that belongs to the
+  # user passed as argument.
+  #
+  # If a matching folder is found, its id is returned. Otherwise nil is returned.
+
+  def user_folder(user)
+    if self.folders.present?
+      folders = self.folders.where(user_id: user.id)
+      if folders.present?
+        folder_id = folders.first.id
+      end
+    end
+
+    return folder_id
+  end
+
   private
+
+  ##
+  # Before adding a feed to a folder, ensure that the feed is not already in other folders that belong
+  # to the same user. In this case, raise a rollback error.
+
+  def single_user_folder(folder)
+    if self.folders.present?
+      raise ActiveRecord::Rollback if self.folders.where(user_id: folder.user_id).exists?
+    end
+  end
 
   ##
   # Ensure that the URL passed as argument has an http:// or https://schema. This is a class method.
