@@ -23,7 +23,7 @@ en:
       refresh: "Refresh"
       unsubscribe: "Unsubscribe"
       folder_management: "Folder"
-      folder_none: "No folder"
+      folder_none: "None"
       folder_new: "New folder"
       all_feeds: "All subscriptions"
       all_entries: "Read all subscriptions"

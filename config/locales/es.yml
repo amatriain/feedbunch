@@ -20,7 +20,7 @@ es:
       refresh: "Actualizar"
       unsubscribe: "Anular suscripción"
       folder_management: "Carpeta"
-      folder_none: "Ninguna carpeta"
+      folder_none: "Ninguna"
       folder_new: "Nueva carpeta"
       all_feeds: "Todas las suscripciones"
       all_entries: "Leer todas las suscripciones"
