@@ -114,8 +114,8 @@ describe 'folders and feeds' do
     it 'has No Folder and New Folder links in the dropdown', js: true do
       find('#folder-management').click
       within '#folder-management-dropdown' do
-        page.should have_css 'a#no-folder'
-        page.should have_css 'a#new-folder'
+        page.should have_css 'li[data-folder-id="none"]'
+        page.should have_css "li[data-folder-id='#{@folder1.id}']"
       end
     end
 
