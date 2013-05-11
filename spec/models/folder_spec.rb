@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Folder do
   before :each do
     @user = FactoryGirl.create :user
-    @folder = FactoryGirl.build :folder
+    @folder = FactoryGirl.build :folder, user_id: @user.id
     @user.folders << @folder
     @folder.reload
   end
@@ -37,9 +37,10 @@ describe Folder do
   context 'association with feeds' do
 
     before :each do
-      @feed1 = FactoryGirl.build :feed
-      @feed2 = FactoryGirl.build :feed
-      @feed3 = FactoryGirl.build :feed
+      @feed1 = FactoryGirl.create :feed
+      @feed2 = FactoryGirl.create :feed
+      @feed3 = FactoryGirl.create :feed
+      @user.feeds << @feed1 << @feed2 << @feed3
       @folder.feeds << @feed1 << @feed2
     end
 
@@ -74,6 +75,53 @@ describe Folder do
 
       folder1.feeds.should include feed
       folder2.feeds.should_not include feed
+    end
+
+    it 'associates a feed with a folder' do
+      Folder.associate @folder.id, @feed3.id
+      @folder.feeds.should include @feed3
+    end
+
+    it 'removes feed from any folders from the same user when associating with the new folder' do
+      folder2 = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder2
+
+      @folder.feeds.should include @feed1
+      Folder.associate folder2.id, @feed1.id
+      @folder.reload
+      @folder.feeds.should_not include @feed1
+      folder2.feeds.should include @feed1
+    end
+
+    it 'does not change feed association with folders for other users' do
+      # Empty folder folder3 belonging to @user
+      folder2 = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder2
+
+      # @user has @feed1 in @folder; user2 has @feed1 in folder2
+      user2 = FactoryGirl.create :user
+      folder3 = FactoryGirl.build :folder, user_id: user2.id
+      user2.folders << folder3
+      folder3.feeds << @feed1
+
+      @folder.user_id.should eq @user.id
+      @folder.feeds.should include @feed1
+      folder2.user_id.should eq @user.id
+      folder2.feeds.should_not include @feed1
+      folder3.user_id.should eq user2.id
+      folder3.feeds.should include @feed1
+
+      Folder.associate folder2.id, @feed1.id
+      @folder.reload
+      folder2.reload
+      folder3.reload
+
+      @folder.user_id.should eq @user.id
+      @folder.feeds.should_not include @feed1
+      folder2.user_id.should eq @user.id
+      folder2.feeds.should include @feed1
+      folder3.user_id.should eq user2.id
+      folder3.feeds.should include @feed1
     end
   end
 

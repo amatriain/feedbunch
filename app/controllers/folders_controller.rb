@@ -86,4 +86,29 @@ class FoldersController < ApplicationController
     Rails.logger.error e.backtrace
     head status: 500
   end
+
+  ##
+  # Associate a feed with a folder. The current user must own the folder and be subscribed to the feed.
+
+  def update
+    folder_id = params[:id]
+    feed_id = params[:feed_id]
+
+    if !current_user.folders.where(id: folder_id).exists?
+      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to associate feed #{feed_id} with folder #{folder_id} that does not belong to him"
+      head status: 404
+    elsif !current_user.feeds.where(id: feed_id).exists?
+      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to associate folder #{folder_id} with feed #{feed_id} to which he's not subscribed"
+      head status: 404
+    else
+      Folder.associate folder_id, feed_id
+      head status: 200
+    end
+  rescue ActiveRecord::RecordNotFound
+    head status: 404
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    head status: 500
+  end
 end

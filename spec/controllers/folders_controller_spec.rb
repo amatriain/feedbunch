@@ -154,4 +154,24 @@ describe FoldersController do
 
   end
 
+  context 'PUT update' do
+
+    it 'returns success' do
+      put :update, id: @folder1.id, feed_id: @feed3.id
+      response.should be_success
+    end
+
+    it 'returns 404 for a folder that does not belong to the current user'
+
+    it 'returns 404 for a feed the current user is not subscribed to'
+
+    it 'returns 404 for non-existing folder'
+
+    it 'returns 404 for non-existing feed'
+
+    it 'returns 304 if the feed is already in the folder'
+
+    it 'returns 500 if there is a problem associating the feed with the folder'
+  end
+
 end

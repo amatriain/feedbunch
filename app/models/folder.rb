@@ -29,6 +29,30 @@ class Folder < ActiveRecord::Base
 
   before_validation :sanitize_fields
 
+  ##
+  # Associate a feed with a folder, for a given user. This is a class method.
+  #
+  # Receives as arguments the id of the feed and the id of the folder to which it's going to be associated.
+  # If the feed is already associated fo another folder that belongs to the same user (folders belong to a single
+  # user), it removes the feed from the old folder before associating it with the new one. This ensures that, from
+  # a given user's point of view, feeds belong to a single folder.
+  #
+  # Returns true if successful, false otherwise.
+
+  def self.associate(folder_id, feed_id)
+    folder = Folder.find folder_id
+    feed = Feed.find feed_id
+
+    # Check if feed is already in another folder from the same user
+    old_folder = feed.folders.where(user_id: folder.user_id).first
+    if old_folder.present?
+      Rails.logger.info "Feed #{feed.id} - #{feed.fetch_url} is already in folder #{old_folder} - #{old_folder.title} from user #{folder.user_id}, removing it before associating with new folder"
+      feed.folders.delete old_folder
+    end
+    folder.feeds << feed
+    return true
+  end
+
   private
 
   ##
