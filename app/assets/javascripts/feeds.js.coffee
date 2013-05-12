@@ -285,7 +285,7 @@ $(document).ready ->
     $("#start-page").click()
 
   #-------------------------------------------------------
-  # Associate feed with folder when clicking on a folder in the dropdown
+  # Associate feed with folder clicking on a folder in the dropdown
   #-------------------------------------------------------
   $("a[data-folder-update-path]").on "click", ->
     update_folder_path = $(this).attr "data-folder-update-path"
