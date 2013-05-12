@@ -161,17 +161,44 @@ describe FoldersController do
       response.should be_success
     end
 
-    it 'returns 404 for a folder that does not belong to the current user'
+    it 'assigns the correct folder' do
+      put :update, id: @folder1.id, feed_id: @feed3.id
+      assigns(:folder).should eq @folder1
+    end
 
-    it 'returns 404 for a feed the current user is not subscribed to'
+    it 'returns 404 for a folder that does not belong to the current user' do
+      put :update, id: @folder2.id, feed_id: @feed3.id
+      response.status.should eq 404
+    end
 
-    it 'returns 404 for non-existing folder'
+    it 'returns 404 for a feed the current user is not subscribed to' do
+      feed = FactoryGirl.create :feed
+      @user.feeds.should_not include feed
 
-    it 'returns 404 for non-existing feed'
+      put :update, id: @folder1.id, feed_id: feed.id
+      response.status.should eq 404
+    end
 
-    it 'returns 304 if the feed is already in the folder'
+    it 'returns 404 for non-existing folder' do
+      put :update, id: '1234567890', feed_id: @feed3.id
+      response.status.should eq 404
+    end
 
-    it 'returns 500 if there is a problem associating the feed with the folder'
+    it 'returns 404 for non-existing feed' do
+      put :update, id: @folder1.id, feed_id: '1234567890'
+      response.status.should eq 404
+    end
+
+    it 'returns 304 if the feed is already in the folder' do
+      put :update, id: @folder1.id, feed_id: @feed1.id
+      response.status.should eq 304
+    end
+
+    it 'returns 500 if there is a problem associating the feed with the folder' do
+      Folder.stub(:associate).and_raise StandardError.new
+      put :update, id: @folder1.id, feed_id: @feed3.id
+      response.status.should eq 500
+    end
   end
 
 end

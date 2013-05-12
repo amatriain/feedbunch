@@ -37,11 +37,19 @@ class Folder < ActiveRecord::Base
   # user), it removes the feed from the old folder before associating it with the new one. This ensures that, from
   # a given user's point of view, feeds belong to a single folder.
   #
-  # Returns true if successful, false otherwise.
+  # If the feed is already associated with the folder, an AlreadyInFolder error is raised.
+  #
+  # Returns the updated folder.
 
   def self.associate(folder_id, feed_id)
     folder = Folder.find folder_id
     feed = Feed.find feed_id
+
+    # Check if feed is already associated with folder
+    if folder.feeds.include? feed
+      Rails.logger.warn "Feed #{feed.id} - #{feed.fetch_url} is already associated with folder #{folder.id} - #{folder.title}, nothing to do"
+      raise AlreadyInFolderError.new
+    end
 
     # Check if feed is already in another folder from the same user
     old_folder = feed.folders.where(user_id: folder.user_id).first
@@ -50,7 +58,7 @@ class Folder < ActiveRecord::Base
       feed.folders.delete old_folder
     end
     folder.feeds << feed
-    return true
+    return folder
   end
 
   private

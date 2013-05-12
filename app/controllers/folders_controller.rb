@@ -101,9 +101,12 @@ class FoldersController < ApplicationController
       Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to associate folder #{folder_id} with feed #{feed_id} to which he's not subscribed"
       head status: 404
     else
-      Folder.associate folder_id, feed_id
-      head status: 200
+      @folder = Folder.associate folder_id, feed_id
+      render 'feeds/_sidebar_feed', locals: {feed: Feed.find(feed_id)}, layout: false
     end
+  rescue AlreadyInFolderError
+    # If feed is already associated to the folder, return 304
+    head status: 304
   rescue ActiveRecord::RecordNotFound
     head status: 404
   rescue => e

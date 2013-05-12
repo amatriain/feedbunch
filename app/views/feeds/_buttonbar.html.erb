@@ -18,15 +18,15 @@
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
-        <li data-folder-id="none">
-          <a>
+        <li>
+          <a data-folder-id="none" data-feed-id>
             <i class="hidden icon-ok"></i>&nbsp;
             <%= t 'feeds.index.folder_none' %>
           </a>
         </li>
         <% current_user.folders.each do |folder| %>
-          <li data-folder-id="<%= folder.id %>">
-            <a>
+          <li>
+            <a data-folder-update-path="<%= folder_path folder %>" data-folder-id="<%= folder.id %>" data-feed-id>
               <i class="hidden icon-ok"></i>&nbsp;
               <%= folder.title %>
             </a>
@@ -34,7 +34,7 @@
         <% end %>
         <li class="divider"></li>
         <li>
-          <a id="new-folder">
+          <a id="new-folder" data-feed-id>
             <i class="icon-plus"></i> <%= t 'feeds.index.folder_new' %>
           </a>
         </li>

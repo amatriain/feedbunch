@@ -77,9 +77,18 @@ describe Folder do
       folder2.feeds.should_not include feed
     end
 
+    it 'returns the updated folder' do
+      out = Folder.associate @folder.id, @feed3.id
+      out.should eq @folder
+    end
+
     it 'associates a feed with a folder' do
       Folder.associate @folder.id, @feed3.id
       @folder.feeds.should include @feed3
+    end
+
+    it 'raises an error if the feed is already associated with the folder' do
+      expect {Folder.associate @folder.id, @feed1.id}.to raise_error AlreadyInFolderError
     end
 
     it 'removes feed from any folders from the same user when associating with the new folder' do
