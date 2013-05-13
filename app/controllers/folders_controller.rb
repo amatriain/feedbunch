@@ -95,13 +95,13 @@ class FoldersController < ApplicationController
     feed_id = params[:feed_id]
 
     if !current_user.folders.where(id: folder_id).exists?
-      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to associate feed #{feed_id} with folder #{folder_id} that does not belong to him"
+      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to add feed #{feed_id} to folder #{folder_id} that does not belong to him"
       head status: 404
     elsif !current_user.feeds.where(id: feed_id).exists?
-      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to associate folder #{folder_id} with feed #{feed_id} to which he's not subscribed"
+      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to add folder #{folder_id} to feed #{feed_id} to which he's not subscribed"
       head status: 404
     else
-      @folder = Folder.associate folder_id, feed_id
+      @folder = Folder.add_feed folder_id, feed_id
       render 'feeds/_sidebar_feed', locals: {feed: Feed.find(feed_id)}, layout: false
     end
   rescue AlreadyInFolderError

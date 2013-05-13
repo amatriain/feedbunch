@@ -186,7 +186,7 @@ describe 'folders and feeds' do
     it 'totally removes a folder when it has no feeds under it'
 
     it 'shows an alert when there is a problem associating a feed with a folder', js: true do
-      Folder.stub(:associate).and_raise StandardError.new
+      Folder.stub(:add_feed).and_raise StandardError.new
 
       read_feed @feed2.id
       find('#folder-management').click

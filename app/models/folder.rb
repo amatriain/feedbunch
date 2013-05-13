@@ -1,5 +1,5 @@
 ##
-# Folder model. Each instance of this class represents a single folder to which a user can associate feeds.
+# Folder model. Each instance of this class represents a single folder to which a user can add feeds.
 #
 # Each folder belongs to a single user, and each user can have many folders (one-to-many relationship).
 #
@@ -30,7 +30,7 @@ class Folder < ActiveRecord::Base
   before_validation :sanitize_fields
 
   ##
-  # Associate a feed with a folder, for a given user. This is a class method.
+  # Add a feed to a folder. This is a class method.
   #
   # Receives as arguments the id of the feed and the id of the folder to which it's going to be associated.
   # If the feed is already associated fo another folder that belongs to the same user (folders belong to a single
@@ -41,7 +41,7 @@ class Folder < ActiveRecord::Base
   #
   # Returns the updated folder.
 
-  def self.associate(folder_id, feed_id)
+  def self.add_feed(folder_id, feed_id)
     folder = Folder.find folder_id
     feed = Feed.find feed_id
 

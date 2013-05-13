@@ -78,17 +78,17 @@ describe Folder do
     end
 
     it 'returns the updated folder' do
-      out = Folder.associate @folder.id, @feed3.id
+      out = Folder.add_feed @folder.id, @feed3.id
       out.should eq @folder
     end
 
     it 'associates a feed with a folder' do
-      Folder.associate @folder.id, @feed3.id
+      Folder.add_feed @folder.id, @feed3.id
       @folder.feeds.should include @feed3
     end
 
     it 'raises an error if the feed is already associated with the folder' do
-      expect {Folder.associate @folder.id, @feed1.id}.to raise_error AlreadyInFolderError
+      expect {Folder.add_feed @folder.id, @feed1.id}.to raise_error AlreadyInFolderError
     end
 
     it 'removes feed from any folders from the same user when associating with the new folder' do
@@ -96,7 +96,7 @@ describe Folder do
       @user.folders << folder2
 
       @folder.feeds.should include @feed1
-      Folder.associate folder2.id, @feed1.id
+      Folder.add_feed folder2.id, @feed1.id
       @folder.reload
       @folder.feeds.should_not include @feed1
       folder2.feeds.should include @feed1
@@ -120,7 +120,7 @@ describe Folder do
       folder3.user_id.should eq user2.id
       folder3.feeds.should include @feed1
 
-      Folder.associate folder2.id, @feed1.id
+      Folder.add_feed folder2.id, @feed1.id
       @folder.reload
       folder2.reload
       folder3.reload
