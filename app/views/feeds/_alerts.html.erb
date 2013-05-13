@@ -60,3 +60,12 @@
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
+
+<%# Alert displayed when the user tries to add a feed to a folder it's already associated to %>
+<div id="already-in-folder" class="row-fluid hidden bottom-alert">
+  <div class="span10 offset2 alert">
+    <button type="button" class="close" data-hide>&times;</button>
+    <p><%= t 'feeds.index.already_in_folder' %></p>
+    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
+  </div>
+</div>
