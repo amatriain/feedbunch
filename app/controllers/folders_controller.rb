@@ -114,4 +114,36 @@ class FoldersController < ApplicationController
     Rails.logger.error e.backtrace
     head status: 500
   end
+
+  ##
+  # Remove the feed passed in params[:feed_id] from the folder passed in params[:id].
+
+  def destroy
+    folder_id = params[:id]
+    feed_id = params[:feed_id]
+
+    if !current_user.folders.where(id: folder_id).exists?
+      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to remove feed #{feed_id} from folder #{folder_id} that does not belong to him"
+      head status: 404
+    elsif !current_user.feeds.where(id: feed_id).exists?
+      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to remove feed #{feed_id} to which he's not subscribed from folder #{folder_id}"
+      head status: 404
+    else
+      folder_has_feeds = Folder.remove_feed folder_id, feed_id
+      if folder_has_feeds
+        head status: 204
+      else
+        head status: 205
+      end
+    end
+  rescue NotInFolderError
+    # If feed is not in the folder, return 304
+    head status: 304
+  rescue ActiveRecord::RecordNotFound
+    head status: 404
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    head status: 500
+  end
 end

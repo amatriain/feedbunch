@@ -86,13 +86,13 @@ Openreader::Application.routes.draw do
   # Static pages served with High_voltage gem
   root :to => 'high_voltage/pages#show', id: 'index'
 
-  # Resourceful routes for feeds
-  resources :feeds, only: [:index, :show, :create, :destroy]
-
   match '/feeds/:id/refresh' => 'feeds#refresh', via: :get, as: 'feed_refresh'
   match '/folders/:id/refresh' => 'folders#refresh', via: :get, as: 'folder_refresh'
 
+  # Resourceful routes for feeds
+  resources :feeds, only: [:index, :show, :create, :destroy]
+
   # Resourceful route to get all entries for all feeds inside a folder
-  resources :folders, only: [:show, :update]
+  resources :folders, only: [:show, :update, :destroy]
 
 end

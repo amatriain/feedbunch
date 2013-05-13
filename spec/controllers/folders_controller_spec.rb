@@ -201,4 +201,70 @@ describe FoldersController do
     end
   end
 
+  context 'DELETE destroy' do
+
+    it 'returns 404 if the folder does not belong to the user' do
+      delete :destroy, id: @folder2.id, feed_id: @feed1.id
+      response.status.should eq 404
+    end
+
+    it 'returns 404 if the user is not subscribed to the feed' do
+      feed = FactoryGirl.create :feed
+      delete :destroy, id: @folder1.id, feed_id: feed.id
+      response.status.should eq 404
+    end
+
+    it 'returns 404 if the folder does not exist' do
+      delete :destroy, id: 1234567890, feed_id: @feed1.id
+      response.status.should eq 404
+    end
+
+    it 'returns 404 if the feed does not exist' do
+      delete :destroy, id: @folder1.id, feed_id: 1234567890
+      response.status.should eq 404
+    end
+
+    it 'returns 304 if the feed is not in the folder' do
+      pending
+
+      delete :destroy, id: @folder1.id, feed_id: @feed3.id
+      response.status.should eq 304
+    end
+
+    it 'returns 204 if the feed is successfully removed from the folder and there are more feeds in the folder' do
+      pending
+
+      delete :destroy, id: @folder1.id, feed_id: @feed1.id
+      response.status.should eq 204
+    end
+
+    it 'returns 205 if the feed is successfully removed from the folder and there are no more feeds in the folder' do
+      pending
+
+      # Ensure that @folder1 only has @feed1
+      @folder1.feeds.delete @feed2
+
+      delete :destroy, id: @folder1.id, feed_id: @feed1.id
+      response.status.should eq 205
+    end
+
+    it 'deletes the folder if the feed is successfully removed from the folder and there are no more feeds in the folder' do
+      pending
+
+      # Ensure that @folder1 only has @feed1
+      @folder1.feeds.delete @feed2
+
+      delete :destroy, id: @folder1.id, feed_id: @feed1.id
+      Folder.exists?(@folder1.id).should be_false
+    end
+
+    it 'returns 500 if there is a problem removing feed from folder' do
+      pending
+
+      Folder.stub remove_feed: false
+      delete :destroy, id: @folder1.id, feed_id: @feed1.id
+      response.status.should eq 500
+    end
+  end
+
 end
