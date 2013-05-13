@@ -17,15 +17,15 @@ $(document).ready ->
   # Dynamic styling when clicking on the "Start" link in the sidebar
   #-------------------------------------------------------
   $("body").on "click", "#start-page", ->
-    $("[data-feed-id]").parent().removeClass "active"
+    $("[data-sidebar-feed]").parent().removeClass "active"
     $(this).parent().addClass "active"
 
   #-------------------------------------------------------
   # Dynamic styling when clicking on a feed in the sidebar
   #-------------------------------------------------------
-  $("body").on "click", "[data-feed-id]", ->
+  $("body").on "click", "[data-sidebar-feed]", ->
     $("#start-page").parent().removeClass "active"
-    $("[data-feed-id]").parent().removeClass "active"
+    $("[data-sidebar-feed]").parent().removeClass "active"
     $(this).parent().addClass "active"
 
   #-------------------------------------------------------
@@ -145,7 +145,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Load current feed entries when clicking on a feed in the sidebar
   #-------------------------------------------------------
-  $("body").on "click", "[data-feed-id]", ->
+  $("body").on "click", "[data-sidebar-feed]", ->
 
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
@@ -277,7 +277,7 @@ $(document).ready ->
     # Function to handle result returned by the server
     unsubscribe_result = (data, status, xhr) ->
       # Remove the feed from the sidebar
-      $("[data-feed-id=#{unsubscribe_feed}]").parent().remove()
+      $("[data-sidebar-feed][data-feed-id=#{unsubscribe_feed}]").parent().remove()
 
     $.post(unsubscribe_path, {"_method":"delete"}, unsubscribe_result)
       .fail ->
@@ -297,11 +297,11 @@ $(document).ready ->
     # Function to handle result returned by the server
     update_folder_result = (data, status, xhr) ->
       # Remove the feed from its old folder, if any
-      count = $("#sidebar a[data-feed-id='#{feed_id}']").parent().each ->
+      count = $("[data-sidebar-feed][data-feed-id='#{feed_id}']").parent().each ->
         # Do not remove it from the "All Subscriptions" folder
         $(this).remove() if $(this).parent().attr("id") != "feeds-all"
       # Update the data-folder-id of the feed links in the sidebar to the new folder id
-      $("#sidebar a[data-feed-id='#{feed_id}']").attr "data-folder-id", folder_id
+      $("[data-sidebar-feed][data-feed-id='#{feed_id}']").attr "data-folder-id", folder_id
       # Insert the new feed in the folder
       $("#folder-#{folder_id}-all-feeds").after data
       # Open the folder if not already open

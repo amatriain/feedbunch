@@ -10,7 +10,8 @@
 
     <%# Link to read all feeds in the folder in a single list of entries %>
     <li id="folder-<%= folder_id %>-all-feeds">
-      <a data-feed-id="all"
+      <a data-sidebar-feed
+         data-feed-id="all"
          data-feed-path="<%= folder_path folder_id %>"
          data-refresh-path="<%= folder_refresh_path folder_id %>"
          data-feed-title="<%= t 'feeds.index.all_entries' %>">

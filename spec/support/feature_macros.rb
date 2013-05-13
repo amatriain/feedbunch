@@ -78,6 +78,6 @@ def read_feed(feed_id)
     page.should have_css "li > a[data-feed-id='#{feed_id}']"
 
     # Click on feed to read its entries
-    find("li > a[data-feed-id='#{feed_id}']").click
+    find("[data-sidebar-feed][data-feed-id='#{feed_id}']").click
   end
 end
