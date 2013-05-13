@@ -107,7 +107,7 @@ class FeedsController < ApplicationController
     if @feed.present?
       success = Feed.unsubscribe @feed.id, current_user.id
       if success
-        head status: 200
+        head status: 204
       else
         head status: 500
       end

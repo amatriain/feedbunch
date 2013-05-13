@@ -133,10 +133,10 @@ describe FeedsController do
       response.status.should eq 404
     end
 
-    it 'returns 200 if the user is successfully unsubscribed' do
+    it 'returns 204 if the user is successfully unsubscribed' do
       Feed.stub unsubscribe: true
       delete :destroy, id: @feed1.id
-      response.status.should eq 200
+      response.status.should eq 204
     end
 
     it 'returns 500 if there is a problem unsubscribing' do
