@@ -17,15 +17,15 @@ $(document).ready ->
   # Dynamic styling when clicking on the "Start" link in the sidebar
   #-------------------------------------------------------
   $("body").on "click", "#start-page", ->
-    $("[data-feed-path]").parent().removeClass "active"
+    $("[data-feed-id]").parent().removeClass "active"
     $(this).parent().addClass "active"
 
   #-------------------------------------------------------
   # Dynamic styling when clicking on a feed in the sidebar
   #-------------------------------------------------------
-  $("body").on "click", "[data-feed-path]", ->
+  $("body").on "click", "[data-feed-id]", ->
     $("#start-page").parent().removeClass "active"
-    $("[data-feed-path]").parent().removeClass "active"
+    $("[data-feed-id]").parent().removeClass "active"
     $(this).parent().addClass "active"
 
   #-------------------------------------------------------
@@ -145,7 +145,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Load current feed entries when clicking on a feed in the sidebar
   #-------------------------------------------------------
-  $("body").on "click", "[data-feed-path]", ->
+  $("body").on "click", "[data-feed-id]", ->
 
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
@@ -169,10 +169,12 @@ $(document).ready ->
           alertTimedShowHide $("#problem-loading")
 
     feed_path = $(this).attr "data-feed-path"
-    # The refresh button now refreshes this feed; it's disabled while the feed loads
-    $("#refresh-feed").attr("data-refresh-feed", feed_path).addClass "disabled"
-
+    refresh_path = $(this).attr "data-refresh-path"
     feed_id = $(this).attr "data-feed-id"
+
+    # The refresh button now refreshes this feed; it's disabled while the feed loads
+    $("#refresh-feed").attr("data-refresh-feed", refresh_path).addClass "disabled"
+
     # The unsubscribe button now unsubscribes from this feed; it's disabled while the feed loads
     $("#unsubscribe-feed").attr("data-unsubscribe-feed", feed_id).attr("data-unsubscribe-path", feed_path).addClass "disabled"
 
@@ -209,7 +211,7 @@ $(document).ready ->
     $(".icon-spinner", this).addClass("icon-spin").removeClass "hidden"
 
     # Load the entries via Ajax
-    $("#feed-entries").load "#{feed_path}", null, insert_entries
+    $("#feed-entries").load feed_path, null, insert_entries
 
   #-------------------------------------------------------
   # Submit the "add subscription" form when clicking on the "Add" button
