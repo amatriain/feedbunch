@@ -39,3 +39,4 @@ es:
       problem_subscribing: "Ha habido un problema añadiendo la suscripción. Por favor inténtelo de nuevo más tarde."
       already_subscribed: "Ya estás suscrito a este feed."
       problem_unsubscribing: "Ha habido un problema anulando la suscripción. Por favor inténtelo de nuevo más tarde."
+      problem_folder_management: "Ha habido un problema gestionando las carpetas. Por favor inténtelo de nuevo más tarde."

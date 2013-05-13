@@ -72,10 +72,12 @@ end
 
 def read_feed(feed_id)
   within 'ul#sidebar li#folder-all' do
-    # Open "All subscriptions" folder
-    find("a[data-target='#feeds-all']").click
+    # If "All subscriptions" folder is closed, open it
+    if !page.has_css? 'ul#feeds-all.in'
+      find("a[data-target='#feeds-all']").click
+    end
 
-    page.should have_css "li > a[data-feed-id='#{feed_id}']"
+    page.should have_css "[data-sidebar-feed][data-feed-id='#{feed_id}']"
 
     # Click on feed to read its entries
     find("[data-sidebar-feed][data-feed-id='#{feed_id}']").click

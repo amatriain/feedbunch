@@ -185,7 +185,23 @@ describe 'folders and feeds' do
 
     it 'totally removes a folder when it has no feeds under it'
 
-    it 'shows an alert when there is a problem associating a feed with a folder'
+    it 'shows an alert when there is a problem associating a feed with a folder', js: true do
+      Folder.stub(:associate).and_raise StandardError.new
+
+      read_feed @feed2.id
+      find('#folder-management').click
+      within '#folder-management-dropdown ul.dropdown-menu' do
+        find("a[data-folder-id='#{@folder1.id}']").click
+      end
+
+      # A "problem refreshing feed" alert should be shown
+      page.should have_css 'div#problem-folder-management'
+      page.should_not have_css 'div#problem-folder-management.hidden', visible: false
+
+      # It should close automatically after 5 seconds
+      sleep 5
+      page.should have_css 'div#problem-folder-management.hidden', visible: false
+    end
 
     it 'shows an alert if the feed is already associated with the folder'
   end

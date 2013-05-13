@@ -26,3 +26,5 @@ $(document).ready ->
       $("#folder-#{folder_id}-all-feeds").next().find("a").click()
 
     $.post(update_folder_path, {"_method":"put", feed_id: feed_id}, update_folder_result)
+      .fail ->
+        Application.alertTimedShowHide $("#problem-folder-management")
