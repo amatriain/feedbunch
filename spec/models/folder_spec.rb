@@ -77,60 +77,112 @@ describe Folder do
       folder2.feeds.should_not include feed
     end
 
-    it 'returns the updated folder' do
-      out = Folder.add_feed @folder.id, @feed3.id
-      out.should eq @folder
+    context 'add feed to folder' do
+
+      it 'returns the updated folder' do
+        out = Folder.add_feed @folder.id, @feed3.id
+        out.should eq @folder
+      end
+
+      it 'associates a feed with a folder' do
+        Folder.add_feed @folder.id, @feed3.id
+        @folder.feeds.should include @feed3
+      end
+
+      it 'raises an error if the feed is already associated with the folder' do
+        expect {Folder.add_feed @folder.id, @feed1.id}.to raise_error AlreadyInFolderError
+      end
+
+      it 'removes feed from any folders from the same user when associating with the new folder' do
+        folder2 = FactoryGirl.build :folder, user_id: @user.id
+        @user.folders << folder2
+
+        @folder.feeds.should include @feed1
+        Folder.add_feed folder2.id, @feed1.id
+        @folder.reload
+        @folder.feeds.should_not include @feed1
+        folder2.feeds.should include @feed1
+      end
+
+      it 'does not change feed association with folders for other users' do
+        # Empty folder folder3 belonging to @user
+        folder2 = FactoryGirl.build :folder, user_id: @user.id
+        @user.folders << folder2
+
+        # @user has @feed1 in @folder; user2 has @feed1 in folder2
+        user2 = FactoryGirl.create :user
+        folder3 = FactoryGirl.build :folder, user_id: user2.id
+        user2.folders << folder3
+        folder3.feeds << @feed1
+
+        @folder.user_id.should eq @user.id
+        @folder.feeds.should include @feed1
+        folder2.user_id.should eq @user.id
+        folder2.feeds.should_not include @feed1
+        folder3.user_id.should eq user2.id
+        folder3.feeds.should include @feed1
+
+        Folder.add_feed folder2.id, @feed1.id
+        @folder.reload
+        folder2.reload
+        folder3.reload
+
+        @folder.user_id.should eq @user.id
+        @folder.feeds.should_not include @feed1
+        folder2.user_id.should eq @user.id
+        folder2.feeds.should include @feed1
+        folder3.user_id.should eq user2.id
+        folder3.feeds.should include @feed1
+      end
     end
 
-    it 'associates a feed with a folder' do
-      Folder.add_feed @folder.id, @feed3.id
-      @folder.feeds.should include @feed3
-    end
+    context 'remove feed from folder' do
 
-    it 'raises an error if the feed is already associated with the folder' do
-      expect {Folder.add_feed @folder.id, @feed1.id}.to raise_error AlreadyInFolderError
-    end
+      it 'removes feed from folder' do
+        Folder.remove_feed @folder.id, @feed1.id
+        @folder.reload
+        @folder.feeds.should_not include @feed1
+      end
 
-    it 'removes feed from any folders from the same user when associating with the new folder' do
-      folder2 = FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << folder2
+      it 'returns true if there are more feeds in the folder' do
+        out = Folder.remove_feed @folder.id, @feed1.id
+        out.should be_true
+      end
 
-      @folder.feeds.should include @feed1
-      Folder.add_feed folder2.id, @feed1.id
-      @folder.reload
-      @folder.feeds.should_not include @feed1
-      folder2.feeds.should include @feed1
-    end
+      it 'returns false if there are no more feeds in the folder' do
+        @folder.feeds.delete @feed2
+        @folder.feeds.count.should eq 1
+        @folder.feeds.should include @feed1
 
-    it 'does not change feed association with folders for other users' do
-      # Empty folder folder3 belonging to @user
-      folder2 = FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << folder2
+        out = Folder.remove_feed @folder.id, @feed1.id
+        out.should be_false
+      end
 
-      # @user has @feed1 in @folder; user2 has @feed1 in folder2
-      user2 = FactoryGirl.create :user
-      folder3 = FactoryGirl.build :folder, user_id: user2.id
-      user2.folders << folder3
-      folder3.feeds << @feed1
+      it 'deletes folder if there are no more feeds in it' do
+        @folder.feeds.delete @feed2
+        @folder.feeds.count.should eq 1
+        @folder.feeds.should include @feed1
 
-      @folder.user_id.should eq @user.id
-      @folder.feeds.should include @feed1
-      folder2.user_id.should eq @user.id
-      folder2.feeds.should_not include @feed1
-      folder3.user_id.should eq user2.id
-      folder3.feeds.should include @feed1
+        Folder.remove_feed @folder.id, @feed1.id
 
-      Folder.add_feed folder2.id, @feed1.id
-      @folder.reload
-      folder2.reload
-      folder3.reload
+        expect {Folder.find @folder.id}.to raise_error ActiveRecord::RecordNotFound
+      end
 
-      @folder.user_id.should eq @user.id
-      @folder.feeds.should_not include @feed1
-      folder2.user_id.should eq @user.id
-      folder2.feeds.should include @feed1
-      folder3.user_id.should eq user2.id
-      folder3.feeds.should include @feed1
+      it 'raises an error if the feed is not in the folder' do
+        expect {Folder.remove_feed @folder.id, @feed3.id}.to raise_error NotInFolderError
+      end
+
+      it 'does not change feed association with other folders' do
+        folder2 = FactoryGirl.create :folder
+        folder2.feeds << @feed1
+
+        Folder.remove_feed @folder.id, @feed1.id
+
+        @folder.reload
+        @folder.feeds.should_not include @feed1
+        folder2.feeds.should include @feed1
+      end
+
     end
   end
 

@@ -65,19 +65,31 @@ class Folder < ActiveRecord::Base
   # Remove a feed from a folder. This is a class method.
   #
   # Receives as arguments the id of the feed and the id of the folder from which it's going to be removed.
-  # The folder id can take the special value "all", which means the feed will be removed from all folders.
   #
   # If after removing the feed there are no more feeds inside the folder, the folder is completely deleted.
   #
-  # If the feed is not in the passed folder (or if the feed is in no folder, if "all" is passed as folder id),
-  # a NotInFolderError is raised.
+  # If the feed is not in the passed folder a NotInFolderError is raised.
   #
   # Returns true if there are more feeds in the folder after removing this one, false otherwise. This means that
-  # if the method returns true, this means the folder still exists; if it returns false, this means the folder
+  # if the method returns true, the folder still exists; if it returns false, this means the folder
   # has been removed from the database.
 
   def self.remove_feed(folder_id, feed_id)
+    folder = Folder.find folder_id
+    feed = Feed.find feed_id
 
+    if !folder.feeds.include? feed
+      raise NotInFolderError.new
+    end
+
+    folder.feeds.delete feed
+
+    if folder.feeds.blank?
+      folder.destroy
+      return false
+    else
+      return true
+    end
   end
 
   private
