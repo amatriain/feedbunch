@@ -138,147 +138,165 @@ describe 'folders and feeds' do
       end
     end
 
-    it 'adds a feed to an existing folder', js: true do
-      read_feed @feed2.id
-      find('#folder-management').click
-      within '#folder-management-dropdown ul.dropdown-menu' do
-        # While reading a feed that is not in a folder, click on an existing folder in the dropdown menu
-        find("a[data-folder-id='#{@folder1.id}']").click
+    context 'add feed to existing folder' do
+
+      it 'adds a feed to an existing folder', js: true do
+        read_feed @feed2.id
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          # While reading a feed that is not in a folder, click on an existing folder in the dropdown menu
+          find("a[data-folder-id='#{@folder1.id}']").click
+        end
+
+        # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
+        # is now inside @folder1
+        page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
+
+        # the feed should have exactly the same link in the sidebar under the @feed1 folder
+        page.should have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
       end
 
-      # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
-      # is now inside @folder1
-      page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
+      it 'removes feed from its old folder when adding it to a different one', js: true do
+        new_folder = FactoryGirl.build :folder, user_id: @user.id
+        @user.folders << new_folder
+        visit feeds_path
+        read_feed @feed1.id
 
-      # the feed should have exactly the same link in the sidebar under the @feed1 folder
-      page.should have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
-    end
+        # @feed1 should be under @folder1
+        page.should have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
 
-    it 'removes a feed from its old folder when adding it to a new one', js: true do
-      new_folder = FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << new_folder
-      visit feeds_path
-      read_feed @feed1.id
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find("a[data-folder-id='#{new_folder.id}']").click
+        end
 
-      # @feed1 should be under @folder1
-      page.should have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
+        # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
+        # is now inside "new_folder"
+        page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']", visible: false
 
-      find('#folder-management').click
-      within '#folder-management-dropdown ul.dropdown-menu' do
-        find("a[data-folder-id='#{new_folder.id}']").click
+        # the feed should have exactly the same link in the sidebar under the new_folder folder
+        page.should have_css "li#folder-#{new_folder.id} > ul#feeds-#{new_folder.id} > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']", visible: false
+
+        # the feed should have disappeared from @folder1
+        page.should_not have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}']", visible: false
       end
 
-      # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
-      # is now inside "new_folder"
-      page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']", visible: false
+      it 'shows an alert if there is a problem adding a feed to a folder', js: true do
+        Folder.stub(:add_feed).and_raise StandardError.new
 
-      # the feed should have exactly the same link in the sidebar under the new_folder folder
-      page.should have_css "li#folder-#{new_folder.id} > ul#feeds-#{new_folder.id} > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']", visible: false
+        read_feed @feed2.id
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find("a[data-folder-id='#{@folder1.id}']").click
+        end
 
-      # the feed should have disappeared from @folder1
-      page.should_not have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}']", visible: false
-    end
+        # A "problem managing folders" alert should be shown
+        page.should have_css 'div#problem-folder-management'
+        page.should_not have_css 'div#problem-folder-management.hidden', visible: false
 
-    it 'adds a feed to a new folder'
-
-    it 'removes a feed from a folder', js: true do
-      find('#folder-management').click
-      within '#folder-management-dropdown ul.dropdown-menu' do
-        find('a[data-folder-id="none"]').click
+        # It should close automatically after 5 seconds
+        sleep 5
+        page.should have_css 'div#problem-folder-management.hidden', visible: false
       end
 
-      # Feed should be under the "All subscriptions" folder, without a data-folder-id attribute (because it doesn't belong to a folder)
-      page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='none']", visible: false
+      it 'shows an alert if the feed is already associated with the folder', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          # While reading a feed that is not in a folder, click on an existing folder in the dropdown menu
+          find("a[data-folder-id='#{@folder1.id}']").click
+        end
 
-      # Feed should have disappeared from @folder1
-      page.should_not have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}']", visible: false
+        # A "feed already in folder" alert should be shown
+        page.should have_css 'div#already-in-folder'
+        page.should_not have_css 'div#already-in-folder.hidden', visible: false
+
+        # It should close automatically after 5 seconds
+        sleep 5
+        page.should have_css 'div#already-in-folder.hidden', visible: false
+      end
     end
 
-    it 'does not remove the folder if there are other feeds inside it', js: true do
-      # Ensure @folder1 contains @feed1 and @feed2
-      @folder1.feeds << @feed2
+    context 'remove feed from folder' do
 
-      visit feeds_path
+      it 'removes a feed from a folder', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="none"]').click
+        end
 
-      # Remove @feed1 from folders
-      read_feed @feed1.id
-      find('#folder-management').click
-      within '#folder-management-dropdown ul.dropdown-menu' do
-        find('a[data-folder-id="none"]').click
+        # Feed should be under the "All subscriptions" folder, without a data-folder-id attribute (because it doesn't belong to a folder)
+        page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='none']", visible: false
+
+        # Feed should have disappeared from @folder1
+        page.should_not have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}']", visible: false
       end
 
-      # Page should still have @folder1 with @feed2 under it
-      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
-    end
+      it 'does not remove the folder if there are other feeds inside it', js: true do
+        # Ensure @folder1 contains @feed1 and @feed2
+        @folder1.feeds << @feed2
 
-    it 'removes a folder from the sidebar when it has no feeds under it', js: true do
-      find('#folder-management').click
-      within '#folder-management-dropdown ul.dropdown-menu' do
-        find('a[data-folder-id="none"]').click
+        visit feeds_path
+
+        # Remove @feed1 from folders
+        read_feed @feed1.id
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="none"]').click
+        end
+
+        # Page should still have @folder1 with @feed2 under it
+        page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
       end
 
-      page.should_not have_css "#sidebar #folder-#{@folder1.id}"
-    end
+      it 'removes a folder from the sidebar when it has no feeds under it', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="none"]').click
+        end
 
-    it 'removes a folder from the dropdown when it has no feeds under it', js: true do
-      find('#folder-management').click
-      within '#folder-management-dropdown ul.dropdown-menu' do
-        find('a[data-folder-id="none"]').click
+        page.should_not have_css "#sidebar #folder-#{@folder1.id}"
       end
 
-      page.should_not have_css "#folder-management-dropdown a[data-folder-id='#{@folder1.id}']", visible: false
-    end
+      it 'removes a folder from the dropdown when it has no feeds under it', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="none"]').click
+        end
 
-    it 'shows an alert when there is a problem adding a feed to a folder', js: true do
-      Folder.stub(:add_feed).and_raise StandardError.new
-
-      read_feed @feed2.id
-      find('#folder-management').click
-      within '#folder-management-dropdown ul.dropdown-menu' do
-        find("a[data-folder-id='#{@folder1.id}']").click
+        page.should_not have_css "#folder-management-dropdown a[data-folder-id='#{@folder1.id}']", visible: false
       end
 
-      # A "problem managing folders" alert should be shown
-      page.should have_css 'div#problem-folder-management'
-      page.should_not have_css 'div#problem-folder-management.hidden', visible: false
+      it 'shows an alert when there is a problem removing a feed from a folder', js: true do
+        Folder.stub(:remove_feed).and_raise StandardError.new
 
-      # It should close automatically after 5 seconds
-      sleep 5
-      page.should have_css 'div#problem-folder-management.hidden', visible: false
-    end
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="none"]').click
+        end
 
-    it 'shows an alert if the feed is already associated with the folder', js: true do
-      find('#folder-management').click
-      within '#folder-management-dropdown ul.dropdown-menu' do
-        # While reading a feed that is not in a folder, click on an existing folder in the dropdown menu
-        find("a[data-folder-id='#{@folder1.id}']").click
+        # A "problem managing folders" alert should be shown
+        page.should have_css 'div#problem-folder-management'
+        page.should_not have_css 'div#problem-folder-management.hidden', visible: false
+
+        # It should close automatically after 5 seconds
+        sleep 5
+        page.should have_css 'div#problem-folder-management.hidden', visible: false
       end
-
-      # A "feed already in folder" alert should be shown
-      page.should have_css 'div#already-in-folder'
-      page.should_not have_css 'div#already-in-folder.hidden', visible: false
-
-      # It should close automatically after 5 seconds
-      sleep 5
-      page.should have_css 'div#already-in-folder.hidden', visible: false
     end
 
-    it 'shows an alert when there is a problem removing a feed from a folder', js: true do
-      Folder.stub(:remove_feed).and_raise StandardError.new
+    context 'add feed to new folder' do
 
-      find('#folder-management').click
-      within '#folder-management-dropdown ul.dropdown-menu' do
-        find('a[data-folder-id="none"]').click
-      end
+      it 'adds a feed to a new folder'
 
-      # A "problem managing folders" alert should be shown
-      page.should have_css 'div#problem-folder-management'
-      page.should_not have_css 'div#problem-folder-management.hidden', visible: false
+      it 'removes feed from its old folder when addint it to a new one'
 
-      # It should close automatically after 5 seconds
-      sleep 5
-      page.should have_css 'div#problem-folder-management.hidden', visible: false
+      it 'adds new folder to the sidebar'
+
+      it 'adds new folder to the dropdown'
+
+      it 'shows an alert if there is a problem adding the feed to the new folder'
     end
+
   end
 
 end
