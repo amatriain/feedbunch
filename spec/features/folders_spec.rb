@@ -295,7 +295,29 @@ describe 'folders and feeds' do
         page.should have_css '#new-folder-popup'
       end
 
-      it 'adds a feed to a new folder'
+      it 'adds a feed to a new folder', js: true do
+        pending
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+
+        sleep 1
+        title = 'New folder'
+        within '#new-folder-popup' do
+          fill_in 'Title', with: title
+          find('#new-folder-submit').click
+        end
+
+        # New folder should be in the sidebar
+        within '#sidebar' do
+          page.should have_content title
+        end
+
+        # data-folder-id attribute should indicate that @feed1 is in the new folder
+        new_folder = Folder.where(user_id: @user.id, title: title).first
+        page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
+      end
 
       it 'removes feed from its old folder when addint it to a new one'
 
