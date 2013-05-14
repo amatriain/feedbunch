@@ -181,11 +181,23 @@ describe 'folders and feeds' do
 
     it 'adds a feed to a new folder'
 
-    it 'removes a feed from a folder'
+    it 'removes a feed from a folder', js: true do
+      find('#folder-management').click
+      within '#folder-management-dropdown ul.dropdown-menu' do
+        find('a[data-folder-id="none"]').click
+      end
+
+      # Feed should be under the "All subscriptions" folder, without a data-folder-id attribute (because it doesn't belong to a folder)
+      page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}']", visible: false
+      page.should_not have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id]", visible: false
+
+      # Feed should have disappeared from @folder1
+      page.should_not have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}']", visible: false
+    end
 
     it 'totally removes a folder when it has no feeds under it'
 
-    it 'shows an alert when there is a problem associating a feed with a folder', js: true do
+    it 'shows an alert when there is a problem adding a feed to a folder', js: true do
       Folder.stub(:add_feed).and_raise StandardError.new
 
       read_feed @feed2.id
@@ -218,6 +230,8 @@ describe 'folders and feeds' do
       sleep 5
       page.should have_css 'div#already-in-folder.hidden', visible: false
     end
+
+    it 'shows an alert when there is a problem removing a feed from a folder'
   end
 
 end
