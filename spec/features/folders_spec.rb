@@ -207,12 +207,20 @@ describe 'folders and feeds' do
         find('a[data-folder-id="none"]').click
       end
 
-      sleep 1
       # Page should still have @folder1 with @feed2 under it
       page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
     end
 
-    it 'totally removes a folder when it has no feeds under it'
+    it 'removes a folder from the sidebar when it has no feeds under it', js: true do
+      find('#folder-management').click
+      within '#folder-management-dropdown ul.dropdown-menu' do
+        find('a[data-folder-id="none"]').click
+      end
+
+      page.should_not have_css "#sidebar #folder-#{@folder1.id}"
+    end
+
+    it 'removes a folder from the dropdown when it has no feeds under it'
 
     it 'shows an alert when there is a problem adding a feed to a folder', js: true do
       Folder.stub(:add_feed).and_raise StandardError.new

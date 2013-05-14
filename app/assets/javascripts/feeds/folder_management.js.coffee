@@ -38,10 +38,17 @@ $(document).ready ->
 
     # Function to handle result returned by the server
     remove_folder_result = (data, status, xhr) ->
-      remove_feed_from_folders feed_id
+      if xhr.status == 205
+        # If the return status is 205, remove the folder (there are no more feeds in it)
+        old_folder_id = feed_folder feed_id
+        remove_folder old_folder_id
+      else
+        # If the return status is 204, remove the feed from the folder but not the folder itself (it has more feeds)
+        remove_feed_from_folders feed_id
       update_folder_id feed_id, "none"
       open_folder "all"
       read_feed feed_id, "all"
+
 
     $.post(delete_folder_path, {"_method":"delete", feed_id: feed_id}, remove_folder_result)
       .fail ->
@@ -83,3 +90,15 @@ $(document).ready ->
   #-------------------------------------------------------
   read_feed = (feed_id, folder_id) ->
     $("#feeds-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed_id}']").click()
+
+  #-------------------------------------------------------
+  # Find out the folder to which a feed currently belongs
+  #-------------------------------------------------------
+  feed_folder = (feed_id) ->
+    return $("#sidebar a[data-sidebar-feed][data-feed-id='#{feed_id}']").attr "data-folder-id"
+
+  #-------------------------------------------------------
+  # Totally remove a folder from the sidebar
+  #-------------------------------------------------------
+  remove_folder = (folder_id) ->
+    $("#sidebar #folder-#{folder_id}").remove()
