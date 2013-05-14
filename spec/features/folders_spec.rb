@@ -194,6 +194,24 @@ describe 'folders and feeds' do
       page.should_not have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}']", visible: false
     end
 
+    it 'does not remove the folder if there are other feeds inside it', js: true do
+      # Ensure @folder1 contains @feed1 and @feed2
+      @folder1.feeds << @feed2
+
+      visit feeds_path
+
+      # Remove @feed1 from folders
+      read_feed @feed1.id
+      find('#folder-management').click
+      within '#folder-management-dropdown ul.dropdown-menu' do
+        find('a[data-folder-id="none"]').click
+      end
+
+      sleep 1
+      # Page should still have @folder1 with @feed2 under it
+      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
+    end
+
     it 'totally removes a folder when it has no feeds under it'
 
     it 'shows an alert when there is a problem adding a feed to a folder', js: true do
