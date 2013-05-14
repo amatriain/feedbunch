@@ -148,9 +148,21 @@ class FoldersController < ApplicationController
   end
 
   ##
-  # Create a new folder with the title passed in params[:new_folder_title]
+  # Create a new folder with the title passed in params[:new_folder_title], and add to it the folder
+  # passed in params[:feed_id]
 
   def create
     folder = Folder.create_user_folder params[:new_folder_title], current_user.id
+    folder = Folder.add_feed folder.id, params[:feed_id]
+    render 'feeds/_sidebar_folder', locals: {feeds: folder.feeds, title: folder.title, folder_id: folder.id}, layout: false
+  rescue FolderAlreadyExistsError
+    # If user already has a folder with the same title, return 304
+    head status: 304
+  rescue ActiveRecord::RecordNotFound
+    head status: 404
+  rescue => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    head status: 500
   end
 end

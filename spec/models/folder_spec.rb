@@ -234,6 +234,12 @@ describe Folder do
       expect {Folder.create_user_folder @folder.title, @user.id}.to raise_error FolderAlreadyExistsError
     end
 
-    it 'does not raise an error if another user has a folder with the same title'
+    it 'does not raise an error if another user has a folder with the same title' do
+      user2 = FactoryGirl.create :user
+      folder2 = FactoryGirl.build :folder, user_id: user2.id
+      user2.folders << folder2
+
+      expect {Folder.create_user_folder folder2.title, @user.id}.to_not raise_error
+    end
   end
 end

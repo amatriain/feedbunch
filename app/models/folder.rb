@@ -113,7 +113,7 @@ class Folder < ActiveRecord::Base
       raise FolderAlreadyExistsError.new
     end
 
-    Rails.info "Creating folder with title #{folder_title} for user #{user.id} - #{user.email}"
+    Rails.logger.info "Creating folder with title #{folder_title} for user #{user.id} - #{user.email}"
     folder = user.folders.create title: folder_title
     return folder
   end

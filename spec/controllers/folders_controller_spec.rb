@@ -250,13 +250,18 @@ describe FoldersController do
   context 'POST create' do
 
     it 'returns success if successfully created folder' do
-      post :create, new_folder_title: 'New folder title'
+      post :create, new_folder_title: 'New folder title', feed_id: @feed1.id
       response.should be_success
     end
 
-    it 'returns 304 if user already has a folder with the same title'
+    it 'returns 304 if user already has a folder with the same title' do
+      title = 'Folder title'
+      folder = FactoryGirl.build :folder, title: title, user_id: @user.id
+      @user.folders << folder
 
-    it 'assigns to @folder the newly created folder'
+      post :create, new_folder_title: title
+      response.status.should eq 304
+    end
   end
 
 end
