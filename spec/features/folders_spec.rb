@@ -188,8 +188,7 @@ describe 'folders and feeds' do
       end
 
       # Feed should be under the "All subscriptions" folder, without a data-folder-id attribute (because it doesn't belong to a folder)
-      page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}']", visible: false
-      page.should_not have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id]", visible: false
+      page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='none']", visible: false
 
       # Feed should have disappeared from @folder1
       page.should_not have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}']", visible: false

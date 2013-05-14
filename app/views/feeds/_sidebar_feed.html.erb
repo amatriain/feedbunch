@@ -7,6 +7,8 @@
      data-feed-url="<%= feed.url %>"
      <% if feed.user_folder(current_user).present? %>
       data-folder-id="<%= feed.user_folder current_user %>"
+    <% else %>
+      data-folder-id="none"
      <% end %>
   >
     <i class="icon-rss"></i> <%= feed.title %> <i class="icon-spinner hidden"></i>
