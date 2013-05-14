@@ -122,7 +122,7 @@ describe FeedsController do
     end
   end
 
-  context 'DELETE destroy' do
+  context 'DELETE remove' do
     it 'returns 404 if the feed does not exist' do
       delete :destroy, id: 1234567890
       response.status.should eq 404

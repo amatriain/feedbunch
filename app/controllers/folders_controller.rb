@@ -116,20 +116,20 @@ class FoldersController < ApplicationController
   end
 
   ##
-  # Remove the feed passed in params[:feed_id] from the folder passed in params[:id].
+  # Remove the feed passed in params[:feed_id] from its current folder.
 
-  def destroy
-    folder_id = params[:id]
+  def remove
     feed_id = params[:feed_id]
 
-    if !current_user.folders.where(id: folder_id).exists?
-      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to remove feed #{feed_id} from folder #{folder_id} that does not belong to him"
-      head status: 404
-    elsif !current_user.feeds.where(id: feed_id).exists?
-      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to remove feed #{feed_id} to which he's not subscribed from folder #{folder_id}"
+    if !current_user.feeds.where(id: feed_id).exists?
+      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to remove feed #{feed_id} to which he's not subscribed from folders"
       head status: 404
     else
-      folder_has_feeds = Folder.remove_feed folder_id, feed_id
+      folder = Feed.find(feed_id).folders.where(user_id: current_user.id).first
+      if folder.blank?
+        raise NotInFolderError.new
+      end
+      folder_has_feeds = Folder.remove_feed folder.id, feed_id
       if folder_has_feeds
         head status: 204
       else
