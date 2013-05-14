@@ -212,4 +212,28 @@ describe Folder do
       folder.title.should eq title_sanitized
     end
   end
+
+  context 'create folder for user' do
+
+    it 'creates folder for the specified user' do
+      title = 'New folder'
+      Folder.create_user_folder title, @user.id
+
+      @user.reload
+      @user.folders.where(title: title).should_not be_blank
+    end
+
+    it 'returns the new folder' do
+      title = 'New folder'
+      folder = Folder.create_user_folder title, @user.id
+      folder.title.should eq title
+      @user.folders.should include folder
+    end
+
+    it 'raises an error if the user already has a folder with the same title' do
+      expect {Folder.create_user_folder @folder.title, @user.id}.to raise_error FolderAlreadyExistsError
+    end
+
+    it 'does not raise an error if another user has a folder with the same title'
+  end
 end

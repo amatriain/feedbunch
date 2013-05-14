@@ -146,4 +146,11 @@ class FoldersController < ApplicationController
     Rails.logger.error e.backtrace
     head status: 500
   end
+
+  ##
+  # Create a new folder with the title passed in params[:new_folder_title]
+
+  def create
+    folder = Folder.create_user_folder params[:new_folder_title], current_user.id
+  end
 end

@@ -29,3 +29,9 @@ $(document).ready ->
   #-------------------------------------------------------
   $("#subscribe-feed-popup").on 'shown',  ->
     $("#subscription_rss", this).focus()
+
+  #-------------------------------------------------------
+  # Give focus to the text input field when showing the "New folder" modal.
+  #-------------------------------------------------------
+  $("#new-folder-popup").on 'shown',  ->
+    $("#new_folder_title", this).focus()

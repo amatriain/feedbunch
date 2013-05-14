@@ -96,7 +96,7 @@ Openreader::Application.routes.draw do
   # Resourceful routes for feeds
   resources :feeds, only: [:index, :show, :create, :destroy]
 
-  # Resourceful route to get all entries for all feeds inside a folder
-  resources :folders, only: [:show, :update]
+  # Resourceful routes for folders
+  resources :folders, only: [:show, :update, :create]
 
 end

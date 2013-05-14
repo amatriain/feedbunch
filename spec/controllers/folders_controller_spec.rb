@@ -247,4 +247,16 @@ describe FoldersController do
     end
   end
 
+  context 'POST create' do
+
+    it 'returns success if successfully created folder' do
+      post :create, new_folder_title: 'New folder title'
+      response.should be_success
+    end
+
+    it 'returns 304 if user already has a folder with the same title'
+
+    it 'assigns to @folder the newly created folder'
+  end
+
 end

@@ -34,3 +34,5 @@ en:
         new_password: "Your new password"
       subscription:
         rss: "URL"
+      new_folder:
+        title: "Title of the new folder"

@@ -1,0 +1,17 @@
+<div id="new-folder-popup" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3><%= t 'feeds.index.new_folder_title' %></h3>
+  </div>
+  <div class="modal-body">
+    <%= simple_form_for :new_folder, url: folders_path,
+                        html: {:method => :post, class: 'form-horizontal', id: 'form-new-folder'},
+                        wrapper: :prepend do |f| %>
+      <%= f.input :title, as: :folder_icon, required: false %>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" ><%= t 'feeds.index.new_folder_close' %></button>
+    <button id="new-folder-submit" class="btn btn-primary"><%= t 'feeds.index.new_folder_submit' %></button>
+  </div>
+</div>

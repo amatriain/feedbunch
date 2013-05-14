@@ -54,6 +54,30 @@ $(document).ready ->
       .fail ->
         Application.alertTimedShowHide $("#problem-folder-management")
 
+  #-------------------------------------------------------
+  # Show "New folder" popup when clicking on New Folder in the dropdown
+  #-------------------------------------------------------
+  $("a[data-new-folder-path]").on "click", ->
+    $("#new-folder-popup").modal "show"
+
+  #-------------------------------------------------------
+  # Submit the "New Folder" form when clicking on the "Add" button
+  #-------------------------------------------------------
+  $("#new-folder-submit").on "click", ->
+    $("#form-new-folder").submit()
+
+  #-------------------------------------------------------
+  # Submit the "New Folder" form via Ajax
+  #-------------------------------------------------------
+  $("#form-new-folder").on "submit", ->
+    alert "PLACEHOLDER"
+
+    # Clean textfield and close modal
+    $("#new_folder_title").val('')
+    $("#new-folder-popup").modal 'hide'
+
+    # prevent default form submit
+    return false
 
   ########################################################
   # COMMON FUNCTIONS

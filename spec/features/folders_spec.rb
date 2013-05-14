@@ -286,6 +286,15 @@ describe 'folders and feeds' do
 
     context 'add feed to new folder' do
 
+      it 'shows a popup to enter the folder name', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+
+        page.should have_css '#new-folder-popup'
+      end
+
       it 'adds a feed to a new folder'
 
       it 'removes feed from its old folder when addint it to a new one'
@@ -295,6 +304,10 @@ describe 'folders and feeds' do
       it 'adds new folder to the dropdown'
 
       it 'shows an alert if there is a problem adding the feed to the new folder'
+
+      it 'shows an alert if the user already has a folder with the same title'
+
+      it 'does not show an alert if another user already has a folder with the same title'
     end
 
   end
