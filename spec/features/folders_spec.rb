@@ -230,7 +230,22 @@ describe 'folders and feeds' do
       page.should have_css 'div#already-in-folder.hidden', visible: false
     end
 
-    it 'shows an alert when there is a problem removing a feed from a folder'
+    it 'shows an alert when there is a problem removing a feed from a folder', js: true do
+      Folder.stub(:remove_feed).and_raise StandardError.new
+
+      find('#folder-management').click
+      within '#folder-management-dropdown ul.dropdown-menu' do
+        find('a[data-folder-id="none"]').click
+      end
+
+      # A "problem managing folders" alert should be shown
+      page.should have_css 'div#problem-folder-management'
+      page.should_not have_css 'div#problem-folder-management.hidden', visible: false
+
+      # It should close automatically after 5 seconds
+      sleep 5
+      page.should have_css 'div#problem-folder-management.hidden', visible: false
+    end
   end
 
 end

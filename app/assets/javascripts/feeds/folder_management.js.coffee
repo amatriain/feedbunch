@@ -45,7 +45,7 @@ $(document).ready ->
 
     $.post(delete_folder_path, {"_method":"delete", feed_id: feed_id}, remove_folder_result)
       .fail ->
-        Application.alertTimedShowHide $("#problem-unsubscribing")
+        Application.alertTimedShowHide $("#problem-folder-management")
 
 
   ########################################################
@@ -82,4 +82,4 @@ $(document).ready ->
   # Read a feed under a specific folder
   #-------------------------------------------------------
   read_feed = (feed_id, folder_id) ->
-    $("#folder-#{folder_id}-all-feeds a[data-sidebar-feed][data-feed-id='#{feed_id}']").click()
+    $("#feeds-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed_id}']").click()
