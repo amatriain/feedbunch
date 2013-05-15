@@ -250,7 +250,7 @@ describe FoldersController do
   context 'POST create' do
 
     it 'returns success if sucessfully created folder' do
-      post :create, new_folder: {title: 'New folder title', feed_id: @feed1.id}
+      post :create, new_folder: {title: 'New folder title', feed_id: @feed1.id}, format: :json
       response.should be_success
     end
 
