@@ -74,11 +74,14 @@ $(document).ready ->
 
     # Function to handle result returned by the server
     new_folder_result = (data, status, xhr) ->
-      remove_feed_from_folders feed_id
-      add_folder data
-      update_folder_id feed_id, data["folder_id"]
-      open_folder data["folder_id"]
-      read_feed feed_id, data["folder_id"]
+      if xhr.status == 304
+        Application.alertTimedShowHide $("#folder-already-exists")
+      else
+        remove_feed_from_folders feed_id
+        add_folder data
+        update_folder_id feed_id, data["folder_id"]
+        open_folder data["folder_id"]
+        read_feed feed_id, data["folder_id"]
 
     # If the user has written something in the form, POST the value via ajax
     if $("#new_folder_title").val()

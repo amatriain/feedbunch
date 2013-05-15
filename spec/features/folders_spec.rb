@@ -395,7 +395,29 @@ describe 'folders and feeds' do
         page.should have_css 'div#problem-new-folder.hidden', visible: false
       end
 
-      it 'shows an alert if the user already has a folder with the same title'
+      it 'shows an alert if the user already has a folder with the same title', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+
+        sleep 1
+        within '#new-folder-popup' do
+          fill_in 'Title', with: @folder1.title
+          find('#new-folder-submit').click
+        end
+        sleep 1
+
+        page.should have_css '#folder-already-exists'
+
+        # A "problem creating folder" alert should be shown
+        page.should have_css 'div#folder-already-exists'
+        page.should_not have_css 'div#folder-already-exists.hidden', visible: false
+
+        # It should close automatically after 5 seconds
+        sleep 5
+        page.should have_css 'div#folder-already-exists.hidden', visible: false
+      end
 
       it 'does not show an alert if another user already has a folder with the same title'
     end

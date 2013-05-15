@@ -48,3 +48,4 @@ en:
       problem_folder_management: "There has been a problem managing folders. Please try again later."
       already_in_folder: "The feed is already in that folder."
       problem_new_folder: "There has been a problem creating the new folder. Please try again later."
+      folder_already_exists: "There is already a folder with that title. Please choose another title."
