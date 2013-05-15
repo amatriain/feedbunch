@@ -1,0 +1,3 @@
+<% self.formats = [:html] %>
+
+<%= {sidebar_folder: render(partial: 'feeds/sidebar_folder', locals: {feeds: feeds, title: title, folder_id: folder_id}, layout: false)}.to_json.html_safe %>

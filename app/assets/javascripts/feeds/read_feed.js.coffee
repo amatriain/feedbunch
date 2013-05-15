@@ -48,6 +48,8 @@ $(document).ready ->
     $("#folder-management-dropdown a[data-folder-id='#{folder_id}'] i.icon-ok").removeClass "hidden"
     # Clicking on the dropdown changes folder association for the current feed
     $("#folder-management-dropdown a").attr("data-feed-id", feed_id)
+    # Creating a new folder adds this feed to it
+    $("#new_folder_feed_id").val(feed_id)
 
     # Show the feed title
     feed_title = $(this).attr "data-feed-title"

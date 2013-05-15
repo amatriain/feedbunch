@@ -40,7 +40,7 @@ $(document).ready ->
     remove_folder_result = (data, status, xhr) ->
       if xhr.status == 205
         # If the return status is 205, remove the folder (there are no more feeds in it)
-        old_folder_id = feed_folder feed_id
+        old_folder_id = find_feed_folder feed_id
         remove_folder old_folder_id
       else
         # If the return status is 204, remove the feed from the folder but not the folder itself (it has more feeds)
@@ -70,7 +70,22 @@ $(document).ready ->
   # Submit the "New Folder" form via Ajax
   #-------------------------------------------------------
   $("#form-new-folder").on "submit", ->
-    alert "PLACEHOLDER"
+    feed_id = $("#new_folder_feed_id", this).val()
+
+    # Function to handle result returned by the server
+    new_folder_result = (data, status, xhr) ->
+      remove_feed_from_folders feed_id
+      add_folder data
+      new_folder_id = find_last_folder_id()
+      update_folder_id feed_id, new_folder_id
+      open_folder new_folder_id
+      read_feed feed_id, new_folder_id
+
+    # If the user has written something in the form, POST the value via ajax
+    if $("#new_folder_title").val()
+      form_url = $("#form-new-folder").attr "action"
+      post_data = $(this).serialize()
+      $.post(form_url, post_data, new_folder_result, 'json')
 
     # Clean textfield and close modal
     $("#new_folder_title").val('')
@@ -118,7 +133,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Find out the folder to which a feed currently belongs
   #-------------------------------------------------------
-  feed_folder = (feed_id) ->
+  find_feed_folder = (feed_id) ->
     return $("#sidebar a[data-sidebar-feed][data-feed-id='#{feed_id}']").attr "data-folder-id"
 
   #-------------------------------------------------------
@@ -127,3 +142,15 @@ $(document).ready ->
   remove_folder = (folder_id) ->
     $("#sidebar #folder-#{folder_id}").remove()
     $("#folder-management-dropdown a[data-folder-id='#{folder_id}']").parent().remove()
+
+  #-------------------------------------------------------
+  # Add a new folder to the sidebar and the dropdown
+  #-------------------------------------------------------
+  add_folder = (folder_data) ->
+    $("#sidebar #folders-list").append folder_data["sidebar_folder"]
+
+  #-------------------------------------------------------
+  # Find out the id of the last folder inserted in the sidebar
+  #-------------------------------------------------------
+  find_last_folder_id = ->
+    return $("#sidebar #folders-list > li").last().attr "data-folder-id"

@@ -249,8 +249,8 @@ describe FoldersController do
 
   context 'POST create' do
 
-    it 'returns success if successfully created folder' do
-      post :create, new_folder_title: 'New folder title', feed_id: @feed1.id
+    it 'returns success if sucessfully created folder' do
+      post :create, new_folder: {title: 'New folder title', feed_id: @feed1.id}
       response.should be_success
     end
 
@@ -259,9 +259,8 @@ describe FoldersController do
       folder = FactoryGirl.build :folder, title: title, user_id: @user.id
       @user.folders << folder
 
-      post :create, new_folder_title: title
+      post :create, new_folder: {title: title, feed_id: @feed1.id}
       response.status.should eq 304
     end
   end
-
 end

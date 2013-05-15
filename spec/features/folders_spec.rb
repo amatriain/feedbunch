@@ -181,6 +181,8 @@ describe 'folders and feeds' do
         page.should_not have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}']", visible: false
       end
 
+      it 'removes folder from sidebar and dropdown if it has no more feeds'
+
       it 'shows an alert if there is a problem adding a feed to a folder', js: true do
         Folder.stub(:add_feed).and_raise StandardError.new
 
@@ -296,7 +298,6 @@ describe 'folders and feeds' do
       end
 
       it 'adds a feed to a new folder', js: true do
-        pending
         find('#folder-management').click
         within '#folder-management-dropdown ul.dropdown-menu' do
           find('a[data-folder-id="new"]').click
@@ -308,22 +309,64 @@ describe 'folders and feeds' do
           fill_in 'Title', with: title
           find('#new-folder-submit').click
         end
-
-        # New folder should be in the sidebar
-        within '#sidebar' do
-          page.should have_content title
-        end
+        sleep 1
 
         # data-folder-id attribute should indicate that @feed1 is in the new folder
         new_folder = Folder.where(user_id: @user.id, title: title).first
         page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
       end
 
-      it 'removes feed from its old folder when addint it to a new one'
+      it 'removes feed from its old folder when adding it to a new one'
 
-      it 'adds new folder to the sidebar'
+      it 'removes old folder from sidebar and dropdown if it has no more feeds'
 
-      it 'adds new folder to the dropdown'
+      it 'adds new folder to the sidebar', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+
+        sleep 1
+        title = 'New folder'
+        within '#new-folder-popup' do
+          fill_in 'Title', with: title
+          find('#new-folder-submit').click
+        end
+        sleep 1
+
+        new_folder = Folder.where(user_id: @user.id, title: title).first
+        within '#sidebar #folders-list' do
+          # new folder should be in the sidebar
+          page.should have_content title
+          page.should have_css "li#folder-#{new_folder.id}"
+          # @feed1 should be under the new folder
+          page.should have_css "li#folder-#{new_folder.id} a[data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
+        end
+      end
+
+      it 'adds new folder to the dropdown', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+
+        sleep 1
+        title = 'New folder'
+        within '#new-folder-popup' do
+          fill_in 'Title', with: title
+          find('#new-folder-submit').click
+        end
+        sleep 1
+
+        new_folder = Folder.where(user_id: @user.id, title: title).first
+        # Click on Folder button to open the dropdown
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          page.should have_content title
+          # New folder should be in the dropdown, with a tick to indicate @feed1 is in the folder
+          page.should have_css "a[data-feed-id='#{@folder1.id}'][data-folder-id=' #{new_folder.id}'] i.icon-ok"
+        end
+      end
 
       it 'shows an alert if there is a problem adding the feed to the new folder'
 

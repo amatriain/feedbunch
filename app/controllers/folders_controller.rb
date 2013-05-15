@@ -4,7 +4,8 @@
 class FoldersController < ApplicationController
   before_filter :authenticate_user!
 
-  respond_to :html
+  respond_to :html, except: [:create]
+  respond_to :json, only: [:create]
 
   ##
   # Return HTML with all entries for a given folder, containing all feeds subscribed to by the user inside the folder.
@@ -152,9 +153,12 @@ class FoldersController < ApplicationController
   # passed in params[:feed_id]
 
   def create
-    folder = Folder.create_user_folder params[:new_folder_title], current_user.id
-    folder = Folder.add_feed folder.id, params[:feed_id]
-    render 'feeds/_sidebar_folder', locals: {feeds: folder.feeds, title: folder.title, folder_id: folder.id}, layout: false
+    params_create = params[:new_folder]
+    folder_title = params_create[:title]
+    feed_id = params_create[:feed_id]
+    folder = Folder.create_user_folder folder_title, current_user.id
+    folder = Folder.add_feed folder.id, feed_id
+    render 'feeds/_new_folder', locals: {feeds: folder.feeds, title: folder.title, folder_id: folder.id}, layout: false
   rescue FolderAlreadyExistsError
     # If user already has a folder with the same title, return 304
     head status: 304
