@@ -158,7 +158,7 @@ class FoldersController < ApplicationController
     feed_id = params_create[:feed_id]
 
     # Check if current user is subscribed to the folder
-    if !current_user.feeds.where(id: feed_id).blank?
+    if current_user.feeds.where(id: feed_id).blank?
       Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to associate with a new folder feed #{feed_id} to which he is not subscribed"
       head status: 404
     else

@@ -4,7 +4,7 @@
     <h3><%= t 'feeds.index.new_folder_title' %></h3>
   </div>
   <div class="modal-body">
-    <%= simple_form_for :new_folder, url: folders_path, type: :json,
+    <%= simple_form_for :new_folder, url: folders_path(format: :json), type: :json,
                         html: {:method => :post, class: 'form-horizontal', id: 'form-new-folder'},
                         wrapper: :prepend do |f| %>
       <%= f.input :title, as: :folder_icon, required: false %>
