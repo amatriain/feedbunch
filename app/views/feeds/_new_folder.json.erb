@@ -4,6 +4,6 @@
   {
     folder_id: folder.id,
     sidebar_folder: render(partial: 'feeds/sidebar_folder', locals: {feeds: folder.feeds, title: folder.title, folder_id: folder.id}, layout: false),
-    dropdown_folder: render(partial: 'feeds/folder_dropdown', locals: {folder: folder}, layout: false)
+    dropdown_folder: render(partial: 'feeds/dropdown_folder', locals: {folder: folder}, layout: false)
   }.to_json.html_safe
 %>
