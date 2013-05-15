@@ -85,6 +85,8 @@ $(document).ready ->
       form_url = $("#form-new-folder").attr "action"
       post_data = $(this).serialize()
       $.post(form_url, post_data, new_folder_result, 'json')
+        .fail ->
+          Application.alertTimedShowHide $("#problem-new-folder")
 
     # Clean textfield and close modal
     $("#new_folder_title").val('')

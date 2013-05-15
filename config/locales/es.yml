@@ -44,3 +44,4 @@ es:
       problem_unsubscribing: "Ha habido un problema anulando la suscripción. Por favor inténtelo de nuevo más tarde."
       problem_folder_management: "Ha habido un problema gestionando las carpetas. Por favor inténtelo de nuevo más arde."
       already_in_folder: "El feed ya está en esa carpeta."
+      problem_new_folder: "Ha habido un problema creando la nueva carpeta. Por favor inténtelo de nuevo más tarde."

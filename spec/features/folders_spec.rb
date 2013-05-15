@@ -368,7 +368,32 @@ describe 'folders and feeds' do
         end
       end
 
-      it 'shows an alert if there is a problem adding the feed to the new folder'
+      it 'shows an alert if there is a problem adding the feed to the new folder', js: true do
+        Folder.stub(:create_user_folder).and_raise StandardError.new
+
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+
+        sleep 1
+        title = 'New folder'
+        within '#new-folder-popup' do
+          fill_in 'Title', with: title
+          find('#new-folder-submit').click
+        end
+        sleep 1
+
+        page.should have_css '#problem-new-folder'
+
+        # A "problem creating folder" alert should be shown
+        page.should have_css 'div#problem-new-folder'
+        page.should_not have_css 'div#problem-new-folder.hidden', visible: false
+
+        # It should close automatically after 5 seconds
+        sleep 5
+        page.should have_css 'div#problem-new-folder.hidden', visible: false
+      end
 
       it 'shows an alert if the user already has a folder with the same title'
 

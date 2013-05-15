@@ -69,3 +69,12 @@
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
+
+<%# Alert displayed when there is a problem adding a new feed %>
+<div id="problem-new-folder" class="row-fluid hidden bottom-alert">
+  <div class="span10 offset2 alert alert-error">
+    <button type="button" class="close" data-hide>&times;</button>
+    <p><%= t 'feeds.index.problem_new_folder' %></p>
+    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
+  </div>
+</div>
