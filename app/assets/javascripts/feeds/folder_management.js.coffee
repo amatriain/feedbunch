@@ -147,3 +147,4 @@ $(document).ready ->
   #-------------------------------------------------------
   add_folder = (folder_data) ->
     $("#sidebar #folders-list").append folder_data["sidebar_folder"]
+    $("#folder-management-dropdown ul.dropdown-menu li.divider").first().after folder_data["dropdown_folder"]

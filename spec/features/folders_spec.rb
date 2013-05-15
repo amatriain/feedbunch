@@ -345,7 +345,6 @@ describe 'folders and feeds' do
       end
 
       it 'adds new folder to the dropdown', js: true do
-        pending
         find('#folder-management').click
         within '#folder-management-dropdown ul.dropdown-menu' do
           find('a[data-folder-id="new"]').click
@@ -365,7 +364,7 @@ describe 'folders and feeds' do
         within '#folder-management-dropdown ul.dropdown-menu' do
           page.should have_content title
           # New folder should be in the dropdown, with a tick to indicate @feed1 is in the folder
-          page.should have_css "a[data-feed-id='#{@folder1.id}'][data-folder-id=' #{new_folder.id}'] i.icon-ok"
+          page.should have_css "a[data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}'] i.icon-ok"
         end
       end
 

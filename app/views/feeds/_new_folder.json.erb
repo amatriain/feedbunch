@@ -2,9 +2,8 @@
 
 <%=
   {
-    folder_id: folder_id,
-    sidebar_folder: render(partial: 'feeds/sidebar_folder', locals: {feeds: feeds, title: title, folder_id: folder_id},
-                            layout: false)
-
+    folder_id: folder.id,
+    sidebar_folder: render(partial: 'feeds/sidebar_folder', locals: {feeds: folder.feeds, title: folder.title, folder_id: folder.id}, layout: false),
+    dropdown_folder: render(partial: 'feeds/folder_dropdown', locals: {folder: folder}, layout: false)
   }.to_json.html_safe
 %>

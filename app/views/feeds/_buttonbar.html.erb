@@ -13,7 +13,30 @@
 
   <div class="span2">
     <div class="btn-group" id="folder-management-dropdown">
-      <%= render 'feeds/folder_dropdown', folders: current_user.folders %>
+      <a id="folder-management" class="btn dropdown-toggle disabled hidden" data-toggle="dropdown">
+        <i class="icon-folder-open"></i> <%= t 'feeds.index.folder_management' %>
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a data-folder-remove-path="<%= folder_remove_path %>" data-folder-id="none" data-feed-id>
+            <i class="hidden icon-ok"></i>&nbsp;
+            <%= t 'feeds.index.folder_none' %>
+          </a>
+        </li>
+        <li class="divider"></li>
+        <% current_user.folders.each do |folder| %>
+
+          <%= render 'feeds/folder_dropdown', folder: folder %>
+
+        <% end %>
+        <li class="divider"></li>
+        <li>
+          <a data-new-folder-path="<%= folders_path %>" data-folder-id="new" data-feed-id>
+            <i class="icon-plus"></i> <%= t 'feeds.index.folder_new' %>
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 

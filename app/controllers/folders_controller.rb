@@ -158,7 +158,7 @@ class FoldersController < ApplicationController
     feed_id = params_create[:feed_id]
     folder = Folder.create_user_folder folder_title, current_user.id
     folder = Folder.add_feed folder.id, feed_id
-    render 'feeds/_new_folder', locals: {feeds: folder.feeds, title: folder.title, folder_id: folder.id}
+    render 'feeds/_new_folder', locals: {folder: folder}
   rescue FolderAlreadyExistsError
     # If user already has a folder with the same title, return 304
     head status: 304
