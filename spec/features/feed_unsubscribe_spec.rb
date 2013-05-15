@@ -66,8 +66,8 @@ describe 'unsubscribe from feed' do
     find('#unsubscribe-submit').click
 
     # Only @feed2 should be present, @feed1 has been unsubscribed
-    page.should_not have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']", visible: false
-    page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed2.id}']", visible: false
+    page.should_not have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']", visible: false
+    page.should have_css "#sidebar li > a[data-feed-id='#{@feed2.id}']", visible: false
   end
 
   it 'shows an alert if there is a problem unsubscribing from a feed', js: true do
@@ -105,8 +105,8 @@ describe 'unsubscribe from feed' do
     read_feed @feed1.id
 
     # Feed should be in the folder and in the "all subscriptions" folder
-    page.should have_css "ul#sidebar > li#folder-all li > a[data-feed-id='#{@feed1.id}']", visible: false
-    page.should have_css "ul#sidebar > li#folder-#{folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
+    page.should have_css "#sidebar li#folder-all li > a[data-feed-id='#{@feed1.id}']", visible: false
+    page.should have_css "#sidebar li#folder-#{folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
 
     find('#unsubscribe-feed').click
     sleep 1
@@ -114,8 +114,8 @@ describe 'unsubscribe from feed' do
     sleep 1
 
     # Feed should disappear completely from both folders
-    page.should_not have_css "ul#sidebar > li#folder-all li > a[data-feed-id='#{@feed1.id}']", visible: false
-    page.should_not have_css "ul#sidebar > li#folder-#{folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
+    page.should_not have_css "#sidebar > li#folder-all li > a[data-feed-id='#{@feed1.id}']", visible: false
+    page.should_not have_css "#sidebar > li#folder-#{folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
   end
 
   it 'shows start page after unsubscribing', js: true do

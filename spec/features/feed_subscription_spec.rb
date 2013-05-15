@@ -36,8 +36,8 @@ describe 'subscription to feeds' do
     end
 
     # Both the old and new feeds should be there, the new feed should be selected
-    page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
-    page.should have_css "ul#sidebar li.active > a[data-feed-id='#{@feed2.id}']"
+    page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
+    page.should have_css "#sidebar li.active > a[data-feed-id='#{@feed2.id}']"
     # The entries for the just subscribed feed should be visible
     page.should have_content entry.title
   end
@@ -55,8 +55,8 @@ describe 'subscription to feeds' do
     end
 
     # Both the old and new feeds should be there, the new feed should be selected
-    page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
-    page.should have_css "ul#sidebar li.active > a[data-feed-id='#{@feed2.id}']"
+    page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
+    page.should have_css "#sidebar li.active > a[data-feed-id='#{@feed2.id}']"
     # The entries for the just subscribed feed should be visible
     page.should have_content entry.title
   end
@@ -77,8 +77,8 @@ describe 'subscription to feeds' do
     end
 
     # Both the old and new feeds should be there, the new feed should be selected
-    page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
-    page.should have_css "ul#sidebar li.active > a[data-feed-id='#{feed.id}']"
+    page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
+    page.should have_css "#sidebar li.active > a[data-feed-id='#{feed.id}']"
     # The entries for the just subscribed feed should be visible
     page.should have_content entry.title
   end
@@ -99,8 +99,8 @@ describe 'subscription to feeds' do
     end
 
     # Both the old and new feeds should be there, the new feed should be selected
-    page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
-    page.should have_css "ul#sidebar li.active > a[data-feed-id='#{feed.id}']"
+    page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
+    page.should have_css "#sidebar li.active > a[data-feed-id='#{feed.id}']"
     # The entries for the just subscribed feed should be visible
     page.should have_content entry.title
   end
@@ -121,8 +121,8 @@ describe 'subscription to feeds' do
     end
 
     # Both the old and new feeds should be there, the new feed should be selected
-    page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
-    page.should have_css "ul#sidebar li.active > a[data-feed-id='#{feed.id}']"
+    page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
+    page.should have_css "#sidebar li.active > a[data-feed-id='#{feed.id}']"
     # The entries for the just subscribed feed should be visible
     page.should have_content entry.title
   end
@@ -161,7 +161,7 @@ FEED_XML
     end
 
     # Both the old and new feeds should be there, the new feed should be selected
-    within 'ul#sidebar li#folder-all ul#feeds-all' do
+    within '#sidebar li#folder-all ul#feeds-all' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title
@@ -228,7 +228,7 @@ FEED_XML
     end
 
     # Both the old and new feeds should be there, the new feed should be selected
-    within 'ul#sidebar li#folder-all ul#feeds-all' do
+    within '#sidebar li#folder-all ul#feeds-all' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title
@@ -296,7 +296,7 @@ FEED_XML
     end
 
     # Both the old and new feeds should be there, the new feed should be selected
-    within 'ul#sidebar li#folder-all ul#feeds-all' do
+    within '#sidebar li#folder-all ul#feeds-all' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title

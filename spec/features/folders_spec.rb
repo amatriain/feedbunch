@@ -34,7 +34,7 @@ describe 'folders and feeds' do
   end
 
   it 'shows an All Subscriptions folder with all feeds subscribed to', js: true do
-    within 'ul#sidebar' do
+    within '#sidebar' do
       page.should have_content 'All subscriptions'
 
       within 'li#folder-all' do
@@ -49,15 +49,15 @@ describe 'folders and feeds' do
 
         # Should have all the feeds inside
         within 'ul#feeds-all' do
-          page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
-          page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed2.id}']"
+          page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
+          page.should have_css "#sidebar li > a[data-feed-id='#{@feed2.id}']"
         end
       end
     end
   end
 
   it 'shows folders containing their respective feeds', js: true do
-    within 'ul#sidebar' do
+    within '#sidebar' do
       page.should have_content @folder1.title
 
       within "li#folder-#{@folder1.id}" do
@@ -72,8 +72,8 @@ describe 'folders and feeds' do
 
         # Should have inside only those feeds associated to the folder
         within "ul#feeds-#{@folder1.id}" do
-          page.should have_css "ul#sidebar li > a[data-feed-id='#{@feed1.id}']"
-          page.should_not have_css "ul#sidebar li > a[data-feed-id='#{@feed2.id}']"
+          page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
+          page.should_not have_css "#sidebar li > a[data-feed-id='#{@feed2.id}']"
         end
       end
     end

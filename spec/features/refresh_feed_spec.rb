@@ -50,7 +50,7 @@ describe 'refresh feeds' do
 
     visit feeds_path
     # Click on "Read all subscriptions" within the "All subscriptions" folder
-    within 'ul#sidebar li#folder-all' do
+    within '#sidebar li#folder-all' do
       # Open "All subscriptions" folder
       find("a[data-target='#feeds-all']").click
       # Click on "Read all subscriptions"
@@ -88,7 +88,7 @@ describe 'refresh feeds' do
 
     visit feeds_path
     # Click on "Read all subscriptions" within the folder
-    within "ul#sidebar li#folder-#{folder.id}" do
+    within "#sidebar li#folder-#{folder.id}" do
       # Open folder
       find("a[data-target='#feeds-#{folder.id}']").click
       # Click on "Read all subscriptions"

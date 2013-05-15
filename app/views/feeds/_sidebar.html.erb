@@ -1,14 +1,17 @@
-<ul class="nav nav-tabs nav-stacked" id="sidebar">
-
+<div id="sidebar">
   <ul class="nav nav-list">
     <li class="active"><a id="start-page"><%= t 'feeds.index.start' %></a></li>
   </ul>
+
   <hr>
 
-  <%= render 'feeds/sidebar_folder', feeds: @feeds, title: t('feeds.index.all_feeds'), folder_id: 'all' %>
+  <ul class="nav nav-tabs nav-stacked">
 
-  <% @folders.each do |folder| %>
-    <%= render 'feeds/sidebar_folder', feeds: folder.feeds, title: folder.title, folder_id: folder.id %>
-  <% end %>
+    <%= render 'feeds/sidebar_folder', feeds: @feeds, title: t('feeds.index.all_feeds'), folder_id: 'all' %>
 
-</ul>
+    <% @folders.each do |folder| %>
+      <%= render 'feeds/sidebar_folder', feeds: folder.feeds, title: folder.title, folder_id: folder.id %>
+    <% end %>
+
+  </ul>
+</div>

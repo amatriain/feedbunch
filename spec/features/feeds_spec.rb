@@ -40,12 +40,12 @@ describe 'feeds' do
     end
 
     it 'shows entries for a feed in the All Subscriptions folder', js: true do
-      within 'ul#sidebar li#folder-all' do
+      within '#sidebar li#folder-all' do
         # Open "All feeds" folder
         find("a[data-target='#feeds-all']").click
 
         # click on feed
-        find("ul#sidebar li > a[data-feed-id='#{@feed2.id}']").click
+        find("#sidebar li > a[data-feed-id='#{@feed2.id}']").click
       end
 
       # Only entries for the clicked feed should appear
@@ -56,12 +56,12 @@ describe 'feeds' do
     end
 
     it 'shows entries for a feed inside a user folder', js: true do
-      within "ul#sidebar li#folder-#{@folder1.id}" do
+      within "#sidebar li#folder-#{@folder1.id}" do
         # Open folder @folder1
         find("a[data-target='#feeds-#{@folder1.id}']").click
 
         # Click on feed
-        find("ul#sidebar li > a[data-feed-id='#{@feed1.id}']").click
+        find("#sidebar li > a[data-feed-id='#{@feed1.id}']").click
       end
 
       # Only entries for the clicked feed should appear
@@ -72,7 +72,7 @@ describe 'feeds' do
     end
 
     it 'shows a link to read entries for all subscriptions inside the All Subscriptions folder', js: true do
-      within 'ul#sidebar li#folder-all' do
+      within '#sidebar li#folder-all' do
         # Open "All feeds" folder
         find("a[data-target='#feeds-all']").click
 
@@ -97,7 +97,7 @@ describe 'feeds' do
       entry3_2 = FactoryGirl.build :entry, feed_id: feed3.id
       feed3.entries << entry3_1 << entry3_2
 
-      within "ul#sidebar li#folder-#{@folder1.id}" do
+      within "#sidebar li#folder-#{@folder1.id}" do
         # Open folder
         find("a[data-target='#feeds-#{@folder1.id}']").click
 
