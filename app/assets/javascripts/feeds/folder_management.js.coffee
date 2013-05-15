@@ -76,10 +76,9 @@ $(document).ready ->
     new_folder_result = (data, status, xhr) ->
       remove_feed_from_folders feed_id
       add_folder data
-      new_folder_id = find_last_folder_id()
-      update_folder_id feed_id, new_folder_id
-      open_folder new_folder_id
-      read_feed feed_id, new_folder_id
+      update_folder_id feed_id, data["folder_id"]
+      open_folder data["folder_id"]
+      read_feed feed_id, data["folder_id"]
 
     # If the user has written something in the form, POST the value via ajax
     if $("#new_folder_title").val()
@@ -148,9 +147,3 @@ $(document).ready ->
   #-------------------------------------------------------
   add_folder = (folder_data) ->
     $("#sidebar #folders-list").append folder_data["sidebar_folder"]
-
-  #-------------------------------------------------------
-  # Find out the id of the last folder inserted in the sidebar
-  #-------------------------------------------------------
-  find_last_folder_id = ->
-    return $("#sidebar #folders-list > li").last().attr "data-folder-id"
