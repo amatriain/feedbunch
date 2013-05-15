@@ -156,9 +156,17 @@ class FoldersController < ApplicationController
     params_create = params[:new_folder]
     folder_title = params_create[:title]
     feed_id = params_create[:feed_id]
-    folder = Folder.create_user_folder folder_title, current_user.id
-    folder = Folder.add_feed folder.id, feed_id
-    render 'feeds/_new_folder', locals: {folder: folder}
+
+    # Check if current user is subscribed to the folder
+    if !current_user.feeds.where(id: feed_id).blank?
+      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to associate with a new folder feed #{feed_id} to which he is not subscribed"
+      head status: 404
+    else
+      folder = Folder.create_user_folder folder_title, current_user.id
+      folder = Folder.add_feed folder.id, feed_id
+      render 'feeds/_new_folder', locals: {folder: folder}
+    end
+
   rescue FolderAlreadyExistsError
     # If user already has a folder with the same title, return 304
     head status: 304
