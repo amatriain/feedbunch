@@ -408,8 +408,6 @@ describe 'folders and feeds' do
         end
         sleep 1
 
-        page.should have_css '#folder-already-exists'
-
         # A "problem creating folder" alert should be shown
         page.should have_css 'div#folder-already-exists'
         page.should_not have_css 'div#folder-already-exists.hidden', visible: false
@@ -419,7 +417,26 @@ describe 'folders and feeds' do
         page.should have_css 'div#folder-already-exists.hidden', visible: false
       end
 
-      it 'does not show an alert if another user already has a folder with the same title'
+      it 'does not show an alert if another user already has a folder with the same title', js: true do
+        user2 = FactoryGirl.create :user
+        folder = FactoryGirl.build :folder, user_id: user2.id
+        user2.folders << folder
+
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+
+        sleep 1
+        within '#new-folder-popup' do
+          fill_in 'Title', with: folder.title
+          find('#new-folder-submit').click
+        end
+        sleep 1
+
+        # No alert should be shown
+        page.should have_css 'div#folder-already-exists.hidden', visible: false
+      end
     end
 
   end
