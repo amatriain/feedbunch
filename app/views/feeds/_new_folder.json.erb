@@ -1,9 +1,21 @@
 <% self.formats = [:html] %>
 
-<%=
-  {
-    folder_id: folder.id,
-    sidebar_folder: render(partial: 'feeds/sidebar_folder', locals: {feeds: folder.feeds, title: folder.title, folder_id: folder.id}, layout: false),
-    dropdown_folder: render(partial: 'feeds/dropdown_folder', locals: {folder: folder}, layout: false)
-  }.to_json.html_safe
-%>
+{
+  "new_folder": <%=
+    {
+      id: new_folder.id,
+      sidebar: render(partial: 'feeds/sidebar_folder', locals: {feeds: new_folder.feeds, title: new_folder.title, folder_id: new_folder.id}, layout: false),
+      dropdown: render(partial: 'feeds/dropdown_folder', locals: {folder: new_folder}, layout: false)
+    }.to_json.html_safe
+  %>
+
+  <% if old_folder.present? %>
+  ,
+  "old_folder": <%=
+    {
+      id: old_folder.id,
+      empty: old_folder.feeds.blank?
+    }.to_json.html_safe
+  %>
+  <% end %>
+}

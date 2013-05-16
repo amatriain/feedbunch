@@ -22,7 +22,6 @@ $(document).ready ->
         remove_feed_from_folders feed_id
         update_folder_id feed_id, folder_id
         insert_feed_in_folder folder_id, data
-        open_folder folder_id
         read_feed feed_id, folder_id
 
     $.post(update_folder_path, {"_method":"put", feed_id: feed_id}, update_folder_result)
@@ -46,7 +45,6 @@ $(document).ready ->
         # If the return status is 204, remove the feed from the folder but not the folder itself (it has more feeds)
         remove_feed_from_folders feed_id
       update_folder_id feed_id, "none"
-      open_folder "all"
       read_feed feed_id, "all"
 
 
@@ -77,11 +75,15 @@ $(document).ready ->
       if xhr.status == 304
         Application.alertTimedShowHide $("#folder-already-exists")
       else
-        remove_feed_from_folders feed_id
-        add_folder data
-        update_folder_id feed_id, data["folder_id"]
-        open_folder data["folder_id"]
-        read_feed feed_id, data["folder_id"]
+        if data["old_folder"]
+          if data["old_folder"]["empty"]
+            remove_folder data["old_folder"]["id"]
+          else
+            remove_feed_from_folders feed_id
+        add_folder data["new_folder"]
+        new_folder_id = data["new_folder"]["id"]
+        update_folder_id feed_id, new_folder_id
+        read_feed feed_id, new_folder_id
 
     # If the user has written something in the form, POST the value via ajax
     if $("#new_folder_title").val()
@@ -132,6 +134,7 @@ $(document).ready ->
   # Read a feed under a specific folder
   #-------------------------------------------------------
   read_feed = (feed_id, folder_id) ->
+    open_folder folder_id
     $("#feeds-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed_id}']").click()
 
   #-------------------------------------------------------
@@ -151,5 +154,5 @@ $(document).ready ->
   # Add a new folder to the sidebar and the dropdown
   #-------------------------------------------------------
   add_folder = (folder_data) ->
-    $("#sidebar #folders-list").append folder_data["sidebar_folder"]
-    $("#folder-management-dropdown ul.dropdown-menu li.divider").first().after folder_data["dropdown_folder"]
+    $("#sidebar #folders-list").append folder_data["sidebar"]
+    $("#folder-management-dropdown ul.dropdown-menu li.divider").first().after folder_data["dropdown"]

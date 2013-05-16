@@ -177,14 +177,14 @@ describe Feed do
       @feed.folders.should_not include folder2
     end
 
-    it 'returns the id of the folder to which a feed belongs, given a user id' do
+    it 'returns the folder to which a feed belongs, given a user id' do
       user = FactoryGirl.create :user
       folder = FactoryGirl.build :folder, user_id: user.id
       user.folders << folder
       user.feeds << @feed
       folder.feeds << @feed
 
-      @feed.user_folder(user).should eq folder.id
+      @feed.user_folder(user).should eq folder
     end
 
     it 'returns nil if the feed belongs to no folder for that user' do

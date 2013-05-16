@@ -146,7 +146,7 @@ class Feed < ActiveRecord::Base
   end
 
   ##
-  # Find the id of the folder to which a feed belongs, for a given user.
+  # Find the folder to which a feed belongs, for a given user.
   #
   # Receives as argument a user.
   #
@@ -154,17 +154,17 @@ class Feed < ActiveRecord::Base
   # This method searches among the folders to which this feed belongs, trying to find one that belongs to the
   # user passed as argument.
   #
-  # If a matching folder is found, its id is returned. Otherwise nil is returned.
+  # If a matching folder is found, it is returned. Otherwise nil is returned.
 
   def user_folder(user)
     if self.folders.present?
       folders = self.folders.where(user_id: user.id)
       if folders.present?
-        folder_id = folders.first.id
+        folder = folders.first
       end
     end
 
-    return folder_id
+    return folder
   end
 
   private

@@ -6,7 +6,7 @@
      data-feed-title="<%= feed.title %>"
      data-feed-url="<%= feed.url %>"
      <% if feed.user_folder(current_user).present? %>
-      data-folder-id="<%= feed.user_folder current_user %>"
+      data-folder-id="<%= feed.user_folder(current_user).id %>"
     <% else %>
       data-folder-id="none"
      <% end %>

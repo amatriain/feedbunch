@@ -316,9 +316,74 @@ describe 'folders and feeds' do
         page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
       end
 
-      it 'removes feed from its old folder when adding it to a new one'
+      it 'removes old folder if it has no more feeds', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
 
-      it 'removes old folder from sidebar and dropdown if it has no more feeds'
+        sleep 1
+        title = 'New folder'
+        within '#new-folder-popup' do
+          fill_in 'Title', with: title
+          find('#new-folder-submit').click
+        end
+        sleep 1
+
+        # Folder should be deleted from the database
+        Folder.where(id: @folder1.id).should be_blank
+
+        # Folder should be removed from the sidebar
+        within '#sidebar #folders-list' do
+          page.should_not have_content @folder1.title
+        end
+        page.should_not have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
+
+        # Folder should be removed from the dropdown
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          page.should_not have_content @folder1.title
+          page.should_not have_css "a[data-folder-id='#{@folder1.id}']"
+        end
+      end
+
+      it 'does not remove old folder if it has more feeds', js: true do
+        # @folder1 contains @feed1, @feed2
+        @folder1.feeds << @feed2
+        visit feeds_path
+        read_feed @feed1.id
+
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+
+        sleep 1
+        title = 'New folder'
+        within '#new-folder-popup' do
+          fill_in 'Title', with: title
+          find('#new-folder-submit').click
+        end
+        sleep 1
+
+        # Folder should not be deleted from the database
+        Folder.where(id: @folder1.id).should be_present
+
+        # Folder should not be removed from the sidebar
+        within '#sidebar #folders-list' do
+          page.should have_content @folder1.title
+        end
+        page.should have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
+
+        # Folder should not be removed from the dropdown
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          page.should have_content @folder1.title
+          page.should have_css "a[data-folder-id='#{@folder1.id}']"
+        end
+      end
+
+      it 'removes feed from its old folder when adding it to a new one'
 
       it 'adds new folder to the sidebar', js: true do
         find('#folder-management').click
