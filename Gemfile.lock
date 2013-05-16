@@ -79,7 +79,7 @@ GEM
       simplecov (>= 0.7)
       thor
     curb (0.8.3)
-    database_cleaner (0.9.1)
+    database_cleaner (1.0.1)
     devise (2.2.4)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
