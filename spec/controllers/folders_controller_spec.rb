@@ -161,11 +161,6 @@ describe FoldersController do
       response.should be_success
     end
 
-    it 'assigns the correct folder' do
-      put :update, id: @folder1.id, feed_id: @feed3.id
-      assigns(:folder).should eq @folder1
-    end
-
     it 'returns 404 for a folder that does not belong to the current user' do
       put :update, id: @folder2.id, feed_id: @feed3.id
       response.status.should eq 404
