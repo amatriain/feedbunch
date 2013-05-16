@@ -4,8 +4,8 @@
 class FoldersController < ApplicationController
   before_filter :authenticate_user!
 
-  respond_to :html, except: [:create]
-  respond_to :json, only: [:create]
+  respond_to :html, except: [:update, :create]
+  respond_to :json, only: [:update, :create]
 
   ##
   # Return HTML with all entries for a given folder, containing all feeds subscribed to by the user inside the folder.
@@ -95,15 +95,24 @@ class FoldersController < ApplicationController
     folder_id = params[:id]
     feed_id = params[:feed_id]
 
+    feed = current_user.feeds.find feed_id
+    old_folder = feed.user_folder current_user
+
     if !current_user.folders.where(id: folder_id).exists?
       Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to add feed #{feed_id} to folder #{folder_id} that does not belong to him"
       head status: 404
-    elsif !current_user.feeds.where(id: feed_id).exists?
+    elsif feed.blank?
       Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to add folder #{folder_id} to feed #{feed_id} to which he's not subscribed"
       head status: 404
     else
-      @folder = Folder.add_feed folder_id, feed_id
-      render 'feeds/_sidebar_feed', locals: {feed: Feed.find(feed_id)}, layout: false
+      new_folder = Folder.add_feed folder_id, feed_id
+      feed.reload
+      # If the feed was in a folder before this change and there are no more feeds in the folder, destroy it.
+      if old_folder.present?
+        old_folder.reload
+        old_folder.destroy if old_folder.feeds.blank?
+      end
+      render 'feeds/_update_folder.json.erb', locals: {new_folder: new_folder, feed: feed, old_folder: old_folder}
     end
   rescue AlreadyInFolderError
     # If feed is already associated to the folder, return 304

@@ -139,6 +139,13 @@ describe 'folders and feeds' do
     end
 
     context 'add feed to existing folder' do
+      
+      before :each do
+        @new_folder = FactoryGirl.build :folder, user_id: @user.id
+        @user.folders << @new_folder
+        visit feeds_path
+        read_feed @feed1.id
+      end
 
       it 'adds a feed to an existing folder', js: true do
         read_feed @feed2.id
@@ -150,15 +157,17 @@ describe 'folders and feeds' do
 
         # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
         # is now inside @folder1
-        page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
+        page.should have_css "#folder-all ul#feeds-all a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
 
-        # the feed should have exactly the same link in the sidebar under the @feed1 folder
-        page.should have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
+        # the feed should have exactly the same link in the sidebar under the @folder1 folder
+        page.should have_css "#folder-#{@folder1.id} ul#feeds-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
       end
 
       it 'removes feed from its old folder when adding it to a different one', js: true do
-        new_folder = FactoryGirl.build :folder, user_id: @user.id
-        @user.folders << new_folder
+        # User has feeds @feed1, @feed2 in @folder1
+        @user.feeds << @feed2
+        @folder1.feeds << @feed2
+
         visit feeds_path
         read_feed @feed1.id
 
@@ -167,21 +176,76 @@ describe 'folders and feeds' do
 
         find('#folder-management').click
         within '#folder-management-dropdown ul.dropdown-menu' do
-          find("a[data-folder-id='#{new_folder.id}']").click
+          find("a[data-folder-id='#{@new_folder.id}']").click
         end
 
         # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
-        # is now inside "new_folder"
-        page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']", visible: false
+        # is now inside "@new_folder"
+        page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@new_folder.id}']", visible: false
 
-        # the feed should have exactly the same link in the sidebar under the new_folder folder
-        page.should have_css "li#folder-#{new_folder.id} > ul#feeds-#{new_folder.id} > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']", visible: false
+        # the feed should have exactly the same link in the sidebar under the @new_folder folder
+        page.should have_css "li#folder-#{@new_folder.id} > ul#feeds-#{@new_folder.id} > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@new_folder.id}']", visible: false
 
         # the feed should have disappeared from @folder1
         page.should_not have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}']", visible: false
       end
 
-      it 'removes folder from sidebar and dropdown if it has no more feeds'
+      it 'removes folder if it has no more feeds', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find("a[data-folder-id='#{@new_folder.id}']").click
+        end
+
+        sleep 1
+
+        # Folder should be deleted from the database
+        Folder.exists?(@folder1.id).should be_false
+
+        # Folder should be removed from the sidebar
+        within '#sidebar #folders-list' do
+          page.should_not have_content @folder1.title
+        end
+        page.should_not have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
+
+        # Folder should be removed from the dropdown
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          page.should_not have_content @folder1.title
+          page.should_not have_css "a[data-folder-id='#{@folder1.id}']"
+        end
+      end
+      
+      it 'does not remove folder if it has more feeds', js: true do
+        # User has feeds @feed1, @feed2 in @folder1
+        @user.feeds << @feed2
+        @folder1.feeds << @feed2
+
+        visit feeds_path
+        read_feed @feed1.id
+
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find("a[data-folder-id='#{@new_folder.id}']").click
+        end
+
+        sleep 1
+
+        # Folder should not be deleted from the database
+        Folder.exists?(@folder1.id).should be_true
+
+        # Folder should not be removed from the sidebar
+        within '#sidebar #folders-list' do
+          page.should have_content @folder1.title
+        end
+        page.should have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
+
+        # Folder should not be removed from the dropdown
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          page.should have_content @folder1.title
+          page.should have_css "a[data-folder-id='#{@folder1.id}']"
+        end
+      end
 
       it 'shows an alert if there is a problem adding a feed to a folder', js: true do
         Folder.stub(:add_feed).and_raise StandardError.new
@@ -349,6 +413,7 @@ describe 'folders and feeds' do
 
       it 'does not remove old folder if it has more feeds', js: true do
         # @folder1 contains @feed1, @feed2
+        @user.feeds << @feed2
         @folder1.feeds << @feed2
         visit feeds_path
         read_feed @feed1.id
@@ -385,6 +450,7 @@ describe 'folders and feeds' do
 
       it 'removes feed from its old folder when adding it to a new one', js: true do
         # @folder1 contains @feed1, @feed2
+        @user.feeds << @feed2
         @folder1.feeds << @feed2
         visit feeds_path
         read_feed @feed1.id

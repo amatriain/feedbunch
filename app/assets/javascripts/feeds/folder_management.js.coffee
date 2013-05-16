@@ -19,12 +19,15 @@ $(document).ready ->
       if xhr.status == 304
         Application.alertTimedShowHide $("#already-in-folder")
       else
-        remove_feed_from_folders feed_id
-        update_folder_id feed_id, folder_id
-        insert_feed_in_folder folder_id, data
+        if data["old_folder"]
+          if data["old_folder"]["empty"]
+            remove_folder data["old_folder"]["id"]
+          else
+            remove_feed_from_folders feed_id
+        insert_feed_in_folder feed_id, folder_id, data["new_folder"]
         read_feed feed_id, folder_id
 
-    $.post(update_folder_path, {"_method":"put", feed_id: feed_id}, update_folder_result)
+    $.post(update_folder_path, {"_method":"put", feed_id: feed_id}, update_folder_result, "json")
       .fail ->
         Application.alertTimedShowHide $("#problem-folder-management")
 
@@ -115,8 +118,9 @@ $(document).ready ->
   #-------------------------------------------------------
   # Insert feed in a folder in the sidebar
   #-------------------------------------------------------
-  insert_feed_in_folder = (folder_id, feed_html) ->
-    $("#folder-#{folder_id}-all-feeds").after feed_html
+  insert_feed_in_folder = (feed_id, folder_id, feed_data) ->
+    update_folder_id feed_id, folder_id
+    $("#folder-#{folder_id}-all-feeds").after feed_data["sidebar"]
 
   #-------------------------------------------------------
   # Update the data-folder-id attribute for all links to a feed in the sidebar
