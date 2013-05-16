@@ -383,7 +383,35 @@ describe 'folders and feeds' do
         end
       end
 
-      it 'removes feed from its old folder when adding it to a new one'
+      it 'removes feed from its old folder when adding it to a new one', js: true do
+        # @folder1 contains @feed1, @feed2
+        @folder1.feeds << @feed2
+        visit feeds_path
+        read_feed @feed1.id
+
+        # @feed1 can be found under @folder1 in the sidebar
+        within "#sidebar #folders-list li[data-folder-id='#{@folder1.id}']" do
+          page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+        end
+
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+
+        sleep 1
+        title = 'New folder'
+        within '#new-folder-popup' do
+          fill_in 'Title', with: title
+          find('#new-folder-submit').click
+        end
+        sleep 1
+
+        # @feed1 is no longer under @folder1
+        within "#sidebar #folders-list li[data-folder-id='#{@folder1.id}']" do
+          page.should_not have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+        end
+      end
 
       it 'adds new folder to the sidebar', js: true do
         find('#folder-management').click
