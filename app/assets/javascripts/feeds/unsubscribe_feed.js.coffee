@@ -1,4 +1,5 @@
 #= require ./alert_hiding
+#= require ./shared_functions
 
 $(document).ready ->
 
@@ -15,11 +16,15 @@ $(document).ready ->
     $("#unsubscribe-feed-popup").modal 'hide'
     unsubscribe_path = $("#unsubscribe-feed").attr("data-unsubscribe-path")
     unsubscribe_feed = $("#unsubscribe-feed").attr("data-unsubscribe-feed")
+    unsubscribe_folder = $("#unsubscribe-feed").attr("data-unsubscribe-folder")
 
     # Function to handle result returned by the server
     unsubscribe_result = (data, status, xhr) ->
       # Remove the feed from the sidebar
       $("[data-sidebar-feed][data-feed-id=#{unsubscribe_feed}]").parent().remove()
+      # If the feed was in a folder which is not empty, remove it
+      if xhr.status == 205
+        Application.remove_folder unsubscribe_folder
 
     $.post(unsubscribe_path, {"_method":"delete"}, unsubscribe_result)
       .fail ->

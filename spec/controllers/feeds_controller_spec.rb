@@ -123,6 +123,35 @@ describe FeedsController do
   end
 
   context 'DELETE remove' do
+
+    it 'returns 200 if the feed was not in a folder' do
+      delete :destroy, id: @feed1.id
+      response.status.should eq 200
+    end
+
+    it 'returns 204 if the feed was in a folder which still has feeds' do
+      feed3 = FactoryGirl.create :feed
+      @user.feeds << feed3
+      @folder1.feeds << @feed1 << feed3
+
+      delete :destroy, id: @feed1.id
+      response.status.should eq 204
+    end
+
+    it 'returns 205 if the feed was in a folder without any other feeds' do
+      @folder1.feeds << @feed1
+
+      delete :destroy, id: @feed1.id
+      response.status.should eq 205
+    end
+
+    it 'deletes the folder if the feed was in a folder without any other feeds' do
+      @folder1.feeds << @feed1
+
+      delete :destroy, id: @feed1.id
+      Folder.exists?(@folder1.id).should be_false
+    end
+
     it 'returns 404 if the feed does not exist' do
       delete :destroy, id: 1234567890
       response.status.should eq 404
@@ -131,12 +160,6 @@ describe FeedsController do
     it 'returns 404 if the user is not subscribed to the feed' do
       delete :destroy, id: @feed2.id
       response.status.should eq 404
-    end
-
-    it 'returns 204 if the user is successfully unsubscribed' do
-      Feed.stub unsubscribe: true
-      delete :destroy, id: @feed1.id
-      response.status.should eq 204
     end
 
     it 'returns 500 if there is a problem unsubscribing' do

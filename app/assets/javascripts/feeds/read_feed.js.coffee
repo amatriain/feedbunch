@@ -31,18 +31,19 @@ $(document).ready ->
     feed_path = $(this).attr "data-feed-path"
     refresh_path = $(this).attr "data-refresh-path"
     feed_id = $(this).attr "data-feed-id"
+    folder_id = $(this).attr "data-folder-id"
+    folder_id ||= "none"
 
     # The refresh button now refreshes this feed; it's disabled while the feed loads
     $("#refresh-feed").attr("data-refresh-feed", refresh_path).addClass "disabled"
 
     # The unsubscribe button now unsubscribes from this feed; it's disabled while the feed loads
-    $("#unsubscribe-feed").attr("data-unsubscribe-feed", feed_id).attr("data-unsubscribe-path", feed_path).addClass "disabled"
+    $("#unsubscribe-feed").attr("data-unsubscribe-feed", feed_id).attr("data-unsubscribe-path", feed_path)
+      .attr("data-unsubscribe-folder", folder_id).addClass "disabled"
 
     # The Folder Management button is disabled while the feed loads
     $("#folder-management").addClass "disabled"
 
-    folder_id = $(this).attr "data-folder-id"
-    folder_id ||= "none"
     # Mark with a tick the folder in the dropdown
     $("#folder-management-dropdown a[data-folder-id] i.icon-ok").addClass "hidden"
     $("#folder-management-dropdown a[data-folder-id='#{folder_id}'] i.icon-ok").removeClass "hidden"

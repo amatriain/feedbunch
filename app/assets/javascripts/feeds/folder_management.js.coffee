@@ -1,4 +1,5 @@
 #= require ./alert_hiding
+#= require ./shared_functions
 
 $(document).ready ->
 
@@ -21,7 +22,7 @@ $(document).ready ->
       else
         if data["old_folder"]
           if data["old_folder"]["empty"]
-            remove_folder data["old_folder"]["id"]
+            Application.remove_folder data["old_folder"]["id"]
           else
             remove_feed_from_folders feed_id
         insert_feed_in_folder feed_id, folder_id, data["new_folder"]
@@ -43,7 +44,7 @@ $(document).ready ->
       if xhr.status == 205
         # If the return status is 205, remove the folder (there are no more feeds in it)
         old_folder_id = find_feed_folder feed_id
-        remove_folder old_folder_id
+        Application.remove_folder old_folder_id
       else
         # If the return status is 204, remove the feed from the folder but not the folder itself (it has more feeds)
         remove_feed_from_folders feed_id
@@ -80,7 +81,7 @@ $(document).ready ->
       else
         if data["old_folder"]
           if data["old_folder"]["empty"]
-            remove_folder data["old_folder"]["id"]
+            Application.remove_folder data["old_folder"]["id"]
           else
             remove_feed_from_folders feed_id
         add_folder data["new_folder"]
@@ -146,13 +147,6 @@ $(document).ready ->
   #-------------------------------------------------------
   find_feed_folder = (feed_id) ->
     return $("#sidebar a[data-sidebar-feed][data-feed-id='#{feed_id}']").attr "data-folder-id"
-
-  #-------------------------------------------------------
-  # Totally remove a folder from the sidebar and the dropdown
-  #-------------------------------------------------------
-  remove_folder = (folder_id) ->
-    $("#sidebar #folder-#{folder_id}").remove()
-    $("#folder-management-dropdown a[data-folder-id='#{folder_id}']").parent().remove()
 
   #-------------------------------------------------------
   # Add a new folder to the sidebar and the dropdown

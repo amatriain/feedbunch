@@ -145,8 +145,68 @@ describe 'unsubscribe from feed' do
     page.should have_css "li#folder-all ul#feeds-all a[data-feed-id='#{@feed1.id}']", visible: false
   end
 
-  it 'still shows folders with feeds'
+  it 'removes folders without feeds', js: true do
+    # @user has folder, and @feed1 is in it.
+    folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder
+    folder.feeds << @feed1
 
-  it 'makes disappear folders without feeds'
+    visit feeds_path
+    read_feed @feed1.id
+
+    find('#unsubscribe-feed').click
+    sleep 1
+    find('#unsubscribe-submit').click
+    sleep 1
+
+    # folder should be deleted from the database
+    Folder.exists?(folder.id).should be_false
+
+    # Folder should be removed from the sidebar
+    within '#sidebar #folders-list' do
+      page.should_not have_content folder.title
+    end
+    page.should_not have_css "#folders-list li[data-folder-id='#{folder.id}']"
+
+    read_feed @feed2.id
+    # Folder should be removed from the dropdown
+    find('#folder-management').click
+    within '#folder-management-dropdown ul.dropdown-menu' do
+      page.should_not have_content folder.title
+      page.should_not have_css "a[data-folder-id='#{folder.id}']"
+    end
+  end
+
+  it 'does not remove folders with feeds', js: true do
+    # @user has folder, and @feed1, @feed2 are in it.
+    folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder
+    folder.feeds << @feed1 << @feed2
+
+    visit feeds_path
+    read_feed @feed1.id
+
+    find('#unsubscribe-feed').click
+    sleep 1
+    find('#unsubscribe-submit').click
+    sleep 1
+
+    # folder should not be deleted from the database
+    Folder.exists?(folder.id).should be_true
+
+    # Folder should not be removed from the sidebar
+    within '#sidebar #folders-list' do
+      page.should have_content folder.title
+    end
+    page.should have_css "#folders-list li[data-folder-id='#{folder.id}']"
+
+    read_feed @feed2.id
+    # Folder should not be removed from the dropdown
+    find('#folder-management').click
+    within '#folder-management-dropdown ul.dropdown-menu' do
+      page.should have_content folder.title
+      page.should have_css "a[data-folder-id='#{folder.id}']"
+    end
+  end
 
 end
