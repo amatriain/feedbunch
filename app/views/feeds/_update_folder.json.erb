@@ -1,0 +1,20 @@
+<% self.formats = [:html] %>
+
+{
+  "new_folder": <%=
+    {
+      id: new_folder.id,
+      sidebar: render(partial: 'feeds/sidebar_feed', locals: {feed: feed}, layout: false)
+    }.to_json.html_safe
+  %>
+
+  <% if old_folder.present? %>
+  ,
+  "old_folder": <%=
+    {
+      id: old_folder.id,
+      empty: old_folder.feeds.blank?
+    }.to_json.html_safe
+  %>
+  <% end %>
+}
