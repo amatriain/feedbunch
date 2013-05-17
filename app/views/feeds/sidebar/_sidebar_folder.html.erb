@@ -21,7 +21,9 @@
 
     <%# Links to read each individual feed in the folder %>
     <% feeds.all(order: 'title ASC').each do |feed| %>
-      <%= render 'feeds/sidebar_feed', feed: feed %>
+
+      <%= render 'feeds/sidebar/sidebar_feed', feed: feed %>
+
     <% end %>
   </ul>
 </li>

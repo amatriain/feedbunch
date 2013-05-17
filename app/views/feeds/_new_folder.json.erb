@@ -4,7 +4,7 @@
   "new_folder": <%=
     {
       id: new_folder.id,
-      sidebar: render(partial: 'feeds/sidebar_folder', locals: {feeds: new_folder.feeds, title: new_folder.title, folder_id: new_folder.id}, layout: false),
+      sidebar: render(partial: 'feeds/sidebar/sidebar_folder', locals: {feeds: new_folder.feeds, title: new_folder.title, folder_id: new_folder.id}, layout: false),
       dropdown: render(partial: 'feeds/dropdown_folder', locals: {folder: new_folder}, layout: false)
     }.to_json.html_safe
   %>
