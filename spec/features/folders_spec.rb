@@ -251,6 +251,7 @@ describe 'folders and feeds' do
 
         read_feed @feed2.id
         find('#folder-management').click
+        sleep 1
         within '#folder-management-dropdown ul.dropdown-menu' do
           find("a[data-folder-id='#{@folder1.id}']").click
         end
