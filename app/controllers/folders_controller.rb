@@ -112,7 +112,7 @@ class FoldersController < ApplicationController
         old_folder.reload
         old_folder.destroy if old_folder.feeds.blank?
       end
-      render 'update', locals: {new_folder: new_folder, feed: feed, old_folder: old_folder}
+      render 'update.json.erb', locals: {new_folder: new_folder, feed: feed, old_folder: old_folder}
     end
   rescue AlreadyInFolderError
     # If feed is already associated to the folder, return 304
@@ -181,7 +181,7 @@ class FoldersController < ApplicationController
         old_folder.reload
         old_folder.destroy if old_folder.feeds.blank?
       end
-      render 'create', locals: {new_folder: new_folder, old_folder: old_folder}
+      render 'create.json.erb', locals: {new_folder: new_folder, old_folder: old_folder}
     end
 
   rescue FolderAlreadyExistsError
