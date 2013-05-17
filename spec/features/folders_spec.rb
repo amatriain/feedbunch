@@ -377,7 +377,7 @@ describe 'folders and feeds' do
 
         # data-folder-id attribute should indicate that @feed1 is in the new folder
         new_folder = Folder.where(user_id: @user.id, title: title).first
-        page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
+        page.should have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
       end
 
       it 'removes old folder if it has no more feeds', js: true do
@@ -525,6 +525,37 @@ describe 'folders and feeds' do
           # New folder should be in the dropdown, with a tick to indicate @feed1 is in the folder
           page.should have_css "a[data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}'] i.icon-ok"
         end
+      end
+
+      it 'allows clicking on the dynamically added folder in the dropdown to move another feed into it', js: true do
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+
+        sleep 1
+        title = 'New folder'
+        within '#new-folder-popup' do
+          fill_in 'Title', with: title
+          find('#new-folder-submit').click
+        end
+        sleep 1
+
+        new_folder = Folder.where(user_id: @user.id, title: title).first
+        # data-folder-id attribute should indicate that @feed1 is in the new folder
+        page.should have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
+        # @feed2 is still in no folder
+        page.should have_css "#folder-all a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='none']"
+
+        # Without reloading the page, move @feed2 to the new folder
+        read_feed @feed2.id
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find("a[data-folder-id='#{new_folder.id}']").click
+        end
+
+        # feed2 should have moved to the new folder
+        page.should have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='#{new_folder.id}']"
       end
 
       it 'shows an alert if there is a problem adding the feed to the new folder', js: true do

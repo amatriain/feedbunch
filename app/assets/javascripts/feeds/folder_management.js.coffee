@@ -10,7 +10,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Associate feed with folder clicking on a folder in the dropdown
   #-------------------------------------------------------
-  $("a[data-folder-update-path]").on "click", ->
+  $("body").on "click", "a[data-folder-update-path]", ->
     update_folder_path = $(this).attr "data-folder-update-path"
     feed_id = $(this).attr("data-feed-id")
     folder_id = $(this).attr("data-folder-id")
