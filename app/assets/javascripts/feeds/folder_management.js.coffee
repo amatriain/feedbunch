@@ -65,7 +65,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Submit the "New Folder" form when clicking on the "Add" button
   #-------------------------------------------------------
-  $("body").on "click", $("#new-folder-submit").on "click", ->
+  $("body").on "click", "#new-folder-submit", ->
     $("#form-new-folder").submit()
 
   #-------------------------------------------------------
