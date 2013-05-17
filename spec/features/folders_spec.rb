@@ -37,7 +37,7 @@ describe 'folders and feeds' do
     within '#sidebar' do
       page.should have_content 'All subscriptions'
 
-      within 'li#folder-all' do
+      within '#folders-list li#folder-all' do
         page.should have_css "a[data-target='#feeds-all']"
 
         # "All feeds" folder should be closed (class "in" not present)
@@ -49,8 +49,8 @@ describe 'folders and feeds' do
 
         # Should have all the feeds inside
         within 'ul#feeds-all' do
-          page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
-          page.should have_css "#sidebar li > a[data-feed-id='#{@feed2.id}']"
+          page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
+          page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
         end
       end
     end
@@ -60,7 +60,7 @@ describe 'folders and feeds' do
     within '#sidebar' do
       page.should have_content @folder1.title
 
-      within "li#folder-#{@folder1.id}" do
+      within "#folders-list li#folder-#{@folder1.id}" do
         page.should have_css "a[data-target='#feeds-#{@folder1.id}']"
 
         # Folder should be closed (class "in" not present)
@@ -72,8 +72,8 @@ describe 'folders and feeds' do
 
         # Should have inside only those feeds associated to the folder
         within "ul#feeds-#{@folder1.id}" do
-          page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
-          page.should_not have_css "#sidebar li > a[data-feed-id='#{@feed2.id}']"
+          page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
+          page.should_not have_css "a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
         end
       end
     end
@@ -101,12 +101,11 @@ describe 'folders and feeds' do
       sleep 1
       page.should have_css 'a#folder-management.hidden', visible: false
       page.should have_css 'a#folder-management.disabled', visible: false
-      page.should_not have_css 'a#folder-management'
     end
 
     it 'drops down a list of all user folders', js: true do
       find('#folder-management').click
-      within '#folder-management-dropdown' do
+      within '#folder-management-dropdown ul.dropdown-menu' do
         page.should have_content @folder1.title
       end
     end
@@ -115,7 +114,7 @@ describe 'folders and feeds' do
       find('#folder-management').click
       within '#folder-management-dropdown' do
         page.should have_css 'a[data-folder-id="none"]'
-        page.should have_css "a[data-folder-id='#{@folder1.id}']"
+        page.should have_css 'a[data-folder-id="new"]'
       end
     end
 

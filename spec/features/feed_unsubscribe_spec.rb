@@ -52,7 +52,6 @@ describe 'unsubscribe from feed' do
     sleep 1
     page.should have_css 'a#unsubscribe-feed.hidden', visible: false
     page.should have_css 'a#unsubscribe-feed.disabled', visible: false
-    page.should_not have_css 'a#unsubscribe-feed'
   end
 
   it 'shows a confirmation popup', js: true do

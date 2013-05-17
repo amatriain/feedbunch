@@ -23,8 +23,8 @@ describe 'feeds' do
       @folder2 = FactoryGirl.create :folder
       @user.folders << @folder1
 
-      @feed1 = FactoryGirl.build :feed
-      @feed2 = FactoryGirl.build :feed
+      @feed1 = FactoryGirl.create :feed
+      @feed2 = FactoryGirl.create :feed
       @user.feeds << @feed1 << @feed2
       @folder1.feeds << @feed1
 
@@ -40,12 +40,12 @@ describe 'feeds' do
     end
 
     it 'shows entries for a feed in the All Subscriptions folder', js: true do
-      within '#sidebar li#folder-all' do
+      within '#folders-list li#folder-all' do
         # Open "All feeds" folder
         find("a[data-target='#feeds-all']").click
 
         # click on feed
-        find("#sidebar li > a[data-feed-id='#{@feed2.id}']").click
+        find("a[data-sidebar-feed][data-feed-id='#{@feed2.id}']").click
       end
 
       # Only entries for the clicked feed should appear
@@ -56,12 +56,12 @@ describe 'feeds' do
     end
 
     it 'shows entries for a feed inside a user folder', js: true do
-      within "#sidebar li#folder-#{@folder1.id}" do
+      within "#folders-list li#folder-#{@folder1.id}" do
         # Open folder @folder1
         find("a[data-target='#feeds-#{@folder1.id}']").click
 
         # Click on feed
-        find("#sidebar li > a[data-feed-id='#{@feed1.id}']").click
+        find("a[data-sidebar-feed][data-feed-id='#{@feed1.id}']").click
       end
 
       # Only entries for the clicked feed should appear
