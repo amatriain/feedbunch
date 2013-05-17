@@ -12,6 +12,7 @@ require 'capybara/rails'
 require 'capybara/rspec'
 require 'database_cleaner'
 require 'nokogiri'
+Capybara.javascript_driver = :webkit
 
 # Factories instead of database fixtures
 require 'factory_girl_rails'
