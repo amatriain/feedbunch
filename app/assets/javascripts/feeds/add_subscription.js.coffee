@@ -5,13 +5,13 @@ $(document).ready ->
   #-------------------------------------------------------
   # Submit the "add subscription" form when clicking on the "Add" button
   #-------------------------------------------------------
-  $("#subscribe-submit").on "click", ->
+  $("body").on "click", "#subscribe-submit", ->
     $("#form-subscription").submit()
 
   #-------------------------------------------------------
   # Submit the "add subscription" form via Ajax
   #-------------------------------------------------------
-  $("#form-subscription").on "submit", ->
+  $("body").on "submit", "#form-subscription", ->
 
     # Function to handle result returned by the server
     subscription_result = (data, status, xhr) ->

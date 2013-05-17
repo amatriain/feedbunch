@@ -6,7 +6,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Show unsubscribe confirmation popup (only if button enabled)
   #-------------------------------------------------------
-  $("#unsubscribe-feed").on "click", ->
+  $("body").on "click", "#unsubscribe-feed", ->
     $("#unsubscribe-feed-popup").modal "show" if $(this).hasClass("disabled")==false
 
   #-------------------------------------------------------

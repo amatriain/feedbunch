@@ -35,7 +35,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Remove feed from folders clicking on "None" in the dropdown
   #-------------------------------------------------------
-  $("a[data-folder-remove-path]").on "click", ->
+  $("body").on "click", "a[data-folder-remove-path]", ->
     delete_folder_path = $(this).attr "data-folder-remove-path"
     feed_id = $(this).attr("data-feed-id")
 
@@ -59,19 +59,19 @@ $(document).ready ->
   #-------------------------------------------------------
   # Show "New folder" popup when clicking on New Folder in the dropdown
   #-------------------------------------------------------
-  $("a[data-new-folder-path]").on "click", ->
+  $("body").on "click", "a[data-new-folder-path]", ->
     $("#new-folder-popup").modal "show"
 
   #-------------------------------------------------------
   # Submit the "New Folder" form when clicking on the "Add" button
   #-------------------------------------------------------
-  $("#new-folder-submit").on "click", ->
+  $("body").on "click", $("#new-folder-submit").on "click", ->
     $("#form-new-folder").submit()
 
   #-------------------------------------------------------
   # Submit the "New Folder" form via Ajax
   #-------------------------------------------------------
-  $("#form-new-folder").on "submit", ->
+  $("body").on "submit", "#form-new-folder", ->
     feed_id = $("#new_folder_feed_id", this).val()
 
     # Function to handle result returned by the server

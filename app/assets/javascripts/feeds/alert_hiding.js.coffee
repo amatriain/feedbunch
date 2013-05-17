@@ -5,7 +5,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Hide alerts when clicking the close button
   #-------------------------------------------------------
-  $("button[data-hide]").on "click", ->
+  $("body").on "click", "button[data-hide]", ->
     $(this).parent().parent().addClass 'hidden'
 
   #-------------------------------------------------------

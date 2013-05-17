@@ -3,7 +3,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Dynamic styling when clicking on the sidebar folders
   #-------------------------------------------------------
-  $(".menu-level1").on "click", ->
+  $("body").on "click", ".menu-level1", ->
     $(this).children("i.arrow").toggleClass "icon-chevron-right"
     $(this).children("i.arrow").toggleClass "icon-chevron-down"
     $(this).children("i.folder").toggleClass "icon-folder-close-alt"
@@ -27,11 +27,11 @@ $(document).ready ->
   #-------------------------------------------------------
   # Give focus to the text input field when showing the "Add subscription" modal.
   #-------------------------------------------------------
-  $("#subscribe-feed-popup").on 'shown',  ->
+  $("body").on "shown", "#subscribe-feed-popup",  ->
     $("#subscription_rss", this).focus()
 
   #-------------------------------------------------------
   # Give focus to the text input field when showing the "New folder" modal.
   #-------------------------------------------------------
-  $("#new-folder-popup").on 'shown',  ->
+  $("body").on "shown", "#new-folder-popup",  ->
     $("#new_folder_title", this).focus()

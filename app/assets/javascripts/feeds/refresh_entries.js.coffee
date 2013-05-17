@@ -5,7 +5,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Load new feed entries when clicking on the Refresh button (only if button enabled)
   #-------------------------------------------------------
-  $("#refresh-feed").on "click", ->
+  $("body").on "click", "#refresh-feed", ->
     if $(this).hasClass("disabled") == false
       feed_path = $(this).attr "data-refresh-feed"
       # Only refresh if the data-refresh-feed attribute has a reference to a feed id

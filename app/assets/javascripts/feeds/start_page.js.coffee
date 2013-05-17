@@ -3,7 +3,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Show the start page when clicking on the "Start" link
   #-------------------------------------------------------
-  $("#start-page").on "click", ->
+  $("body").on "click", "#start-page", ->
     # Hide feed entries, title, and buttons
     $("#feed-entries").empty().addClass "hidden"
     $("#feed-title a").text ""
