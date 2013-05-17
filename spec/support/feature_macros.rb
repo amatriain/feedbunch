@@ -71,7 +71,7 @@ end
 # Click on a feed to read its entries during acceptance testing
 
 def read_feed(feed_id)
-  within '#sidebar li#folder-all' do
+  within '#sidebar #folders-list li#folder-all' do
     # If "All subscriptions" folder is closed, open it
     if !page.has_css? 'ul#feeds-all.in'
       find("a[data-target='#feeds-all']").click
