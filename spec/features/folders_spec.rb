@@ -40,11 +40,7 @@ describe 'folders and feeds' do
       within '#folders-list li#folder-all' do
         page.should have_css "a[data-target='#feeds-all']"
 
-        # "All feeds" folder should be closed (class "in" not present)
-        page.should_not have_css 'ul#feeds-all.in'
-
-        # Open "All feeds" folder (should acquire class "in")
-        find("a[data-target='#feeds-all']").click
+        # "All feeds" folder should be open (class "in" present)
         page.should have_css 'ul#feeds-all.in'
 
         # Should have all the feeds inside
@@ -63,11 +59,7 @@ describe 'folders and feeds' do
       within "#folders-list li#folder-#{@folder1.id}" do
         page.should have_css "a[data-target='#feeds-#{@folder1.id}']"
 
-        # Folder should be closed (class "in" not present)
-        page.should_not have_css "ul#feeds-#{@folder1.id}.in"
-
-        # Open folder (should acquire class "in")
-        find("a[data-target='#feeds-#{@folder1.id}']").click
+        # Folder should be open (class "in" present)
         page.should have_css "ul#feeds-#{@folder1.id}.in"
 
         # Should have inside only those feeds associated to the folder
@@ -148,7 +140,9 @@ describe 'folders and feeds' do
 
       it 'adds a feed to an existing folder', js: true do
         read_feed @feed2.id
+        sleep 1
         find('#folder-management').click
+        sleep 1
         within '#folder-management-dropdown ul.dropdown-menu' do
           # While reading a feed that is not in a folder, click on an existing folder in the dropdown menu
           find("a[data-folder-id='#{@folder1.id}']").click

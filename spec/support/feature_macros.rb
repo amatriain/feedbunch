@@ -68,15 +68,32 @@ def mail_should_not_be_sent
 end
 
 ##
-# Click on a feed to read its entries during acceptance testing
+# Open a folder in the sidebar. Receives the folder id as argument, accepts "all" to open
+# the All Subscriptions folder.
 
-def read_feed(feed_id)
-  within '#sidebar #folders-list li#folder-all' do
-    # If "All subscriptions" folder is closed, open it
-    if !page.has_css? 'ul#feeds-all.in'
-      find("a[data-target='#feeds-all']").click
-    end
+def open_folder(folder_id)
+  # Open folder only if it is closed
+  if !page.has_css? "#folders-list ul#feeds-#{folder_id}.in"
+    find("a[data-target='#feeds-#{folder_id}']").click
+  end
+end
 
+##
+# Click on a feed to read its entries during acceptance testing. Receives as arguments:
+#
+# - feed_id: mandatory argument, with the id of the id of the feed to read.
+# - folder_id: optional argument, with the id of the folder under which the feed will be clicked.
+#
+# The folder_id argument accepts the value "all"; this means the feed will be clicked under the All Subscriptions
+# folder.
+#
+# If the folder_id argument is not present, it defaults to "all".
+#
+# If the feed is not under the folder passed as argument, the test will immediately fail.
+
+def read_feed(feed_id, folder_id = 'all')
+  open_folder folder_id
+  within "#folders-list li#folder-#{folder_id}" do
     page.should have_css "[data-sidebar-feed][data-feed-id='#{feed_id}']"
 
     # Click on feed to read its entries

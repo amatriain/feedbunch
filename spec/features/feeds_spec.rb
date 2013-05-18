@@ -40,13 +40,7 @@ describe 'feeds' do
     end
 
     it 'shows entries for a feed in the All Subscriptions folder', js: true do
-      within '#folders-list li#folder-all' do
-        # Open "All feeds" folder
-        find("a[data-target='#feeds-all']").click
-
-        # click on feed
-        find("a[data-sidebar-feed][data-feed-id='#{@feed2.id}']").click
-      end
+      read_feed @feed2.id, 'all'
 
       # Only entries for the clicked feed should appear
       page.should have_content @entry2_1.title
@@ -56,13 +50,7 @@ describe 'feeds' do
     end
 
     it 'shows entries for a feed inside a user folder', js: true do
-      within "#folders-list li#folder-#{@folder1.id}" do
-        # Open folder @folder1
-        find("a[data-target='#feeds-#{@folder1.id}']").click
-
-        # Click on feed
-        find("a[data-sidebar-feed][data-feed-id='#{@feed1.id}']").click
-      end
+      read_feed @feed1.id, @folder1.id
 
       # Only entries for the clicked feed should appear
       page.should have_content @entry1_1.title

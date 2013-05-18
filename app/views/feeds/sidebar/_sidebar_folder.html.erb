@@ -2,11 +2,11 @@
 
   <%# Link to open the folder (initialy it's closed) %>
   <a data-toggle="collapse" data-target="#feeds-<%= folder_id %>" class="menu-level1">
-    <i class="folder icon-folder-close-alt"></i> <%= title %><i class="arrow icon-chevron-right pull-right"></i>
+    <i class="folder icon-folder-open-alt"></i> <%= title %><i class="arrow icon-chevron-down pull-right"></i>
   </a>
 
   <%# Content of the folder (initially hidden) %>
-  <ul class="nav nav-list collapse" id="feeds-<%= folder_id %>">
+  <ul class="nav nav-list collapse in" id="feeds-<%= folder_id %>">
 
     <%# Link to read all feeds in the folder in a single list of entries %>
     <li id="folder-<%= folder_id %>-all-feeds">
