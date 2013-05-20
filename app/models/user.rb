@@ -45,6 +45,16 @@ class User < ActiveRecord::Base
   has_many :entries, through: :feeds
   has_many :entry_states, dependent: :destroy, uniq: true
 
+  ##
+  # Retrieve entries from the feed passed as argument that are marked as unread for this user.
+  #
+  # Returns an ActiveRecord::Relation with the entries.
+
+  def unread_feed_entries(feed_id)
+    entries = Entry.joins(:entry_states, :feed).where entry_states: {read: false, user_id: self.id}, feeds: {id: feed_id}
+    return entries
+  end
+
   private
 
   ##

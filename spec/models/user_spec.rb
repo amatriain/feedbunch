@@ -142,6 +142,25 @@ describe User do
       @user.entry_states.count.should eq 1
       @user.entry_states.where(user_id: @user.id, entry_id: entry2.id).should be_present
     end
+
+    it 'retrieves unread entries in a feed' do
+      feed = FactoryGirl.create :feed
+      entry1 = FactoryGirl.build :entry, feed_id: feed.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed.id
+      entry3 = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry1 << entry2 << entry3
+      @user.feeds << feed
+
+      # Mark one of the three entries as read by user
+      entry_state = EntryState.where(entry_id: entry3.id, user_id: @user.id).first
+      entry_state.read = true
+      entry_state.save!
+
+      entries = @user.unread_feed_entries feed.id
+      entries.count.should eq 2
+      entries.should include entry1
+      entries.should include entry2
+    end
   end
 
 end
