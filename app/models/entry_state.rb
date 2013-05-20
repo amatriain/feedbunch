@@ -7,6 +7,8 @@
 # Also, each entry-state belongs to a single entry, and each entry can have many entry-states, one for each user
 # subscribed to its feed (one-to-many relationship).
 #
+# A given entry can have at most one entry_state for a given user.
+#
 # The model fields are:
 #
 # - read: boolean. Mandatory. Indicates whether a user has read an entry or not.
@@ -22,9 +24,9 @@ class EntryState < ActiveRecord::Base
   attr_accessible :read, :user_id, :entry_id, as: :admin
 
   belongs_to :user
-  validates :user_id, presence: true
+  validates :user_id, presence: true, uniqueness: {scope: :entry_id}
   belongs_to :entry
-  validates :entry_id, presence: true
+  validates :entry_id, presence: true, uniqueness: {scope: :user_id}
 
   validates :read, inclusion: {in: [true, false]}
 end
