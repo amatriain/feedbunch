@@ -4,7 +4,6 @@ describe Entry do
 
   before :each do
     @entry = FactoryGirl.create :entry
-    @entry.should be_valid
   end
 
   context 'validations' do
@@ -93,6 +92,37 @@ describe Entry do
       sanitized_guid = 'guid'
       entry = FactoryGirl.create :entry, guid: unsanitized_guid
       entry.guid.should eq sanitized_guid
+    end
+  end
+
+  context 'read/unread state' do
+
+    it 'retrieves the read/unread states of an entry for subscribed users' do
+      entry_state1 = FactoryGirl.build :entry_state, entry_id: @entry.id
+      entry_state2 = FactoryGirl.build :entry_state, entry_id: @entry.id
+      @entry.entry_states << entry_state1 << entry_state2
+
+      @entry.entry_states.count.should eq 2
+      @entry.entry_states.should include entry_state1
+      @entry.entry_states.should include entry_state2
+    end
+
+    it 'deletes entry states when deleting an entry' do
+      entry_state1 = FactoryGirl.build :entry_state, entry_id: @entry.id
+      entry_state2 = FactoryGirl.build :entry_state, entry_id: @entry.id
+      @entry.entry_states << entry_state1 << entry_state2
+
+      EntryState.all.count.should eq 2
+      @entry.destroy
+      EntryState.all.count.should eq 0
+    end
+
+    it 'does not allow duplicate entry states' do
+      entry_state = FactoryGirl.build :entry_state, entry_id: @entry.id
+      @entry.entry_states << entry_state
+      @entry.entry_states << entry_state
+
+      @entry.entry_states.count.should eq 1
     end
   end
 end

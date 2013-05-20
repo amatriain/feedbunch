@@ -19,7 +19,10 @@
 # belongs to a single user (one-to-many relationship).
 #
 # A relationship is also established between User and Entry models, through the Feed model. This enables us to retrieve
-# all entries for all feeds a user is suscribed to.
+# all entries for all feeds a user is subscribed to.
+#
+# A relationship is also established between User and Entry-state models. This enables us to retrieve the state of
+# all entries for all feeds a user is subscribed to.
 #
 # It is not mandatory that a user be suscribed to any feeds (in fact when a user first signs up he won't
 # have any suscriptions).
@@ -38,4 +41,5 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :feeds, uniq: true
   has_many :folders, dependent: :destroy, uniq: true
   has_many :entries, through: :feeds
+  has_many :entry_states, dependent: :destroy, uniq: true
 end

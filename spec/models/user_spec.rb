@@ -65,4 +65,34 @@ describe User do
     @user.folders.count.should eq 1
     @user.folders.first.should eq folder
   end
+
+  it 'retrieves entry states for subscribed feeds' do
+    entry_state1 = FactoryGirl.build :entry_state, user_id: @user.id
+    entry_state2 = FactoryGirl.build :entry_state, user_id: @user.id
+    @user.entry_states << entry_state1
+    @user.entry_states << entry_state2
+
+
+    @user.entry_states.count.should eq 2
+    @user.entry_states.should include entry_state1
+    @user.entry_states.should include entry_state2
+  end
+
+  it 'deletes entry states when deleting a user' do
+    entry_state = FactoryGirl.build :entry_state, user_id: @user.id
+    @user.entry_states << entry_state
+
+    EntryState.count.should eq 1
+    @user.destroy
+    EntryState.count.should eq 0
+  end
+
+  it 'does not allow duplicate entry states' do
+    entry_state = FactoryGirl.build :entry_state, user_id: @user.id
+    @user.entry_states << entry_state
+    @user.entry_states << entry_state
+
+    @user.entry_states.count.should eq 1
+  end
+
 end

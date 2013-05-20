@@ -6,6 +6,9 @@
 #
 # Each entry belongs to exactly one feed.
 #
+# Each entry has many entry-states, exactly one for each user subscribed to the feed. each entry-state indicates
+# whether each user has read or not this entry.
+#
 # Each entry is uniquely identified by its guid. Duplicate guids are not allowed.
 #
 # Attributes of the model:
@@ -30,6 +33,8 @@ class Entry < ActiveRecord::Base
 
   belongs_to :feed
   validates :feed_id, presence: true
+
+  has_many :entry_states, dependent: :destroy, uniq: true
 
   validates :title, presence: true
   validates :url, presence: true, format: {with: /\Ahttps?:\/\/.+\..+\z/}
