@@ -149,11 +149,14 @@ describe Entry do
       user1.feeds << feed
       user2.feeds << feed
 
+      user1.entry_states.count.should eq 1
+      user2.entry_states.count.should eq 1
+
       entry.summary = "changed summary"
       entry.save!
 
-      user1.entry_states.count.should eq 0
-      user2.entry_states.count.should eq 0
+      user1.entry_states.count.should eq 1
+      user2.entry_states.count.should eq 1
     end
 
     it 'does not save read/unread information for unsubscribed users' do
