@@ -48,10 +48,15 @@ class User < ActiveRecord::Base
   ##
   # Retrieve entries from the feed passed as argument that are marked as unread for this user.
   #
-  # Returns an ActiveRecord::Relation with the entries.
+  # Returns an ActiveRecord::Relation with the entries if successful.
+  #
+  # If the user is not subscribed to the feed an ActiveRecord::RecordNotFound error is raised.
 
   def unread_feed_entries(feed_id)
-    entries = Entry.joins(:entry_states, :feed).where entry_states: {read: false, user_id: self.id}, feeds: {id: feed_id}
+    # ensure user is subscribed to the feed
+    feed = self.feeds.find feed_id
+
+    entries = Entry.joins(:entry_states, :feed).where entry_states: {read: false, user_id: self.id}, feeds: {id: feed.id}
     return entries
   end
 

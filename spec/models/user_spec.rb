@@ -161,6 +161,14 @@ describe User do
       entries.should include entry1
       entries.should include entry2
     end
+
+    it 'raises an error trying to retrieve unread entries from an unsubscribed feed' do
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+
+      expect {@user.unread_feed_entries feed.id}.to raise_error ActiveRecord::RecordNotFound
+    end
   end
 
 end
