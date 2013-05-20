@@ -19,6 +19,7 @@
 
 class EntryState < ActiveRecord::Base
   attr_accessible :read
+  attr_accessible :read, :user_id, :entry_id, as: :admin
 
   belongs_to :user
   validates :user_id, presence: true

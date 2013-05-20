@@ -6,8 +6,12 @@
 #
 # Each entry belongs to exactly one feed.
 #
-# Each entry has many entry-states, exactly one for each user subscribed to the feed. each entry-state indicates
+# Each entry has many entry-states, exactly one for each user subscribed to the feed. Each entry-state indicates
 # whether each user has read or not this entry.
+#
+# When a new entry is saved in the database for the first time, it is marked as unread for all users subscribed to
+# its feed (by saving as many entry_state instances as subscribed users into the database, all of them with the attribute
+# "read" set to false).
 #
 # Each entry is uniquely identified by its guid. Duplicate guids are not allowed.
 #
@@ -41,6 +45,7 @@ class Entry < ActiveRecord::Base
   validates :guid, presence: true, uniqueness: {case_sensitive: false}
 
   before_validation :sanitize_fields
+  after_create :set_unread_state
 
   private
 
@@ -57,5 +62,16 @@ class Entry < ActiveRecord::Base
     self.content = sanitize self.content
     self.summary = sanitize self.summary
     self.guid = sanitize self.guid
+  end
+
+  ##
+  # For each user subscribed to this entry's feed, save an entry_state instance with the "read" attribute set to false.
+  #
+  # Or in layman's terms: mark this entry as unread for all users subscribed to the feed.
+
+  def set_unread_state
+    self.feed.users.each do |user|
+      entry_state = user.entry_states.create({entry_id: self.id, read: false}, as: :admin)
+    end
   end
 end

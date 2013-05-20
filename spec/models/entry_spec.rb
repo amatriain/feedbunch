@@ -124,5 +124,50 @@ describe Entry do
 
       @entry.entry_states.count.should eq 1
     end
+
+    it 'marks an entry as unread for all subscribed users when first saving it' do
+      feed = FactoryGirl.create :feed
+      user1 = FactoryGirl.create :user
+      user2 = FactoryGirl.create :user
+      user1.feeds << feed
+      user2.feeds << feed
+
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      entry.save!
+
+      user1.entry_states.count.should eq 1
+      user1.entry_states.where(entry_id: entry.id, read: false).should be_present
+      user2.entry_states.count.should eq 1
+      user2.entry_states.where(entry_id: entry.id, read: false).should be_present
+    end
+
+    it 'does not change read/unread state when updating an already saved entry' do
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.create :entry, feed_id: feed.id
+      user1 = FactoryGirl.create :user
+      user2 = FactoryGirl.create :user
+      user1.feeds << feed
+      user2.feeds << feed
+
+      entry.summary = "changed summary"
+      entry.save!
+
+      user1.entry_states.count.should eq 0
+      user2.entry_states.count.should eq 0
+    end
+
+    it 'does not save read/unread information for unsubscribed users' do
+      feed = FactoryGirl.create :feed
+      user1 = FactoryGirl.create :user
+      user2 = FactoryGirl.create :user
+      user1.feeds << feed
+
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      entry.save!
+
+      user1.entry_states.count.should eq 1
+      user1.entry_states.where(entry_id: entry.id, read: false).should be_present
+      user2.entry_states.count.should eq 0
+    end
   end
 end
