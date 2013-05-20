@@ -27,7 +27,7 @@ class FeedsController < ApplicationController
   # If the requests asks for a feed the current user is not suscribed to, the response is a 404 error code (Not Found).
 
   def show
-    @entries = current_user.feeds.find(params[:id]).entries
+    @entries = current_user.unread_feed_entries params[:id]
 
     if @entries.present?
       respond_with @entries, layout: false

@@ -8,10 +8,10 @@ describe 'feed entries' do
 
     @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
-    @user.feeds << @feed
     @entry1 = FactoryGirl.build :entry, feed_id: @feed.id
     @entry2 = FactoryGirl.build :entry, feed_id: @feed.id
     @feed.entries << @entry1 << @entry2
+    @user.feeds << @feed
 
     login_user_for_feature @user
     visit feeds_path
@@ -50,6 +50,19 @@ describe 'feed entries' do
       page.should have_content @entry2.summary
     end
   end
+
+  it 'by default only shows unread entries in a feed', js: true do
+    entry_state = EntryState.where(entry_id: @entry1.id, user_id: @user.id ).first
+    entry_state.read = true
+    entry_state.save!
+
+    read_feed @feed.id
+
+    page.should have_content @entry2.title
+    page.should_not have_content @entry1.title
+  end
+
+  it 'by default only shows unread entries in a folder'
 
   it 'marks as read an entry when opening it'
 

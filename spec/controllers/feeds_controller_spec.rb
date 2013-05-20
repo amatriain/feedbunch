@@ -67,6 +67,24 @@ describe FeedsController do
       FeedClient.should_not_receive(:fetch).with @feed1.id
       get :show, id: @feed1.id
     end
+
+    it 'assigns to @entries only unread entries by default' do
+      feed3 = FactoryGirl.create :feed
+      entry1 = FactoryGirl.build :entry, feed_id: feed3.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed3.id
+      entry3 = FactoryGirl.build :entry, feed_id: feed3.id
+      feed3.entries << entry1 << entry2 << entry3
+      @user.feeds << feed3
+
+      entry_state3 = EntryState.where(entry_id: entry3.id, user_id: @user.id).first
+      entry_state3.read = true
+      entry_state3.save!
+
+      get :show, id: feed3.id
+      assigns(:entries).count.should eq 2
+      assigns(:entries).should include entry1
+      assigns(:entries).should include entry2
+    end
   end
 
   context 'GET refresh' do
