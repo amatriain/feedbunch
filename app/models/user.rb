@@ -65,6 +65,33 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Retrieve entries in the folder passed as argument that are marked as unread for this user.
+  # In this context, "entries in the folder" means "entries from all feeds in the folder".
+  #
+  # Receives as argument the id of the folder from which to retrieve entries. The special value
+  # "all" means that unread entries should be retrieved from ALL subscribed feeds.
+  #
+  # Raises an ActiveRecord;;RecordNotFound error if the folder does not belong to the user.
+  #
+  # If successful, returns an ActiveRecord::Relation with the entries.
+
+  def unread_folder_entries(folder_id)
+    if folder_id == 'all'
+      Rails.logger.info "User #{self.id} - #{self.email} is retrieving unread entries from all subscribed feeds"
+      entries = Entry.joins(:entry_states).where entry_states: {read: false, user_id: self.id}
+    else
+      # ensure folder belongs to user
+      folder = self.folders.find folder_id
+
+      Rails.logger.info "User #{self.id} - #{self.email} is retrieving unread entries from folder #{folder.id} - #{folder.title}"
+      entries = Entry.joins(:entry_states, feed: :folders).where entry_states: {read: false, user_id: self.id},
+                                                                 folders: {id: folder_id}
+    end
+
+    return entries
+  end
+
+  ##
   # Refresh a feed; this triggers a fetch of the feed from its server.
   #
   # Receives as argument the id of the feed to refresh.

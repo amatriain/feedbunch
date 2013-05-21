@@ -72,6 +72,7 @@ end
 # the All Subscriptions folder.
 
 def open_folder(folder_id)
+  page.should have_css "#folders-list li#folder-#{folder_id}"
   # Open folder only if it is closed
   if !page.has_css? "#folders-list ul#feeds-#{folder_id}.in"
     find("a[data-target='#feeds-#{folder_id}']").click
@@ -98,5 +99,21 @@ def read_feed(feed_id, folder_id = 'all')
 
     # Click on feed to read its entries
     find("[data-sidebar-feed][data-feed-id='#{feed_id}']").click
+  end
+end
+
+##
+# Click on the "read all subscriptions" link under a folder to read its entries during acceptance testing.
+# Receives as argument:
+#
+# - folder_id: mandatory argument, with the id of the id of the feed to read. It accepts the special value "all",
+# which means clicking on "read all subscriptions" under the All Subscriptions folder.
+#
+# If the folder does not exist, the test will immediately fail.
+
+def read_folder(folder_id)
+  open_folder folder_id
+  within "#folders-list li#folder-#{folder_id}" do
+    find("[data-sidebar-feed][data-feed-id='all']").click
   end
 end

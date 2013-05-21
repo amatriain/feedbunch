@@ -62,7 +62,51 @@ describe 'feed entries' do
     page.should_not have_content @entry1.title
   end
 
-  it 'by default only shows unread entries in a folder'
+  it 'by default only shows unread entries in a folder', js: true do
+    # @feed and feed2 are in a folder
+    feed2 = FactoryGirl.create :feed
+    @user.feeds << feed2
+    entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+    feed2.entries << entry3
+    folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder
+    folder.feeds << @feed << feed2
+
+    # @entry1 is read, @entry2 and entry3 are unread
+    entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+    entry_state1.read = true
+    entry_state1.save!
+
+    visit feeds_path
+    read_folder folder.id
+
+    page.should_not have_content @entry1.title
+    page.should have_content @entry2.title
+    page.should have_content entry3.title
+  end
+
+  it 'by default only shows unread entries when reading all subscriptions', js: true do
+    # @feed is in a folder, feed2 isn't in any folder
+    feed2 = FactoryGirl.create :feed
+    @user.feeds << feed2
+    entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+    feed2.entries << entry3
+    folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder
+    folder.feeds << @feed
+
+    # @entry1 is read, @entry2 and entry3 are unread
+    entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+    entry_state1.read = true
+    entry_state1.save!
+
+    visit feeds_path
+    read_folder 'all'
+
+    page.should_not have_content @entry1.title
+    page.should have_content @entry2.title
+    page.should have_content entry3.title
+  end
 
   it 'marks as read an entry when opening it'
 

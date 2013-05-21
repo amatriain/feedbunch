@@ -435,23 +435,76 @@ describe User do
   end
 
   context 'relationship with folders' do
+    before :each do
+      @folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << @folder
+    end
+
     it 'deletes folders when deleting a user' do
-      folder1 = FactoryGirl.build :folder
-      folder2 = FactoryGirl.build :folder
-      @user.folders << folder1 << folder2
-
-      Folder.count.should eq 2
-
+      Folder.count.should eq 1
       @user.destroy
       Folder.count.should eq 0
     end
 
     it 'does not allow associating to the same folder more than once' do
-      folder = FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << folder
-      @user.folders << folder
       @user.folders.count.should eq 1
-      @user.folders.first.should eq folder
+      @user.folders.should include @folder
+
+      @user.folders << @folder
+
+      @user.folders.count.should eq 1
+      @user.folders.first.should eq @folder
+    end
+
+    it 'retrieves unread entries from a folder' do
+      # feed1 and feed2 are in @folder
+      feed1 = FactoryGirl.create :feed
+      feed2 = FactoryGirl.create :feed
+      @user.feeds << feed1 << feed2
+      entry1 = FactoryGirl.build :entry, feed_id: feed1.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed1.id
+      entry3 = FactoryGirl.build :entry, feed_id: feed1.id
+      feed1.entries << entry1 << entry2
+      feed2.entries << entry3
+      @folder.feeds << feed1 << feed2
+
+      # entry1 is read, entry2 and entry3 are unread
+      entry_state1 = EntryState.where(user_id: @user.id, entry_id: entry1.id).first
+      entry_state1.read = true
+      entry_state1.save!
+
+      entries = @user.unread_folder_entries @folder.id
+      entries.count.should eq 2
+      entries.should include entry2
+      entries.should include entry3
+    end
+
+    it 'retrieves unread entries for all subscribed feeds' do
+      # feed1 is in @folder; feed2 is subscribed, but it's not in any folder
+      feed1 = FactoryGirl.create :feed
+      feed2 = FactoryGirl.create :feed
+      @user.feeds << feed1 << feed2
+      entry1 = FactoryGirl.build :entry, feed_id: feed1.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed1.id
+      entry3 = FactoryGirl.build :entry, feed_id: feed1.id
+      feed1.entries << entry1 << entry2
+      feed2.entries << entry3
+      @folder.feeds << feed1
+
+      # entry1 is read, entry2 and entry3 are unread
+      entry_state1 = EntryState.where(user_id: @user.id, entry_id: entry1.id).first
+      entry_state1.read = true
+      entry_state1.save!
+
+      entries = @user.unread_folder_entries 'all'
+      entries.count.should eq 2
+      entries.should include entry2
+      entries.should include entry3
+    end
+
+    it 'raises an error trying to retrieve entries from a folder that does not belong to the user' do
+      folder2 = FactoryGirl.create :folder
+      expect{@user.unread_folder_entries folder2.id}.to raise_error ActiveRecord::RecordNotFound
     end
   end
 
