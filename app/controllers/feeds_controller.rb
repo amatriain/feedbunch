@@ -63,8 +63,8 @@ class FeedsController < ApplicationController
 
   def create
     url = params[:subscription][:rss]
+    @feed = current_user.subscribe url
 
-    @feed = Feed.subscribe url, current_user.id
     if @feed
       respond_with @feed, layout: false
     else
@@ -128,8 +128,8 @@ class FeedsController < ApplicationController
       # If user is already subscribed to the feed, return 304
       head status: 304
     else
-      Rails.logger.error e.message
-      Rails.logger.error e.backtrace
+      Rails.logger.error error.message
+      Rails.logger.error error.backtrace
       head status: 500
     end
   end

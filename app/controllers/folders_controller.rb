@@ -186,8 +186,8 @@ class FoldersController < ApplicationController
       # If user already has a folder with the same title, return 304
       head status: 304
     else
-      Rails.logger.error e.message
-      Rails.logger.error e.backtrace
+      Rails.logger.error error.message
+      Rails.logger.error error.backtrace
       head status: 500
     end
   end
