@@ -192,7 +192,7 @@ class User < ActiveRecord::Base
       if folder.feeds.blank?
         folder_id = folder.id
         folder.destroy
-        return id
+        return folder_id
       end
     end
 
