@@ -13,12 +13,8 @@ class FeedsController < ApplicationController
     @feeds = current_user.feeds
     @folders = current_user.folders
     respond_with @feeds, @folders
-  rescue ActiveRecord::RecordNotFound
-    head status: 404
   rescue => e
-    Rails.logger.error e.message
-    Rails.logger.error e.backtrace
-    head status: 500
+    handle_error e
   end
 
   ##
@@ -37,12 +33,8 @@ class FeedsController < ApplicationController
     end
 
     return
-  rescue ActiveRecord::RecordNotFound
-    head status: 404
   rescue => e
-    Rails.logger.error e.message
-    Rails.logger.error e.backtrace
-    head status: 500
+    handle_error e
   end
 
   ##
@@ -63,12 +55,8 @@ class FeedsController < ApplicationController
       Rails.logger.warn "Feed #{params[:id]} does not belong to the user or does not exist, returning a 404"
       head status: 404
     end
-  rescue ActiveRecord::RecordNotFound
-    head status: 404
   rescue => e
-    Rails.logger.error e.message
-    Rails.logger.error e.backtrace
-    head status: 500
+    handle_error e
   end
 
   ##
@@ -87,16 +75,8 @@ class FeedsController < ApplicationController
       head status: 404
     end
 
-  rescue AlreadySubscribedError
-    # If user is already subscribed to the feed, return 304
-    head status: 304
-  rescue ActiveRecord::RecordNotFound
-    # This should not happen normally
-    head status: 404
   rescue => e
-    Rails.logger.error e.message
-    Rails.logger.error e.backtrace
-    head status: 500
+    handle_error e
   end
 
   ##
@@ -132,11 +112,27 @@ class FeedsController < ApplicationController
       Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to unsubscribe from feed #{params[:id]} to which he's not subscribed"
       head status: 404
     end
-  rescue ActiveRecord::RecordNotFound
-    head status: 404
   rescue => e
-    Rails.logger.error e.message
-    Rails.logger.error e.backtrace
-    head status: 500
+    handle_error e
+  end
+
+  private
+
+  ##
+  # Handle an error raised during action processing.
+  # It just logs the error and returns an HTTP 500 or 404 error, depending
+  # on the kind of error raised.
+
+  def handle_error(error)
+    if error.is_a? ActiveRecord::RecordNotFound
+      head status: 404
+    elsif error.is_a? AlreadySubscribedError
+      # If user is already subscribed to the feed, return 304
+      head status: 304
+    else
+      Rails.logger.error e.message
+      Rails.logger.error e.backtrace
+      head status: 500
+    end
   end
 end
