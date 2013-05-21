@@ -48,6 +48,8 @@ class User < ActiveRecord::Base
   ##
   # Retrieve entries from the feed passed as argument that are marked as unread for this user.
   #
+  # Receives as argument the id of the feed from which entries are to be retrieved.
+  #
   # Returns an ActiveRecord::Relation with the entries if successful.
   #
   # If the user is not subscribed to the feed an ActiveRecord::RecordNotFound error is raised.
@@ -56,7 +58,29 @@ class User < ActiveRecord::Base
     # ensure user is subscribed to the feed
     feed = self.feeds.find feed_id
 
-    entries = Entry.joins(:entry_states, :feed).where entry_states: {read: false, user_id: self.id}, feeds: {id: feed.id}
+    Rails.logger.info "User #{self.id} - #{self.email} is retrieving unread entries from feed #{feed.id} - #{feed.fetch_url}"
+    entries = Entry.joins(:entry_states, :feed).where entry_states: {read: false, user_id: self.id},
+                                                      feeds: {id: feed.id}
+    return entries
+  end
+
+  ##
+  # Refresh a feed; this triggers a fetch of the feed from its server.
+  #
+  # Receives as argument the id of the feed to refresh.
+  #
+  # Returns an ActiveRecord::Relation with the unread entries for the refreshed feed; this may or may
+  # not contain new entries.
+  #
+  # If the user is not subscribed to the feed an ActiveRecord::RecordNotFound error is raised.
+
+  def refresh_feed(feed_id)
+    # ensure user is subscribed to the feed
+    feed = self.feeds.find feed_id
+
+    Rails.logger.info "User #{self.id} - #{self.email} is refreshing feed #{feed.id} - #{feed.fetch_url}"
+    FeedClient.fetch feed.id
+    entries = self.unread_feed_entries feed.id
     return entries
   end
 

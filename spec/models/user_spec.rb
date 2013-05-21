@@ -169,6 +169,49 @@ describe User do
 
       expect {@user.unread_feed_entries feed.id}.to raise_error ActiveRecord::RecordNotFound
     end
+
+    context 'refresh feed' do
+      before :each do
+        @feed = FactoryGirl.create :feed
+        @user.feeds << @feed
+
+        FeedClient.stub :fetch
+      end
+
+      it 'fetches a feed' do
+        FeedClient.should_receive(:fetch).with @feed.id
+        @user.refresh_feed @feed.id
+      end
+
+      it 'returns unread entries from the feed' do
+        # @user is subscribed to feed2, which has entries entry1, entry2
+        feed2 = FactoryGirl.create :feed
+        entry1 = FactoryGirl.build :entry, feed_id: feed2.id
+        entry2 = FactoryGirl.build :entry, feed_id: feed2.id
+        feed2.entries << entry1 << entry2
+        @user.feeds << feed2
+        # entry1 is read, entry2 is unread
+        entry_state1 = EntryState.where(entry_id: entry1.id, user_id: @user.id).first
+        entry_state1.read = true
+        entry_state1.save!
+        # fetches a new entry (unread by default)
+        entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+        FeedClient.stub :fetch do
+          feed2.entries << entry3
+        end
+
+        # refresh should return the "old" unread entry and the new (just fetched) entry
+        entries = @user.refresh_feed feed2.id
+        entries.count.should eq 2
+        entries.should include entry2
+        entries.should include entry3
+      end
+
+      it 'raises an error trying to refresh a feed the user is not subscribed to' do
+        feed2 = FactoryGirl.create :feed
+        expect {@user.refresh_feed feed2.id}.to raise_error ActiveRecord::RecordNotFound
+      end
+    end
   end
 
 end

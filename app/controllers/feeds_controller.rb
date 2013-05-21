@@ -28,7 +28,7 @@ class FeedsController < ApplicationController
     if @entries.present?
       respond_with @entries, layout: false
     else
-      Rails.logger.warn "Feed #{params[:id]} has no entries or the user is not subscribed to it, returning a 404"
+      Rails.logger.warn "Feed #{params[:id]} has no entries, returning a 404"
       head status: 404
     end
 
@@ -45,16 +45,14 @@ class FeedsController < ApplicationController
   # If the request asks to refresh a folder the user is not suscribed to, the response is a 404 error code (Not Found).
 
   def refresh
-    feed = current_user.feeds.find params[:id]
-    if feed.present?
-      FeedClient.fetch feed.id
-      feed.reload
-      @entries = feed.entries
+    @entries = current_user.refresh_feed params[:id]
+    if @entries.present?
       respond_with @entries, template: 'feeds/show', layout: false
     else
-      Rails.logger.warn "Feed #{params[:id]} does not belong to the user or does not exist, returning a 404"
+      Rails.logger.warn "Feed #{params[:id]} has no entries, returning a 404"
       head status: 404
     end
+
   rescue => e
     handle_error e
   end
