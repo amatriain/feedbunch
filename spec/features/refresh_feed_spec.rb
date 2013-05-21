@@ -99,7 +99,42 @@ describe 'refresh feeds' do
     page.should have_content entry4.title
   end
 
-  it 'only shows unread entries when refreshing all subscribed feeds'
+  it 'only shows unread entries when refreshing all subscribed feeds', js: true do
+    # @feed1 is in folder, feed2 isn't in any folder
+    folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder
+    folder.feeds << @feed1
+    feed2 = FactoryGirl.create :feed
+    @user.feeds << feed2
+
+    entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @feed1.entries << entry2
+    # @entry1 is read, entry2 is unread
+    entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+    entry_state1.read = true
+    entry_state1.save!
+
+    # When refreshing the feed, fetch new unread entries
+    entry3 = FactoryGirl.build :entry, feed_id: @feed1.id
+    entry4 = FactoryGirl.build :entry, feed_id: feed2.id
+    FeedClient.stub :fetch do |feed_id|
+      if feed_id == @feed1.id
+        @feed1.entries << entry3
+      elsif feed_id == feed2.id
+        feed2.entries << entry4
+      end
+    end
+
+    visit feeds_path
+    read_folder 'all'
+    find('a#refresh-feed').click
+
+    # entry2, entry3 and entry4 should appear, @entry1 should not appear because it's already read
+    page.should_not have_content @entry1.title
+    page.should have_content entry2.title
+    page.should have_content entry3.title
+    page.should have_content entry4.title
+  end
 
   it 'refreshes all subscribed feeds inside a folder', js: true do
     folder = FactoryGirl.build :folder, user_id: @user.id
@@ -139,7 +174,34 @@ describe 'refresh feeds' do
     page.should have_content entry4.title
   end
 
-  it 'only shows unread entries when refreshing a whole folder'
+  it 'only shows unread entries when refreshing a whole folder', js: true do
+    # @feed1 is in folder
+    folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder
+    folder.feeds << @feed1
+
+    entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @feed1.entries << entry2
+    # @entry1 is read, entry2 is unread
+    entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+    entry_state1.read = true
+    entry_state1.save!
+
+    # When refreshing the feed, fetch the new unread entry3
+    entry3 = FactoryGirl.build :entry, feed_id: @feed1.id
+    FeedClient.stub :fetch do
+      @feed1.entries << entry3
+    end
+
+    visit feeds_path
+    read_folder folder.id
+    find('a#refresh-feed').click
+
+    # entry2 and entry3 should appear, @entry1 should not appear because it's already read
+    page.should_not have_content @entry1.title
+    page.should have_content entry2.title
+    page.should have_content entry3.title
+  end
 
   it 'shows an alert if there is a problem refreshing a feed', js: true do
     FeedClient.stub(:fetch).and_raise ActiveRecord::RecordNotFound.new

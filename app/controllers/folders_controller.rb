@@ -39,30 +39,11 @@ class FoldersController < ApplicationController
   # If the request asks to refresh a folder that does not belong to the user, the response is an HTTP 404 (Not Found).
 
   def refresh
-    folder_id = params[:id]
+    @entries = current_user.refresh_folder params[:id]
 
-    # If asked for folder_id="all", fetch all feeds
-    if folder_id == 'all'
-      feeds = current_user.feeds
-    else
-      # If asked for a folder_id, fetch feeds inside the folder
-      feeds = current_user.folders.find(folder_id).feeds
-    end
-
-    if feeds.present?
-      feeds.each { |feed| FeedClient.fetch feed.id if current_user.feeds.include? feed }
-
-      # If asked for folder_id="all", respond with entries of all feeds user is subscribed to
-      if folder_id == 'all'
-        current_user.reload
-        @entries = current_user.entries
-      else
-        # If asked for a folder_id, respond with entries for the feeds inside this folder
-        @entries = current_user.folders.find(folder_id).entries
-      end
+    if @entries.present?
       respond_with @entries, template: 'feeds/show', layout: false
     else
-      Rails.error "Found no feeds to refresh in folder #{params[:id]}, user #{current_user.id}, returning a 404"
       head status: 404
     end
   rescue => e
