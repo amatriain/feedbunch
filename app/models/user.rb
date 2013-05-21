@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Subscribe the user to a feed.
+  # Subscribe the user to a feed. Receives as argument the URL of the feed.
   #
   # First it checks if the feed is already in the database. In this case:
   #
@@ -156,6 +156,47 @@ class User < ActiveRecord::Base
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
     raise e
+  end
+
+  ##
+  # Unsubscribes the user from a feed.
+  #
+  # Receives as argument the id of the feed to unsubscribe.
+  #
+  # If the user is not subscribed to the feed, an ActiveRecord::RecordNotFound error is raised.
+  #
+  # If there are no more users subscribed to the feed, it is deleted from the database. This triggers
+  # a deletion of all its entries.
+  #
+  # If the user had associated the feed with a folder, and after unsubscribing there are no more feeds
+  # in the folder, that folder is deleted.
+  #
+  # If successful:
+  # - returns the id of the deleted folder,  if the user had associated the feed with a folder and that
+  # folder has been deleted (because it had no more feeds inside).
+  # - returns nil otherwise (the feed was not in a folder, or the folder still has feeds inside)
+
+  def unsubscribe(feed_id)
+    feed = self.feeds.find feed_id
+    folder = feed.user_folder self
+
+    Rails.logger.info "unsubscribing user #{self.id} - #{self.email} from feed #{feed.id} - #{feed.fetch_url}"
+    self.feeds.delete feed
+
+    if feed.users.blank?
+      Rails.logger.warn "no more users subscribed to feed #{feed.id} - #{feed.fetch_url} . Removing it from the database"
+      feed.destroy
+    end
+
+    if folder.present?
+      if folder.feeds.blank?
+        folder_id = folder.id
+        folder.destroy
+        return id
+      end
+    end
+
+    return nil
   end
 
   private

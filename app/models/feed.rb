@@ -44,32 +44,6 @@ class Feed < ActiveRecord::Base
   before_validation :sanitize_fields
 
   ##
-  # Unsubscribes a user from a feed. This is a class method.
-  #
-  # Receives as arguments the id of the feed to unsubscribe, and the id of the user doing the unsuscribing.
-  #
-  # Returns true if succesfully unsuscribed, false otherwise.
-
-  def self.unsubscribe(feed_id, user_id)
-    user = User.find user_id
-    feed = user.feeds.find feed_id
-
-    Rails.logger.info "unsubscribing user #{user.id} - #{user.email} from feed #{feed.id} - #{feed.fetch_url}"
-    user.feeds.delete feed
-
-    if feed.users.blank?
-      Rails.logger.warn "no more users subscribed to feed #{feed.id} - #{feed.fetch_url} . Removing it from the database"
-      feed.destroy
-    end
-
-    return true
-  rescue => e
-    Rails.logger.error e.message
-    Rails.logger.error e.backtrace
-    return false
-  end
-
-  ##
   # Find the folder to which a feed belongs, for a given user.
   #
   # Receives as argument a user.
@@ -89,30 +63,6 @@ class Feed < ActiveRecord::Base
     end
 
     return folder
-  end
-
-  private
-
-  ##
-  # Before adding a feed to a folder, ensure that the feed is not already in other folders that belong
-  # to the same user. In this case, raise a rollback error.
-
-  def single_user_folder(folder)
-    if self.folders.present?
-      raise ActiveRecord::Rollback if self.folders.where(user_id: folder.user_id).exists?
-    end
-  end
-
-  ##
-  # Sanitize the title and URL of the feed.
-  #
-  # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
-  # Better paranoid than sorry!
-
-  def sanitize_fields
-    self.title = sanitize self.title
-    self.fetch_url = sanitize self.fetch_url
-    self.url = sanitize self.url
   end
 
   ##
@@ -146,6 +96,30 @@ class Feed < ActiveRecord::Base
     end
 
     return matching_feed
+  end
+
+  private
+
+  ##
+  # Before adding a feed to a folder, ensure that the feed is not already in other folders that belong
+  # to the same user. In this case, raise a rollback error.
+
+  def single_user_folder(folder)
+    if self.folders.present?
+      raise ActiveRecord::Rollback if self.folders.where(user_id: folder.user_id).exists?
+    end
+  end
+
+  ##
+  # Sanitize the title and URL of the feed.
+  #
+  # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
+  # Better paranoid than sorry!
+
+  def sanitize_fields
+    self.title = sanitize self.title
+    self.fetch_url = sanitize self.fetch_url
+    self.url = sanitize self.url
   end
 
   ##

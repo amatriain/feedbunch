@@ -142,9 +142,9 @@ describe FeedsController do
 
   context 'DELETE remove' do
 
-    it 'returns 200 if the feed was not in a folder' do
+    it 'returns 204 if the feed was not in a folder' do
       delete :destroy, id: @feed1.id
-      response.status.should eq 200
+      response.status.should eq 204
     end
 
     it 'returns 204 if the feed was in a folder which still has feeds' do
@@ -181,7 +181,7 @@ describe FeedsController do
     end
 
     it 'returns 500 if there is a problem unsubscribing' do
-      Feed.stub unsubscribe: false
+      User.any_instance.stub(:unsubscribe).and_raise StandardError.new
       delete :destroy, id: @feed1.id
       response.status.should eq 500
     end

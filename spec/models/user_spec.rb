@@ -359,6 +359,79 @@ describe User do
         success.should be_false
       end
     end
+
+    context 'unsubscribe from feed' do
+
+      before :each do
+        @feed = FactoryGirl.create :feed
+        @user.feeds << @feed
+      end
+
+      it 'unsubscribes a user from a feed' do
+        @user.feeds.exists?(@feed.id).should be_true
+        @user.unsubscribe @feed.id
+        @user.feeds.exists?(@feed.id).should be_false
+      end
+
+      it 'returns nil if feed was not in a folder' do
+        @user.feeds.exists?(@feed.id).should be_true
+        folder_unchanged = @user.unsubscribe @feed.id
+        folder_unchanged.should be_nil
+      end
+
+      it 'returns nil if feed was in a folder with more feeds' do
+        folder = FactoryGirl.build :folder, user_id: @user.id
+        feed2 = FactoryGirl.create :feed
+        @user.feeds << feed2
+        @user.folders << folder
+        folder.feeds << feed2
+        folder.feeds << @feed
+
+        folder_unchanged = @user.unsubscribe @feed.id
+        folder_unchanged.should be_nil
+      end
+
+      it 'returns folder id if feed was in a folder with no more feeds' do
+        folder = FactoryGirl.build :folder, user_id: @user.id
+        @user.folders << folder
+        folder.feeds << @feed
+
+        folder_unchanged = @user.unsubscribe @feed.id
+        folder_unchanged.should eq folder.id
+      end
+
+      it 'raises error if the user is not subscribed to the feed' do
+        feed2 = FactoryGirl.create :feed
+        expect {@user.unsubscribe feed2.id}.to raise_error ActiveRecord::RecordNotFound
+      end
+
+      it 'raises an error if there is a problem unsubscribing' do
+        User.any_instance.stub(:feeds).and_raise StandardError.new
+        expect {@user.unsubscribe @feed.id}.to raise_error
+      end
+
+      it 'does not change subscriptions to the feed by other users' do
+        user2 = FactoryGirl.create :user
+        user2.feeds << @feed
+
+        @user.feeds.exists?(@feed.id).should be_true
+        user2.feeds.exists?(@feed.id).should be_true
+
+        @user.unsubscribe @feed.id
+        Feed.exists?(@feed.id).should be_true
+        @user.feeds.exists?(@feed.id).should be_false
+        user2.feeds.exists?(@feed.id).should be_true
+      end
+
+      it 'completely deletes feed if there are no more users subscribed' do
+        Feed.exists?(@feed.id).should be_true
+
+        @user.unsubscribe @feed.id
+
+        Feed.exists?(@feed.id).should be_false
+      end
+
+    end
   end
 
   context 'relationship with folders' do

@@ -42,6 +42,8 @@ describe 'refresh feeds' do
     page.should have_content entry2.title
   end
 
+  it 'only shows unread entries when refreshing a single feed'
+
   it 'refreshes all subscribed feeds', js: true do
     feed2 = FactoryGirl.create :feed
     @user.feeds << feed2
@@ -76,6 +78,8 @@ describe 'refresh feeds' do
     page.should have_content entry3.title
     page.should have_content entry4.title
   end
+
+  it 'only shows unread entries when refreshing all subscribed feeds'
 
   it 'refreshes all subscribed feeds inside a folder', js: true do
     folder = FactoryGirl.build :folder, user_id: @user.id
@@ -114,6 +118,8 @@ describe 'refresh feeds' do
     page.should have_content entry3.title
     page.should have_content entry4.title
   end
+
+  it 'only shows unread entries when refreshing a whole folder'
 
   it 'shows an alert if there is a problem refreshing a feed', js: true do
     FeedClient.stub(:fetch).and_raise ActiveRecord::RecordNotFound.new

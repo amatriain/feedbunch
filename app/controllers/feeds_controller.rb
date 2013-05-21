@@ -65,7 +65,7 @@ class FeedsController < ApplicationController
     url = params[:subscription][:rss]
     @feed = current_user.subscribe url
 
-    if @feed
+    if @feed.present?
       respond_with @feed, layout: false
     else
       Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
@@ -81,34 +81,15 @@ class FeedsController < ApplicationController
   # Unsubscribe the authenticated user from the feed passed in the params[:id] param.
   #
   # Return status:
-  # - 200 if the feed was not in any folder
   # - 204 if the feed was in a folder, and it still has feeds
   # - 205 if the feed was in a folder which has been deleted because it had no more feeds
 
   def destroy
-    feed = current_user.feeds.find params[:id]
-    if feed.present?
-      folder = feed.user_folder current_user
-      success = Feed.unsubscribe feed.id, current_user.id
-      if success
-        # If the feed was in a folder, check if it still has feeds
-        if folder.present?
-          folder.reload
-          if folder.feeds.blank?
-            folder.destroy
-            head status: 205
-          else
-            head status: 204
-          end
-        else
-          head status: 200
-        end
-      else
-        head status: 500
-      end
+    deleted_folder = current_user.unsubscribe params[:id]
+    if deleted_folder.present?
+      head status: 205
     else
-      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to unsubscribe from feed #{params[:id]} to which he's not subscribed"
-      head status: 404
+      head status: 204
     end
   rescue => e
     handle_error e
