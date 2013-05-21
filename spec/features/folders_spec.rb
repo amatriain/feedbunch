@@ -241,7 +241,7 @@ describe 'folders and feeds' do
       end
 
       it 'shows an alert if there is a problem adding a feed to a folder', js: true do
-        Folder.stub(:add_feed).and_raise StandardError.new
+        User.any_instance.stub(:add_feed_to_folder).and_raise StandardError.new
 
         read_feed @feed2.id
         find('#folder-management').click
@@ -257,22 +257,6 @@ describe 'folders and feeds' do
         # It should close automatically after 5 seconds
         sleep 5
         page.should have_css 'div#problem-folder-management.hidden', visible: false
-      end
-
-      it 'shows an alert if the feed is already associated with the folder', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          # While reading a feed that is not in a folder, click on an existing folder in the dropdown menu
-          find("a[data-folder-id='#{@folder1.id}']").click
-        end
-
-        # A "feed already in folder" alert should be shown
-        page.should have_css 'div#already-in-folder'
-        page.should_not have_css 'div#already-in-folder.hidden', visible: false
-
-        # It should close automatically after 5 seconds
-        sleep 5
-        page.should have_css 'div#already-in-folder.hidden', visible: false
       end
     end
 
@@ -327,7 +311,8 @@ describe 'folders and feeds' do
       end
 
       it 'shows an alert when there is a problem removing a feed from a folder', js: true do
-        Folder.stub(:remove_feed).and_raise StandardError.new
+        pending
+        User.any_instance.stub(:remove_feed_from_folder).and_raise StandardError.new
 
         find('#folder-management').click
         within '#folder-management-dropdown ul.dropdown-menu' do

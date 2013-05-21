@@ -54,28 +54,9 @@ class FoldersController < ApplicationController
   # Associate a feed with a folder. The current user must own the folder and be subscribed to the feed.
 
   def update
-    folder_id = params[:id]
-    feed_id = params[:feed_id]
-
-    feed = current_user.feeds.find feed_id
-    old_folder = feed.user_folder current_user
-
-    if !current_user.folders.where(id: folder_id).exists?
-      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to add feed #{feed_id} to folder #{folder_id} that does not belong to him"
-      head status: 404
-    elsif feed.blank?
-      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to add folder #{folder_id} to feed #{feed_id} to which he's not subscribed"
-      head status: 404
-    else
-      new_folder = Folder.add_feed folder_id, feed_id
-      feed.reload
-      # If the feed was in a folder before this change and there are no more feeds in the folder, destroy it.
-      if old_folder.present?
-        old_folder.reload
-        old_folder.destroy if old_folder.feeds.blank?
-      end
-      render 'update.json.erb', locals: {new_folder: new_folder, feed: feed, old_folder: old_folder}
-    end
+    changed_data = current_user.add_feed_to_folder params[:feed_id], params[:id]
+    render 'update.json.erb', locals: {new_folder: changed_data[:new_folder],
+                                       feed: changed_data[:feed], old_folder: changed_data[:old_folder]}
   rescue => e
     handle_error e
   end
@@ -92,10 +73,12 @@ class FoldersController < ApplicationController
     else
       folder = Feed.find(feed_id).folders.where(user_id: current_user.id).first
       if folder.blank?
-        raise NotInFolderError.new
+        raise StandardError.new
       end
-      folder_has_feeds = Folder.remove_feed folder.id, feed_id
-      if folder_has_feeds
+      feed = current_user.feeds.find feed_id
+      folder.feeds.delete feed
+      folder_still_exists = Folder.exists? id: folder.id
+      if folder_still_exists
         head status: 204
       else
         head status: 205
@@ -123,7 +106,7 @@ class FoldersController < ApplicationController
       head status: 404
     else
       new_folder = Folder.create_user_folder folder_title, current_user.id
-      new_folder = Folder.add_feed new_folder.id, feed_id
+      new_folder.feeds << feed
       # If the feed was in a folder before this change and there are no more feeds in the folder, destroy it.
       if old_folder.present?
         old_folder.reload
@@ -146,12 +129,6 @@ class FoldersController < ApplicationController
   def handle_error(error)
     if error.is_a? ActiveRecord::RecordNotFound
       head status: 404
-    elsif error.is_a? AlreadyInFolderError
-      # If feed is already associated to the folder, return 304
-      head status: 304
-    elsif error.is_a? NotInFolderError
-      # If feed is not in the folder, return 304
-      head status: 304
     elsif error.is_a? FolderAlreadyExistsError
       # If user already has a folder with the same title, return 304
       head status: 304

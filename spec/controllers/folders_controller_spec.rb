@@ -184,13 +184,13 @@ describe FoldersController do
       response.status.should eq 404
     end
 
-    it 'returns 304 if the feed is already in the folder' do
+    it 'returns 200 if the feed is already in the folder' do
       put :update, id: @folder1.id, feed_id: @feed1.id
-      response.status.should eq 304
+      response.status.should eq 200
     end
 
     it 'returns 500 if there is a problem associating the feed with the folder' do
-      Folder.stub(:add_feed).and_raise StandardError.new
+      User.any_instance.stub(:add_feed_to_folder).and_raise StandardError.new
       put :update, id: @folder1.id, feed_id: @feed3.id
       response.status.should eq 500
     end
@@ -210,6 +210,7 @@ describe FoldersController do
     end
 
     it 'returns 304 if the feed is not in any folder' do
+      pending
       delete :remove, feed_id: @feed3.id
       response.status.should eq 304
     end
@@ -236,7 +237,8 @@ describe FoldersController do
     end
 
     it 'returns 500 if there is a problem removing feed from folder' do
-      Folder.stub(:remove_feed).and_raise StandardError.new
+      pending
+      User.any_instance.stub(:remove_feed_from_folder).and_raise StandardError.new
       delete :remove, feed_id: @feed1.id
       response.status.should eq 500
     end

@@ -22,79 +22,12 @@ class Folder < ActiveRecord::Base
 
   belongs_to :user
   validates :user_id, presence: true
-  has_and_belongs_to_many :feeds, uniq: true, before_add: :single_user_folder
+  has_and_belongs_to_many :feeds, uniq: true, before_add: :single_user_folder, after_remove: :remove_empty_folders
   has_many :entries, through: :feeds
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
 
   before_validation :sanitize_fields
-
-  ##
-  # Add a feed to a folder. This is a class method.
-  #
-  # Receives as arguments the id of the feed and the id of the folder to which it's going to be associated.
-  # If the feed is already associated fo another folder that belongs to the same user (folders belong to a single
-  # user), it removes the feed from the old folder before associating it with the new one. This ensures that, from
-  # a given user's point of view, feeds belong to a single folder.
-  #
-  # If the feed is already associated with the folder, an AlreadyInFolderError is raised.
-  #
-  # Returns the updated folder.
-
-  def self.add_feed(folder_id, feed_id)
-    folder = Folder.find folder_id
-    feed = Feed.find feed_id
-
-    # Check if feed is already associated with folder
-    if folder.feeds.include? feed
-      Rails.logger.warn "Feed #{feed.id} - #{feed.fetch_url} is already associated with folder #{folder.id} - #{folder.title}, nothing to do"
-      raise AlreadyInFolderError.new
-    end
-
-    # Check if feed is already in another folder from the same user
-    old_folder = feed.folders.where(user_id: folder.user_id).first
-    if old_folder.present?
-      Rails.logger.info "Feed #{feed.id} - #{feed.fetch_url} is already in folder #{old_folder} - #{old_folder.title} from user #{folder.user_id}, removing it before associating with new folder"
-      feed.folders.delete old_folder
-    end
-    folder.feeds << feed
-    return folder
-  end
-
-  ##
-  # Remove a feed from a folder. This is a class method.
-  #
-  # Receives as arguments the id of the feed and the id of the folder from which it's going to be removed.
-  #
-  # If after removing the feed there are no more feeds inside the folder, the folder is completely deleted.
-  #
-  # If the feed is not in the passed folder a NotInFolderError is raised.
-  #
-  # Returns true if there are more feeds in the folder after removing this one, false otherwise. This means that
-  # if the method returns true, the folder still exists; if it returns false, this means the folder
-  # has been removed from the database.
-
-  def self.remove_feed(folder_id, feed_id)
-    folder = Folder.find folder_id
-    feed = Feed.find feed_id
-
-    if !folder.feeds.include? feed
-      Rails.logger.warn "Tried to remove feed #{feed.id} - #{feed.fetch_url} from folder #{folder.id} - #{folder.title}, but feed was not in that folder"
-      raise NotInFolderError.new
-    end
-
-    Rails.logger.info "Removing feed #{feed.id} - #{feed.fetch_url} from folder #{folder.id} - #{folder.title}"
-    folder.feeds.delete feed
-
-    if folder.feeds.blank?
-      Rails.logger.info "Folder folder #{folder.id} - #{folder.title} has no more feeds, destroying it"
-      folder.destroy
-      return false
-    else
-      Rails.logger.info "Folder folder #{folder.id} - #{folder.title} has more feeds, it will not be destroyed"
-      return true
-    end
-  end
 
   ##
   # Create a new folder and add it to the list of folders that belong to a user.
@@ -131,12 +64,23 @@ class Folder < ActiveRecord::Base
   end
 
   ##
-  # Before adding a feed to a folder, ensure that the feed is not already in other folders that belong
-  # to the same user. In this case, raise a rollback error.
+  # Before adding a feed to a folder, check if the feed is already in another folder owned
+  # by the same user. In this case, remove it from the old folder before adding it to the new one.
 
   def single_user_folder(feed)
-    if feed.folders.present?
-      raise ActiveRecord::Rollback if feed.folders.where(user_id: self.user_id).exists?
+    old_folder = feed.folders.where(user_id: self.user_id).first
+    if old_folder.present?
+      old_folder.feeds.delete feed
+    end
+  end
+
+  ##
+  # After removing a feed from a folder, check if there are no more feeds in the folder.
+  # In this case, delete the folder from the database.
+
+  def remove_empty_folders(feed)
+    if self.feeds.blank?
+      self.destroy
     end
   end
 end

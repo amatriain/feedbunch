@@ -252,6 +252,42 @@ class User < ActiveRecord::Base
     return nil
   end
 
+  ##
+  # Add a feed to a folder.
+  #
+  # Receives as arguments the id of the feed and the id of the folder.
+  #
+  # The folder must belong to the user, and the user must be subscribed to the feed. If any of these
+  # conditions is not met, an ActiveRecord::RecordNotFound error is raised.
+  #
+  # If the feed was previously in another folder (owned by the same user), it is removed from that folder.
+  # If there are no more feeds in that folder, it is deleted.
+  #
+  # Returns a hash with the following values:
+  # - :feed => the feed which has been added to the folder
+  # - :new_folder => the folder to which the feed has been added
+  # - :old_folder => the folder (owned by this user) in which the feed was previously. This object may have already
+  # been deleted from the database, if there were no more feeds in it. If the feed wasn't in any folder, this key is
+  # not present in the hash
+
+  def add_feed_to_folder(feed_id, folder_id)
+    # Ensure the user is subscribed to the feed and the folder is owned by the user.
+    feed = self.feeds.find feed_id
+    folder = self.folders.find folder_id
+
+    # Retrieve the current folder the feed is in, if any
+    old_folder = feed.user_folder self
+
+    folder.feeds << feed
+
+    changes = {}
+    changes[:new_folder] = folder.reload
+    changes[:feed] = feed.reload
+    changes[:old_folder] = old_folder if old_folder.present?
+
+    return changes
+  end
+
   private
 
   ##
