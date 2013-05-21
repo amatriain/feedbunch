@@ -32,7 +32,7 @@ class FeedClient
   # fetched but passing a false to the "perform_autodiscovery" argument, to avoid entering an infinite loop of
   # HTTP GETs.
   #
-  # Returns true if fetch is successful, false otherwise.
+  # Returns true if fetch is successful, raises an error otherwise.
 
   def self.fetch(feed_id, perform_autodiscovery=true)
     feed = Feed.find feed_id
@@ -57,26 +57,22 @@ class FeedClient
             # This second fetch will not try to perform autodiscovery, to avoid entering an infinite loop.
             return FeedClient.fetch feed.id, false
           else
-            return false
+            raise FeedAutodiscoveryError.new
           end
         else
           Rails.logger.warn "Tried to fetch #{feed.fetch_url} after feed autodiscovery, but the response is not a parseable feed"
-          return false
+          raise FeedAutodiscoveryError.new
         end
       end
     else
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
-      return false
+      raise EmptyResponseError.new
     end
 
     return true
   rescue RestClient::NotModified => e
     Rails.logger.info "Feed #{feed.fetch_url} returned 304 - not modified"
     return true
-  rescue => e
-    Rails.logger.error e.message
-    Rails.logger.error e.backtrace
-    return false
   end
 
   private

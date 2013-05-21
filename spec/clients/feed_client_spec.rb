@@ -25,9 +25,9 @@ describe FeedClient do
     RestClient.stub :get
   end
 
-  it 'downloads the feed XML' do
+  it 'downloads the feed XML and raises an error if response is empty' do
     RestClient.should_receive(:get).with @feed.fetch_url, anything
-    FeedClient.fetch @feed.id
+    expect{FeedClient.fetch @feed.id}.to raise_error EmptyResponseError
   end
 
   context 'RSS 2.0 feed fetching' do
@@ -773,18 +773,16 @@ FEED_XML
 
   context 'error handling' do
 
-    it 'returns false if trying to fetch non-existing feed' do
-      success = FeedClient.fetch 1234567890
-      success.should be_false
+    it 'raises error if trying to fetch non-existing feed' do
+      expect {FeedClient.fetch 1234567890}.to raise_error ActiveRecord::RecordNotFound
     end
 
-    it 'returns false if trying to fetch from an unreachable URL' do
+    it 'raises error if trying to fetch from an unreachable URL' do
       RestClient.stub(:get).and_raise SocketError.new
-      success = FeedClient.fetch @feed.id
-      success.should be_false
+      expect {FeedClient.fetch @feed.id}.to raise_error SocketError
     end
 
-    it 'returns false if trying to fetch from a webpage that does not have feed autodiscovery enabled' do
+    it 'raises error if trying to fetch from a webpage that does not have feed autodiscovery enabled' do
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
 <html>
@@ -798,17 +796,15 @@ WEBPAGE_HTML
       webpage_html.stub headers: {}
       RestClient.stub get: webpage_html
 
-      success = FeedClient.fetch @feed.id
-      success.should be_false
+      expect {FeedClient.fetch @feed.id}.to raise_error FeedAutodiscoveryError
     end
 
-    it 'returns false if trying to perform feed autodiscovery on a malformed webpage' do
+    it 'raises error if trying to perform feed autodiscovery on a malformed webpage' do
       webpage_html = '<!DOCTYPE html><html NOT A VALID HTML AFTER ALL'
       webpage_html.stub headers: {}
       RestClient.stub get: webpage_html
 
-      success = FeedClient.fetch @feed.id
-      success.should be_false
+      expect {FeedClient.fetch @feed.id}.to raise_error FeedAutodiscoveryError
     end
 
     it 'does not enter an infinite loop during autodiscovery if the feed linked is not actually a feed' do
@@ -827,8 +823,7 @@ WEBPAGE_HTML
       RestClient.stub get: webpage_html
 
       RestClient.should_receive(:get).twice
-      success = FeedClient.fetch @feed.id
-      success.should be_false
+      expect {FeedClient.fetch @feed.id}.to raise_error FeedAutodiscoveryError
     end
   end
 end
