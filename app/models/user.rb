@@ -204,14 +204,6 @@ class User < ActiveRecord::Base
         return nil
       end
     end
-
-  rescue AlreadySubscribedError => e
-    # AlreadySubscribedError is re-raised to be handled in the controller
-    raise e
-  rescue => e
-    Rails.logger.error e.message
-    Rails.logger.error e.backtrace
-    raise e
   end
 
   ##
