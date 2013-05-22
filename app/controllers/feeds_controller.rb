@@ -2,6 +2,8 @@
 # Controller to access the Feed model.
 
 class FeedsController < ApplicationController
+  include ControllersErrorHandling
+
   before_filter :authenticate_user!
 
   respond_to :html
@@ -93,25 +95,5 @@ class FeedsController < ApplicationController
     end
   rescue => e
     handle_error e
-  end
-
-  private
-
-  ##
-  # Handle an error raised during action processing.
-  # It just logs the error and returns an HTTP 500 or 404 error, depending
-  # on the kind of error raised.
-
-  def handle_error(error)
-    if error.is_a? ActiveRecord::RecordNotFound
-      head status: 404
-    elsif error.is_a? AlreadySubscribedError
-      # If user is already subscribed to the feed, return 304
-      head status: 304
-    else
-      Rails.logger.error error.message
-      Rails.logger.error error.backtrace
-      head status: 500
-    end
   end
 end
