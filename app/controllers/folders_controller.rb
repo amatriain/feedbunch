@@ -54,9 +54,10 @@ class FoldersController < ApplicationController
   # Associate a feed with a folder. The current user must own the folder and be subscribed to the feed.
 
   def update
-    changed_data = current_user.add_feed_to_folder params[:feed_id], params[:id]
-    render 'update.json.erb', locals: {new_folder: changed_data[:new_folder],
-                                       feed: changed_data[:feed], old_folder: changed_data[:old_folder]}
+    @changed_data = current_user.add_feed_to_folder params[:feed_id], params[:id]
+    render 'update.json.erb', locals: {new_folder: @changed_data[:new_folder],
+                                       feed: @changed_data[:feed],
+                                       old_folder: @changed_data[:old_folder]}
   rescue => e
     handle_error e
   end
@@ -65,24 +66,11 @@ class FoldersController < ApplicationController
   # Remove the feed passed in params[:feed_id] from its current folder.
 
   def remove
-    feed_id = params[:feed_id]
-
-    if !current_user.feeds.where(id: feed_id).exists?
-      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to remove feed #{feed_id} to which he's not subscribed from folders"
-      head status: 404
+    folder_still_exists = current_user.remove_feed_from_folder params[:feed_id]
+    if folder_still_exists
+      head status: 204
     else
-      folder = Feed.find(feed_id).folders.where(user_id: current_user.id).first
-      if folder.blank?
-        raise StandardError.new
-      end
-      feed = current_user.feeds.find feed_id
-      folder.feeds.delete feed
-      folder_still_exists = Folder.exists? id: folder.id
-      if folder_still_exists
-        head status: 204
-      else
-        head status: 205
-      end
+      head status: 205
     end
   rescue => e
     handle_error e

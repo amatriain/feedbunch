@@ -209,10 +209,9 @@ describe FoldersController do
       response.status.should eq 404
     end
 
-    it 'returns 304 if the feed is not in any folder' do
-      pending
+    it 'returns 204 if the feed is not in any folder' do
       delete :remove, feed_id: @feed3.id
-      response.status.should eq 304
+      response.status.should eq 204
     end
 
     it 'returns 204 if the feed is successfully removed from the folder and there are more feeds in the folder' do
@@ -237,7 +236,6 @@ describe FoldersController do
     end
 
     it 'returns 500 if there is a problem removing feed from folder' do
-      pending
       User.any_instance.stub(:remove_feed_from_folder).and_raise StandardError.new
       delete :remove, feed_id: @feed1.id
       response.status.should eq 500

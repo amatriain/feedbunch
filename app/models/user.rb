@@ -278,6 +278,7 @@ class User < ActiveRecord::Base
     # Retrieve the current folder the feed is in, if any
     old_folder = feed.user_folder self
 
+    Rails.logger.info "user #{self.id} - #{self.email} is adding feed #{feed.id} - #{feed.fetch_url} to folder #{folder.id} - #{folder.title}"
     folder.feeds << feed
 
     changes = {}
@@ -286,6 +287,39 @@ class User < ActiveRecord::Base
     changes[:old_folder] = old_folder if old_folder.present?
 
     return changes
+  end
+
+  ##
+  # Remove a feed from its current folder, ir any.
+  #
+  # Receives as argument the id of the feed.
+  #
+  # A feed can only be in a single folder owned by a given user, so it's not necessary to pass the folder id
+  # as an argument, it can be inferred from the user id and feed id.
+  #
+  # The user must be subscribed to the feed. Otherwise an ActiveRecord::RecordNotFound
+  # error is raised.
+  #
+  # If after removing the feed there are no more feeds in the folder, it is deleted.
+  #
+  # Returns a boolean:
+  # - true if the folder has not been deleted (it has more feeds in it)
+  # - false if the folder has been deleted (it had no more feeds)
+
+  def remove_feed_from_folder(feed_id)
+    # Ensure that the user is subscribed to the feed
+    feed = self.feeds.find feed_id
+
+    folder = feed.folders.where(user_id: self.id).first
+    if folder.present?
+      Rails.logger.info "user #{self.id} - #{self.email} is removing feed #{feed.id} - #{feed.fetch_url} from folder #{folder.id} - #{folder.title}"
+      folder.feeds.delete feed
+      return !folder.destroyed?
+    else
+      Rails.logger.info "user #{self.id} - #{self.email} is trying to remove feed #{feed.id} - #{feed.fetch_url} from its folder, but it's not in any folder"
+      return true
+    end
+
   end
 
   private

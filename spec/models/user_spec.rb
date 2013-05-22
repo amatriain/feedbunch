@@ -886,4 +886,55 @@ describe User do
       expect {@user.add_feed_to_folder feed.id, @folder.id}.to raise_error ActiveRecord::RecordNotFound
     end
   end
+
+  context 'remove feed from folder' do
+
+    before :each do
+      @feed = FactoryGirl.create :feed
+      @user.feeds << @feed
+      @folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << @folder
+      @folder.feeds << @feed
+    end
+
+    it 'removes a feed from a folder' do
+      @folder.feeds.count.should eq 1
+      @user.remove_feed_from_folder @feed.id
+      @folder.feeds.count.should eq 0
+    end
+
+    it 'deletes the folder if it is empty' do
+      @user.remove_feed_from_folder @feed.id
+      Folder.exists?(id: @folder.id).should be_false
+    end
+
+    it 'does not delete the folder if it is not empty' do
+      feed2 = FactoryGirl.create :feed
+      @user.feeds << feed2
+      @folder.feeds << feed2
+
+      @user.remove_feed_from_folder @feed.id
+      Folder.exists?(id: @folder.id).should be_true
+    end
+
+    it 'returns true if it the folder still exists' do
+      feed2 = FactoryGirl.create :feed
+      @user.feeds << feed2
+      @folder.feeds << feed2
+
+      folder_exists = @user.remove_feed_from_folder @feed.id
+      folder_exists.should be_true
+    end
+
+    it 'returns false if the folder has been deleted' do
+      folder_exists = @user.remove_feed_from_folder @feed.id
+      folder_exists.should be_false
+    end
+
+    it 'raises an error if the user is not subscribed to the feed' do
+      feed2 = FactoryGirl.create :feed
+      expect {@user.remove_feed_from_folder feed2.id}.to raise_error ActiveRecord::RecordNotFound
+    end
+
+  end
 end

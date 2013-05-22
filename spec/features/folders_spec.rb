@@ -311,7 +311,6 @@ describe 'folders and feeds' do
       end
 
       it 'shows an alert when there is a problem removing a feed from a folder', js: true do
-        pending
         User.any_instance.stub(:remove_feed_from_folder).and_raise StandardError.new
 
         find('#folder-management').click
