@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
-  has_and_belongs_to_many :feeds, uniq: true, after_add: :mark_unread_entries, after_remove: :remove_entry_states
+  has_and_belongs_to_many :feeds, uniq: true, after_add: :mark_unread_entries, after_remove: :removed_feed_subscription
   has_many :folders, dependent: :destroy, uniq: true
   has_many :entries, through: :feeds
   has_many :entry_states, dependent: :destroy, uniq: true
@@ -236,11 +236,6 @@ class User < ActiveRecord::Base
     Rails.logger.info "unsubscribing user #{self.id} - #{self.email} from feed #{feed.id} - #{feed.fetch_url}"
     self.feeds.delete feed
 
-    if feed.users.blank?
-      Rails.logger.warn "no more users subscribed to feed #{feed.id} - #{feed.fetch_url} . Removing it from the database"
-      feed.destroy
-    end
-
     if folder.present?
       if folder.feeds.blank?
         folder_id = folder.id
@@ -364,6 +359,20 @@ class User < ActiveRecord::Base
   def mark_unread_entries(feed)
     feed.entries.each do |entry|
       self.entry_states.create({entry_id: entry.id, read: false},as: :admin)
+    end
+  end
+
+  ##
+  # When a feed is removed from a user's subscriptions, check if there are other users still subscribed to the feed and:
+  # - if there are no subscribed users, delete the feed. This triggers the deletion of all its entries and entry-states.
+  # - if there are still users subscribed, delete all entry-states for the user and the feed.
+
+  def removed_feed_subscription(feed)
+    if feed.users.blank?
+      Rails.logger.warn "no more users subscribed to feed #{feed.id} - #{feed.fetch_url} . Removing it from the database"
+      feed.destroy
+    else
+      remove_entry_states feed
     end
   end
 

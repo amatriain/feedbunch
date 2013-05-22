@@ -431,6 +431,14 @@ describe User do
         Feed.exists?(@feed.id).should be_false
       end
 
+      it 'does not delete feed if there are more users subscribed' do
+        user2 = FactoryGirl.create :user
+        user2.feeds << @feed
+
+        @user.unsubscribe @feed.id
+        Feed.exists?(@feed).should be_true
+      end
+
     end
   end
 
