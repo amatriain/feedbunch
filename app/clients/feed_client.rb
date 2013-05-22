@@ -36,7 +36,32 @@ class FeedClient
 
   def self.fetch(feed_id, perform_autodiscovery=true)
     feed = Feed.find feed_id
+    http_response = fetch_valid_feed feed
 
+    if http_response.present?
+      handle_html_response feed, http_response, perform_autodiscovery
+    end
+
+    return true
+  end
+
+  private
+
+  ##
+  # Fetch a feed, parse it and save received entries in the database.
+  # This method assumes that the document at feed.fetch_url is a valid feed.
+  #
+  # Receives as argument the feed instance to be fetched.
+  #
+  # If there's a problem downloading from feed.fetch_url, raises an error.
+  #
+  # If there's a problem parsing the downloaded document (e.g. if the document
+  # is HTML instead of a valid feed), returns the HTTP response so that other
+  # methods can try to perform feed autodiscovery.
+  #
+  # If the feed is successfully fetched and parsed, returns nil.
+
+  def self.fetch_valid_feed(feed)
     # Calculate HTTP headers to be used for fetching
     headers = fetch_headers feed
 
@@ -48,34 +73,51 @@ class FeedClient
       begin
         # Try to parse the response as a feed
         feed_parse feed, feed_response
+        return nil
       rescue
-        if perform_autodiscovery
-          # If there was a problem parsing the feed assume we've downloaded an HTML webpage, try to perform feed autodiscovery
-          feed = feed_autodiscovery feed, feed_response
-          if feed.present?
-            # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
-            # This second fetch will not try to perform autodiscovery, to avoid entering an infinite loop.
-            return FeedClient.fetch feed.id, false
-          else
-            raise FeedAutodiscoveryError.new
-          end
-        else
-          Rails.logger.warn "Tried to fetch #{feed.fetch_url} after feed autodiscovery, but the response is not a parseable feed"
-          raise FeedAutodiscoveryError.new
-        end
+        return feed_response
       end
     else
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
       raise EmptyResponseError.new
     end
-
-    return true
   rescue RestClient::NotModified => e
     Rails.logger.info "Feed #{feed.fetch_url} returned 304 - not modified"
-    return true
+    return nil
   end
 
-  private
+  ##
+  # Handle an HTTP response assuming it's not a valid feed but probably an HTML document,
+  # maybe with feed autodiscovery enabled.
+  #
+  # Receives as arguments:
+  # - the feed instance that is being fetched
+  # - the http response that could be an HTML document with feed autodiscovery
+  # - a boolean flag that controls whether this method tries to perform feed autodiscovery (if true) or not (if false)
+  #
+  # If perform_autodiscovery is true, and the HTML document has a feed linked in its head, a new fetch of the linked
+  # feed is triggered. However this second fetch will not try to perform feed autodiscovery; this is to avoid the
+  # situation in which a webpage links to itself, which could lead to an infinite loop unless the second fetch does not
+  # perform feed autodiscovery.
+  #
+  # If feed autodiscovery does not finish successfully, an error is raised.
+
+  def self.handle_html_response(feed, http_response, perform_autodiscovery)
+    if perform_autodiscovery
+      # If there was a problem parsing the feed assume we've downloaded an HTML webpage, try to perform feed autodiscovery
+      feed = feed_autodiscovery feed, http_response
+      if feed.present?
+        # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
+        # This second fetch will not try to perform autodiscovery, to avoid entering an infinite loop.
+        return FeedClient.fetch feed.id, false
+      else
+        raise FeedAutodiscoveryError.new
+      end
+    else
+      Rails.logger.warn "Tried to fetch #{feed.fetch_url} after feed autodiscovery, but the response is not a parseable feed"
+      raise FeedAutodiscoveryError.new
+    end
+  end
 
   ##
   # Save feed entries in the database. This is a class method.
