@@ -3,6 +3,8 @@
 
 module ControllersErrorHandling
 
+  private
+
   ##
   # Handle an error raised during action processing.
   # It just logs the error and returns an HTTP status code, depending

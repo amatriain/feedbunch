@@ -84,6 +84,8 @@ module UserSubscriptionHelpers
     return deleted_folder_id
   end
 
+  private
+
   ##
   # Ensure that the URL passed as argument has an http:// or https://schema.
   #
