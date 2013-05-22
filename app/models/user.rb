@@ -344,7 +344,7 @@ class User < ActiveRecord::Base
     # Ensure that the user is subscribed to the feed
     feed = self.feeds.find feed_id
 
-    folder = feed.folders.where(user_id: self.id).first
+    folder = feed.user_folder self
     if folder.present?
       Rails.logger.info "user #{self.id} - #{self.email} is removing feed #{feed.id} - #{feed.fetch_url} from folder #{folder.id} - #{folder.title}"
       folder.feeds.delete feed
