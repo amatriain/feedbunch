@@ -29,28 +29,6 @@ class Folder < ActiveRecord::Base
 
   before_validation :sanitize_fields
 
-  ##
-  # Create a new folder and add it to the list of folders that belong to a user.
-  #
-  # Receives as arguments the title of the new folder and the id of the user to which it will belong.
-  #
-  # If the user already has a folder with the same title, raises a FolderAlreadyExistsError.
-  #
-  # If successful, returns the new folder instance.
-
-  def self.create_user_folder(folder_title, user_id)
-    user = User.find user_id
-
-    if user.folders.where(title: folder_title).present?
-      Rails.logger.info "User #{user.id} - #{user.email} tried to create a new folder with title #{folder_title}, but it already has a folder with that title"
-      raise FolderAlreadyExistsError.new
-    end
-
-    Rails.logger.info "Creating folder with title #{folder_title} for user #{user.id} - #{user.email}"
-    folder = user.folders.create title: folder_title
-    return folder
-  end
-
   private
 
   ##

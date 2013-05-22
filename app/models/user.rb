@@ -290,6 +290,40 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Create a new folder owned by the user, and add a feed to it.
+  #
+  # Receives as arguments the id of the feed and the title of the new folder.
+  #
+  # If the user already has a folder with the same title, raises a FolderAlreadyExistsError.
+  # If the user is not subscribed to the feed, raises an ActiveRecord::RecordNotFound error.
+  #
+  # If the feed was previously in another folder (owned by the same user), it is removed from that folder.
+  # If there are no more feeds in that folder, it is deleted.
+  #
+  # Returns a hash with the following values:
+  # - :new_folder => the newly created folder to which the feed has been added
+  # - :old_folder => the folder (owned by this user) in which the feed was previously. This object may have already
+  # been deleted from the database, if there were no more feeds in it. If the feed wasn't in any folder, this key is
+  # not present in the hash
+
+  def add_feed_to_new_folder(feed_id, folder_title)
+    # Ensure that user is subscribed to the feed
+    feed = self.feeds.find feed_id
+
+    if self.folders.where(title: folder_title).present?
+      Rails.logger.info "User #{self.id} - #{self.email} tried to create a new folder with title #{folder_title}, but it already has a folder with that title"
+      raise FolderAlreadyExistsError.new
+    end
+
+    Rails.logger.info "Creating folder with title #{folder_title} for user #{self.id} - #{self.email}"
+    folder = self.folders.create title: folder_title
+
+    changes = self.add_feed_to_folder feed.id, folder.id
+    # Only return the :old_folder, :new_folder keys
+    return changes.except :feed
+  end
+
+  ##
   # Remove a feed from its current folder, ir any.
   #
   # Receives as argument the id of the feed.

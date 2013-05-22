@@ -81,28 +81,9 @@ class FoldersController < ApplicationController
   # passed in params[:feed_id]
 
   def create
-    params_create = params[:new_folder]
-    folder_title = params_create[:title]
-    feed_id = params_create[:feed_id]
-
-    feed = current_user.feeds.find feed_id
-    old_folder = feed.user_folder current_user
-
-    # Check if current user is subscribed to the folder
-    if feed.blank?
-      Rails.logger.warn "User #{current_user.id} - #{current_user.email} tried to associate with a new folder feed #{feed_id} to which he is not subscribed"
-      head status: 404
-    else
-      new_folder = Folder.create_user_folder folder_title, current_user.id
-      new_folder.feeds << feed
-      # If the feed was in a folder before this change and there are no more feeds in the folder, destroy it.
-      if old_folder.present?
-        old_folder.reload
-        old_folder.destroy if old_folder.feeds.blank?
-      end
-      render 'create.json.erb', locals: {new_folder: new_folder, old_folder: old_folder}
-    end
-
+    @changed_data = current_user.add_feed_to_new_folder params[:new_folder][:feed_id], params[:new_folder][:title]
+    render 'create.json.erb', locals: {new_folder: @changed_data[:new_folder],
+                                       old_folder: @changed_data[:old_folder]}
   rescue => e
     handle_error e
   end
