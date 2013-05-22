@@ -40,7 +40,10 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
-  has_and_belongs_to_many :feeds, uniq: true, after_add: :mark_unread_entries, after_remove: :removed_feed_subscription
+  has_and_belongs_to_many :feeds, uniq: true,
+                          after_add: :mark_unread_entries,
+                          before_remove: :before_remove_feed_subscription,
+                          after_remove: :removed_feed_subscription
   has_many :folders, dependent: :destroy, uniq: true
   has_many :entries, through: :feeds
   has_many :entry_states, dependent: :destroy, uniq: true
@@ -237,14 +240,11 @@ class User < ActiveRecord::Base
     self.feeds.delete feed
 
     if folder.present?
-      if folder.feeds.blank?
-        folder_id = folder.id
-        folder.destroy
-        return folder_id
+      if !Folder.exists? folder
+        deleted_folder_id = folder.id
       end
     end
-
-    return nil
+    return deleted_folder_id
   end
 
   ##
@@ -360,6 +360,15 @@ class User < ActiveRecord::Base
     feed.entries.each do |entry|
       self.entry_states.create({entry_id: entry.id, read: false},as: :admin)
     end
+  end
+
+  ##
+  # Before removing a feed subscription, remove the feed from its current folder, if any.
+  # If this means the folder is now empty, a deletion of the folder is triggered.
+
+  def before_remove_feed_subscription(feed)
+    folder = feed.user_folder self
+    folder.feeds.delete feed if folder.present?
   end
 
   ##
