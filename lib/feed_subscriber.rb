@@ -1,10 +1,11 @@
 ##
-# Module with functions related to subscribing and unsubscribing users from feeds
+# This class has methods to subscribe a user to a feed.
 
-module UserSubscriptionHelpers
+class FeedSubscriber
+  extend UriHelpers
 
   ##
-  # Subscribe the user to a feed. Receives as argument the URL of the feed.
+  # Subscribe the user to a feed. Receives as arguments the URL of the feed and the user that will be subscribed.
   #
   # First it checks if the feed is already in the database. In this case:
   #
@@ -34,77 +35,24 @@ module UserSubscriptionHelpers
   # - "\xkcd.com/"
   # - "\xkcd.com"
 
-  def subscribe(url)
-    Rails.logger.info "User #{self.id} - #{self.email} submitted Subscribe form with value #{url}"
+  def self.subscribe(url, user)
+    Rails.logger.info "User #{user.id} - #{user.email} submitted Subscribe form with value #{url}"
 
     # Ensure the url has a schema (defaults to http:// if none is passed)
     feed_url = ensure_schema url
 
     # Try to subscribe the user to the feed assuming it's in the database
-    feed = subscribe_known_feed self, feed_url
+    feed = subscribe_known_feed user, feed_url
 
     # If the feed is not in the database, save it and fetch it for the first time.
     if feed.blank?
-      feed = subscribe_new_feed self, feed_url
+      feed = subscribe_new_feed user, feed_url
     end
 
     return feed
   end
 
-  ##
-  # Unsubscribes the user from a feed.
-  #
-  # Receives as argument the id of the feed to unsubscribe.
-  #
-  # If the user is not subscribed to the feed, an ActiveRecord::RecordNotFound error is raised.
-  #
-  # If there are no more users subscribed to the feed, it is deleted from the database. This triggers
-  # a deletion of all its entries.
-  #
-  # If the user had associated the feed with a folder, and after unsubscribing there are no more feeds
-  # in the folder, that folder is deleted.
-  #
-  # If successful:
-  # - returns the id of the deleted folder,  if the user had associated the feed with a folder and that
-  # folder has been deleted (because it had no more feeds inside).
-  # - returns nil otherwise (the feed was not in a folder, or the folder still has feeds inside)
-
-  def unsubscribe(feed_id)
-    feed = self.feeds.find feed_id
-    folder = feed.user_folder self
-
-    Rails.logger.info "unsubscribing user #{self.id} - #{self.email} from feed #{feed.id} - #{feed.fetch_url}"
-    self.feeds.delete feed
-
-    if folder.present?
-      if !Folder.exists? folder
-        deleted_folder_id = folder.id
-      end
-    end
-    return deleted_folder_id
-  end
-
   private
-
-  ##
-  # Ensure that the URL passed as argument has an http:// or https://schema.
-  #
-  # Receives as argument an URL.
-  #
-  # If the URL has no schema it is returned prepended with http://
-  #
-  # If the URL has an http:// or https:// schema, it is returned untouched.
-
-  def ensure_schema(url)
-    uri = URI.parse url
-    if !uri.kind_of?(URI::HTTP) && !uri.kind_of?(URI::HTTPS)
-      Rails.logger.info "Value #{url} has no URI scheme, trying to add http:// scheme"
-      fixed_url = URI::HTTP.new('http', nil, url, nil, nil, nil, nil, nil, nil).to_s
-    else
-      fixed_url = url
-    end
-    return fixed_url
-  end
 
   ##
   # Subscribe a user to a feed already in the database.
@@ -120,7 +68,7 @@ module UserSubscriptionHelpers
   #
   # If a matching feed is found, the user is subscribed to it and the feed instance is returned.
 
-  def subscribe_known_feed(user, feed_url)
+  def self.subscribe_known_feed(user, feed_url)
     # Check if there is a feed with that URL already in the database
     known_feed = Feed.url_variants_feed feed_url
     if known_feed.present?
@@ -151,7 +99,7 @@ module UserSubscriptionHelpers
   # If the fetch is unsuccessful (e.g. no valid feed can be found at the URL), nothing is saved in the database and
   # nil is returned.
 
-  def subscribe_new_feed(user, feed_url)
+  def self.subscribe_new_feed(user, feed_url)
     Rails.logger.info "Feed #{feed_url} not in the database, trying to fetch it"
     feed = Feed.create! fetch_url: feed_url, title: feed_url
     fetch_result = FeedClient.fetch feed.id
@@ -167,5 +115,4 @@ module UserSubscriptionHelpers
       return nil
     end
   end
-
 end

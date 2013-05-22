@@ -1,3 +1,9 @@
+require 'folder_feed_remove'
+require 'folder_feed_add'
+require 'feed_subscriber'
+require 'feed_unsubscriber'
+require 'feed_refresh'
+
 ##
 # User model. Each instance of this class represents a single user that can log in to the application
 # (or at least that has passed through the signup process but has not yet confirmed his email).
@@ -30,9 +36,6 @@
 # have any suscriptions).
 
 class User < ActiveRecord::Base
-  include UserSubscriptionHelpers
-  include UserFolderHelpers
-  include UserRefreshHelpers
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
@@ -95,6 +98,55 @@ class User < ActiveRecord::Base
     end
 
     return entries
+  end
+
+  ##
+  # Remove a feed from a folder. See FolderFeedRemove#remove_feed_from_folder
+
+  def remove_feed_from_folder(feed_id)
+    FolderFeedRemove.remove_feed_from_folder feed_id, self
+  end
+
+  ##
+  # Add a feed to an existing folder. See FolderFeedAdd#add_feed_to_folder
+
+  def add_feed_to_folder(feed_id, folder_id)
+    FolderFeedAdd.add_feed_to_folder feed_id, folder_id, self
+  end
+
+  ##
+  # Add a feed to a new folder. See FolderFeedAdd#add_feed_to_new_folder
+
+  def add_feed_to_new_folder(feed_id, folder_title)
+    FolderFeedAdd.add_feed_to_new_folder feed_id, folder_title, self
+  end
+
+  ##
+  # Refresh a single feed. See FeedRefresh#refresh_feed
+
+  def refresh_feed(feed_id)
+    FeedRefresh.refresh_feed feed_id, self
+  end
+
+  ##
+  # Refresh all feeds in a folder. See FeedRefresh#refresh_folder
+
+  def refresh_folder(folder_id)
+    FeedRefresh.refresh_folder folder_id, self
+  end
+
+  ##
+  # Subscribe to a feed. See FeedSubscriber#subscribe
+
+  def subscribe(url)
+    FeedSubscriber.subscribe url, self
+  end
+
+  ##
+  # Unsubscribe from a feed. See FeedUnsubscriber#unsubscribe
+
+  def unsubscribe(feed_id)
+    FeedUnsubscriber.unsubscribe feed_id, self
   end
 
   private
