@@ -2,14 +2,15 @@ require 'feedzirra'
 require 'rest_client'
 require 'nokogiri'
 require 'uri'
+require 'feed_autodiscovery'
+require 'feed_caching'
+require 'feed_parser'
 
 ##
 # This class can fetch feeds and parse them. It also takes care of caching, sending HTTP headers
 # that indicate the server to send only new entries.
 
 class FeedClient
-
-  extend FeedClientHelpers
 
   ##
   # Fetch a feed, parse it and save the entries in the database. This is a class method.
@@ -63,7 +64,7 @@ class FeedClient
 
   def self.fetch_valid_feed(feed)
     # Calculate HTTP headers to be used for fetching
-    headers = fetch_headers feed
+    headers = FeedCaching.fetch_headers feed
 
     # GET the feed
     Rails.logger.info "Fetching from URL #{feed.fetch_url}"
@@ -72,7 +73,7 @@ class FeedClient
     if feed_response.present?
       begin
         # Try to parse the response as a feed
-        feed_parse feed, feed_response
+        FeedParser.parse_feed feed, feed_response
         return nil
       rescue
         return feed_response
@@ -105,7 +106,7 @@ class FeedClient
   def self.handle_html_response(feed, http_response, perform_autodiscovery)
     if perform_autodiscovery
       # If there was a problem parsing the feed assume we've downloaded an HTML webpage, try to perform feed autodiscovery
-      feed = feed_autodiscovery feed, http_response
+      feed = FeedAutodiscovery.perform_feed_autodiscovery feed, http_response
       if feed.present?
         # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
         # This second fetch will not try to perform autodiscovery, to avoid entering an infinite loop.
