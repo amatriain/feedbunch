@@ -1,7 +1,7 @@
 ##
 # Module with functions related to subscribing and unsubscribing users from feeds
 
-module SubscriptionHelpers
+module UserSubscriptionHelpers
 
   ##
   # Ensure that the URL passed as argument has an http:// or https://schema.

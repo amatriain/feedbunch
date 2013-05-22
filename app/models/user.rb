@@ -30,8 +30,8 @@
 # have any suscriptions).
 
 class User < ActiveRecord::Base
-  include SubscriptionHelpers
-  include FolderHelpers
+  include UserSubscriptionHelpers
+  include UserFolderHelpers
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,

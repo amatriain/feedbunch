@@ -1,7 +1,7 @@
 ##
 # Module with functions related to adding and removing feeds from folders
 
-module FolderHelpers
+module UserFolderHelpers
 
   ##
   # Add a feed to a folder.
