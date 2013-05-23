@@ -16,16 +16,7 @@ $(document).ready ->
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
       entries_loaded()
-      # Show and enable Refresh button
-      $("#refresh-feed").removeClass("hidden").removeClass("disabled")
-      # Unsubscribe and Folder Management buttons are shown and enabled only if reading a single feed
-      if Openreader.current_feed_id=="all"
-        $("#unsubscribe-feed").addClass("hidden").addClass("disabled")
-        $("#folder-management").addClass("hidden").addClass("disabled")
-      else
-        $("#unsubscribe-feed").removeClass("hidden").removeClass("disabled")
-        $("#folder-management").removeClass("hidden").removeClass("disabled")
-
+      enable_buttons()
       if status in ["error", "timeout", "abort", "parsererror"]
         if xhr.status == 404
           Openreader.alertTimedShowHide $("#no-entries")
@@ -37,15 +28,7 @@ $(document).ready ->
     Openreader.current_feed_id = $(this).attr "data-feed-id"
     Openreader.current_folder_id = $(this).attr "data-folder-id"
     Openreader.current_folder_id ||= "none"
-
-    disable_refresh_button()
-
-    # The unsubscribe button now unsubscribes from this feed; it's disabled while the feed loads
-    $("#unsubscribe-feed").addClass "disabled"
-
-    # The Folder Management button is disabled while the feed loads
-    $("#folder-management").addClass "disabled"
-
+    disable_buttons()
     mark_folder_in_dropdown()
     show_feed_title this
     loading_entries this
@@ -94,7 +77,58 @@ $(document).ready ->
       .removeClass "hidden"
 
   #-------------------------------------------------------
+  # Disable the Refresh, Folder Management and Unsubscribe buttons
+  #-------------------------------------------------------
+  disable_buttons = ->
+    disable_refresh_button()
+    disable_folder_management_button()
+    disable_unsubscribe_button()
+
+  #-------------------------------------------------------
   # Disable Refresh button
   #-------------------------------------------------------
   disable_refresh_button = ->
     $("#refresh-feed").addClass "disabled"
+
+  #-------------------------------------------------------
+  # Disable Folder Management button
+  #-------------------------------------------------------
+  disable_folder_management_button = ->
+    $("#folder-management").addClass "disabled"
+
+  #-------------------------------------------------------
+  # Disable Unsubscribe button
+  #-------------------------------------------------------
+  disable_unsubscribe_button = ->
+    $("#unsubscribe-feed").addClass "disabled"
+
+  #-------------------------------------------------------
+  # Enable and show the Refresh, Folder Management and Unsubscribe buttons
+  #-------------------------------------------------------
+  enable_buttons = ->
+    enable_refresh_button()
+    # Unsubscribe and Folder Management buttons are shown and enabled only if reading a single feed
+    if Openreader.current_feed_id=="all"
+      disable_folder_management_button()
+      disable_unsubscribe_button()
+    else
+      enable_folder_management_button()
+      enable_unsubscribe_button()
+
+  #-------------------------------------------------------
+  # Enable and show the Refresh button
+  #-------------------------------------------------------
+  enable_refresh_button = ->
+    $("#refresh-feed").removeClass("hidden").removeClass("disabled")
+
+  #-------------------------------------------------------
+  # Enable and show the Folder Management button
+  #-------------------------------------------------------
+  enable_folder_management_button = ->
+    $("#folder-management").removeClass("hidden").removeClass("disabled")
+
+  #-------------------------------------------------------
+  # Enable and show the Unsubscribe button
+  #-------------------------------------------------------
+  enable_unsubscribe_button = ->
+    $("#unsubscribe-feed").removeClass("hidden").removeClass("disabled")
