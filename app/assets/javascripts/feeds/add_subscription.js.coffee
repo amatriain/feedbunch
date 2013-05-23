@@ -17,7 +17,7 @@ $(document).ready ->
     subscription_result = (data, status, xhr) ->
       $("#loading").addClass "hidden"
       if xhr.status == 304
-        Application.alertTimedShowHide $("#already-subscribed")
+        Openreader.alertTimedShowHide $("#already-subscribed")
       else
         # Insert the new feed in the "all subscriptions" list
         $("#folder-all-all-feeds").after data
@@ -40,7 +40,7 @@ $(document).ready ->
         .fail ->
           $("#loading").addClass "hidden"
           $("#start-page").click()
-          Application.alertTimedShowHide $("#problem-subscribing")
+          Openreader.alertTimedShowHide $("#problem-subscribing")
 
     # Clean textfield and close modal
     $("#subscription_rss").val('')

@@ -25,6 +25,6 @@ $(document).ready ->
           $("#unsubscribe-feed").removeClass "disabled"
           $("#folder-management").removeClass "disabled"
           if status in ["error", "timeout", "abort", "parsererror"]
-            Application.alertTimedShowHide $("#problem-refreshing")
+            Openreader.alertTimedShowHide $("#problem-refreshing")
 
         $("#feed-entries").empty().load "#{feed_path}/refresh", null, insert_entries

@@ -18,11 +18,11 @@ $(document).ready ->
     # Function to handle result returned by the server
     update_folder_result = (data, status, xhr) ->
       if xhr.status == 304
-        Application.alertTimedShowHide $("#already-in-folder")
+        Openreader.alertTimedShowHide $("#already-in-folder")
       else
         if data["old_folder"]
           if data["old_folder"]["empty"]
-            Application.remove_folder data["old_folder"]["id"]
+            Openreader.remove_folder data["old_folder"]["id"]
           else
             remove_feed_from_folders feed_id
         insert_feed_in_folder feed_id, folder_id, data["new_folder"]
@@ -30,7 +30,7 @@ $(document).ready ->
 
     $.post(update_folder_path, {"_method":"put", feed_id: feed_id}, update_folder_result, "json")
       .fail ->
-        Application.alertTimedShowHide $("#problem-folder-management")
+        Openreader.alertTimedShowHide $("#problem-folder-management")
 
   #-------------------------------------------------------
   # Remove feed from folders clicking on "None" in the dropdown
@@ -44,7 +44,7 @@ $(document).ready ->
       if xhr.status == 205
         # If the return status is 205, remove the folder (there are no more feeds in it)
         old_folder_id = find_feed_folder feed_id
-        Application.remove_folder old_folder_id
+        Openreader.remove_folder old_folder_id
       else
         # If the return status is 204, remove the feed from the folder but not the folder itself (it has more feeds)
         remove_feed_from_folders feed_id
@@ -54,7 +54,7 @@ $(document).ready ->
 
     $.post(delete_folder_path, {"_method":"delete", feed_id: feed_id}, remove_folder_result)
       .fail ->
-        Application.alertTimedShowHide $("#problem-folder-management")
+        Openreader.alertTimedShowHide $("#problem-folder-management")
 
   #-------------------------------------------------------
   # Show "New folder" popup when clicking on New Folder in the dropdown
@@ -77,11 +77,11 @@ $(document).ready ->
     # Function to handle result returned by the server
     new_folder_result = (data, status, xhr) ->
       if xhr.status == 304
-        Application.alertTimedShowHide $("#folder-already-exists")
+        Openreader.alertTimedShowHide $("#folder-already-exists")
       else
         if data["old_folder"]
           if data["old_folder"]["empty"]
-            Application.remove_folder data["old_folder"]["id"]
+            Openreader.remove_folder data["old_folder"]["id"]
           else
             remove_feed_from_folders feed_id
         add_folder data["new_folder"]
@@ -95,7 +95,7 @@ $(document).ready ->
       post_data = $(this).serialize()
       $.post(form_url, post_data, new_folder_result, 'json')
         .fail ->
-          Application.alertTimedShowHide $("#problem-new-folder")
+          Openreader.alertTimedShowHide $("#problem-new-folder")
 
     # Clean textfield and close modal
     $("#new_folder_title").val('')

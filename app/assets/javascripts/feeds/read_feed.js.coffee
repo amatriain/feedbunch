@@ -26,9 +26,9 @@ $(document).ready ->
 
       if status in ["error", "timeout", "abort", "parsererror"]
         if xhr.status == 404
-          Application.alertTimedShowHide $("#no-entries")
+          Openreader.alertTimedShowHide $("#no-entries")
         else
-          Application.alertTimedShowHide $("#problem-loading")
+          Openreader.alertTimedShowHide $("#problem-loading")
 
     feed_path = $(this).attr "data-feed-path"
     refresh_path = $(this).attr "data-refresh-path"

@@ -24,11 +24,11 @@ $(document).ready ->
       $("[data-sidebar-feed][data-feed-id=#{unsubscribe_feed}]").parent().remove()
       # If the feed was in a folder which is not empty, remove it
       if xhr.status == 205
-        Application.remove_folder unsubscribe_folder
+        Openreader.remove_folder unsubscribe_folder
 
     $.post(unsubscribe_path, {"_method":"delete"}, unsubscribe_result)
       .fail ->
-        Application.alertTimedShowHide $("#problem-unsubscribing")
+        Openreader.alertTimedShowHide $("#problem-unsubscribing")
 
     # Show the start page
     $("#start-page").click()
