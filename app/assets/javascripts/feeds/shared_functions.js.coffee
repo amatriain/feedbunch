@@ -1,5 +1,9 @@
 window.Openreader ||= {}
 
+########################################################
+# GLOBAL FUNCTIONS
+########################################################
+
 #-------------------------------------------------------
 # Totally remove a folder from the sidebar and the dropdown
 #-------------------------------------------------------
@@ -24,16 +28,10 @@ Openreader.update_folder_id = (feed_id, folder_id) ->
   $("[data-sidebar-feed][data-feed-id='#{feed_id}']").attr "data-folder-id", folder_id
 
 #-------------------------------------------------------
-# Open a folder in the sidebar, if it's not already open
-#-------------------------------------------------------
-Openreader.open_folder = (folder_id) ->
-  $("#sidebar #feeds-#{folder_id}").not(".in").prev("a").click()
-
-#-------------------------------------------------------
 # Read a feed under a specific folder
 #-------------------------------------------------------
 Openreader.read_feed = (feed_id, folder_id) ->
-  Openreader.open_folder folder_id
+  open_folder folder_id
   $("#feeds-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed_id}']").click()
 
 #-------------------------------------------------------
@@ -53,11 +51,25 @@ Openreader.show_loading_message = ->
 #-------------------------------------------------------
 Openreader.loading_entries = (feed)->
   Openreader.disable_buttons()
-  $("#feed-entries").empty().addClass "hidden"
+  Openreader.hide_entries()
   $("#start-info").addClass "hidden"
   Openreader.show_loading_message()
   if feed
     $(".icon-spinner", feed).addClass("icon-spin").removeClass "hidden"
+
+#-------------------------------------------------------
+# Hide the entries list
+#-------------------------------------------------------
+Openreader.hide_entries = ->
+  $("#feed-entries").empty().addClass "hidden"
+
+#-------------------------------------------------------
+# Hide the feed title
+#-------------------------------------------------------
+Openreader.hide_feed_title = ()->
+  $("#feed-title a").text ""
+  $("#feed-title").addClass "hidden"
+  $("#feed-title a").attr "href", ""
 
 #-------------------------------------------------------
 # Show the "Start" page
@@ -69,24 +81,91 @@ Openreader.show_start_page = ()->
 # Disable the Refresh, Folder Management and Unsubscribe buttons
 #-------------------------------------------------------
 Openreader.disable_buttons = ->
-  Openreader.disable_refresh_button()
-  Openreader.disable_folder_management_button()
-  Openreader.disable_unsubscribe_button()
+  disable_refresh_button()
+  disable_folder_management_button()
+  disable_unsubscribe_button()
+
+#-------------------------------------------------------
+# Enable and show the Refresh, Folder Management and Unsubscribe buttons
+#-------------------------------------------------------
+Openreader.enable_buttons = ->
+  enable_refresh_button()
+  # Unsubscribe and Folder Management buttons are shown and enabled only if reading a single feed
+  if Openreader.current_feed_id=="all"
+    hide_folder_management_button()
+    hide_unsubscribe_button()
+  else
+    enable_folder_management_button()
+    enable_unsubscribe_button()
+
+#-------------------------------------------------------
+# Hide the Refresh, Folder Management and Unsubscribe buttons
+#-------------------------------------------------------
+Openreader.hide_buttons = ->
+  hide_refresh_button()
+  hide_folder_management_button()
+  hide_unsubscribe_button()
+
+########################################################
+# PRIVATE FUNCTIONS
+########################################################
+
+#-------------------------------------------------------
+# Open a folder in the sidebar, if it's not already open
+#-------------------------------------------------------
+open_folder = (folder_id) ->
+  $("#sidebar #feeds-#{folder_id}").not(".in").prev("a").click()
 
 #-------------------------------------------------------
 # Disable Refresh button
 #-------------------------------------------------------
-Openreader.disable_refresh_button = ->
+disable_refresh_button = ->
   $("#refresh-feed").addClass "disabled"
 
 #-------------------------------------------------------
 # Disable Folder Management button
 #-------------------------------------------------------
-Openreader.disable_folder_management_button = ->
+disable_folder_management_button = ->
   $("#folder-management").addClass "disabled"
 
 #-------------------------------------------------------
 # Disable Unsubscribe button
 #-------------------------------------------------------
-Openreader.disable_unsubscribe_button = ->
+disable_unsubscribe_button = ->
   $("#unsubscribe-feed").addClass "disabled"
+
+#-------------------------------------------------------
+# Enable and show the Refresh button
+#-------------------------------------------------------
+enable_refresh_button = ->
+  $("#refresh-feed").removeClass("hidden").removeClass("disabled")
+
+#-------------------------------------------------------
+# Enable and show the Folder Management button
+#-------------------------------------------------------
+enable_folder_management_button = ->
+  $("#folder-management").removeClass("hidden").removeClass("disabled")
+
+#-------------------------------------------------------
+# Enable and show the Unsubscribe button
+#-------------------------------------------------------
+enable_unsubscribe_button = ->
+  $("#unsubscribe-feed").removeClass("hidden").removeClass("disabled")
+
+#-------------------------------------------------------
+# Hide Refresh button
+#-------------------------------------------------------
+hide_refresh_button = ->
+  $("#refresh-feed").addClass("hidden").addClass "disabled"
+
+#-------------------------------------------------------
+# Hide Folder Management button
+#-------------------------------------------------------
+hide_folder_management_button = ->
+  $("#folder-management").addClass("hidden").addClass "disabled"
+
+#-------------------------------------------------------
+# Hide Unsubscribe button
+#-------------------------------------------------------
+hide_unsubscribe_button = ->
+  $("#unsubscribe-feed").addClass("hidden").addClass "disabled"

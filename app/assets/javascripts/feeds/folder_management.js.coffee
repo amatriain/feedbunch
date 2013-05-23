@@ -57,7 +57,7 @@ $(document).ready ->
   # Show "New folder" popup when clicking on New Folder in the dropdown
   #-------------------------------------------------------
   $("body").on "click", "a[data-new-folder-path]", ->
-    $("#new-folder-popup").modal "show"
+    show_popup()
 
   #-------------------------------------------------------
   # Submit the "New Folder" form when clicking on the "Add" button
@@ -94,9 +94,7 @@ $(document).ready ->
         .fail ->
           Openreader.alertTimedShowHide $("#problem-new-folder")
 
-    # Clean textfield and close modal
-    $("#new_folder_title").val('')
-    $("#new-folder-popup").modal 'hide'
+    close_popup()
 
     # prevent default form submit
     return false
@@ -119,3 +117,16 @@ $(document).ready ->
   add_folder = (folder_data) ->
     $("#sidebar #folders-list").append folder_data["sidebar"]
     $("#folder-management-dropdown ul.dropdown-menu li.divider").first().after folder_data["dropdown"]
+
+  #-------------------------------------------------------
+  # Show modal popup
+  #-------------------------------------------------------
+  show_popup = ->
+    $("#new-folder-popup").modal "show"
+
+  #-------------------------------------------------------
+  # Clean textfield and close modal popup
+  #-------------------------------------------------------
+  close_popup = ->
+    $("#new_folder_title").val('')
+    $("#new-folder-popup").modal 'hide'

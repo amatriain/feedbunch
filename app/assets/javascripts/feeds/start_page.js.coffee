@@ -1,15 +1,28 @@
+#= require ./alert_hiding
+#= require ./shared_functions
+
 $(document).ready ->
+
+  ########################################################
+  # EVENTS
+  ########################################################
 
   #-------------------------------------------------------
   # Show the start page when clicking on the "Start" link
   #-------------------------------------------------------
   $("body").on "click", "#start-page", ->
-    # Hide feed entries, title, and buttons
-    $("#feed-entries").empty().addClass "hidden"
-    $("#feed-title a").text ""
-    $("#feed-title").addClass "hidden"
-    $("#unsubscribe-feed").addClass("hidden").addClass("disabled")
-    $("#refresh-feed").addClass("hidden").addClass("disabled")
-    $("#folder-management").addClass("hidden").addClass("disabled")
-    # Show the start page
+    Openreader.hide_entries()
+    Openreader.hide_feed_title()
+    Openreader.hide_loading_message()
+    Openreader.hide_buttons()
+    show_start_information()
+
+  ########################################################
+  # COMMON FUNCTIONS
+  ########################################################
+
+  #-------------------------------------------------------
+  # Show the Start page
+  #-------------------------------------------------------
+  show_start_information = ()->
     $("#start-info").removeClass "hidden"

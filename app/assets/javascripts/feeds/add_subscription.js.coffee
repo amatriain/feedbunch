@@ -32,7 +32,7 @@ $(document).ready ->
       form_url = $("#form-subscription").attr "action"
       post_data = $(this).serialize()
       Openreader.loading_entries()
-      hide_feed_title()
+      Openreader.hide_feed_title()
       $.post(form_url, post_data, subscription_result, 'json')
         .fail ->
           Openreader.hide_loading_message()
@@ -54,10 +54,3 @@ $(document).ready ->
   close_popup = ->
     $("#subscription_rss").val('')
     $("#subscribe-feed-popup").modal 'hide'
-
-  #-------------------------------------------------------
-  # Hide the feed title
-  #-------------------------------------------------------
-  hide_feed_title = ()->
-    $("#feed-title a").text ""
-    $("#feed-title").addClass "hidden"
