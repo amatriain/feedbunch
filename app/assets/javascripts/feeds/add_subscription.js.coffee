@@ -20,11 +20,8 @@ $(document).ready ->
       if xhr.status == 304
         Openreader.alertTimedShowHide $("#already-subscribed")
       else
-        Openreader.insert_feed_in_folder null, "all", data["sidebar"]
-        # Open the "all subscriptions" folder if not already open
-        $("#feeds-all").not(".in").prev("a").click()
-        # Select the new feed
-        $("#folder-all-all-feeds").next().find("a").click()
+        Openreader.insert_feed_in_folder data["id"], "all", data["sidebar"]
+        Openreader.read_feed data["id"], "all"
 
     # If the user has written something in the form, POST the value via ajax
     if $("#subscription_rss").val()

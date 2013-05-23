@@ -12,11 +12,10 @@ Openreader.remove_folder = (folder_id) ->
 #-------------------------------------------------------
 Openreader.insert_feed_in_folder = (feed_id, folder_id, feed_data) ->
   $("#folder-#{folder_id}-all-feeds").after feed_data
-  if feed_id
-    if folder_id=="all"
-      Openreader.update_folder_id feed_id, "none"
-    else
-      Openreader.update_folder_id feed_id, folder_id
+  if folder_id=="all"
+    Openreader.update_folder_id feed_id, "none"
+  else
+    Openreader.update_folder_id feed_id, folder_id
 
 #-------------------------------------------------------
 # Update the data-folder-id attribute for all links to a feed in the sidebar
