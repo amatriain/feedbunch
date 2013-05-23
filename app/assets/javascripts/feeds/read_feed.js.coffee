@@ -47,11 +47,8 @@ $(document).ready ->
     # The Folder Management button is disabled while the feed loads
     $("#folder-management").addClass "disabled"
 
-    # Mark with a tick the folder in the dropdown
-    $("#folder-management-dropdown a[data-folder-id] i.icon-ok").addClass "hidden"
-    $("#folder-management-dropdown a[data-folder-id='#{Openreader.current_folder_id}'] i.icon-ok").removeClass "hidden"
-    # Clicking on the dropdown changes folder association for the current feed
-    $("#folder-management-dropdown a").attr("data-feed-id", Openreader.current_feed_id)
+    mark_folder_in_dropdown()
+
     # Creating a new folder adds this feed to it
     $("#new_folder_feed_id").val(Openreader.current_feed_id)
 
@@ -92,3 +89,12 @@ $(document).ready ->
     $("#feed-title").removeClass "hidden"
     feed_url = $(feed).attr "data-feed-url"
     $("#feed-title a").attr("href", feed_url)
+
+  #-------------------------------------------------------
+  # Mark with a tick the current feed's folder in the dropdown
+  #-------------------------------------------------------
+  mark_folder_in_dropdown = ->
+    $("#folder-management-dropdown a[data-folder-id] i.icon-ok").addClass "hidden"
+    $("#folder-management-dropdown a[data-folder-id='#{Openreader.current_folder_id}'] i.icon-ok").removeClass "hidden"
+    # Clicking on the dropdown changes folder association for the current feed
+    $("#folder-management-dropdown a").attr("data-feed-id", Openreader.current_feed_id)

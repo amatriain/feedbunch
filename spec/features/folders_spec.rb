@@ -244,6 +244,7 @@ describe 'folders and feeds' do
         User.any_instance.stub(:add_feed_to_folder).and_raise StandardError.new
 
         read_feed @feed2.id
+        sleep 1
         find('#folder-management').click
         sleep 1
         within '#folder-management-dropdown ul.dropdown-menu' do

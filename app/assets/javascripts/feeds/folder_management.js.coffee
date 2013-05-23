@@ -12,7 +12,6 @@ $(document).ready ->
   #-------------------------------------------------------
   $("body").on "click", "a[data-folder-update-path]", ->
     update_folder_path = $(this).attr "data-folder-update-path"
-    feed_id = $(this).attr("data-feed-id")
     folder_id = $(this).attr("data-folder-id")
 
     # Function to handle result returned by the server
@@ -24,11 +23,11 @@ $(document).ready ->
           if data["old_folder"]["empty"]
             Openreader.remove_folder data["old_folder"]["id"]
           else
-            remove_feed_from_folders feed_id
-        insert_feed_in_folder feed_id, folder_id, data["new_folder"]
-        read_feed feed_id, folder_id
+            remove_feed_from_folders Openreader.current_feed_id
+        insert_feed_in_folder Openreader.current_feed_id, folder_id, data["new_folder"]
+        read_feed Openreader.current_feed_id, folder_id
 
-    $.post(update_folder_path, {"_method":"put", feed_id: feed_id}, update_folder_result, "json")
+    $.post(update_folder_path, {"_method":"put", feed_id: Openreader.current_feed_id}, update_folder_result, "json")
       .fail ->
         Openreader.alertTimedShowHide $("#problem-folder-management")
 
@@ -37,22 +36,21 @@ $(document).ready ->
   #-------------------------------------------------------
   $("body").on "click", "a[data-folder-remove-path]", ->
     delete_folder_path = $(this).attr "data-folder-remove-path"
-    feed_id = $(this).attr("data-feed-id")
 
     # Function to handle result returned by the server
     remove_folder_result = (data, status, xhr) ->
       if xhr.status == 205
         # If the return status is 205, remove the folder (there are no more feeds in it)
-        old_folder_id = find_feed_folder feed_id
+        old_folder_id = find_feed_folder Openreader.current_feed_id
         Openreader.remove_folder old_folder_id
       else
         # If the return status is 204, remove the feed from the folder but not the folder itself (it has more feeds)
-        remove_feed_from_folders feed_id
-      update_folder_id feed_id, "none"
-      read_feed feed_id, "all"
+        remove_feed_from_folders Openreader.current_feed_id
+      update_folder_id Openreader.current_feed_id, "none"
+      read_feed Openreader.current_feed_id, "all"
 
 
-    $.post(delete_folder_path, {"_method":"delete", feed_id: feed_id}, remove_folder_result)
+    $.post(delete_folder_path, {"_method":"delete", feed_id: Openreader.current_feed_id}, remove_folder_result)
       .fail ->
         Openreader.alertTimedShowHide $("#problem-folder-management")
 

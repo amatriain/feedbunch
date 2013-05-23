@@ -19,7 +19,7 @@
       </a>
       <ul class="dropdown-menu">
         <li>
-          <a data-folder-remove-path="<%= folder_remove_path %>" data-folder-id="none" data-feed-id>
+          <a data-folder-remove-path="<%= folder_remove_path %>" data-folder-id="none">
             <i class="hidden icon-ok"></i>&nbsp;
             <%= t 'feeds.index.folder_none' %>
           </a>
@@ -32,7 +32,7 @@
         <% end %>
         <li class="divider"></li>
         <li>
-          <a data-new-folder-path="<%= folders_path format: :json %>" data-folder-id="new" data-feed-id>
+          <a data-new-folder-path="<%= folders_path format: :json %>" data-folder-id="new">
             <i class="icon-plus"></i> <%= t 'feeds.index.folder_new' %>
           </a>
         </li>
