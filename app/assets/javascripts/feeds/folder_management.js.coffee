@@ -81,15 +81,17 @@ $(document).ready ->
           if data["old_folder"]["empty"]
             Openreader.remove_folder data["old_folder"]["id"]
           else
-            remove_feed_from_folders feed_id
+            remove_feed_from_folders Openreader.current_feed_id
         add_folder data["new_folder"]
         new_folder_id = data["new_folder"]["id"]
-        update_folder_id feed_id, new_folder_id
-        read_feed feed_id, new_folder_id
+        update_folder_id Openreader.current_feed_id, new_folder_id
+        read_feed Openreader.current_feed_id, new_folder_id
 
     # If the user has written something in the form, POST the value via ajax
     if $("#new_folder_title").val()
       form_url = $("#form-new-folder").attr "action"
+      # Set the current folder id in a hidden field, to be sent with the POST
+      $("#new_folder_feed_id", this).val(Openreader.current_feed_id)
       post_data = $(this).serialize()
       $.post(form_url, post_data, new_folder_result, 'json')
         .fail ->

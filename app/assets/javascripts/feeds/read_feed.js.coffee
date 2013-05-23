@@ -48,10 +48,6 @@ $(document).ready ->
     $("#folder-management").addClass "disabled"
 
     mark_folder_in_dropdown()
-
-    # Creating a new folder adds this feed to it
-    $("#new_folder_feed_id").val(Openreader.current_feed_id)
-
     show_feed_title this
     loading_entries this
 
