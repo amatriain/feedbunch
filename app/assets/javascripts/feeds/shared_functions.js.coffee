@@ -47,3 +47,19 @@ Openreader.hide_loading_message = ->
 #-------------------------------------------------------
 Openreader.show_loading_message = ->
   $("#loading").removeClass "hidden"
+
+#-------------------------------------------------------
+# While loading entries hide the entries list,show "Loading" message and optionally show a spinner
+#-------------------------------------------------------
+Openreader.loading_entries = (feed)->
+  $("#feed-entries").empty().addClass "hidden"
+  $("#start-info").addClass "hidden"
+  Openreader.show_loading_message()
+  if feed
+    $(".icon-spinner", feed).addClass("icon-spin").removeClass "hidden"
+
+#-------------------------------------------------------
+# Show the "Start" page
+#-------------------------------------------------------
+Openreader.show_start_page = ()->
+  $("#start-page").click()

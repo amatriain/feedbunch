@@ -27,5 +27,4 @@ $(document).ready ->
       .fail ->
         Openreader.alertTimedShowHide $("#problem-unsubscribing")
 
-    # Show the start page
-    $("#start-page").click()
+    Openreader.show_start_page()

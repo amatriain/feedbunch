@@ -32,7 +32,7 @@ $(document).ready ->
     disable_buttons()
     mark_folder_in_dropdown()
     show_feed_title this
-    loading_entries this
+    Openreader.loading_entries this
 
     # Load the entries via Ajax
     $("#feed-entries").load Openreader.current_feed_path, null, insert_entries
@@ -42,18 +42,9 @@ $(document).ready ->
   ########################################################
 
   #-------------------------------------------------------
-  # While loading entries hide the entries list,show the spinner and  show "Loading" message
-  #-------------------------------------------------------
-  loading_entries = (feed)->
-    $("#feed-entries").empty().addClass "hidden"
-    $("#start-info").addClass "hidden"
-    Openreader.show_loading_message()
-    $(".icon-spinner", feed).addClass("icon-spin").removeClass "hidden"
-
-  #-------------------------------------------------------
   # When entries have loaded hide the spinner and "Loading" message, show the entries list
   #-------------------------------------------------------
-  entries_loaded = (feed)->
+  entries_loaded = ()->
     $(".icon-spin").removeClass("icon-spin").addClass "hidden"
     Openreader.hide_loading_message()
     $("#feed-entries").removeClass "hidden"

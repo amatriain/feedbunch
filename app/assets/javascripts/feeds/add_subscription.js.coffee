@@ -3,6 +3,10 @@
 
 $(document).ready ->
 
+  ########################################################
+  # EVENTS
+  ########################################################
+
   #-------------------------------------------------------
   # Submit the "add subscription" form when clicking on the "Add" button
   #-------------------------------------------------------
@@ -27,21 +31,33 @@ $(document).ready ->
     if $("#subscription_rss").val()
       form_url = $("#form-subscription").attr "action"
       post_data = $(this).serialize()
-      # Show "loading" message
-      Openreader.show_loading_message()
-      $("#feed-entries").empty().addClass "hidden"
-      $("#feed-title a").text ""
-      $("#feed-title").addClass "hidden"
-      $("#start-info").addClass "hidden"
+      Openreader.loading_entries()
+      hide_feed_title()
       $.post(form_url, post_data, subscription_result, 'json')
         .fail ->
-          $("#loading").addClass "hidden"
-          $("#start-page").click()
+          Openreader.hide_loading_message()
+          Openreader.show_start_page()
           Openreader.alertTimedShowHide $("#problem-subscribing")
 
-    # Clean textfield and close modal
-    $("#subscription_rss").val('')
-    $("#subscribe-feed-popup").modal 'hide'
+    close_popup()
 
     # prevent default form submit
     return false
+
+  ########################################################
+  # COMMON FUNCTIONS
+  ########################################################
+
+  #-------------------------------------------------------
+  # Clean textfield and close modal popup
+  #-------------------------------------------------------
+  close_popup = ->
+    $("#subscription_rss").val('')
+    $("#subscribe-feed-popup").modal 'hide'
+
+  #-------------------------------------------------------
+  # Hide the feed title
+  #-------------------------------------------------------
+  hide_feed_title = ()->
+    $("#feed-title a").text ""
+    $("#feed-title").addClass "hidden"
