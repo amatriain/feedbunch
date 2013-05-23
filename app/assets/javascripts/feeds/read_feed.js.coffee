@@ -90,9 +90,8 @@ $(document).ready ->
   #-------------------------------------------------------
   mark_folder_in_dropdown = ->
     $("#folder-management-dropdown a[data-folder-id] i.icon-ok").addClass "hidden"
-    $("#folder-management-dropdown a[data-folder-id='#{Openreader.current_folder_id}'] i.icon-ok").removeClass "hidden"
-    # Clicking on the dropdown changes folder association for the current feed
-    $("#folder-management-dropdown a").attr("data-feed-id", Openreader.current_feed_id)
+    $("#folder-management-dropdown a[data-folder-id='#{Openreader.current_folder_id}'] i.icon-ok")
+      .removeClass "hidden"
 
   #-------------------------------------------------------
   # Disable Refresh button

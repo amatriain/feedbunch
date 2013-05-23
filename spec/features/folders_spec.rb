@@ -502,7 +502,7 @@ describe 'folders and feeds' do
         within '#folder-management-dropdown ul.dropdown-menu' do
           page.should have_content title
           # New folder should be in the dropdown, with a tick to indicate @feed1 is in the folder
-          page.should have_css "a[data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}'] i.icon-ok"
+          page.should have_css "a[data-folder-id='#{new_folder.id}'] i.icon-ok"
         end
       end
 
@@ -528,6 +528,7 @@ describe 'folders and feeds' do
 
         # Without reloading the page, move @feed2 to the new folder
         read_feed @feed2.id
+        sleep 1
         find('#folder-management').click
         within '#folder-management-dropdown ul.dropdown-menu' do
           find("a[data-folder-id='#{new_folder.id}']").click
