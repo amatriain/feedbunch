@@ -1,4 +1,5 @@
 #= require ./alert_hiding
+#= require ./shared_functions
 
 window.Openreader ||= {}
 
@@ -46,7 +47,7 @@ $(document).ready ->
   loading_entries = (feed)->
     $("#feed-entries").empty().addClass "hidden"
     $("#start-info").addClass "hidden"
-    $("#loading").removeClass "hidden"
+    Openreader.show_loading_message()
     $(".icon-spinner", feed).addClass("icon-spin").removeClass "hidden"
 
   #-------------------------------------------------------
@@ -54,7 +55,7 @@ $(document).ready ->
   #-------------------------------------------------------
   entries_loaded = (feed)->
     $(".icon-spin").removeClass("icon-spin").addClass "hidden"
-    $("#loading").addClass "hidden"
+    Openreader.hide_loading_message()
     $("#feed-entries").removeClass "hidden"
 
   #-------------------------------------------------------
@@ -103,14 +104,32 @@ $(document).ready ->
     $("#unsubscribe-feed").addClass "disabled"
 
   #-------------------------------------------------------
+  # Hide Refresh button
+  #-------------------------------------------------------
+  hide_refresh_button = ->
+    $("#refresh-feed").addClass("hidden").addClass "disabled"
+
+  #-------------------------------------------------------
+  # Hide Folder Management button
+  #-------------------------------------------------------
+  hide_folder_management_button = ->
+    $("#folder-management").addClass("hidden").addClass "disabled"
+
+  #-------------------------------------------------------
+  # Hide Unsubscribe button
+  #-------------------------------------------------------
+  hide_unsubscribe_button = ->
+    $("#unsubscribe-feed").addClass("hidden").addClass "disabled"
+
+  #-------------------------------------------------------
   # Enable and show the Refresh, Folder Management and Unsubscribe buttons
   #-------------------------------------------------------
   enable_buttons = ->
     enable_refresh_button()
     # Unsubscribe and Folder Management buttons are shown and enabled only if reading a single feed
     if Openreader.current_feed_id=="all"
-      disable_folder_management_button()
-      disable_unsubscribe_button()
+      hide_folder_management_button()
+      hide_unsubscribe_button()
     else
       enable_folder_management_button()
       enable_unsubscribe_button()

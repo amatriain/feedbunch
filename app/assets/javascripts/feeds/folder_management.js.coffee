@@ -24,8 +24,8 @@ $(document).ready ->
             Openreader.remove_folder data["old_folder"]["id"]
           else
             remove_feed_from_folders Openreader.current_feed_id
-        insert_feed_in_folder Openreader.current_feed_id, folder_id, data["new_folder"]
-        read_feed Openreader.current_feed_id, folder_id
+        Openreader.insert_feed_in_folder Openreader.current_feed_id, folder_id, data["new_folder"]["sidebar"]
+        Openreader.read_feed Openreader.current_feed_id, folder_id
 
     $.post(update_folder_path, {"_method":"put", feed_id: Openreader.current_feed_id}, update_folder_result, "json")
       .fail ->
@@ -46,8 +46,8 @@ $(document).ready ->
       else
         # If the return status is 204, remove the feed from the folder but not the folder itself (it has more feeds)
         remove_feed_from_folders Openreader.current_feed_id
-      update_folder_id Openreader.current_feed_id, "none"
-      read_feed Openreader.current_feed_id, "all"
+      Openreader.update_folder_id Openreader.current_feed_id, "none"
+      Openreader.read_feed Openreader.current_feed_id, "all"
 
 
     $.post(delete_folder_path, {"_method":"delete", feed_id: Openreader.current_feed_id}, remove_folder_result)
@@ -70,8 +70,6 @@ $(document).ready ->
   # Submit the "New Folder" form via Ajax
   #-------------------------------------------------------
   $("body").on "submit", "#form-new-folder", ->
-    feed_id = $("#new_folder_feed_id", this).val()
-
     # Function to handle result returned by the server
     new_folder_result = (data, status, xhr) ->
       if xhr.status == 304
@@ -84,8 +82,8 @@ $(document).ready ->
             remove_feed_from_folders Openreader.current_feed_id
         add_folder data["new_folder"]
         new_folder_id = data["new_folder"]["id"]
-        update_folder_id Openreader.current_feed_id, new_folder_id
-        read_feed Openreader.current_feed_id, new_folder_id
+        Openreader.update_folder_id Openreader.current_feed_id, new_folder_id
+        Openreader.read_feed Openreader.current_feed_id, new_folder_id
 
     # If the user has written something in the form, POST the value via ajax
     if $("#new_folder_title").val()
@@ -115,32 +113,6 @@ $(document).ready ->
     $("[data-sidebar-feed][data-feed-id='#{feed_id}']").parent().each ->
       # Do not remove it from the "All Subscriptions" folder
       $(this).remove() if $(this).parent().attr("id") != "feeds-all"
-
-  #-------------------------------------------------------
-  # Insert feed in a folder in the sidebar
-  #-------------------------------------------------------
-  insert_feed_in_folder = (feed_id, folder_id, feed_data) ->
-    update_folder_id feed_id, folder_id
-    $("#folder-#{folder_id}-all-feeds").after feed_data["sidebar"]
-
-  #-------------------------------------------------------
-  # Update the data-folder-id attribute for all links to a feed in the sidebar
-  #-------------------------------------------------------
-  update_folder_id = (feed_id, folder_id) ->
-    $("[data-sidebar-feed][data-feed-id='#{feed_id}']").attr "data-folder-id", folder_id
-
-  #-------------------------------------------------------
-  # Open a folder in the sidebar, if it's not already open
-  #-------------------------------------------------------
-  open_folder = (folder_id) ->
-    $("#sidebar #feeds-#{folder_id}").not(".in").prev("a").click()
-
-  #-------------------------------------------------------
-  # Read a feed under a specific folder
-  #-------------------------------------------------------
-  read_feed = (feed_id, folder_id) ->
-    open_folder folder_id
-    $("#feeds-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed_id}']").click()
 
   #-------------------------------------------------------
   # Find out the folder to which a feed currently belongs

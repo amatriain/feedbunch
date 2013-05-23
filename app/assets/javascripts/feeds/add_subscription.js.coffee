@@ -1,4 +1,5 @@
 #= require ./alert_hiding
+#= require ./shared_functions
 
 $(document).ready ->
 
@@ -15,12 +16,11 @@ $(document).ready ->
 
     # Function to handle result returned by the server
     subscription_result = (data, status, xhr) ->
-      $("#loading").addClass "hidden"
+      Openreader.hide_loading_message()
       if xhr.status == 304
         Openreader.alertTimedShowHide $("#already-subscribed")
       else
-        # Insert the new feed in the "all subscriptions" list
-        $("#folder-all-all-feeds").after data
+        Openreader.insert_feed_in_folder null, "all", data
         # Open the "all subscriptions" folder if not already open
         $("#feeds-all").not(".in").prev("a").click()
         # Select the new feed
@@ -31,7 +31,7 @@ $(document).ready ->
       form_url = $("#form-subscription").attr "action"
       post_data = $(this).serialize()
       # Show "loading" message
-      $("#loading").removeClass "hidden"
+      Openreader.show_loading_message()
       $("#feed-entries").empty().addClass "hidden"
       $("#feed-title a").text ""
       $("#feed-title").addClass "hidden"
