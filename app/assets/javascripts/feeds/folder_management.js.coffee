@@ -41,8 +41,7 @@ $(document).ready ->
     remove_folder_result = (data, status, xhr) ->
       if xhr.status == 205
         # If the return status is 205, remove the folder (there are no more feeds in it)
-        old_folder_id = find_feed_folder Openreader.current_feed_id
-        Openreader.remove_folder old_folder_id
+        Openreader.remove_folder Openreader.current_folder_id
       else
         # If the return status is 204, remove the feed from the folder but not the folder itself (it has more feeds)
         remove_feed_from_folders Openreader.current_feed_id
@@ -113,12 +112,6 @@ $(document).ready ->
     $("[data-sidebar-feed][data-feed-id='#{feed_id}']").parent().each ->
       # Do not remove it from the "All Subscriptions" folder
       $(this).remove() if $(this).parent().attr("id") != "feeds-all"
-
-  #-------------------------------------------------------
-  # Find out the folder to which a feed currently belongs
-  #-------------------------------------------------------
-  find_feed_folder = (feed_id) ->
-    return $("#sidebar a[data-sidebar-feed][data-feed-id='#{feed_id}']").attr "data-folder-id"
 
   #-------------------------------------------------------
   # Add a new folder to the sidebar and the dropdown
