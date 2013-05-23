@@ -1,0 +1,6 @@
+<% self.formats = [:html] %>
+
+{
+  "id": <%= feed.id %>,
+  "sidebar": <%= render('feeds/sidebar/sidebar_feed', feed: feed).to_json.html_safe %>
+}

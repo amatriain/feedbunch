@@ -6,7 +6,8 @@ class FeedsController < ApplicationController
 
   before_filter :authenticate_user!
 
-  respond_to :html
+  respond_to :html, except: [:create]
+  respond_to :json, only: [:create]
 
   ##
   # list all feeds the currently authenticated is suscribed to
@@ -68,7 +69,7 @@ class FeedsController < ApplicationController
     @feed = current_user.subscribe url
 
     if @feed.present?
-      respond_with @feed, layout: false
+      render 'create.json.erb', locals: {feed: @feed}
     else
       Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
       #TODO respond with html for search results, for instance with head status:300 (Multiple Choices)

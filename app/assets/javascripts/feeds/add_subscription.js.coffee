@@ -20,7 +20,7 @@ $(document).ready ->
       if xhr.status == 304
         Openreader.alertTimedShowHide $("#already-subscribed")
       else
-        Openreader.insert_feed_in_folder null, "all", data
+        Openreader.insert_feed_in_folder null, "all", data["sidebar"]
         # Open the "all subscriptions" folder if not already open
         $("#feeds-all").not(".in").prev("a").click()
         # Select the new feed
@@ -36,7 +36,7 @@ $(document).ready ->
       $("#feed-title a").text ""
       $("#feed-title").addClass "hidden"
       $("#start-info").addClass "hidden"
-      $.post(form_url, post_data, subscription_result)
+      $.post(form_url, post_data, subscription_result, 'json')
         .fail ->
           $("#loading").addClass "hidden"
           $("#start-page").click()
