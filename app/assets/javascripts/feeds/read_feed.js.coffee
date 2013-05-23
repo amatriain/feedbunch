@@ -33,13 +33,12 @@ $(document).ready ->
           Openreader.alertTimedShowHide $("#problem-loading")
 
     Openreader.current_feed_path = $(this).attr "data-feed-path"
-    refresh_path = $(this).attr "data-refresh-path"
+    Openreader.current_feed_refresh_path = $(this).attr "data-refresh-path"
     Openreader.current_feed_id = $(this).attr "data-feed-id"
     Openreader.current_folder_id = $(this).attr "data-folder-id"
     Openreader.current_folder_id ||= "none"
 
-    # The refresh button now refreshes this feed; it's disabled while the feed loads
-    $("#refresh-feed").attr("data-refresh-feed", refresh_path).addClass "disabled"
+    disable_refresh_button()
 
     # The unsubscribe button now unsubscribes from this feed; it's disabled while the feed loads
     $("#unsubscribe-feed").addClass "disabled"
@@ -94,3 +93,9 @@ $(document).ready ->
     $("#folder-management-dropdown a[data-folder-id='#{Openreader.current_folder_id}'] i.icon-ok").removeClass "hidden"
     # Clicking on the dropdown changes folder association for the current feed
     $("#folder-management-dropdown a").attr("data-feed-id", Openreader.current_feed_id)
+
+  #-------------------------------------------------------
+  # Disable Refresh button
+  #-------------------------------------------------------
+  disable_refresh_button = ->
+    $("#refresh-feed").addClass "disabled"

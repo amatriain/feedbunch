@@ -7,9 +7,8 @@ $(document).ready ->
   #-------------------------------------------------------
   $("body").on "click", "#refresh-feed", ->
     if $(this).hasClass("disabled") == false
-      feed_path = $(this).attr "data-refresh-feed"
-      # Only refresh if the data-refresh-feed attribute has a reference to a feed id
-      if feed_path?.length
+      # Only refresh if the global variable stores a feed refresh path
+      if Openreader.current_feed_refresh_path?.length
         $("> i.icon-repeat", this).addClass "icon-spin"
         # Show "loading" message
         $("#loading").removeClass "hidden"
@@ -27,4 +26,4 @@ $(document).ready ->
           if status in ["error", "timeout", "abort", "parsererror"]
             Openreader.alertTimedShowHide $("#problem-refreshing")
 
-        $("#feed-entries").empty().load "#{feed_path}/refresh", null, insert_entries
+        $("#feed-entries").empty().load Openreader.current_feed_refresh_path, null, insert_entries
