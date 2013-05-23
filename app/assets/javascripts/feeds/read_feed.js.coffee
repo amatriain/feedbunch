@@ -2,6 +2,10 @@
 
 $(document).ready ->
 
+  ########################################################
+  # EVENTS
+  ########################################################
+
   #-------------------------------------------------------
   # Load current feed entries when clicking on a feed in the sidebar
   #-------------------------------------------------------
@@ -9,9 +13,7 @@ $(document).ready ->
 
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
-      $(".icon-spin").removeClass("icon-spin").addClass "hidden"
-      $("#loading").addClass "hidden"
-      $("#feed-entries").removeClass "hidden"
+      entries_loaded()
       # Show and enable Refresh button
       $("#refresh-feed").removeClass("hidden").removeClass("disabled")
       # Unsubscribe and Folder Management buttons are shown and enabled only if reading a single feed
@@ -52,26 +54,40 @@ $(document).ready ->
     # Creating a new folder adds this feed to it
     $("#new_folder_feed_id").val(feed_id)
 
-    # Show the feed title
-    feed_title = $(this).attr "data-feed-title"
-    $("#feed-title a").text feed_title
-    $("#feed-title").removeClass "hidden"
-
-    # The feed title links to the feed url
-    feed_url = $(this).attr "data-feed-url"
-    $("#feed-title a").attr("href", feed_url)
-
-    # Empty the entries list before loading
-    $("#feed-entries").empty().addClass "hidden"
-
-    # Hide the start page
-    $("#start-info").addClass "hidden"
-
-    # Show "loading" message
-    $("#loading").removeClass "hidden"
-
-    # Show a spinning icon while loading
-    $(".icon-spinner", this).addClass("icon-spin").removeClass "hidden"
+    show_feed_title this
+    loading_entries this
 
     # Load the entries via Ajax
     $("#feed-entries").load feed_path, null, insert_entries
+
+  ########################################################
+  # COMMON FUNCTIONS
+  ########################################################
+
+  #-------------------------------------------------------
+  # While loading entries hide the entries list,show the spinner and  show "Loading" message
+  #-------------------------------------------------------
+  loading_entries = (feed)->
+    $("#feed-entries").empty().addClass "hidden"
+    $("#start-info").addClass "hidden"
+    $("#loading").removeClass "hidden"
+    $(".icon-spinner", feed).addClass("icon-spin").removeClass "hidden"
+
+  #-------------------------------------------------------
+  # When entries have loaded hide the spinner and "Loading" message, show the entries list
+  #-------------------------------------------------------
+  entries_loaded = (feed)->
+    $(".icon-spin").removeClass("icon-spin").addClass "hidden"
+    $("#loading").addClass "hidden"
+    $("#feed-entries").removeClass "hidden"
+
+  #-------------------------------------------------------
+  # Show the feed title and link it to the feed URL
+  #-------------------------------------------------------
+  show_feed_title = (feed)->
+    # Show the feed title
+    feed_title = $(feed).attr "data-feed-title"
+    $("#feed-title a").text feed_title
+    $("#feed-title").removeClass "hidden"
+    feed_url = $(feed).attr "data-feed-url"
+    $("#feed-title a").attr("href", feed_url)
