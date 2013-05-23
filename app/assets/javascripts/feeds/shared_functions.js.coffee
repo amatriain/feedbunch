@@ -52,6 +52,7 @@ Openreader.show_loading_message = ->
 # While loading entries hide the entries list,show "Loading" message and optionally show a spinner
 #-------------------------------------------------------
 Openreader.loading_entries = (feed)->
+  Openreader.disable_buttons()
   $("#feed-entries").empty().addClass "hidden"
   $("#start-info").addClass "hidden"
   Openreader.show_loading_message()
@@ -63,3 +64,29 @@ Openreader.loading_entries = (feed)->
 #-------------------------------------------------------
 Openreader.show_start_page = ()->
   $("#start-page").click()
+
+#-------------------------------------------------------
+# Disable the Refresh, Folder Management and Unsubscribe buttons
+#-------------------------------------------------------
+Openreader.disable_buttons = ->
+  Openreader.disable_refresh_button()
+  Openreader.disable_folder_management_button()
+  Openreader.disable_unsubscribe_button()
+
+#-------------------------------------------------------
+# Disable Refresh button
+#-------------------------------------------------------
+Openreader.disable_refresh_button = ->
+  $("#refresh-feed").addClass "disabled"
+
+#-------------------------------------------------------
+# Disable Folder Management button
+#-------------------------------------------------------
+Openreader.disable_folder_management_button = ->
+  $("#folder-management").addClass "disabled"
+
+#-------------------------------------------------------
+# Disable Unsubscribe button
+#-------------------------------------------------------
+Openreader.disable_unsubscribe_button = ->
+  $("#unsubscribe-feed").addClass "disabled"

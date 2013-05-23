@@ -29,7 +29,6 @@ $(document).ready ->
     Openreader.current_feed_id = $(this).attr "data-feed-id"
     Openreader.current_folder_id = $(this).attr "data-folder-id"
     Openreader.current_folder_id ||= "none"
-    disable_buttons()
     mark_folder_in_dropdown()
     show_feed_title this
     Openreader.loading_entries this
@@ -67,32 +66,6 @@ $(document).ready ->
     $("#folder-management-dropdown a[data-folder-id] i.icon-ok").addClass "hidden"
     $("#folder-management-dropdown a[data-folder-id='#{Openreader.current_folder_id}'] i.icon-ok")
       .removeClass "hidden"
-
-  #-------------------------------------------------------
-  # Disable the Refresh, Folder Management and Unsubscribe buttons
-  #-------------------------------------------------------
-  disable_buttons = ->
-    disable_refresh_button()
-    disable_folder_management_button()
-    disable_unsubscribe_button()
-
-  #-------------------------------------------------------
-  # Disable Refresh button
-  #-------------------------------------------------------
-  disable_refresh_button = ->
-    $("#refresh-feed").addClass "disabled"
-
-  #-------------------------------------------------------
-  # Disable Folder Management button
-  #-------------------------------------------------------
-  disable_folder_management_button = ->
-    $("#folder-management").addClass "disabled"
-
-  #-------------------------------------------------------
-  # Disable Unsubscribe button
-  #-------------------------------------------------------
-  disable_unsubscribe_button = ->
-    $("#unsubscribe-feed").addClass "disabled"
 
   #-------------------------------------------------------
   # Hide Refresh button
