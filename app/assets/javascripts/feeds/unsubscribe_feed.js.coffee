@@ -14,19 +14,16 @@ $(document).ready ->
   #-------------------------------------------------------
   $("#unsubscribe-submit").on "click", ->
     $("#unsubscribe-feed-popup").modal 'hide'
-    unsubscribe_path = $("#unsubscribe-feed").attr("data-unsubscribe-path")
-    unsubscribe_feed = $("#unsubscribe-feed").attr("data-unsubscribe-feed")
-    unsubscribe_folder = $("#unsubscribe-feed").attr("data-unsubscribe-folder")
 
     # Function to handle result returned by the server
     unsubscribe_result = (data, status, xhr) ->
       # Remove the feed from the sidebar
-      $("[data-sidebar-feed][data-feed-id=#{unsubscribe_feed}]").parent().remove()
+      $("[data-sidebar-feed][data-feed-id=#{Openreader.current_feed_id}]").parent().remove()
       # If the feed was in a folder which is not empty, remove it
       if xhr.status == 205
-        Openreader.remove_folder unsubscribe_folder
+        Openreader.remove_folder Openreader.current_folder_id
 
-    $.post(unsubscribe_path, {"_method":"delete"}, unsubscribe_result)
+    $.post(Openreader.current_feed_path, {"_method":"delete"}, unsubscribe_result)
       .fail ->
         Openreader.alertTimedShowHide $("#problem-unsubscribing")
 

@@ -1,5 +1,7 @@
 #= require ./alert_hiding
 
+window.Openreader ||= {}
+
 $(document).ready ->
 
   ########################################################
@@ -17,7 +19,7 @@ $(document).ready ->
       # Show and enable Refresh button
       $("#refresh-feed").removeClass("hidden").removeClass("disabled")
       # Unsubscribe and Folder Management buttons are shown and enabled only if reading a single feed
-      if feed_id=="all"
+      if Openreader.current_feed_id=="all"
         $("#unsubscribe-feed").addClass("hidden").addClass("disabled")
         $("#folder-management").addClass("hidden").addClass("disabled")
       else
@@ -30,35 +32,34 @@ $(document).ready ->
         else
           Openreader.alertTimedShowHide $("#problem-loading")
 
-    feed_path = $(this).attr "data-feed-path"
+    Openreader.current_feed_path = $(this).attr "data-feed-path"
     refresh_path = $(this).attr "data-refresh-path"
-    feed_id = $(this).attr "data-feed-id"
-    folder_id = $(this).attr "data-folder-id"
-    folder_id ||= "none"
+    Openreader.current_feed_id = $(this).attr "data-feed-id"
+    Openreader.current_folder_id = $(this).attr "data-folder-id"
+    Openreader.current_folder_id ||= "none"
 
     # The refresh button now refreshes this feed; it's disabled while the feed loads
     $("#refresh-feed").attr("data-refresh-feed", refresh_path).addClass "disabled"
 
     # The unsubscribe button now unsubscribes from this feed; it's disabled while the feed loads
-    $("#unsubscribe-feed").attr("data-unsubscribe-feed", feed_id).attr("data-unsubscribe-path", feed_path)
-      .attr("data-unsubscribe-folder", folder_id).addClass "disabled"
+    $("#unsubscribe-feed").addClass "disabled"
 
     # The Folder Management button is disabled while the feed loads
     $("#folder-management").addClass "disabled"
 
     # Mark with a tick the folder in the dropdown
     $("#folder-management-dropdown a[data-folder-id] i.icon-ok").addClass "hidden"
-    $("#folder-management-dropdown a[data-folder-id='#{folder_id}'] i.icon-ok").removeClass "hidden"
+    $("#folder-management-dropdown a[data-folder-id='#{Openreader.current_folder_id}'] i.icon-ok").removeClass "hidden"
     # Clicking on the dropdown changes folder association for the current feed
-    $("#folder-management-dropdown a").attr("data-feed-id", feed_id)
+    $("#folder-management-dropdown a").attr("data-feed-id", Openreader.current_feed_id)
     # Creating a new folder adds this feed to it
-    $("#new_folder_feed_id").val(feed_id)
+    $("#new_folder_feed_id").val(Openreader.current_feed_id)
 
     show_feed_title this
     loading_entries this
 
     # Load the entries via Ajax
-    $("#feed-entries").load feed_path, null, insert_entries
+    $("#feed-entries").load Openreader.current_feed_path, null, insert_entries
 
   ########################################################
   # COMMON FUNCTIONS
