@@ -341,18 +341,8 @@ describe 'folders and feeds' do
       end
 
       it 'adds a feed to a new folder', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="new"]').click
-        end
-
-        sleep 1
         title = 'New folder'
-        within '#new-folder-popup' do
-          fill_in 'Title', with: title
-          find('#new-folder-submit').click
-        end
-        sleep 1
+        add_feed_to_new_folder @feed1.id, title
 
         # data-folder-id attribute should indicate that @feed1 is in the new folder
         new_folder = Folder.where(user_id: @user.id, title: title).first
@@ -360,18 +350,8 @@ describe 'folders and feeds' do
       end
 
       it 'removes old folder if it has no more feeds', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="new"]').click
-        end
-
-        sleep 1
         title = 'New folder'
-        within '#new-folder-popup' do
-          fill_in 'Title', with: title
-          find('#new-folder-submit').click
-        end
-        sleep 1
+        add_feed_to_new_folder @feed1.id, title
 
         # Folder should be deleted from the database
         Folder.where(id: @folder1.id).should be_blank
@@ -397,18 +377,8 @@ describe 'folders and feeds' do
         visit feeds_path
         read_feed @feed1.id
 
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="new"]').click
-        end
-
-        sleep 1
         title = 'New folder'
-        within '#new-folder-popup' do
-          fill_in 'Title', with: title
-          find('#new-folder-submit').click
-        end
-        sleep 1
+        add_feed_to_new_folder @feed1.id, title
 
         # Folder should not be deleted from the database
         Folder.where(id: @folder1.id).should be_present
@@ -439,18 +409,8 @@ describe 'folders and feeds' do
           page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
         end
 
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="new"]').click
-        end
-
-        sleep 1
         title = 'New folder'
-        within '#new-folder-popup' do
-          fill_in 'Title', with: title
-          find('#new-folder-submit').click
-        end
-        sleep 1
+        add_feed_to_new_folder @feed1.id, title
 
         # @feed1 is no longer under @folder1
         within "#sidebar #folders-list li[data-folder-id='#{@folder1.id}']" do
@@ -459,18 +419,8 @@ describe 'folders and feeds' do
       end
 
       it 'adds new folder to the sidebar', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="new"]').click
-        end
-
-        sleep 1
         title = 'New folder'
-        within '#new-folder-popup' do
-          fill_in 'Title', with: title
-          find('#new-folder-submit').click
-        end
-        sleep 1
+        add_feed_to_new_folder @feed1.id, title
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
         within '#sidebar #folders-list' do
@@ -483,18 +433,8 @@ describe 'folders and feeds' do
       end
 
       it 'adds new folder to the dropdown', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="new"]').click
-        end
-
-        sleep 1
         title = 'New folder'
-        within '#new-folder-popup' do
-          fill_in 'Title', with: title
-          find('#new-folder-submit').click
-        end
-        sleep 1
+        add_feed_to_new_folder @feed1.id, title
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
         # Click on Folder button to open the dropdown
@@ -507,18 +447,8 @@ describe 'folders and feeds' do
       end
 
       it 'allows clicking on the dynamically added folder in the dropdown to move another feed into it', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="new"]').click
-        end
-
-        sleep 1
         title = 'New folder'
-        within '#new-folder-popup' do
-          fill_in 'Title', with: title
-          find('#new-folder-submit').click
-        end
-        sleep 1
+        add_feed_to_new_folder @feed1.id, title
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
         # data-folder-id attribute should indicate that @feed1 is in the new folder
@@ -540,19 +470,8 @@ describe 'folders and feeds' do
 
       it 'shows an alert if there is a problem adding the feed to the new folder', js: true do
         User.any_instance.stub(:add_feed_to_new_folder).and_raise StandardError.new
-
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="new"]').click
-        end
-
-        sleep 1
         title = 'New folder'
-        within '#new-folder-popup' do
-          fill_in 'Title', with: title
-          find('#new-folder-submit').click
-        end
-        sleep 1
+        add_feed_to_new_folder @feed1.id, title
 
         page.should have_css '#problem-new-folder'
 
@@ -566,17 +485,7 @@ describe 'folders and feeds' do
       end
 
       it 'shows an alert if the user already has a folder with the same title', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="new"]').click
-        end
-
-        sleep 1
-        within '#new-folder-popup' do
-          fill_in 'Title', with: @folder1.title
-          find('#new-folder-submit').click
-        end
-        sleep 1
+        add_feed_to_new_folder @feed1.id, @folder1.title
 
         # A "problem creating folder" alert should be shown
         page.should have_css 'div#folder-already-exists'
@@ -592,18 +501,7 @@ describe 'folders and feeds' do
         folder = FactoryGirl.build :folder, user_id: user2.id
         user2.folders << folder
 
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="new"]').click
-        end
-
-        sleep 1
-        within '#new-folder-popup' do
-          fill_in 'Title', with: folder.title
-          find('#new-folder-submit').click
-        end
-        sleep 1
-
+        add_feed_to_new_folder @feed1.id, folder.title
         # No alert should be shown
         page.should have_css 'div#folder-already-exists.hidden', visible: false
       end

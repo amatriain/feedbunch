@@ -60,3 +60,23 @@ def read_folder(folder_id)
     find("[data-sidebar-feed][data-feed-id='all']").click
   end
 end
+
+##
+# Click on a feed to read it, and then click on the Folder dropdown to move it to a newly created folder
+#
+# Receives as arguments the id of the feed and the title of the new folder.
+
+def add_feed_to_new_folder(feed_id, title)
+  read_feed feed_id
+  sleep 1
+  find('#folder-management').click
+  within '#folder-management-dropdown ul.dropdown-menu' do
+    find('a[data-folder-id="new"]').click
+  end
+  sleep 1
+  within '#new-folder-popup' do
+    fill_in 'Title', with: title
+    find('#new-folder-submit').click
+  end
+  sleep 1
+end
