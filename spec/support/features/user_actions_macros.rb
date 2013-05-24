@@ -93,6 +93,7 @@ def add_feed_to_folder(feed_id, folder_id)
   within '#folder-management-dropdown ul.dropdown-menu' do
     find("a[data-folder-id='#{folder_id}']").click
   end
+  sleep 1
 end
 
 ##
