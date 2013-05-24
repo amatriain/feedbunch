@@ -6,8 +6,8 @@ class FeedsController < ApplicationController
 
   before_filter :authenticate_user!
 
-  respond_to :html, except: [:create]
-  respond_to :json, only: [:create]
+  respond_to :html, except: [:create, :destroy]
+  respond_to :json, only: [:create, :destroy]
 
   ##
   # list all feeds the currently authenticated is suscribed to
