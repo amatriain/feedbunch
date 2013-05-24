@@ -8,7 +8,7 @@ $(document).ready ->
   ########################################################
 
   #-------------------------------------------------------
-  # Associate feed with folder clicking on a folder in the dropdown
+  # Add feed to folder clicking on a folder in the dropdown
   #-------------------------------------------------------
   $("body").on "click", "a[data-folder-update-path]", ->
     update_folder_path = $(this).attr "data-folder-update-path"
@@ -23,33 +23,11 @@ $(document).ready ->
           if data["old_folder"]["empty"]
             Openreader.remove_folder data["old_folder"]["id"]
           else
-            remove_feed_from_folders Openreader.current_feed_id
+            Openreader.remove_feed_from_folders Openreader.current_feed_id
         Openreader.insert_feed_in_folder Openreader.current_feed_id, folder_id, data["new_folder"]["sidebar"]
         Openreader.read_feed Openreader.current_feed_id, folder_id
 
     $.post(update_folder_path, {"_method":"put", feed_id: Openreader.current_feed_id}, update_folder_result, "json")
-      .fail ->
-        Openreader.alertTimedShowHide $("#problem-folder-management")
-
-  #-------------------------------------------------------
-  # Remove feed from folders clicking on "None" in the dropdown
-  #-------------------------------------------------------
-  $("body").on "click", "a[data-folder-remove-path]", ->
-    delete_folder_path = $(this).attr "data-folder-remove-path"
-
-    # Function to handle result returned by the server
-    remove_folder_result = (data, status, xhr) ->
-      if xhr.status == 205
-        # If the return status is 205, remove the folder (there are no more feeds in it)
-        Openreader.remove_folder Openreader.current_folder_id
-      else
-        # If the return status is 204, remove the feed from the folder but not the folder itself (it has more feeds)
-        remove_feed_from_folders Openreader.current_feed_id
-      Openreader.update_folder_id Openreader.current_feed_id, "none"
-      Openreader.read_feed Openreader.current_feed_id, "all"
-
-
-    $.post(delete_folder_path, {"_method":"delete", feed_id: Openreader.current_feed_id}, remove_folder_result)
       .fail ->
         Openreader.alertTimedShowHide $("#problem-folder-management")
 
@@ -78,7 +56,7 @@ $(document).ready ->
           if data["old_folder"]["empty"]
             Openreader.remove_folder data["old_folder"]["id"]
           else
-            remove_feed_from_folders Openreader.current_feed_id
+            Openreader.remove_feed_from_folders Openreader.current_feed_id
         add_folder data["new_folder"]
         new_folder_id = data["new_folder"]["id"]
         Openreader.update_folder_id Openreader.current_feed_id, new_folder_id
@@ -102,14 +80,6 @@ $(document).ready ->
   ########################################################
   # COMMON FUNCTIONS
   ########################################################
-
-  #-------------------------------------------------------
-  # Remove feed from all folders, except the All Subscriptions folder
-  #-------------------------------------------------------
-  remove_feed_from_folders = (feed_id) ->
-    $("[data-sidebar-feed][data-feed-id='#{feed_id}']").parent().each ->
-      # Do not remove it from the "All Subscriptions" folder
-      $(this).remove() if $(this).parent().attr("id") != "feeds-all"
 
   #-------------------------------------------------------
   # Add a new folder to the sidebar and the dropdown

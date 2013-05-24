@@ -12,6 +12,14 @@ Openreader.remove_folder = (folder_id) ->
   $("#folder-management-dropdown a[data-folder-id='#{folder_id}']").parent().remove()
 
 #-------------------------------------------------------
+# Remove feed from all folders, except the All Subscriptions folder
+#-------------------------------------------------------
+Openreader.remove_feed_from_folders = (feed_id) ->
+  $("[data-sidebar-feed][data-feed-id='#{feed_id}']").parent().each ->
+    # Do not remove it from the "All Subscriptions" folder
+    $(this).remove() if $(this).parent().attr("id") != "feeds-all"
+
+#-------------------------------------------------------
 # Insert feed in a folder in the sidebar
 #-------------------------------------------------------
 Openreader.insert_feed_in_folder = (feed_id, folder_id, feed_data) ->
