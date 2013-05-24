@@ -85,7 +85,15 @@ describe 'unread entries count' do
     unread_folder_entries_should_eq @folder1.id, 1
   end
 
-  it 'shows number of unread entries in a newly subscribed feed'
+  it 'updates number of unread entries when subscribing to a feed', js: true do
+    feed = FactoryGirl.create :feed
+    entry1 = FactoryGirl.build :entry, feed_id: feed.id
+    entry2 = FactoryGirl.build :entry, feed_id: feed.id
+    feed.entries << entry1 << entry2
+    subscribe_feed feed.url
+    unread_folder_entries_should_eq 'all', 6
+    unread_feed_entries_should_eq feed.id, 2
+  end
 
   it 'updates number of unread entries when unsubscribing from a feed'
 

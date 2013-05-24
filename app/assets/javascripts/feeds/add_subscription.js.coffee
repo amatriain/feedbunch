@@ -24,7 +24,8 @@ $(document).ready ->
       if xhr.status == 304
         Openreader.alertTimedShowHide $("#already-subscribed")
       else
-        Openreader.insert_feed_in_folder data["id"], "all", data["sidebar"]
+        Openreader.insert_feed_in_folder data["id"], "all", data["sidebar_feed"]
+        Openreader.update_folder_entry_count "all", data["sidebar_read_all"]
         Openreader.read_feed data["id"], "all"
 
     # If the user has written something in the form, POST the value via ajax
