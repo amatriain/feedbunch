@@ -28,11 +28,10 @@ class FolderFeedRemove
     if folder.present?
       Rails.logger.info "user #{user.id} - #{user.email} is removing feed #{feed.id} - #{feed.fetch_url} from folder #{folder.id} - #{folder.title}"
       folder.feeds.delete feed
-      return folder
     else
       Rails.logger.info "user #{user.id} - #{user.email} is trying to remove feed #{feed.id} - #{feed.fetch_url} from its folder, but it's not in any folder"
-      return nil
     end
 
+    return folder
   end
 end

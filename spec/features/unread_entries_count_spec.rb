@@ -38,11 +38,7 @@ describe 'unread entries count' do
   it 'shows number of unread entries in a single feed', js: true do
     unread_feed_entries_should_eq @feed1.title, 3
     unread_feed_entries_should_eq @feed2.title, 1
-  end
-
-  it 'updates number of unread entries when clicking on a folder'
-
-  it 'updates number of unread entries when clicking on a feed'
+    end
 
   it 'updates number of unread entries when adding a feed to a newly created folder', js: true do
     @folder1.feeds << @feed2
@@ -95,7 +91,13 @@ describe 'unread entries count' do
     unread_feed_entries_should_eq feed.title, 2
   end
 
-  it 'updates number of unread entries when unsubscribing from a feed'
+  it 'updates number of unread entries when unsubscribing from a feed', js: true do
+    @folder1.feeds << @feed2
+    visit feeds_path
+    unsubscribe_feed @feed1.id
+    unread_folder_entries_should_eq 'all', 1
+    unread_folder_entries_should_eq @folder1.id, 1
+  end
 
   it 'updates number of unread entries when refreshing a feed'
 end

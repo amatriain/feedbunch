@@ -22,11 +22,14 @@ $(document).ready ->
     # Function to handle result returned by the server
     unsubscribe_result = (data, status, xhr) ->
       remove_feed()
-      # If the feed was in a folder which is now empty, remove it
-      if xhr.status == 205
-        Openreader.remove_folder Openreader.current_folder_id
+      Openreader.update_folder_entry_count "all", data["all_subscriptions"]["sidebar_read_all"]
+      if data["old_folder"]
+        if data["old_folder"]["deleted"]
+          Openreader.remove_folder data["old_folder"]["id"]
+        else
+          Openreader.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
 
-    $.post(Openreader.current_feed_path, {"_method":"delete"}, unsubscribe_result)
+    $.post(Openreader.current_feed_path, {"_method":"delete"}, unsubscribe_result, 'json')
       .fail ->
         Openreader.alertTimedShowHide $("#problem-unsubscribing")
 

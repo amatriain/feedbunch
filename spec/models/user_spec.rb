@@ -379,25 +379,13 @@ describe User do
         folder_unchanged.should be_nil
       end
 
-      it 'returns nil if feed was in a folder with more feeds' do
-        folder = FactoryGirl.build :folder, user_id: @user.id
-        feed2 = FactoryGirl.create :feed
-        @user.feeds << feed2
-        @user.folders << folder
-        folder.feeds << feed2
-        folder.feeds << @feed
-
-        folder_unchanged = @user.unsubscribe @feed.id
-        folder_unchanged.should be_nil
-      end
-
-      it 'returns folder id if feed was in a folder with no more feeds' do
+      it 'returns folder id if feed was in a folder' do
         folder = FactoryGirl.build :folder, user_id: @user.id
         @user.folders << folder
         folder.feeds << @feed
 
-        folder_unchanged = @user.unsubscribe @feed.id
-        folder_unchanged.should eq folder.id
+        old_folder = @user.unsubscribe @feed.id
+        old_folder.should eq folder
       end
 
       it 'raises error if the user is not subscribed to the feed' do

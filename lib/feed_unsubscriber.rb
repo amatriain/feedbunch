@@ -16,10 +16,9 @@ class FeedUnsubscriber
   # If the user had associated the feed with a folder, and after unsubscribing there are no more feeds
   # in the folder, that folder is deleted.
   #
-  # If successful:
-  # - returns the id of the deleted folder,  if the user had associated the feed with a folder and that
-  # folder has been deleted (because it had no more feeds inside).
-  # - returns nil otherwise (the feed was not in a folder, or the folder still has feeds inside)
+  # Returns a Folder instance with the data of the folder in which the feed was previously, or nil
+  # if it wasn't in any folder. This object may have already  been deleted from the database,
+  # if there were no more feeds in it.
 
   def self.unsubscribe(feed_id, user)
     feed = user.feeds.find feed_id
@@ -28,11 +27,6 @@ class FeedUnsubscriber
     Rails.logger.info "unsubscribing user #{user.id} - #{user.email} from feed #{feed.id} - #{feed.fetch_url}"
     user.feeds.delete feed
 
-    if folder.present?
-      if !Folder.exists? folder
-        deleted_folder_id = folder.id
-      end
-    end
-    return deleted_folder_id
+    return folder
   end
 end

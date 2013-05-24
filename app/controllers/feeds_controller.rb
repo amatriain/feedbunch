@@ -83,18 +83,11 @@ class FeedsController < ApplicationController
 
   ##
   # Unsubscribe the authenticated user from the feed passed in the params[:id] param.
-  #
-  # Return status:
-  # - 204 if the feed was in a folder, and it still has feeds
-  # - 205 if the feed was in a folder which has been deleted because it had no more feeds
 
   def destroy
-    deleted_folder = current_user.unsubscribe params[:id]
-    if deleted_folder.present?
-      head status: 205
-    else
-      head status: 204
-    end
+    @old_folder = current_user.unsubscribe params[:id]
+    render 'destroy.json.erb', locals: {user: current_user,
+                                       old_folder: @old_folder}
   rescue => e
     handle_error e
   end
