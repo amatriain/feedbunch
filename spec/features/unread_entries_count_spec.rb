@@ -58,11 +58,27 @@ describe 'unread entries count' do
     unread_folder_entries_should_eq new_folder.id, 3
   end
 
-  it 'shows number of unread entries in a newly subscribed feed'
+  it 'updates number of unread entries when moving a feed into an existing folder', js: true do
+    # @folder1 has @feed1, @feed2. folder2 has feed3
+    @folder1.feeds << @feed2
+    folder2 = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder2
+    feed3 = FactoryGirl.create :feed
+    @user.feeds << feed3
+    folder2.feeds << feed3
+    visit feeds_path
 
-  it 'updates number of unread entries when moving a feed into a folder'
+    add_feed_to_folder @feed1.id, folder2.id
+
+    # Entry count in @folder1 should be updated
+    unread_folder_entries_should_eq @folder1.id, 1
+    # Entry count in folder2 should be updated
+    unread_folder_entries_should_eq folder2.id, 3
+  end
 
   it 'updates number of unread entries when removing a feed from a folder'
+
+  it 'shows number of unread entries in a newly subscribed feed'
 
   it 'updates number of unread entries when unsubscribing from a feed'
 

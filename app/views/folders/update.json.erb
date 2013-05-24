@@ -4,17 +4,24 @@
   "new_folder": <%=
     {
       id: new_folder.id,
-      sidebar: render(partial: 'feeds/sidebar/sidebar_feed', locals: {user: user, feed: feed}, layout: false)
+      sidebar_feed: render(partial: 'feeds/sidebar/sidebar_feed', locals: {user: user, feed: feed}, layout: false),
+      sidebar_read_all: render(partial: 'feeds/sidebar/sidebar_folder_read_all', locals: {user: user, folder_id: new_folder.id}, layout: false)
     }.to_json.html_safe
   %>
 
-  <% if old_folder.present? %>
-  ,
-  "old_folder": <%=
-    {
-      id: old_folder.id,
-      deleted: old_folder.feeds.blank?
-    }.to_json.html_safe
+  <%
+    if old_folder.present?
+      old_folder_deleted = old_folder.feeds.blank?
+      old_folder_data = {
+        id: old_folder.id,
+        deleted: old_folder_deleted
+      }
+      if !old_folder_deleted
+        old_folder_data[:sidebar_read_all] = render(partial: 'feeds/sidebar/sidebar_folder_read_all', locals: {user: user, folder_id: old_folder.id}, layout: false)
+      end
   %>
+  ,
+  "old_folder": <%= old_folder_data.to_json.html_safe %>
+
   <% end %>
 }

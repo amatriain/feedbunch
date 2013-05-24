@@ -24,7 +24,9 @@ $(document).ready ->
             Openreader.remove_folder data["old_folder"]["id"]
           else
             Openreader.remove_feed_from_folders Openreader.current_feed_id
-        Openreader.insert_feed_in_folder Openreader.current_feed_id, folder_id, data["new_folder"]["sidebar"]
+            Openreader.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
+        Openreader.insert_feed_in_folder Openreader.current_feed_id, folder_id, data["new_folder"]["sidebar_feed"]
+        Openreader.update_folder_entry_count data["new_folder"]["id"], data["new_folder"]["sidebar_read_all"]
         Openreader.read_feed Openreader.current_feed_id, folder_id
 
     $.post(update_folder_path, {"_method":"put", feed_id: Openreader.current_feed_id}, update_folder_result, "json")
@@ -57,7 +59,7 @@ $(document).ready ->
             Openreader.remove_folder data["old_folder"]["id"]
           else
             Openreader.remove_feed_from_folders Openreader.current_feed_id
-            Openreader.update_folder_entry_count Openreader.current_folder_id, data["old_folder"]["sidebar_read_all"]
+            Openreader.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
         add_folder data["new_folder"]
         new_folder_id = data["new_folder"]["id"]
         Openreader.update_folder_id Openreader.current_feed_id, new_folder_id
