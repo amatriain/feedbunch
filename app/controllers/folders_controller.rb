@@ -6,8 +6,8 @@ class FoldersController < ApplicationController
 
   before_filter :authenticate_user!
 
-  respond_to :html, except: [:update, :create]
-  respond_to :json, only: [:update, :create]
+  respond_to :html, except: [:update, :create, :remove]
+  respond_to :json, only: [:update, :create, :remove]
 
   ##
   # Return HTML with all entries for a given folder, containing all feeds subscribed to by the user inside the folder.
