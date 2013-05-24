@@ -28,12 +28,7 @@ describe 'subscription to feeds' do
     entry = FactoryGirl.build :entry, feed_id: @feed2.id
     @feed2.entries << entry
 
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: @feed2.fetch_url
-      find('#subscribe-submit').click
-    end
+    subscribe_feed @feed2.fetch_url
 
     # Both the old and new feeds should be there, the new feed should be selected
     page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
@@ -47,12 +42,7 @@ describe 'subscription to feeds' do
     entry = FactoryGirl.build :entry, feed_id: @feed2.id
     @feed2.entries << entry
 
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: @feed2.url
-      find('#subscribe-submit').click
-    end
+    subscribe_feed @feed2.url
 
     # Both the old and new feeds should be there, the new feed should be selected
     page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
@@ -69,12 +59,7 @@ describe 'subscription to feeds' do
     entry = FactoryGirl.build :entry, feed_id: feed.id
     feed.entries << entry
 
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: url_slash
-      find('#subscribe-submit').click
-    end
+    subscribe_feed url_slash
 
     # Both the old and new feeds should be there, the new feed should be selected
     page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
@@ -91,12 +76,7 @@ describe 'subscription to feeds' do
     entry = FactoryGirl.build :entry, feed_id: feed.id
     feed.entries << entry
 
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: url_no_slash
-      find('#subscribe-submit').click
-    end
+    subscribe_feed url_no_slash
 
     # Both the old and new feeds should be there, the new feed should be selected
     page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
@@ -113,12 +93,7 @@ describe 'subscription to feeds' do
     entry = FactoryGirl.build :entry, feed_id: feed.id
     feed.entries << entry
 
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: url_no_scheme
-      find('#subscribe-submit').click
-    end
+    subscribe_feed url_no_scheme
 
     # Both the old and new feeds should be there, the new feed should be selected
     page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
@@ -153,12 +128,7 @@ FEED_XML
     feed_xml.stub(:headers).and_return {}
     RestClient.stub get: feed_xml
 
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: fetch_url
-      find('#subscribe-submit').click
-    end
+    subscribe_feed fetch_url
 
     # Both the old and new feeds should be there, the new feed should be selected
     within '#sidebar li#folder-all ul#feeds-all' do
@@ -220,12 +190,7 @@ FEED_XML
 
     end
 
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: webpage_url
-      find('#subscribe-submit').click
-    end
+    subscribe_feed webpage_url
 
     # Both the old and new feeds should be there, the new feed should be selected
     within '#sidebar li#folder-all ul#feeds-all' do
@@ -288,12 +253,7 @@ FEED_XML
 
     end
 
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: url_no_schema
-      find('#subscribe-submit').click
-    end
+    subscribe_feed url_no_schema
 
     # Both the old and new feeds should be there, the new feed should be selected
     within '#sidebar li#folder-all ul#feeds-all' do
@@ -309,12 +269,7 @@ FEED_XML
   it 'shows an alert if there is a problem subscribing to a feed', js: true do
     User.any_instance.stub(:feeds).and_raise StandardError.new
     # Try to subscribe to feed (already in the database, for simplicity)
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: @feed2.fetch_url
-      find('#subscribe-submit').click
-    end
+    subscribe_feed @feed2.fetch_url
 
     # A "problem subscribing to feed" alert should be shown
     page.should have_css 'div#problem-subscribing'
@@ -327,12 +282,7 @@ FEED_XML
 
   it 'shows an alert if the user is already subscribed to the feed', js: true do
     # Try to subscribe to feed again
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: @feed1.fetch_url
-      find('#subscribe-submit').click
-    end
+    subscribe_feed @feed1.fetch_url
 
     # A "you're already subscribed to feed" alert should be shown
     page.should have_css 'div#already-subscribed'
@@ -385,23 +335,10 @@ FEED_XML
 
     end
 
-    # Subscribe to feed
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: webpage_url
-      find('#subscribe-submit').click
-    end
+    subscribe_feed webpage_url
 
-    sleep 1
-
-    # Try to subscribe to feed again submitting the URL without scheme
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: url_slash
-      find('#subscribe-submit').click
-    end
+    # Try to subscribe to feed again submitting the URL without schema
+    subscribe_feed url_slash
 
     # A "you're already subscribed to feed" alert should be shown
     page.should have_css 'div#already-subscribed'
@@ -454,23 +391,10 @@ FEED_XML
 
     end
 
-    # Subscribe to feed
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: webpage_url
-      find('#subscribe-submit').click
-    end
-
-    sleep 1
+    subscribe_feed webpage_url
 
     # Try to subscribe to feed again submitting the URL without scheme
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: url_no_slash
-      find('#subscribe-submit').click
-    end
+    subscribe_feed url_no_slash
 
     # A "you're already subscribed to feed" alert should be shown
     page.should have_css 'div#already-subscribed'
@@ -523,23 +447,10 @@ FEED_XML
 
     end
 
-    # Subscribe to feed
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: url_no_schema
-      find('#subscribe-submit').click
-    end
-
-    sleep 1
+    subscribe_feed url_no_schema
 
     # Try to subscribe to feed again submitting the URL without scheme
-    find('#add-subscription').click
-    sleep 1
-    within '#subscribe-feed-popup' do
-      fill_in 'Feed', with: url_no_schema
-      find('#subscribe-submit').click
-    end
+    subscribe_feed url_no_schema
 
     # A "you're already subscribed to feed" alert should be shown
     page.should have_css 'div#already-subscribed'

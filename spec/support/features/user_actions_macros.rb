@@ -109,3 +109,17 @@ def remove_feed_from_folder(feed_id)
     find('a[data-folder-id="none"]').click
   end
 end
+
+##
+# Click on the Subscribe button, enters the URL passed as argument in the popup form, and submit the form.
+# Receives as argument the URL to enter in the Add Subscription popup form.
+
+def subscribe_feed(url)
+  find('#add-subscription').click
+  sleep 1
+  within '#subscribe-feed-popup' do
+    fill_in 'Feed', with: url
+    find('#subscribe-submit').click
+  end
+  sleep 1
+end
