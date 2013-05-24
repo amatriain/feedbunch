@@ -139,14 +139,7 @@ describe 'folders and feeds' do
       end
 
       it 'adds a feed to an existing folder', js: true do
-        read_feed @feed2.id
-        sleep 1
-        find('#folder-management').click
-        sleep 1
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          # While reading a feed that is not in a folder, click on an existing folder in the dropdown menu
-          find("a[data-folder-id='#{@folder1.id}']").click
-        end
+        add_feed_to_folder @feed2.id, @folder1.id
 
         # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
         # is now inside @folder1
@@ -162,15 +155,10 @@ describe 'folders and feeds' do
         @folder1.feeds << @feed2
 
         visit feeds_path
-        read_feed @feed1.id
-
         # @feed1 should be under @folder1
         page.should have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
 
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find("a[data-folder-id='#{@new_folder.id}']").click
-        end
+        add_feed_to_folder @feed1.id, @new_folder.id
 
         # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
         # is now inside "@new_folder"
@@ -184,12 +172,7 @@ describe 'folders and feeds' do
       end
 
       it 'removes folder if it has no more feeds', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find("a[data-folder-id='#{@new_folder.id}']").click
-        end
-
-        sleep 1
+        add_feed_to_folder @feed1.id, @new_folder.id
 
         # Folder should be deleted from the database
         Folder.exists?(@folder1.id).should be_false
@@ -214,14 +197,7 @@ describe 'folders and feeds' do
         @folder1.feeds << @feed2
 
         visit feeds_path
-        read_feed @feed1.id
-
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find("a[data-folder-id='#{@new_folder.id}']").click
-        end
-
-        sleep 1
+        add_feed_to_folder @feed1.id, @new_folder.id
 
         # Folder should not be deleted from the database
         Folder.exists?(@folder1.id).should be_true
@@ -243,13 +219,7 @@ describe 'folders and feeds' do
       it 'shows an alert if there is a problem adding a feed to a folder', js: true do
         User.any_instance.stub(:add_feed_to_folder).and_raise StandardError.new
 
-        read_feed @feed2.id
-        sleep 1
-        find('#folder-management').click
-        sleep 1
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find("a[data-folder-id='#{@folder1.id}']").click
-        end
+        add_feed_to_folder @feed2.id, @folder1.id
 
         # A "problem managing folders" alert should be shown
         page.should have_css 'div#problem-folder-management'

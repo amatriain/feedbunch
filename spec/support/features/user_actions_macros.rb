@@ -80,3 +80,17 @@ def add_feed_to_new_folder(feed_id, title)
   end
   sleep 1
 end
+
+##
+# Click on a feed to read it, and then click on the Folder dropdown to move it to an already existing folder
+#
+# Receives as arguments the id of the feed and the id of the folder.
+
+def add_feed_to_folder(feed_id, folder_id)
+  read_feed feed_id
+  sleep 1
+  find('#folder-management').click
+  within '#folder-management-dropdown ul.dropdown-menu' do
+    find("a[data-folder-id='#{folder_id}']").click
+  end
+end
