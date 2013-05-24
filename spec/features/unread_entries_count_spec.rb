@@ -28,22 +28,16 @@ describe 'unread entries count' do
   end
 
   it 'shows total number of unread entries', js: true do
-    within '#sidebar #folders-list #folder-all #feeds-all #folder-all-all-feeds' do
-      page.should have_content 'Read all subscriptions (4)'
-    end
+    unread_folder_entries_should_eq 'all', 4
   end
 
   it 'shows number of unread entries in a folder', js: true do
-    within "#sidebar #folders-list #folder-#{@folder1.id} #feeds-#{@folder1.id} #folder-#{@folder1.id}-all-feeds" do
-      page.should have_content 'Read all subscriptions (3)'
-    end
+    unread_folder_entries_should_eq @folder1.id, 3
   end
 
   it 'shows number of unread entries in a single feed', js: true do
-    within '#sidebar #folders-list #folder-all #feeds-all' do
-      page.should have_content "#{@feed1.title} (3)"
-      page.should have_content "#{@feed2.title} (1)"
-    end
+    unread_feed_entries_should_eq @feed1.title, 3
+    unread_feed_entries_should_eq @feed2.title, 1
   end
 
   it 'updates number of unread entries when clicking on a folder'
@@ -57,15 +51,11 @@ describe 'unread entries count' do
     add_feed_to_new_folder @feed1.id, title
 
     # Entry count in @folder1 should be updated
-    within "#sidebar #folders-list #folder-#{@folder1.id} #feeds-#{@folder1.id} #folder-#{@folder1.id}-all-feeds" do
-      page.should have_content 'Read all subscriptions (1)'
-    end
+    unread_folder_entries_should_eq @folder1.id, 1
 
     # new folder should have the correct entry count
     new_folder = Folder.where(user_id: @user.id, title: title).first
-    within "#sidebar #folders-list #folder-#{new_folder.id} #feeds-#{new_folder.id} #folder-#{new_folder.id}-all-feeds" do
-      page.should have_content 'Read all subscriptions (3)'
-    end
+    unread_folder_entries_should_eq new_folder.id, 3
   end
 
   it 'shows number of unread entries in a newly subscribed feed'

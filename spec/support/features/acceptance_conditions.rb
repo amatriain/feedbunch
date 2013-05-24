@@ -54,3 +54,23 @@ def mail_should_not_be_sent
   email = ActionMailer::Base.deliveries.pop
   email.present?.should be_false
 end
+
+##
+# Test that the count of unread entries in a folder equals the passed argument.
+# Receives as argument the folder id and the expected entry count.
+
+def unread_folder_entries_should_eq(folder_id, count)
+  within "#sidebar #folders-list #folder-#{folder_id} #feeds-#{folder_id} #folder-#{folder_id}-all-feeds" do
+    page.should have_content "Read all subscriptions (#{count})"
+  end
+end
+
+##
+# Test that the count of unread entries in a feed equals the passed argument.
+# Receives as argument the feed title, the expected entry count and optionally what folder to look at (defaults to "all")
+
+def unread_feed_entries_should_eq(feed_title, count, folder_id='all')
+  within "#sidebar #folders-list #folder-#{folder_id} #feeds-#{folder_id}" do
+    page.should have_content "#{feed_title} (#{count})"
+  end
+end
