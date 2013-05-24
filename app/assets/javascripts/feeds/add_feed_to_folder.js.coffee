@@ -20,7 +20,7 @@ $(document).ready ->
         Openreader.alertTimedShowHide $("#already-in-folder")
       else
         if data["old_folder"]
-          if data["old_folder"]["empty"]
+          if data["old_folder"]["deleted"]
             Openreader.remove_folder data["old_folder"]["id"]
           else
             Openreader.remove_feed_from_folders Openreader.current_feed_id
