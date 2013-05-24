@@ -76,7 +76,14 @@ describe 'unread entries count' do
     unread_folder_entries_should_eq folder2.id, 3
   end
 
-  it 'updates number of unread entries when removing a feed from a folder'
+  it 'updates number of unread entries when removing a feed from a folder', js: true do
+    @folder1.feeds << @feed2
+    visit feeds_path
+
+    remove_feed_from_folder @folder1.id
+
+    unread_folder_entries_should_eq @folder1.id, 1
+  end
 
   it 'shows number of unread entries in a newly subscribed feed'
 

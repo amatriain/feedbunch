@@ -925,18 +925,31 @@ describe User do
       Folder.exists?(id: @folder.id).should be_true
     end
 
-    it 'returns true if it the folder still exists' do
+    it 'returns the folder object if it the feed was in a folder' do
+      folder = @user.remove_feed_from_folder @feed.id
+      folder.should eq @folder
+    end
+
+    it 'does not return a folder object if it the feed was not in a folder' do
+      feed2 = FactoryGirl.create :feed
+      @user.feeds << feed2
+
+      folder = @user.remove_feed_from_folder feed2.id
+      folder.should be_nil
+    end
+
+    it 'returns a folder object with no feeds if there are no more feeds in it' do
+      folder = @user.remove_feed_from_folder @feed.id
+      folder.feeds.blank?.should be_true
+    end
+
+    it 'returns a folder object with feeds if there are more feeds in it' do
       feed2 = FactoryGirl.create :feed
       @user.feeds << feed2
       @folder.feeds << feed2
 
-      folder_exists = @user.remove_feed_from_folder @feed.id
-      folder_exists.should be_true
-    end
-
-    it 'returns false if the folder has been deleted' do
-      folder_exists = @user.remove_feed_from_folder @feed.id
-      folder_exists.should be_false
+      folder = @user.remove_feed_from_folder @feed.id
+      folder.feeds.blank?.should be_false
     end
 
     it 'raises an error if the user is not subscribed to the feed' do

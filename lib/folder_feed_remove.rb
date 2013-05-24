@@ -16,9 +16,9 @@ class FolderFeedRemove
   #
   # If after removing the feed there are no more feeds in the folder, it is deleted.
   #
-  # Returns a boolean:
-  # - true if the folder has not been deleted (it has more feeds in it)
-  # - false if the folder has been deleted (it had no more feeds)
+  # Returns a Folder instance with the data of the folder in which the feed was previously, or nil
+  # if it wasn't in any folder. This object may have already  been deleted from the database,
+  # if there were no more feeds in it.
 
   def self.remove_feed_from_folder(feed_id, user)
     # Ensure that the user is subscribed to the feed
@@ -28,10 +28,10 @@ class FolderFeedRemove
     if folder.present?
       Rails.logger.info "user #{user.id} - #{user.email} is removing feed #{feed.id} - #{feed.fetch_url} from folder #{folder.id} - #{folder.title}"
       folder.feeds.delete feed
-      return !folder.destroyed?
+      return folder
     else
       Rails.logger.info "user #{user.id} - #{user.email} is trying to remove feed #{feed.id} - #{feed.fetch_url} from its folder, but it's not in any folder"
-      return true
+      return nil
     end
 
   end

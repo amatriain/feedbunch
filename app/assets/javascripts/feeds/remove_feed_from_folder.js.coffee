@@ -15,15 +15,14 @@ $(document).ready ->
 
     # Function to handle result returned by the server
     remove_folder_result = (data, status, xhr) ->
-      if xhr.status == 205
-        # If the return status is 205, remove the folder (there are no more feeds in it)
-        Openreader.remove_folder Openreader.current_folder_id
-      else
-        # If the return status is 204, remove the feed from the folder but not the folder itself (it has more feeds)
-        Openreader.remove_feed_from_folders Openreader.current_feed_id
-      Openreader.update_folder_id Openreader.current_feed_id, "none"
-      Openreader.read_feed Openreader.current_feed_id, "all"
-
+      if data["old_folder"]
+        if data["old_folder"]["deleted"]
+          Openreader.remove_folder data["old_folder"]["id"]
+        else
+          Openreader.remove_feed_from_folders Openreader.current_feed_id
+          Openreader.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
+        Openreader.update_folder_id Openreader.current_feed_id, "none"
+        Openreader.read_feed Openreader.current_feed_id, "all"
 
     $.post(delete_folder_path, {"_method":"delete", feed_id: Openreader.current_feed_id}, remove_folder_result)
       .fail ->

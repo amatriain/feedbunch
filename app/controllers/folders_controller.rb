@@ -69,12 +69,9 @@ class FoldersController < ApplicationController
   # Remove the feed passed in params[:feed_id] from its current folder.
 
   def remove
-    folder_still_exists = current_user.remove_feed_from_folder params[:feed_id]
-    if folder_still_exists
-      head status: 204
-    else
-      head status: 205
-    end
+    @old_folder = current_user.remove_feed_from_folder params[:feed_id]
+    render 'remove.json.erb', locals: {user: current_user,
+                                       old_folder: @old_folder}
   rescue => e
     handle_error e
   end

@@ -198,6 +198,11 @@ describe FoldersController do
 
   context 'DELETE destroy' do
 
+    it 'returns success' do
+      delete :remove, feed_id: @feed1.id
+      response.should be_success
+    end
+
     it 'returns 404 if the user is not subscribed to the feed' do
       feed = FactoryGirl.create :feed
       delete :remove, feed_id: feed.id
@@ -209,22 +214,9 @@ describe FoldersController do
       response.status.should eq 404
     end
 
-    it 'returns 204 if the feed is not in any folder' do
-      delete :remove, feed_id: @feed3.id
-      response.status.should eq 204
-    end
-
-    it 'returns 204 if the feed is successfully removed from the folder and there are more feeds in the folder' do
+    it 'assigns to @old_folder the folder in which the feed was previously' do
       delete :remove, feed_id: @feed1.id
-      response.status.should eq 204
-    end
-
-    it 'returns 205 if the feed is successfully removed from the folder and there are no more feeds in the folder' do
-      # Ensure that @folder1 only has @feed1
-      @folder1.feeds.delete @feed2
-
-      delete :remove, feed_id: @feed1.id
-      response.status.should eq 205
+      assigns(:old_folder).should eq @folder1
     end
 
     it 'deletes the folder if the feed is successfully removed from the folder and there are no more feeds in the folder' do

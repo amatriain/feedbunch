@@ -102,7 +102,6 @@ end
 
 def remove_feed_from_folder(feed_id)
   read_feed feed_id
-
   sleep 1
   find('#folder-management').click
   within '#folder-management-dropdown ul.dropdown-menu' do
