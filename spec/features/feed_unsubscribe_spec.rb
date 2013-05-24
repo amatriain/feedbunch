@@ -15,7 +15,6 @@ describe 'unsubscribe from feed' do
 
     login_user_for_feature @user
     visit feeds_path
-    read_feed @feed1.id
   end
 
   it 'hides unsubscribe button until a feed is selected', js: true do
@@ -24,6 +23,7 @@ describe 'unsubscribe from feed' do
   end
 
   it 'shows unsubscribe button when a feed is selected', js: true do
+    read_feed @feed1.id
     page.should_not have_css 'a#unsubscribe-feed.hidden', visible: false
     page.should_not have_css 'a#unsubscribe-feed.disabled', visible: false
     page.should have_css 'a#unsubscribe-feed'
@@ -33,9 +33,7 @@ describe 'unsubscribe from feed' do
     # Regression test for bug #152
 
     # Unsubscribe from @feed1
-    find('#unsubscribe-feed').click
-    sleep 1
-    find('#unsubscribe-submit').click
+    unsubscribe_feed @feed1.id
 
     # Read @feed2. All buttons should be visible and enabled
     read_feed @feed2.id
@@ -55,14 +53,14 @@ describe 'unsubscribe from feed' do
   end
 
   it 'shows a confirmation popup', js: true do
+    read_feed @feed1.id
     find('#unsubscribe-feed').click
+    sleep 1
     page.should have_css '#unsubscribe-feed-popup'
   end
 
   it 'unsubscribes from a feed', js: true do
-    find('#unsubscribe-feed').click
-    sleep 1
-    find('#unsubscribe-submit').click
+    unsubscribe_feed @feed1.id
 
     # Only @feed2 should be present, @feed1 has been unsubscribed
     page.should_not have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']", visible: false
@@ -72,9 +70,7 @@ describe 'unsubscribe from feed' do
   it 'shows an alert if there is a problem unsubscribing from a feed', js: true do
     User.any_instance.stub(:feeds).and_raise StandardError.new
 
-    find('#unsubscribe-feed').click
-    sleep 1
-    find('#unsubscribe-submit').click
+    unsubscribe_feed @feed1.id
 
     # A "problem refreshing feed" alert should be shown
     page.should have_css 'div#problem-unsubscribing'
@@ -88,10 +84,7 @@ describe 'unsubscribe from feed' do
   it 'deletes a feed if there are no users subscribed to it', js: true do
     Feed.exists?(@feed1.id).should be_true
 
-    find('#unsubscribe-feed').click
-    sleep 1
-    find('#unsubscribe-submit').click
-    sleep 1
+    unsubscribe_feed @feed1.id
 
     Feed.exists?(@feed1.id).should be_false
   end
@@ -101,16 +94,12 @@ describe 'unsubscribe from feed' do
     @user.folders << folder
     folder.feeds << @feed1
     visit feeds_path
-    read_feed @feed1.id
 
     # Feed should be in the folder and in the "all subscriptions" folder
     page.should have_css "#sidebar li#folder-all li > a[data-feed-id='#{@feed1.id}']", visible: false
     page.should have_css "#sidebar li#folder-#{folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
 
-    find('#unsubscribe-feed').click
-    sleep 1
-    find('#unsubscribe-submit').click
-    sleep 1
+    unsubscribe_feed @feed1.id
 
     # Feed should disappear completely from both folders
     page.should_not have_css "#sidebar > li#folder-all li > a[data-feed-id='#{@feed1.id}']", visible: false
@@ -118,12 +107,10 @@ describe 'unsubscribe from feed' do
   end
 
   it 'shows start page after unsubscribing', js: true do
+    read_feed @feed1.id
     page.should have_css '#start-info.hidden', visible: false
 
-    find('#unsubscribe-feed').click
-    sleep 1
-    find('#unsubscribe-submit').click
-    sleep 1
+    unsubscribe_feed @feed1.id
 
     page.should have_css '#start-info'
   end
@@ -133,10 +120,7 @@ describe 'unsubscribe from feed' do
     user2.feeds << @feed1
 
     # Unsubscribe @user from @feed1 and logout
-    find('#unsubscribe-feed').click
-    sleep 1
-    find('#unsubscribe-submit').click
-    sleep 1
+    unsubscribe_feed @feed1.id
     find('#sign_out').click
 
     # user2 should still see the feed in his own list
@@ -151,12 +135,7 @@ describe 'unsubscribe from feed' do
     folder.feeds << @feed1
 
     visit feeds_path
-    read_feed @feed1.id
-
-    find('#unsubscribe-feed').click
-    sleep 1
-    find('#unsubscribe-submit').click
-    sleep 1
+    unsubscribe_feed @feed1.id
 
     # folder should be deleted from the database
     Folder.exists?(folder.id).should be_false
@@ -183,12 +162,7 @@ describe 'unsubscribe from feed' do
     folder.feeds << @feed1 << @feed2
 
     visit feeds_path
-    read_feed @feed1.id
-
-    find('#unsubscribe-feed').click
-    sleep 1
-    find('#unsubscribe-submit').click
-    sleep 1
+    unsubscribe_feed @feed1.id
 
     # folder should not be deleted from the database
     Folder.exists?(folder.id).should be_true

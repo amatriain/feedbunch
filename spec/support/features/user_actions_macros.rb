@@ -123,3 +123,15 @@ def subscribe_feed(url)
   end
   sleep 1
 end
+
+##
+# Click on the Unsubscribe button and then click on Accept in the confirmation popup.
+# Receives as argument the id of the feed to unsubscribe
+
+def unsubscribe_feed(feed_id)
+  read_feed feed_id
+  find('#unsubscribe-feed').click
+  sleep 1
+  find('#unsubscribe-submit').click
+  sleep 1
+end
