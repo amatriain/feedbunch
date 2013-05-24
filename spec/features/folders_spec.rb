@@ -234,10 +234,7 @@ describe 'folders and feeds' do
     context 'remove feed from folder' do
 
       it 'removes a feed from a folder', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="none"]').click
-        end
+        remove_feed_from_folder @feed1.id
 
         # Feed should be under the "All subscriptions" folder, without a data-folder-id attribute (because it doesn't belong to a folder)
         page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='none']", visible: false
@@ -251,32 +248,20 @@ describe 'folders and feeds' do
         @folder1.feeds << @feed2
 
         visit feeds_path
-
-        # Remove @feed1 from folders
-        read_feed @feed1.id
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="none"]').click
-        end
+        remove_feed_from_folder @feed1.id
 
         # Page should still have @folder1 with @feed2 under it
         page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
       end
 
       it 'removes a folder from the sidebar when it has no feeds under it', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="none"]').click
-        end
+        remove_feed_from_folder @feed1.id
 
         page.should_not have_css "#sidebar #folder-#{@folder1.id}"
       end
 
       it 'removes a folder from the dropdown when it has no feeds under it', js: true do
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="none"]').click
-        end
+        remove_feed_from_folder @feed1.id
 
         page.should_not have_css "#folder-management-dropdown a[data-folder-id='#{@folder1.id}']", visible: false
       end
@@ -284,10 +269,7 @@ describe 'folders and feeds' do
       it 'shows an alert when there is a problem removing a feed from a folder', js: true do
         User.any_instance.stub(:remove_feed_from_folder).and_raise StandardError.new
 
-        find('#folder-management').click
-        within '#folder-management-dropdown ul.dropdown-menu' do
-          find('a[data-folder-id="none"]').click
-        end
+        remove_feed_from_folder @feed1.id
 
         # A "problem managing folders" alert should be shown
         page.should have_css 'div#problem-folder-management'

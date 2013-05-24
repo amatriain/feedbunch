@@ -94,3 +94,18 @@ def add_feed_to_folder(feed_id, folder_id)
     find("a[data-folder-id='#{folder_id}']").click
   end
 end
+
+##
+# Click on a feed to read it, and then click on the Folder dropdown to remove it from its current folder.
+#
+# Receives as arguments the id of the feed.
+
+def remove_feed_from_folder(feed_id)
+  read_feed feed_id
+
+  sleep 1
+  find('#folder-management').click
+  within '#folder-management-dropdown ul.dropdown-menu' do
+    find('a[data-folder-id="none"]').click
+  end
+end
