@@ -14,7 +14,7 @@
   "old_folder": <%=
     {
       id: old_folder.id,
-      empty: old_folder.feeds.blank?
+      deleted: old_folder.feeds.blank?
     }.to_json.html_safe
   %>
   <% end %>
