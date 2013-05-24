@@ -92,7 +92,7 @@ describe 'unread entries count' do
     feed.entries << entry1 << entry2
     subscribe_feed feed.url
     unread_folder_entries_should_eq 'all', 6
-    unread_feed_entries_should_eq feed.id, 2
+    unread_feed_entries_should_eq feed.title, 2
   end
 
   it 'updates number of unread entries when unsubscribing from a feed'
