@@ -50,7 +50,23 @@ describe 'unread entries count' do
 
   it 'updates number of unread entries when clicking on a feed'
 
-  it 'shows number of unread entries in a newly created folder'
+  it 'updates number of unread entries when adding a feed to a newly created folder', js: true do
+    @folder1.feeds << @feed2
+    visit feeds_path
+    title = 'New folder'
+    add_feed_to_new_folder @feed1.id, title
+
+    # Entry count in @folder1 should be updated
+    within "#sidebar #folders-list #folder-#{@folder1.id} #feeds-#{@folder1.id} #folder-#{@folder1.id}-all-feeds" do
+      page.should have_content 'Read all subscriptions (1)'
+    end
+
+    # new folder should have the correct entry count
+    new_folder = Folder.where(user_id: @user.id, title: title).first
+    within "#sidebar #folders-list #folder-#{new_folder.id} #feeds-#{new_folder.id} #folder-#{new_folder.id}-all-feeds" do
+      page.should have_content 'Read all subscriptions (3)'
+    end
+  end
 
   it 'shows number of unread entries in a newly subscribed feed'
 
@@ -59,4 +75,6 @@ describe 'unread entries count' do
   it 'updates number of unread entries when removing a feed from a folder'
 
   it 'updates number of unread entries when unsubscribing from a feed'
+
+  it 'updates number of unread entries when refreshing a feed'
 end

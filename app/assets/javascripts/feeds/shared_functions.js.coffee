@@ -36,6 +36,12 @@ Openreader.update_folder_id = (feed_id, folder_id) ->
   $("[data-sidebar-feed][data-feed-id='#{feed_id}']").attr "data-folder-id", folder_id
 
 #-------------------------------------------------------
+# Update the count of unread entries in a folder by rewriting the "read all" link
+#-------------------------------------------------------
+Openreader.update_folder_entry_count = (folder_id, data) ->
+  $("li#folder-#{folder_id}-all-feeds").replaceWith data
+
+#-------------------------------------------------------
 # Read a feed under a specific folder
 #-------------------------------------------------------
 Openreader.read_feed = (feed_id, folder_id) ->
