@@ -15,7 +15,8 @@ class FeedsController < ApplicationController
   def index
     @feeds = current_user.feeds
     @folders = current_user.folders
-    respond_with @feeds, @folders
+    @user = current_user
+    respond_with @user, @feeds, @folders
   rescue => e
     handle_error e
   end
@@ -69,7 +70,7 @@ class FeedsController < ApplicationController
     @feed = current_user.subscribe url
 
     if @feed.present?
-      render 'create.json.erb', locals: {feed: @feed}
+      render 'create.json.erb', locals: {user: current_user, feed: @feed}
     else
       Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
       #TODO respond with html for search results, for instance with head status:300 (Multiple Choices)

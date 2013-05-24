@@ -11,6 +11,6 @@
       data-folder-id="none"
      <% end %>
   >
-    <i class="icon-rss"></i> <%= feed.title %> <i class="icon-spinner hidden"></i>
+    <i class="icon-rss"></i> <%= "#{feed.title} (#{user.unread_feed_entries(feed.id).count})" %> <i class="icon-spinner hidden"></i>
   </a>
 </li>

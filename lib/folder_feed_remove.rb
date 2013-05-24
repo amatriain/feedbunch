@@ -4,7 +4,7 @@
 class FolderFeedRemove
 
   ##
-  # Remove a feed from its current folder, ir any.
+  # Remove a feed from its current folder, if any.
   #
   # Receives as argument the id of the feed and the user which owns the folder.
   #

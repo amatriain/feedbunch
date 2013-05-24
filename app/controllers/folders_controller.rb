@@ -57,7 +57,8 @@ class FoldersController < ApplicationController
 
   def update
     @changed_data = current_user.add_feed_to_folder params[:feed_id], params[:id]
-    render 'update.json.erb', locals: {new_folder: @changed_data[:new_folder],
+    render 'update.json.erb', locals: {user: current_user,
+                                       new_folder: @changed_data[:new_folder],
                                        feed: @changed_data[:feed],
                                        old_folder: @changed_data[:old_folder]}
   rescue => e
@@ -84,7 +85,8 @@ class FoldersController < ApplicationController
 
   def create
     @changed_data = current_user.add_feed_to_new_folder params[:new_folder][:feed_id], params[:new_folder][:title]
-    render 'create.json.erb', locals: {new_folder: @changed_data[:new_folder],
+    render 'create.json.erb', locals: {user: current_user,
+                                       new_folder: @changed_data[:new_folder],
                                        old_folder: @changed_data[:old_folder]}
   rescue => e
     handle_error e

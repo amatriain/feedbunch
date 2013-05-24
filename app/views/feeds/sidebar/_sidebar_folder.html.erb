@@ -15,14 +15,16 @@
          data-feed-path="<%= folder_path folder_id %>"
          data-refresh-path="<%= folder_refresh_path folder_id %>"
          data-feed-title="<%= t 'feeds.index.all_entries' %>">
-        <em><strong><i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></strong></em> <i class="icon-spinner hidden"></i>
+        <em><strong>
+          <i class="icon-rss"></i> <%= "#{t 'feeds.index.all_entries'} (#{user.unread_folder_entries(folder_id).count})" %>
+        </strong></em> <i class="icon-spinner hidden"></i>
       </a>
     </li>
 
     <%# Links to read each individual feed in the folder %>
     <% feeds.all(order: 'title ASC').each do |feed| %>
 
-      <%= render 'feeds/sidebar/sidebar_feed', feed: feed %>
+      <%= render 'feeds/sidebar/sidebar_feed', user: user, feed: feed %>
 
     <% end %>
   </ul>

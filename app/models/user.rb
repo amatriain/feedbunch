@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
   # Receives as argument the id of the folder from which to retrieve entries. The special value
   # "all" means that unread entries should be retrieved from ALL subscribed feeds.
   #
-  # Raises an ActiveRecord;;RecordNotFound error if the folder does not belong to the user.
+  # Raises an ActiveRecord::RecordNotFound error if the folder does not belong to the user.
   #
   # If successful, returns an ActiveRecord::Relation with the entries.
 
