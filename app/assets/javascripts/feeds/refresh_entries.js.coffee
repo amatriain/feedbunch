@@ -20,15 +20,17 @@ $(document).ready ->
         # Function to insert new entries in the list
         entries_received = (data, status, xhr) ->
           Openreader.entries_loaded()
-          Openreader.insert_entries data["feed"]["entries"]
-          Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"], true
+          Openreader.insert_entries data["entries"]
           Openreader.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
+          if data["feed"]
+            Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"], true
           if data["folder"]
             Openreader.update_folder_entry_count data["folder"]["id"], data["folder"]["sidebar_read_all"]
 
         $.get(Openreader.current_feed_refresh_path, null, entries_received, 'json')
           .fail ->
             Openreader.hide_loading_message()
+            stop_icon_animation()
             Openreader.alertTimedShowHide $("#problem-refreshing")
 
   ########################################################
@@ -40,3 +42,9 @@ $(document).ready ->
   #-------------------------------------------------------
   start_icon_animation = ->
     $("#refresh-feed i.icon-repeat").addClass "icon-spin"
+
+  #-------------------------------------------------------
+  # Stop animation of the refresh icon in the button
+  #-------------------------------------------------------
+  stop_icon_animation = ->
+    $("#refresh-feed i.icon-repeat").removeClass "icon-spin"

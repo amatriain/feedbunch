@@ -6,8 +6,8 @@ class FoldersController < ApplicationController
 
   before_filter :authenticate_user!
 
-  respond_to :html, except: [:update, :create, :remove]
-  respond_to :json, only: [:update, :create, :remove]
+  respond_to :html, only: [:show]
+  respond_to :json, except: [:show]
 
   ##
   # Return HTML with all entries for a given folder, containing all feeds subscribed to by the user inside the folder.
@@ -22,7 +22,7 @@ class FoldersController < ApplicationController
     if @entries.present?
       # The folders#show and feeds#show actions use the same template, the only difference is the
       # entries passed to it.
-      respond_with @entries, template: 'feeds/show', layout: false
+      render 'feeds/show.html.erb', locals: {entries: @entries}, layout: false
     else
       head status: 404
     end
@@ -41,10 +41,10 @@ class FoldersController < ApplicationController
   # If the request asks to refresh a folder that does not belong to the user, the response is an HTTP 404 (Not Found).
 
   def refresh
+    @folder= current_user.folders.find params[:id] if params[:id]!='all'
     @entries = current_user.refresh_folder params[:id]
-
     if @entries.present?
-      respond_with @entries, template: 'feeds/show', layout: false
+      render 'feeds/show.json.erb', locals: {user: current_user, feed: nil, entries: @entries, folder: @folder}
     else
       head status: 404
     end
