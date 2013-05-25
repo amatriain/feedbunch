@@ -15,18 +15,21 @@ $(document).ready ->
       # Only refresh if the global variable stores a feed refresh path
       if Openreader.current_feed_refresh_path?.length
         start_icon_animation()
-        Openreader.show_loading_message()
-        Openreader.disable_buttons()
+        Openreader.loading_entries()
 
         # Function to insert new entries in the list
-        insert_entries = (entries, status, xhr) ->
-          stop_icon_animation()
-          Openreader.hide_loading_message()
-          Openreader.enable_buttons()
-          if status in ["error", "timeout", "abort", "parsererror"]
-            Openreader.alertTimedShowHide $("#problem-refreshing")
+        entries_received = (data, status, xhr) ->
+          Openreader.entries_loaded()
+          Openreader.insert_entries data["feed"]["entries"]
+          Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"], true
+          Openreader.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
+          if data["folder"]
+            Openreader.update_folder_entry_count data["folder"]["id"], data["folder"]["sidebar_read_all"]
 
-        $("#feed-entries").empty().load Openreader.current_feed_refresh_path, null, insert_entries
+        $.get(Openreader.current_feed_refresh_path, null, entries_received, 'json')
+          .fail ->
+            Openreader.hide_loading_message()
+            Openreader.alertTimedShowHide $("#problem-refreshing")
 
   ########################################################
   # COMMON FUNCTIONS
@@ -37,9 +40,3 @@ $(document).ready ->
   #-------------------------------------------------------
   start_icon_animation = ->
     $("#refresh-feed i.icon-repeat").addClass "icon-spin"
-
-  #-------------------------------------------------------
-  # Stop animation of the refresh icon in the button
-  #-------------------------------------------------------
-  stop_icon_animation = ->
-    $("#refresh-feed i.icon-repeat").removeClass "icon-spin"

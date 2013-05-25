@@ -16,8 +16,7 @@ $(document).ready ->
 
     # Function to insert new entries in the list
     insert_entries = (entries, status, xhr) ->
-      entries_loaded()
-      Openreader.enable_buttons()
+      Openreader.entries_loaded(Openreader.current_feed_id)
       if status in ["error", "timeout", "abort", "parsererror"]
         if xhr.status == 404
           Openreader.alertTimedShowHide $("#no-entries")
@@ -35,14 +34,6 @@ $(document).ready ->
   ########################################################
   # COMMON FUNCTIONS
   ########################################################
-
-  #-------------------------------------------------------
-  # When entries have loaded hide the spinner and "Loading" message, show the entries list
-  #-------------------------------------------------------
-  entries_loaded = ()->
-    $(".icon-spin").removeClass("icon-spin").addClass "hidden"
-    Openreader.hide_loading_message()
-    $("#feed-entries").removeClass "hidden"
 
   #-------------------------------------------------------
   # Show the feed title and link it to the feed URL

@@ -1,0 +1,21 @@
+<% self.formats = [:html] %>
+
+{
+    "feed":{
+        "id": <%= feed.id %>,
+        "entries": <%= render('feeds/entries.html.erb', entries: entries).to_json.html_safe %>,
+        "sidebar": <%= render('feeds/sidebar/sidebar_feed', user: user, feed: feed).to_json.html_safe %>
+    },
+    "folder_all": {
+        "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all',
+                                locals: {user: user, folder_id: 'all'}, layout: false).to_json.html_safe %>
+    }
+<% if folder.present? %>
+    ,
+    "folder": {
+        "id": <%= folder.id %>,
+        "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all',
+                                locals: {user: user, folder_id: folder.id}, layout: false).to_json.html_safe %>
+    }
+<% end %>
+}

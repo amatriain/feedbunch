@@ -42,11 +42,27 @@ Openreader.update_folder_entry_count = (folder_id, data) ->
   $("li#folder-#{folder_id}-all-feeds").replaceWith data
 
 #-------------------------------------------------------
+# Update the count of unread entries in a feed by rewriting its link in the sidebar. Optionally
+# can set the feed CSS class as "active"
+#-------------------------------------------------------
+Openreader.update_feed_entry_count = (feed_id, data, active=false) ->
+  sidebar_feed = $("[data-sidebar-feed][data-feed-id='#{feed_id}']").parent()
+  sidebar_feed.replaceWith data
+  if active
+    sidebar_feed.addClass "active"
+
+#-------------------------------------------------------
 # Read a feed under a specific folder
 #-------------------------------------------------------
 Openreader.read_feed = (feed_id, folder_id) ->
   open_folder folder_id
   $("#feeds-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed_id}']").click()
+
+#-------------------------------------------------------
+# Insert a list of entries, replacing the old one (if any)
+#-------------------------------------------------------
+Openreader.insert_entries = (data) ->
+  $("#feed-entries").html data
 
 #-------------------------------------------------------
 # Hide the "Loading" message
@@ -72,10 +88,27 @@ Openreader.loading_entries = (feed)->
     $(".icon-spinner", feed).addClass("icon-spin").removeClass "hidden"
 
 #-------------------------------------------------------
+# When entries have loaded hide the spinner and "Loading" message, show the entries list
+#-------------------------------------------------------
+Openreader.entries_loaded = (feed_id)->
+  if feed_id
+    $("#sidebar .icon-spin").addClass "hidden"
+  $(".icon-spin").removeClass("icon-spin")
+  Openreader.hide_loading_message()
+  Openreader.show_entries()
+  Openreader.enable_buttons()
+
+#-------------------------------------------------------
 # Hide the entries list
 #-------------------------------------------------------
 Openreader.hide_entries = ->
   $("#feed-entries").empty().addClass "hidden"
+
+#-------------------------------------------------------
+# Show the entries list
+#-------------------------------------------------------
+Openreader.show_entries = ->
+  $("#feed-entries").removeClass "hidden"
 
 #-------------------------------------------------------
 # Hide the feed title

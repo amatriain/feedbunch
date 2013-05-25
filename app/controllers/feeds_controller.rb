@@ -6,8 +6,8 @@ class FeedsController < ApplicationController
 
   before_filter :authenticate_user!
 
-  respond_to :html, except: [:create, :destroy]
-  respond_to :json, only: [:create, :destroy]
+  respond_to :html, only: [:show, :index]
+  respond_to :json, except: [:show, :index]
 
   ##
   # list all feeds the currently authenticated is suscribed to
@@ -30,13 +30,11 @@ class FeedsController < ApplicationController
     @entries = current_user.unread_feed_entries params[:id]
 
     if @entries.present?
-      respond_with @entries, layout: false
+      render 'show.html.erb', locals: {entries: @entries}, layout: false
     else
       Rails.logger.warn "Feed #{params[:id]} has no entries, returning a 404"
       head status: 404
     end
-
-    return
   rescue => e
     handle_error e
   end
@@ -49,14 +47,15 @@ class FeedsController < ApplicationController
   # If the request asks to refresh a folder the user is not suscribed to, the response is a 404 error code (Not Found).
 
   def refresh
+    @feed = current_user.feeds.find params[:id]
+    @folder= @feed.user_folder current_user
     @entries = current_user.refresh_feed params[:id]
     if @entries.present?
-      respond_with @entries, template: 'feeds/show', layout: false
+      render 'show.json.erb', locals: {user: current_user, feed: @feed, entries: @entries, folder: @folder}
     else
       Rails.logger.warn "Feed #{params[:id]} has no entries, returning a 404"
       head status: 404
     end
-
   rescue => e
     handle_error e
   end
