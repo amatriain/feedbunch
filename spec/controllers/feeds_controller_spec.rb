@@ -142,25 +142,15 @@ describe FeedsController do
 
   context 'DELETE remove' do
 
-    it 'returns 204 if the feed was not in a folder' do
+    it 'does not assign @old_folder if the feed was not in a folder' do
       delete :destroy, id: @feed1.id
-      response.status.should eq 204
+      assigns(:old_folder).should be_nil
     end
 
-    it 'returns 204 if the feed was in a folder which still has feeds' do
-      feed3 = FactoryGirl.create :feed
-      @user.feeds << feed3
-      @folder1.feeds << @feed1 << feed3
-
-      delete :destroy, id: @feed1.id
-      response.status.should eq 204
-    end
-
-    it 'returns 205 if the feed was in a folder without any other feeds' do
+    it 'assigns @old_folder correctly if the feed was in a folder' do
       @folder1.feeds << @feed1
-
       delete :destroy, id: @feed1.id
-      response.status.should eq 205
+      assigns(:old_folder).should eq @folder1
     end
 
     it 'deletes the folder if the feed was in a folder without any other feeds' do
