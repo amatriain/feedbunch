@@ -99,5 +99,21 @@ describe 'unread entries count' do
     unread_folder_entries_should_eq @folder1.id, 1
   end
 
-  it 'updates number of unread entries when refreshing a feed'
+  it 'updates number of unread entries when refreshing a feed', js: true do
+	  pending
+    read_feed @feed1.id
+    User.any_instance.stub :refresh_feed do
+      entry = FactoryGirl.build :entry, feed_id: @feed1.id
+      @feed1.entries << entry
+    end
+
+    find('a#refresh-feed').click
+    sleep 1
+
+    unread_folder_entries_should_eq 'all', 5
+    unread_folder_entries_should_eq @folder1.id, 4
+    unread_feed_entries_should_eq @feed1.title, 3
+  end
+
+  it 'updates number of unread entries when refreshing a folder'
 end
