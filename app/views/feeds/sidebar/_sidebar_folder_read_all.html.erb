@@ -3,7 +3,6 @@
   <a data-sidebar-feed
      data-feed-id="all"
      data-feed-path="<%= folder_path folder_id %>"
-     data-refresh-path="<%= folder_refresh_path folder_id %>"
      data-feed-title="<%= t 'feeds.index.all_entries' %>">
     <em><strong>
       <i class="icon-rss"></i> <%= "#{t 'feeds.index.all_entries'} (#{user.unread_folder_entries(folder_id).count})" %>

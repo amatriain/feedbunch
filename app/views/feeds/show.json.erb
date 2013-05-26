@@ -1,19 +1,14 @@
 <% self.formats = [:html] %>
 
 {
-    "entries": <%= render('feeds/entries.html.erb', entries: entries).to_json.html_safe %>,
     "folder_all": {
         "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all',
                                 locals: {user: user, folder_id: 'all'}, layout: false).to_json.html_safe %>
-    }
-
-<% if feed.present? %>
-    ,
+    },
     "feed":{
         "id": <%= feed.id %>,
         "sidebar": <%= render('feeds/sidebar/sidebar_feed', user: user, feed: feed).to_json.html_safe %>
     }
-<% end %>
 
 <% if folder.present? %>
     ,

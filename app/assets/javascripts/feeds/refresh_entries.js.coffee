@@ -19,11 +19,11 @@ $(document).ready ->
 
         # Function to insert new entries in the list
         entries_received = (data, status, xhr) ->
-          Openreader.entries_loaded()
-          Openreader.insert_entries data["entries"]
           Openreader.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
-          if data["feed"]
-            Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"], true
+          folder_id = data["folder"]["id"]
+          folder_id ||= "all"
+          Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"], true
+          Openreader.read_feed data["feed"]["id"], folder_id
           if data["folder"]
             Openreader.update_folder_entry_count data["folder"]["id"], data["folder"]["sidebar_read_all"]
 

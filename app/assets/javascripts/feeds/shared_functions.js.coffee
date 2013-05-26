@@ -136,12 +136,11 @@ Openreader.disable_buttons = ->
 # Enable and show the Refresh, Folder Management and Unsubscribe buttons
 #-------------------------------------------------------
 Openreader.enable_buttons = ->
-  enable_refresh_button()
-  # Unsubscribe and Folder Management buttons are shown and enabled only if reading a single feed
+  # Buttons are shown and enabled only if reading a single feed
   if Openreader.current_feed_id=="all"
-    hide_folder_management_button()
-    hide_unsubscribe_button()
+    Openreader.hide_buttons()
   else
+    enable_refresh_button()
     enable_folder_management_button()
     enable_unsubscribe_button()
 

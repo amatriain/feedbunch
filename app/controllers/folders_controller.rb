@@ -31,28 +31,6 @@ class FoldersController < ApplicationController
   end
 
   ##
-  # Fetch all feeds in a folder and save in the database any new entries. User must be subscribed to the feeds.
-  #
-  # After that it does exactly the same as the show action: return HTML with all entries for a folder, containing
-  # all feeds subscribed to by the user inside the folder.
-  #
-  # If the param :id is "all", all feeds the user is subscribed to will be fetched and their entries returned.
-  #
-  # If the request asks to refresh a folder that does not belong to the user, the response is an HTTP 404 (Not Found).
-
-  def refresh
-    @folder= current_user.folders.find params[:id] if params[:id]!='all'
-    @entries = current_user.refresh_folder params[:id]
-    if @entries.present?
-      render 'feeds/show.json.erb', locals: {user: current_user, feed: nil, entries: @entries, folder: @folder}
-    else
-      head status: 404
-    end
-  rescue => e
-    handle_error e
-  end
-
-  ##
   # Associate a feed with a folder. The current user must own the folder and be subscribed to the feed.
 
   def update

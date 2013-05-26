@@ -129,13 +129,6 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Refresh all feeds in a folder. See FeedRefresh#refresh_folder
-
-  def refresh_folder(folder_id)
-    FeedRefresh.refresh_folder folder_id, self
-  end
-
-  ##
   # Subscribe to a feed. See FeedSubscriber#subscribe
 
   def subscribe(url)

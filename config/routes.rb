@@ -88,7 +88,6 @@ Openreader::Application.routes.draw do
 
   # Refresh feeds and folders; this causes a fetch from external servers
   match '/feeds/:id/refresh' => 'feeds#refresh', via: :get, as: 'feed_refresh'
-  match '/folders/:id/refresh' => 'folders#refresh', via: :get, as: 'folder_refresh'
 
   # Remove a feed from folders
   match '/folders/remove' => 'folders#remove', via: :delete, as: 'folder_remove'

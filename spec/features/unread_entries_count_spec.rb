@@ -113,6 +113,4 @@ describe 'unread entries count' do
     unread_folder_entries_should_eq @folder1.id, 4
     unread_feed_entries_should_eq @feed1.title, 4
   end
-
-  it 'updates number of unread entries when refreshing a folder'
 end
