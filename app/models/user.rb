@@ -3,6 +3,7 @@ require 'folder_feed_add'
 require 'feed_subscriber'
 require 'feed_unsubscriber'
 require 'feed_refresh'
+require 'entry_state_change'
 
 ##
 # User model. Each instance of this class represents a single user that can log in to the application
@@ -140,6 +141,13 @@ class User < ActiveRecord::Base
 
   def unsubscribe(feed_id)
     FeedUnsubscriber.unsubscribe feed_id, self
+  end
+
+  ##
+  # Change the read/unread state of an entry for this user. See EntryStateChange#change_entry_state
+
+  def change_entry_state(entry_id, state)
+    EntryStateChange.change_entry_state entry_id, state, self
   end
 
   private

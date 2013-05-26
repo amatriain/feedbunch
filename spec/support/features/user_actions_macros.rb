@@ -62,6 +62,19 @@ def read_folder(folder_id)
 end
 
 ##
+# Click on an entry to open and read it. Receives as argument the id of the entry to be read.
+#
+# If the entry is not currently in the entries list, the test will immediately fail.
+
+def read_entry(entry_id)
+  within 'ul#feed-entries' do
+    find("li#entry-#{entry_id} > a").click
+    # Give some time for the opening animation
+    sleep 1
+  end
+end
+
+##
 # Click on a feed to read it, and then click on the Folder dropdown to move it to a newly created folder
 #
 # Receives as arguments the id of the feed and the title of the new folder.

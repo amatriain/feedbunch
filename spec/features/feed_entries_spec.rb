@@ -19,36 +19,23 @@ describe 'feed entries' do
   end
 
   it 'opens an entry', js: true do
-    within 'ul#feed-entries' do
-      # Entry summary should not be visible
-      page.should_not have_content @entry1.summary
+    # Entry summary should not be visible
+    page.should_not have_content @entry1.summary
 
-      # Open entry
-      find("li#entry-#{@entry1.id} > a").click
+    read_entry @entry1.id
 
-      # Summary should appear
-      page.should have_content @entry1.summary
-    end
+    page.should have_content @entry1.summary
   end
 
   it 'closes other entries when opening an entry', js: true do
-    within 'ul#feed-entries' do
-      # Open first entry, give it some time for open animation
-      find("li#entry-#{@entry1.id} > a").click
-      sleep 1
-
-      # Only summary of first entry should be visible
-      page.should have_content @entry1.summary
-      page.should_not have_content @entry2.summary
-
-      # Open second entry, give it some time for open animation
-      find("li#entry-#{@entry2.id} > a").click
-      sleep 1
-
-      # Only summary of second entry should be visible
-      page.should_not have_content @entry1.summary
-      page.should have_content @entry2.summary
-    end
+    read_entry @entry1.id
+    # Only summary of first entry should be visible
+    page.should have_content @entry1.summary
+    page.should_not have_content @entry2.summary
+    read_entry @entry2.id
+    # Only summary of second entry should be visible
+    page.should_not have_content @entry1.summary
+    page.should have_content @entry2.summary
   end
 
   it 'by default only shows unread entries in a feed', js: true do
@@ -108,7 +95,18 @@ describe 'feed entries' do
     page.should have_content entry3.title
   end
 
-  it 'marks as read an entry when opening it'
+  it 'marks as read an entry when opening it', js: true do
+    pending
+    read_entry @entry1.id
+
+    entry_state = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+    entry_state.read.should be_true
+
+    # On refresh, @entry1 should no longer appear
+    visit feeds_path
+    read_feed @feed1.id
+    page.should_not have_content @entry1.title
+  end
 
   it 'marks all entries as read'
 

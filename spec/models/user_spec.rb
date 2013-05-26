@@ -908,4 +908,64 @@ describe User do
       expect {@user.add_feed_to_new_folder feed2.id, @title}.to raise_error ActiveRecord::RecordNotFound
     end
   end
+
+  context 'change entry state' do
+
+    before :each do
+      @feed = FactoryGirl.create :feed
+      @user.feeds << @feed
+      @entry = FactoryGirl.build :entry, feed_id: @feed.id
+      @feed.entries << @entry
+    end
+
+    it 'marks entry as read' do
+      entry_state = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
+      entry_state.read.should be_false
+
+      @user.change_entry_state @entry.id, 'read'
+      entry_state.reload
+      entry_state.read.should be_true
+    end
+
+    it 'marks entry as unread' do
+      entry_state = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
+      entry_state.read = true
+      entry_state.save
+
+      @user.change_entry_state @entry.id, 'unread'
+      entry_state.reload
+      entry_state.read.should be_false
+    end
+
+    it 'does not change an entry state if passed an unknown state' do
+      entry_state = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
+      entry_state.read.should be_false
+
+      @user.change_entry_state @entry.id, 'somethingsomethingsomething'
+      entry_state.reload
+      entry_state.read.should be_false
+
+      entry_state.read = true
+      entry_state.save
+
+      @user.change_entry_state @entry.id, 'somethingsomethingsomething'
+      entry_state.reload
+      entry_state.read.should be_true
+    end
+
+    it 'raises an error if the entry is not from a feed the user is subscribed to' do
+      entry2 = FactoryGirl.create :entry
+      expect {@user.change_entry_state entry2.id, 'read'}.to raise_error ActiveRecord::RecordNotFound
+    end
+
+    it 'does not change state for other users' do
+      user2 = FactoryGirl.create :user
+      user2.feeds << @feed
+
+      @user.change_entry_state @entry.id, 'read'
+
+      entry_state2 = EntryState.where(user_id: user2.id, entry_id: @entry.id).first
+      entry_state2.read.should be false
+    end
+  end
 end

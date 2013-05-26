@@ -98,4 +98,6 @@ Openreader::Application.routes.draw do
   # Resourceful routes for folders
   resources :folders, only: [:show, :update, :create]
 
+  # Resourceful routes for entries
+  resources :entries, only: [:update]
 end
