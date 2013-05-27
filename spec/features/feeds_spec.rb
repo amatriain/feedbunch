@@ -109,13 +109,7 @@ describe 'feeds' do
       visit feeds_path
       read_feed feed3.id
 
-      # A "no entries" alert should be shown
-      page.should have_css 'div#no-entries'
-      page.should_not have_css 'div#no-entries.hidden', visible: false
-
-      # It should close automatically after 5 seconds
-      sleep 5
-      page.should have_css 'div#no-entries.hidden', visible: false
+      should_show_alert 'no-entries'
     end
 
     it 'shows an alert if there is a problem loading a feed', js: true do
@@ -123,13 +117,7 @@ describe 'feeds' do
       # Try to read feed
       read_feed @feed1.id
 
-      # A "problem loading feed" alert should be shown
-      page.should have_css 'div#problem-loading'
-      page.should_not have_css 'div#problem-loading.hidden', visible: false
-
-      # It should close automatically after 5 seconds
-      sleep 5
-      page.should have_css 'div#problem-loading.hidden', visible: false
+      should_show_alert 'problem-loading'
     end
   end
 end

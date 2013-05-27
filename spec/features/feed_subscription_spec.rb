@@ -271,26 +271,14 @@ FEED_XML
     # Try to subscribe to feed (already in the database, for simplicity)
     subscribe_feed @feed2.fetch_url
 
-    # A "problem subscribing to feed" alert should be shown
-    page.should have_css 'div#problem-subscribing'
-    page.should_not have_css 'div#problem-subscribing.hidden', visible: false
-
-    # It should close automatically after 5 seconds
-    sleep 5
-    page.should have_css 'div#problem-subscribing.hidden', visible: false
+    should_show_alert 'problem-subscribing'
   end
 
   it 'shows an alert if the user is already subscribed to the feed', js: true do
     # Try to subscribe to feed again
     subscribe_feed @feed1.fetch_url
 
-    # A "you're already subscribed to feed" alert should be shown
-    page.should have_css 'div#already-subscribed'
-    page.should_not have_css 'div#already-subscribed.hidden', visible: false
-
-    # It should close automatically after 5 seconds
-    sleep 5
-    page.should have_css 'div#already-subscribed.hidden', visible: false
+    should_show_alert 'already-subscribed'
   end
 
   it 'shows an alert if the user is already subscribed to the feed and submits the URL with an added trailing slash', js: true do
@@ -340,13 +328,7 @@ FEED_XML
     # Try to subscribe to feed again submitting the URL without schema
     subscribe_feed url_slash
 
-    # A "you're already subscribed to feed" alert should be shown
-    page.should have_css 'div#already-subscribed'
-    page.should_not have_css 'div#already-subscribed.hidden', visible: false
-
-    # It should close automatically after 5 seconds
-    sleep 5
-    page.should have_css 'div#already-subscribed.hidden', visible: false
+    should_show_alert 'already-subscribed'
   end
 
   it 'shows an alert if the user is already subscribed to the feed and submits the URL missing a trailing slash', js: true do
@@ -396,13 +378,7 @@ FEED_XML
     # Try to subscribe to feed again submitting the URL without scheme
     subscribe_feed url_no_slash
 
-    # A "you're already subscribed to feed" alert should be shown
-    page.should have_css 'div#already-subscribed'
-    page.should_not have_css 'div#already-subscribed.hidden', visible: false
-
-    # It should close automatically after 5 seconds
-    sleep 5
-    page.should have_css 'div#already-subscribed.hidden', visible: false
+    should_show_alert 'already-subscribed'
   end
 
   it 'shows an alert if the user is already subscribed to the feed and submits the URL without schema', js: true do
@@ -449,15 +425,6 @@ FEED_XML
 
     subscribe_feed url_no_schema
 
-    # Try to subscribe to feed again submitting the URL without scheme
-    subscribe_feed url_no_schema
-
-    # A "you're already subscribed to feed" alert should be shown
-    page.should have_css 'div#already-subscribed'
-    page.should_not have_css 'div#already-subscribed.hidden', visible: false
-
-    # It should close automatically after 5 seconds
-    sleep 5
-    page.should have_css 'div#already-subscribed.hidden', visible: false
+    should_show_alert 'already-subscribed'
   end
 end

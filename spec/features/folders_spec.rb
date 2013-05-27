@@ -221,13 +221,7 @@ describe 'folders and feeds' do
 
         add_feed_to_folder @feed2.id, @folder1.id
 
-        # A "problem managing folders" alert should be shown
-        page.should have_css 'div#problem-folder-management'
-        page.should_not have_css 'div#problem-folder-management.hidden', visible: false
-
-        # It should close automatically after 5 seconds
-        sleep 5
-        page.should have_css 'div#problem-folder-management.hidden', visible: false
+        should_show_alert 'problem-folder-management'
       end
     end
 
@@ -271,13 +265,7 @@ describe 'folders and feeds' do
 
         remove_feed_from_folder @feed1.id
 
-        # A "problem managing folders" alert should be shown
-        page.should have_css 'div#problem-folder-management'
-        page.should_not have_css 'div#problem-folder-management.hidden', visible: false
-
-        # It should close automatically after 5 seconds
-        sleep 5
-        page.should have_css 'div#problem-folder-management.hidden', visible: false
+        should_show_alert 'problem-folder-management'
       end
     end
 
@@ -427,25 +415,13 @@ describe 'folders and feeds' do
 
         page.should have_css '#problem-new-folder'
 
-        # A "problem creating folder" alert should be shown
-        page.should have_css 'div#problem-new-folder'
-        page.should_not have_css 'div#problem-new-folder.hidden', visible: false
-
-        # It should close automatically after 5 seconds
-        sleep 5
-        page.should have_css 'div#problem-new-folder.hidden', visible: false
+        should_show_alert 'problem-new-folder'
       end
 
       it 'shows an alert if the user already has a folder with the same title', js: true do
         add_feed_to_new_folder @feed1.id, @folder1.title
 
-        # A "problem creating folder" alert should be shown
-        page.should have_css 'div#folder-already-exists'
-        page.should_not have_css 'div#folder-already-exists.hidden', visible: false
-
-        # It should close automatically after 5 seconds
-        sleep 5
-        page.should have_css 'div#folder-already-exists.hidden', visible: false
+        should_show_alert 'folder-already-exists'
       end
 
       it 'does not show an alert if another user already has a folder with the same title', js: true do
@@ -453,9 +429,7 @@ describe 'folders and feeds' do
         folder = FactoryGirl.build :folder, user_id: user2.id
         user2.folders << folder
 
-        add_feed_to_new_folder @feed1.id, folder.title
-        # No alert should be shown
-        page.should have_css 'div#folder-already-exists.hidden', visible: false
+        should_hide_alert 'folder-already-exists'
       end
     end
 

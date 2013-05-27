@@ -74,3 +74,23 @@ def unread_feed_entries_should_eq(feed_title, count, folder_id='all')
     page.should have_content "#{feed_title} (#{count})"
   end
 end
+
+##
+# Test that an alert with the passed id is shown on the page, and that it disappears automatically
+# after 5 seconds.
+
+def should_show_alert(alert_id)
+  page.should have_css "div##{alert_id}"
+  page.should_not have_css "div##{alert_id}.hidden", visible: false
+
+  # It should close automatically after 5 seconds
+  sleep 5
+  page.should have_css "div##{alert_id}", visible: false
+end
+
+##
+# Test that an alert with the passed id is hidden-
+
+def should_hide_alert(alert_id)
+  page.should have_css "div##{alert_id}.hidden", visible: false
+end

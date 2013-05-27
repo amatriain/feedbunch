@@ -72,13 +72,7 @@ describe 'unsubscribe from feed' do
 
     unsubscribe_feed @feed1.id
 
-    # A "problem refreshing feed" alert should be shown
-    page.should have_css 'div#problem-unsubscribing'
-    page.should_not have_css 'div#problem-unsubscribing.hidden', visible: false
-
-    # It should close automatically after 5 seconds
-    sleep 5
-    page.should have_css 'div#problem-unsubscribing.hidden', visible: false
+    should_show_alert 'problem-unsubscribing'
   end
 
   it 'deletes a feed if there are no users subscribed to it', js: true do

@@ -69,13 +69,7 @@ describe 'refresh feeds' do
     # Refresh feed
     find('a#refresh-feed').click
 
-    # A "problem refreshing feed" alert should be shown
-    page.should have_css 'div#problem-refreshing'
-    page.should_not have_css 'div#problem-refreshing.hidden', visible: false
-
-    # It should close automatically after 5 seconds
-    sleep 5
-    page.should have_css 'div#problem-refreshing.hidden', visible: false
+    should_show_alert 'problem-refreshing'
   end
 
 end
