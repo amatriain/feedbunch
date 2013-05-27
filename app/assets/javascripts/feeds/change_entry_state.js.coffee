@@ -18,7 +18,7 @@ $(document).ready ->
       # Function to handle result returned by the server
       update_entry_state_result = (data, status, xhr) ->
         Openreader.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
-        Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"], true
+        Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"], true, Openreader.current_folder_id
         if data["folder"]
           Openreader.update_folder_entry_count data["folder"]["id"], data["folder"]["sidebar_read_all"]
 

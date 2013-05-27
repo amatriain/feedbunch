@@ -43,13 +43,14 @@ Openreader.update_folder_entry_count = (folder_id, data) ->
 
 #-------------------------------------------------------
 # Update the count of unread entries in a feed by rewriting its link in the sidebar. Optionally
-# can set the feed CSS class as "active"
+# can set the feed CSS class as "active" under the passed folder.
 #-------------------------------------------------------
-Openreader.update_feed_entry_count = (feed_id, data, active=false) ->
+Openreader.update_feed_entry_count = (feed_id, data, active=false, folder_id="all") ->
   sidebar_feed = $("[data-sidebar-feed][data-feed-id='#{feed_id}']").parent()
   sidebar_feed.replaceWith data
   if active
-    sidebar_feed.addClass "active"
+    $("a[data-sidebar-feed]").not("[data-feed-id='#{feed_id}']").parent().removeClass "active"
+    $("#feeds-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed_id}']").parent().addClass "active"
 
 #-------------------------------------------------------
 # Read a feed under a specific folder

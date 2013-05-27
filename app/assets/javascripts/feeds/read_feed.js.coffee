@@ -50,7 +50,7 @@ $(document).ready ->
   #-------------------------------------------------------
   mark_folder_in_dropdown = ->
     $("#folder-management-dropdown a[data-folder-id] i.icon-ok").addClass "hidden"
-    $("#folder-management-dropdown a[data-folder-id='#{Openreader.current_folder_id}'] i.icon-ok")
+    $("#folder-management-dropdown a[data-folder-id='#{Openreader.current_feed_folder_id}'] i.icon-ok")
       .removeClass "hidden"
 
   #-------------------------------------------------------
@@ -60,5 +60,6 @@ $(document).ready ->
     Openreader.current_feed_path = $(feed).attr "data-feed-path"
     Openreader.current_feed_refresh_path = $(feed).attr "data-refresh-path"
     Openreader.current_feed_id = $(feed).attr "data-feed-id"
-    Openreader.current_folder_id = $(feed).attr "data-folder-id"
-    Openreader.current_folder_id ||= "none"
+    Openreader.current_feed_folder_id = $(feed).attr "data-folder-id"
+    Openreader.current_feed_folder_id ||= "none"
+    Openreader.current_folder_id = $(feed).parent().closest("[data-folder-id]").attr "data-folder-id"
