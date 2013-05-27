@@ -423,6 +423,9 @@ FEED_XML
 
     end
 
+    subscribe_feed fetch_url
+
+    # Try to subscribe to feed again submitting the URL without schema
     subscribe_feed url_no_schema
 
     should_show_alert 'already-subscribed'
