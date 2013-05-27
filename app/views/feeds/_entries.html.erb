@@ -3,11 +3,10 @@
         <li id="entry-<%= entry.id %>" class="accordion-group">
 
           <%# Link to open the entry summary %>
-          <a data-entry-id="<%= entry.id %>"
-             data-entry-state-update-path="<%= entry_path entry.id %>"
-             data-toggle="collapse"
+          <a data-toggle="collapse"
              data-target="#entry-<%= entry.id %>-summary"
              data-parent="#feed-entries"
+             data-entry-id="<%= entry.id %>"
              class="entry-unread">
 
             <%= sanitize entry.title %>
@@ -18,7 +17,8 @@
           <%# Entry summary, initially collapsed %>
           <div class="collapse"
                id="entry-<%= entry.id %>-summary"
-               data-entry-summary-id="<%= entry.id %>">
+               data-entry-summary-id="<%= entry.id %>"
+               data-entry-state-update-path="<%= entry_path entry.id %>">
             <div class="entry-content">
               <p class="lead">
                 <%= sanitize link_to(entry.title, entry.url, target: '_blank') %>
