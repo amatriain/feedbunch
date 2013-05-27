@@ -107,7 +107,18 @@ describe 'feed entries' do
     page.should_not have_content @entry1.title
   end
 
-  it 'shows an alert if it cannot mark entry as read'
+  it 'shows an alert if it cannot mark entry as read', js: true do
+    User.any_instance.stub(:change_entry_state).and_raise StandardError.new
+    read_entry @entry1.id
+
+    # A "problem communicating with server" alert should be shown
+    page.should have_css 'div#problem-entry-state-change'
+    page.should_not have_css 'div#problem-entry-state-change.hidden', visible: false
+
+    # It should close automatically after 5 seconds
+    sleep 5
+    page.should have_css 'div#problem-entry-state-change', visible: false
+  end
 
   it 'marks all entries as read'
 
