@@ -118,4 +118,6 @@ describe 'feed entries' do
 
   it 'marks an entry as unread'
 
+  it 'marks a single entry as read'
+
 end

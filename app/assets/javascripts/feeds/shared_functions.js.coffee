@@ -128,6 +128,7 @@ Openreader.show_start_page = ()->
 # Disable the Refresh, Folder Management and Unsubscribe buttons
 #-------------------------------------------------------
 Openreader.disable_buttons = ->
+  disable_read_all_button()
   disable_refresh_button()
   disable_folder_management_button()
   disable_unsubscribe_button()
@@ -140,6 +141,7 @@ Openreader.enable_buttons = ->
   if Openreader.current_feed_id=="all"
     Openreader.hide_buttons()
   else
+    enable_read_all_button()
     enable_refresh_button()
     enable_folder_management_button()
     enable_unsubscribe_button()
@@ -148,6 +150,7 @@ Openreader.enable_buttons = ->
 # Hide the Refresh, Folder Management and Unsubscribe buttons
 #-------------------------------------------------------
 Openreader.hide_buttons = ->
+  hide_read_all_button()
   hide_refresh_button()
   hide_folder_management_button()
   hide_unsubscribe_button()
@@ -161,6 +164,12 @@ Openreader.hide_buttons = ->
 #-------------------------------------------------------
 open_folder = (folder_id) ->
   $("#sidebar #feeds-#{folder_id}").not(".in").prev("a").click()
+
+#-------------------------------------------------------
+# Disable Read All button
+#-------------------------------------------------------
+disable_read_all_button = ->
+  $("#read-all-button").addClass "disabled"
 
 #-------------------------------------------------------
 # Disable Refresh button
@@ -181,6 +190,12 @@ disable_unsubscribe_button = ->
   $("#unsubscribe-feed").addClass "disabled"
 
 #-------------------------------------------------------
+# Enable and show the Read All button
+#-------------------------------------------------------
+enable_read_all_button = ->
+  $("#read-all-button").removeClass("hidden").removeClass("disabled")
+
+#-------------------------------------------------------
 # Enable and show the Refresh button
 #-------------------------------------------------------
 enable_refresh_button = ->
@@ -197,6 +212,12 @@ enable_folder_management_button = ->
 #-------------------------------------------------------
 enable_unsubscribe_button = ->
   $("#unsubscribe-feed").removeClass("hidden").removeClass("disabled")
+
+#-------------------------------------------------------
+# Hide Read All button
+#-------------------------------------------------------
+hide_read_all_button = ->
+  $("#read-all-button").addClass("hidden").addClass "disabled"
 
 #-------------------------------------------------------
 # Hide Refresh button

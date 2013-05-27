@@ -21,6 +21,7 @@ en:
       start: "Start"
       open_new_tab: "Open in new tab"
       refresh: "Refresh"
+      read-all: "Mark all as read"
       unsubscribe: "Unsubscribe"
       folder_management: "Move feed to"
       folder_none: "No folder"

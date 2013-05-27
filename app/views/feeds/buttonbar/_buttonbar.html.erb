@@ -1,12 +1,18 @@
 <div class="row-fluid buttonbar">
-  <div class="span3">
+  <div class="span2">
     <a id="add-subscription" class="btn btn-inverse" data-target="#subscribe-feed-popup" data-toggle="modal">
       <i class="icon-plus"></i> <%= t 'feeds.index.subscribe_button' %>
     </a>
   </div>
 
   <div class="span2">
-    <a id="refresh-feed" class="btn btn-primary disabled hidden">
+    <a id="read-all-button" class="btn btn-primary disabled hidden">
+      <i class="icon-eye-open"></i> <%= t 'feeds.index.read-all' %>
+    </a>
+  </div>
+
+  <div class="span2">
+    <a id="refresh-feed" class="btn disabled hidden">
       <i class="icon-repeat"></i> <%= t 'feeds.index.refresh' %>
     </a>
   </div>

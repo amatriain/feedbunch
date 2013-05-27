@@ -18,6 +18,7 @@ es:
       start: "Inicio"
       open_new_tab: "Abrir en una nueva pestaña"
       refresh: "Actualizar"
+      read-all: "Marcar todos como leídos"
       unsubscribe: "Anular suscripción"
       folder_management: "Mover feed a"
       folder_none: "Ninguna carpeta"
