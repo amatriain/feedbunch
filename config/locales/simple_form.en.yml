@@ -24,7 +24,7 @@ en:
         current_password: "(we need your current password to confirm your changes)"
         blank_password: "(leave blank if you don't want to change it)"
       subscription:
-        rss: "Introduce a webpage or feed URL"
+        rss: "Enter a webpage or feed URL"
     placeholders:
       user:
         email: "Your email address"
