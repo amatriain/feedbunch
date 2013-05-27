@@ -937,6 +937,11 @@ describe User do
       entry_state.read.should be_false
     end
 
+    it 'returns feed' do
+      feed = @user.change_entry_state @entry.id, 'read'
+      feed.should eq @feed
+    end
+
     it 'does not change an entry state if passed an unknown state' do
       entry_state = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
       entry_state.read.should be_false

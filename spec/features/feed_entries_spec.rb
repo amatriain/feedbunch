@@ -96,7 +96,6 @@ describe 'feed entries' do
   end
 
   it 'marks as read an entry when opening it', js: true do
-    pending
     read_entry @entry1.id
 
     entry_state = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
@@ -104,9 +103,11 @@ describe 'feed entries' do
 
     # On refresh, @entry1 should no longer appear
     visit feeds_path
-    read_feed @feed1.id
+    read_feed @feed.id
     page.should_not have_content @entry1.title
   end
+
+  it 'shows an alert if it cannot mark entry as read'
 
   it 'marks all entries as read'
 

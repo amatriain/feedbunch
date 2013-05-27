@@ -5,6 +5,8 @@ class EntryStateChange
 
   ##
   # Change the read or unread state of an entry, for a given user.
+  #
+  # Returns the feed instance to which the entry belongs.
 
   def self.change_entry_state(entry_id, state, user)
     entry = user.entries.find entry_id
@@ -15,5 +17,6 @@ class EntryStateChange
       entry_state.read = false
     end
     entry_state.save!
+    return entry_state.entry.feed
   end
 end

@@ -68,7 +68,7 @@ end
 
 def read_entry(entry_id)
   within 'ul#feed-entries' do
-    find("li#entry-#{entry_id} > a").click
+    find("[data-entry-id='#{entry_id}']").click
     # Give some time for the opening animation
     sleep 1
   end

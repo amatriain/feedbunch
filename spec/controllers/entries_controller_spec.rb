@@ -36,5 +36,10 @@ describe EntriesController do
       put :update, id: @entry.id, state: 'read'
       response.status.should eq 500
     end
+
+    it 'assigns the correct feed to @feed' do
+      put :update, id: @entry.id, state: 'read'
+      assigns(:feed).should eq @feed
+    end
   end
 end

@@ -1,0 +1,15 @@
+a.entry-unread{
+  background-color: #F5F5F5;
+}
+
+a.entry-read{
+  background-color: #d9ffbe;
+}
+
+.nav > li > a.entry-read:hover{
+  background-color: #d6ffac;
+}
+
+.entry-content{
+  padding: 10px;
+}
