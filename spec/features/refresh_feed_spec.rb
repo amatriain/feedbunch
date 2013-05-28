@@ -5,7 +5,6 @@ describe 'refresh feeds' do
   before :each do
     # Ensure no actual HTTP calls are made
     RestClient.stub get: true
-    FeedClient.stub(:fetch)
 
     @user = FactoryGirl.create :user
     @feed1 = FactoryGirl.create :feed
@@ -57,7 +56,9 @@ describe 'refresh feeds' do
     end
 
     read_feed @feed1.id
+    sleep 1
     find('a#refresh-feed').click
+    sleep 1
 
     # entry2 and entry3 should appear, @entry1 should not appear because it's already read
     page.should_not have_content @entry1.title
@@ -66,7 +67,7 @@ describe 'refresh feeds' do
   end
 
   it 'shows an alert if there is a problem refreshing a feed', js: true do
-    FeedClient.stub(:fetch).and_raise ActiveRecord::RecordNotFound.new
+    FeedClient.stub(:fetch).and_raise StandardError.new
     # Refresh feed
     find('a#refresh-feed').click
 
@@ -75,6 +76,7 @@ describe 'refresh feeds' do
 
   # Regression test for bug #169
   it 'does not show an alert refreshing a feed without unread entries', js: true do
+    FeedClient.stub :fetch
     entry_state = EntryState.where(entry_id: @entry1.id, user_id: @user.id).first
     entry_state.read=true
     entry_state.save

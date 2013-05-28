@@ -54,8 +54,8 @@ class FeedsController < ApplicationController
   def refresh
     @feed = current_user.feeds.find params[:id]
     @folder= @feed.user_folder current_user
-    @entries = current_user.refresh_feed params[:id]
-    render 'show.json.erb', locals: {user: current_user, feed: @feed, entries: @entries, folder: @folder}
+    current_user.refresh_feed params[:id]
+    render 'show.json.erb', locals: {user: current_user, feed: @feed, folder: @folder}
   rescue => e
     handle_error e
   end
