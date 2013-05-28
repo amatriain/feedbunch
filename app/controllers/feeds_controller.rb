@@ -55,12 +55,7 @@ class FeedsController < ApplicationController
     @feed = current_user.feeds.find params[:id]
     @folder= @feed.user_folder current_user
     @entries = current_user.refresh_feed params[:id]
-    if @entries.present?
-      render 'show.json.erb', locals: {user: current_user, feed: @feed, entries: @entries, folder: @folder}
-    else
-      Rails.logger.warn "Feed #{params[:id]} has no entries, returning a 404"
-      head status: 404
-    end
+    render 'show.json.erb', locals: {user: current_user, feed: @feed, entries: @entries, folder: @folder}
   rescue => e
     handle_error e
   end
