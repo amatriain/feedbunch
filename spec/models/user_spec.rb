@@ -922,7 +922,7 @@ describe User do
       entry_state = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
       entry_state.read.should be_false
 
-      @user.change_entry_state @entry.id, 'read'
+      @user.change_entry_state [@entry.id], 'read'
       entry_state.reload
       entry_state.read.should be_true
     end
@@ -932,42 +932,71 @@ describe User do
       entry_state.read = true
       entry_state.save
 
-      @user.change_entry_state @entry.id, 'unread'
+      @user.change_entry_state [@entry.id], 'unread'
       entry_state.reload
       entry_state.read.should be_false
     end
 
-    it 'returns feed' do
-      feed = @user.change_entry_state @entry.id, 'read'
-      feed.should eq @feed
+    it 'marks several entries as read' do
+      entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+      @feed.entries << entry2
+
+      entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
+      entry_state1.read.should be_false
+      entry_state2 = EntryState.where(user_id: @user.id, entry_id: entry2.id).first
+      entry_state2.read.should be_false
+
+      @user.change_entry_state [@entry.id, entry2.id], 'read'
+      entry_state1.reload
+      entry_state1.read.should be_true
+      entry_state2.reload
+      entry_state2.read.should be_true
+    end
+
+    it 'marks several entries as unread' do
+      entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+      @feed.entries << entry2
+
+      entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
+      entry_state1.read = true
+      entry_state1.save
+      entry_state2 = EntryState.where(user_id: @user.id, entry_id: entry2.id).first
+      entry_state2.read = true
+      entry_state2.save
+
+      @user.change_entry_state [@entry.id, entry2.id], 'unread'
+      entry_state1.reload
+      entry_state1.read.should be_false
+      entry_state2.reload
+      entry_state2.read.should be_false
     end
 
     it 'does not change an entry state if passed an unknown state' do
       entry_state = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
       entry_state.read.should be_false
 
-      @user.change_entry_state @entry.id, 'somethingsomethingsomething'
+      @user.change_entry_state [@entry.id], 'somethingsomethingsomething'
       entry_state.reload
       entry_state.read.should be_false
 
       entry_state.read = true
       entry_state.save
 
-      @user.change_entry_state @entry.id, 'somethingsomethingsomething'
+      @user.change_entry_state [@entry.id], 'somethingsomethingsomething'
       entry_state.reload
       entry_state.read.should be_true
     end
 
     it 'raises an error if the entry is not from a feed the user is subscribed to' do
       entry2 = FactoryGirl.create :entry
-      expect {@user.change_entry_state entry2.id, 'read'}.to raise_error ActiveRecord::RecordNotFound
+      expect {@user.change_entry_state [entry2.id], 'read'}.to raise_error ActiveRecord::RecordNotFound
     end
 
     it 'does not change state for other users' do
       user2 = FactoryGirl.create :user
       user2.feeds << @feed
 
-      @user.change_entry_state @entry.id, 'read'
+      @user.change_entry_state [@entry.id], 'read'
 
       entry_state2 = EntryState.where(user_id: user2.id, entry_id: @entry.id).first
       entry_state2.read.should be false
