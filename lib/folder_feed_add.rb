@@ -21,6 +21,9 @@ class FolderFeedAdd
   # - :old_folder => the folder (owned by this user) in which the feed was previously. This object may have already
   # been deleted from the database, if there were no more feeds in it. If the feed wasn't in any folder, this key is
   # not present in the hash
+  #
+  # If the method detects that the feed is being moved to the same folder it's already at, no action is
+  # taken at the database level, and the return hash has the same values in the :new_folder and :old_folder keys.
 
   def self.add_feed_to_folder(feed_id, folder_id, user)
     # Ensure the user is subscribed to the feed and the folder is owned by the user.
@@ -30,8 +33,12 @@ class FolderFeedAdd
     # Retrieve the current folder the feed is in, if any
     old_folder = feed.user_folder user
 
-    Rails.logger.info "user #{user.id} - #{user.email} is adding feed #{feed.id} - #{feed.fetch_url} to folder #{folder.id} - #{folder.title}"
-    folder.feeds << feed
+    if folder == old_folder
+      Rails.logger.info "user #{user.id} - #{user.email} is trying to add feed #{feed.id} - #{feed.fetch_url} to folder #{folder.id} - #{folder.title}, but the feed is already in that folder"
+    else
+      Rails.logger.info "user #{user.id} - #{user.email} is adding feed #{feed.id} - #{feed.fetch_url} to folder #{folder.id} - #{folder.title}"
+      folder.feeds << feed
+    end
 
     changes = {}
     changes[:new_folder] = folder.reload
