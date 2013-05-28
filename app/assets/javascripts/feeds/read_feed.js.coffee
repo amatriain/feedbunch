@@ -31,15 +31,16 @@ $(document).ready ->
   # Load read and unread feed entries when clicking on the "Show read entries" button
   #-------------------------------------------------------
   $("body").on "click", "#show-read-button", ->
-    Openreader.loading_entries this
-    # Load the entries via Ajax
-    $.get(Openreader.current_feed_path, {include_read: true}, insert_entries)
-      .fail (xhr, textStatus, errorThrown) ->
-        Openreader.entries_loaded(Openreader.current_feed_id)
-        if xhr.status == 404
-          Openreader.alertTimedShowHide $("#no-entries")
-        else
-          Openreader.alertTimedShowHide $("#problem-loading")
+    if $(this).hasClass("disabled") == false
+      Openreader.loading_entries this
+      # Load the entries via Ajax
+      $.get(Openreader.current_feed_path, {include_read: true}, insert_entries)
+        .fail (xhr, textStatus, errorThrown) ->
+          Openreader.entries_loaded(Openreader.current_feed_id)
+          if xhr.status == 404
+            Openreader.alertTimedShowHide $("#no-entries")
+          else
+            Openreader.alertTimedShowHide $("#problem-loading")
 
 
   ########################################################

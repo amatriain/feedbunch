@@ -11,7 +11,8 @@ $(document).ready ->
   # Show unsubscribe confirmation popup (only if button enabled)
   #-------------------------------------------------------
   $("body").on "click", "#unsubscribe-feed", ->
-    show_popup()
+    if $(this).hasClass("disabled") == false
+      show_popup()
 
   #-------------------------------------------------------
   # Unsubscribe from feed via Ajax
