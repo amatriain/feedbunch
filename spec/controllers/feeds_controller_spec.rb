@@ -89,25 +89,6 @@ describe FeedsController do
 
   context 'GET refresh' do
 
-    it 'assigns to @entries the new entries of a feed' do
-      entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-      entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
-
-      # At first the feed has no entries
-      get :refresh, id: @feed1.id
-      assigns(:entries).count.should eq 0
-
-      FeedClient.stub :fetch do
-        @feed1.entries << entry1 << entry2
-      end
-
-      # New entries should appear now
-      get :refresh, id: @feed1.id
-      assigns(:entries).count.should eq 2
-      assigns(:entries).should include entry1
-      assigns(:entries).should include entry2
-    end
-
     it 'returns a 404 for a feed the user is not suscribed to' do
       get :refresh, id: @feed2.id
       response.status.should eq 404
