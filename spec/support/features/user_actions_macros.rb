@@ -84,6 +84,14 @@ def mark_all_as_read
 end
 
 ##
+# Click on the "Show read entries" button so that all feed entries are displayed, including read ones.
+
+def show_read_entries
+  find('#show-read-button').click
+  sleep 1
+end
+
+##
 # Click on a feed to read it, and then click on the Folder dropdown to move it to a newly created folder
 #
 # Receives as arguments the id of the feed and the title of the new folder.

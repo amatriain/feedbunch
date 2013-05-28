@@ -172,5 +172,33 @@ describe Entry do
       user1.entry_states.where(entry_id: entry.id, read: false).should be_present
       user2.entry_states.count.should eq 0
     end
+
+    it 'retrieves state for a read entry' do
+      feed = FactoryGirl.create :feed
+      user = FactoryGirl.create :user
+      user.feeds << feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+
+      entry_state = EntryState.where(user_id: user.id, entry_id: entry.id).first
+      entry_state.read = true
+      entry_state.save
+
+      entry.read_by?(user).should be_true
+    end
+
+    it 'retrieves state for an unread entry' do
+      feed = FactoryGirl.create :feed
+      user = FactoryGirl.create :user
+      user.feeds << feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+
+      entry_state = EntryState.where(user_id: user.id, entry_id: entry.id).first
+      entry_state.read = false
+      entry_state.save
+
+      entry.read_by?(user).should be_false
+    end
   end
 end

@@ -22,7 +22,7 @@ class FoldersController < ApplicationController
     if @entries.present?
       # The folders#show and feeds#show actions use the same template, the only difference is the
       # entries passed to it.
-      render 'feeds/show.html.erb', locals: {entries: @entries}, layout: false
+      render 'feeds/show.html.erb', locals: {entries: @entries, user: current_user}, layout: false
     else
       head status: 404
     end

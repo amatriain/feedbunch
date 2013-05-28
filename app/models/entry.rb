@@ -47,6 +47,16 @@ class Entry < ActiveRecord::Base
   before_validation :sanitize_fields
   after_create :set_unread_state
 
+  ##
+  # Return a boolean that indicates whether this entry has been marked as read by the passed user.
+  #
+  # Receives as argument the user for which the read/unread state will be retrieved.
+
+  def read_by?(user)
+    state = EntryState.where(entry_id: self.id, user_id: user.id).first
+    return state.read
+  end
+
   private
 
   ##

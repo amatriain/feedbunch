@@ -27,10 +27,15 @@ class FeedsController < ApplicationController
   # If the requests asks for a feed the current user is not suscribed to, the response is a 404 error code (Not Found).
 
   def show
-    @entries = current_user.unread_feed_entries params[:id]
+    if params[:include_read].present?
+      include_read = params[:include_read]
+    else
+      include_read = false
+    end
+    @entries = current_user.feed_entries params[:id], include_read
 
     if @entries.present?
-      render 'show.html.erb', locals: {entries: @entries}, layout: false
+      render 'show.html.erb', locals: {entries: @entries, user: current_user}, layout: false
     else
       Rails.logger.warn "Feed #{params[:id]} has no entries, returning a 404"
       head status: 404

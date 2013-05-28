@@ -10,30 +10,48 @@ $(document).ready ->
   ########################################################
 
   #-------------------------------------------------------
-  # Load current feed entries when clicking on a feed in the sidebar
+  # Load unread feed entries when clicking on a feed in the sidebar
   #-------------------------------------------------------
   $("body").on "click", "[data-sidebar-feed]", ->
-
-    # Function to insert new entries in the list
-    insert_entries = (entries, status, xhr) ->
-      Openreader.entries_loaded(Openreader.current_feed_id)
-      if status in ["error", "timeout", "abort", "parsererror"]
-        if xhr.status == 404
-          Openreader.alertTimedShowHide $("#no-entries")
-        else
-          Openreader.alertTimedShowHide $("#problem-loading")
-
     set_global_variables(this)
     mark_folder_in_dropdown()
     show_feed_title this
     Openreader.loading_entries this
 
     # Load the entries via Ajax
-    $("#feed-entries").load Openreader.current_feed_path, null, insert_entries
+    $.get(Openreader.current_feed_path, null, insert_entries)
+      .fail (xhr, textStatus, errorThrown) ->
+        Openreader.entries_loaded(Openreader.current_feed_id)
+        if xhr.status == 404
+          Openreader.alertTimedShowHide $("#no-entries")
+        else
+          Openreader.alertTimedShowHide $("#problem-loading")
+
+  #-------------------------------------------------------
+  # Load read and unread feed entries when clicking on the "Show read entries" button
+  #-------------------------------------------------------
+  $("body").on "click", "#show-read-button", ->
+    Openreader.loading_entries this
+    # Load the entries via Ajax
+    $.get(Openreader.current_feed_path, {include_read: true}, insert_entries)
+      .fail (xhr, textStatus, errorThrown) ->
+        Openreader.entries_loaded(Openreader.current_feed_id)
+        if xhr.status == 404
+          Openreader.alertTimedShowHide $("#no-entries")
+        else
+          Openreader.alertTimedShowHide $("#problem-loading")
+
 
   ########################################################
   # COMMON FUNCTIONS
   ########################################################
+
+  #-------------------------------------------------------
+  # Function to insert new entries in the list
+  #-------------------------------------------------------
+  insert_entries = (entries, status, xhr) ->
+    $("#feed-entries").html entries
+    Openreader.entries_loaded(Openreader.current_feed_id)
 
   #-------------------------------------------------------
   # Show the feed title and link it to the feed URL

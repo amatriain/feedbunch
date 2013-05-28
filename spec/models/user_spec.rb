@@ -604,10 +604,31 @@ describe User do
       entry_state.read = true
       entry_state.save!
 
-      entries = @user.unread_feed_entries feed.id
+      entries = @user.feed_entries feed.id
       entries.count.should eq 2
       entries.should include entry1
       entries.should include entry2
+      entries.should_not include entry3
+    end
+
+    it 'retrieves read and unread entries in a feed' do
+      feed = FactoryGirl.create :feed
+      entry1 = FactoryGirl.build :entry, feed_id: feed.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed.id
+      entry3 = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry1 << entry2 << entry3
+      @user.feeds << feed
+
+      # Mark one of the three entries as read by user
+      entry_state = EntryState.where(entry_id: entry3.id, user_id: @user.id).first
+      entry_state.read = true
+      entry_state.save!
+
+      entries = @user.feed_entries feed.id, true
+      entries.count.should eq 3
+      entries.should include entry1
+      entries.should include entry2
+      entries.should include entry3
     end
 
     it 'raises an error trying to retrieve unread entries from an unsubscribed feed' do
@@ -615,7 +636,7 @@ describe User do
       entry = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry
 
-      expect {@user.unread_feed_entries feed.id}.to raise_error ActiveRecord::RecordNotFound
+      expect {@user.feed_entries feed.id}.to raise_error ActiveRecord::RecordNotFound
     end
   end
 

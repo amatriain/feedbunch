@@ -4,6 +4,7 @@ require 'feed_subscriber'
 require 'feed_unsubscriber'
 require 'feed_refresh'
 require 'entry_state_change'
+require 'entry_recovery'
 
 ##
 # User model. Each instance of this class represents a single user that can log in to the application
@@ -57,48 +58,17 @@ class User < ActiveRecord::Base
   has_many :entry_states, dependent: :destroy, uniq: true
 
   ##
-  # Retrieve entries from the feed passed as argument that are marked as unread for this user.
-  #
-  # Receives as argument the id of the feed from which entries are to be retrieved.
-  #
-  # Returns an ActiveRecord::Relation with the entries if successful.
-  #
-  # If the user is not subscribed to the feed an ActiveRecord::RecordNotFound error is raised.
+  # Retrieve entries from a feed. See EntryRecovery#feed_entries
 
-  def unread_feed_entries(feed_id)
-    # ensure user is subscribed to the feed
-    feed = self.feeds.find feed_id
-
-    Rails.logger.info "User #{self.id} - #{self.email} is retrieving unread entries from feed #{feed.id} - #{feed.fetch_url}"
-    entries = Entry.joins(:entry_states, :feed).where entry_states: {read: false, user_id: self.id},
-                                                      feeds: {id: feed.id}
-    return entries
+  def feed_entries(feed_id, include_read=false)
+    EntryRecovery.feed_entries feed_id, include_read, self
   end
 
   ##
-  # Retrieve entries in the folder passed as argument that are marked as unread for this user.
-  # In this context, "entries in the folder" means "entries from all feeds in the folder".
-  #
-  # Receives as argument the id of the folder from which to retrieve entries. The special value
-  # "all" means that unread entries should be retrieved from ALL subscribed feeds.
-  #
-  # Raises an ActiveRecord::RecordNotFound error if the folder does not belong to the user.
-  #
-  # If successful, returns an ActiveRecord::Relation with the entries.
+  # Retrieve unread entries from a folder. See EntryRecovery#feed_entries
 
   def unread_folder_entries(folder_id)
-    if folder_id == 'all'
-      Rails.logger.info "User #{self.id} - #{self.email} is retrieving unread entries from all subscribed feeds"
-      entries = Entry.joins(:entry_states).where entry_states: {read: false, user_id: self.id}
-    else
-      # ensure folder belongs to user
-      folder = self.folders.find folder_id
-      Rails.logger.info "User #{self.id} - #{self.email} is retrieving unread entries from folder #{folder.id} - #{folder.title}"
-      entries = Entry.joins(:entry_states, feed: :folders).where entry_states: {read: false, user_id: self.id},
-                                                                 folders: {id: folder_id}
-    end
-
-    return entries
+    EntryRecovery.unread_folder_entries folder_id, self
   end
 
   ##

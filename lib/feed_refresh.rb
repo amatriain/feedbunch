@@ -19,7 +19,7 @@ class FeedRefresh
 
     Rails.logger.info "User #{user.id} - #{user.email} is refreshing feed #{feed.id} - #{feed.fetch_url}"
     FeedClient.fetch feed.id
-    entries = user.unread_feed_entries feed.id
+    entries = user.feed_entries feed.id
     return entries
   end
 end

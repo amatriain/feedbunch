@@ -134,4 +134,26 @@ describe 'feed entries' do
 
   it 'marks a single entry as read'
 
+  it 'shows all entries, including read ones', js: true do
+    entry_state1 = EntryState.where(entry_id: @entry1.id, user_id: @user.id ).first
+    entry_state1.read = true
+    entry_state1.save!
+
+    visit feeds_path
+    read_feed @feed.id
+
+    # @entry1 is read, should not appear on the page
+    page.should_not have_content @entry1.title
+
+    show_read_entries
+
+    # both @entry1 and @entry2 should appear on the page
+    page.should have_content @entry1.title
+    page.should have_content @entry2.title
+
+    # entries should have the correct CSS class
+    page.should have_css "a[data-entry-id='#{@entry1.id}'].entry-read"
+    page.should have_css "a[data-entry-id='#{@entry2.id}'].entry-unread"
+  end
+
 end
