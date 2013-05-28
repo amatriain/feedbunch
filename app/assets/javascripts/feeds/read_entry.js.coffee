@@ -15,18 +15,31 @@ $(document).ready ->
       update_entry_state_path = $(this).attr "data-entry-state-update-path"
       entry_id = $(this).attr "data-entry-summary-id"
 
-      # Function to handle result returned by the server
-      update_entry_state_result = (data, status, xhr) ->
-        Openreader.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
-        Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"], true, Openreader.current_folder_id
-        if data["folder"]
-          Openreader.update_folder_entry_count data["folder"]["id"], data["folder"]["sidebar_read_all"]
-
       mark_entry_as_read entry_id
-      $.post(update_entry_state_path, {_method:"put", id: entry_id, state: "read"},
-              update_entry_state_result, "json")
+      $.post(update_entry_state_path,
+        {_method:"put", entry_ids: [entry_id], state: "read", feed_id: Openreader.current_feed_id},
+        update_entry_state_result, "json")
         .fail (jqXHR, textStatus, errorThrown)->
           Openreader.alertTimedShowHide $("#problem-entry-state-change")
+
+  #-------------------------------------------------------
+  # Mark all visible entries as read when clicking on the "mark all as read" button
+  #-------------------------------------------------------
+  $("body").on "click", "#read-all-button", ->
+    if $(this).hasClass("disabled") == false
+      update_entry_state_path = $(this).attr "data-entry-state-update-path"
+      entries = []
+      $("[data-entry-id]").each ->
+        entry_id = $(this).attr "data-entry-id"
+        mark_entry_as_read entry_id
+        entries.push entry_id
+
+      $.post(update_entry_state_path,
+        {_method:"put", entry_ids: entries, state: "read", feed_id: Openreader.current_feed_id},
+          update_entry_state_result, "json")
+          .fail (jqXHR, textStatus, errorThrown)->
+            Openreader.alertTimedShowHide $("#problem-entry-state-change")
+
 
 
   ########################################################
@@ -46,3 +59,12 @@ $(document).ready ->
   #-------------------------------------------------------
   mark_entry_as_read = (entry_id) ->
     $("[data-entry-id='#{entry_id}']").removeClass("entry-unread").addClass "entry-read"
+
+  #-------------------------------------------------------
+  # Function to handle result returned by the server
+  #-------------------------------------------------------
+  update_entry_state_result = (data, status, xhr) ->
+    Openreader.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
+    Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"], true, Openreader.current_folder_id
+    if data["folder"]
+      Openreader.update_folder_entry_count data["folder"]["id"], data["folder"]["sidebar_read_all"]

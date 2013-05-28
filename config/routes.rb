@@ -92,12 +92,12 @@ Openreader::Application.routes.draw do
   # Remove a feed from folders
   match '/folders/remove' => 'folders#remove', via: :delete, as: 'folder_remove'
 
+  # Mark as read an array of entries
+  match '/entries/update' => 'entries#update', via: :put, as: 'entries_update'
+
   # Resourceful routes for feeds
   resources :feeds, only: [:index, :show, :create, :destroy]
 
   # Resourceful routes for folders
   resources :folders, only: [:show, :update, :create]
-
-  # Resourceful routes for entries
-  resources :entries, only: [:update]
 end

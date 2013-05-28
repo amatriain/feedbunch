@@ -75,6 +75,15 @@ def read_entry(entry_id)
 end
 
 ##
+# Click on the "mark all as read" button to mark all currently visible entries as read.
+# If the button is not currently visible the test immediately fails.
+
+def mark_all_as_read
+  find('#read-all-button').click
+  sleep 1
+end
+
+##
 # Click on a feed to read it, and then click on the Folder dropdown to move it to a newly created folder
 #
 # Receives as arguments the id of the feed and the title of the new folder.

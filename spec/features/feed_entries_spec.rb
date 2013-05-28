@@ -114,7 +114,21 @@ describe 'feed entries' do
     should_show_alert 'problem-entry-state-change'
   end
 
-  it 'marks all entries as read'
+  it 'marks all entries as read', js: true do
+    mark_all_as_read
+
+    entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+    entry_state1.read.should be_true
+    entry_state2 = EntryState.where(user_id: @user.id, entry_id: @entry2.id).first
+    entry_state2.read.should be_true
+
+    # On refresh, no entries should appear for @feed
+    visit feeds_path
+    read_feed @feed.id
+    page.should_not have_content @entry1.title
+    page.should_not have_content @entry2.title
+    page.should_not have_css '[data-entry-id]'
+  end
 
   it 'marks an entry as unread'
 

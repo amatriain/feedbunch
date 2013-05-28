@@ -18,7 +18,7 @@
           <div class="collapse"
                id="entry-<%= entry.id %>-summary"
                data-entry-summary-id="<%= entry.id %>"
-               data-entry-state-update-path="<%= entry_path entry.id %>">
+               data-entry-state-update-path="<%= entries_update_path %>">
             <div class="entry-content">
               <p class="lead">
                 <%= sanitize link_to(entry.title, entry.url, target: '_blank') %>
