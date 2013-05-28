@@ -85,12 +85,13 @@ def should_show_alert(alert_id)
 
   # It should close automatically after 5 seconds
   sleep 5
-  page.should have_css "div##{alert_id}", visible: false
+  page.should have_css "div##{alert_id}", visible: true
 end
 
 ##
 # Test that an alert with the passed id is hidden-
 
 def should_hide_alert(alert_id)
+  page.should_not have_css "div##{alert_id}", visible: true
   page.should have_css "div##{alert_id}.hidden", visible: false
 end
