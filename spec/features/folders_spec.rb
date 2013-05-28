@@ -190,6 +190,38 @@ describe 'folders and feeds' do
           page.should_not have_css "a[data-folder-id='#{@folder1.id}']"
         end
       end
+
+      # Regression test for bug #165
+      it 'does not change feed/folder if user tries to move a feed to the same folder it already is at', js: true do
+        # @feed1 is already in @folder1, user clicks on @folder1 in the dropdown
+        add_feed_to_folder @feed1.id, @folder1.id
+
+        # Folder should not be deleted from the database
+        Folder.exists?(@folder1.id).should be_true
+
+        # Folder should not be removed from the sidebar
+        within '#sidebar #folders-list' do
+          page.should have_content @folder1.title
+        end
+        page.should have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
+
+        # Folder should not be removed from the dropdown
+        find('#folder-management').click
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          page.should have_content @folder1.title
+          page.should have_css "a[data-folder-id='#{@folder1.id}']"
+        end
+
+        # @feed1 under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that
+        # indicates it is inside @folder1
+        page.should have_css "#folder-all ul#feeds-all a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
+
+        # @feed1 should have exactly the same link in the sidebar under the @folder1 folder
+        page.should have_css "#folder-#{@folder1.id} ul#feeds-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
+
+        # No alert should be shown
+        should_hide_alert 'problem-folder-management'
+      end
       
       it 'does not remove folder if it has more feeds', js: true do
         # User has feeds @feed1, @feed2 in @folder1

@@ -714,6 +714,15 @@ describe User do
       @folder.feeds.should_not include @feed
     end
 
+    it 'does not change feed/folder if asked to move feed to the same folder' do
+      @folder.feeds << @feed
+
+      @user.add_feed_to_folder @feed.id, @folder.id
+
+      @folder.feeds.count.should eq 1
+      @folder.feeds.should include @feed
+    end
+
     it 'returns the feed' do
       folders = @user.add_feed_to_folder @feed.id, @folder.id
       folders[:feed].should eq @feed
