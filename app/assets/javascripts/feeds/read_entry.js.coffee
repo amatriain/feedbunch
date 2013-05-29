@@ -17,9 +17,9 @@ $(document).ready ->
 
       mark_entry_as_read entry_id
       $.post(update_entry_state_path,
-        {_method:"put", entry_ids: [entry_id], state: "read", feed_id: Openreader.current_feed_id},
+        {_method:"put", entry_ids: [entry_id], state: "read"},
         update_entry_state_result, "json")
-        .fail (jqXHR, textStatus, errorThrown)->
+        .fail ->
           Openreader.alertTimedShowHide $("#problem-entry-state-change")
 
   #-------------------------------------------------------
@@ -35,9 +35,9 @@ $(document).ready ->
         entries.push entry_id
 
       $.post(update_entry_state_path,
-        {_method:"put", entry_ids: entries, state: "read", feed_id: Openreader.current_feed_id},
+        {_method:"put", entry_ids: entries, state: "read"},
           update_entry_state_result, "json")
-          .fail (jqXHR, textStatus, errorThrown)->
+          .fail ->
             Openreader.alertTimedShowHide $("#problem-entry-state-change")
 
 
@@ -65,6 +65,15 @@ $(document).ready ->
   #-------------------------------------------------------
   update_entry_state_result = (data, status, xhr) ->
     Openreader.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
-    Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"], true, Openreader.current_folder_id
-    if data["folder"]
-      Openreader.update_folder_entry_count data["folder"]["id"], data["folder"]["sidebar_read_all"]
+
+    if data["feeds"]
+      changed_feeds = data["feeds"]
+      for feed in changed_feeds
+        Openreader.update_feed_entry_count feed["id"], feed["sidebar"]
+
+    if data["folders"]
+      changed_folders = data["folders"]
+      for folder in changed_folders
+        Openreader.update_folder_entry_count folder["id"], folder["sidebar_read_all"]
+
+    Openreader.make_active Openreader.current_feed_id, Openreader.current_folder_id

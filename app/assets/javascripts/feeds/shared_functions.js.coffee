@@ -42,15 +42,11 @@ Openreader.update_folder_entry_count = (folder_id, data) ->
   $("li#folder-#{folder_id}-all-feeds").replaceWith data
 
 #-------------------------------------------------------
-# Update the count of unread entries in a feed by rewriting its link in the sidebar. Optionally
-# can set the feed CSS class as "active" under the passed folder.
+# Update the count of unread entries in a feed by rewriting its link in the sidebar.
 #-------------------------------------------------------
-Openreader.update_feed_entry_count = (feed_id, data, active=false, folder_id="all") ->
+Openreader.update_feed_entry_count = (feed_id, data) ->
   sidebar_feed = $("[data-sidebar-feed][data-feed-id='#{feed_id}']").parent()
   sidebar_feed.replaceWith data
-  if active
-    $("a[data-sidebar-feed]").not("[data-feed-id='#{feed_id}']").parent().removeClass "active"
-    $("#feeds-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed_id}']").parent().addClass "active"
 
 #-------------------------------------------------------
 # Read a feed under a specific folder
@@ -58,6 +54,12 @@ Openreader.update_feed_entry_count = (feed_id, data, active=false, folder_id="al
 Openreader.read_feed = (feed_id, folder_id) ->
   open_folder folder_id
   $("#feeds-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed_id}']").click()
+
+#-------------------------------------------------------
+# Mark a sidebar feed or folder link as active
+#-------------------------------------------------------
+Openreader.make_active = (feed_id, folder_id) ->
+  $("#folders-list #folder-#{folder_id} a[data-feed-id='#{feed_id}']").parent().addClass "active"
 
 #-------------------------------------------------------
 # Insert a list of entries, replacing the old one (if any)

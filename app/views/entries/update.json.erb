@@ -1,0 +1,40 @@
+<% self.formats = [:html] %>
+
+{
+    "folder_all": {
+        "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all',
+                                locals: {user: user, folder_id: 'all'}, layout: false).to_json.html_safe %>
+    }
+
+<% if feeds.present? %>
+  <%
+    feeds_json = []
+    feeds.each do |feed|
+      feed_json = {}
+      feed_json[:id] = feed.id
+      feed_json[:sidebar] = render('feeds/sidebar/sidebar_feed', user: user, feed: feed)
+      feeds_json << feed_json
+    end
+  %>
+
+    , "feeds": <%= feeds_json.to_json.html_safe %>
+
+<% end %>
+
+<% if folders.present? %>
+  <%
+    folders_json = []
+    folders.each do |folder|
+      folder_json = {}
+      folder_json[:id] = folder.id
+      folder_json[:sidebar_read_all] = render(partial: 'feeds/sidebar/sidebar_folder_read_all',
+                                locals: {user: user, folder_id: folder.id}, layout: false)
+      folders_json << folder_json
+    end
+  %>
+
+    , "folders": <%= folders_json.to_json.html_safe %>
+
+<% end %>
+
+}

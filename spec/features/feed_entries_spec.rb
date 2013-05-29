@@ -95,8 +95,30 @@ describe 'feed entries' do
     page.should have_content entry3.title
   end
 
-  it 'marks as read an entry when opening it', js: true do
+  it 'marks as read an entry when reading a feed and opening an entry', js: true do
     read_entry @entry1.id
+
+    entry_state = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+    entry_state.read.should be_true
+
+    # On refresh, @entry1 should no longer appear
+    visit feeds_path
+    read_feed @feed.id
+    page.should_not have_content @entry1.title
+  end
+
+  # Regression test for bug #177
+  it 'marks as read an entry when reading a folder and opening an entry', js: true do
+    folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder
+    folder.feeds << @feed
+    visit feeds_path
+
+    read_folder folder.id
+    read_entry @entry1.id
+
+    # No alert should appear
+    should_hide_alert 'problem-entry-state-change'
 
     entry_state = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
     entry_state.read.should be_true
