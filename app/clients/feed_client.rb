@@ -35,7 +35,7 @@ class FeedClient
   # fetched but passing a false to the "perform_autodiscovery" argument, to avoid entering an infinite loop of
   # HTTP GETs.
   #
-  # Returns true if fetch is successful, raises an error otherwise.
+  # Returns feed instance if fetch is successful, raises an error otherwise.
 
   def self.fetch(feed_id, perform_autodiscovery=true)
     feed = Feed.find feed_id
@@ -45,7 +45,7 @@ class FeedClient
       handle_html_response feed, http_response, perform_autodiscovery
     end
 
-    return true
+    return feed
   end
 
   ##
