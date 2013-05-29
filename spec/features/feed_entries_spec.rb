@@ -27,6 +27,14 @@ describe 'feed entries' do
     page.should have_content @entry1.summary
   end
 
+  it 'opens title link in a new tab', js: true do
+    read_entry @entry1.id
+
+    within "#entry-#{@entry1.id}-summary .entry-content .lead" do
+      page.should have_css "a[target='_blank'][href='#{@entry1.url}']"
+    end
+  end
+
   it 'closes other entries when opening an entry', js: true do
     read_entry @entry1.id
     # Only summary of first entry should be visible

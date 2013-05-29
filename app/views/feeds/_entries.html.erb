@@ -29,14 +29,11 @@
                data-entry-state-update-path="<%= entries_update_path %>">
             <div class="entry-content">
               <p class="lead">
-                <%= sanitize link_to(entry.title, entry.url, target: '_blank') %>
-                <span class="pull-right">
-              <%= sanitize link_to(content_tag(:i, '', class: 'icon-external-link'),
-                                   entry.url,
-                                   target: '_blank',
-                                   title: t('.open_new_tab'),
-                                   alt: t('.open_new_tab')) %>
-            </span>
+                <% link_entry = link_to(entry.url, target: '_blank') do %>
+                  <%= entry.title %>
+                  <%= content_tag(:i, '', class: 'icon-external-link') %>
+                <% end %>
+                <%= sanitize link_entry %>
               </p>
 
               <p class="hidden"><%= sanitize entry.guid %></p>
