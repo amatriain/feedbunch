@@ -75,20 +75,6 @@ describe User do
         @user.feeds.should include existing_feed
       end
 
-      it 'does not create a feed in the database if an already existing feed is actually fetched' do
-        url = 'xkcd.com'
-        existing_feed = FactoryGirl.create :feed
-        FeedClient.stub :fetch do
-          existing_feed
-        end
-
-        result = @user.subscribe url
-
-        Feed.all.count.should eq 2
-        Feed.all.should include @feed
-        Feed.all.should include existing_feed
-      end
-
       it 'raises an error if user tries to subscribe twice to a feed, given its fetch_url' do
         # User is already subscribed to the feed
         @user.feeds << @feed

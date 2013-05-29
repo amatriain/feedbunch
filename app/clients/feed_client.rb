@@ -42,7 +42,7 @@ class FeedClient
     http_response = fetch_valid_feed feed
 
     if http_response.present?
-      handle_html_response feed, http_response, perform_autodiscovery
+      feed = handle_html_response feed, http_response, perform_autodiscovery
     end
 
     return feed
@@ -106,11 +106,11 @@ class FeedClient
   def self.handle_html_response(feed, http_response, perform_autodiscovery)
     if perform_autodiscovery
       # If there was a problem parsing the feed assume we've downloaded an HTML webpage, try to perform feed autodiscovery
-      feed = FeedAutodiscovery.perform_feed_autodiscovery feed, http_response
-      if feed.present?
+      discovered_feed = FeedAutodiscovery.perform_feed_autodiscovery feed, http_response
+      if discovered_feed.present?
         # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
         # This second fetch will not try to perform autodiscovery, to avoid entering an infinite loop.
-        return FeedClient.fetch feed.id, false
+        return FeedClient.fetch discovered_feed.id, false
       else
         raise FeedAutodiscoveryError.new
       end

@@ -83,7 +83,7 @@ class Feed < ActiveRecord::Base
   def self.url_variants_feed(url)
     # Remove leading and trailing whitespace, to avoid confusion when detecting trailing slashes
     stripped_url = url.strip
-    Rails.logger.info "Searching for mathing feeds for url #{stripped_url}"
+    Rails.logger.info "Searching for matching feeds for url #{stripped_url}"
     matching_feed = Feed.url_feed stripped_url
     if matching_feed.blank? && stripped_url =~ /.*[^\/]$/
       Rails.logger.info "No matching feed found for #{stripped_url}, adding trailing slash to search again for url"

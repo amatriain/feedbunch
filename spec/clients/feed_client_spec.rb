@@ -395,7 +395,7 @@ FEED_XML
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
       old_feed.entries.count.should eq 1
       old_feed.entries.where(guid: @entry1.guid).should be_present
-      Feed.exists?(id: new_feed).should be_false
+      Feed.exists?(new_feed).should be_false
     end
 
     it 'uses first feed available for autodiscovery' do
