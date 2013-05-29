@@ -826,4 +826,11 @@ WEBPAGE_HTML
       expect {FeedClient.fetch @feed.id}.to raise_error FeedAutodiscoveryError
     end
   end
+
+  context 'summary manipularion' do
+
+    it 'sanitizes entry summary'
+
+    it 'changes all links in the summary to open in a new tab'
+  end
 end

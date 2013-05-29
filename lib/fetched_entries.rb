@@ -1,3 +1,5 @@
+require 'entry_summary_sanitizer'
+
 ##
 # Class to save or update in the database a collection of fetched feed entries.
 
@@ -28,7 +30,7 @@ class FetchedEntries
       e.url = f.url
       e.author = f.author
       e.content = f.content
-      e.summary = f.summary
+      e.summary = EntrySummarySanitizer.modify_entry_summary f.summary
       e.published = f.published
       e.guid = f.entry_id
       feed.entries << e
