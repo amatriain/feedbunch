@@ -102,13 +102,19 @@ class FeedSubscriber
   def self.subscribe_new_feed(user, feed_url)
     Rails.logger.info "Feed #{feed_url} not in the database, trying to fetch it"
     feed = Feed.create! fetch_url: feed_url, title: feed_url
-    fetch_result = FeedClient.fetch feed.id
-    if fetch_result
-      Rails.logger.info "New feed #{feed_url} successfully fetched. Subscribing user #{user.id} - #{user.email}"
-      # We have to reload the feed because the title has likely changed value to the real one when first fetching it
-      feed.reload
-      user.feeds << feed
-      return feed
+    fetched_feed = FeedClient.fetch feed.id
+    if fetched_feed
+      Rails.logger.error "DEBUG----- #{fetched_feed.id} - #{fetched_feed.url} - #{fetched_feed.fetch_url} - #{fetched_feed.title}"
+      if user.feeds.include? fetched_feed
+        # Only subscribe user to the actually fetched feed if he's not already subscribed
+        Rails.logger.info "Fetched feed #{feed_url} was already subscribed by user #{user.id} - #{user.email}"
+        raise AlreadySubscribedError.new
+      else
+        Rails.logger.info "New feed #{feed_url} successfully fetched. Subscribing user #{user.id} - #{user.email}"
+        user.feeds << fetched_feed
+      end
+
+      return fetched_feed
     else
       Rails.logger.info "URL #{feed_url} is not a valid feed URL"
       feed.destroy

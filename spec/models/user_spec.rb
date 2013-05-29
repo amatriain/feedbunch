@@ -38,7 +38,7 @@ describe User do
 
       before :each do
         @feed = FactoryGirl.create :feed
-        FeedClient.stub fetch: true
+        FeedClient.stub fetch: @feed
       end
 
       it 'rejects non-valid URLs' do
@@ -50,9 +50,29 @@ describe User do
 
       it 'accepts URLs without scheme, defaults to http://' do
         url = 'xkcd.com'
+        FeedClient.stub :fetch do |url|
+          feed = Feed.where(fetch_url: url).first
+          feed
+        end
+
         result = @user.subscribe url
-        result.should be_true
-        @user.feeds.where(fetch_url: 'http://'+url).should be_present
+
+        feed = @user.feeds.where(fetch_url: 'http://'+url).first
+        result.should eq feed
+      end
+
+      it 'subscribes to the feed actually fetched, not necessarily to a new one' do
+        url = 'xkcd.com'
+        existing_feed = FactoryGirl.create :feed
+        FeedClient.stub :fetch do
+          existing_feed
+        end
+
+        result = @user.subscribe url
+
+        result.should eq existing_feed
+        @user.feeds.count.should eq 1
+        @user.feeds.should include existing_feed
       end
 
       it 'raises an error if user tries to subscribe twice to a feed, given its fetch_url' do
@@ -324,7 +344,7 @@ describe User do
           entry1 = FactoryGirl.build :entry, feed_id: feed.id, title: entry_title1
           entry2 = FactoryGirl.build :entry, feed_id: feed.id, title: entry_title2
           feed.entries << entry1 << entry2
-          true
+          feed
         end
 
         # At first the user is not subscribed to the feed
@@ -339,7 +359,7 @@ describe User do
 
       it 'does not save in the database if there is a problem fetching the feed' do
         feed_url = 'http://a.new.feed.url.com'
-        FeedClient.stub fetch: false
+        FeedClient.stub fetch: nil
 
         # At first the user is not subscribed to any feed
         @user.feeds.should be_blank
@@ -352,7 +372,7 @@ describe User do
 
       it 'returns false if it cannot fetch the feed' do
         feed_url = 'http://a.new.feed.url.com'
-        FeedClient.stub fetch: false
+        FeedClient.stub fetch: nil
 
         # At first the user is not subscribed to any feed
         success = @user.subscribe feed_url
@@ -668,6 +688,7 @@ describe User do
       entry3 = FactoryGirl.build :entry, feed_id: feed2.id
       FeedClient.stub :fetch do
         feed2.entries << entry3
+        feed2
       end
 
       # refresh should return the "old" unread entry and the new (just fetched) entry

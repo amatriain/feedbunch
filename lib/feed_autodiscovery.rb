@@ -41,10 +41,21 @@ class FeedAutodiscovery
         feed_href = uri.to_s
       end
 
-      Rails.logger.info "Autodiscovered feed with url #{feed_href}. Updating feed in the database."
-      feed.fetch_url = feed_href
-      feed.save!
-      return feed
+      # Check if the autodiscovered feed is already in the database
+      existing_feed = Feed.url_variants_feed feed_href
+      if existing_feed.present?
+        # If autodiscovered feed is in the database, use it and delete the one passed
+        Rails.logger.info "Autodiscovered already known feed with url #{feed_href}. Using it and destroying feed with url #{feed.url} passed as argument"
+        feed.destroy
+        discovered_feed = existing_feed
+      else
+        Rails.logger.info "Autodiscovered new feed with url #{feed_href}. Updating fetch url in the database."
+        feed.fetch_url = feed_href
+        feed.save!
+        discovered_feed = feed
+      end
+
+      return discovered_feed
     else
       Rails.logger.warn "Feed autodiscovery failed for #{feed.fetch_url}"
       return nil

@@ -23,6 +23,142 @@ describe 'subscription to feeds' do
     page.should_not have_content @feed2.title
   end
 
+  it 'subscribes to a feed already in the database, given a website URL that through autodiscovery leads to its fetch_url', js: true do
+    # Fetching a feed returns an HTML document with feed autodiscovery
+    webpage_url = 'http://www.some.webpage.url'
+    alternate_webpage_url = 'http://some.webpage.url'
+    fetch_url = 'http://some.webpage.url/feed.php'
+
+    existing_feed = FactoryGirl.create :feed, url: webpage_url, fetch_url: fetch_url
+
+    webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+    webpage_html.stub headers: {}
+
+    feed_title = 'new feed title'
+    entry_title = 'some entry title'
+    feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>http://xkcd.com</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{entry_title}</title>
+      <link>http://xkcd.com/1203/</link>
+      <description>entry summary</description>
+      <pubDate>#{DateTime.new}</pubDate>
+      <guid>http://xkcd.com/1203/</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+    feed_xml.stub(:headers).and_return {}
+
+    RestClient.stub :get do |url|
+      if url == alternate_webpage_url
+        webpage_html
+      elsif url == fetch_url
+        feed_xml
+      end
+    end
+
+    subscribe_feed alternate_webpage_url
+
+    # Both the old and new feeds should be there, the new feed should be selected
+    within '#sidebar li#folder-all ul#feeds-all' do
+      page.should have_content @feed1.title
+      within 'li.active' do
+        page.should have_content feed_title
+      end
+    end
+    # The entries for the just subscribed feed should be visible
+    page.should have_content entry_title
+
+    # No error message should be shown
+    should_hide_alert 'problem-subscribing'
+
+    # User should be subscribed to @feed1 (it already was subscribed) and to existing_feed (new subscription)
+    @user.feeds.count.should eq 2
+    @user.feeds.should include @feed1
+    @user.feeds.should include existing_feed
+  end
+
+  it 'shows alert if user tries to subscribe to a website URL that through autodiscovery leads to a subscribed feed', js: true do
+    # Fetching a feed returns an HTML document with feed autodiscovery
+    webpage_url = 'http://www.some.webpage.url'
+    alternate_webpage_url = 'http://some.webpage.url'
+    fetch_url = 'http://some.webpage.url/feed.php'
+
+    existing_feed = FactoryGirl.create :feed, url: webpage_url, fetch_url: fetch_url
+    @user.feeds << existing_feed
+    visit feeds_path
+
+    webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+    webpage_html.stub headers: {}
+
+    feed_title = 'new feed title'
+    entry_title = 'some entry title'
+    feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>http://xkcd.com</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{entry_title}</title>
+      <link>http://xkcd.com/1203/</link>
+      <description>entry summary</description>
+      <pubDate>#{DateTime.new}</pubDate>
+      <guid>http://xkcd.com/1203/</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+    feed_xml.stub(:headers).and_return {}
+
+    RestClient.stub :get do |url|
+      if url == webpage_url || url == alternate_webpage_url
+        webpage_html
+      elsif url == fetch_url
+        feed_xml
+      end
+    end
+
+    subscribe_feed alternate_webpage_url
+
+    # Alert message should be shown
+    should_show_alert 'already-subscribed'
+
+    # User should be subscribed to @feed1 and to existing_feed (it already was subscribed to both)
+    @user.feeds.count.should eq 2
+    @user.feeds.should include @feed1
+    @user.feeds.should include existing_feed
+  end
+
   it 'subscribes to a feed already in the database, given the feed URL', js: true do
     # User is not yet subscribed to @feed2
     entry = FactoryGirl.build :entry, feed_id: @feed2.id
