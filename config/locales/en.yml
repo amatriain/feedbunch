@@ -52,3 +52,6 @@ en:
       problem_new_folder: "There has been a problem creating the new folder. Please try again later."
       folder_already_exists: "There is already a folder with that title. Please choose another title."
       problem_entry_state: "There was a problem communicating with the server."
+  entries:
+    index:
+      mark_unread: "Mark as unread"

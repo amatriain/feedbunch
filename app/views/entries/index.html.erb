@@ -34,6 +34,10 @@
                   <%= content_tag(:i, '', class: 'icon-external-link') %>
                 <% end %>
                 <%= sanitize link_entry %>
+
+                <a class="btn btn-small pull-right">
+                  <i class="icon-eye-close"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
+                </a>
               </p>
 
               <p class="hidden"><%= sanitize entry.guid %></p>
