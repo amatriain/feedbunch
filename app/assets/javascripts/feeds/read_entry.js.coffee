@@ -40,7 +40,19 @@ $(document).ready ->
           .fail ->
             Openreader.alertTimedShowHide $("#problem-entry-state-change")
 
+  #-------------------------------------------------------
+  # Mark a single entry as unread when clicking on the "mark as unread" button
+  #-------------------------------------------------------
+  $("body").on "click", "[data-unread-entry-id]", ->
+    update_entry_state_path = $(this).attr "data-entry-state-update-path"
+    entry_id = $(this).attr "data-unread-entry-id"
 
+    mark_entry_as_unread entry_id
+    $.post(update_entry_state_path,
+      {_method:"put", entry_ids: [entry_id], state: "unread"},
+        update_entry_state_result, "json")
+          .fail ->
+            Openreader.alertTimedShowHide $("#problem-entry-state-change")
 
   ########################################################
   # COMMON FUNCTIONS
@@ -59,6 +71,12 @@ $(document).ready ->
   #-------------------------------------------------------
   mark_entry_as_read = (entry_id) ->
     $("[data-entry-id='#{entry_id}']").removeClass("entry-unread").addClass "entry-read"
+
+  #-------------------------------------------------------
+  # Mark visually an entry as unread by adding a CSS class to it
+  #-------------------------------------------------------
+  mark_entry_as_unread = (entry_id) ->
+    $("[data-entry-id='#{entry_id}']").removeClass("entry-read").addClass "entry-unread"
 
   #-------------------------------------------------------
   # Function to handle result returned by the server

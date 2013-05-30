@@ -160,9 +160,17 @@ describe 'feed entries' do
     page.should_not have_css '[data-entry-id]'
   end
 
-  it 'marks an entry as unread'
+  it 'marks an entry as unread', js: true do
+    read_entry @entry1.id
+    entry_should_be_marked_read @entry1.id
 
-  it 'marks a single entry as read'
+    find("[data-unread-entry-id='#{@entry1.id}']").click
+
+    entry_should_be_marked_unread @entry1.id
+
+    read_feed @feed.id
+    page.should_not have_content @entry1.title
+  end
 
   it 'shows all entries, including read ones', js: true do
     entry_state1 = EntryState.where(entry_id: @entry1.id, user_id: @user.id ).first

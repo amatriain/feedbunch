@@ -95,3 +95,17 @@ def should_hide_alert(alert_id)
   page.should_not have_css "div##{alert_id}", visible: true
   page.should have_css "div##{alert_id}.hidden", visible: false
 end
+
+##
+# Test that the entry with the passed id is visible but marked as read
+
+def entry_should_be_marked_read(entry_id)
+  page.should have_css "a[data-entry-id='#{entry_id}'].entry-read"
+end
+
+##
+# Test that the entry with the passed id is visible and marked as unread
+
+def entry_should_be_marked_unread(entry_id)
+  page.should have_css "a[data-entry-id='#{entry_id}'].entry-unread"
+end
