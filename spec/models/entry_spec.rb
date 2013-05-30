@@ -50,7 +50,7 @@ describe Entry do
     end
   end
 
-  context 'sanitization' do
+  context 'sanitization and summary manipulation' do
 
     it 'sanitizes title' do
       unsanitized_title = '<script>alert("pwned!");</script>title'
@@ -81,10 +81,17 @@ describe Entry do
     end
 
     it 'sanitizes summary' do
-      unsanitized_summary = '<script>alert("pwned!");</script>summary'
-      sanitized_summary = 'summary'
+      unsanitized_summary = '<script>alert("pwned!");</script><p>summary</p>'
+      sanitized_summary = '<p>summary</p>'
       entry = FactoryGirl.create :entry, summary: unsanitized_summary
       entry.summary.should eq sanitized_summary
+    end
+
+    it 'opens summary links in a new tab' do
+      unmodified_summary = '<a href="http://some.link">Click here to read full story</a>'
+      modified_summary = '<a href="http://some.link" target="_blank">Click here to read full story</a>'
+      entry = FactoryGirl.create :entry, summary: unmodified_summary
+      entry.summary.should eq modified_summary
     end
 
     it 'sanitizes guid' do

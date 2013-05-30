@@ -24,7 +24,7 @@ describe 'feed entries' do
 
     read_entry @entry1.id
 
-    page.should have_content @entry1.summary
+    page.should have_content Nokogiri::HTML(@entry1.summary).text
   end
 
   it 'opens title link in a new tab', js: true do
@@ -38,12 +38,12 @@ describe 'feed entries' do
   it 'closes other entries when opening an entry', js: true do
     read_entry @entry1.id
     # Only summary of first entry should be visible
-    page.should have_content @entry1.summary
-    page.should_not have_content @entry2.summary
+    page.should have_content Nokogiri::HTML(@entry1.summary).text
+    page.should_not have_content Nokogiri::HTML(@entry2.summary).text
     read_entry @entry2.id
     # Only summary of second entry should be visible
-    page.should_not have_content @entry1.summary
-    page.should have_content @entry2.summary
+    page.should_not have_content Nokogiri::HTML(@entry1.summary).text
+    page.should have_content Nokogiri::HTML(@entry2.summary).text
   end
 
   it 'by default only shows unread entries in a feed', js: true do

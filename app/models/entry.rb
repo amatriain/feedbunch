@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 ##
 # Feed entry model. Each instance of this class represents an entry in an RSS or Atom feed.
 #
@@ -45,6 +47,7 @@ class Entry < ActiveRecord::Base
   validates :guid, presence: true, uniqueness: {case_sensitive: false}
 
   before_validation :sanitize_fields
+  before_save :links_new_tab
   after_create :set_unread_state
 
   ##
@@ -83,5 +86,16 @@ class Entry < ActiveRecord::Base
     self.feed.users.each do |user|
       entry_state = user.entry_states.create({entry_id: self.id, read: false}, as: :admin)
     end
+  end
+
+  ##
+  # Ensure that any links in the summary open in a new tab, by adding the target="_blank" attribute if necessary
+
+  def links_new_tab
+    summaryDoc = Nokogiri::HTML self.summary
+    summaryDoc.css('a').each do |link|
+      link['target'] = '_blank'
+    end
+    self.summary = summaryDoc.css('body').children.to_s
   end
 end

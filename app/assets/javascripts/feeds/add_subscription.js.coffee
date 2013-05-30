@@ -23,6 +23,7 @@ $(document).ready ->
       Openreader.hide_loading_message()
       if xhr.status == 304
         Openreader.alertTimedShowHide $("#already-subscribed")
+        Openreader.show_start_page()
       else
         Openreader.insert_feed_in_folder data["id"], "all", data["sidebar_feed"]
         Openreader.update_folder_entry_count "all", data["sidebar_read_all"]
