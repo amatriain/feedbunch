@@ -35,7 +35,7 @@ class FeedsController < ApplicationController
     @entries = current_user.feed_entries params[:id], include_read
 
     if @entries.present?
-      render 'show.html.erb', locals: {entries: @entries, user: current_user}, layout: false
+      render 'entries/index.html.erb', locals: {entries: @entries, user: current_user}, layout: false
     else
       Rails.logger.warn "Feed #{params[:id]} has no entries, returning a 404"
       head status: 404
