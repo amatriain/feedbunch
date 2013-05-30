@@ -159,9 +159,9 @@ FEED_XML
       RestClient.stub get: feed_xml
     end
 
-    it 'returns true if successful' do
-      success = FeedClient.fetch @feed.id
-      success.should be_true
+    it 'returns feed if successful' do
+      feed = FeedClient.fetch @feed.id
+      feed.should eq @feed
     end
 
     it 'fetches the right entries and saves them in the database' do
@@ -995,12 +995,5 @@ WEBPAGE_HTML
       RestClient.should_receive(:get).twice
       expect {FeedClient.fetch @feed.id}.to raise_error FeedAutodiscoveryError
     end
-  end
-
-  context 'summary manipularion' do
-
-    it 'sanitizes entry summary'
-
-    it 'changes all links in the summary to open in a new tab'
   end
 end
