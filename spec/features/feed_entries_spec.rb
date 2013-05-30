@@ -169,7 +169,7 @@ describe 'feed entries' do
     entry_should_be_marked_unread @entry1.id
 
     read_feed @feed.id
-    page.should_not have_content @entry1.title
+    page.should have_content @entry1.title
   end
 
   it 'shows all entries, including read ones', js: true do
