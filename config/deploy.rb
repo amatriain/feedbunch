@@ -4,6 +4,7 @@ require "bundler/capistrano"
 set :application, 'openreader'
 set :repository,  'git://github.com/amatriain/openreader.git'
 set :scm, :git
+set :deploy_via, :remote_cache
 set :deploy_to, '/var/www/rails'
 default_environment['TERM'] = 'xterm'
 
