@@ -1,3 +1,13 @@
+#############################################################
+#	Multi-staging
+#############################################################
+
+set :stages, %w(production staging)
+set :default_stage, 'staging'
+require 'capistrano/ext/multistage'
+
+
+
 load 'deploy/assets'
 require "bundler/capistrano"
 
@@ -13,11 +23,10 @@ require 'rvm/capistrano'
 set :rvm_type, :system
 set :rvm_path, '/usr/local/rvm'
 
-server 'ec2-54-216-109-28.eu-west-1.compute.amazonaws.com', :app, :web, :db, primary: true
+
 set :user, 'openreader'
 set :use_sudo, false
 ssh_options[:keys] = '/home/amatriain/Openreader/Staging/Openreaderstaging.pem'
-set :rails_env, :staging
 
 namespace :openreader_secret_data do
   task :copy, roles: :app, except: {no_release: true} do
