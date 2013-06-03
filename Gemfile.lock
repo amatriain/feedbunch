@@ -130,6 +130,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.23)
     multi_json (1.7.3)
+    mysql2 (0.3.11)
     net-scp (1.1.1)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
@@ -139,7 +140,6 @@ GEM
       net-ssh (>= 2.6.5)
     nokogiri (1.5.9)
     orm_adapter (0.4.0)
-    pg (0.15.1)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -252,8 +252,8 @@ DEPENDENCIES
   jquery-rails
   launchy
   log4r
+  mysql2
   nokogiri
-  pg
   rails (= 3.2.13)
   rest-client
   rspec-rails (~> 2.0)
