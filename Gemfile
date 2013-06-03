@@ -63,12 +63,16 @@ gem 'rest-client'
 # To parse html
 gem 'nokogiri'
 
+group :development do
+  gem 'capistrano', require: false
+end
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'
 
   # Static code vulnerability scanner
-  gem 'brakeman', :require => false
+  gem 'brakeman', require: false
 
   # Testing framework
   gem 'rspec-rails', '~> 2.0'
