@@ -5,7 +5,7 @@ set :application, 'openreader'
 set :repository,  'git://github.com/amatriain/openreader.git'
 set :scm, :git
 set :deploy_via, :remote_cache
-set :deploy_to, '/var/www/rails'
+set :deploy_to, '/var/rails/openreader'
 default_environment['TERM'] = 'xterm'
 
 set :rvm_ruby_string, 'ruby-1.9.3-p429@openreader'
