@@ -65,6 +65,7 @@ gem 'nokogiri'
 
 group :development do
   gem 'capistrano', require: false
+  gem 'rvm-capistrano', require: false
 end
 
 group :test, :development do
@@ -96,6 +97,6 @@ group :test do
 end
 
 group :staging, :production do
-  # Postgresql database for staging and production
-  gem 'pg'
+  # Mysql database for staging and production
+  gem 'mysql2'
 end
