@@ -14,15 +14,16 @@ set :rvm_type, :system
 set :rvm_path, '/usr/local/rvm'
 
 server 'ec2-54-216-109-28.eu-west-1.compute.amazonaws.com', :app, :web, :db, primary: true
-set :user, 'ubuntu'
+set :user, 'openreader'
+set :use_sudo, false
 ssh_options[:keys] = '/home/amatriain/Openreader/Staging/Openreaderstaging.pem'
 set :rails_env, :staging
 
 namespace :openreader_secret_data do
   task :copy, roles: :app, except: {no_release: true} do
-    run 'ln -sf /home/ubuntu/Openreader/Staging/secret_token.rb ' \
-        '#{release_path}/config/initializers/secret_token.rb'
-    run 'ln -sf /home/ubuntu/Openreader/Staging/database.yml ' \
+    run 'ln -sf /home/openreader/config/secret_token.rb ' \
+        "#{release_path}/config/initializers/secret_token.rb"
+    run 'ln -sf /home/openreader/config/database.yml ' \
         "#{release_path}/config/database.yml"
   end
 end
