@@ -73,6 +73,8 @@ namespace :openreader_secret_data do
         "#{release_path}/config/initializers/secret_token.rb"
     run 'ln -sf /home/openreader/config/database.yml ' \
         "#{release_path}/config/database.yml"
+    run 'ln -sf /home/openreader/config/staging.rb ' \
+        "#{release_path}/config/environments/staging.rb"
   end
 end
 
