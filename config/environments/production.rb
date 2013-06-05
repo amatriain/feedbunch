@@ -65,9 +65,16 @@ Openreader::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  # Links in emails will point to this host
-  # TODO change the host to the actual production host
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  # Email configuration
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { :host => 'feedbunch.com' }
+  config.action_mailer.smtp_settings = {
+      address: '...',
+      user_name: '...',
+      password: '...',
+      authentication: :login,
+      enable_starttls_auto: true
+  }
 
   # Use SSL for Devise views
   config.to_prepare { Devise::SessionsController.force_ssl }
