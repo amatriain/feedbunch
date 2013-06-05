@@ -68,4 +68,9 @@ Openreader::Application.configure do
   # Links in emails will point to this host
   # TODO change the host to the actual production host
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+
+  # Use SSL for Devise views
+  config.to_prepare { Devise::SessionsController.force_ssl }
+  config.to_prepare { Devise::RegistrationsController.force_ssl }
+  config.to_prepare { Devise::PasswordsController.force_ssl }
 end
