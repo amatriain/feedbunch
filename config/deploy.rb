@@ -31,7 +31,6 @@ default_environment['TERM'] = 'xterm'
 set :user, 'feedbunch'
 # We use a non-privileged user for security reasons
 set :use_sudo, false
-ssh_options[:keys] = '/home/amatriain/Feedbunch/Staging/Openreaderstaging.pem'
 set :deploy_to, '/var/rails/feedbunch'
 
 #############################################################
