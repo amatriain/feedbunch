@@ -10,7 +10,7 @@ require 'capistrano/ext/multistage'
 #	Application
 #############################################################
 
-set :application, 'openreader'
+set :application, 'feedbunch'
 
 #############################################################
 #	Settings
@@ -28,11 +28,11 @@ default_environment['TERM'] = 'xterm'
 #	Servers
 #############################################################
 
-set :user, 'openreader'
+set :user, 'feedbunch'
 # We use a non-privileged user for security reasons
 set :use_sudo, false
-ssh_options[:keys] = '/home/amatriain/Openreader/Staging/Openreaderstaging.pem'
-set :deploy_to, '/var/rails/openreader'
+ssh_options[:keys] = '/home/amatriain/Feedbunch/Staging/Openreaderstaging.pem'
+set :deploy_to, '/var/rails/feedbunch'
 
 #############################################################
 #	Git
@@ -47,7 +47,7 @@ set :deploy_via, :remote_cache
 #	RVM
 #############################################################
 
-set :rvm_ruby_string, 'ruby-1.9.3-p429@openreader'
+set :rvm_ruby_string, 'ruby-1.9.3-p429@feedbunch'
 require 'rvm/capistrano'
 set :rvm_type, :system
 set :rvm_path, '/usr/local/rvm'
@@ -56,7 +56,7 @@ set :rvm_path, '/usr/local/rvm'
 #	Passenger
 #############################################################
 
-namespace :openreader_passenger do
+namespace :feedbunch_passenger do
   task :restart do
     # Tell passenger to restart the app
     run "touch #{File.join(current_path,'tmp','restart.txt')}"
@@ -67,13 +67,13 @@ end
 #	Copy secret token and database credentials to deployment
 #############################################################
 
-namespace :openreader_secret_data do
+namespace :feedbunch_secret_data do
   task :copy, roles: :app, except: {no_release: true} do
-    run 'ln -sf /home/openreader/config/secret_token.rb ' \
+    run 'ln -sf /home/feedbunch/config/secret_token.rb ' \
         "#{release_path}/config/initializers/secret_token.rb"
-    run 'ln -sf /home/openreader/config/database.yml ' \
+    run 'ln -sf /home/feedbunch/config/database.yml ' \
         "#{release_path}/config/database.yml"
-    run 'ln -sf /home/openreader/config/staging.rb ' \
+    run 'ln -sf /home/feedbunch/config/staging.rb ' \
         "#{release_path}/config/environments/staging.rb"
   end
 end
@@ -84,12 +84,12 @@ end
 
 namespace :deploy do
   task :restart, roles: :app, except: {no_release: true} do
-    openreader_passenger.restart
+    feedbunch_passenger.restart
   end
 end
 
 # copy secret files just before compiling assets
-before 'deploy:assets:precompile', 'openreader_secret_data:copy'
+before 'deploy:assets:precompile', 'feedbunch_secret_data:copy'
 
 # run database migrations on each deploy, just after copying the new code
 after 'deploy:update_code', 'deploy:migrate'
