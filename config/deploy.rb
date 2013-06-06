@@ -72,8 +72,8 @@ namespace :feedbunch_secret_data do
         "#{release_path}/config/initializers/secret_token.rb"
     run 'ln -sf /home/feedbunch/config/database.yml ' \
         "#{release_path}/config/database.yml"
-    run 'ln -sf /home/feedbunch/config/staging.rb ' \
-        "#{release_path}/config/environments/staging.rb"
+    run "ln -sf /home/feedbunch/config/#{rails_env}.rb " \
+        "#{release_path}/config/environments/#{rails_env}.rb"
   end
 end
 
