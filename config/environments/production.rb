@@ -67,7 +67,7 @@ Openreader::Application.configure do
 
   # Email configuration
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.default_url_options = { :host => 'https://www.feedbunch.com' }
+  config.action_mailer.default_url_options = { :host => 'www.feedbunch.com', protocol: 'https' }
   config.action_mailer.smtp_settings = {
       address: '...',
       user_name: '...',
