@@ -1,7 +1,9 @@
 <% if user_signed_in? %>
   <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
+
       <%= link_to 'Openreader', root_path, class: 'brand' %>
+
       <ul class="nav">
         <li>
           <%= link_to feeds_path, id: 'feeds' do %>
@@ -10,14 +12,24 @@
           <% end %>
         </li>
       </ul>
+
       <ul class="pull-right nav">
+        <li>
+          <%= link_to resque_path do %>
+            <i class="icon-code-fork"></i>
+            <%= t 'layouts.application.background_jobs' %>
+          <% end %>
+        </li>
+
         <li>
           <%=  link_to edit_user_registration_path, id: 'my_account' do %>
             <i class="icon-user"></i>
             <%= t 'layouts.application.my_account' %>
           <% end %>
         </li>
+
         <li class="divider-vertical"></li>
+
         <li>
           <%= link_to destroy_user_session_path, :method => :delete, id: 'sign_out' do %>
             <%= t 'layouts.application.logout' %>
@@ -25,6 +37,7 @@
           <% end %>
         </li>
       </ul>
+
     </div>
   </div>
 <% end %>

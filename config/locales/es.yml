@@ -10,6 +10,7 @@ es:
   layouts:
     application:
       logout: "Salir"
+      background_jobs: "Tareas en background"
       my_account: "Mi cuenta"
       my_feeds: "Mis feeds"
       closing_timer_html: "cerrando en <span data-timer></span>"

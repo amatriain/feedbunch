@@ -63,6 +63,9 @@ gem 'rest-client'
 # To parse html
 gem 'nokogiri'
 
+# Background jobs
+gem 'resque'
+
 group :development do
   gem 'capistrano', require: false
   gem 'rvm-capistrano', require: false

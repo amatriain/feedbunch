@@ -13,6 +13,7 @@ en:
   layouts:
     application:
       logout: "Logout"
+      background_jobs: "Background jobs"
       my_account: "My account"
       my_feeds: "My feeds"
       closing_timer_html: "closing in <span data-timer></span>"

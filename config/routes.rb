@@ -1,3 +1,5 @@
+require 'resque/server'
+
 Openreader::Application.routes.draw do
   devise_for :users, skip: [:sessions, :passwords, :registrations, :confirmations, :unlocks]
 
@@ -100,4 +102,7 @@ Openreader::Application.routes.draw do
 
   # Resourceful routes for folders
   resources :folders, only: [:show, :update, :create]
+
+  # Resque queue monitoring app will live in the /resque subpath
+  mount Resque::Server.new, at: '/resque', as: 'resque'
 end

@@ -48,6 +48,8 @@ class FeedClient
     return feed
   end
 
+  private
+
   ##
   # Fetch a feed, parse it and save received entries in the database.
   # This method assumes that the document at feed.fetch_url is a valid feed.
