@@ -65,6 +65,7 @@ gem 'nokogiri'
 
 # Background jobs
 gem 'resque'
+gem 'resque-scheduler', :require => 'resque_scheduler'
 
 group :development do
   gem 'capistrano', require: false
