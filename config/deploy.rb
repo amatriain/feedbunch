@@ -16,15 +16,17 @@ set :application, 'feedbunch'
 #	RVM
 #############################################################
 
-set :rvm_ruby_string, 'ruby-1.9.3-p429@feedbunch'
-require 'rvm/capistrano'
+set :rvm_ruby_string, 'ruby-1.9.3-p429'
+set :rvm_gemset, 'feedbunch'
 set :rvm_type, :system
 set :rvm_path, '/usr/local/rvm'
+require 'rvm/capistrano'
 
 #############################################################
 #	Settings
 #############################################################
 
+set :bundle_dir, "/usr/local/rvm/gems/ruby-1.9.3-p429@feedbunch"
 # runs 'bundle install' during deployment
 require 'bundler/capistrano'
 
@@ -68,15 +70,17 @@ end
 
 namespace :feedbunch_god do
   task :start do
-    run "RAILS_ENV=#{rails_env} god -c #{File.join(current_path,'config','background_jobs.god')}"
+    run "rvm gemset use #{rvm_gemset};
+        RAILS_ENV=#{rails_env} god -c #{File.join(current_path,'config','background_jobs.god')}"
   end
 
   task :stop do
     # We run a "true" shell command after issuing a "god terminate" command because otherwise if
     # God were not running before this, we would get a return value of false which
     # Capistrano would intepret as an error and the deployment would be rolled back
-    run 'god terminate;
-        true'
+    run "rvm gemset use #{rvm_gemset};
+        god terminate;
+        true"
   end
 
   task :restart do
