@@ -70,8 +70,12 @@ gem 'resque-scheduler', :require => 'resque_scheduler'
 # Process monitoring
 gem 'god'
 
+# Automate deployments
 gem 'capistrano', require: false
 gem 'rvm-capistrano', require: false
+
+# Enable TLS in God email notifications
+gem 'tlsmail', require: false
 
 group :test, :development do
   # Sqlite database for testing and development
