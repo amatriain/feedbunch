@@ -13,6 +13,15 @@ require 'capistrano/ext/multistage'
 set :application, 'feedbunch'
 
 #############################################################
+#	RVM
+#############################################################
+
+set :rvm_ruby_string, 'ruby-1.9.3-p429@feedbunch'
+require 'rvm/capistrano'
+set :rvm_type, :system
+set :rvm_path, '/usr/local/rvm'
+
+#############################################################
 #	Settings
 #############################################################
 
@@ -43,15 +52,6 @@ set :branch, 'master'
 set :deploy_via, :remote_cache
 
 #############################################################
-#	RVM
-#############################################################
-
-set :rvm_ruby_string, 'ruby-1.9.3-p429@feedbunch'
-require 'rvm/capistrano'
-set :rvm_type, :system
-set :rvm_path, '/usr/local/rvm'
-
-#############################################################
 #	Passenger
 #############################################################
 
@@ -68,16 +68,14 @@ end
 
 namespace :feedbunch_god do
   task :start do
-    run "rvm gemset use feedbunch;
-        RAILS_ENV=#{rails_env} god -c #{File.join(current_path,'config','background_jobs.god')}"
+    run "RAILS_ENV=#{rails_env} god -c #{File.join(current_path,'config','background_jobs.god')}"
   end
 
   task :stop do
     # We run a "true" shell command after issuing a "god terminate" command because otherwise if
     # God were not running before this, we would get a return value of false which
     # Capistrano would intepret as an error and the deployment would be rolled back
-    run 'rvm gemset use feedbunch;
-        god terminate;
+    run 'god terminate;
         true'
   end
 
