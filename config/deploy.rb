@@ -79,8 +79,8 @@ namespace :feedbunch_god do
   end
 
   task :restart do
-    fechit_god.stop
-    fechit_god.start
+    feedbunch_god.stop
+    feedbunch_god.start
   end
 end
 
