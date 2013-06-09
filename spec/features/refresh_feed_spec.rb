@@ -73,6 +73,7 @@ describe 'refresh feeds' do
 
   # Regression test for bug #169
   it 'does not show an alert refreshing a feed without unread entries', js: true do
+    FeedClient.stub :fetch
     entry_state = EntryState.where(entry_id: @entry1.id, user_id: @user.id).first
     entry_state.read=true
     entry_state.save
