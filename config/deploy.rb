@@ -68,10 +68,6 @@ end
 
 namespace :feedbunch_god do
   task :start do
-    # IMPORTANT: Redis working directory is in the capistrano shared folder, so that the
-    # append-only file and the dump file are not lost on each deployment. Create it if necessary.
-    redis_working_dir = File.join(shared_path, 'redis').gsub('/', '\\/')
-    run "mkdir -p #{redis_working_dir}"
     run "RAILS_ENV=#{rails_env} god -c #{File.join(current_path,'config','background_jobs.god')}"
   end
 
@@ -105,6 +101,11 @@ namespace :feedbunch_secret_data do
 
     run 'ln -sf /home/feedbunch/config/notifications.god ' \
         "#{release_path}/config/notifications.god"
+
+    # Redis working directory is in the capistrano shared folder, so that the
+    # append-only file and the dump file are not lost on each deployment. Create it if necessary.
+    redis_working_dir = File.join(shared_path, 'redis').gsub('/', '\\/')
+    run "mkdir -p #{redis_working_dir}"
 
     run 'ln -sf /home/feedbunch/config/redis.conf ' \
         "#{shared_path}/redis/redis.conf"
