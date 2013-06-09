@@ -67,16 +67,14 @@ end
 
 namespace :feedbunch_god do
   task :start do
-    run "rvm gemset use #{rvm_gemset};
-        RAILS_ENV=#{rails_env} god -c #{File.join(current_path,'config','background_jobs.god')}"
+    run "RAILS_ENV=#{rails_env} bundle exec god -c #{File.join(current_path,'config','background_jobs.god')}"
   end
 
   task :stop do
     # We run a "true" shell command after issuing a "god terminate" command because otherwise if
     # God were not running before this, we would get a return value of false which
     # Capistrano would intepret as an error and the deployment would be rolled back
-    run "rvm gemset use #{rvm_gemset};
-        god terminate;
+    run "bundle exec god terminate;
         true"
   end
 
