@@ -16,17 +16,15 @@ set :application, 'feedbunch'
 #	RVM
 #############################################################
 
-set :rvm_ruby_string, 'ruby-1.9.3-p429'
-set :rvm_gemset, 'feedbunch'
+set :rvm_ruby_string, :local
 set :rvm_type, :system
-set :rvm_path, '/usr/local/rvm'
 require 'rvm/capistrano'
+set :default_shell, :bash
 
 #############################################################
 #	Settings
 #############################################################
 
-set :bundle_dir, "/usr/local/rvm/gems/ruby-1.9.3-p429@feedbunch"
 # runs 'bundle install' during deployment
 require 'bundler/capistrano'
 
@@ -34,6 +32,7 @@ require 'bundler/capistrano'
 load 'deploy/assets'
 
 default_environment['TERM'] = 'xterm'
+default_run_options[:pty] = true
 
 #############################################################
 #	Servers

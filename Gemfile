@@ -70,10 +70,8 @@ gem 'resque-scheduler', :require => 'resque_scheduler'
 # Process monitoring
 gem 'god'
 
-group :development do
-  gem 'capistrano', require: false
-  gem 'rvm-capistrano', require: false
-end
+gem 'capistrano', require: false
+gem 'rvm-capistrano', require: false
 
 group :test, :development do
   # Sqlite database for testing and development
