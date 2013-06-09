@@ -67,6 +67,9 @@ gem 'nokogiri'
 gem 'resque'
 gem 'resque-scheduler', :require => 'resque_scheduler'
 
+# Process monitoring
+gem 'god'
+
 group :development do
   gem 'capistrano', require: false
   gem 'rvm-capistrano', require: false

@@ -63,17 +63,51 @@ namespace :feedbunch_passenger do
 end
 
 #############################################################
-#	Copy secret token and database credentials to deployment
+#	God (manages Redis, Resque)
+#############################################################
+
+namespace :feedbunch_god do
+  task :start do
+    # IMPORTANT: Redis working directory is in the capistrano shared folder, so that the
+    # append-only file and the dump file are not lost on each deployment. Create it if necessary.
+    redis_working_dir = File.join(shared_path, 'redis').gsub('/', '\\/')
+    run "mkdir -p #{redis_working_dir}"
+    run "RAILS_ENV=#{rails_env} god -c #{File.join(current_path,'config','background_jobs.god')}"
+  end
+
+  task :stop do
+    # We run a "true" shell command after issuing a "god terminate" command because otherwise if
+    # God were not running before this, we would get a return value of false which
+    # Capistrano would intepret as an error and the deployment would be rolled back
+    run 'god terminate;true'
+  end
+
+  task :restart do
+    fechit_god.stop
+    fechit_god.start
+  end
+end
+
+#############################################################
+#	Copy per-environment config files to deployment
 #############################################################
 
 namespace :feedbunch_secret_data do
   task :copy, roles: :app, except: {no_release: true} do
     run 'ln -sf /home/feedbunch/config/secret_token.rb ' \
         "#{release_path}/config/initializers/secret_token.rb"
+
     run 'ln -sf /home/feedbunch/config/database.yml ' \
         "#{release_path}/config/database.yml"
+
     run "ln -sf /home/feedbunch/config/#{rails_env}.rb " \
         "#{release_path}/config/environments/#{rails_env}.rb"
+
+    run 'ln -sf /home/feedbunch/config/notifications.god ' \
+        "#{release_path}/config/notifications.god"
+
+    run 'ln -sf /home/feedbunch/config/redis.conf ' \
+        "#{shared_path}/redis/redis.conf"
   end
 end
 
@@ -82,7 +116,16 @@ end
 #############################################################
 
 namespace :deploy do
+  task :start, roles: :app, except: {no_release: true} do
+    feedbunch_god.start
+  end
+
+  task :stop, roles: :app, except: {no_release: true} do
+    feedbunch_god.stop
+  end
+
   task :restart, roles: :app, except: {no_release: true} do
+    feedbunch_god.restart
     feedbunch_passenger.restart
   end
 end
