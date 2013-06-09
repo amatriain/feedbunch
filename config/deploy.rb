@@ -19,7 +19,6 @@ set :application, 'feedbunch'
 set :rvm_ruby_string, 'ruby-1.9.3-p429@feedbunch'
 set :rvm_type, :system
 require 'rvm/capistrano'
-set :default_shell, :bash
 
 #############################################################
 #	Settings
@@ -32,7 +31,6 @@ require 'bundler/capistrano'
 load 'deploy/assets'
 
 default_environment['TERM'] = 'xterm'
-default_run_options[:pty] = true
 
 #############################################################
 #	Servers
