@@ -3,9 +3,6 @@ require 'spec_helper'
 describe 'unsubscribe from feed' do
 
   before :each do
-    # Ensure no actual HTTP calls are made
-    RestClient.stub get: true
-
     @user = FactoryGirl.create :user
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed

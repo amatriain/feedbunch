@@ -3,9 +3,6 @@ require 'spec_helper'
 describe 'unread entries count' do
 
   before :each do
-    # Ensure no actual HTTP calls are made
-    RestClient.stub get: true
-
     @user = FactoryGirl.create :user
 
     @folder1 = FactoryGirl.build :folder, user_id: @user.id

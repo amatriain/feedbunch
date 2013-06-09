@@ -55,4 +55,16 @@ RSpec.configure do |config|
 
   # To test controllers protected by Devise authentication
   config.include Devise::TestHelpers, :type => :controller
+
+  # methods stubbed in all specs
+  config.before :each do
+    # Ensure no HTTP calls are made during testing
+    RestClient.stub :get
+
+    # ensure no attempt to connect to Redis is done
+    Resque.stub :set_schedule
+    Resque.stub :remove_schedule
+    Resque.stub :enqueue
+    Resque.stub :enqueue_in
+  end
 end

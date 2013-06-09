@@ -14,10 +14,6 @@ describe FeedsController do
     @user.folders << @folder1
 
     login_user_for_unit @user
-
-    # Ensure no actual HTTP calls are done
-    FeedClient.stub :fetch
-    RestClient.stub :get
   end
 
   context 'GET index' do

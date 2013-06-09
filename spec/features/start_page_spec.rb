@@ -3,9 +3,6 @@ require 'spec_helper'
 describe 'start page' do
 
   before :each do
-    # Ensure no actual HTTP calls are made
-    RestClient.stub get: true
-
     @user = FactoryGirl.create :user
     @feed1 = FactoryGirl.create :feed
     @user.feeds << @feed1

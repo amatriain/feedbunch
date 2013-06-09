@@ -43,6 +43,9 @@ class Feed < ActiveRecord::Base
 
   before_validation :sanitize_fields
 
+  after_create :schedule_updates
+  after_destroy :unschedule_updates
+
   ##
   # Find the folder to which a feed belongs, for a given user.
   #
@@ -99,6 +102,20 @@ class Feed < ActiveRecord::Base
   end
 
   private
+
+  ##
+  # After saving a new feed in the database, a scheduled job will be created to update it periodically
+
+  def schedule_updates
+    UpdateFeedJob.schedule_feed_updates self.id
+  end
+
+  ##
+  # After removing a feed from the database, the scheduled job that updated it will be unscheduled.
+
+  def unschedule_updates
+    UpdateFeedJob.unschedule_feed_updates self.id
+  end
 
   ##
   # Before adding a feed to a folder, ensure that the feed is not already in other folders that belong

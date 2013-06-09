@@ -4,9 +4,6 @@ describe Feed do
 
   before :each do
     @feed = FactoryGirl.create :feed
-
-    # ensure no actual HTTP calls are made
-    RestClient.stub :get
   end
 
   context 'validations' do
@@ -191,6 +188,29 @@ describe Feed do
       user = FactoryGirl.create :user
       user.feeds << @feed
       @feed.user_folder(user).should be_nil
+    end
+  end
+
+  context 'scheduled updates' do
+
+    it 'schedules updates for a feed when it is created' do
+      feed = FactoryGirl.build :feed
+      UpdateFeedJob.should_receive :schedule_feed_updates do |feed_id|
+        f = Feed.find feed_id
+        f.should eq feed.reload
+      end
+      feed.save
+    end
+
+    it 'does not change scheduling when saving an already existing feed' do
+      UpdateFeedJob.should_not_receive :schedule_feed_updates
+      @feed.title = 'another title'
+      @feed.save
+    end
+
+    it 'unschedules updates for a feed when it is destroyed' do
+      UpdateFeedJob.should_receive(:unschedule_feed_updates).with @feed.id
+      @feed.destroy
     end
   end
 end

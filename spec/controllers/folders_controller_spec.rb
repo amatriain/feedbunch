@@ -28,10 +28,6 @@ describe FoldersController do
     @user.feeds << @feed1 << @feed2 << @feed3
 
     login_user_for_unit @user
-
-    # Ensure no actual HTTP calls are done
-    FeedClient.stub :fetch
-    RestClient.stub :get
   end
 
   context 'GET show' do

@@ -2,9 +2,6 @@ require 'spec_helper'
 
 describe 'automatically closing notices and alerts' do
   before :each do
-    # Ensure no actual HTTP calls are made
-    RestClient.stub get: true
-
     @user = FactoryGirl.create :user
   end
 

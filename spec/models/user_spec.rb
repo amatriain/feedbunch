@@ -38,7 +38,6 @@ describe User do
 
       before :each do
         @feed = FactoryGirl.create :feed
-        FeedClient.stub fetch: @feed
       end
 
       it 'rejects non-valid URLs' do
@@ -664,8 +663,6 @@ describe User do
     before :each do
       @feed = FactoryGirl.create :feed
       @user.feeds << @feed
-
-      FeedClient.stub :fetch
     end
 
     it 'fetches a feed' do

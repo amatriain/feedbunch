@@ -3,9 +3,6 @@ require 'spec_helper'
 describe EntriesController do
 
   before :each do
-    # Ensure no actual HTTP calls are done
-    RestClient.stub :get
-
     @feed = FactoryGirl.create :feed
     @user = FactoryGirl.create :user
     @user.feeds << @feed

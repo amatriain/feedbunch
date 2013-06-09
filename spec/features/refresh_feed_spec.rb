@@ -3,9 +3,6 @@ require 'spec_helper'
 describe 'refresh feeds' do
 
   before :each do
-    # Ensure no actual HTTP calls are made
-    RestClient.stub get: true
-
     @user = FactoryGirl.create :user
     @feed1 = FactoryGirl.create :feed
     @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
@@ -76,7 +73,6 @@ describe 'refresh feeds' do
 
   # Regression test for bug #169
   it 'does not show an alert refreshing a feed without unread entries', js: true do
-    FeedClient.stub :fetch
     entry_state = EntryState.where(entry_id: @entry1.id, user_id: @user.id).first
     entry_state.read=true
     entry_state.save

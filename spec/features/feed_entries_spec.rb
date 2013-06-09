@@ -3,9 +3,6 @@ require 'spec_helper'
 describe 'feed entries' do
 
   before :each do
-    # Ensure no actual HTTP calls are made
-    RestClient.stub get: true
-
     @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
     @entry1 = FactoryGirl.build :entry, feed_id: @feed.id

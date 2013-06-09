@@ -20,9 +20,6 @@ describe FeedClient do
     @entry2.summary = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;"&gt;}
     @entry2.published = 'Fri, 12 Apr 2013 04:00:00 -0000'
     @entry2.guid = 'http://xkcd.com/1198/'
-
-    # Ensure no HTTP calls are made
-    RestClient.stub :get
   end
 
   it 'downloads the feed XML and raises an error if response is empty' do
