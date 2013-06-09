@@ -9,6 +9,9 @@ APP_ROOT = Dir.pwd
 # Notifications config for God. This file will be different in production and staging environments.
 God.load(File.join(APP_ROOT, 'config', 'notifications.god'))
 
+# Pass current rails environment to processes that need it
+rails_env = ENV["RAILS_ENV"] || 'development'
+
 God.watch do |w|
   w.name = 'redis'
   w.group = 'background'
@@ -42,7 +45,8 @@ end
 God.watch do |w|
   w.name = 'resque-work'
   w.group = 'background'
-  w.env = {'QUEUE' => 'update_feeds',
+  w.env = {'RAILS_ENV' => rails_env,
+           'QUEUE' => 'update_feeds',
            'TERM_CHILD' => '1',
            'RESQUE_TERM_TIMEOUT' => ' 10'}
   w.start = "rake -f #{File.join(APP_ROOT, 'Rakefile')} resque:work"
@@ -70,7 +74,8 @@ end
 God.watch do |w|
   w.name = 'resque-scheduler'
   w.group = 'background'
-  w.env = {'TERM_CHILD' => '1',
+  w.env = {'RAILS_ENV' => rails_env,
+           'TERM_CHILD' => '1',
            'RESQUE_TERM_TIMEOUT' => ' 10'}
   w.start = "rake -f #{File.join(APP_ROOT, 'Rakefile')} resque:scheduler"
 

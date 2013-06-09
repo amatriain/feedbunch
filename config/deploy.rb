@@ -110,7 +110,7 @@ namespace :feedbunch_secret_data do
     run "mkdir -p #{redis_working_dir}"
 
     run 'ln -sf /home/feedbunch/config/redis.conf ' \
-        "#{shared_path}/redis/redis.conf"
+        "#{release_path}/redis/redis.conf"
   end
 end
 
