@@ -37,7 +37,7 @@ God.watch do |w|
       c.retry_in = 10.minutes
       c.retry_times = 5
       c.retry_within = 2.hours
-      c.notify = 'admin'
+      c.notify = 'admins'
     end
   end
 end
@@ -66,7 +66,7 @@ God.watch do |w|
       c.retry_in = 10.minutes
       c.retry_times = 5
       c.retry_within = 2.hours
-      c.notify = 'admin'
+      c.notify = 'admins'
     end
   end
 end
@@ -94,7 +94,7 @@ God.watch do |w|
       c.retry_in = 10.minutes
       c.retry_times = 5
       c.retry_within = 2.hours
-      c.notify = 'admin'
+      c.notify = 'admins'
     end
   end
 end
