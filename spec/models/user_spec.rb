@@ -369,6 +369,19 @@ describe User do
         Feed.where(url: feed_url).should be_blank
       end
 
+      it 'does not save in the database if feed autodiscovery fails' do
+        feed_url = 'http://a.new.feed.url.com'
+        FeedClient.stub(:fetch).and_raise FeedAutodiscoveryError.new
+
+        # At first the user is not subscribed to any feed
+        @user.feeds.should be_blank
+        expect {@user.subscribe feed_url}.to raise_error FeedAutodiscoveryError
+        # User should still be subscribed to no feeds, and the feed should not be saved in the database
+        @user.feeds.should be_blank
+        Feed.where(fetch_url: feed_url).should be_blank
+        Feed.where(url: feed_url).should be_blank
+      end
+
       it 'returns false if it cannot fetch the feed' do
         feed_url = 'http://a.new.feed.url.com'
         FeedClient.stub fetch: nil
