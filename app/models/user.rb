@@ -27,6 +27,11 @@ require 'entry_recovery'
 # - Entry, through the Feed model: This enables us to retrieve all entries for all feeds a user is subscribed to.
 # - EntryState: This enables us to retrieve the state (read or unread) of all entries for all feeds a user is subscribed to.
 #
+# Also, the User model has the following attributes:
+#
+# - Admin: Boolean that indicates whether the user is an administrator. This attribute is used to restrict access to certain
+# functionality, like Resque administration.
+#
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
 #

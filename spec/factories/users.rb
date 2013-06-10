@@ -9,9 +9,14 @@ FactoryGirl.define do
     password {generate :user_password_sequence}
     remember_me true
     confirmed_at Time.now
+    admin false
 
     factory :user_unconfirmed do
       confirmed_at nil
+    end
+
+    factory :user_admin do
+      admin true
     end
   end
 end

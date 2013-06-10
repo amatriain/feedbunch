@@ -14,12 +14,15 @@
       </ul>
 
       <ul class="pull-right nav">
-        <li>
-          <%= link_to resque_path, target: '_blank' do %>
-            <i class="icon-code-fork"></i>
-            <%= t 'layouts.application.background_jobs' %>
-          <% end %>
-        </li>
+        <% if can? :manage, Resque %>
+          <li>
+            <%#= link_to resque_path, target: '_blank' do %>
+            <%= link_to '/admin/resque', target: '_blank' do %>
+              <i class="icon-code-fork"></i>
+              <%= t 'layouts.application.background_jobs' %>
+            <% end %>
+          </li>
+        <% end %>
 
         <li>
           <%=  link_to edit_user_registration_path, id: 'my_account' do %>

@@ -77,6 +77,9 @@ gem 'rvm-capistrano', require: false
 # Enable TLS in God email notifications
 gem 'tlsmail', require: false
 
+# Authorization management
+gem 'cancan'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'
