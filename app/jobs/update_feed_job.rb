@@ -8,7 +8,7 @@ class UpdateFeedJob
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 
   def self.perform(feed_id)
-    FeedClient.fetch feed_id
+    FeedClient.fetch feed_id, false
   end
 
   ##
