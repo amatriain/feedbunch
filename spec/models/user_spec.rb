@@ -49,14 +49,48 @@ describe User do
 
       it 'accepts URLs without scheme, defaults to http://' do
         url = 'xkcd.com'
-        FeedClient.stub :fetch do |url|
-          feed = Feed.where(fetch_url: url).first
+        FeedClient.stub :fetch do |id, perform_autodiscovery|
+          feed = Feed.find id
           feed
         end
 
         result = @user.subscribe url
 
+        result.should be_present
         feed = @user.feeds.where(fetch_url: 'http://'+url).first
+        feed.should be_present
+        result.should eq feed
+      end
+
+      it 'accepts URLs with feed:// scheme, defaults to http://' do
+        url_feed = 'feed://xkcd.com'
+        url_http = 'http://xkcd.com'
+        FeedClient.stub :fetch do |id, perform_autodiscovery|
+          feed = Feed.find id
+          feed
+        end
+
+        result = @user.subscribe url_feed
+
+        result.should be_present
+        feed = @user.feeds.where(fetch_url: url_http).first
+        feed.should be_present
+        result.should eq feed
+      end
+
+      it 'accepts URLs with feed: scheme, defaults to http://' do
+        url_feed = 'feed:http://xkcd.com'
+        url_http = 'http://xkcd.com'
+        FeedClient.stub :fetch do |id, perform_autodiscovery|
+          feed = Feed.find id
+          feed
+        end
+
+        result = @user.subscribe url_feed
+
+        result.should be_present
+        feed = @user.feeds.where(fetch_url: url_http).first
+        feed.should be_present
         result.should eq feed
       end
 

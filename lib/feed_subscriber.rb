@@ -39,7 +39,7 @@ class FeedSubscriber
     Rails.logger.info "User #{user.id} - #{user.email} submitted Subscribe form with value #{url}"
 
     # Ensure the url has a schema (defaults to http:// if none is passed)
-    feed_url = ensure_schema url
+    feed_url = ensure_scheme url
 
     # Try to subscribe the user to the feed assuming it's in the database
     feed = subscribe_known_feed user, feed_url
