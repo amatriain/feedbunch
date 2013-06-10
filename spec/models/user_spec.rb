@@ -679,7 +679,7 @@ describe User do
     end
 
     it 'fetches a feed' do
-      FeedClient.should_receive(:fetch).with @feed.id
+      FeedClient.should_receive(:fetch).with @feed.id, anything
       @user.refresh_feed @feed.id
     end
 

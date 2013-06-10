@@ -117,8 +117,8 @@ class FeedClient
         raise FeedAutodiscoveryError.new
       end
     else
-      Rails.logger.warn "Tried to fetch #{feed.fetch_url} after feed autodiscovery, but the response is not a parseable feed"
-      raise FeedAutodiscoveryError.new
+      Rails.logger.warn "Tried to fetch #{feed.fetch_url} but it is not a valid feed"
+      raise FeedFetchError.new
     end
   end
 

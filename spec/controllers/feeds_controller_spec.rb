@@ -96,7 +96,7 @@ describe FeedsController do
     end
 
     it 'fetches new entries in the feed before returning' do
-      FeedClient.should_receive(:fetch).with @feed1.id
+      FeedClient.should_receive(:fetch).with @feed1.id, anything
       get :refresh, id: @feed1.id
     end
   end
