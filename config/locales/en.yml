@@ -45,7 +45,7 @@ en:
       no_entries: "No unread entries for this subscription."
       problem_refreshing: "There has been a problem refreshing the feed. Please try again later."
       problem_loading: "There has been a problem loading the feed. Please try again later."
-      problem_subscribing: "There has been a problem adding the subscription. Please try again later."
+      problem_subscribing: "Could not add subscription."
       already_subscribed: "You are already subscribed to this feed."
       problem_unsubscribing: "There has been a problem unsubscribing from the feed. Please try again later."
       problem_folder_management: "There has been a problem managing folders. Please try again later."

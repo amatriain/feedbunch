@@ -42,7 +42,7 @@ es:
       no_entries: "No hay entradas sin leer para esta suscripción"
       problem_refreshing: "Ha habido un problema refrescando el feed. Por favor inténtelo de nuevo más tarde."
       problem_loading: "Ha habido un problema cargando el feed. Por favor inténtelo de nuevo más tarde."
-      problem_subscribing: "Ha habido un problema añadiendo la suscripción. Por favor inténtelo de nuevo más tarde."
+      problem_subscribing: "No se ha podido añadir la suscripción."
       already_subscribed: "Ya estás suscrito a este feed."
       problem_unsubscribing: "Ha habido un problema anulando la suscripción. Por favor inténtelo de nuevo más tarde."
       problem_folder_management: "Ha habido un problema gestionando las carpetas. Por favor inténtelo de nuevo más arde."
