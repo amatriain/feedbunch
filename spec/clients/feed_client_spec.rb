@@ -1011,5 +1011,43 @@ WEBPAGE_HTML
       RestClient.should_receive(:get).twice
       expect {FeedClient.fetch @feed.id, true}.to raise_error FeedFetchError
     end
+
+    it 'processes entries skipping those that have errors' do
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>#{@feed_title}</title>
+  <link href="#{@feed_url}" rel="alternate" />
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+  <entry>
+    <wtf>This is not a valid entry!</wtf>
+  </entry>
+  <entry>
+    <title>#{@entry1.title}</title>
+    <link href="#{@entry1.url}" rel="alternate" />
+    <updated>#{@entry1.published}</updated>
+    <id>#{@entry1.guid}</id>
+    <summary type="html">#{@entry1.summary}</summary>
+  </entry>
+</feed>
+FEED_XML
+
+      feed_xml.stub(:headers).and_return {}
+      RestClient.stub get: feed_xml
+
+      FeedClient.fetch @feed.id
+      @feed.reload
+      @feed.entries.count.should eq 1
+
+      entry1 = @feed.entries[0]
+      entry1.title.should eq @entry1.title
+      entry1.url.should eq @entry1.url
+      entry1.author.should eq @entry1.author
+      entry1.content.should eq @entry1.content
+      entry1.summary.should eq CGI.unescapeHTML(@entry1.summary)
+      entry1.published.should eq @entry1.published
+      entry1.guid.should eq @entry1.guid
+    end
   end
 end

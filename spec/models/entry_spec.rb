@@ -50,6 +50,43 @@ describe Entry do
     end
   end
 
+  context 'default values' do
+
+    before :each do
+      @url = 'http://some.feed.com'
+    end
+
+    it 'defaults guid to url attribute' do
+      entry1 = FactoryGirl.create :entry, url: @url, guid: nil
+      entry1.guid.should eq @url
+
+      entry1.destroy
+
+      entry2 = FactoryGirl.create :entry, url: @url, guid: ''
+      entry2.guid.should eq @url
+    end
+
+    it 'defaults title to url attribute' do
+      entry1 = FactoryGirl.create :entry, url: @url, title: nil
+      entry1.title.should eq @url
+
+      entry2 = FactoryGirl.create :entry, url: @url, title: ''
+      entry2.title.should eq @url
+    end
+
+    it 'does not use default value if guid has value' do
+      guid = '123456789a'
+      entry = FactoryGirl.create :entry, url: @url, guid: guid
+      entry.guid.should eq guid
+    end
+
+    it 'does not use default value if title has value' do
+      title = 'entry_title'
+      entry = FactoryGirl.create :entry, url: @url, title: title
+      entry.title.should eq title
+    end
+  end
+
   context 'sanitization and summary manipulation' do
 
     it 'sanitizes title' do

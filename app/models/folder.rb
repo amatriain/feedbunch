@@ -27,7 +27,7 @@ class Folder < ActiveRecord::Base
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
 
-  before_validation :sanitize_fields
+  before_validation :sanitize_attributes
 
   private
 
@@ -37,7 +37,7 @@ class Folder < ActiveRecord::Base
   # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
   # Better paranoid than sorry!
 
-  def sanitize_fields
+  def sanitize_attributes
     self.title = sanitize self.title
   end
 

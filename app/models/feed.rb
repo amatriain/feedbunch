@@ -41,7 +41,7 @@ class Feed < ActiveRecord::Base
   validates :url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, allow_blank: true
   validates :title, presence: true
 
-  before_validation :sanitize_fields
+  before_validation :sanitize_attributes
 
   after_create :schedule_updates
   after_destroy :unschedule_updates
@@ -133,7 +133,7 @@ class Feed < ActiveRecord::Base
   # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
   # Better paranoid than sorry!
 
-  def sanitize_fields
+  def sanitize_attributes
     self.title = sanitize self.title
     self.fetch_url = sanitize self.fetch_url
     self.url = sanitize self.url
