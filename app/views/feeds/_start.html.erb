@@ -1,3 +1,71 @@
 <div id="start-info">
-  <%= t 'start.welcome_html', feeds: user.feeds.count, entries: user.unread_folder_entries('all').count %>
+
+  <div class="row-fluid">
+    <div class="span2">
+      <img src="/assets/feed128x128.png">
+    </div>
+
+    <div class="span10">
+      <h1>
+        <%= t 'start.welcome' %>
+        <p>
+          <small>
+            <%= t 'start.stats', feeds: user.feeds.count, entries: user.unread_folder_entries('all').count %>
+          </small>
+        </p>
+      </h1>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span8">
+      <hr>
+      <p class="lead">
+        <i class="icon-arrow-left icon-large"></i>
+        <%= t 'start.read' %>
+      </p>
+      <hr>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span8 well">
+
+      <div class="span2">
+        <i class="icon-magic icon-4x"></i>
+      </div>
+
+      <div class="span10">
+        <p><%= t 'start.import.introduction' %></p>
+        <ol class="icons-ul">
+          <li>
+            <i class="icon-angle-right"></i>
+            <%= t 'start.import.download_data_html', google_url: 'https://www.google.com/takeout/#custom:reader' %>
+          </li>
+          <li>
+            <i class="icon-angle-right"></i>
+            <%= t 'start.import.import_data_html', import_url: '#' %>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span8">
+      <p><%= t 'start.export_html' %></p>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span8">
+      <hr>
+
+      <p>
+        <i class="icon-github icon-large"></i>
+        <%= t 'start.github_html', github_url: 'https://github.com/amatriain/openreader' %>
+      </p>
+    </div>
+  </div>
+
 </div>

@@ -57,21 +57,12 @@ en:
     index:
       mark_unread: "Mark as unread"
   start:
-    welcome_html: >
-      Welcome to Feedbunch.
-      <br/>
-      You are subscribed to %{feeds} feeds with %{entries} unread entries.
-      <br>
-      To read a feed, click on its name in the sidebar.
-      <br>
-      You can organize your feeds in folders for easier management.
-      <br>
-      Do you want to import your subscribed feeds from Google Reader? Then:
-      <ul>
-        <li>Visit <a href="https://www.google.com/takeout/#custom:reader">this page</a> to download a copy of your Google Reader data.</li>
-        <li>Click <a href="#">here</a> to import your downloaded data into Feedbunch.</li>
-      </ul>
-      <br>
-      If you ever want to download a copy of your subscribed feeds from Feedreader, <a href="#">click here</a>.
-      <br>
-      You can <a href="https://github.com/amatriain/openreader">visit us on Github</a>.
+    welcome: "Welcome to Feedbunch"
+    stats: "You are subscribed to %{feeds} feeds with %{entries} unread entries."
+    read: "To read a feed, click on its title in the sidebar."
+    import:
+      introduction: "If you want to import your subscribed feeds from Google Reader:"
+      download_data_html: "<a href=\"%{google_url}\" target=\"_blank\">Visit this page</a> to download a copy of your Google Reader data."
+      import_data_html: "<a href=\"%{import_url}\">Click here</a> to import your downloaded data into Feedbunch."
+    export_html: "If you want to download a copy of your Feedbunch data, <a href=\"#\">click here</a>."
+    github_html: "You can <a href=\"%{github_url}\">visit us on Github</a>."
