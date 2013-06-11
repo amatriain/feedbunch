@@ -68,9 +68,24 @@ describe 'start page' do
   end
 
   context 'stats' do
-    it 'shows number of subscribed feeds'
 
-    it 'shows number of unread entries'
+    before :each do
+      @feed2 = FactoryGirl.create :feed
+      @user.feeds << @feed2
+      @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @entry3 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @feed2.entries << @entry2 << @entry3
+
+      visit feeds_path
+    end
+
+    it 'shows number of subscribed feeds', js: true do
+      page.should have_content '2 feeds'
+    end
+
+    it 'shows number of unread entries', js: true do
+      page.should have_content '3 unread entries'
+    end
   end
 
 end
