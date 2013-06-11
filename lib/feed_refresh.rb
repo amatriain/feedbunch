@@ -18,7 +18,7 @@ class FeedRefresh
     feed = user.feeds.find feed_id
 
     Rails.logger.info "User #{user.id} - #{user.email} is refreshing feed #{feed.id} - #{feed.fetch_url}"
-    FeedClient.fetch feed.id
+    FeedClient.fetch feed.id, false
     entries = user.feed_entries feed.id
     return entries
   end

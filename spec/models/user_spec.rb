@@ -49,14 +49,48 @@ describe User do
 
       it 'accepts URLs without scheme, defaults to http://' do
         url = 'xkcd.com'
-        FeedClient.stub :fetch do |url|
-          feed = Feed.where(fetch_url: url).first
+        FeedClient.stub :fetch do |id, perform_autodiscovery|
+          feed = Feed.find id
           feed
         end
 
         result = @user.subscribe url
 
+        result.should be_present
         feed = @user.feeds.where(fetch_url: 'http://'+url).first
+        feed.should be_present
+        result.should eq feed
+      end
+
+      it 'accepts URLs with feed:// scheme, defaults to http://' do
+        url_feed = 'feed://xkcd.com'
+        url_http = 'http://xkcd.com'
+        FeedClient.stub :fetch do |id, perform_autodiscovery|
+          feed = Feed.find id
+          feed
+        end
+
+        result = @user.subscribe url_feed
+
+        result.should be_present
+        feed = @user.feeds.where(fetch_url: url_http).first
+        feed.should be_present
+        result.should eq feed
+      end
+
+      it 'accepts URLs with feed: scheme, defaults to http://' do
+        url_feed = 'feed:http://xkcd.com'
+        url_http = 'http://xkcd.com'
+        FeedClient.stub :fetch do |id, perform_autodiscovery|
+          feed = Feed.find id
+          feed
+        end
+
+        result = @user.subscribe url_feed
+
+        result.should be_present
+        feed = @user.feeds.where(fetch_url: url_http).first
+        feed.should be_present
         result.should eq feed
       end
 
@@ -369,6 +403,19 @@ describe User do
         Feed.where(url: feed_url).should be_blank
       end
 
+      it 'does not save in the database if feed autodiscovery fails' do
+        feed_url = 'http://a.new.feed.url.com'
+        FeedClient.stub(:fetch).and_raise FeedAutodiscoveryError.new
+
+        # At first the user is not subscribed to any feed
+        @user.feeds.should be_blank
+        expect {@user.subscribe feed_url}.to raise_error FeedAutodiscoveryError
+        # User should still be subscribed to no feeds, and the feed should not be saved in the database
+        @user.feeds.should be_blank
+        Feed.where(fetch_url: feed_url).should be_blank
+        Feed.where(url: feed_url).should be_blank
+      end
+
       it 'returns false if it cannot fetch the feed' do
         feed_url = 'http://a.new.feed.url.com'
         FeedClient.stub fetch: nil
@@ -666,7 +713,7 @@ describe User do
     end
 
     it 'fetches a feed' do
-      FeedClient.should_receive(:fetch).with @feed.id
+      FeedClient.should_receive(:fetch).with @feed.id, anything
       @user.refresh_feed @feed.id
     end
 

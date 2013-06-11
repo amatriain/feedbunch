@@ -19,7 +19,7 @@ class FeedClient
   # fetch_url field must have value.
   #
   # Optionally receives as argument a boolean that tells the method whether to perform feed autodiscovery. It
-  # defaults to true.
+  # defaults to false.
   #
   # The method tries to use the last received etag with the if-none-match header to indicate the server to send only new
   # entries.
@@ -37,7 +37,7 @@ class FeedClient
   #
   # Returns feed instance if fetch is successful, raises an error otherwise.
 
-  def self.fetch(feed_id, perform_autodiscovery=true)
+  def self.fetch(feed_id, perform_autodiscovery=false)
     feed = Feed.find feed_id
     http_response = fetch_valid_feed feed
 
@@ -117,8 +117,8 @@ class FeedClient
         raise FeedAutodiscoveryError.new
       end
     else
-      Rails.logger.warn "Tried to fetch #{feed.fetch_url} after feed autodiscovery, but the response is not a parseable feed"
-      raise FeedAutodiscoveryError.new
+      Rails.logger.warn "Tried to fetch #{feed.fetch_url} but it is not a valid feed"
+      raise FeedFetchError.new
     end
   end
 

@@ -30,7 +30,7 @@ describe 'refresh feeds' do
 
     # Refresh feed
     entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
-    FeedClient.should_receive(:fetch).with @feed1.id
+    FeedClient.should_receive(:fetch).with @feed1.id, anything
     @feed1.entries << entry2
     find('a#refresh-feed').click
 

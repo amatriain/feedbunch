@@ -248,7 +248,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq feed_url
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed.id, true
       @feed.reload
       @feed.fetch_url.should eq feed_url
     end
@@ -282,7 +282,7 @@ WEBPAGE_HTML
       end
 
       feed.fetch_url.should_not eq feed_fetch_url
-      FeedClient.fetch feed.id
+      FeedClient.fetch feed.id, true
       feed.reload
       feed.fetch_url.should eq feed_fetch_url
     end
@@ -332,7 +332,7 @@ FEED_XML
       end
 
       @feed.entries.should be_blank
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed.id, true
       @feed.entries.count.should eq 1
       @feed.entries.where(guid: @entry1.guid).should be_present
     end
@@ -386,7 +386,7 @@ FEED_XML
 
       old_feed.entries.should be_blank
 
-      FeedClient.fetch new_feed.id
+      FeedClient.fetch new_feed.id, true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
@@ -426,7 +426,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq rss_url
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed.id, true
       @feed.reload
       @feed.fetch_url.should eq rss_url
     end
@@ -460,7 +460,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq feed_url
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed.id, true
       @feed.reload
       @feed.fetch_url.should eq feed_url
     end
@@ -494,7 +494,7 @@ WEBPAGE_HTML
       end
 
       feed.fetch_url.should_not eq feed_fetch_url
-      FeedClient.fetch feed.id
+      FeedClient.fetch feed.id, true
       feed.reload
       feed.fetch_url.should eq feed_fetch_url
     end
@@ -542,7 +542,7 @@ FEED_XML
       end
 
       @feed.entries.should be_blank
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed.id, true
       @feed.entries.count.should eq 1
       @feed.entries.where(guid: @entry1.guid).should be_present
     end
@@ -594,7 +594,7 @@ FEED_XML
 
       old_feed.entries.should be_blank
 
-      FeedClient.fetch new_feed.id
+      FeedClient.fetch new_feed.id, true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
@@ -634,7 +634,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq atom_url
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed.id, true
       @feed.reload
       @feed.fetch_url.should eq atom_url
     end
@@ -668,7 +668,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq feed_url
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed.id, true
       @feed.reload
       @feed.fetch_url.should eq feed_url
     end
@@ -702,7 +702,7 @@ WEBPAGE_HTML
       end
 
       feed.fetch_url.should_not eq feed_fetch_url
-      FeedClient.fetch feed.id
+      FeedClient.fetch feed.id, true
       feed.reload
       feed.fetch_url.should eq feed_fetch_url
     end
@@ -750,7 +750,7 @@ FEED_XML
       end
 
       @feed.entries.should be_blank
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed.id, true
       @feed.entries.count.should eq 1
       @feed.entries.where(guid: @entry1.guid).should be_present
     end
@@ -802,7 +802,7 @@ FEED_XML
 
       old_feed.entries.should be_blank
 
-      FeedClient.fetch new_feed.id
+      FeedClient.fetch new_feed.id, true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
@@ -842,7 +842,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq feed_url
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed.id, true
       @feed.reload
       @feed.fetch_url.should eq feed_url
     end
@@ -963,7 +963,26 @@ WEBPAGE_HTML
       webpage_html.stub headers: {}
       RestClient.stub get: webpage_html
 
-      expect {FeedClient.fetch @feed.id}.to raise_error FeedAutodiscoveryError
+      expect {FeedClient.fetch @feed.id, true}.to raise_error FeedAutodiscoveryError
+    end
+
+    it 'raises error if trying to fetch from a webpage and being told not to perform autodiscovery' do
+      feed_url = 'http://webpage.com/feed'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="feed" href="#{feed_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+      RestClient.stub get: webpage_html
+
+      expect{FeedClient.fetch @feed.id, false}.to raise_error FeedFetchError
     end
 
     it 'raises error if trying to perform feed autodiscovery on a malformed webpage' do
@@ -971,7 +990,7 @@ WEBPAGE_HTML
       webpage_html.stub headers: {}
       RestClient.stub get: webpage_html
 
-      expect {FeedClient.fetch @feed.id}.to raise_error FeedAutodiscoveryError
+      expect {FeedClient.fetch @feed.id, true}.to raise_error FeedAutodiscoveryError
     end
 
     it 'does not enter an infinite loop during autodiscovery if the feed linked is not actually a feed' do
@@ -990,7 +1009,7 @@ WEBPAGE_HTML
       RestClient.stub get: webpage_html
 
       RestClient.should_receive(:get).twice
-      expect {FeedClient.fetch @feed.id}.to raise_error FeedAutodiscoveryError
+      expect {FeedClient.fetch @feed.id, true}.to raise_error FeedFetchError
     end
   end
 end
