@@ -42,7 +42,11 @@
               </p>
 
               <p class="hidden"><%= sanitize entry.guid %></p>
-              <%= sanitize entry.summary %>
+              <% if entry.content.present? %>
+                <%= sanitize entry.content %>
+              <% else %>
+                <%= sanitize entry.summary %>
+              <% end %>
             </div>
           </div>
         </li>
