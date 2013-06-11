@@ -13,13 +13,6 @@ describe Entry do
       entry.should_not be_valid
     end
 
-    it 'requires a title' do
-      entry_nil = FactoryGirl.build :entry, title: nil
-      entry_nil.should_not be_valid
-      entry_empty = FactoryGirl.build :entry, title: ''
-      entry_empty.should_not be_valid
-    end
-
     it 'requires a URL' do
       entry_nil = FactoryGirl.build :entry, url: nil
       entry_nil.should_not be_valid
@@ -35,13 +28,6 @@ describe Entry do
     it 'does not accept invalid URLs' do
       entry = FactoryGirl.build :entry, url: 'not-a-url'
       entry.should_not be_valid
-    end
-
-    it 'requires a guid' do
-      entry_nil = FactoryGirl.build :entry, guid: nil
-      entry_nil.should_not be_valid
-      entry_empty = FactoryGirl.build :entry, guid: ''
-      entry_empty.should_not be_valid
     end
 
     it 'does not accept duplicate guids' do
