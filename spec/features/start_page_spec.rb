@@ -67,5 +67,10 @@ describe 'start page' do
 
   end
 
+  context 'stats' do
+    it 'shows number of subscribed feeds'
+
+    it 'shows number of unread entries'
+  end
 
 end

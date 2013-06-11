@@ -56,3 +56,22 @@ en:
   entries:
     index:
       mark_unread: "Mark as unread"
+  start:
+    welcome_html: >
+      Welcome to Feedbunch.
+      <br/>
+      You are subscribed to %{feeds} feeds with %{entries} unread entries.
+      <br>
+      To read a feed, click on its name in the sidebar.
+      <br>
+      You can organize your feeds in folders for easier management.
+      <br>
+      Do you want to import your subscribed feeds from Google Reader? Then:
+      <ul>
+        <li>Visit <a href="https://www.google.com/takeout/#custom:reader">this page</a> to download a copy of your Google Reader data.</li>
+        <li>Click <a href="#">here</a> to import your downloaded data into Feedbunch.</li>
+      </ul>
+      <br>
+      If you ever want to download a copy of your subscribed feeds from Feedreader, <a href="#">click here</a>.
+      <br>
+      You can <a href="https://github.com/amatriain/openreader">visit us on Github</a>.
