@@ -11,27 +11,23 @@ class FeedCaching
   #
   # It receives as an argument the feed that is going to be fetched
   #
-  # The method tries to use the last received etag with the if-none-match header to indicate the server to send only new
-  # entries.
+  # The method tries to use the last received etag with the if-none-match header and the last received
+  # last-modified with the if-modified-since header to tell the server to send the feed only if it has new entries.
   #
-  # If no etag was received last time the feed was fetched, it tries to use the last received last-modified header with the
-  # if-modified-since request header to indicate the server to send only new entries.
-  #
-  # If the last time the feed was fetched no etag and no last-modified headers were in the response, this method fetches
-  # the full feed without sending caching headers.
+  # If the last time the feed was fetched no etag and no last-modified headers were in the response, no caching headers
+  # are set, which means the full feed will be fetched unconditionally.
 
   def self.fetch_headers(feed)
     headers = {}
-    # Prefer to use etag for cache control
+
     if feed.etag.present?
       Rails.logger.info "Fetching feed XML from: #{feed.fetch_url} with etag: #{feed.etag}"
-      headers = {if_none_match: feed.etag}
-      # If etag is not saved, try to use last-modified for cache control
-    elsif feed.last_modified.present?
+      headers[:if_none_match] = feed.etag
+    end
+
+    if feed.last_modified.present?
       Rails.logger.info "Fetching feed XML from: #{feed.fetch_url} with last-modified: #{feed.last_modified}"
-      headers = {if_modified_since: feed.last_modified}
-    else
-      Rails.logger.info "Fetching feed XML from: #{feed.fetch_url} with no cache control headers"
+      headers[:if_modified_since] = feed.last_modified
     end
 
     return headers

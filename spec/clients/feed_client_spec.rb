@@ -922,13 +922,13 @@ FEED_XML
       FeedClient.fetch @feed.id
     end
 
-    it 'tries to cache data using etag, not last-modified, if both are present' do
+    it 'tries to cache data using both etag and last-modified' do
       # Fetch the feed a first time, so the last-modified is saved
       FeedClient.fetch @feed.id
 
       # Next time the feed is fetched, the last-modified from the last time will be sent in the if-modified-since header
       @feed.reload
-      RestClient.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag}
+      RestClient.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag, if_modified_since: @feed.last_modified}
       FeedClient.fetch @feed.id
     end
 
