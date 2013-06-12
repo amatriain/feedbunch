@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130610084128) do
+ActiveRecord::Schema.define(:version => 20130612084904) do
 
   create_table "entries", :force => true do |t|
     t.text     "title"
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(:version => 20130610084128) do
     t.datetime "updated_at",    :null => false
     t.text     "fetch_url"
     t.text     "etag"
-    t.datetime "last_modified"
+    t.text     "last_modified"
   end
 
   create_table "feeds_folders", :force => true do |t|

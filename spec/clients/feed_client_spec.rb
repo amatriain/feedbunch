@@ -863,7 +863,7 @@ WEBPAGE_HTML
 FEED_XML
 
       @etag = "\"3648649162\""
-      @last_modified = DateTime.now
+      @last_modified = "Wed, 12 Jun 2013 04:00:06 GMT"
       @headers = {etag: @etag, last_modified: @last_modified}
       @feed_xml.stub(:headers).and_return @headers
       RestClient.stub(:get).and_return @feed_xml
