@@ -98,7 +98,7 @@ describe Entry do
 
     it 'sanitizes content' do
       unsanitized_content = '<script>alert("pwned!");</script>content'
-      sanitized_content = 'content'
+      sanitized_content = '<p>content</p>'
       entry = FactoryGirl.create :entry, content: unsanitized_content
       entry.content.should eq sanitized_content
     end

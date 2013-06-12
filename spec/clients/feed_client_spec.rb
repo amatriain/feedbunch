@@ -74,7 +74,6 @@ FEED_XML
       entry1.title.should eq @entry1.title
       entry1.url.should eq @entry1.url
       entry1.author.should eq @entry1.author
-      entry1.content.should eq @entry1.content
       entry1.summary.should eq CGI.unescapeHTML(@entry1.summary)
       entry1.published.should eq @entry1.published
       entry1.guid.should eq @entry1.guid
@@ -83,7 +82,6 @@ FEED_XML
       entry2.title.should eq @entry2.title
       entry2.url.should eq @entry2.url
       entry2.author.should eq @entry2.author
-      entry2.content.should eq @entry2.content
       entry2.summary.should eq CGI.unescapeHTML(@entry2.summary)
       entry2.published.should eq @entry2.published
       entry2.guid.should eq @entry2.guid
@@ -106,7 +104,6 @@ FEED_XML
       entry.title.should eq @entry1.title
       entry.url.should eq @entry1.url
       entry.author.should eq @entry1.author
-      entry.content.should eq @entry1.content
       entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
       entry.published.should eq @entry1.published
       entry.guid.should eq @entry1.guid
@@ -170,7 +167,6 @@ FEED_XML
       entry1.title.should eq @entry1.title
       entry1.url.should eq @entry1.url
       entry1.author.should eq @entry1.author
-      entry1.content.should eq @entry1.content
       entry1.summary.should eq CGI.unescapeHTML(@entry1.summary)
       entry1.published.should eq @entry1.published
       entry1.guid.should eq @entry1.guid
@@ -179,7 +175,6 @@ FEED_XML
       entry2.title.should eq @entry2.title
       entry2.url.should eq @entry2.url
       entry2.author.should eq @entry2.author
-      entry2.content.should eq @entry2.content
       entry2.summary.should eq CGI.unescapeHTML(@entry2.summary)
       entry2.published.should eq @entry2.published
       entry2.guid.should eq @entry2.guid
@@ -202,7 +197,6 @@ FEED_XML
       entry.title.should eq @entry1.title
       entry.url.should eq @entry1.url
       entry.author.should eq @entry1.author
-      entry.content.should eq @entry1.content
       entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
       entry.published.should eq @entry1.published
       entry.guid.should eq @entry1.guid
@@ -1044,7 +1038,6 @@ FEED_XML
       entry1.title.should eq @entry1.title
       entry1.url.should eq @entry1.url
       entry1.author.should eq @entry1.author
-      entry1.content.should eq @entry1.content
       entry1.summary.should eq CGI.unescapeHTML(@entry1.summary)
       entry1.published.should eq @entry1.published
       entry1.guid.should eq @entry1.guid
