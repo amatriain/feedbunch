@@ -62,6 +62,7 @@ class User < ActiveRecord::Base
   has_many :folders, dependent: :destroy, uniq: true
   has_many :entries, through: :feeds
   has_many :entry_states, dependent: :destroy, uniq: true
+  has_one :data_import, dependent: :destroy
 
   ##
   # Retrieve entries from a feed. See EntryRecovery#feed_entries

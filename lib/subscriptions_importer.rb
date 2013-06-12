@@ -15,6 +15,6 @@ class SubscriptionsImporter
   # Imported feeds that were not in the database are fetched, to populate their current entries.
 
   def self.import_subscriptions(file, user)
-    
+
   end
 end

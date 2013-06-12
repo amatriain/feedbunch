@@ -706,6 +706,20 @@ describe User do
     end
   end
 
+  context 'relationship with data_imports' do
+
+    before :each do
+      @data_import = FactoryGirl.create :data_import
+      @user.data_import = @data_import
+    end
+
+    it 'deletes data_imports when deleting a user' do
+      DataImport.count.should eq 1
+      @user.destroy
+      DataImport.count.should eq 0
+    end
+  end
+
   context 'refresh feed' do
     before :each do
       @feed = FactoryGirl.create :feed
