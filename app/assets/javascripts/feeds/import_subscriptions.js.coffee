@@ -13,6 +13,27 @@ $(document).ready ->
   $("body").on "click", "a[data-import-subscriptions]", ->
     show_popup()
 
+  #-------------------------------------------------------
+  # Submit the "import subscriptions" form when clicking on the "Upload" button
+  #-------------------------------------------------------
+  $("body").on "click", "#import-subscriptions-submit", ->
+    $("#form-import-subscriptions").submit()
+
+  #-------------------------------------------------------
+  # Submit the "import subscriptions" form via Ajax
+  #-------------------------------------------------------
+  $("body").on "submit", "#form-import-subscriptions", ->
+    close_popup()
+
+    # If the user has selected a file to upload, POST it via ajax
+    if $("#import_subscriptions_file").val()
+      alert "YESS"
+    else
+      alert "NOOO"
+
+    # prevent default form submit
+    return false
+
   ########################################################
   # COMMON FUNCTIONS
   ########################################################
@@ -22,3 +43,10 @@ $(document).ready ->
   #-------------------------------------------------------
   show_popup = ->
     $("#import-subscriptions-popup").modal "show"
+
+  #-------------------------------------------------------
+  # Clean file field and close modal popup
+  #-------------------------------------------------------
+  close_popup = ->
+    $("#import_subscriptions_file").val('')
+    $("#import-subscriptions-popup").modal 'hide'
