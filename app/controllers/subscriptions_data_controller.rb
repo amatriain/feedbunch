@@ -14,7 +14,8 @@ class SubscriptionsDataController < ApplicationController
 
   def create
     file = params[:import_subscriptions][:file]
-    Rails.logger.error "TESTTTT"
+    current_user.import_subscriptions file
+    redirect_to feeds_path
   rescue => e
     handle_error e
   end

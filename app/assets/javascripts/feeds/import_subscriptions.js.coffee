@@ -23,16 +23,13 @@ $(document).ready ->
   # Submit the "import subscriptions" form via Ajax
   #-------------------------------------------------------
   $("body").on "submit", "#form-import-subscriptions", ->
-    close_popup()
 
-    # If the user has selected a file to upload, POST it via ajax
-    if $("#import_subscriptions_file").val()
-      alert "YESS"
-    else
-      alert "NOOO"
-
-    # prevent default form submit
-    return false
+    # If the user has not selected a file to upload, close the popup and to not POST
+    # Form submit will be a full browser POST, because POSTing files via Ajax is not
+    # widely supported in older browsers.
+    if $("#import_subscriptions_file").val() == ''
+      close_popup()
+      return false
 
   ########################################################
   # COMMON FUNCTIONS

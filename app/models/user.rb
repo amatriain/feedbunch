@@ -5,6 +5,7 @@ require 'feed_unsubscriber'
 require 'feed_refresh'
 require 'entry_state_change'
 require 'entry_recovery'
+require 'subscriptions_importer'
 
 ##
 # User model. Each instance of this class represents a single user that can log in to the application
@@ -123,6 +124,14 @@ class User < ActiveRecord::Base
 
   def change_entry_state(entry_id, state)
     EntryStateChange.change_entry_state entry_id, state, self
+  end
+
+  ##
+  # Import an XML (optionally zipped) with subscription data, and subscribe the user to the feeds
+  # in it. See SubscriptionsImporter#import_subscriptions
+
+  def import_subscriptions(file)
+    SubscriptionsImporter.import_subscriptions file, self
   end
 
   private
