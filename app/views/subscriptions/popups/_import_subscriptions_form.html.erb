@@ -1,0 +1,17 @@
+<div id="import-subscriptions-popup" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3><%= t 'start.import.import_popup_title' %></h3>
+  </div>
+  <div class="modal-body">
+    <%= simple_form_for :import_subscriptions, url: folders_path(format: :json), type: :json,
+                        html: {:method => :post, class: 'form-horizontal', id: 'form-import-subscriptions'},
+                        wrapper: :prepend do |f| %>
+      <%= f.input :file, as: :rss_icon, required: false %>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" ><%= t 'feeds.index.new_folder_close' %></button>
+    <button id="new-folder-submit" class="btn btn-primary"><%= t 'feeds.index.new_folder_submit' %></button>
+  </div>
+</div>

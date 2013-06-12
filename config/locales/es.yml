@@ -53,3 +53,14 @@ es:
   entries:
     index:
       mark_unread: "Marcar como no leído"
+  start:
+    welcome: "Bienvenido a Feedbunch"
+    stats: "Estás suscrito a %{feeds} feeds con %{entries} entradas sin leer."
+    read: "Para leer un feed, haz click en su título en la barra lateral."
+    import:
+      introduction: "Si quieres importar tus feeds suscritos desde Google Reader:"
+      download_data_html: "<a href=\"%{google_url}\" target=\"_blank\">Visita esta página</a> para descargar una copia de tus datos en Google Reader."
+      import_data_html: "<a %{attributes}>Haz click aquí</a> para importar los datos descargados en Feedbunch."
+      import_popup_title: "Importar suscripciones"
+    export_html: "Si quieres descargar una copia de tus datos en Feedbunch, <a href=\"#\">haz click aquí</a>."
+    github_html: "Puedes <a target=\"_blank\" href=\"%{github_url}\">visitarnos en Github</a>."
