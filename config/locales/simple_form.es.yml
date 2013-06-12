@@ -18,6 +18,8 @@ es:
         current_password: "Contraseña actual"
       subscription:
         rss: "Feed"
+      import_subscriptions:
+        file: "Fichero de datos"
     hints:
       user:
         password: "Tu contraseña debe tener entre 8 y 128 caracteres"

@@ -5,13 +5,14 @@
   </div>
   <div class="modal-body">
     <%= simple_form_for :import_subscriptions, url: folders_path(format: :json), type: :json,
+                        multipart: true, 
                         html: {:method => :post, class: 'form-horizontal', id: 'form-import-subscriptions'},
                         wrapper: :prepend do |f| %>
-      <%= f.input :file, as: :rss_icon, required: false %>
+      <%= f.input :file, as: :file, required: false %>
     <% end %>
   </div>
   <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" ><%= t 'feeds.index.new_folder_close' %></button>
-    <button id="new-folder-submit" class="btn btn-primary"><%= t 'feeds.index.new_folder_submit' %></button>
+    <button class="btn" data-dismiss="modal" ><%= t 'start.import.form_close' %></button>
+    <button id="new-folder-submit" class="btn btn-primary"><%= t 'start.import.form_submit' %></button>
   </div>
 </div>

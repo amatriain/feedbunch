@@ -62,5 +62,7 @@ es:
       download_data_html: "<a href=\"%{google_url}\" target=\"_blank\">Visita esta página</a> para descargar una copia de tus datos en Google Reader."
       import_data_html: "<a %{attributes}>Haz click aquí</a> para importar los datos descargados en Feedbunch."
       import_popup_title: "Importar suscripciones"
+      form_close: "Cancelar"
+      form_submit: "Enviar fichero"
     export_html: "Si quieres descargar una copia de tus datos en Feedbunch, <a href=\"#\">haz click aquí</a>."
     github_html: "Puedes <a target=\"_blank\" href=\"%{github_url}\">visitarnos en Github</a>."

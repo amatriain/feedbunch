@@ -18,6 +18,8 @@ en:
         current_password: "Current password"
       subscription:
         rss: "Feed"
+      import_subscriptions:
+        file: "Data file"
     hints:
       user:
         password: "Password length must be between 8 and 128 characters"
