@@ -80,6 +80,9 @@ gem 'tlsmail', require: false
 # Authorization management
 gem 'cancan'
 
+# Manage zip files
+gem 'rubyzip'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'
