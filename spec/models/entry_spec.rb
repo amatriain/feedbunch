@@ -117,6 +117,13 @@ describe Entry do
       entry.summary.should eq modified_summary
     end
 
+    it 'opens content links in a new tab' do
+      unmodified_content = '<a href="http://some.link">Click here to read full story</a>'
+      modified_content = '<a href="http://some.link" target="_blank">Click here to read full story</a>'
+      entry = FactoryGirl.create :entry, content: unmodified_content
+      entry.content.should eq modified_content
+    end
+
     it 'sanitizes guid' do
       unsanitized_guid = '<script>alert("pwned!");</script>guid'
       sanitized_guid = 'guid'

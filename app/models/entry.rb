@@ -104,13 +104,25 @@ class Entry < ActiveRecord::Base
   end
 
   ##
-  # Ensure that any links in the summary open in a new tab, by adding the target="_blank" attribute if necessary
+  # Ensure that any links in the summary and content open in a new tab, by adding the target="_blank"
+  # attribute if necessary
 
   def links_new_tab
-    summaryDoc = Nokogiri::HTML self.summary
-    summaryDoc.css('a').each do |link|
+    self.summary = add_target_blank self.summary
+    self.content = add_target_blank self.content
+  end
+
+  ##
+  # Add the target="_blank" attribute to any links in the passed HTML fragment.
+  # Receives as argument a string with an HTML fragment.
+  # The attribute will overwrite any target="" attribute that was present in the links
+
+  def add_target_blank(html_fragment)
+    htmlDoc = Nokogiri::HTML html_fragment
+    htmlDoc.css('a').each do |link|
       link['target'] = '_blank'
     end
-    self.summary = summaryDoc.css('body').children.to_s
+    return htmlDoc.css('body').children.to_s
   end
+
 end
