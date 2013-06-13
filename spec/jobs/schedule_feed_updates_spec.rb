@@ -22,6 +22,13 @@ describe ScheduleFeedUpdatesJob do
     ScheduleFeedUpdatesJob.perform @feed.id
   end
 
+  it 'does not immediately enqueue a feed update if the feed has been deleted' do
+    Resque.should_not_receive :enqueue
+    @feed.destroy
+
+    ScheduleFeedUpdatesJob.perform @feed.id
+  end
+
   it 'does not schedule updates if the feed has been deleted' do
     Resque.should_not_receive :set_schedule
     @feed.destroy

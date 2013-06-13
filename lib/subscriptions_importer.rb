@@ -8,21 +8,24 @@ class SubscriptionsImporter
 
   ##
   # This method extracts subscriptions data from an OPML file (probably exported from Google Reader), and
-  # imports those subscriptions to Feedbunch, so that the user that uploaded the file
-  # gets subscribed to the feeds.
+  # saves them in a (unzipped) OPML file in the filesystem. Afterwards it enqueues a background job
+  # to import those subscriptions in the user's account.
   #
-  # Optionally the file can be zipped; this is the format one gets when exporting from Google.
+  # Receives as arguments the file uploaded by the user and user that requested the import.
   #
-  # Folders are also imported, and feeds moved into folders as necessary.
-  #
-  # Imported feeds that were not in the database are fetched, to populate their current entries.
+  # Optionally the file can be a zip archive; this is the format one gets when exporting from Google.
 
   def self.import_subscriptions(file, user)
+    Rails.logger.info "User #{user.id} - #{user.email} requested import of a data file"
     data_import = user.create_data_import
 
     subscription_data = self.read_data_file file
   rescue => e
-    data_import.destroy
+    Rails.logger.error "Error trying to read OPML data from file uploaded by user #{user.id} - #{user.email}"
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    data_import.status = DataImport::ERROR
+    data_import.save
     raise e
   end
 
@@ -56,9 +59,14 @@ class SubscriptionsImporter
       file_contents = self.search_zip zip_file, /.xml\z/ if file_contents.blank?
       file_contents = self.search_zip zip_file, /.XML\z/ if file_contents.blank?
       zip_file.close
-      raise ImportDataError.new if file_contents.blank?
+
+      if file_contents.blank?
+        Rails.logger.warn 'Could not find OPML file in uploaded data file'
+        raise ImportDataError.new
+      end
     rescue Zip::ZipError => e
-      # file is not a zip
+      # file is not a zip, read it normally
+      Rails.logger.info 'Uploaded file is not a zip archive, it is probably an uncompressed OPML file'
       open_file = File.read file
     end
 
@@ -79,6 +87,7 @@ class SubscriptionsImporter
     file_contents = nil
     zip_file.each do |f|
       if f.name =~ pattern
+        Rails.logger.debug "Found OPML file #{f.name} in uploaded zip archive"
         file_contents = zip_file.file.read f.name
         break
       end

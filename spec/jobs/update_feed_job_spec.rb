@@ -12,6 +12,13 @@ describe UpdateFeedJob do
     UpdateFeedJob.perform @feed.id
   end
 
+  it 'does not update feed if it has been deleted' do
+    FeedClient.should_not_receive :fetch
+    @feed.destroy
+
+    UpdateFeedJob.perform @feed.id
+  end
+
   it 'programs a delayed job to start hourly updates' do
     Resque.should_receive(:enqueue_in) do |delay, job_class, args|
       delay.should be_between 0.minutes, 60.minutes

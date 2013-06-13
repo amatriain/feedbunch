@@ -1,3 +1,8 @@
+##
+# Background job to enqueue an immediate update of a feed, and schedule hourly updates of that feed.
+#
+# Its perform method will be infoked from a Resque worker.
+
 class ScheduleFeedUpdatesJob
   @queue = :update_feeds
 

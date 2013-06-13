@@ -1137,20 +1137,51 @@ describe User do
   context 'import subscriptions' do
 
     before :each do
+      @opml_data = File.read File.join(File.dirname(__FILE__), '..', 'attachments', 'subscriptions.xml')
       @data_file = File.open File.join(File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
     end
 
-    it 'creates a new data_import for the user' do
+    it 'creates a new data_import with status RUNNING for the user' do
       @user.data_import.should be_blank
       @user.import_subscriptions @data_file
 
       @user.data_import.should be_present
+      @user.data_import.status.should eq DataImport::RUNNING
     end
 
-    it 'accepts zipped file'
+    it 'sets data_import status as ERROR if an error is raised' do
+      Zip::ZipFile.stub(:open).and_raise StandardError.new
+      expect{@user.import_subscriptions @data_file}.to raise_error StandardError
 
-    it 'accepts xml file'
+      @user.data_import.status.should eq DataImport::ERROR
+    end
 
-    it 'accepts opml file'
+    context 'unzipped opml file' do
+
+      before :each do
+        @data_file = File.open File.join(File.dirname(__FILE__), '..', 'attachments', 'subscriptions.xml')
+      end
+
+      it 'saves timestamped file in uploads folder' do
+        pending
+        Time.now.stub(:now).and_return 1371146348
+
+        @user.import_subscriptions @data_file
+      end
+
+      it 'enqueues job to process the file'
+    end
+
+    context 'zipped subscriptions.xml file' do
+
+    end
+
+    context 'zipped opml file' do
+
+    end
+
+    context 'zipped xml file' do
+
+    end
   end
 end

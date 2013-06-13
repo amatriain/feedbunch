@@ -1,3 +1,8 @@
+##
+# Background job to fetch and update a feed's entries.
+#
+# Its perform method will be infoked from a Resque worker.
+
 class UpdateFeedJob
   @queue = :update_feeds
 
@@ -8,7 +13,7 @@ class UpdateFeedJob
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 
   def self.perform(feed_id)
-    FeedClient.fetch feed_id, false
+    FeedClient.fetch feed_id, false if Feed.exists? feed_id
   end
 
   ##
