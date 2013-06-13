@@ -20,6 +20,8 @@ class SubscriptionsImporter
     data_import = user.create_data_import
 
     subscription_data = self.read_data_file file
+    filename = File.join Rails.root, 'uploads', "#{Time.now.to_i}.opml"
+    File.open(filename, 'w'){|file| file.write subscription_data}
   rescue => e
     Rails.logger.error "Error trying to read OPML data from file uploaded by user #{user.id} - #{user.email}"
     Rails.logger.error e.message
@@ -67,7 +69,7 @@ class SubscriptionsImporter
     rescue Zip::ZipError => e
       # file is not a zip, read it normally
       Rails.logger.info 'Uploaded file is not a zip archive, it is probably an uncompressed OPML file'
-      open_file = File.read file
+      file_contents = File.read file
     end
 
     return file_contents

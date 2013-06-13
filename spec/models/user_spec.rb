@@ -1139,6 +1139,10 @@ describe User do
     before :each do
       @opml_data = File.read File.join(File.dirname(__FILE__), '..', 'attachments', 'subscriptions.xml')
       @data_file = File.open File.join(File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
+
+      timestamp = 1371146348
+      Time.stub(:now).and_return Time.at(timestamp)
+      @filename = File.join(Rails.root, 'uploads', "#{timestamp}.opml")
     end
 
     it 'creates a new data_import with status RUNNING for the user' do
@@ -1159,14 +1163,19 @@ describe User do
     context 'unzipped opml file' do
 
       before :each do
-        @data_file = File.open File.join(File.dirname(__FILE__), '..', 'attachments', 'subscriptions.xml')
+        @uploaded_filename = File.join(File.dirname(__FILE__), '..', 'attachments', 'subscriptions.xml').to_s
+        @data_file = File.open @uploaded_filename
+      end
+
+      after :each do
+        File.delete @filename
       end
 
       it 'saves timestamped file in uploads folder' do
-        pending
-        Time.now.stub(:now).and_return 1371146348
-
         @user.import_subscriptions @data_file
+
+        written_data = File.read @filename
+        written_data.should eq @opml_data
       end
 
       it 'enqueues job to process the file'
