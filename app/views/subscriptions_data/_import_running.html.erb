@@ -1,0 +1,16 @@
+<p><%= t 'start.import.import_running' %></p>
+<p>
+  <%= t 'start.import.progress', total: user.data_import.total_feeds,
+        processed: user.data_import.processed_feeds %>
+</p>
+<%
+   if user.data_import.total_feeds == 0
+     progress = 0
+   else
+     progress = 100 * user.data_import.processed_feeds / user.data_import.total_feeds
+   end
+%>
+<div class="progress progress-striped active">
+  <div class="bar" style="width: <%= progress %>%;"></div>
+</div>
+<p><%= t 'start.import.import_background' %></p>

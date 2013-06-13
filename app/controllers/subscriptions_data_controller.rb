@@ -14,7 +14,7 @@ class SubscriptionsDataController < ApplicationController
 
   def create
     file = params[:import_subscriptions][:file]
-    current_user.import_subscriptions file
+    current_user.import_subscriptions file.tempfile
     redirect_to feeds_path
   rescue => e
     handle_error e

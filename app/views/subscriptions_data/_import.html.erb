@@ -1,0 +1,16 @@
+<div class="span2">
+  <i class="icon-magic icon-4x"></i>
+</div>
+
+<div class="span10">
+
+  <% if user.data_import.blank? %>
+    <%= render 'subscriptions_data/import_upload' %>
+  <% elsif user.data_import.status == DataImport::RUNNING %>
+    <%= render 'subscriptions_data/import_running', user: user %>
+  <% elsif user.data_import.status == DataImport::ERROR %>
+    <%= render 'subscriptions_data/import_error' %>
+  <% elsif user.data_import.status == DataImport::SUCCESS %>
+    <%= render 'subscriptions_data/import_success' %>
+  <% end %>
+</div>

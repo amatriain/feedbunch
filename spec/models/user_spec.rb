@@ -709,7 +709,7 @@ describe User do
   context 'relationship with data_imports' do
 
     before :each do
-      @data_import = FactoryGirl.create :data_import
+      @data_import = FactoryGirl.build :data_import, user_id: @user.id
       @user.data_import = @data_import
     end
 
@@ -717,6 +717,14 @@ describe User do
       DataImport.count.should eq 1
       @user.destroy
       DataImport.count.should eq 0
+    end
+
+    it 'deletes the old data_import when adding a new one for a user' do
+      DataImport.exists?(@data_import).should be_true
+      data_import2 = FactoryGirl.build :data_import, user_id: @user.id
+      @user.data_import = data_import2
+
+      DataImport.exists?(@data_import).should be_false
     end
   end
 
@@ -1124,5 +1132,25 @@ describe User do
       entry_state2 = EntryState.where(user_id: user2.id, entry_id: @entry.id).first
       entry_state2.read.should be false
     end
+  end
+
+  context 'import subscriptions' do
+
+    before :each do
+      @data_file = File.open File.join(File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
+    end
+
+    it 'creates a new data_import for the user' do
+      @user.data_import.should be_blank
+      @user.import_subscriptions @data_file
+
+      @user.data_import.should be_present
+    end
+
+    it 'accepts zipped file'
+
+    it 'accepts xml file'
+
+    it 'accepts opml file'
   end
 end

@@ -128,7 +128,7 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Import an XML (optionally zipped) with subscription data, and subscribe the user to the feeds
+  # Import an OPML (optionally zipped) with subscription data, and subscribe the user to the feeds
   # in it. See SubscriptionsImporter#import_subscriptions
 
   def import_subscriptions(file)
