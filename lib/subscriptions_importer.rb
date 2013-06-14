@@ -22,6 +22,8 @@ class SubscriptionsImporter
     subscription_data = self.read_data_file file
     filename = File.join Rails.root, 'uploads', "#{Time.now.to_i}.opml"
     File.open(filename, 'w'){|file| file.write subscription_data}
+    Rails.logger.info "Enqueuing Import Subscriptions Job for user #{user.id} - #{user.email}, OPML file #{filename}"
+    Resque.enqueue ImportSubscriptionsJob, filename, user.id
   rescue => e
     Rails.logger.error "Error trying to read OPML data from file uploaded by user #{user.id} - #{user.email}"
     Rails.logger.error e.message

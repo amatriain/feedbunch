@@ -1179,19 +1179,68 @@ describe User do
         written_data.should eq @opml_data
       end
 
-      it 'enqueues job to process the file'
+      it 'enqueues job to process the file' do
+        Resque.should_receive(:enqueue).once.with ImportSubscriptionsJob, @filename, @user.id
+        @user.import_subscriptions @data_file
+      end
     end
 
     context 'zipped subscriptions.xml file' do
 
+      before :each do
+        @uploaded_filename = File.join(File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-takeout.zip').to_s
+        @data_file = File.open @uploaded_filename
+      end
+
+      it 'saves timestamped file in uploads folder' do
+        @user.import_subscriptions @data_file
+
+        written_data = File.read @filename
+        written_data.should eq @opml_data
+      end
+
+      it 'enqueues job to process the file' do
+        Resque.should_receive(:enqueue).once.with ImportSubscriptionsJob, @filename, @user.id
+        @user.import_subscriptions @data_file
+      end
     end
 
     context 'zipped opml file' do
+      before :each do
+        @uploaded_filename = File.join(File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-opml.zip').to_s
+        @data_file = File.open @uploaded_filename
+      end
 
+      it 'saves timestamped file in uploads folder' do
+        @user.import_subscriptions @data_file
+
+        written_data = File.read @filename
+        written_data.should eq @opml_data
+      end
+
+      it 'enqueues job to process the file' do
+        Resque.should_receive(:enqueue).once.with ImportSubscriptionsJob, @filename, @user.id
+        @user.import_subscriptions @data_file
+      end
     end
 
     context 'zipped xml file' do
+      before :each do
+        @uploaded_filename = File.join(File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-xml.zip').to_s
+        @data_file = File.open @uploaded_filename
+      end
 
+      it 'saves timestamped file in uploads folder' do
+        @user.import_subscriptions @data_file
+
+        written_data = File.read @filename
+        written_data.should eq @opml_data
+      end
+
+      it 'enqueues job to process the file' do
+        Resque.should_receive(:enqueue).once.with ImportSubscriptionsJob, @filename, @user.id
+        @user.import_subscriptions @data_file
+      end
     end
   end
 end

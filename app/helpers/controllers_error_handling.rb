@@ -19,6 +19,9 @@ module ControllersErrorHandling
     elsif error.is_a? FolderAlreadyExistsError
       # If user already has a folder with the same title, return 304
       head status: 304
+    elsif error.is_a? ImportDataError
+      # If an error happens when importing subscription data, redirect to feeds view
+      redirect_to feeds_path
     else
       Rails.logger.error error.message
       Rails.logger.error error.backtrace
