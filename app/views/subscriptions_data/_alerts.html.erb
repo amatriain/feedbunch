@@ -1,6 +1,6 @@
 <%# Notice displayed when the import process finishes successfully %>
-<div id="import-process-success" class="row-fluid hidden bottom-alert">
-  <div class="span10 offset2 alert alert-success">
+<div id="import-process-success" class="span8 offset2 hidden top-alert">
+  <div class="alert alert-success">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'start.import.finish_success' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -8,8 +8,8 @@
 </div>
 
 <%# Notice displayed when the import process finishes with an error %>
-<div id="import-process-error" class="row-fluid hidden bottom-alert">
-  <div class="span10 offset2 alert alert-error">
+<div id="import-process-error" class="span8 offset2 hidden top-alert">
+  <div class="alert alert-error">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'start.import.finish_error' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -17,8 +17,8 @@
 </div>
 
 <%# Alert displayed when there is a problem getting the import process status %>
-<div id="problem-updating-import-status" class="row-fluid hidden bottom-alert">
-  <div class="span10 offset2 alert alert-error">
+<div id="problem-updating-import-status" class="span8 offset2 hidden top-alert">
+  <div class="alert alert-error">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'start.import.problem_updating' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>

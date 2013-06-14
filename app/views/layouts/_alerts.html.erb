@@ -1,6 +1,6 @@
 <% if  notice.present? %>
-  <div class="row-fluid bottom-alert">
-    <div id="notice" class="span10 offset1 alert fade in">
+  <div class="span8 offset2 top-alert">
+    <div id="notice" class="alert fade in">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       <p><%= notice %></p>
       <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -9,8 +9,8 @@
 <% end %>
 
 <% if  alert.present? %>
-  <div class="row-fluid bottom-alert">
-    <div id="alert" class="span10 offset1 alert alert-error fade in">
+  <div class="span8 offset2 top-alert">
+    <div id="alert" class="alert alert-error fade in">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       <p><%= alert %></p>
       <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
