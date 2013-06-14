@@ -1,16 +1,30 @@
-<p><%= t 'start.import.import_running' %></p>
-<p>
-  <%= t 'start.import.progress', total: user.data_import.total_feeds,
-        processed: user.data_import.processed_feeds %>
-</p>
-<%
-   if user.data_import.total_feeds == 0
-     progress = 0
-   else
-     progress = 100 * user.data_import.processed_feeds / user.data_import.total_feeds
-   end
-%>
-<div class="progress progress-striped active">
-  <div class="bar" style="width: <%= progress %>%;"></div>
+<div class="span8 alert alert-info alert-block">
+
+  <div class="span2">
+    <i class="icon-cogs icon-4x"></i>
+  </div>
+
+  <div class="span10">
+
+    <p><%= t 'start.import.import_running' %></p>
+    <p>
+      <%= t 'start.import.progress', total: user.data_import.total_feeds,
+            processed: user.data_import.processed_feeds %>
+    </p>
+    <%
+       if user.data_import.total_feeds == 0
+         progress = 0
+       else
+         progress = 100 * user.data_import.processed_feeds / user.data_import.total_feeds
+       end
+    %>
+    <div class="progress progress-striped active">
+      <div class="bar" style="width: <%= progress %>%;"></div>
+    </div>
+    <p><%= t 'start.import.import_background' %></p>
+
+  </div>
+
 </div>
-<p><%= t 'start.import.import_background' %></p>
+
+
