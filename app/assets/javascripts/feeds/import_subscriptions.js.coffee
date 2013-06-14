@@ -41,15 +41,18 @@ $(document).ready ->
       status_received = (data, textStatus, xhr) ->
         status = data["status"]
         if status == "NONE"
+          update_status_html data["status_html"]
           clearInterval timer_update
         else if status == "SUCCESS"
+          update_status_html data["status_html"]
           clearInterval timer_update
           Openreader.alertTimedShowHide $("#import-process-success")
         else if status == "ERROR"
+          update_status_html data["status_html"]
           clearInterval timer_update
           Openreader.alertTimedShowHide $("#import-process-error")
         else if status == "RUNNING"
-          alert "test"
+          update_status_html data["status_html"]
 
       # Load the status via Ajax
       $.get("/subscriptions_data", null, status_received, 'json')
@@ -82,3 +85,9 @@ $(document).ready ->
   close_popup = ->
     $("#import_subscriptions_file").val('')
     $("#import-subscriptions-popup").modal 'hide'
+
+  #-------------------------------------------------------
+  # Load the import status div sent by the server, replacing the current one
+  #-------------------------------------------------------
+  update_status_html = (status_html)->
+    $("#import-process-status").html status_html

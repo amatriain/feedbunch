@@ -9,6 +9,6 @@
 %>
 
 {
-  "status": <%= status %>,
-  "alert": <%= render(partial: 'subscriptions_data/import', locals: {user: user}, layout: false) %>
+  "status": "<%= status %>",
+  "status_html": <%= render(partial: 'subscriptions_data/import', locals: {user: user}, layout: false).to_json.html_safe %>
 }
