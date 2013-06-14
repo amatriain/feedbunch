@@ -106,11 +106,23 @@ namespace :feedbunch_secret_data do
 
     # Redis working directory is in the capistrano shared folder, so that the
     # append-only file and the dump file are not lost on each deployment. Create it if necessary.
-    redis_working_dir = File.join(shared_path, 'redis').gsub('/', '\\/')
-    run "mkdir -p #{redis_working_dir}"
+    run "mkdir -p #{shared_path}/redis"
 
     run 'ln -sf /home/feedbunch/config/redis.conf ' \
         "#{release_path}/redis/redis.conf"
+  end
+end
+
+#############################################################
+#	Create and link "uploads" folder in the shared folder
+#############################################################
+
+namespace :feedbunch_shared_folders do
+  task :create, roles: :app, except: {no_release: true} do
+    # Uploads directory is in the capistrano shared folder, so that the
+    # uploaded files are not lost on each deployment. Create it if necessary.
+    run "mkdir -p #{shared_path}/uploads"
+    run "ln -sf #{shared_path}/uploads #{release_path}/uploads"
   end
 end
 
@@ -135,6 +147,9 @@ end
 
 # copy secret files just before compiling assets
 before 'deploy:assets:precompile', 'feedbunch_secret_data:copy'
+
+# Create shared folders after copying secret data
+after 'feedbunch_secret_data:copy', 'feedbunch_shared_folders:create'
 
 # run database migrations on each deploy, just after copying the new code
 after 'deploy:update_code', 'deploy:migrate'
