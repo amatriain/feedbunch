@@ -104,7 +104,7 @@ Openreader::Application.routes.draw do
   resources :folders, only: [:show, :update, :create]
 
   # Resourceful routes for subscription data
-  resources :subscriptions_data, only: [:create]
+  resource :subscriptions_data, only: [:create, :show]
 
   # Resque queue monitoring app will live in the /resque subpath
   # Resque-web is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/

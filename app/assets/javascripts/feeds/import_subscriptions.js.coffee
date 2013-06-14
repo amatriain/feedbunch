@@ -20,7 +20,7 @@ $(document).ready ->
     $("#form-import-subscriptions").submit()
 
   #-------------------------------------------------------
-  # Submit the "import subscriptions" form via Ajax
+  # Close the popup when submitting the form
   #-------------------------------------------------------
   $("body").on "submit", "#form-import-subscriptions", ->
 
@@ -30,6 +30,41 @@ $(document).ready ->
     if $("#import_subscriptions_file").val() == ''
       close_popup()
       return false
+
+  #-------------------------------------------------------
+  # Periodically update the import process status while it is running
+  #-------------------------------------------------------
+  update_status_timer = ->
+
+    update_import_status = ->
+      # Update the page with the received status
+      status_received = (data, textStatus, xhr) ->
+        status = data["status"]
+        if status == "NONE"
+          clearInterval timer_update
+        else if status == "SUCCESS"
+          clearInterval timer_update
+          Openreader.alertTimedShowHide $("#import-process-success")
+        else if status == "ERROR"
+          clearInterval timer_update
+          Openreader.alertTimedShowHide $("#import-process-error")
+        else if status == "RUNNING"
+          alert "test"
+
+      # Load the status via Ajax
+      $.get("/subscriptions_data", null, status_received, 'json')
+        .fail (xhr, textStatus, errorThrown) ->
+          if xhr.status != 304
+            Openreader.alertTimedShowHide $("#problem-updating-import-status")
+
+    timer_update = setInterval update_import_status, 3000
+
+  #-------------------------------------------------------
+  # If the "import running" div is shown, periodically update import status
+  #-------------------------------------------------------
+
+  if $("#import-subscriptions-running").length
+    update_status_timer()
 
   ########################################################
   # COMMON FUNCTIONS

@@ -70,5 +70,8 @@ es:
       retry_html: "<a %{attributes}>Haz click aquí</a> para volver a importar un fichero de datos en Feedbunch."
       progress: "Feeds importados: %{processed} de %{total}"
       success: "Tus suscripciones han sido importadas en Feedbunch con éxito."
+      problem_updating: "Ha habido un problema en la comunicación con el servidor."
+      finish_success: "Tus suscripciones a feeds han sido importadas en Feedbunch. Refresca la página para verlas."
+      finish_error: "Ha habido un error durante la importación en Feedbunch de tus suscripciones a feeds."
     export_html: "Si quieres descargar una copia de tus datos en Feedbunch, <a href=\"#\">haz click aquí</a>."
     github_html: "Puedes <a target=\"_blank\" href=\"%{github_url}\">visitarnos en Github</a>."

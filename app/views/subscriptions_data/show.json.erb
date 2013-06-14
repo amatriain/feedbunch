@@ -1,0 +1,14 @@
+<% self.formats = [:html] %>
+
+<%
+  if user.data_import.present?
+    status = user.data_import.status
+  else
+    status = 'NONE'
+  end
+%>
+
+{
+  "status": <%= status %>,
+  "alert": <%= render(partial: 'subscriptions_data/import', locals: {user: user}, layout: false) %>
+}
