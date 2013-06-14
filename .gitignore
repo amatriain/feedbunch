@@ -20,4 +20,4 @@ config/initializers/secret_token.rb
 coverage/*
 redis/*.aof
 redis/*.rdb
-uploads
+uploads/*.opml

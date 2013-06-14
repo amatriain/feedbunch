@@ -19,9 +19,15 @@ describe 'import subscriptions' do
     before :each do
       data_file = File.join File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-takeout.zip'
       find('a[data-import-subscriptions]').click
+      sleep 1
       attach_file 'import_subscriptions_file', data_file
       find('#import-subscriptions-submit').click
       sleep 1
+    end
+
+    after :each do
+      uploaded_files = File.join Rails.root, 'uploads', '*.opml'
+      Dir.glob(uploaded_files).each {|f| File.delete f}
     end
 
     it 'redirects to start page', js: true do

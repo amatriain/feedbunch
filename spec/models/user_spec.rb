@@ -1145,6 +1145,11 @@ describe User do
       @filename = File.join(Rails.root, 'uploads', "#{timestamp}.opml")
     end
 
+    after :each do
+      uploaded_files = File.join Rails.root, 'uploads', '*.opml'
+      Dir.glob(uploaded_files).each {|f| File.delete f}
+    end
+
     it 'creates a new data_import with status RUNNING for the user' do
       @user.data_import.should be_blank
       @user.import_subscriptions @data_file
@@ -1165,10 +1170,6 @@ describe User do
       before :each do
         @uploaded_filename = File.join(File.dirname(__FILE__), '..', 'attachments', 'subscriptions.xml').to_s
         @data_file = File.open @uploaded_filename
-      end
-
-      after :each do
-        File.delete @filename
       end
 
       it 'saves timestamped file in uploads folder' do
