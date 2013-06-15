@@ -17,6 +17,7 @@ en:
       my_account: "My account"
       my_feeds: "My feeds"
       closing_timer_html: "closing in <span data-timer></span>"
+      import: "Import subscriptions"
   feeds:
     index:
       start: "Start"

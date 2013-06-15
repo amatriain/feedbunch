@@ -12,15 +12,33 @@ describe 'import subscriptions' do
   end
 
   it 'shows file upload popup', js: true do
-    find('a[data-import-subscriptions]').click
+    find('a#start-import-subscriptions').click
     page.should have_css '#import-subscriptions-popup', visible: true
+  end
+
+  context 'upload link in navbar' do
+
+    it 'show link if the user has never run an import', js: true do
+      page.should have_css '.navbar a#nav-import-subscriptions'
+      find('.navbar a#nav-import-subscriptions').click
+      page.should have_css '#import-subscriptions-popup', visible: true
+    end
+
+    it 'shows link if user has an errored import'
+
+    it 'does not show link if user has a running import'
+
+    it 'does not show link if user has a successful import'
+
+    it 'opens popup even if user is not in feeds index view'
+
   end
 
   context 'user uploads file' do
 
     before :each do
       data_file = File.join File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-takeout.zip'
-      find('a[data-import-subscriptions]').click
+      find('a#start-import-subscriptions').click
       sleep 1
       attach_file 'import_subscriptions_file', data_file
       find('#import-subscriptions-submit').click
