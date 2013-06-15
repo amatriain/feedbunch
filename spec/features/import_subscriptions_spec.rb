@@ -3,6 +3,8 @@ require 'spec_helper'
 describe 'import subscriptions' do
   before :each do
     @user = FactoryGirl.create :user
+    @feed = FactoryGirl.create :feed
+    @user.feeds << @feed
 
     login_user_for_feature @user
     visit feeds_path
@@ -59,6 +61,41 @@ describe 'import subscriptions' do
 
     it 'shows import process progress', js: true do
       page.should have_content 'Your subscriptions are being imported into Feedbunch'
+      @user.data_import.total_feeds = 412
+      @user.data_import.processed_feeds = 77
+      @user.data_import.save
+      sleep 4
+      page.should have_content 'Feeds imported: 77 of 412'
+    end
+
+    it 'changes message when import finishes successfully', js: true do
+      @user.data_import.status = DataImport::SUCCESS
+      @user.data_import.save
+      sleep 4
+      page.should have_content 'Your subscriptions have been successfully imported into Feedbunch'
+    end
+
+    it 'shows alert when import finishes successfully', js: true do
+      read_feed @feed.id
+      @user.data_import.status = DataImport::SUCCESS
+      @user.data_import.save
+      sleep 4
+      page.should have_content 'Your subscribed feeds have been imported into Feedbunch'
+    end
+
+    it 'changes message when import finishes with an error', js: true do
+      @user.data_import.status = DataImport::ERROR
+      @user.data_import.save
+      sleep 4
+      page.should have_content 'There\'s been an error importing your subscriptions'
+    end
+
+    it 'shows alert when import finishes with an error', js: true do
+      read_feed @feed.id
+      @user.data_import.status = DataImport::ERROR
+      @user.data_import.save
+      sleep 4
+      page.should have_content 'There has been an error while trying to import your subscribed feeds into Feedbunch'
     end
   end
 end
