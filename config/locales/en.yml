@@ -64,7 +64,7 @@ en:
     import:
       introduction: "If you want to import your subscribed feeds from Google Reader:"
       download_data_html: "<a href=\"%{google_url}\" target=\"_blank\">Visit this page</a> to download a copy of your Google Reader data."
-      import_data_html: "<a id=\"%{id}\" %{attributes}>Click here</a> to import your downloaded data into Feedbunch."
+      import_data_html: "<a class=\"btn\" id=\"%{id}\" %{attributes}>Click here</a> to import your downloaded data into Feedbunch."
       import_popup_title: "Import subscriptions"
       import_popup_help_1: "Upload a subscriptions file exported from another feed reading service."
       import_popup_help_2_html: "To export it from Google Reader: <a href=\"%{google_url}\" class=\"btn\" target=\"_blank\">Click here</a>"
