@@ -10,6 +10,9 @@
 
 <%= render 'layouts/navbar' %>
 
+<%= render 'layouts/alerts' %>
+<%= render 'devise/alerts' %>
+
 <div class="row-fluid page-header">
   <div class="span10 offset1">
     <h1>
@@ -20,22 +23,6 @@
     </h1>
   </div>
 </div>
-
-<%= render 'layouts/alerts' %>
-
-<% if  devise_error_messages!.present? %>
-  <div class="row-fluid">
-    <div id="devise-error" class="span10 offset1 alert alert-error fade in">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <ul>
-        <% resource.errors.full_messages.each do |m| %>
-          <li><%= m %></li>
-        <% end %>
-      </ul>
-      <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
-    </div>
-  </div>
-<% end %>
 
 <div class="row-fluid">
   <div class="span2 offset9">
