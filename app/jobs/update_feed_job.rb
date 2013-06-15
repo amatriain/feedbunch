@@ -1,7 +1,7 @@
 ##
 # Background job to fetch and update a feed's entries.
 #
-# Its perform method will be infoked from a Resque worker.
+# Its perform method will be invoked from a Resque worker.
 
 class UpdateFeedJob
   @queue = :update_feeds

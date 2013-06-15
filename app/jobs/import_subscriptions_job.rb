@@ -3,7 +3,7 @@
 # It also enqueues updates of any new feeds created (existing feeds are assumed
 # to have been updated in the last hour and so don't need an update right now).
 #
-# Its perform method will be infoked from a Resque worker.
+# Its perform method will be invoked from a Resque worker.
 
 class ImportSubscriptionsJob
   @queue = :update_feeds
