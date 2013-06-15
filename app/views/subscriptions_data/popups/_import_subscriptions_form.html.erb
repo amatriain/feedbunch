@@ -4,6 +4,15 @@
     <h3><%= t 'start.import.import_popup_title' %></h3>
   </div>
   <div class="modal-body">
+    <div class="alert alert-info">
+      <i class="import-popup-info icon-info-sign icon-4x pull-left"></i>
+      <div>
+        <p><%= t 'start.import.import_popup_help_1' %></p>
+        <p><%= t 'start.import.import_popup_help_2_html', google_url: 'https://www.google.com/takeout/#custom:reader' %></p>
+        <p><%= t 'start.import.import_popup_help_3' %></p>
+      </div>
+    </div>
+    <hr>
     <%= simple_form_for :import_subscriptions, url: subscriptions_data_path, multipart: true,
                         html: {:method => :post, class: 'form-horizontal', id: 'form-import-subscriptions'},
                         wrapper: :prepend do |f| %>
