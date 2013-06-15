@@ -24,13 +24,33 @@ describe 'import subscriptions' do
       page.should have_css '#import-subscriptions-popup', visible: true
     end
 
-    it 'shows link if user has an errored import'
+    it 'shows link if user has an errored import', js: true do
+      data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::ERROR
+      @user.data_import = data_import
+      visit feeds_path
+      page.should have_css '.navbar a#nav-import-subscriptions', visible: true
+    end
 
-    it 'does not show link if user has a running import'
+    it 'does not show link if user has a running import', js: true do
+      data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::RUNNING
+      @user.data_import = data_import
+      visit feeds_path
+      page.should_not have_css '.navbar a#nav-import-subscriptions', visible: true
+    end
 
-    it 'does not show link if user has a successful import'
+    it 'does not show link if user has a successful import', js: true do
+      data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::SUCCESS
+      @user.data_import = data_import
+      visit feeds_path
+      page.should_not have_css '.navbar a#nav-import-subscriptions', visible: true
+    end
 
-    it 'opens popup even if user is not in feeds index view'
+    it 'opens popup even if user is not in feeds index view', js: true do
+      visit edit_user_registration_path
+      page.should have_css '.navbar a#nav-import-subscriptions'
+      find('.navbar a#nav-import-subscriptions').click
+      page.should have_css '#import-subscriptions-popup', visible: true
+    end
 
   end
 
