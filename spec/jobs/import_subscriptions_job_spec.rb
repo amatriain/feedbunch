@@ -4,12 +4,17 @@ describe ImportSubscriptionsJob do
 
   before :each do
     @user = FactoryGirl.create :user
-    @data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::RUNNING
+    @data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::RUNNING,
+                                     total_feeds: 0, processed_feeds: 0
     @user.data_import = @data_import
     @filename = File.join File.dirname(__FILE__), '..', 'attachments', '1371324422.opml'
   end
 
-  it 'updates the data import total number of feeds'
+  it 'updates the data import total number of feeds' do
+    ImportSubscriptionsJob.perform @filename, @user.id
+    @user.reload
+    @user.data_import.total_feeds.should eq 4
+  end
 
   it 'sets data import status to ERROR if the file does not exist'
 
@@ -22,6 +27,8 @@ describe ImportSubscriptionsJob do
   it 'subscribes user to already existing feeds'
 
   it 'updates data import number of processed feeds when subscribing user to existing feeds'
+
+  it 'updates data import number of processed feeds when finding duplicated feeds'
 
   it 'creates new feeds and subscribes user to them'
 
@@ -36,5 +43,7 @@ describe ImportSubscriptionsJob do
   it 'sets data import status to SUCCESS if all feeds already existed'
 
   it 'leaves data import status as RUNNING if there were new feeds'
+
+  it 'creates a data_import for the user if one does not exist'
 
 end
