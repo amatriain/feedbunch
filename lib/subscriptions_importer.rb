@@ -93,6 +93,7 @@ class SubscriptionsImporter
       if f.name =~ pattern
         Rails.logger.debug "Found OPML file #{f.name} in uploaded zip archive"
         file_contents = zip_file.file.read f.name
+        file_contents.force_encoding 'utf-8'
         break
       end
     end
