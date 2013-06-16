@@ -14,25 +14,84 @@ class ImportSubscriptionsJob
   # Import an OPML file with subscriptions for a user, and then deletes it.
   #
   # Receives as arguments:
-  # - the name of the file
+  # - the name of the file, including path from Rails.root (e.g. 'uploads/1371321122.opml')
   # - the id of the user who is importing the file
   #
-  # The file must be saved in the $RAILS_ROOT/uploads folder.
+  # The file is normally in the $RAILS_ROOT/uploads folder, but the full pathname relative to Rails.root
+  # must be passed with the filename, so that this is not absolutely necessary.
+  #
+  # After finishing the job the file will be deleted no matter what.
+  #
+  # The data_import of the user is updated (with the process status, total number of feeds and
+  # current number of processed feeds) so that the user can see the import progress.
   #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 
   def self.perform(filename, user_id)
+    # Check if the user actually exists
+    if !User.exists? user_id
+      Rails.logger.error "Trying to import OPML file #{filename} for non-existing user @#{user_id}"
+      return
+    end
     user = User.find user_id
-    docXml = Nokogiri::XML File.open(filename)
 
-    # Count total number of feeds
-    user.data_import.total_feeds = self.count_total_feeds docXml
-    user.data_import.save
-
-    docXml.xpath('/opml/body//outline[@type="rss"]').each do
-
+    # Check that user has a data_import with status RUNNING
+    if user.data_import.blank?
+      Rails.logger.warn "User #{user.id} - #{user.email} has no data_import for the OPML import, creating one"
+      user.create_data_import
+    elsif user.data_import.status != DataImport::RUNNING
+      Rails.logger.error "User #{user.id} - #{user.email} has a data_import in status #{user.data_import.status}, aborting OPML import"
+      return
     end
 
+    # Check if file actually exists
+    if !FileTest.exists? filename
+      Rails.logger.error "Trying to import for user #{user_id} from non-existing OPML file: #{filename}"
+      self.import_status_error user
+      return
+    end
+
+    # Open and parse OPML file (it's actually XML)
+    begin
+      docXml = Nokogiri::XML(File.open(filename)) {|config| config.strict}
+    rescue Nokogiri::XML::SyntaxError => e
+      Rails.logger.error "Trying to parse malformed XML file #{filename}"
+      self.import_status_error user
+      return
+    end
+
+    # Count total number of feeds
+    total_feeds = self.count_total_feeds docXml
+    # Check that the file was actually an OPML file with feeds
+    if total_feeds == 0
+      self.import_status_error user
+      return
+    end
+    # Update total number of feeds, so user can see progress.
+    user.data_import.total_feeds = total_feeds
+    user.data_import.save
+
+    # Process feeds that are not in a folder
+    docXml.xpath('/opml/body/outline[@type="rss" and @xmlUrl]').each do |feed_node|
+      self.import_feed feed_node['title'], feed_node['xmlUrl'], feed_node['htmlUrl'], user
+    end
+
+    # Process feeds in folders
+    docXml.xpath('/opml/body/outline[not(@type="rss")]').each do |folder_node|
+      folder = self.import_folder folder_node['title'], user
+      folder_node.xpath('./outline[@type="rss" and @xmlUrl]').each do |feed_node|
+        self.import_feed feed_node['title'], feed_node['xmlUrl'], feed_node['htmlUrl'], user, folder
+      end
+    end
+
+    # If all feeds already existed in the database, mark import status as SUCCESS.
+    # If there were new feeds, the job will be marked as SUCCESS when all are fetched for the first time
+    user.reload
+    if user.data_import.total_feeds == user.data_import.processed_feeds
+      self.import_status_success user
+    end
+  ensure
+    File.delete filename
   end
 
   private
@@ -43,6 +102,86 @@ class ImportSubscriptionsJob
   # Returns the number of feeds in the document.
 
   def self.count_total_feeds(docXml)
-    return docXml.xpath 'count(/opml/body//outline[@type="rss"])'
+    feeds_not_in_folders = docXml.xpath 'count(/opml/body/outline[@type="rss" and @xmlUrl])'
+    feeds_in_folders = docXml.xpath 'count(/opml/body/outline[not(@type="rss")]/outline[@type="rss" and @xmlUrl])'
+    return feeds_not_in_folders + feeds_in_folders
+  end
+
+  ##
+  # Increment the number of processed feeds in data import process by one, so user can see progress.
+  # Receives as argument the user who requested the import.
+
+  def self.increment_processed_feeds_count(user)
+    user.data_import.processed_feeds += 1
+    user.data_import.save
+  end
+
+  ##
+  # Sets the data_import status for the user as ERROR.
+  # Receives as argument the user whose import process has failed.
+
+  def self.import_status_error(user)
+    user.data_import.status = DataImport::ERROR
+    user.data_import.save
+  end
+
+  ##
+  # Sets the data_import status for the user as SUCCESS.
+  # Receives as argument the user whose import process has finished successfully.
+
+  def self.import_status_success(user)
+    user.data_import.status = DataImport::SUCCESS
+    user.data_import.save
+  end
+
+  ##
+  # Import a feed, subscribing the user to it.
+  # Receives as arguments:
+  # - the title of the feed
+  # - the fetch_url of the feed
+  # - the url of the feed
+  # - the user who requested the import (and who will be subscribed to the feed)
+  # - optionally, the folder in which the feed will be (defaults to none)
+  #
+  # If the feed already exists in the database, the user is subscribed to it.
+
+  def self.import_feed(title, fetch_url, url, user, folder=nil)
+    # Check if feed already exists in database
+    feed = Feed.url_variants_feed fetch_url
+
+    if feed.present?
+      Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to already existing feed #{feed.id} - #{feed.title}"
+      user.feeds << feed
+      self.increment_processed_feeds_count user
+    else
+      Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to newly created feed #{title} - #{fetch_url}"
+      feed = user.feeds.create title: title, fetch_url: fetch_url
+      Resque.enqueue FetchImportedFeedJob, feed.id, user.id
+    end
+
+    if folder.present?
+      Rails.logger.info "As part of OPML import, moving feed #{feed.id} - #{feed.title} into folder #{folder.title} owned by user #{user.id} - #{user.email}"
+      folder.feeds << feed
+    end
+  end
+
+  ##
+  # Import a folder, creating it if necessary. The folder will be owned by the passed user.
+  # If the user already has a folder with the same title, no action will be taken.
+  # Receives as arguments the title of the folder and the user who requested the import.
+  # Returns the folder. It may be a newly created folder, if the user didn't have a folder with the same title,
+  # or it may be an already existing folder if he did.
+
+  def self.import_folder(title, user)
+    folder = user.folders.where(title: title).first
+
+    if folder.blank?
+      Rails.logger.info "User #{user.id} - #{user.email} imported new folder #{title}, creating it"
+      folder = user.folders.create title: title
+    else
+      Rails.logger.info "User #{user.id} - #{user.email} imported already existing folder #{title}, reusing it"
+    end
+
+    return folder
   end
 end

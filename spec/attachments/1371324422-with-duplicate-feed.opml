@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+  <head>
+    <title>feedbunch subscriptions in Google Reader</title>
+  </head>
+  <body>
+    <outline text="Brakeman - Rails Security Scanner"
+             title="Brakeman - Rails Security Scanner" type="rss"
+             xmlUrl="http://brakemanscanner.org/atom.xml" htmlUrl="http://brakemanscanner.org/"/>
+    <outline text="Andy Weir's Writing"
+             title="Andy Weir's Writing" type="rss"
+             xmlUrl="http://www.galactanet.com/feed.xml" htmlUrl="http://www.galactanet.com/writing.html"/>
+    <outline title="Tech" text="Tech">
+      <outline text="Arch Linux: Recent news updates"
+               title="Arch Linux: Recent news updates" type="rss"
+               xmlUrl="https://www.archlinux.org/feeds/news/" htmlUrl="https://www.archlinux.org/news/"/>
+      <outline text="Brakeman - Rails Security Scanner"
+               title="Brakeman - Rails Security Scanner" type="rss"
+               xmlUrl="http://brakemanscanner.org/atom.xml" htmlUrl="http://brakemanscanner.org/"/>
+    </outline>
+    <outline title="Webcomics" text="Webcomics">
+      <outline text="xkcd.com" title="xkcd.com" type="rss"
+               xmlUrl="http://xkcd.com/rss.xml" htmlUrl="http://xkcd.com/"/>
+    </outline>
+  </body>
+</opml>
