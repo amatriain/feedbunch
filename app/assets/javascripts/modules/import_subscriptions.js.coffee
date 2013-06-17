@@ -60,7 +60,7 @@ $(document).ready ->
           if xhr.status != 304
             Feedbunch.alertTimedShowHide $("#problem-updating-import-status")
 
-    timer_update = setInterval update_import_status, 10000
+    timer_update = setInterval update_import_status, 5000
 
   #-------------------------------------------------------
   # If the "import running" div is shown, periodically update import status
