@@ -11,7 +11,7 @@
 
     <%= render 'feeds/sidebar/sidebar_folder', user: @user, feeds: @feeds, title: t('feeds.index.all_feeds'), folder_id: 'all' %>
 
-    <% @folders.each do |folder| %>
+    <% @folders.all(order: 'title ASC').each do |folder| %>
 
       <%= render 'feeds/sidebar/sidebar_folder', user: @user, feeds: folder.feeds, title: folder.title, folder_id: folder.id %>
 
