@@ -23,18 +23,18 @@ $(document).ready ->
     # Function to handle result returned by the server
     unsubscribe_result = (data, status, xhr) ->
       remove_feed()
-      Openreader.update_folder_entry_count "all", data["all_subscriptions"]["sidebar_read_all"]
+      Feedbunch.update_folder_entry_count "all", data["all_subscriptions"]["sidebar_read_all"]
       if data["old_folder"]
         if data["old_folder"]["deleted"]
-          Openreader.remove_folder data["old_folder"]["id"]
+          Feedbunch.remove_folder data["old_folder"]["id"]
         else
-          Openreader.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
+          Feedbunch.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
 
-    $.post(Openreader.current_feed_path, {"_method":"delete"}, unsubscribe_result, 'json')
+    $.post(Feedbunch.current_feed_path, {"_method":"delete"}, unsubscribe_result, 'json')
       .fail ->
-        Openreader.alertTimedShowHide $("#problem-unsubscribing")
+        Feedbunch.alertTimedShowHide $("#problem-unsubscribing")
 
-    Openreader.show_start_page()
+    Feedbunch.show_start_page()
 
   ########################################################
   # COMMON FUNCTIONS
@@ -44,7 +44,7 @@ $(document).ready ->
   # Remove feed from the sidebar
   #-------------------------------------------------------
   remove_feed = ->
-    $("[data-sidebar-feed][data-feed-id=#{Openreader.current_feed_id}]").parent().remove()
+    $("[data-sidebar-feed][data-feed-id=#{Feedbunch.current_feed_id}]").parent().remove()
 
   #-------------------------------------------------------
   # Show modal popup

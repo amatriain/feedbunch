@@ -17,21 +17,21 @@ $(document).ready ->
     # Function to handle result returned by the server
     update_folder_result = (data, status, xhr) ->
       if xhr.status == 304
-        Openreader.alertTimedShowHide $("#already-in-folder")
+        Feedbunch.alertTimedShowHide $("#already-in-folder")
       else
         if data["old_folder"]
           if data["old_folder"]["deleted"]
-            Openreader.remove_folder data["old_folder"]["id"]
+            Feedbunch.remove_folder data["old_folder"]["id"]
           else
-            Openreader.remove_feed_from_folders Openreader.current_feed_id
-            Openreader.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
-        Openreader.insert_feed_in_folder Openreader.current_feed_id, folder_id, data["new_folder"]["sidebar_feed"]
-        Openreader.update_folder_entry_count data["new_folder"]["id"], data["new_folder"]["sidebar_read_all"]
-        Openreader.read_feed Openreader.current_feed_id, folder_id
+            Feedbunch.remove_feed_from_folders Feedbunch.current_feed_id
+            Feedbunch.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
+        Feedbunch.insert_feed_in_folder Feedbunch.current_feed_id, folder_id, data["new_folder"]["sidebar_feed"]
+        Feedbunch.update_folder_entry_count data["new_folder"]["id"], data["new_folder"]["sidebar_read_all"]
+        Feedbunch.read_feed Feedbunch.current_feed_id, folder_id
 
-    $.post(update_folder_path, {"_method":"put", feed_id: Openreader.current_feed_id}, update_folder_result, "json")
+    $.post(update_folder_path, {"_method":"put", feed_id: Feedbunch.current_feed_id}, update_folder_result, "json")
       .fail ->
-        Openreader.alertTimedShowHide $("#problem-folder-management")
+        Feedbunch.alertTimedShowHide $("#problem-folder-management")
 
   #-------------------------------------------------------
   # Show "New folder" popup when clicking on New Folder in the dropdown
@@ -52,28 +52,28 @@ $(document).ready ->
     # Function to handle result returned by the server
     new_folder_result = (data, status, xhr) ->
       if xhr.status == 304
-        Openreader.alertTimedShowHide $("#folder-already-exists")
+        Feedbunch.alertTimedShowHide $("#folder-already-exists")
       else
         if data["old_folder"]
           if data["old_folder"]["deleted"]
-            Openreader.remove_folder data["old_folder"]["id"]
+            Feedbunch.remove_folder data["old_folder"]["id"]
           else
-            Openreader.remove_feed_from_folders Openreader.current_feed_id
-            Openreader.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
+            Feedbunch.remove_feed_from_folders Feedbunch.current_feed_id
+            Feedbunch.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
         add_folder data["new_folder"]
         new_folder_id = data["new_folder"]["id"]
-        Openreader.update_folder_id Openreader.current_feed_id, new_folder_id
-        Openreader.read_feed Openreader.current_feed_id, new_folder_id
+        Feedbunch.update_folder_id Feedbunch.current_feed_id, new_folder_id
+        Feedbunch.read_feed Feedbunch.current_feed_id, new_folder_id
 
     # If the user has written something in the form, POST the value via ajax
     if $("#new_folder_title").val()
       form_url = $("#form-new-folder").attr "action"
       # Set the current folder id in a hidden field, to be sent with the POST
-      $("#new_folder_feed_id", this).val(Openreader.current_feed_id)
+      $("#new_folder_feed_id", this).val(Feedbunch.current_feed_id)
       post_data = $(this).serialize()
       $.post(form_url, post_data, new_folder_result, 'json')
         .fail ->
-          Openreader.alertTimedShowHide $("#problem-new-folder")
+          Feedbunch.alertTimedShowHide $("#problem-new-folder")
 
     close_popup()
 

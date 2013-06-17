@@ -11,10 +11,10 @@ $(document).ready ->
   # Show the start page when clicking on the "Start" link
   #-------------------------------------------------------
   $("body").on "click", "#start-page", ->
-    Openreader.hide_entries()
-    Openreader.hide_feed_title()
-    Openreader.hide_loading_message()
-    Openreader.hide_buttons()
+    Feedbunch.hide_entries()
+    Feedbunch.hide_feed_title()
+    Feedbunch.hide_loading_message()
+    Feedbunch.hide_buttons()
     show_start_information()
 
   ########################################################

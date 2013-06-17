@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Openreader::Application.load_tasks
+Feedbunch::Application.load_tasks

@@ -46,7 +46,7 @@ set :deploy_to, '/var/rails/feedbunch'
 #############################################################
 
 set :scm, :git
-set :repository,  'git://github.com/amatriain/openreader.git'
+set :repository,  'git://github.com/amatriain/feedbunch.git'
 set :branch, 'master'
 set :deploy_via, :remote_cache
 

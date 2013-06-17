@@ -10,13 +10,13 @@ if defined?(Bundler)
 end
 
 ##
-# Main module of the Openreader application. Most classes will be namespaced inside
+# Main module of the Feedbunch application. Most classes will be namespaced inside
 # this module.
 
-module Openreader
+module Feedbunch
 
   ##
-  # Main class of the Openreader application. Global settings are set here.
+  # Main class of the Feedbunch application. Global settings are set here.
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

@@ -32,4 +32,4 @@ require 'log4r/outputter/datefileoutputter'
 config_file = File.read File.join(File.dirname(__FILE__), 'log4r.yml.erb')
 log4r_config = YAML.load(ERB.new(config_file).result)
 Log4r::YamlConfigurator.decode_yaml(log4r_config['log4r_config'])
-Openreader::Application.config.logger = Log4r::Logger[Rails.env]
+Feedbunch::Application.config.logger = Log4r::Logger[Rails.env]

@@ -1,6 +1,6 @@
 require 'resque/server'
 
-Openreader::Application.routes.draw do
+Feedbunch::Application.routes.draw do
   devise_for :users, skip: [:sessions, :passwords, :registrations, :confirmations, :unlocks]
 
   # Customize login, logout etc routes instead of the Devise defaults.

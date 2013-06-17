@@ -1,4 +1,4 @@
-window.Openreader ||= {}
+window.Feedbunch ||= {}
 
 $(document).ready ->
 
@@ -12,7 +12,7 @@ $(document).ready ->
   # Show the alert div passed as argument and hide it after 5 seconds.
   # Only works for alerts caused by AJAX events.
   #-------------------------------------------------------
-  Openreader.alertTimedShowHide = (alert_div) ->
+  Feedbunch.alertTimedShowHide = (alert_div) ->
     alert_div.removeClass "hidden"
     seconds = 5
     updateTimer = ->

@@ -20,7 +20,7 @@ $(document).ready ->
         {_method:"put", entry_ids: [entry_id], state: "read"},
         update_entry_state_result, "json")
         .fail ->
-          Openreader.alertTimedShowHide $("#problem-entry-state-change")
+          Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
 
   #-------------------------------------------------------
   # Mark all visible entries as read when clicking on the "mark all as read" button
@@ -38,7 +38,7 @@ $(document).ready ->
         {_method:"put", entry_ids: entries, state: "read"},
           update_entry_state_result, "json")
           .fail ->
-            Openreader.alertTimedShowHide $("#problem-entry-state-change")
+            Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
 
   #-------------------------------------------------------
   # Mark a single entry as unread when clicking on the "mark as unread" button
@@ -52,7 +52,7 @@ $(document).ready ->
       {_method:"put", entry_ids: [entry_id], state: "unread"},
         update_entry_state_result, "json")
           .fail ->
-            Openreader.alertTimedShowHide $("#problem-entry-state-change")
+            Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
 
   ########################################################
   # COMMON FUNCTIONS
@@ -82,16 +82,16 @@ $(document).ready ->
   # Function to handle result returned by the server
   #-------------------------------------------------------
   update_entry_state_result = (data, status, xhr) ->
-    Openreader.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
+    Feedbunch.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
 
     if data["feeds"]
       changed_feeds = data["feeds"]
       for feed in changed_feeds
-        Openreader.update_feed_entry_count feed["id"], feed["sidebar"]
+        Feedbunch.update_feed_entry_count feed["id"], feed["sidebar"]
 
     if data["folders"]
       changed_folders = data["folders"]
       for folder in changed_folders
-        Openreader.update_folder_entry_count folder["id"], folder["sidebar_read_all"]
+        Feedbunch.update_folder_entry_count folder["id"], folder["sidebar_read_all"]
 
-    Openreader.make_active Openreader.current_feed_id, Openreader.current_folder_id
+    Feedbunch.make_active Feedbunch.current_feed_id, Feedbunch.current_folder_id

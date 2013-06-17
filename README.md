@@ -1,8 +1,8 @@
-Openreader
+Feedbunch
 ==========
-[![Build Status](https://travis-ci.org/amatriain/openreader.png?branch=master)](https://travis-ci.org/amatriain/openreader) [![Coverage Status](https://coveralls.io/repos/amatriain/openreader/badge.png?branch=master)](https://coveralls.io/r/amatriain/openreader) [![Code Climate](https://codeclimate.com/github/amatriain/openreader.png)](https://codeclimate.com/github/amatriain/openreader) [![Dependency Status](https://gemnasium.com/amatriain/openreader.png)](https://gemnasium.com/amatriain/openreader)
+[![Build Status](https://travis-ci.org/amatriain/feedbunch.png?branch=master)](https://travis-ci.org/amatriain/feedbunch) [![Coverage Status](https://coveralls.io/repos/amatriain/feedbunch/badge.png?branch=master)](https://coveralls.io/r/amatriain/feedbunch) [![Code Climate](https://codeclimate.com/github/amatriain/feedbunch.png)](https://codeclimate.com/github/amatriain/feedbunch) [![Dependency Status](https://gemnasium.com/amatriain/feedbunch.png)](https://gemnasium.com/amatriain/feedbunch)
 
-[Latest documentation at rdoc.info](http://rubydoc.info/github/amatriain/openreader/frames/file/README.md)
+[Latest documentation at rdoc.info](http://rubydoc.info/github/amatriain/feedbunch/frames/file/README.md)
 
 Licensed under the MIT license (see LICENSE.txt file in the root directory for details).
 

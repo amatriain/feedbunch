@@ -21,7 +21,7 @@ require 'subscriptions_importer'
 # {https://github.com/plataformatec/devise}[https://github.com/plataformatec/devise]
 #
 # Beyond the attributes added to this class by Devise[https://github.com/plataformatec/devise] for authentication,
-# Openreader establishes relationships between the User model and the following models:
+# Feedbunch establishes relationships between the User model and the following models:
 #
 # - Feed: Each user can be suscribed to many feeds and many users can be suscribed to a single feed (many-to-many relationship).
 # - Folder: Each user can have many folders and each folder belongs to a single user (one-to-many relationship).

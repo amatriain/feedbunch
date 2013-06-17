@@ -17,16 +17,16 @@ $(document).ready ->
     remove_folder_result = (data, status, xhr) ->
       if data["old_folder"]
         if data["old_folder"]["deleted"]
-          Openreader.remove_folder data["old_folder"]["id"]
+          Feedbunch.remove_folder data["old_folder"]["id"]
         else
-          Openreader.remove_feed_from_folders Openreader.current_feed_id
-          Openreader.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
-        Openreader.update_folder_id Openreader.current_feed_id, "none"
-        Openreader.read_feed Openreader.current_feed_id, "all"
+          Feedbunch.remove_feed_from_folders Feedbunch.current_feed_id
+          Feedbunch.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
+        Feedbunch.update_folder_id Feedbunch.current_feed_id, "none"
+        Feedbunch.read_feed Feedbunch.current_feed_id, "all"
 
-    $.post(delete_folder_path, {"_method":"delete", feed_id: Openreader.current_feed_id}, remove_folder_result)
+    $.post(delete_folder_path, {"_method":"delete", feed_id: Feedbunch.current_feed_id}, remove_folder_result)
       .fail ->
-        Openreader.alertTimedShowHide $("#problem-folder-management")
+        Feedbunch.alertTimedShowHide $("#problem-folder-management")
 
 
   ########################################################

@@ -13,23 +13,23 @@ $(document).ready ->
   $("body").on "click", "#refresh-feed", ->
     if $(this).hasClass("disabled") == false
       # Only refresh if the global variable stores a feed refresh path
-      if Openreader.current_feed_refresh_path?.length
+      if Feedbunch.current_feed_refresh_path?.length
         start_icon_animation()
-        Openreader.loading_entries()
+        Feedbunch.loading_entries()
 
         # Function to insert new entries in the list
         entries_received = (data, status, xhr) ->
-          Openreader.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
-          Openreader.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"]
-          Openreader.read_feed data["feed"]["id"], Openreader.current_folder_id
+          Feedbunch.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
+          Feedbunch.update_feed_entry_count data["feed"]["id"], data["feed"]["sidebar"]
+          Feedbunch.read_feed data["feed"]["id"], Feedbunch.current_folder_id
           if data["folder"]
-            Openreader.update_folder_entry_count data["folder"]["id"], data["folder"]["sidebar_read_all"]
+            Feedbunch.update_folder_entry_count data["folder"]["id"], data["folder"]["sidebar_read_all"]
 
-        $.get(Openreader.current_feed_refresh_path, null, entries_received, 'json')
+        $.get(Feedbunch.current_feed_refresh_path, null, entries_received, 'json')
           .fail ->
-            Openreader.hide_loading_message()
+            Feedbunch.hide_loading_message()
             stop_icon_animation()
-            Openreader.alertTimedShowHide $("#problem-refreshing")
+            Feedbunch.alertTimedShowHide $("#problem-refreshing")
 
   ########################################################
   # COMMON FUNCTIONS

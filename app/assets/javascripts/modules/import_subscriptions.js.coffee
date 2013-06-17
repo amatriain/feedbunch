@@ -46,11 +46,11 @@ $(document).ready ->
         else if status == "SUCCESS"
           update_status_html data["status_html"]
           clearInterval timer_update
-          Openreader.alertTimedShowHide $("#import-process-success")
+          Feedbunch.alertTimedShowHide $("#import-process-success")
         else if status == "ERROR"
           update_status_html data["status_html"]
           clearInterval timer_update
-          Openreader.alertTimedShowHide $("#import-process-error")
+          Feedbunch.alertTimedShowHide $("#import-process-error")
         else if status == "RUNNING"
           update_status_html data["status_html"]
 
@@ -58,7 +58,7 @@ $(document).ready ->
       $.get("/subscriptions_data", null, status_received, 'json')
         .fail (xhr, textStatus, errorThrown) ->
           if xhr.status != 304
-            Openreader.alertTimedShowHide $("#problem-updating-import-status")
+            Feedbunch.alertTimedShowHide $("#problem-updating-import-status")
 
     timer_update = setInterval update_import_status, 10000
 
