@@ -99,6 +99,13 @@ describe 'feeds' do
       page.should_not have_content @entry2_2.title
     end
 
+    it 'shows entries without a published date', js: true do
+      entry1_3 = FactoryGirl.build :entry, feed_id: @feed1.id, published: nil
+      @feed1.entries << entry1_3
+      read_feed @feed1.id, 'all'
+      page.should have_content entry1_3.title
+    end
+
     it 'shows an alert if the feed clicked has no entries', js: true do
       feed3 = FactoryGirl.create :feed
       @user.feeds << feed3

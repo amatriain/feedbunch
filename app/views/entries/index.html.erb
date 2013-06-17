@@ -18,7 +18,9 @@
              class="<%= entry_class %>">
 
             <%= sanitize entry.title %>
-            <span class="pull-right"><%= l entry.published, format: :short %></span>
+            <% if entry.published.present? %>
+              <span class="pull-right"><%= l entry.published, format: :short %></span>
+            <% end %>
 
           </a>
 
