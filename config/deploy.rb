@@ -55,7 +55,7 @@ set :deploy_via, :remote_cache
 #############################################################
 
 namespace :feedbunch_passenger do
-  task :restart do
+  task :restart, roles: :app do
     # Tell passenger to restart the app
     run "touch #{File.join(current_path,'tmp','restart.txt')}"
   end
@@ -66,12 +66,12 @@ end
 #############################################################
 
 namespace :feedbunch_god do
-  task :start do
+  task :start, roles: :background do
     run "cd #{current_path};
         RAILS_ENV=#{rails_env} bundle exec god -c #{File.join(current_path,'config','background_jobs.god')}"
   end
 
-  task :stop do
+  task :stop, roles: :background do
     # We run a "true" shell command after issuing a "god terminate" command because otherwise if
     # God were not running before this, we would get a return value of false which
     # Capistrano would intepret as an error and the deployment would be rolled back
@@ -80,7 +80,7 @@ namespace :feedbunch_god do
         true"
   end
 
-  task :restart do
+  task :restart, roles: :background do
     feedbunch_god.stop
     feedbunch_god.start
   end
@@ -91,16 +91,24 @@ end
 #############################################################
 
 namespace :feedbunch_secret_data do
-  task :copy, roles: :app, except: {no_release: true} do
-    run 'ln -sf /home/feedbunch/config/secret_token.rb ' \
-        "#{release_path}/config/initializers/secret_token.rb"
+  task :copy, roles: {:app, :background}, except: {no_release: true} do
 
     run 'ln -sf /home/feedbunch/config/database.yml ' \
         "#{release_path}/config/database.yml"
 
+    copy_app
+    copy_background
+  end
+
+  task :copy_app, roles: :app do
+    run 'ln -sf /home/feedbunch/config/secret_token.rb ' \
+        "#{release_path}/config/initializers/secret_token.rb"
+
     run "ln -sf /home/feedbunch/config/#{rails_env}.rb " \
         "#{release_path}/config/environments/#{rails_env}.rb"
+  end
 
+  task :copy_background, roles: :background do
     run 'ln -sf /home/feedbunch/config/notifications.god ' \
         "#{release_path}/config/notifications.god"
 
@@ -131,15 +139,15 @@ end
 #############################################################
 
 namespace :deploy do
-  task :start, roles: :app, except: {no_release: true} do
+  task :start, roles: :background, except: {no_release: true} do
     feedbunch_god.start
   end
 
-  task :stop, roles: :app, except: {no_release: true} do
+  task :stop, roles: :background, except: {no_release: true} do
     feedbunch_god.stop
   end
 
-  task :restart, roles: :app, except: {no_release: true} do
+  task :restart, roles: {:app, :background}, except: {no_release: true} do
     feedbunch_god.restart
     feedbunch_passenger.restart
   end
