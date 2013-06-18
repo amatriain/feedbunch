@@ -40,7 +40,7 @@ es:
       new_folder_title: "Crear nueva carpeta"
       new_folder_close: "Cancelar"
       new_folder_submit: "Crear carpeta"
-      no_entries: "No hay entradas sin leer para esta suscripción"
+      no_entries: "No hay entradas sin leer"
       problem_refreshing: "Ha habido un problema refrescando el feed. Por favor inténtelo de nuevo más tarde."
       problem_loading: "Ha habido un problema cargando el feed. Por favor inténtelo de nuevo más tarde."
       problem_subscribing: "No se ha podido añadir la suscripción."

@@ -43,7 +43,7 @@ en:
       new_folder_title: "Create new folder"
       new_folder_close: "Cancel"
       new_folder_submit: "Create folder"
-      no_entries: "No unread entries for this subscription."
+      no_entries: "No unread entries."
       problem_refreshing: "There has been a problem refreshing the feed. Please try again later."
       problem_loading: "There has been a problem loading the feed. Please try again later."
       problem_subscribing: "Could not add subscription."
