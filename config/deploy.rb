@@ -91,7 +91,7 @@ end
 #############################################################
 
 namespace :feedbunch_secret_data do
-  task :copy, roles: {:app, :background}, except: {no_release: true} do
+  task :copy, roles: [:app, :background], except: {no_release: true} do
 
     run 'ln -sf /home/feedbunch/config/database.yml ' \
         "#{release_path}/config/database.yml"
@@ -147,7 +147,7 @@ namespace :deploy do
     feedbunch_god.stop
   end
 
-  task :restart, roles: {:app, :background}, except: {no_release: true} do
+  task :restart, roles: [:app, :background], except: {no_release: true} do
     feedbunch_god.restart
     feedbunch_passenger.restart
   end
