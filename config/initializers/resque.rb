@@ -4,11 +4,18 @@ require 'resque'
 require 'resque_scheduler'
 require 'resque_scheduler/server'
 
+# For each Rails environment (production and staging) there are two different server roles; background server
+# connect to Redis on localhost, while app servers connect to the Redis instance in the background server.
 rails_root = Rails.root || File.dirname(__FILE__) + '/../..'
 rails_env = Rails.env || 'development'
+if ENV['RESQUE_ENV']=='background'
+  resque_env = "#{rails_env}_background"
+else
+  resque_env = rails_env
+end
 
 resque_config = YAML.load_file(rails_root.to_s + '/config/resque.yml')
-Resque.redis = resque_config[rails_env]
+Resque.redis = resque_config[resque_env]
 
 # If you want to be able to dynamically change the schedule,
 # uncomment this line.  A dynamic schedule can be updated via the

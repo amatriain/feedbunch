@@ -68,7 +68,7 @@ end
 namespace :feedbunch_god do
   task :start, roles: :background do
     run "cd #{current_path};
-        RAILS_ENV=#{rails_env} bundle exec god -c #{File.join(current_path,'config','background_jobs.god')}"
+        RAILS_ENV=#{rails_env} RESQUE_ENV=background bundle exec god -c #{File.join(current_path,'config','background_jobs.god')}"
   end
 
   task :stop, roles: :background do
