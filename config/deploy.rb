@@ -130,7 +130,7 @@ namespace :feedbunch_shared_folders do
     # Uploads directory is in the capistrano shared folder, so that the
     # uploaded files are not lost on each deployment. Create it if necessary.
     run "mkdir -p #{shared_path}/uploads"
-    run "ln -sf #{shared_path}/uploads #{release_path}/uploads"
+    run "ln -sfT #{shared_path}/uploads #{release_path}/uploads"
   end
 end
 
