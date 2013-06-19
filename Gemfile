@@ -114,4 +114,7 @@ end
 group :staging, :production do
   # Mysql database for staging and production
   gem 'mysql2'
+
+  # Access Amazon AWS programattically
+  gem 'aws-sdk'
 end
