@@ -126,7 +126,7 @@ end
 #############################################################
 
 namespace :feedbunch_shared_folders do
-  task :create, roles: :app, except: {no_release: true} do
+  task :create, roles: [:app, :background], except: {no_release: true} do
     # Uploads directory is in the capistrano shared folder, so that the
     # uploaded files are not lost on each deployment. Create it if necessary.
     run "mkdir -p #{shared_path}/uploads"
