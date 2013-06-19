@@ -37,4 +37,7 @@ Feedbunch::Application.configure do
 
   # Links in emails will point to this host
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+
+  # Upload files to filesystem
+  Feedbunch::Application.config.uploads_manager = FileClient
 end

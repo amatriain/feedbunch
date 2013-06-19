@@ -20,8 +20,10 @@ class SubscriptionsImporter
     data_import = user.create_data_import
 
     subscription_data = self.read_data_file file
-    filename = File.join Rails.root, 'uploads', "#{Time.now.to_i}.opml"
-    File.open(filename, 'w'){|file| file.write subscription_data}
+
+    filename = "#{Time.now.to_i}.opml"
+    Feedbunch::Application.config.uploads_manager.save filename, subscription_data
+
     Rails.logger.info "Enqueuing Import Subscriptions Job for user #{user.id} - #{user.email}, OPML file #{filename}"
     Resque.enqueue ImportSubscriptionsJob, filename, user.id
   rescue => e

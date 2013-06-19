@@ -91,7 +91,7 @@ class ImportSubscriptionsJob
       self.import_status_success user
     end
   ensure
-    File.delete filename
+    Feedbunch::Application.config.uploads_manager.delete filename
   end
 
   private

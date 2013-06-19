@@ -1142,7 +1142,8 @@ describe User do
 
       timestamp = 1371146348
       Time.stub(:now).and_return Time.at(timestamp)
-      @filename = File.join(Rails.root, 'uploads', "#{timestamp}.opml")
+      @filename = "#{timestamp}.opml"
+      @filepath = File.join(Rails.root, 'uploads', @filename)
     end
 
     after :each do

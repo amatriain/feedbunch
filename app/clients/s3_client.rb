@@ -18,7 +18,6 @@ class S3Client
     Rails.logger.info "Uploading to S3 object with key #{key}"
     s3_object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects.create key, content
     Rails.logger.debug "Succesfully uploaded to S3 object with key #{key}"
-    return s3_object
   end
 
   ##
