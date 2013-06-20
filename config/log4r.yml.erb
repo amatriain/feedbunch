@@ -8,7 +8,7 @@ log4r_config:
       - test_log_outputter
   <% elsif Rails.env.ci? %>
     - name : ci
-      level : INFO
+      level : WARN
       trace : 'true'
       outputters:
       - stdout_ci_outputter
