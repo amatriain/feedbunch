@@ -1140,15 +1140,14 @@ describe User do
       @opml_data = File.read File.join(File.dirname(__FILE__), '..', 'attachments', 'subscriptions.xml')
       @data_file = File.open File.join(File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
 
+      @upload_manager_mock = double "upload_manager", read: @opml_data
+      @upload_manager_mock.stub :save
+      @upload_manager_mock.stub :delete
+      Feedbunch::Application.config.uploads_manager = @upload_manager_mock
+
       timestamp = 1371146348
       Time.stub(:now).and_return Time.at(timestamp)
       @filename = "#{timestamp}.opml"
-      @filepath = File.join(Rails.root, 'uploads', @filename)
-    end
-
-    after :each do
-      uploaded_files = File.join Rails.root, 'uploads', '*.opml'
-      Dir.glob(uploaded_files).each {|f| File.delete f}
     end
 
     it 'creates a new data_import with status RUNNING for the user' do
@@ -1174,10 +1173,8 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
+        @upload_manager_mock.should_receive(:save).with @filename, @opml_data
         @user.import_subscriptions @data_file
-
-        written_data = File.read @filename
-        written_data.should eq @opml_data
       end
 
       it 'enqueues job to process the file' do
@@ -1194,10 +1191,8 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
+        @upload_manager_mock.should_receive(:save).with @filename, @opml_data
         @user.import_subscriptions @data_file
-
-        written_data = File.read @filename
-        written_data.should eq @opml_data
       end
 
       it 'enqueues job to process the file' do
@@ -1213,10 +1208,8 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
+        @upload_manager_mock.should_receive(:save).with @filename, @opml_data
         @user.import_subscriptions @data_file
-
-        written_data = File.read @filename
-        written_data.should eq @opml_data
       end
 
       it 'enqueues job to process the file' do
@@ -1232,10 +1225,8 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
+        @upload_manager_mock.should_receive(:save).with @filename, @opml_data
         @user.import_subscriptions @data_file
-
-        written_data = File.read @filename
-        written_data.should eq @opml_data
       end
 
       it 'enqueues job to process the file' do

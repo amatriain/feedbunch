@@ -44,16 +44,17 @@ class ImportSubscriptionsJob
       return
     end
 
-    # Check if file actually exists
-    if !FileTest.exists? filename
+    # Open file and check if it actually exists
+    xml_contents = Feedbunch::Application.config.uploads_manager.read filename
+    if xml_contents == nil
       Rails.logger.error "Trying to import for user #{user_id} from non-existing OPML file: #{filename}"
       self.import_status_error user
       return
     end
 
-    # Open and parse OPML file (it's actually XML)
+    # Parse OPML file (it's actually XML)
     begin
-      docXml = Nokogiri::XML(File.open(filename)) {|config| config.strict}
+      docXml = Nokogiri::XML(xml_contents) {|config| config.strict}
     rescue Nokogiri::XML::SyntaxError => e
       Rails.logger.error "Trying to parse malformed XML file #{filename}"
       self.import_status_error user

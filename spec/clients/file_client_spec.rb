@@ -24,6 +24,13 @@ describe FileClient do
     FileTest.exists?(@filepath).should be_false
   end
 
+  it 'reads file from uploads folder' do
+    File.open(@filepath, 'w') {|f| f.write @file_content}
+
+    contents = FileClient.read @filename
+    contents.should eq @file_content
+  end
+
   it 're-raises any exceptions' do
     error = StandardError.new
     File.stub(:open).and_raise error
