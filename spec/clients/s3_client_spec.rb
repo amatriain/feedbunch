@@ -9,7 +9,7 @@ describe S3Client do
 
     # Substitute the AWS S3 object that makes the call to the AWS API with
     # a mock object
-    @s3_object_mock = double 'object', key: @s3_key, delete: nil, read: @file_content
+    @s3_object_mock = double 'object', key: @s3_key, delete: nil, read: @file_content, exists?: true
     @s3_objects_mock = double 'objects', create: @s3_object_mock
     @s3_objects_mock.stub :[] => @s3_object_mock
     @s3_bucket_mock = double 'bucket', objects: @s3_objects_mock

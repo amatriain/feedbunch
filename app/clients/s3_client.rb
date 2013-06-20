@@ -43,7 +43,7 @@ class S3Client
     Rails.logger.info "reading S3 object with key #{key}"
     object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects[key]
     object_contents = object.read if object.exists?
-    return object
+    return object_contents
   end
 
   private
