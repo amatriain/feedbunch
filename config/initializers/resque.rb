@@ -1,4 +1,5 @@
 require 'resque'
+require 'yaml'
 
 # Resque-scheduler additions to resque-web
 require 'resque_scheduler'
