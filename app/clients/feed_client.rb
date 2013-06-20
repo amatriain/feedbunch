@@ -21,11 +21,8 @@ class FeedClient
   # Optionally receives as argument a boolean that tells the method whether to perform feed autodiscovery. It
   # defaults to false.
   #
-  # The method tries to use the last received etag with the if-none-match header to indicate the server to send only new
-  # entries.
-  #
-  # If no etag was received last time the feed was fetched, it tries to use the last received last-modified header with the
-  # if-modified-since request header to indicate the server to send only new entries.
+  # The method tries to use the last received etag with the if-none-match header and the last received
+  # last-modified with the if-modified-since header to tell the server to send the feed only if it has new entries.
   #
   # If the last time the feed was fetched no etag and no last-modified headers were in the response, this method fetches
   # the full feed without sending caching headers.
