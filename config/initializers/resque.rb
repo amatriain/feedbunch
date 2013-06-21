@@ -20,6 +20,15 @@ end
 resque_config = YAML.load_file(rails_root.to_s + '/config/resque.yml')
 Resque.redis = resque_config[resque_env]
 
+# In background servers we must require each job class individually, because we're not
+# running the full Rails app
+if resque_env=='background'
+  require "#{rails_root}/app/jobs/fetch_imported_feed_job"
+  require "#{rails_root}/app/jobs/import_subscriptions_job"
+  require "#{rails_root}/app/jobs/schedule_feed_updates_job"
+  require "#{rails_root}/app/jobs/update_feed_job"
+end
+
 # If you want to be able to dynamically change the schedule,
 # uncomment this line.  A dynamic schedule can be updated via the
 # Resque::Scheduler.set_schedule (and remove_schedule) methods.
