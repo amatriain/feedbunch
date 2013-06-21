@@ -9,10 +9,12 @@ describe 'import subscriptions' do
     login_user_for_feature @user
     visit feeds_path
     find('#start-page').click
+    sleep 1
   end
 
   it 'shows file upload popup', js: true do
     find('a#start-import-subscriptions').click
+    sleep 1
     page.should have_css '#import-subscriptions-popup', visible: true
   end
 
@@ -21,6 +23,7 @@ describe 'import subscriptions' do
     it 'show link if the user has never run an import', js: true do
       page.should have_css '.navbar a#nav-import-subscriptions'
       find('.navbar a#nav-import-subscriptions').click
+      sleep 1
       page.should have_css '#import-subscriptions-popup', visible: true
     end
 
@@ -49,6 +52,7 @@ describe 'import subscriptions' do
       visit edit_user_registration_path
       page.should have_css '.navbar a#nav-import-subscriptions'
       find('.navbar a#nav-import-subscriptions').click
+      sleep 1
       page.should have_css '#import-subscriptions-popup', visible: true
     end
 
@@ -61,6 +65,7 @@ describe 'import subscriptions' do
       find('a#start-import-subscriptions').click
       sleep 1
       attach_file 'import_subscriptions_file', data_file
+      sleep 1
       find('#import-subscriptions-submit').click
       sleep 1
     end
