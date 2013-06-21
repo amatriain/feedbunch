@@ -12,13 +12,12 @@ rails_env = ENV['RAILS_ENV'] || 'development'
 resque_env = ENV['RESQUE_ENV'] || 'app'
 
 if resque_env=='background'
-  resque_env = "#{rails_env}_background"
+  resque_conf_key = "#{rails_env}_background"
 else
-  resque_env = rails_env
+  resque_conf_key = rails_env
 end
-
 resque_config = YAML.load_file(rails_root.to_s + '/config/resque.yml')
-Resque.redis = resque_config[resque_env]
+Resque.redis = resque_config[resque_conf_key]
 
 # In background servers we must require each job class individually, because we're not
 # running the full Rails app

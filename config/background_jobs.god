@@ -109,7 +109,7 @@ God.watch do |w|
            'RESQUE_ENV' => resque_env,
            'TERM_CHILD' => '1',
            'RESQUE_TERM_TIMEOUT' => ' 10'}
-  w.start = "resque-web -L -p 5678 #{File.join(APP_ROOT, 'config', 'initializers', 'resque.rb')}"
+  w.start = "resque-web -L -F -p 5678 #{File.join(APP_ROOT, 'config', 'initializers', 'resque.rb')}"
 
   # Uncomment one of the following two lines, depending on whether resource usage limit is desired
   #w.keepalive memory_max: 256.megabytes, cpu_max: 25.percent
