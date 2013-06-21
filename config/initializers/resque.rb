@@ -5,11 +5,13 @@ require 'yaml'
 require 'resque_scheduler'
 require 'resque_scheduler/server'
 
-# For each Rails environment (production and staging) there are two different server roles; background server
+# For each Rails environment (production and staging) there are two different server roles; background servers
 # connect to Redis on localhost, while app servers connect to the Redis instance in the background server.
 rails_root = ENV['RAILS_ROOT'] || File.dirname(__FILE__) + '/../..'
 rails_env = ENV['RAILS_ENV'] || 'development'
-if ENV['RESQUE_ENV']=='background'
+resque_env = ENV['RESQUE_ENV'] || 'app'
+
+if resque_env=='background'
   resque_env = "#{rails_env}_background"
 else
   resque_env = rails_env
