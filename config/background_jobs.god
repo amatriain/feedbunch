@@ -23,7 +23,7 @@ God.watch do |w|
   #w.pid_file = File.join APP_ROOT, 'pids', 'redis.pid'
   #w.behavior :clean_pid_file
 
-  # Uncomment one of the followint two lines, depending on whether resource usage limit is desired
+  # Uncomment one of the following two lines, depending on whether resource usage limit is desired
   #w.keepalive memory_max: 256.megabyte, cpu_max: 50.percent
   w.keepalive
 
@@ -53,7 +53,7 @@ God.watch do |w|
            'RESQUE_TERM_TIMEOUT' => ' 10'}
   w.start = "rake -f #{File.join(APP_ROOT, 'Rakefile')} resque:work"
 
-  # Uncomment one of the followint two lines, depending on whether resource usage limit is desired
+  # Uncomment one of the following two lines, depending on whether resource usage limit is desired
   #w.keepalive memory_max: 256.megabytes, cpu_max: 50.percent
   w.keepalive
 
@@ -82,12 +82,41 @@ God.watch do |w|
            'RESQUE_TERM_TIMEOUT' => ' 10'}
   w.start = "rake -f #{File.join(APP_ROOT, 'Rakefile')} resque:scheduler"
 
-  # Uncomment one of the followint two lines, depending on whether resource usage limit is desired
+  # Uncomment one of the following two lines, depending on whether resource usage limit is desired
   #w.keepalive memory_max: 256.megabytes, cpu_max: 25.percent
   w.keepalive
 
   w.dir = APP_ROOT
   w.log = File.join APP_ROOT, 'log', 'resque.log'
+
+  w.lifecycle do |on|
+    on.condition(:flapping) do |c|
+      c.times = 5
+      c.within = 5.minute
+      c.to_state = [:start, :restart]
+      c.retry_in = 10.minutes
+      c.retry_times = 5
+      c.retry_within = 2.hours
+      c.notify = 'admins'
+    end
+  end
+end
+
+God.watch do |w|
+  w.name = 'resque-web'
+  w.group = 'background'
+  w.env = {'RAILS_ENV' => rails_env,
+           'RESQUE_ENV' => resque_env,
+           'TERM_CHILD' => '1',
+           'RESQUE_TERM_TIMEOUT' => ' 10'}
+  w.start = "resque-web -L -p 5678 #{File.join(APP_ROOT, 'config', 'initializers', 'resque.rb')}"
+
+  # Uncomment one of the following two lines, depending on whether resource usage limit is desired
+  #w.keepalive memory_max: 256.megabytes, cpu_max: 25.percent
+  w.keepalive
+
+  w.dir = APP_ROOT
+  w.log = File.join APP_ROOT, 'log', 'resque-web.log'
 
   w.lifecycle do |on|
     on.condition(:flapping) do |c|
