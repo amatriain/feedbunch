@@ -62,7 +62,7 @@ GEM
       terminal-table (~> 1.4)
     builder (3.0.4)
     cancan (1.6.10)
-    capistrano (2.15.4)
+    capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
