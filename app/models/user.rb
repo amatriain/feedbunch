@@ -64,6 +64,8 @@ class User < ActiveRecord::Base
   has_many :entry_states, dependent: :destroy, uniq: true
   has_one :data_import, dependent: :destroy
 
+  before_save :encode_password
+
   ##
   # Retrieve entries from a feed. See EntryRecovery#feed_entries
 
@@ -136,6 +138,13 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  ##
+  # Before saving a user instance, ensure the encrypted_password is encoded as utf-8
+
+  def encode_password
+    self.encrypted_password.encode! 'utf-8'
+  end
 
   ##
   # Mark as unread for this user all entries of the feed passed as argument.
