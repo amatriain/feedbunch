@@ -114,7 +114,7 @@ GEM
     god (0.13.2)
     gorillib (0.1.11)
       json
-    haml (4.0.2)
+    haml (4.0.3)
       tilt
     high_voltage (1.2.3)
     highline (1.6.19)
@@ -200,7 +200,7 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
-    ruby2ruby (2.0.5)
+    ruby2ruby (2.0.6)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
     ruby_parser (3.1.3)
