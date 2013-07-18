@@ -23,8 +23,7 @@ describe 'authorization' do
 
   it 'allows access to Resque to admin users' do
     login_user_for_feature @admin_user
-    visit '/admin/resque'
-    page.status_code.should eq 200
+    expect {visit '/admin/resque'}.not_to raise_error ActionController::RoutingError
   end
 
   it 'does not allow access to Resque to non-admin users' do
