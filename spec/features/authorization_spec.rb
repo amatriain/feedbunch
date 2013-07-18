@@ -21,7 +21,7 @@ describe 'authorization' do
     page.should_not have_css 'a[href="/admin/resque"]'
   end
 
-  it 'allows access to Resque to non-admin users' do
+  it 'allows access to Resque to admin users' do
     login_user_for_feature @admin_user
     visit '/admin/resque'
     page.status_code.should eq 200
