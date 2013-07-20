@@ -14,17 +14,16 @@ describe ImportSubscriptionsJob do
     @filename = '1371324422.opml'
     @filepath = File.join File.dirname(__FILE__), '..', 'attachments', @filename
     @file_contents = File.read @filepath
-    @uploads_manager_mock = double 'uploads_manager'
-    @uploads_manager_mock.stub :read do |filename|
+
+    Feedbunch::Application.config.uploads_manager.stub :read do |filename|
       if filename == @filename
         @file_contents
       else
         nil
       end
     end
-    @uploads_manager_mock.stub :save
-    @uploads_manager_mock.stub :delete
-    Feedbunch::Application.config.uploads_manager = @uploads_manager_mock
+    Feedbunch::Application.config.uploads_manager.stub :save
+    Feedbunch::Application.config.uploads_manager.stub :delete
 
     @brakeman_feed = FactoryGirl.create :feed, title: 'Brakeman - Rails Security Scanner',
                                         fetch_url: 'http://brakemanscanner.org/atom.xml',
@@ -49,7 +48,7 @@ describe ImportSubscriptionsJob do
   it 'sets data import status to ERROR if the file is not well formed XML' do
     not_valid_xml_filename = File.join File.dirname(__FILE__), '..', 'attachments', 'not-well-formed-xml.opml'
     file_contents = File.read not_valid_xml_filename
-    @uploads_manager_mock.stub read: file_contents
+    Feedbunch::Application.config.uploads_manager.stub read: file_contents
     ImportSubscriptionsJob.perform not_valid_xml_filename, @user.id
     @user.reload
     @user.data_import.status.should eq DataImport::ERROR
@@ -58,19 +57,19 @@ describe ImportSubscriptionsJob do
   it 'sets data import status to ERROR if the file is not valid OPML' do
     not_valid_opml_filename = File.join File.dirname(__FILE__), '..', 'attachments', 'not-valid-opml.opml'
     file_contents = File.read not_valid_opml_filename
-    @uploads_manager_mock.stub read: file_contents
+    Feedbunch::Application.config.uploads_manager.stub read: file_contents
     ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id
     @user.reload
     @user.data_import.status.should eq DataImport::ERROR
   end
 
   it 'does nothing if the user does not exist' do
-    @uploads_manager_mock.should_not_receive :read
+    Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, 1234567890
   end
 
   it 'reads uploaded file' do
-    @uploads_manager_mock.should_receive(:read).with @filename
+    Feedbunch::Application.config.uploads_manager.should_receive(:read).with @filename
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
@@ -93,7 +92,7 @@ describe ImportSubscriptionsJob do
   it 'updates data import number of processed feeds when finding duplicated feeds' do
     filename = File.join File.dirname(__FILE__), '..', 'attachments', '1371324422-with-duplicate-feed.opml'
     file_contents = File.read filename
-    @uploads_manager_mock.stub read: file_contents
+    Feedbunch::Application.config.uploads_manager.stub read: file_contents
     ImportSubscriptionsJob.perform filename, @user.id
     @user.reload
     @user.data_import.total_feeds.should eq 5
@@ -103,7 +102,7 @@ describe ImportSubscriptionsJob do
   it 'ignores feeds without xmlUrl attribute' do
     filename = File.join File.dirname(__FILE__), '..', 'attachments', '1371324422-with-feed-without-attributes.opml'
     file_contents = File.read filename
-    @uploads_manager_mock.stub read: file_contents
+    Feedbunch::Application.config.uploads_manager.stub read: file_contents
 
     Resque.should_receive(:enqueue) do |job_class, feed_id, user_id|
       job_class.should eq FetchImportedFeedJob
@@ -219,24 +218,24 @@ describe ImportSubscriptionsJob do
   it 'does nothing if the data_import for the user has status ERROR' do
     @user.data_import.status = DataImport::ERROR
     @user.data_import.save
-    @uploads_manager_mock.should_not_receive :read
+    Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
   it 'does nothing if the data_import for the user has status SUCCESS' do
     @user.data_import.status = DataImport::SUCCESS
     @user.data_import.save
-    @uploads_manager_mock.should_not_receive :read
+    Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
   it 'deletes file after finishing successfully' do
-    @uploads_manager_mock.should_receive(:delete).with @filename
+    Feedbunch::Application.config.uploads_manager.should_receive(:delete).with @filename
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
   it 'deletes file after finishing with an error' do
-    @uploads_manager_mock.should_receive(:delete).with @filename
+    Feedbunch::Application.config.uploads_manager.should_receive(:delete).with @filename
     ImportSubscriptionsJob.perform @filename, 1234567890
   end
 

@@ -1140,10 +1140,9 @@ describe User do
       @opml_data = File.read File.join(File.dirname(__FILE__), '..', 'attachments', 'subscriptions.xml')
       @data_file = File.open File.join(File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
 
-      @upload_manager_mock = double "upload_manager", read: @opml_data
-      @upload_manager_mock.stub :save
-      @upload_manager_mock.stub :delete
-      Feedbunch::Application.config.uploads_manager = @upload_manager_mock
+      Feedbunch::Application.config.uploads_manager.stub read: @opml_data
+      Feedbunch::Application.config.uploads_manager.stub :save
+      Feedbunch::Application.config.uploads_manager.stub :delete
 
       timestamp = 1371146348
       Time.stub(:now).and_return Time.at(timestamp)
@@ -1173,7 +1172,7 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
-        @upload_manager_mock.should_receive(:save).with @filename, @opml_data
+        Feedbunch::Application.config.uploads_manager.should_receive(:save).with @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 
@@ -1191,7 +1190,7 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
-        @upload_manager_mock.should_receive(:save).with @filename, @opml_data
+        Feedbunch::Application.config.uploads_manager.should_receive(:save).with @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 
@@ -1208,7 +1207,7 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
-        @upload_manager_mock.should_receive(:save).with @filename, @opml_data
+        Feedbunch::Application.config.uploads_manager.should_receive(:save).with @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 
@@ -1225,7 +1224,7 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
-        @upload_manager_mock.should_receive(:save).with @filename, @opml_data
+        Feedbunch::Application.config.uploads_manager.should_receive(:save).with @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 
