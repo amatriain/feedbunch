@@ -10,6 +10,13 @@ class SubscriptionsDataController < ApplicationController
   respond_to :json, only: [:show]
 
   ##
+  # Return JSON indicating the status of the "import subscriptions" process for the current user
+
+  def show
+    render 'show.json.erb', locals: {user: current_user}
+  end
+
+  ##
   # Upload a subscriptions data file (probably exported from Google Reader) and subscribe the current user
   # to the feeds there.
 
@@ -21,10 +28,4 @@ class SubscriptionsDataController < ApplicationController
     handle_error e
   end
 
-  ##
-  # Return JSON indicating the status of the "import subscriptions" process for the current user
-
-  def show
-    render 'show.json.erb', locals: {user: current_user}
-  end
 end

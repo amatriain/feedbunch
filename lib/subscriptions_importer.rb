@@ -14,6 +14,9 @@ class SubscriptionsImporter
   # Receives as arguments the file uploaded by the user and user that requested the import.
   #
   # Optionally the file can be a zip archive; this is the format one gets when exporting from Google.
+  #
+  # If any error is raised during importing, this method raises an ImportDataError, to ensure that the user is
+  # always redirected to the start page, instead of being left at a blank HTTP 500 page.
 
   def self.import_subscriptions(file, user)
     Rails.logger.info "User #{user.id} - #{user.email} requested import of a data file"
@@ -32,7 +35,7 @@ class SubscriptionsImporter
     Rails.logger.error e.backtrace
     data_import.status = DataImport::ERROR
     data_import.save
-    raise e
+    raise ImportDataError.new
   end
 
   private
