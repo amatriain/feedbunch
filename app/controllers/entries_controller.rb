@@ -13,7 +13,7 @@ class EntriesController < ApplicationController
     changed_data = current_user.change_entry_state params[:entry_ids], params[:state]
     @feeds = changed_data[:feeds]
     @folders = changed_data[:folders]
-    render 'update.json.erb',
+    render 'update',
            locals: {user: current_user, feeds: @feeds, folders: @folders}
   rescue => e
     handle_error e
