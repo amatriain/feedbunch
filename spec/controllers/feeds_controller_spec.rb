@@ -103,7 +103,7 @@ describe FeedsController do
 
   context 'POST create' do
     it 'returns 304 if the user is already subscribed to the feed' do
-      post :create, subscription: {rss: @feed1.fetch_url}
+      post :create, subscription: {rss: @feed1.fetch_url}, format: :json
       response.status.should eq 304
 
       post :create, subscription: {rss: @feed1.url}
@@ -111,7 +111,7 @@ describe FeedsController do
     end
 
     it 'assigns to @feed the new subscribed feed' do
-      post :create, subscription: {rss: @feed2.fetch_url}
+      post :create, subscription: {rss: @feed2.fetch_url}, format: :json
       response.should  be_success
       assigns(:feed).should eq @feed2
     end

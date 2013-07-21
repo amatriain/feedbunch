@@ -35,7 +35,7 @@ class FeedsController < ApplicationController
     @entries = current_user.feed_entries params[:id], include_read
 
     if @entries.present?
-      render 'entries/index.html.erb', locals: {entries: @entries, user: current_user}, layout: false
+      render 'entries/index', locals: {entries: @entries, user: current_user}, layout: false
     else
       Rails.logger.warn "Feed #{params[:id]} has no entries, returning a 404"
       head status: 404
@@ -55,7 +55,7 @@ class FeedsController < ApplicationController
     @feed = current_user.feeds.find params[:id]
     @folder= @feed.user_folder current_user
     current_user.refresh_feed params[:id]
-    render 'show.json.erb', locals: {user: current_user, feed: @feed, folder: @folder}
+    render 'show', locals: {user: current_user, feed: @feed, folder: @folder}
   rescue => e
     handle_error e
   end
@@ -69,7 +69,7 @@ class FeedsController < ApplicationController
     @feed = current_user.subscribe url
 
     if @feed.present?
-      render 'create.json.erb', locals: {user: current_user, feed: @feed}
+      render 'create', locals: {user: current_user, feed: @feed}
     else
       Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
       #TODO respond with html for search results, for instance with head status:300 (Multiple Choices)
@@ -85,7 +85,7 @@ class FeedsController < ApplicationController
 
   def destroy
     @old_folder = current_user.unsubscribe params[:id]
-    render 'destroy.json.erb', locals: {user: current_user,
+    render 'destroy', locals: {user: current_user,
                                        old_folder: @old_folder}
   rescue => e
     handle_error e
