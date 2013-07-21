@@ -135,7 +135,7 @@ GEM
     mime-types (1.23)
     mono_logger (1.1.0)
     multi_json (1.7.7)
-    mysql2 (0.3.11)
+    mysql2 (0.3.13)
     net-scp (1.1.1)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
