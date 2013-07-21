@@ -13,7 +13,7 @@ class SubscriptionsDataController < ApplicationController
   # Return JSON indicating the status of the "import subscriptions" process for the current user
 
   def show
-    render 'show.json.erb', locals: {user: current_user}
+    render 'show', locals: {user: current_user}
   end
 
   ##

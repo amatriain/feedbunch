@@ -12,7 +12,7 @@ describe SubscriptionsDataController do
   context 'GET show' do
 
     it 'returns import process status successfully' do
-      get :show
+      get :show, format: :json
       response.status.should eq 200
     end
 
