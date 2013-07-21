@@ -22,7 +22,7 @@ class FoldersController < ApplicationController
     if @entries.present?
       # The folders#show and feeds#show actions use the same template, the only difference is the
       # entries passed to it.
-      render 'entries/index.html.erb', locals: {entries: @entries, user: current_user}, layout: false
+      render 'entries/index', locals: {entries: @entries, user: current_user}, layout: false
     else
       head status: 404
     end
@@ -35,7 +35,7 @@ class FoldersController < ApplicationController
 
   def update
     @changed_data = current_user.add_feed_to_folder params[:feed_id], params[:id]
-    render 'update.json.erb', locals: {user: current_user,
+    render 'update', locals: {user: current_user,
                                        new_folder: @changed_data[:new_folder],
                                        feed: @changed_data[:feed],
                                        old_folder: @changed_data[:old_folder]}
@@ -48,7 +48,7 @@ class FoldersController < ApplicationController
 
   def remove
     @old_folder = current_user.remove_feed_from_folder params[:feed_id]
-    render 'remove.json.erb', locals: {user: current_user,
+    render 'remove', locals: {user: current_user,
                                        old_folder: @old_folder}
   rescue => e
     handle_error e
@@ -60,7 +60,7 @@ class FoldersController < ApplicationController
 
   def create
     @changed_data = current_user.add_feed_to_new_folder params[:new_folder][:feed_id], params[:new_folder][:title]
-    render 'create.json.erb', locals: {user: current_user,
+    render 'create', locals: {user: current_user,
                                        new_folder: @changed_data[:new_folder],
                                        old_folder: @changed_data[:old_folder]}
   rescue => e
