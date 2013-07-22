@@ -99,7 +99,7 @@ class Entry < ActiveRecord::Base
 
   def set_unread_state
     self.feed.users.each do |user|
-      if user.entry_states.where(:entry_id == self.id).blank?
+      if !EntryState.exists? user_id: user.id, entry_id: self.id
         entry_state = user.entry_states.build read: false
         entry_state.entry_id = self.id
         entry_state.save!
