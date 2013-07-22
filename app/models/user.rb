@@ -151,7 +151,9 @@ class User < ActiveRecord::Base
 
   def mark_unread_entries(feed)
     feed.entries.each do |entry|
-      self.entry_states.create({entry_id: entry.id, read: false},as: :admin)
+      entry_state = self.entry_states.build read: false
+      entry_state.entry_id = entry.id
+      entry_state.save!
     end
   end
 
