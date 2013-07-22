@@ -51,10 +51,13 @@ RSpec.configure do |config|
   # order dependency and want to debug it, you can fix the order by providing
   # the seed, which is printed after each run.
   #     --seed 1234
-  config.order = "random"
+  config.order = 'random'
 
   # To test controllers protected by Devise authentication
   config.include Devise::TestHelpers, :type => :controller
+
+  # Use capybara-webkit for javascript-enabled acceptance tests
+  Capybara.javascript_driver = :webkit
 
   # methods stubbed in all specs
   config.before :each do

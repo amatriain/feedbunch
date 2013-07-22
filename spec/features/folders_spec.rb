@@ -109,7 +109,9 @@ describe 'folders and feeds' do
 
     it 'shows a tick besides No Folder when the feed is not in a folder', js: true do
       read_feed @feed2.id
+      sleep 1
       find('#folder-management').click
+      sleep 1
       within '#folder-management-dropdown' do
         # tick should be only besides No Folder
         page.should have_css 'a[data-folder-id="none"] > i.icon-ok'

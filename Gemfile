@@ -103,7 +103,7 @@ group :test do
 
   # To simulate a user's browser during acceptance testing
   gem 'capybara'
-  gem 'selenium-webdriver'
+  gem 'capybara-webkit'
 
   # To be able to open the browser during debugging of acceptance tests
   gem 'launchy'
