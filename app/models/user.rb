@@ -151,9 +151,12 @@ class User < ActiveRecord::Base
 
   def mark_unread_entries(feed)
     feed.entries.each do |entry|
-      entry_state = self.entry_states.build read: false
-      entry_state.entry_id = entry.id
-      entry_state.save!
+      if self.entry_states.where(:entry_id == entry.id).blank?
+        entry_state = self.entry_states.build read: false
+        entry_state.entry_id = entry.id
+        entry_state.save!
+      end
+
     end
   end
 
