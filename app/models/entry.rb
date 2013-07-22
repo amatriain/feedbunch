@@ -99,9 +99,11 @@ class Entry < ActiveRecord::Base
 
   def set_unread_state
     self.feed.users.each do |user|
-      entry_state = user.entry_states.build read: false
-      entry_state.entry_id = self.id
-      entry_state.save!
+      if user.entry_states.where(:entry_id == self.id).blank?
+        entry_state = user.entry_states.build read: false
+        entry_state.entry_id = self.id
+        entry_state.save!
+      end
     end
   end
 
