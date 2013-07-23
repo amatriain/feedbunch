@@ -44,7 +44,6 @@ describe 'start page' do
     before :each do
       # click on a feed, then click on the Start link
       read_feed @feed1.id
-      sleep 1
       find('#start-page').click
       sleep 1
     end

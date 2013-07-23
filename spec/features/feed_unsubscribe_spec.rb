@@ -44,7 +44,6 @@ describe 'unsubscribe from feed' do
 
   it 'hides unsubscribe button when reading a whole folder', js: true do
     read_feed 'all'
-    sleep 1
     page.should have_css 'a#unsubscribe-feed.hidden', visible: false
     page.should have_css 'a#unsubscribe-feed.disabled', visible: false
   end

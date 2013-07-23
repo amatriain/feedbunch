@@ -53,7 +53,6 @@ describe 'refresh feeds' do
     end
 
     read_feed @feed1.id
-    sleep 1
     find('a#refresh-feed').click
     sleep 1
 
@@ -79,6 +78,7 @@ describe 'refresh feeds' do
     entry_state.save
 
     find('a#refresh-feed').click
+    sleep 1
 
     should_hide_alert 'problem-refreshing'
   end

@@ -87,7 +87,6 @@ describe 'folders and feeds' do
 
     it 'hides folder management button when reading a whole folder', js: true do
       read_feed 'all'
-      sleep 1
       page.should have_css 'a#folder-management.hidden', visible: false
       page.should have_css 'a#folder-management.disabled', visible: false
     end
@@ -109,7 +108,6 @@ describe 'folders and feeds' do
 
     it 'shows a tick besides No Folder when the feed is not in a folder', js: true do
       read_feed @feed2.id
-      sleep 1
       find('#folder-management').click
       sleep 1
       within '#folder-management-dropdown' do
@@ -429,7 +427,6 @@ describe 'folders and feeds' do
 
         # Without reloading the page, move @feed2 to the new folder
         read_feed @feed2.id
-        sleep 1
         find('#folder-management').click
         within '#folder-management-dropdown ul.dropdown-menu' do
           find("a[data-folder-id='#{new_folder.id}']").click

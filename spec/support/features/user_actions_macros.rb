@@ -8,6 +8,7 @@ def login_user_for_feature(user)
   fill_in 'Email', with: user.email
   fill_in 'Password', with: user.password
   click_on 'Sign in'
+  sleep 1
 end
 
 ##
@@ -19,6 +20,7 @@ def open_folder(folder_id)
   # Open folder only if it is closed
   if !page.has_css? "#folders-list ul#feeds-#{folder_id}.in"
     find("a[data-target='#feeds-#{folder_id}']").click
+    sleep 1
   end
 end
 
@@ -42,6 +44,7 @@ def read_feed(feed_id, folder_id = 'all')
 
     # Click on feed to read its entries
     find("[data-sidebar-feed][data-feed-id='#{feed_id}']").click
+    sleep 1
   end
 end
 
@@ -58,6 +61,7 @@ def read_folder(folder_id)
   open_folder folder_id
   within "#folders-list li#folder-#{folder_id}" do
     find("[data-sidebar-feed][data-feed-id='all']").click
+    sleep 1
   end
 end
 
@@ -98,8 +102,8 @@ end
 
 def add_feed_to_new_folder(feed_id, title)
   read_feed feed_id
-  sleep 1
   find('#folder-management').click
+  sleep 1
   within '#folder-management-dropdown ul.dropdown-menu' do
     find('a[data-folder-id="new"]').click
   end
@@ -118,8 +122,8 @@ end
 
 def add_feed_to_folder(feed_id, folder_id)
   read_feed feed_id
-  sleep 1
   find('#folder-management').click
+  sleep 1
   within '#folder-management-dropdown ul.dropdown-menu' do
     find("a[data-folder-id='#{folder_id}']").click
   end
@@ -133,11 +137,12 @@ end
 
 def remove_feed_from_folder(feed_id)
   read_feed feed_id
-  sleep 1
   find('#folder-management').click
+  sleep 1
   within '#folder-management-dropdown ul.dropdown-menu' do
     find('a[data-folder-id="none"]').click
   end
+  sleep 1
 end
 
 ##
