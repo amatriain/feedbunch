@@ -10,6 +10,7 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rails'
 require 'capybara/rspec'
+require 'capybara-webkit'
 require 'database_cleaner'
 require 'nokogiri'
 
