@@ -2,7 +2,7 @@ language: ruby
 rvm:
   - "1.9.3"
 script:
-  - "brakeman -z  --skip-files config/initializers/secret_token.rb"
+  - "bundle exec brakeman -z  --skip-files config/initializers/secret_token.rb"
   - "rake db:migrate"
   - "bundle exec rspec spec"
 env: RAILS_ENV=ci
