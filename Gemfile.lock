@@ -42,7 +42,7 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.5)
     arel (3.0.2)
-    aws-sdk (1.13.0)
+    aws-sdk (1.14.0)
       json (~> 1.4)
       nokogiri (< 1.6.0)
       uuidtools (~> 2.1)
