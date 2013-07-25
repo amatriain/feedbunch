@@ -162,6 +162,7 @@ describe 'feed entries' do
     entry_should_be_marked_read @entry1.id
 
     find("[data-unread-entry-id='#{@entry1.id}']").click
+    sleep 1
 
     entry_should_be_marked_unread @entry1.id
 
