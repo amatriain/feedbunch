@@ -247,7 +247,11 @@ describe 'folders and feeds' do
       it 'shows an alert if there is a problem adding a feed to a folder', js: true do
         User.any_instance.stub(:add_feed_to_folder).and_raise StandardError.new
 
-        add_feed_to_folder @feed2.id, @folder1.id
+        read_feed @feed2.id
+        open_folder_dropdown
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find("a[data-folder-id='#{@folder1.id}']").click
+        end
 
         should_show_alert 'problem-folder-management'
       end
@@ -256,7 +260,7 @@ describe 'folders and feeds' do
     context 'remove feed from folder' do
 
       it 'removes a feed from a folder', js: true do
-        remove_feed_from_folder @feed1.id
+        remove_feed_from_folder @feed1.id, @feed1.id
 
         # Feed should be under the "All subscriptions" folder, without a data-folder-id attribute (because it doesn't belong to a folder)
         page.should have_css "li#folder-all > ul#feeds-all > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='none']", visible: false
@@ -270,20 +274,20 @@ describe 'folders and feeds' do
         @folder1.feeds << @feed2
 
         visit feeds_path
-        remove_feed_from_folder @feed1.id
+        remove_feed_from_folder @feed1.id, @folder1.id
 
         # Page should still have @folder1 with @feed2 under it
         page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
       end
 
       it 'removes a folder from the sidebar when it has no feeds under it', js: true do
-        remove_feed_from_folder @feed1.id
+        remove_feed_from_folder @feed1.id, @folder1.id
 
         page.should_not have_css "#sidebar #folder-#{@folder1.id}"
       end
 
       it 'removes a folder from the dropdown when it has no feeds under it', js: true do
-        remove_feed_from_folder @feed1.id
+        remove_feed_from_folder @feed1.id, @folder1.id
 
         page.should_not have_css "#folder-management-dropdown a[data-folder-id='#{@folder1.id}']", visible: false
       end
@@ -291,7 +295,11 @@ describe 'folders and feeds' do
       it 'shows an alert when there is a problem removing a feed from a folder', js: true do
         User.any_instance.stub(:remove_feed_from_folder).and_raise StandardError.new
 
-        remove_feed_from_folder @feed1.id
+        read_feed @feed1.id
+        open_folder_dropdown
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="none"]').click
+        end
 
         should_show_alert 'problem-folder-management'
       end
@@ -438,7 +446,17 @@ describe 'folders and feeds' do
       it 'shows an alert if there is a problem adding the feed to the new folder', js: true do
         User.any_instance.stub(:add_feed_to_new_folder).and_raise StandardError.new
         title = 'New folder'
-        add_feed_to_new_folder @feed1.id, title
+
+        read_feed @feed1.id
+        open_folder_dropdown
+        within '#folder-management-dropdown ul.dropdown-menu' do
+          find('a[data-folder-id="new"]').click
+        end
+        page.should have_css '#new-folder-popup'
+        within '#new-folder-popup' do
+          fill_in 'Title', with: title
+          find('#new-folder-submit').click
+        end
 
         page.should have_css '#problem-new-folder'
 

@@ -127,6 +127,8 @@ end
 # Click on a feed to read it, and then click on the Folder dropdown to move it to a newly created folder
 #
 # Receives as arguments the id of the feed and the title of the new folder.
+#
+# This method ensures that the new folder appears in the sidebar before returning.
 
 def add_feed_to_new_folder(feed_id, title)
   read_feed feed_id
@@ -134,9 +136,14 @@ def add_feed_to_new_folder(feed_id, title)
   within '#folder-management-dropdown ul.dropdown-menu' do
     find('a[data-folder-id="new"]').click
   end
+  page.should have_css '#new-folder-popup'
   within '#new-folder-popup' do
     fill_in 'Title', with: title
     find('#new-folder-submit').click
+  end
+  # Ensure new feed appears in the sidebar
+  within '#folders-list' do
+    page.should have_text title
   end
 end
 
@@ -161,14 +168,19 @@ end
 ##
 # Click on a feed to read it, and then click on the Folder dropdown to remove it from its current folder.
 #
-# Receives as arguments the id of the feed.
+# Receives as arguments the id of the feed and the id of the folder.
+#
+# This method ensures that the feed has been removed from the folder before returning.
 
-def remove_feed_from_folder(feed_id)
+def remove_feed_from_folder(feed_id, folder_id)
   read_feed feed_id
   open_folder_dropdown
   within '#folder-management-dropdown ul.dropdown-menu' do
     find('a[data-folder-id="none"]').click
   end
+
+  # Ensure feed has been removed from folder
+  page.should_not have_css "#folders-list li#folder-#{folder_id} [data-sidebar-feed][data-feed-id='#{feed_id}']"
 end
 
 ##
