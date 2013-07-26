@@ -92,14 +92,14 @@ describe 'folders and feeds' do
     end
 
     it 'drops down a list of all user folders', js: true do
-      find('#folder-management').click
+      open_folder_dropdown
       within '#folder-management-dropdown ul.dropdown-menu' do
         page.should have_content @folder1.title
       end
     end
 
     it 'has No Folder and New Folder links in the dropdown', js: true do
-      find('#folder-management').click
+      open_folder_dropdown
       within '#folder-management-dropdown' do
         page.should have_css 'a[data-folder-id="none"]'
         page.should have_css 'a[data-folder-id="new"]'
@@ -108,8 +108,7 @@ describe 'folders and feeds' do
 
     it 'shows a tick besides No Folder when the feed is not in a folder', js: true do
       read_feed @feed2.id
-      find('#folder-management').click
-      sleep 1
+      open_folder_dropdown
       within '#folder-management-dropdown' do
         # tick should be only besides No Folder
         page.should have_css 'a[data-folder-id="none"] > i.icon-ok'
@@ -118,7 +117,7 @@ describe 'folders and feeds' do
     end
 
     it 'shows a tick besides the folder name when the feed is in a folder', js: true do
-      find('#folder-management').click
+      open_folder_dropdown
       within '#folder-management-dropdown' do
         # tick should be only besides @folder1
         page.should_not have_css 'li[data-folder-id="none"] a > i.icon-ok'
@@ -181,7 +180,7 @@ describe 'folders and feeds' do
         page.should_not have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
 
         # Folder should be removed from the dropdown
-        find('#folder-management').click
+        open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           page.should_not have_content @folder1.title
           page.should_not have_css "a[data-folder-id='#{@folder1.id}']"
@@ -203,7 +202,7 @@ describe 'folders and feeds' do
         page.should have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
 
         # Folder should not be removed from the dropdown
-        find('#folder-management').click
+        open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           page.should have_content @folder1.title
           page.should have_css "a[data-folder-id='#{@folder1.id}']"
@@ -238,7 +237,7 @@ describe 'folders and feeds' do
         page.should have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
 
         # Folder should not be removed from the dropdown
-        find('#folder-management').click
+        open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           page.should have_content @folder1.title
           page.should have_css "a[data-folder-id='#{@folder1.id}']"
@@ -301,7 +300,7 @@ describe 'folders and feeds' do
     context 'add feed to new folder' do
 
       it 'shows a popup to enter the folder name', js: true do
-        find('#folder-management').click
+        open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           find('a[data-folder-id="new"]').click
         end
@@ -332,7 +331,7 @@ describe 'folders and feeds' do
         page.should_not have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
 
         # Folder should be removed from the dropdown
-        find('#folder-management').click
+        open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           page.should_not have_content @folder1.title
           page.should_not have_css "a[data-folder-id='#{@folder1.id}']"
@@ -359,7 +358,7 @@ describe 'folders and feeds' do
         page.should have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
 
         # Folder should not be removed from the dropdown
-        find('#folder-management').click
+        open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           page.should have_content @folder1.title
           page.should have_css "a[data-folder-id='#{@folder1.id}']"
@@ -407,7 +406,7 @@ describe 'folders and feeds' do
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
         # Click on Folder button to open the dropdown
-        find('#folder-management').click
+        open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           page.should have_content title
           # New folder should be in the dropdown, with a tick to indicate @feed1 is in the folder
@@ -427,7 +426,7 @@ describe 'folders and feeds' do
 
         # Without reloading the page, move @feed2 to the new folder
         read_feed @feed2.id
-        find('#folder-management').click
+        open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           find("a[data-folder-id='#{new_folder.id}']").click
         end

@@ -9,12 +9,10 @@ describe 'import subscriptions' do
     login_user_for_feature @user
     visit feeds_path
     find('#start-page').click
-    sleep 1
   end
 
   it 'shows file upload popup', js: true do
     find('a#start-import-subscriptions').click
-    sleep 1
     page.should have_css '#import-subscriptions-popup', visible: true
   end
 
@@ -23,7 +21,6 @@ describe 'import subscriptions' do
     it 'show link if the user has never run an import', js: true do
       page.should have_css '.navbar a#nav-import-subscriptions'
       find('.navbar a#nav-import-subscriptions').click
-      sleep 1
       page.should have_css '#import-subscriptions-popup', visible: true
     end
 
@@ -52,7 +49,6 @@ describe 'import subscriptions' do
       visit edit_user_registration_path
       page.should have_css '.navbar a#nav-import-subscriptions'
       find('.navbar a#nav-import-subscriptions').click
-      sleep 1
       page.should have_css '#import-subscriptions-popup', visible: true
     end
 
@@ -63,11 +59,10 @@ describe 'import subscriptions' do
     before :each do
       data_file = File.join File.dirname(__FILE__), '..', 'attachments', 'feedbunch@gmail.com-takeout.zip'
       find('a#start-import-subscriptions').click
-      sleep 1
+      page.should have_css '#import_subscriptions_file'
       attach_file 'import_subscriptions_file', data_file
-      sleep 1
       find('#import-subscriptions-submit').click
-      sleep 1
+      page.should have_text 'Your subscriptions are being imported into Feedbunch'
     end
 
     after :each do
@@ -86,7 +81,6 @@ describe 'import subscriptions' do
       data_import.save!
 
       visit feeds_path
-      sleep 1
 
       page.should have_content 'There\'s been an error importing your subscriptions'
     end
@@ -97,7 +91,6 @@ describe 'import subscriptions' do
       data_import.save!
 
       visit feeds_path
-      sleep 1
 
       page.should have_content 'Your subscriptions have been successfully imported into Feedbunch'
     end
@@ -107,14 +100,12 @@ describe 'import subscriptions' do
       @user.data_import.total_feeds = 412
       @user.data_import.processed_feeds = 77
       @user.data_import.save
-      sleep 6
       page.should have_content 'Feeds imported: 77 of 412'
     end
 
     it 'changes message when import finishes successfully', js: true do
       @user.data_import.status = DataImport::SUCCESS
       @user.data_import.save
-      sleep 6
       page.should have_content 'Your subscriptions have been successfully imported into Feedbunch'
     end
 
@@ -122,14 +113,12 @@ describe 'import subscriptions' do
       read_feed @feed.id
       @user.data_import.status = DataImport::SUCCESS
       @user.data_import.save
-      sleep 6
       page.should have_content 'Your subscribed feeds have been imported into Feedbunch'
     end
 
     it 'changes message when import finishes with an error', js: true do
       @user.data_import.status = DataImport::ERROR
       @user.data_import.save
-      sleep 6
       page.should have_content 'There\'s been an error importing your subscriptions'
     end
 
@@ -137,7 +126,6 @@ describe 'import subscriptions' do
       read_feed @feed.id
       @user.data_import.status = DataImport::ERROR
       @user.data_import.save
-      sleep 6
       page.should have_content 'There has been an error while trying to import your subscribed feeds into Feedbunch'
     end
   end

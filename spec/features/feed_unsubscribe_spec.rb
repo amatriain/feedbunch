@@ -51,7 +51,6 @@ describe 'unsubscribe from feed' do
   it 'shows a confirmation popup', js: true do
     read_feed @feed1.id
     find('#unsubscribe-feed').click
-    sleep 1
     page.should have_css '#unsubscribe-feed-popup'
   end
 

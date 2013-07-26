@@ -45,7 +45,6 @@ describe 'start page' do
       # click on a feed, then click on the Start link
       read_feed @feed1.id
       find('#start-page').click
-      sleep 1
     end
 
     it 'shows start page', js: true do

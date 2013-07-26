@@ -60,6 +60,11 @@ RSpec.configure do |config|
   # Use capybara-webkit for javascript-enabled acceptance tests
   Capybara.javascript_driver = :webkit
 
+  # Make capybara wait for a long time for things to appear in the DOM,
+  # in case there's a long-running AJAX call running which changes the DOM after a few seconds
+  # (or we're just running in a slow CI environment)
+  Capybara.default_wait_time = 10
+
   # methods stubbed in all specs
   config.before :each do
     # Ensure no HTTP calls are made during testing

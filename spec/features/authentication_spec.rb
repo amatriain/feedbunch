@@ -57,8 +57,7 @@ describe 'authentication' do
         confirmation_link = mail_should_be_sent path: confirmation_path, to: user.email
 
         # Test that user cannot login before confirming the email address
-        login_user_for_feature user
-        user_should_not_be_logged_in
+        failed_login_user_for_feature new_email, new_password
 
         # Follow link received by email, user should get logged in
         visit confirmation_link
@@ -67,7 +66,6 @@ describe 'authentication' do
 
         # Test that user can login
         login_user_for_feature user
-        user_should_be_logged_in
       end
 
       it 'does not sign up user if email already registered' do
@@ -82,25 +80,24 @@ describe 'authentication' do
         mail_should_not_be_sent
 
         # Test that user cannot login
-        login_user_for_feature user
-        user_should_not_be_logged_in
+        failed_login_user_for_feature user.email, new_password
       end
 
       it 'does not sign up user if both password fields do not match' do
         new_email = 'new_email@test.com'
         new_password = 'new_password'
-        user = FactoryGirl.build :user, email: new_email, password: new_password
-        fill_in 'Email', with: @user.email
+        different_password = 'different_password'
+        fill_in 'Email', with: new_email
         fill_in 'Password', with: new_password
-        fill_in 'Confirm password', with: 'different_password'
+        fill_in 'Confirm password', with: different_password
         click_on 'Sign up'
 
         # test that a confirmation email is not sent
         mail_should_not_be_sent
 
         # Test that user cannot login
-        login_user_for_feature user
-        user_should_not_be_logged_in
+        failed_login_user_for_feature new_email, new_password
+        failed_login_user_for_feature new_email, different_password
       end
 
     end
@@ -134,13 +131,11 @@ describe 'authentication' do
         click_on 'Logout'
 
         # test that user cannot login with old password
-        login_user_for_feature @user
-        user_should_not_be_logged_in
+        failed_login_user_for_feature @user.email, @user.password
 
         # test that user can login with new password
         @user.password = new_password
         login_user_for_feature @user
-        user_should_be_logged_in
       end
 
       it 'does not allow password change if both fields do not match' do
@@ -156,8 +151,9 @@ describe 'authentication' do
 
         # submit password change form
         new_password = 'new_password'
+        different_password = 'different_password'
         fill_in 'New password', with: new_password
-        fill_in 'Confirm password', with: 'different_password'
+        fill_in 'Confirm password', with: different_password
         click_on 'Change your password'
 
         # after submit, user should NOT be logged in
@@ -165,13 +161,11 @@ describe 'authentication' do
 
         # test that user can login with old password
         login_user_for_feature @user
-        user_should_be_logged_in
         click_on 'Logout'
 
         # test that user cannot login with new password
-        @user.password = new_password
-        login_user_for_feature @user
-        user_should_not_be_logged_in
+        failed_login_user_for_feature @user.email, new_password
+        failed_login_user_for_feature @user.email, different_password
       end
 
       it 'does not send password change email to an unregistered address' do
@@ -209,8 +203,7 @@ describe 'authentication' do
         confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
 
         # Check that user cannot log in before confirming
-        login_user_for_feature user
-        user_should_not_be_logged_in
+        failed_login_user_for_feature new_email, new_password
 
         # Confirm email, user should be logged in automatically
         visit confirmation_link
@@ -220,7 +213,6 @@ describe 'authentication' do
         click_on 'Logout'
         visit new_user_session_path
         login_user_for_feature user
-        user_should_be_logged_in
       end
 
       it 'does not send confirmation email to a confirmed user' do
@@ -266,24 +258,22 @@ describe 'authentication' do
 
       it 'locks user after too many failed authentication attempts' do
         # lock user after 5 failed authentication attempts
-        @user.password = 'wrong_password'
-        (1..5).each do
-          login_user_for_feature @user
+        wrong_password = 'wrong_password'
+        (1..6).each do
+          failed_login_user_for_feature @user.email, wrong_password
         end
 
         # Check that user is locked
-        login_user_for_feature @user
-        user_should_not_be_logged_in
+        failed_login_user_for_feature @user.email, @user.password
       end
 
       it 'automatically sends unlock email to a locked user' do
         # Lock user after 5 failed authentication attempts
         # The next authentication attempt the app sends an unlock email to
         # notify the user and give him the chance to unlock his account.
-        correct_password = @user.password
-        @user.password = 'wrong_password'
+        wrong_password = 'wrong_password'
         (1..6).each do
-          login_user_for_feature @user
+          failed_login_user_for_feature @user.email, wrong_password
         end
 
         # Check that unlock email is sent
@@ -291,17 +281,14 @@ describe 'authentication' do
 
         # Check that can log in after following unlock link
         visit unlock_link
-        @user.password = correct_password
         login_user_for_feature @user
-        user_should_be_logged_in
       end
 
       it 'resends unlock email to a locked user' do
         # lock user after 5 failed authentication attempts
-        correct_password = @user.password
-        @user.password = 'wrong_password'
+        wrong_password = 'wrong_password'
         (1..6).each do
-          login_user_for_feature @user
+          failed_login_user_for_feature @user.email, wrong_password
         end
 
         # Remove aumatically sent email from queue
@@ -317,9 +304,7 @@ describe 'authentication' do
 
         # Check that can log in after following unlock link
         visit unlock_link
-        @user.password = correct_password
         login_user_for_feature @user
-        user_should_be_logged_in
       end
 
       it 'does not send unlock email to an unlocked user' do
@@ -425,18 +410,15 @@ describe 'authentication' do
 
         # test that before confirmation I can login with the old email
         login_user_for_feature @user
-        user_should_be_logged_in
         click_on 'Logout'
 
         # test that after confirmation I cannot login with the old email
         visit confirmation_link
-        login_user_for_feature @user
-        user_should_not_be_logged_in
+        failed_login_user_for_feature @user.email, @user.password
 
         # test that after confirmation I can login with the new email
         @user.email = new_email
         login_user_for_feature @user
-        user_should_be_logged_in
       end
 
       it 'does not allow email change if current password is left blank' do
@@ -450,7 +432,6 @@ describe 'authentication' do
 
         # test that I can login with the old email
         login_user_for_feature @user
-        user_should_be_logged_in
       end
 
       it 'does not allow email change if current password is filled with wrong password' do
@@ -465,7 +446,6 @@ describe 'authentication' do
 
         # test that I can login with the old email
         login_user_for_feature @user
-        user_should_be_logged_in
         click_on 'Logout'
       end
 
@@ -478,13 +458,11 @@ describe 'authentication' do
         click_on 'Logout'
 
         # test that I cannot login with the old password
-        login_user_for_feature @user
-        user_should_not_be_logged_in
+        failed_login_user_for_feature @user, @user.password
 
         # test that I can login with the new password
         @user.password = new_password
         login_user_for_feature @user
-        user_should_be_logged_in
       end
 
       it 'does not allow password change if current password is left blank' do
@@ -496,7 +474,6 @@ describe 'authentication' do
 
         # test that I can login with the old password
         login_user_for_feature @user
-        user_should_be_logged_in
       end
 
       it 'does not allow password change if current password is filled with wrong password' do
@@ -509,7 +486,6 @@ describe 'authentication' do
 
         # test that I can login with the old password
         login_user_for_feature @user
-        user_should_be_logged_in
       end
 
       it 'does not allow password change if both password fields do not match' do
@@ -522,7 +498,6 @@ describe 'authentication' do
 
         # test that I can login with the old password
         login_user_for_feature @user
-        user_should_be_logged_in
       end
 
       it 'deletes account', js: true do

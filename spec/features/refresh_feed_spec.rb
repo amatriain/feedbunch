@@ -54,7 +54,6 @@ describe 'refresh feeds' do
 
     read_feed @feed1.id
     find('a#refresh-feed').click
-    sleep 1
 
     # entry2 and entry3 should appear, @entry1 should not appear because it's already read
     page.should_not have_content @entry1.title
@@ -78,7 +77,6 @@ describe 'refresh feeds' do
     entry_state.save
 
     find('a#refresh-feed').click
-    sleep 1
 
     should_hide_alert 'problem-refreshing'
   end
