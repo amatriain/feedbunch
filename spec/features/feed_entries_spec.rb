@@ -144,10 +144,7 @@ describe 'feed entries' do
   it 'marks all entries as read', js: true do
     mark_all_as_read
 
-    entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
-    entry_state1.read.should be_true
-    entry_state2 = EntryState.where(user_id: @user.id, entry_id: @entry2.id).first
-    entry_state2.read.should be_true
+    page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
 
     # On refresh, no entries should appear for @feed
     visit feeds_path

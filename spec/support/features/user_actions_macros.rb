@@ -1,8 +1,6 @@
 ##
 # Perform the actions a user would do to login.
 #
-# This method ensures that the user has logged in successfully.
-#
 # This method is intended to be called during an acceptance (also called feature) test.
 
 def login_user_for_feature(user)
@@ -18,8 +16,6 @@ end
 # because of a wrong username, wrong password, locked user or any other reason.
 #
 # Receives as arguments the username and password to enter into the login form.
-#
-# This method ensures that the login attempt has failed.
 #
 # This method is intended to be called during an acceptance test.
 
@@ -40,6 +36,7 @@ def open_folder(folder_id)
   # Open folder only if it is closed
   if !page.has_css? "#folders-list ul#feeds-#{folder_id}.in"
     find("a[data-target='#feeds-#{folder_id}']").click
+    page.should have_css "#folders-list ul#feeds-#{folder_id}.in"
   end
 end
 
@@ -55,8 +52,6 @@ end
 # If the folder_id argument is not present, it defaults to "all".
 #
 # If the feed is not under the folder passed as argument, the test will immediately fail.
-#
-# This method ensures that the feed has finished loading (by checking the absence of the "Loading..." message).
 
 def read_feed(feed_id, folder_id = 'all')
   open_folder folder_id
@@ -67,7 +62,7 @@ def read_feed(feed_id, folder_id = 'all')
     find("[data-sidebar-feed][data-feed-id='#{feed_id}']").click
   end
 
-  # Ensure feed has finished loading
+  # Ensure entries have finished loading
   page.should_not have_css 'div#loading'
 end
 
@@ -85,6 +80,9 @@ def read_folder(folder_id)
   within "#folders-list li#folder-#{folder_id}" do
     find("[data-sidebar-feed][data-feed-id='all']").click
   end
+
+  # Ensure entries have finished loading
+  page.should_not have_css 'div#loading'
 end
 
 ##
@@ -93,30 +91,39 @@ end
 # If the entry is not currently in the entries list, the test will immediately fail.
 
 def read_entry(entry_id)
-  within 'ul#feed-entries' do
-    find("[data-entry-id='#{entry_id}']").click
+  page.should have_css "#feed-entries li#entry-#{entry_id}"
+
+  # Open entry only if it is closed
+  if !page.has_css? "#feed-entries div#entry-#{entry_id}-summary.in"
+    find("#feed-entries [data-entry-id='#{entry_id}']").click
+    page.should have_css "#feed-entries div#entry-#{entry_id}-summary.in"
   end
 end
 
 ##
 # Click on the "mark all as read" button to mark all currently visible entries as read.
+#
 # If the button is not currently visible the test immediately fails.
 
 def mark_all_as_read
+  page.should have_css '#read-all-button'
   find('#read-all-button').click
+  page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
 end
 
 ##
 # Click on the "Show read entries" button so that all feed entries are displayed, including read ones.
 
 def show_read_entries
+  page.should have_css '#show-read-button'
   find('#show-read-button').click
+
+  # Ensure entries have finished loading
+  page.should_not have_css 'div#loading'
 end
 
 ##
 # Click on the "folders" button to open the folders dropdown for the currently selected feed.
-#
-# This method ensures that the dropdown has actually opened.
 
 def open_folder_dropdown
   find('#folder-management').click
@@ -127,8 +134,6 @@ end
 # Click on a feed to read it, and then click on the Folder dropdown to move it to a newly created folder
 #
 # Receives as arguments the id of the feed and the title of the new folder.
-#
-# This method ensures that the new folder appears in the sidebar before returning.
 
 def add_feed_to_new_folder(feed_id, title)
   read_feed feed_id
@@ -151,8 +156,6 @@ end
 # Click on a feed to read it, and then click on the Folder dropdown to move it to an already existing folder
 #
 # Receives as arguments the id of the feed and the id of the folder.
-#
-# This method ensures that the feed has been moved to the folder before returning.
 
 def add_feed_to_folder(feed_id, folder_id)
   read_feed feed_id
@@ -169,8 +172,6 @@ end
 # Click on a feed to read it, and then click on the Folder dropdown to remove it from its current folder.
 #
 # Receives as arguments the id of the feed and the id of the folder.
-#
-# This method ensures that the feed has been removed from the folder before returning.
 
 def remove_feed_from_folder(feed_id, folder_id)
   read_feed feed_id
@@ -189,10 +190,14 @@ end
 
 def subscribe_feed(url)
   find('#add-subscription').click
+  page.should have_css '#subscribe-feed-popup'
   within '#subscribe-feed-popup' do
     fill_in 'Feed', with: url
     find('#subscribe-submit').click
   end
+
+  # Ensure entries have finished loading
+  page.should_not have_css 'div#loading'
 end
 
 ##
@@ -203,4 +208,7 @@ def unsubscribe_feed(feed_id)
   read_feed feed_id
   find('#unsubscribe-feed').click
   find('#unsubscribe-submit').click
+
+  # Ensure user is shown the start page
+  page.should have_css '#sidebar li.active a#start-page'
 end

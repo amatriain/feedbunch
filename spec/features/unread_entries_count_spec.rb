@@ -73,7 +73,7 @@ describe 'unread entries count' do
     @folder1.feeds << @feed2
     visit feeds_path
 
-    remove_feed_from_folder @folder1.id
+    remove_feed_from_folder @feed1.id, @folder1.id
 
     unread_folder_entries_should_eq @folder1.id, 1
   end

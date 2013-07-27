@@ -41,7 +41,22 @@ RSpec.configure do |config|
   # Clean the database between tests with database_cleaner
   config.before(:suite)  {DatabaseCleaner.strategy = :deletion}
   config.before(:each) {DatabaseCleaner.start}
-  config.after(:each) {DatabaseCleaner.clean}
+  config.after(:each) {
+    # If database is locked when test is finished (because some database operations are not yet finished),
+    # sleep 1 second and try to clean it again. Do it a maximum of 15 times before giving up.
+    num_retries = 0
+    begin
+      DatabaseCleaner.clean
+    rescue ActiveRecord::StatementInvalid => e
+      num_retries += 1
+      if num_retries < 15
+        sleep 1
+        retry
+      else
+        raise e
+      end
+    end
+  }
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of

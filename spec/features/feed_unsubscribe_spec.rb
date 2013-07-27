@@ -70,18 +70,11 @@ describe 'unsubscribe from feed' do
     should_show_alert 'problem-unsubscribing'
   end
 
-  it 'deletes a feed if there are no users subscribed to it', js: true do
-    Feed.exists?(@feed1.id).should be_true
-
-    unsubscribe_feed @feed1.id
-
-    Feed.exists?(@feed1.id).should be_false
-  end
-
   it 'makes feed disappear from folders', js: true do
     folder = FactoryGirl.build :folder, user_id: @user.id
     @user.folders << folder
     folder.feeds << @feed1
+
     visit feeds_path
 
     # Feed should be in the folder and in the "all subscriptions" folder
@@ -124,10 +117,9 @@ describe 'unsubscribe from feed' do
     folder.feeds << @feed1
 
     visit feeds_path
-    unsubscribe_feed @feed1.id
+    page.should have_content folder.title
 
-    # folder should be deleted from the database
-    Folder.exists?(folder.id).should be_false
+    unsubscribe_feed @feed1.id
 
     # Folder should be removed from the sidebar
     within '#sidebar #folders-list' do
@@ -151,10 +143,9 @@ describe 'unsubscribe from feed' do
     folder.feeds << @feed1 << @feed2
 
     visit feeds_path
-    unsubscribe_feed @feed1.id
+    page.should have_content folder.title
 
-    # folder should not be deleted from the database
-    Folder.exists?(folder.id).should be_true
+    unsubscribe_feed @feed1.id
 
     # Folder should not be removed from the sidebar
     within '#sidebar #folders-list' do
