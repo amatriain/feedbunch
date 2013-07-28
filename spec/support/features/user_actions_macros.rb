@@ -128,7 +128,7 @@ end
 def open_folder_dropdown
   #Only open dropdown if it's closed
   page.should_not have_css '#folder-management-dropdown.open'
-  find('#folder-management').click
+  find('a#folder-management').click
   page.should have_css '#folder-management-dropdown.open'
 end
 
