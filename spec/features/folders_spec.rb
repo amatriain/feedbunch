@@ -170,9 +170,6 @@ describe 'folders and feeds' do
       it 'removes folder if it has no more feeds', js: true do
         add_feed_to_folder @feed1.id, @new_folder.id
 
-        # Folder should be deleted from the database
-        Folder.exists?(@folder1.id).should be_false
-
         # Folder should be removed from the sidebar
         within '#sidebar #folders-list' do
           page.should_not have_content @folder1.title
@@ -191,9 +188,6 @@ describe 'folders and feeds' do
       it 'does not change feed/folder if user tries to move a feed to the same folder it already is at', js: true do
         # @feed1 is already in @folder1, user clicks on @folder1 in the dropdown
         add_feed_to_folder @feed1.id, @folder1.id
-
-        # Folder should not be deleted from the database
-        Folder.exists?(@folder1.id).should be_true
 
         # Folder should not be removed from the sidebar
         within '#sidebar #folders-list' do
@@ -226,9 +220,6 @@ describe 'folders and feeds' do
 
         visit feeds_path
         add_feed_to_folder @feed1.id, @new_folder.id
-
-        # Folder should not be deleted from the database
-        Folder.exists?(@folder1.id).should be_true
 
         # Folder should not be removed from the sidebar
         within '#sidebar #folders-list' do
