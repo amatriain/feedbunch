@@ -103,8 +103,7 @@ describe 'feed entries' do
   it 'marks as read an entry when reading a feed and opening an entry', js: true do
     read_entry @entry1.id
 
-    entry_state = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
-    entry_state.read.should be_true
+    entry_should_be_marked_read @entry1.id
 
     # On refresh, @entry1 should no longer appear
     visit feeds_path
@@ -125,8 +124,7 @@ describe 'feed entries' do
     # No alert should appear
     should_hide_alert 'problem-entry-state-change'
 
-    entry_state = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
-    entry_state.read.should be_true
+    entry_should_be_marked_read @entry1.id
 
     # On refresh, @entry1 should no longer appear
     visit feeds_path
