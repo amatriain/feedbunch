@@ -127,7 +127,7 @@ end
 
 def open_folder_dropdown
   find('#folder-management').click
-  page.should have_css '#folder-management-dropdown ul.dropdown-menu'
+  page.should have_css 'ul.dropdown-menu a[data-folder-remove-path]'
 end
 
 ##
