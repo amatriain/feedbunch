@@ -6,10 +6,6 @@ script:
   - "rake db:migrate"
   - "bundle exec rspec spec"
 env: RAILS_ENV=ci
-before_install:
-  - "gem install bundler"
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
 before_script:
   - "cp config/database.yml.ci config/database.yml"
   - "cp config/initializers/secret_token.rb.ci config/initializers/secret_token.rb"
