@@ -126,8 +126,13 @@ end
 # Click on the "folders" button to open the folders dropdown for the currently selected feed.
 
 def open_folder_dropdown
+  # Only click on button if it's enabled
+  page.should have_css '#folder-management-dropdown a#folder-management'
+  page.should_not have_css '#folder-management-dropdown a#folder-management.disabled'
+
   #Only open dropdown if it's closed
   page.should_not have_css '#folder-management-dropdown.open'
+
   find('a#folder-management').click
   page.should have_css '#folder-management-dropdown.open'
 end
