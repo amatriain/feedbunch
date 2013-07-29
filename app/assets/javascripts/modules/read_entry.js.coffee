@@ -15,10 +15,14 @@ $(document).ready ->
       update_entry_state_path = $(this).attr "data-entry-state-update-path"
       entry_id = $(this).attr "data-entry-summary-id"
 
-      mark_entry_as_read entry_id
+      # Function to handle result returned by the server
+      entry_read_result = (data, status, xhr) ->
+        mark_entry_as_read entry_id
+        update_unread_counts data
+
       $.post(update_entry_state_path,
         {_method:"put", entry_ids: [entry_id], state: "read"},
-        update_entry_state_result, "json")
+        entry_read_result, "json")
         .fail ->
           Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
 
@@ -31,12 +35,17 @@ $(document).ready ->
       entries = []
       $("[data-entry-id]").each ->
         entry_id = $(this).attr "data-entry-id"
-        mark_entry_as_read entry_id
         entries.push entry_id
+
+      # Function to handle result returned by the server
+      all_read_result = (data, status, xhr) ->
+        for id in entries
+          mark_entry_as_read id
+        update_unread_counts data
 
       $.post(update_entry_state_path,
         {_method:"put", entry_ids: entries, state: "read"},
-          update_entry_state_result, "json")
+        all_read_result, "json")
           .fail ->
             Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
 
@@ -47,10 +56,14 @@ $(document).ready ->
     update_entry_state_path = $(this).attr "data-entry-state-update-path"
     entry_id = $(this).attr "data-unread-entry-id"
 
-    mark_entry_as_unread entry_id
+    # Function to handle result returned by the server
+    entry_unread_result = (data, status, xhr) ->
+      mark_entry_as_unread entry_id
+      update_unread_counts data
+      
     $.post(update_entry_state_path,
       {_method:"put", entry_ids: [entry_id], state: "unread"},
-        update_entry_state_result, "json")
+      entry_unread_result, "json")
           .fail ->
             Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
 
@@ -81,7 +94,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Function to handle result returned by the server
   #-------------------------------------------------------
-  update_entry_state_result = (data, status, xhr) ->
+  update_unread_counts = (data) ->
     Feedbunch.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
 
     if data["feeds"]
