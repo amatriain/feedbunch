@@ -6,11 +6,23 @@ a.entry-unread{
   background-color: #F5F5F5;
 }
 
+a.entry-becoming-unread{
+  background-color: #F2F7E6;
+}
+
 a.entry-read{
   background-color: #e6ffce;
 }
 
+a.entry-becoming-read{
+  background-color: #EAFFD6;
+}
+
 .nav > li > a.entry-read:hover{
+  background-color: #d6ffac;
+}
+
+.nav > li > a.entry-becoming-read:hover{
   background-color: #d6ffac;
 }
 

@@ -15,10 +15,16 @@ $(document).ready ->
       update_entry_state_path = $(this).attr "data-entry-state-update-path"
       entry_id = $(this).attr "data-entry-summary-id"
 
-      mark_entry_as_read entry_id
+      marking_entry_as_read entry_id
+
+      # Function to handle result returned by the server
+      entry_read_result = (data, status, xhr) ->
+        mark_entry_as_read entry_id
+        update_unread_counts data
+
       $.post(update_entry_state_path,
         {_method:"put", entry_ids: [entry_id], state: "read"},
-        update_entry_state_result, "json")
+        entry_read_result, "json")
         .fail ->
           Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
 
@@ -31,12 +37,18 @@ $(document).ready ->
       entries = []
       $("[data-entry-id]").each ->
         entry_id = $(this).attr "data-entry-id"
-        mark_entry_as_read entry_id
+        marking_entry_as_read entry_id
         entries.push entry_id
+
+      # Function to handle result returned by the server
+      all_read_result = (data, status, xhr) ->
+        for id in entries
+          mark_entry_as_read id
+        update_unread_counts data
 
       $.post(update_entry_state_path,
         {_method:"put", entry_ids: entries, state: "read"},
-          update_entry_state_result, "json")
+        all_read_result, "json")
           .fail ->
             Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
 
@@ -47,10 +59,16 @@ $(document).ready ->
     update_entry_state_path = $(this).attr "data-entry-state-update-path"
     entry_id = $(this).attr "data-unread-entry-id"
 
-    mark_entry_as_unread entry_id
+    marking_entry_as_unread entry_id
+
+    # Function to handle result returned by the server
+    entry_unread_result = (data, status, xhr) ->
+      mark_entry_as_unread entry_id
+      update_unread_counts data
+      
     $.post(update_entry_state_path,
       {_method:"put", entry_ids: [entry_id], state: "unread"},
-        update_entry_state_result, "json")
+      entry_unread_result, "json")
           .fail ->
             Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
 
@@ -67,21 +85,37 @@ $(document).ready ->
     return !summary.hasClass "in"
 
   #-------------------------------------------------------
+  # Indicate visually that an entry as being marked as read by adding a CSS class to it
+  #-------------------------------------------------------
+  marking_entry_as_read = (entry_id) ->
+    remove_state_classes entry_id
+    $("[data-entry-id='#{entry_id}']").addClass "entry-becoming-read"
+
+  #-------------------------------------------------------
   # Mark visually an entry as read by adding a CSS class to it
   #-------------------------------------------------------
   mark_entry_as_read = (entry_id) ->
-    $("[data-entry-id='#{entry_id}']").removeClass("entry-unread").addClass "entry-read"
+    remove_state_classes entry_id
+    $("[data-entry-id='#{entry_id}']").addClass "entry-read"
+
+  #-------------------------------------------------------
+  # Indicate visually that an entry as being marked as unread by adding a CSS class to it
+  #-------------------------------------------------------
+  marking_entry_as_unread = (entry_id) ->
+    remove_state_classes entry_id
+    $("[data-entry-id='#{entry_id}']").addClass "entry-becoming-unread"
 
   #-------------------------------------------------------
   # Mark visually an entry as unread by adding a CSS class to it
   #-------------------------------------------------------
   mark_entry_as_unread = (entry_id) ->
-    $("[data-entry-id='#{entry_id}']").removeClass("entry-read").addClass "entry-unread"
+    remove_state_classes entry_id
+    $("[data-entry-id='#{entry_id}']").addClass "entry-unread"
 
   #-------------------------------------------------------
   # Function to handle result returned by the server
   #-------------------------------------------------------
-  update_entry_state_result = (data, status, xhr) ->
+  update_unread_counts = (data) ->
     Feedbunch.update_folder_entry_count "all", data["folder_all"]["sidebar_read_all"]
 
     if data["feeds"]
@@ -95,3 +129,10 @@ $(document).ready ->
         Feedbunch.update_folder_entry_count folder["id"], folder["sidebar_read_all"]
 
     Feedbunch.make_active Feedbunch.current_feed_id, Feedbunch.current_folder_id
+
+  #-------------------------------------------------------
+  # Remove all read/unread CSS classes from a single entry
+  #-------------------------------------------------------
+  remove_state_classes = (entry_id) ->
+    $("[data-entry-id='#{entry_id}']").removeClass("entry-unread").removeClass("entry-becoming-unread")
+      .removeClass("entry-read").removeClass("entry-becoming-read")
