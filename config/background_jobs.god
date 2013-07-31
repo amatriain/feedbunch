@@ -6,11 +6,11 @@
 # Therefore god MUST be called from the rails root, or all paths in this file will be incorrect.
 APP_ROOT = Dir.pwd
 
-# Notifications config for God. This file will be different in production and staging environments.
-God.load(File.join(APP_ROOT, 'config', 'notifications.god'))
-
 # Where God should put pid files for those watches it daemonizes
 God.pid_file_directory = File.join APP_ROOT, %w(tmp pids)
+
+# Notifications config for God. This file will be different in production and staging environments.
+God.load(File.join(APP_ROOT, 'config', 'notifications.god'))
 
 # Pass current environment to processes that need it
 rails_env = ENV["RAILS_ENV"] || 'development'
