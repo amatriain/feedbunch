@@ -96,6 +96,9 @@ namespace :feedbunch_secret_data do
     run 'ln -sf /home/feedbunch/config/database.yml ' \
         "#{release_path}/config/database.yml"
 
+    run 'ln -sf /home/feedbunch/config/resque.yml ' \
+        "#{release_path}/config/resque.yml"
+
     run 'ln -sf /home/feedbunch/config/aws_key.rb ' \
         "#{release_path}/config/initializers/aws_key.rb"
 
