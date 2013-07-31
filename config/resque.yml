@@ -1,0 +1,6 @@
+development: localhost:6379
+test: localhost:6379:1
+staging: --
+staging_background: --
+production: --
+production_background: --
