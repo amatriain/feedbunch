@@ -128,7 +128,8 @@ namespace :feedbunch_secret_data do
 end
 
 #############################################################
-#	Create and link "uploads" folder in the shared folder
+#	Create and link "uploads" and "tmp/pids" folder in the shared folder.
+# "uploads" is created in both server roles, "tmp/pids" only in the background server.
 #############################################################
 
 namespace :feedbunch_shared_folders do
@@ -138,6 +139,16 @@ namespace :feedbunch_shared_folders do
     run "mkdir -p #{shared_path}/uploads"
     run "rm -rf #{release_path}/uploads"
     run "ln -sf #{shared_path}/uploads #{release_path}/uploads"
+
+    create_god_pid_folder
+  end
+
+  task :create_god_pid_folder, roles: :background do
+    # God PIDs directory is in the capistrano shared folder, so that the
+    # PID files are not lost on each deployment. Create it if necessary.
+    run "mkdir -p #{shared_path}/tmp/pids"
+    run "rm -rf #{release_path}/tmp"
+    run "ln -sf #{shared_path}/tmp #{release_path}/tmp"
   end
 end
 
