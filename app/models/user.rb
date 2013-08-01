@@ -55,10 +55,11 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
-  has_and_belongs_to_many :feeds, uniq: true,
-                          after_add: :mark_unread_entries,
-                          before_remove: :before_remove_feed_subscription,
-                          after_remove: :removed_feed_subscription
+  has_many :feed_subscriptions, dependent: :destroy, uniq: true,
+           after_add: :mark_unread_entries,
+           before_remove: :before_remove_feed_subscription,
+           after_remove: :removed_feed_subscription
+  has_many :feeds, through: :feed_subscriptions
   has_many :folders, dependent: :destroy, uniq: true
   has_many :entries, through: :feeds
   has_many :entry_states, dependent: :destroy, uniq: true
@@ -149,7 +150,8 @@ class User < ActiveRecord::Base
   ##
   # Mark as unread for this user all entries of the feed passed as argument.
 
-  def mark_unread_entries(feed)
+  def mark_unread_entries(feed_subscription)
+    feed = feed_subscription.feed
     feed.entries.each do |entry|
       if !EntryState.exists? user_id: self.id, entry_id: entry.id
         entry_state = self.entry_states.build read: false
@@ -164,7 +166,8 @@ class User < ActiveRecord::Base
   # Before removing a feed subscription, remove the feed from its current folder, if any.
   # If this means the folder is now empty, a deletion of the folder is triggered.
 
-  def before_remove_feed_subscription(feed)
+  def before_remove_feed_subscription(feed_subscription)
+    feed = feed_subscription.feed
     folder = feed.user_folder self
     folder.feeds.delete feed if folder.present?
   end
@@ -174,7 +177,8 @@ class User < ActiveRecord::Base
   # - if there are no subscribed users, delete the feed. This triggers the deletion of all its entries and entry-states.
   # - if there are still users subscribed, delete all entry-states for the user and the feed.
 
-  def removed_feed_subscription(feed)
+  def removed_feed_subscription(feed_subscription)
+    feed = feed_subscription.feed
     if feed.users.blank?
       Rails.logger.warn "no more users subscribed to feed #{feed.id} - #{feed.fetch_url} . Removing it from the database"
       feed.destroy

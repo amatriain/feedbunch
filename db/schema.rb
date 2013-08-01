@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130801101759) do
+ActiveRecord::Schema.define(:version => 20130801122616) do
 
   create_table "data_imports", :force => true do |t|
     t.integer  "user_id"
@@ -64,11 +64,6 @@ ActiveRecord::Schema.define(:version => 20130801101759) do
   create_table "feeds_folders", :force => true do |t|
     t.integer "feed_id"
     t.integer "folder_id"
-  end
-
-  create_table "feeds_users", :force => true do |t|
-    t.integer "user_id"
-    t.integer "feed_id"
   end
 
   create_table "folders", :force => true do |t|

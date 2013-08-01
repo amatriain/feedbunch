@@ -16,7 +16,15 @@ describe User do
     it 'returns feeds the user is suscribed to' do
       feed1 = FactoryGirl.create :feed
       feed2 = FactoryGirl.create :feed
-      @user.feeds << feed1 << feed2
+      feed_subscription1 = FeedSubscription.new
+      feed_subscription1.feed_id = feed1.id
+      feed_subscription1.unread_entries = 0
+      @user.feed_subscriptions << feed_subscription1
+      feed_subscription2 = FeedSubscription.new
+      feed_subscription2.feed_id = feed2.id
+      feed_subscription2.unread_entries = 0
+      @user.feed_subscriptions << feed_subscription2
+      @user.reload
       @user.feeds.include?(feed1).should be_true
       @user.feeds.include?(feed2).should be_true
     end
