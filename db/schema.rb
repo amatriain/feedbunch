@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130612200907) do
+ActiveRecord::Schema.define(:version => 20130801101759) do
 
   create_table "data_imports", :force => true do |t|
     t.integer  "user_id"
@@ -41,6 +41,14 @@ ActiveRecord::Schema.define(:version => 20130612200907) do
     t.integer  "entry_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "feed_subscriptions", :force => true do |t|
+    t.integer  "user_id",        :null => false
+    t.integer  "feed_id",        :null => false
+    t.integer  "unread_entries"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "feeds", :force => true do |t|
