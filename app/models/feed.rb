@@ -1,10 +1,11 @@
 require 'uri'
 
 ##
-# Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which a user is suscribed.
+# Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which users can be suscribed.
 #
-# Many users can be suscribed to a single feed, and a single user can be suscribed to many feeds (many-to-many
-# relationship).
+# A single feed can have many subscriptions (from different users), but a single subscription corresponds to a single feed (one-to-many relationship).
+#
+# Users are associated with Feeds through the FeedSubscription model. This enables us to retrieve users that are subscribed to a feed.
 #
 # Feeds can be associated with folders. Each feed can be in many folders (as long as they belong to different users),
 # and each folder can have many feeds (many-to-many association). However a single feed cannot be associated with
@@ -33,7 +34,8 @@ class Feed < ActiveRecord::Base
 
   attr_accessible :fetch_url, :title
 
-  has_and_belongs_to_many :users, uniq: true
+  has_many :feed_subscriptions, dependent: :destroy, uniq: true
+  has_many :users, through: :feed_subscriptions
   has_and_belongs_to_many :folders, uniq: true, before_add: :single_user_folder
   has_many :entries, dependent: :destroy, uniq: true
 

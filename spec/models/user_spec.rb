@@ -16,15 +16,8 @@ describe User do
     it 'returns feeds the user is suscribed to' do
       feed1 = FactoryGirl.create :feed
       feed2 = FactoryGirl.create :feed
-      feed_subscription1 = FeedSubscription.new
-      feed_subscription1.feed_id = feed1.id
-      feed_subscription1.unread_entries = 0
-      @user.feed_subscriptions << feed_subscription1
-      feed_subscription2 = FeedSubscription.new
-      feed_subscription2.feed_id = feed2.id
-      feed_subscription2.unread_entries = 0
-      @user.feed_subscriptions << feed_subscription2
-      @user.reload
+      @user.subscribe feed1.fetch_url
+      @user.subscribe feed2.fetch_url
       @user.feeds.include?(feed1).should be_true
       @user.feeds.include?(feed2).should be_true
     end
@@ -36,8 +29,8 @@ describe User do
 
     it 'does not allow subscribing to the same feed more than once' do
       feed = FactoryGirl.create :feed
-      @user.feeds << feed
-      @user.feeds << feed
+      @user.subscribe feed.fetch_url
+      expect {@user.subscribe feed.fetch_url}.to raise_error
       @user.feeds.count.should eq 1
       @user.feeds.first.should eq feed
     end
@@ -118,7 +111,7 @@ describe User do
 
       it 'raises an error if user tries to subscribe twice to a feed, given its fetch_url' do
         # User is already subscribed to the feed
-        @user.feeds << @feed
+        @user.subscribe @feed.fetch_url
 
         # The feed is already in the database, no attempt to save it should happen
         Feed.any_instance.should_not_receive :save
@@ -134,7 +127,7 @@ describe User do
         url_no_slash = 'http://some.host/feed'
         feed = FactoryGirl.create :feed, fetch_url: feed_url
         # User is already subscribed to the feed
-        @user.feeds << feed
+        @user.subscribe feed.fetch_url
 
         # The feed is already in the database, no attempt to save it should happen
         Feed.any_instance.should_not_receive :save
@@ -150,7 +143,7 @@ describe User do
         url_slash = 'http://some.host/feed/'
         feed = FactoryGirl.create :feed, fetch_url: feed_url
         # User is already subscribed to the feed
-        @user.feeds << feed
+        @user.subscribe feed.fetch_url
 
         # The feed is already in the database, no attempt to save it should happen
         Feed.any_instance.should_not_receive :save
@@ -166,7 +159,7 @@ describe User do
         url_no_scheme = 'some.host/feed/'
         feed = FactoryGirl.create :feed, fetch_url: feed_url
         # User is already subscribed to the feed
-        @user.feeds << feed
+        @user.subscribe feed.fetch_url
 
         # The feed is already in the database, no attempt to save it should happen
         Feed.any_instance.should_not_receive :save
@@ -248,7 +241,7 @@ describe User do
 
       it 'raises an error if user tries to subscribe twice to a feed, given its url' do
         # User is already subscribed to the feed
-        @user.feeds << @feed
+        @user.subscribe @feed.fetch_url
 
         # The feed is already in the database, no attempt to save it should happen
         Feed.any_instance.should_not_receive :save
@@ -264,7 +257,7 @@ describe User do
         url_no_slash = 'http://some.host/feed'
         feed = FactoryGirl.create :feed, url: feed_url
         # User is already subscribed to the feed
-        @user.feeds << feed
+        @user.subscribe feed.fetch_url
 
         # The feed is already in the database, no attempt to save it should happen
         Feed.any_instance.should_not_receive :save
@@ -280,7 +273,7 @@ describe User do
         url_slash = 'http://some.host/feed/'
         feed = FactoryGirl.create :feed, url: feed_url
         # User is already subscribed to the feed
-        @user.feeds << feed
+        @user.subscribe feed.fetch_url
 
         # The feed is already in the database, no attempt to save it should happen
         Feed.any_instance.should_not_receive :save
@@ -296,7 +289,7 @@ describe User do
         url_no_scheme = 'some.host/feed/'
         feed = FactoryGirl.create :feed, url: feed_url
         # User is already subscribed to the feed
-        @user.feeds << feed
+        @user.subscribe feed.fetch_url
 
         # The feed is already in the database, no attempt to save it should happen
         Feed.any_instance.should_not_receive :save
@@ -438,7 +431,7 @@ describe User do
 
       before :each do
         @feed = FactoryGirl.create :feed
-        @user.feeds << @feed
+        @user.subscribe @feed.fetch_url
       end
 
       it 'unsubscribes a user from a feed' do
@@ -474,7 +467,7 @@ describe User do
 
       it 'does not change subscriptions to the feed by other users' do
         user2 = FactoryGirl.create :user
-        user2.feeds << @feed
+        user2.subscribe @feed.fetch_url
 
         @user.feeds.exists?(@feed.id).should be_true
         user2.feeds.exists?(@feed.id).should be_true
@@ -495,7 +488,7 @@ describe User do
 
       it 'does not delete feed if there are more users subscribed' do
         user2 = FactoryGirl.create :user
-        user2.feeds << @feed
+        user2.subscribe @feed.fetch_url
 
         @user.unsubscribe @feed.id
         Feed.exists?(@feed).should be_true
@@ -530,7 +523,8 @@ describe User do
       # feed1 and feed2 are in @folder
       feed1 = FactoryGirl.create :feed
       feed2 = FactoryGirl.create :feed
-      @user.feeds << feed1 << feed2
+      @user.subscribe feed1.fetch_url
+      @user.subscribe feed2.fetch_url
       entry1 = FactoryGirl.build :entry, feed_id: feed1.id
       entry2 = FactoryGirl.build :entry, feed_id: feed1.id
       entry3 = FactoryGirl.build :entry, feed_id: feed1.id
@@ -553,7 +547,8 @@ describe User do
       # feed1 is in @folder; feed2 is subscribed, but it's not in any folder
       feed1 = FactoryGirl.create :feed
       feed2 = FactoryGirl.create :feed
-      @user.feeds << feed1 << feed2
+      @user.subscribe feed1.fetch_url
+      @user.subscribe feed2.fetch_url
       entry1 = FactoryGirl.build :entry, feed_id: feed1.id
       entry2 = FactoryGirl.build :entry, feed_id: feed1.id
       entry3 = FactoryGirl.build :entry, feed_id: feed1.id
@@ -582,7 +577,8 @@ describe User do
     it 'retrieves all entries for all subscribed feeds' do
       feed1 = FactoryGirl.create :feed
       feed2 = FactoryGirl.create :feed
-      @user.feeds << feed1 << feed2
+      @user.subscribe feed1.fetch_url
+      @user.subscribe feed2.fetch_url
       entry1 = FactoryGirl.build :entry, feed_id: feed1.id
       entry2 = FactoryGirl.build :entry, feed_id: feed1.id
       entry3 = FactoryGirl.build :entry, feed_id: feed2.id
@@ -632,7 +628,7 @@ describe User do
       entry2 = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry1 << entry2
 
-      @user.feeds << feed
+      @user.subscribe feed.fetch_url
       @user.entry_states.count.should eq 2
       @user.entry_states.where(entry_id: entry1.id, read: false).should be_present
       @user.entry_states.where(entry_id: entry2.id, read: false).should be_present
@@ -643,7 +639,7 @@ describe User do
       entry1 = FactoryGirl.build :entry, feed_id: feed.id
       entry2 = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry1 << entry2
-      @user.feeds << feed
+      @user.subscribe feed.fetch_url
 
       @user.entry_states.count.should eq 2
       @user.feeds.delete feed
@@ -657,7 +653,8 @@ describe User do
       feed2 = FactoryGirl.create :feed
       entry2 = FactoryGirl.build :entry, feed_id: feed2.id
       feed2.entries << entry2
-      @user.feeds << feed1 << feed2
+      @user.subscribe feed1.fetch_url
+      @user.subscribe feed2.fetch_url
 
       @user.entry_states.count.should eq 2
       @user.feeds.delete feed1
@@ -671,7 +668,7 @@ describe User do
       entry2 = FactoryGirl.build :entry, feed_id: feed.id
       entry3 = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry1 << entry2 << entry3
-      @user.feeds << feed
+      @user.subscribe feed.fetch_url
 
       # Mark one of the three entries as read by user
       entry_state = EntryState.where(entry_id: entry3.id, user_id: @user.id).first
@@ -691,7 +688,7 @@ describe User do
       entry2 = FactoryGirl.build :entry, feed_id: feed.id
       entry3 = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry1 << entry2 << entry3
-      @user.feeds << feed
+      @user.subscribe feed.fetch_url
 
       # Mark one of the three entries as read by user
       entry_state = EntryState.where(entry_id: entry3.id, user_id: @user.id).first
@@ -739,7 +736,7 @@ describe User do
   context 'refresh feed' do
     before :each do
       @feed = FactoryGirl.create :feed
-      @user.feeds << @feed
+      @user.subscribe @feed.fetch_url
     end
 
     it 'fetches a feed' do
@@ -753,7 +750,7 @@ describe User do
       entry1 = FactoryGirl.build :entry, feed_id: feed2.id
       entry2 = FactoryGirl.build :entry, feed_id: feed2.id
       feed2.entries << entry1 << entry2
-      @user.feeds << feed2
+      @user.subscribe feed2.fetch_url
       # entry1 is read, entry2 is unread
       entry_state1 = EntryState.where(entry_id: entry1.id, user_id: @user.id).first
       entry_state1.read = true
@@ -783,7 +780,7 @@ describe User do
       @folder = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << @folder
       @feed = FactoryGirl.create :feed
-      @user.feeds << @feed
+      @user.subscribe @feed.fetch_url
     end
 
     it 'adds a feed to a folder' do
@@ -796,7 +793,7 @@ describe User do
 
     it 'removes the feed from its old folder' do
       feed2 = FactoryGirl.create :feed
-      @user.feeds << feed2
+      @user.subscribe feed2.fetch_url
       @folder.feeds << @feed
       @folder.feeds << feed2
 
@@ -854,7 +851,7 @@ describe User do
 
     it 'does not delete the old folder if it has more feeds' do
       feed2 = FactoryGirl.create :feed
-      @user.feeds << feed2
+      @user.subscribe feed2.fetch_url
       @folder.feeds << @feed << feed2
       folder2 = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder2
@@ -879,7 +876,7 @@ describe User do
 
     before :each do
       @feed = FactoryGirl.create :feed
-      @user.feeds << @feed
+      @user.subscribe @feed.fetch_url
       @folder = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << @folder
       @folder.feeds << @feed
@@ -898,7 +895,7 @@ describe User do
 
     it 'does not delete the folder if it is not empty' do
       feed2 = FactoryGirl.create :feed
-      @user.feeds << feed2
+      @user.subscribe feed2.fetch_url
       @folder.feeds << feed2
 
       @user.remove_feed_from_folder @feed.id
@@ -912,7 +909,7 @@ describe User do
 
     it 'does not return a folder object if it the feed was not in a folder' do
       feed2 = FactoryGirl.create :feed
-      @user.feeds << feed2
+      @user.subscribe feed2.fetch_url
 
       folder = @user.remove_feed_from_folder feed2.id
       folder.should be_nil
@@ -925,7 +922,7 @@ describe User do
 
     it 'returns a folder object with feeds if there are more feeds in it' do
       feed2 = FactoryGirl.create :feed
-      @user.feeds << feed2
+      @user.subscribe feed2.fetch_url
       @folder.feeds << feed2
 
       folder = @user.remove_feed_from_folder @feed.id
@@ -942,7 +939,7 @@ describe User do
   context 'add feed to new folder' do
     before :each do
       @feed = FactoryGirl.create :feed
-      @user.feeds << @feed
+      @user.subscribe @feed.fetch_url
       @title = 'New folder'
     end
 
@@ -985,7 +982,7 @@ describe User do
       folder = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder
       feed2 = FactoryGirl.create :feed
-      @user.feeds << feed2
+      @user.subscribe feed2.fetch_url
       folder.feeds << @feed << feed2
 
       @user.add_feed_to_new_folder @feed.id, @title
@@ -1038,7 +1035,7 @@ describe User do
 
     before :each do
       @feed = FactoryGirl.create :feed
-      @user.feeds << @feed
+      @user.subscribe @feed.fetch_url
       @entry = FactoryGirl.build :entry, feed_id: @feed.id
       @feed.entries << @entry
     end
@@ -1133,7 +1130,7 @@ describe User do
 
     it 'does not change state for other users' do
       user2 = FactoryGirl.create :user
-      user2.feeds << @feed
+      user2.subscribe @feed.fetch_url
 
       @user.change_entry_state [@entry.id], 'read'
 

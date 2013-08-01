@@ -21,11 +21,12 @@ class FeedUnsubscriber
   # if there were no more feeds in it.
 
   def self.unsubscribe(feed_id, user)
+    feed_subscription = FeedSubscription.where(feed_id: feed_id, user_id: user.id).first
     feed = user.feeds.find feed_id
     folder = feed.user_folder user
 
     Rails.logger.info "unsubscribing user #{user.id} - #{user.email} from feed #{feed.id} - #{feed.fetch_url}"
-    user.feeds.delete feed
+    user.feed_subscriptions.delete feed_subscription
 
     return folder
   end

@@ -23,7 +23,8 @@ require 'subscriptions_importer'
 # Beyond the attributes added to this class by Devise[https://github.com/plataformatec/devise] for authentication,
 # Feedbunch establishes relationships between the User model and the following models:
 #
-# - Feed: Each user can be suscribed to many feeds and many users can be suscribed to a single feed (many-to-many relationship).
+# - FeedSubscription: Each user can be subscribed to many feeds, but a single subscription belongs to a single user (one-to-many relationship).
+# - Feed, through the FeedSubscription model: This enables us to retrieve the feeds a user is subscribed to.
 # - Folder: Each user can have many folders and each folder belongs to a single user (one-to-many relationship).
 # - Entry, through the Feed model: This enables us to retrieve all entries for all feeds a user is subscribed to.
 # - EntryState: This enables us to retrieve the state (read or unread) of all entries for all feeds a user is subscribed to.

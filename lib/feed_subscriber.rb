@@ -78,7 +78,11 @@ class FeedSubscriber
         raise AlreadySubscribedError.new
       end
       Rails.logger.info "Subscribing user #{user.id} (#{user.email}) to pre-existing feed #{known_feed.id} - #{known_feed.fetch_url}"
-      user.feeds << known_feed
+      feed_subscription = FeedSubscription.new
+      feed_subscription.user = user
+      feed_subscription.feed = known_feed
+      feed_subscription.unread_entries = known_feed.entries.count
+      feed_subscription.save!
       return known_feed
     else
       return nil
@@ -112,7 +116,11 @@ class FeedSubscriber
           raise AlreadySubscribedError.new
         else
           Rails.logger.info "New feed #{feed_url} successfully fetched. Subscribing user #{user.id} - #{user.email}"
-          user.feeds << fetched_feed
+          feed_subscription = FeedSubscription.new
+          feed_subscription.user = user
+          feed_subscription.feed = fetched_feed
+          feed_subscription.unread_entries = fetched_feed.entries.count
+          feed_subscription.save!
         end
 
         return fetched_feed
