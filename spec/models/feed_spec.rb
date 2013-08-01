@@ -110,10 +110,11 @@ describe Feed do
 
   context 'user suscriptions' do
     before :each do
-      @user1 = FactoryGirl.build :user
-      @user2 = FactoryGirl.build :user
-      @user3 = FactoryGirl.build :user
-      @feed.users << @user1 << @user2
+      @user1 = FactoryGirl.create :user
+      @user2 = FactoryGirl.create :user
+      @user3 = FactoryGirl.create :user
+      @user1.subscribe @feed.fetch_url
+      @user2.subscribe @feed.fetch_url
     end
 
     it 'returns user suscribed to the feed' do
@@ -129,7 +130,7 @@ describe Feed do
       @feed.users.count.should eq 2
       @feed.users.where(id: @user1.id).count.should eq 1
 
-      @feed.users << @user1
+      expect {@user1.subscribe @feed.fetch_url}.to raise_error
       @feed.users.count.should eq 2
       @feed.users.where(id: @user1.id).count.should eq 1
     end
@@ -139,7 +140,7 @@ describe Feed do
     before :each do
       @folder1 = FactoryGirl.build :folder
       @folder2 = FactoryGirl.build :folder
-      @folder3 = FactoryGirl.build :folder
+      @folder3 = FactoryGirl.create :folder
       @feed.folders << @folder1 << @folder2
     end
 
@@ -178,7 +179,7 @@ describe Feed do
       user = FactoryGirl.create :user
       folder = FactoryGirl.build :folder, user_id: user.id
       user.folders << folder
-      user.feeds << @feed
+      user.subscribe @feed.fetch_url
       folder.feeds << @feed
 
       @feed.user_folder(user).should eq folder
@@ -186,7 +187,7 @@ describe Feed do
 
     it 'returns nil if the feed belongs to no folder for that user' do
       user = FactoryGirl.create :user
-      user.feeds << @feed
+      user.subscribe @feed.fetch_url
       @feed.user_folder(user).should be_nil
     end
   end

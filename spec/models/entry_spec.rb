@@ -166,8 +166,8 @@ describe Entry do
       feed = FactoryGirl.create :feed
       user1 = FactoryGirl.create :user
       user2 = FactoryGirl.create :user
-      user1.feeds << feed
-      user2.feeds << feed
+      user1.subscribe feed.fetch_url
+      user2.subscribe feed.fetch_url
 
       entry = FactoryGirl.build :entry, feed_id: feed.id
       entry.save!
@@ -183,8 +183,8 @@ describe Entry do
       entry = FactoryGirl.create :entry, feed_id: feed.id
       user1 = FactoryGirl.create :user
       user2 = FactoryGirl.create :user
-      user1.feeds << feed
-      user2.feeds << feed
+      user1.subscribe feed.fetch_url
+      user2.subscribe feed.fetch_url
 
       user1.entry_states.count.should eq 1
       user2.entry_states.count.should eq 1
@@ -200,7 +200,7 @@ describe Entry do
       feed = FactoryGirl.create :feed
       user1 = FactoryGirl.create :user
       user2 = FactoryGirl.create :user
-      user1.feeds << feed
+      user1.subscribe feed.fetch_url
 
       entry = FactoryGirl.build :entry, feed_id: feed.id
       entry.save!
@@ -213,7 +213,7 @@ describe Entry do
     it 'retrieves state for a read entry' do
       feed = FactoryGirl.create :feed
       user = FactoryGirl.create :user
-      user.feeds << feed
+      user.subscribe feed.fetch_url
       entry = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry
 
@@ -227,7 +227,7 @@ describe Entry do
     it 'retrieves state for an unread entry' do
       feed = FactoryGirl.create :feed
       user = FactoryGirl.create :user
-      user.feeds << feed
+      user.subscribe feed.fetch_url
       entry = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry
 

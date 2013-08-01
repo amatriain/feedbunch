@@ -40,7 +40,9 @@ describe Folder do
       @feed1 = FactoryGirl.create :feed
       @feed2 = FactoryGirl.create :feed
       @feed3 = FactoryGirl.create :feed
-      @user.feeds << @feed1 << @feed2 << @feed3
+      @user.subscribe @feed1.fetch_url
+      @user.subscribe @feed2.fetch_url
+      @user.subscribe @feed3.fetch_url
       @folder.feeds << @feed1 << @feed2
     end
 
@@ -71,7 +73,9 @@ describe Folder do
       folder1 = FactoryGirl.build :folder, user_id: user.id
       folder2 = FactoryGirl.build :folder, user_id: user.id
       user.folders << folder1 << folder2
-      user.feeds << feed << feed2 << feed3
+      user.subscribe feed.fetch_url
+      user.subscribe feed2.fetch_url
+      user.subscribe feed3.fetch_url
       folder1.feeds << feed2
       folder2.feeds << feed3
 
@@ -90,7 +94,7 @@ describe Folder do
         folder2 = FactoryGirl.build :folder, user_id: @user.id
         @user.folders << folder2
         feed2 = FactoryGirl.create :feed
-        @user.feeds << feed2
+        @user.subscribe feed2.fetch_url
         @folder.feeds << feed2
 
         @folder.feeds.should include @feed1

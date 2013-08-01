@@ -642,7 +642,7 @@ describe User do
       @user.subscribe feed.fetch_url
 
       @user.entry_states.count.should eq 2
-      @user.feeds.delete feed
+      @user.unsubscribe feed.id
       @user.entry_states.count.should eq 0
     end
 
@@ -657,7 +657,7 @@ describe User do
       @user.subscribe feed2.fetch_url
 
       @user.entry_states.count.should eq 2
-      @user.feeds.delete feed1
+      @user.unsubscribe feed1.id
       @user.entry_states.count.should eq 1
       @user.entry_states.where(user_id: @user.id, entry_id: entry2.id).should be_present
     end
@@ -708,6 +708,31 @@ describe User do
       feed.entries << entry
 
       expect {@user.feed_entries feed.id}.to raise_error ActiveRecord::RecordNotFound
+    end
+
+    context 'unread entries count caching' do
+
+      it 'retrieves unread entries for a feed'
+
+      it 'retrieves unread entries for a folder'
+
+      it 'updates feed unread entries count when marking an entry as read'
+
+      it 'updates feed unread entries count when marking an entry as unread'
+
+      it 'updates folder unread entries count when marking an entry as read'
+
+      it 'updates folder unread entries count when marking an entry as unread'
+
+      it 'removes cached count when unsubscribing from a feed'
+
+      it 'counts all entries as unread when subscribing to a feed'
+
+      it 'updates folder unread entries count when unsubscribing from a feed'
+
+      it 'updates folder unread entries count when adding a feed to a folder'
+
+      it 'updates folder unread entries count when removing a feed from a folder'
     end
   end
 
