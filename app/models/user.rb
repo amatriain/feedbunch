@@ -6,6 +6,7 @@ require 'feed_refresh'
 require 'entry_state_change'
 require 'entry_recovery'
 require 'subscriptions_importer'
+require 'unread_entries_count_caching'
 
 ##
 # User model. Each instance of this class represents a single user that can log in to the application
@@ -80,6 +81,14 @@ class User < ActiveRecord::Base
 
   def unread_folder_entries(folder_id)
     EntryRecovery.unread_folder_entries folder_id, self
+  end
+
+  ##
+  # Retrieve the number of unread entries in a feed for this user.
+  # See UnreadEntriesCountCaching#unread_feed_entries_count
+
+  def unread_feed_entries_count(feed_id)
+    UnreadEntriesCountCaching.unread_feed_entries_count feed_id, self
   end
 
   ##

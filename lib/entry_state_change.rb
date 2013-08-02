@@ -1,10 +1,12 @@
+require 'unread_entries_count_caching'
+
 ##
 # Class with methods related to changing the read/unread state of entries.
 
 class EntryStateChange
 
   ##
-  # Change the read or unread state of an entry, for a given user.
+  # Change the read or unread state of several entries, for a given user.
   #
   # Receives as arguments:
   # - an array with the IDs of the entries to be changed state
@@ -26,10 +28,14 @@ class EntryStateChange
       entry_state = EntryState.where(user_id: user.id, entry_id: entry.id).first
       if state == 'read'
         entry_state.read = true
+        entry_state.save!
+        UnreadEntriesCountCaching.decrement_feed_count entry.feed.id, user
+
       elsif state == 'unread'
         entry_state.read = false
+        entry_state.save!
+        UnreadEntriesCountCaching.increment_feed_count entry.feed.id, user
       end
-      entry_state.save!
 
       feed = entry.feed
       folder = feed.user_folder user
