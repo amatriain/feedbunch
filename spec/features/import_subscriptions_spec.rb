@@ -4,7 +4,7 @@ describe 'import subscriptions' do
   before :each do
     @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
-    @user.feeds << @feed
+    @user.subscribe @feed.fetch_url
 
     login_user_for_feature @user
     visit feeds_path

@@ -6,7 +6,7 @@ describe 'subscription to feeds' do
     @user = FactoryGirl.create :user
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
-    @user.feeds << @feed1
+    @user.subscribe @feed1.fetch_url
 
     login_user_for_feature @user
     visit feeds_path
@@ -99,7 +99,7 @@ FEED_XML
     fetch_url = 'http://some.webpage.url/feed.php'
 
     existing_feed = FactoryGirl.create :feed, url: webpage_url, fetch_url: fetch_url
-    @user.feeds << existing_feed
+    @user.subscribe existing_feed.fetch_url
     visit feeds_path
 
     webpage_html = <<WEBPAGE_HTML

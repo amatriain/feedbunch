@@ -6,7 +6,8 @@ describe 'unsubscribe from feed' do
     @user = FactoryGirl.create :user
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
-    @user.feeds << @feed1 << @feed2
+    @user.subscribe @feed1.fetch_url
+    @user.subscribe @feed2.fetch_url
     @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry1
 
@@ -99,7 +100,7 @@ describe 'unsubscribe from feed' do
 
   it 'still shows the feed for other subscribed users', js: true do
     user2 = FactoryGirl.create :user
-    user2.feeds << @feed1
+    user2.subscribe @feed1.fetch_url
 
     # Unsubscribe @user from @feed1 and logout
     unsubscribe_feed @feed1.id

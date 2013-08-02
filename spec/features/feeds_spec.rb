@@ -21,7 +21,8 @@ describe 'feeds' do
 
       @feed1 = FactoryGirl.create :feed
       @feed2 = FactoryGirl.create :feed
-      @user.feeds << @feed1 << @feed2
+      @user.subscribe @feed1.fetch_url
+      @user.subscribe @feed2.fetch_url
       @folder1.feeds << @feed1
 
       @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
@@ -75,7 +76,7 @@ describe 'feeds' do
     it 'shows a link to read all entries for all subscriptions inside a folder', js: true do
       # Add a second feed inside @folder1
       feed3 = FactoryGirl.create :feed
-      @user.feeds << feed3
+      @user.subscribe feed3.fetch_url
       @folder1.feeds << feed3
       entry3_1 = FactoryGirl.build :entry, feed_id: feed3.id
       entry3_2 = FactoryGirl.build :entry, feed_id: feed3.id
@@ -108,7 +109,7 @@ describe 'feeds' do
 
     it 'shows an alert if the feed clicked has no entries', js: true do
       feed3 = FactoryGirl.create :feed
-      @user.feeds << feed3
+      @user.subscribe feed3.fetch_url
       visit feeds_path
       read_feed feed3.id
 

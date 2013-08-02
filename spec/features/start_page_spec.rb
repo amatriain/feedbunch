@@ -5,7 +5,7 @@ describe 'start page' do
   before :each do
     @user = FactoryGirl.create :user
     @feed1 = FactoryGirl.create :feed
-    @user.feeds << @feed1
+    @user.subscribe @feed1.fetch_url
     @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry1
 
@@ -69,7 +69,7 @@ describe 'start page' do
 
     before :each do
       @feed2 = FactoryGirl.create :feed
-      @user.feeds << @feed2
+      @user.subscribe @feed2.fetch_url
       @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
       @entry3 = FactoryGirl.build :entry, feed_id: @feed2.id
       @feed2.entries << @entry2 << @entry3

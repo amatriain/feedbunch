@@ -7,7 +7,7 @@ describe 'refresh feeds' do
     @feed1 = FactoryGirl.create :feed
     @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry1
-    @user.feeds << @feed1
+    @user.subscribe @feed1.fetch_url
 
     login_user_for_feature @user
     visit feeds_path

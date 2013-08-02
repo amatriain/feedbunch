@@ -9,9 +9,10 @@ describe 'folders and feeds' do
     @folder2 = FactoryGirl.create :folder
     @user.folders << @folder1
 
-    @feed1 = FactoryGirl.build :feed
-    @feed2 = FactoryGirl.build :feed
-    @user.feeds << @feed1 << @feed2
+    @feed1 = FactoryGirl.create :feed
+    @feed2 = FactoryGirl.create :feed
+    @user.subscribe @feed1.fetch_url
+    @user.subscribe @feed2.fetch_url
     @folder1.feeds << @feed1
 
     @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
@@ -147,7 +148,6 @@ describe 'folders and feeds' do
 
       it 'removes feed from its old folder when adding it to a different one', js: true do
         # User has feeds @feed1, @feed2 in @folder1
-        @user.feeds << @feed2
         @folder1.feeds << @feed2
 
         visit feeds_path
@@ -215,7 +215,6 @@ describe 'folders and feeds' do
       
       it 'does not remove folder if it has more feeds', js: true do
         # User has feeds @feed1, @feed2 in @folder1
-        @user.feeds << @feed2
         @folder1.feeds << @feed2
 
         visit feeds_path
@@ -339,7 +338,6 @@ describe 'folders and feeds' do
 
       it 'does not remove old folder if it has more feeds', js: true do
         # @folder1 contains @feed1, @feed2
-        @user.feeds << @feed2
         @folder1.feeds << @feed2
         visit feeds_path
         read_feed @feed1.id
@@ -366,7 +364,6 @@ describe 'folders and feeds' do
 
       it 'removes feed from its old folder when adding it to a new one', js: true do
         # @folder1 contains @feed1, @feed2
-        @user.feeds << @feed2
         @folder1.feeds << @feed2
         visit feeds_path
         read_feed @feed1.id

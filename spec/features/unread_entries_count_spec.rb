@@ -10,7 +10,8 @@ describe 'unread entries count' do
 
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
-    @user.feeds << @feed1 << @feed2
+    @user.subscribe @feed1.fetch_url
+    @user.subscribe @feed2.fetch_url
     @folder1.feeds << @feed1
 
     @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
@@ -57,7 +58,7 @@ describe 'unread entries count' do
     folder2 = FactoryGirl.build :folder, user_id: @user.id
     @user.folders << folder2
     feed3 = FactoryGirl.create :feed
-    @user.feeds << feed3
+    @user.subscribe feed3.fetch_url
     folder2.feeds << feed3
     visit feeds_path
 
