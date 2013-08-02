@@ -12,7 +12,7 @@ describe FetchImportedFeedJob do
                                      status: DataImport::RUNNING
     @user.data_import = @data_import
     @feed = FactoryGirl.create :feed
-    @user.feeds << @feed
+    @user.subscribe @feed.fetch_url
   end
 
   it 'fetches feed' do

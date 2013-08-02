@@ -152,11 +152,19 @@ class ImportSubscriptionsJob
 
     if feed.present?
       Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to already existing feed #{feed.id} - #{feed.title}"
-      user.feeds << feed
-      self.increment_processed_feeds_count user
+      begin
+        user.subscribe feed.fetch_url
+      rescue
+        Rails.logger.error "Error trying to subscribe user #{user.id} - #{user.email} to feed at #{fetch_url} from OPML file. Skipping to next feed"
+        return
+      ensure
+        self.increment_processed_feeds_count user
+      end
     else
       Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to newly created feed #{title} - #{fetch_url}"
-      feed = user.feeds.create title: title, fetch_url: fetch_url
+      feed = Feed.new title: title, fetch_url: fetch_url
+      feed.save!
+      user.subscribe feed.fetch_url
       Resque.enqueue FetchImportedFeedJob, feed.id, user.id
     end
 
