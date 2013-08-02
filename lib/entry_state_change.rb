@@ -30,7 +30,6 @@ class EntryStateChange
         entry_state.read = true
         entry_state.save!
         UnreadEntriesCountCaching.decrement_feed_count entry.feed.id, user
-
       elsif state == 'unread'
         entry_state.read = false
         entry_state.save!
