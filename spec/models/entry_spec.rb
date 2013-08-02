@@ -237,5 +237,14 @@ describe Entry do
 
       entry.read_by?(user).should be_false
     end
+
+    it 'returns unread state for an entry from an unsubscribed feed' do
+      feed = FactoryGirl.create :feed
+      user = FactoryGirl.create :user
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+
+      entry.read_by?(user).should be_false
+    end
   end
 end

@@ -43,4 +43,71 @@ describe EntryState do
       entry_state2.should be_valid
     end
   end
+
+  context 'callbacks' do
+
+    it 'increments the cached count for all subscribed users when first saving it' do
+      feed = FactoryGirl.create :feed
+      user1 = FactoryGirl.create :user
+      user2 = FactoryGirl.create :user
+      user1.subscribe feed.fetch_url
+      user2.subscribe feed.fetch_url
+
+      user1.unread_feed_entries_count(feed.id).should eq 0
+      user2.unread_feed_entries_count(feed.id).should eq 0
+
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      entry.save!
+
+      user1.unread_feed_entries_count(feed.id).should eq 1
+      user2.unread_feed_entries_count(feed.id).should eq 1
+    end
+
+    it 'does not increment the cached count when updating an already saved entry' do
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.create :entry, feed_id: feed.id
+      user1 = FactoryGirl.create :user
+      user2 = FactoryGirl.create :user
+      user1.subscribe feed.fetch_url
+      user2.subscribe feed.fetch_url
+
+      user1.unread_feed_entries_count(feed.id).should eq 1
+      user2.unread_feed_entries_count(feed.id).should eq 1
+
+      entry.summary = "changed summary"
+      entry.save!
+
+      user1.unread_feed_entries_count(feed.id).should eq 1
+      user2.unread_feed_entries_count(feed.id).should eq 1
+    end
+
+    it 'does not increment the cached count for unsubscribed users' do
+      feed = FactoryGirl.create :feed
+      user1 = FactoryGirl.create :user
+      user2 = FactoryGirl.create :user
+      user1.subscribe feed.fetch_url
+
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      entry.save!
+
+      user1.unread_feed_entries_count(feed.id).should eq 1
+      user2.unread_feed_entries_count(feed.id).should eq 0
+    end
+
+    it 'decrements the cached count when deleting an entry state' do
+      feed = FactoryGirl.create :feed
+      entry1 = FactoryGirl.build :entry, feed_id: feed.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry1 << entry2
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+
+      user.unread_feed_entries_count(feed.id).should eq 2
+
+      entry1.destroy
+
+      user.unread_feed_entries_count(feed.id).should eq 1
+    end
+
+  end
 end

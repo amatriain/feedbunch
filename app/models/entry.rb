@@ -54,10 +54,18 @@ class Entry < ActiveRecord::Base
   # Return a boolean that indicates whether this entry has been marked as read by the passed user.
   #
   # Receives as argument the user for which the read/unread state will be retrieved.
+  #
+  # If the user is not actually subscribed to the feed, returns false.
 
   def read_by?(user)
-    state = EntryState.where(entry_id: self.id, user_id: user.id).first
-    return state.read
+    read = false
+
+    if self.feed.users.include? user
+      state = EntryState.where(entry_id: self.id, user_id: user.id).first
+      read =  state.read
+    end
+
+    return read
   end
 
   private
@@ -98,7 +106,7 @@ class Entry < ActiveRecord::Base
   # Or in layman's terms: mark this entry as unread for all users subscribed to the feed.
 
   def set_unread_state
-    self.feed.users.each do |user|
+    self.feed.users(true).each do |user|
       if !EntryState.exists? user_id: user.id, entry_id: self.id
         entry_state = user.entry_states.build read: false
         entry_state.entry_id = self.id

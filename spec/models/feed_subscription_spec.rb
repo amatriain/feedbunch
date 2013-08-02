@@ -18,9 +18,10 @@ describe FeedSubscription do
       feed_subscription.should_not be_valid
     end
 
-    it 'does not accept empty unread_entries count' do
+    it 'gives a default value of zero to the unread entries count' do
       feed_subscription = FactoryGirl.build :feed_subscription, unread_entries: nil
-      feed_subscription.should_not be_valid
+      feed_subscription.save!
+      feed_subscription.unread_entries.should eq 0
     end
 
     it 'does not accept decimal unread_entries count' do

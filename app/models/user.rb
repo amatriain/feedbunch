@@ -168,7 +168,6 @@ class User < ActiveRecord::Base
         entry_state.entry_id = entry.id
         entry_state.save!
       end
-
     end
   end
 

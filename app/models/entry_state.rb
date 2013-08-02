@@ -29,4 +29,27 @@ class EntryState < ActiveRecord::Base
   validates :entry_id, presence: true, uniqueness: {scope: :user_id}
 
   validates :read, inclusion: {in: [true, false]}
+
+  after_create :increment_unread_count
+  before_destroy :decrement_unread_count
+
+  private
+
+  ##
+  # If the entry is unread, increment by 1 the cached unread entries count after creating the state.
+
+  def increment_unread_count
+    if !self.read
+      UnreadEntriesCountCaching.increment_feed_count self.entry.feed.id, self.user
+    end
+  end
+
+  ##
+  # If the entry was unread, decrement by 1 the cached unread entries count before deleting the state.
+
+  def decrement_unread_count
+    if !self.read
+      UnreadEntriesCountCaching.decrement_feed_count self.entry.feed.id, self.user
+    end
+  end
 end

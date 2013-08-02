@@ -28,4 +28,15 @@ class FeedSubscription < ActiveRecord::Base
   validates :feed_id, presence: true, uniqueness: {scope: :user_id}
 
   validates :unread_entries, presence: true, numericality: {only_integer: true, greater_than_or_equal_to: 0}
+
+  before_validation :default_values
+
+  private
+
+  ##
+  # By default the number of unread entries is zero, if not set.
+
+  def default_values
+    self.unread_entries = 0 if self.unread_entries.blank?
+  end
 end
