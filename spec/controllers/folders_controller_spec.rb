@@ -25,7 +25,9 @@ describe FoldersController do
 
     @user.folders << @folder1
     @folder1.feeds << @feed1 << @feed2
-    @user.feeds << @feed1 << @feed2 << @feed3
+    @user.subscribe @feed1.fetch_url
+    @user.subscribe @feed2.fetch_url
+    @user.subscribe @feed3.fetch_url
 
     login_user_for_unit @user
   end

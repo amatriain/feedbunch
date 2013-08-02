@@ -7,7 +7,7 @@ describe FeedsController do
 
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
-    @user.feeds << @feed1
+    @user.subscribe @feed1.fetch_url
 
     @folder1 = FactoryGirl.build :folder, user_id: @user.id
     @folder2 = FactoryGirl.create :folder
@@ -70,7 +70,7 @@ describe FeedsController do
       entry2 = FactoryGirl.build :entry, feed_id: feed3.id
       entry3 = FactoryGirl.build :entry, feed_id: feed3.id
       feed3.entries << entry1 << entry2 << entry3
-      @user.feeds << feed3
+      @user.subscribe feed3.fetch_url
 
       entry_state3 = EntryState.where(entry_id: entry3.id, user_id: @user.id).first
       entry_state3.read = true

@@ -5,7 +5,7 @@ describe EntriesController do
   before :each do
     @feed = FactoryGirl.create :feed
     @user = FactoryGirl.create :user
-    @user.feeds << @feed
+    @user.subscribe @feed.fetch_url
     @entry = FactoryGirl.build :entry, feed_id: @feed.id
     @feed.entries << @entry
     login_user_for_unit @user
