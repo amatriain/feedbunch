@@ -1,12 +1,11 @@
 require 'folder_feed_remove'
 require 'folder_feed_add'
 require 'feed_subscriber'
-require 'feed_unsubscriber'
 require 'feed_refresh'
 require 'entry_state_change'
 require 'entry_recovery'
 require 'subscriptions_importer'
-require 'unread_entries_count_caching'
+require 'subscriptions_manager'
 
 ##
 # User model. Each instance of this class represents a single user that can log in to the application
@@ -85,10 +84,10 @@ class User < ActiveRecord::Base
 
   ##
   # Retrieve the number of unread entries in a feed for this user.
-  # See UnreadEntriesCountCaching#unread_feed_entries_count
+  # See SubscriptionsManager#unread_feed_entries_count
 
-  def unread_feed_entries_count(feed_id)
-    UnreadEntriesCountCaching.unread_feed_entries_count feed_id, self
+  def feed_unread_count(feed_id)
+    SubscriptionsManager.feed_unread_count feed_id, self
   end
 
   ##
@@ -129,8 +128,8 @@ class User < ActiveRecord::Base
   ##
   # Unsubscribe from a feed. See FeedUnsubscriber#unsubscribe
 
-  def unsubscribe(feed_id)
-    FeedUnsubscriber.unsubscribe feed_id, self
+  def unsubscribe(feed)
+    SubscriptionsManager.unsubscribe feed, self
   end
 
   ##

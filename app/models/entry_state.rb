@@ -40,7 +40,7 @@ class EntryState < ActiveRecord::Base
 
   def increment_unread_count
     if !self.read
-      UnreadEntriesCountCaching.increment_feed_count self.entry.feed.id, self.user
+      SubscriptionsManager.feed_increment_count self.entry.feed, self.user
     end
   end
 
@@ -49,7 +49,7 @@ class EntryState < ActiveRecord::Base
 
   def decrement_unread_count
     if !self.read
-      UnreadEntriesCountCaching.decrement_feed_count self.entry.feed.id, self.user
+      SubscriptionsManager.feed_decrement_count self.entry.feed, self.user
     end
   end
 end

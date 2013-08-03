@@ -84,7 +84,8 @@ class FeedsController < ApplicationController
   # Unsubscribe the authenticated user from the feed passed in the params[:id] param.
 
   def destroy
-    @old_folder = current_user.unsubscribe params[:id]
+    @feed = Feed.find params[:id]
+    @old_folder = current_user.unsubscribe @feed
     render 'destroy', locals: {user: current_user,
                                        old_folder: @old_folder}
   rescue => e

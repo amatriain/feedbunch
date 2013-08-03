@@ -58,14 +58,8 @@ class Entry < ActiveRecord::Base
   # If the user is not actually subscribed to the feed, returns false.
 
   def read_by?(user)
-    read = false
-
-    if self.feed.users.include? user
-      state = EntryState.where(entry_id: self.id, user_id: user.id).first
-      read =  state.read
-    end
-
-    return read
+    state = EntryState.where(entry_id: self.id, user_id: user.id).first
+    return state.read
   end
 
   private
