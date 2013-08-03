@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe EntryState do
 
-  before :each do
-    @entry_state = FactoryGirl.create :entry_state
-  end
-
   context 'validations' do
 
     it 'does not accept empty user' do
@@ -46,15 +42,33 @@ describe EntryState do
 
   context 'callbacks' do
 
-    it 'increments the cached count for all subscribed users when first saving it' do
+    before :each do
+      @user = FactoryGirl.create :user
+      @feed = FactoryGirl.create :feed
+      @user.subscribe @feed.fetch_url
+    end
+
+    it 'increments the cached unread count for the user when creating an unread state' do
+      entry_state = FactoryGirl.build :entry_state, read: false
+      FeedSubscription.where(feed_id: entry_state.entry.feed.id, user_id: entry_state.user.id).count.should eq 0
+      entry_state.save!
+      feed_subscription = FeedSubscription.where(feed_id: entry_state.entry.feed.id, user_id: entry_state.user.id).first
+      feed_subscription.unread_entries.should eq 1
+    end
+
+    it 'increments the cached unread count for the user when creating an unread state' do
+      pending
+
+
+
       feed = FactoryGirl.create :feed
       user1 = FactoryGirl.create :user
       user2 = FactoryGirl.create :user
       user1.subscribe feed.fetch_url
       user2.subscribe feed.fetch_url
 
-      user1.unread_feed_entries_count(feed.id).should eq 0
-      user2.unread_feed_entries_count(feed.id).should eq 0
+      user1.feed_unread_count(feed).should eq 0
+      user2.feed_unread_count(feed).should eq 0
 
       entry = FactoryGirl.build :entry, feed_id: feed.id
       entry.save!
