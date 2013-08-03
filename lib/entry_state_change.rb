@@ -1,4 +1,4 @@
-require 'subscriptions_cache'
+require 'subscriptions_manager'
 
 ##
 # Class with methods related to changing the read/unread state of entries.
