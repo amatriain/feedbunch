@@ -30,15 +30,16 @@ class EntryState < ActiveRecord::Base
 
   validates :read, inclusion: {in: [true, false]}
 
-  after_create :increment_unread_count
-  before_destroy :decrement_unread_count
+  after_create :entry_state_created
+  before_destroy :entry_state_destroyed
+  after_update :entry_state_updated
 
   private
 
   ##
   # If the entry is unread, increment by 1 the cached unread entries count after creating the state.
 
-  def increment_unread_count
+  def entry_state_created
     if !self.read
       SubscriptionsManager.feed_increment_count self.entry.feed, self.user
     end
@@ -47,9 +48,23 @@ class EntryState < ActiveRecord::Base
   ##
   # If the entry was unread, decrement by 1 the cached unread entries count before deleting the state.
 
-  def decrement_unread_count
+  def entry_state_destroyed
     if !self.read
       SubscriptionsManager.feed_decrement_count self.entry.feed, self.user
+    end
+  end
+
+  ##
+  # If the state has been changed from read to unread, increment by 1 the cached unread entries count.
+  # If it has been changed from unread to read, decrement it by 1.
+
+  def entry_state_updated
+    if self.read_changed?
+      if self.read
+        SubscriptionsManager.feed_decrement_count self.entry.feed, self.user
+      else
+        SubscriptionsManager.feed_increment_count self.entry.feed, self.user
+      end
     end
   end
 end

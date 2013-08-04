@@ -16,6 +16,9 @@ module ControllersErrorHandling
     elsif error.is_a? AlreadySubscribedError
       # If user is already subscribed to the feed, return 304
       head status: 304
+    elsif error.is_a? NotSubscribedError
+      # If user is not subscribed to the feed, return 404
+      head status: 404
     elsif error.is_a? FolderAlreadyExistsError
       # If user already has a folder with the same title, return 304
       head status: 304

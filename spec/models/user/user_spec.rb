@@ -125,20 +125,22 @@ describe User do
 
   context 'relationship with entry states' do
     it 'retrieves entry states for subscribed feeds' do
-      entry_state1 = FactoryGirl.build :entry_state, user_id: @user.id
-      entry_state2 = FactoryGirl.build :entry_state, user_id: @user.id
-      @user.entry_states << entry_state1
-      @user.entry_states << entry_state2
-
+      feed = FactoryGirl.create :feed
+      entry1 = FactoryGirl.build :entry, feed_id: feed.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry1 << entry2
+      @user.subscribe feed.fetch_url
 
       @user.entry_states.count.should eq 2
-      @user.entry_states.should include entry_state1
-      @user.entry_states.should include entry_state2
+      @user.entry_states.where(entry_id: entry1.id).count.should eq 1
+      @user.entry_states.where(entry_id: entry2.id).count.should eq 1
     end
 
     it 'deletes entry states when deleting a user' do
-      entry_state = FactoryGirl.build :entry_state, user_id: @user.id
-      @user.entry_states << entry_state
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      @user.subscribe feed.fetch_url
 
       EntryState.count.should eq 1
       @user.destroy
@@ -146,8 +148,14 @@ describe User do
     end
 
     it 'does not allow duplicate entry states' do
-      entry_state = FactoryGirl.build :entry_state, user_id: @user.id
-      @user.entry_states << entry_state
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      @user.subscribe feed.fetch_url
+
+      @user.entry_states.count.should eq 1
+
+      entry_state = FactoryGirl.build :entry_state, user_id: @user.id, entry_id: entry.id
       @user.entry_states << entry_state
 
       @user.entry_states.count.should eq 1
@@ -173,7 +181,7 @@ describe User do
       @user.subscribe feed.fetch_url
 
       @user.entry_states.count.should eq 2
-      @user.unsubscribe feed.id
+      @user.unsubscribe feed
       @user.entry_states.count.should eq 0
     end
 
@@ -188,7 +196,7 @@ describe User do
       @user.subscribe feed2.fetch_url
 
       @user.entry_states.count.should eq 2
-      @user.unsubscribe feed1.id
+      @user.unsubscribe feed1
       @user.entry_states.count.should eq 1
       @user.entry_states.where(user_id: @user.id, entry_id: entry2.id).should be_present
     end

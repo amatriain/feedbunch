@@ -86,8 +86,8 @@ class User < ActiveRecord::Base
   # Retrieve the number of unread entries in a feed for this user.
   # See SubscriptionsManager#unread_feed_entries_count
 
-  def feed_unread_count(feed_id)
-    SubscriptionsManager.feed_unread_count feed_id, self
+  def feed_unread_count(feed)
+    SubscriptionsManager.feed_unread_count feed, self
   end
 
   ##
@@ -129,7 +129,7 @@ class User < ActiveRecord::Base
   # Unsubscribe from a feed. See FeedUnsubscriber#unsubscribe
 
   def unsubscribe(feed)
-    SubscriptionsManager.unsubscribe feed, self
+    SubscriptionsManager.remove_subscription feed, self
   end
 
   ##
@@ -171,27 +171,28 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Before removing a feed subscription, remove the feed from its current folder, if any.
-  # If this means the folder is now empty, a deletion of the folder is triggered.
+  # Before removing a feed subscription:
+  # - remove the feed from its current folder, if any. If this means the folder is now empty, a deletion of the folder is triggered.
+  # - delete all state information (read/unread) for this user and for all entries of the feed.
 
   def before_remove_feed_subscription(feed_subscription)
     feed = feed_subscription.feed
+
     folder = feed.user_folder self
     folder.feeds.delete feed if folder.present?
+
+    remove_entry_states feed
   end
 
   ##
-  # When a feed is removed from a user's subscriptions, check if there are other users still subscribed to the feed and:
-  # - if there are no subscribed users, delete the feed. This triggers the deletion of all its entries and entry-states.
-  # - if there are still users subscribed, delete all entry-states for the user and the feed.
+  # When a feed is removed from a user's subscriptions, check if there are other users still subscribed to the feed
+  # and if there are no subscribed users, delete the feed. This triggers the deletion of all its entries and entry-states.
 
   def removed_feed_subscription(feed_subscription)
     feed = feed_subscription.feed
     if feed.users.blank?
       Rails.logger.warn "no more users subscribed to feed #{feed.id} - #{feed.fetch_url} . Removing it from the database"
       feed.destroy
-    else
-      remove_entry_states feed
     end
   end
 

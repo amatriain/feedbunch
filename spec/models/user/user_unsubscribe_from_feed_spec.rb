@@ -31,11 +31,11 @@ describe User do
 
     it 'raises error if the user is not subscribed to the feed' do
       feed2 = FactoryGirl.create :feed
-      expect {@user.unsubscribe feed2}.to raise_error ActiveRecord::RecordNotFound
+      expect {@user.unsubscribe feed2}.to raise_error
     end
 
     it 'raises an error if there is a problem unsubscribing' do
-      User.any_instance.stub(:feeds).and_raise StandardError.new
+      SubscriptionsManager.stub(:remove_subscription).and_raise StandardError.new
       expect {@user.unsubscribe @feed}.to raise_error
     end
 

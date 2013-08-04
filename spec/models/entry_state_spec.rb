@@ -42,85 +42,60 @@ describe EntryState do
 
   context 'callbacks' do
 
-    before :each do
-      @user = FactoryGirl.create :user
-      @feed = FactoryGirl.create :feed
-      @user.subscribe @feed.fetch_url
-    end
-
-    it 'increments the cached unread count for the user when creating an unread state' do
+    it 'increments the cached unread count when creating an unread state' do
       entry_state = FactoryGirl.build :entry_state, read: false
-      FeedSubscription.where(feed_id: entry_state.entry.feed.id, user_id: entry_state.user.id).count.should eq 0
+      SubscriptionsManager.should_receive(:feed_increment_count).once.with do |feed, user|
+        entry_state.entry.feed.should eq feed
+        entry_state.user.should eq user
+      end
+
       entry_state.save!
-      feed_subscription = FeedSubscription.where(feed_id: entry_state.entry.feed.id, user_id: entry_state.user.id).first
-      feed_subscription.unread_entries.should eq 1
     end
 
-    it 'increments the cached unread count for the user when creating an unread state' do
-      pending
+    it 'does not increment the cached unread count when creating a read state' do
+      entry_state = FactoryGirl.build :entry_state, read: true
+      SubscriptionsManager.should_not_receive :feed_increment_count
 
-
-
-      feed = FactoryGirl.create :feed
-      user1 = FactoryGirl.create :user
-      user2 = FactoryGirl.create :user
-      user1.subscribe feed.fetch_url
-      user2.subscribe feed.fetch_url
-
-      user1.feed_unread_count(feed).should eq 0
-      user2.feed_unread_count(feed).should eq 0
-
-      entry = FactoryGirl.build :entry, feed_id: feed.id
-      entry.save!
-
-      user1.unread_feed_entries_count(feed.id).should eq 1
-      user2.unread_feed_entries_count(feed.id).should eq 1
+      entry_state.save!
     end
 
-    it 'does not increment the cached count when updating an already saved entry' do
-      feed = FactoryGirl.create :feed
-      entry = FactoryGirl.create :entry, feed_id: feed.id
-      user1 = FactoryGirl.create :user
-      user2 = FactoryGirl.create :user
-      user1.subscribe feed.fetch_url
-      user2.subscribe feed.fetch_url
+    it 'decrements the cached unread count when deleting an unread state' do
+      entry_state = FactoryGirl.create :entry_state, read: false
+      SubscriptionsManager.should_receive(:feed_decrement_count).once.with do |feed, user|
+        entry_state.entry.feed.should eq feed
+        entry_state.user.should eq user
+      end
 
-      user1.unread_feed_entries_count(feed.id).should eq 1
-      user2.unread_feed_entries_count(feed.id).should eq 1
-
-      entry.summary = "changed summary"
-      entry.save!
-
-      user1.unread_feed_entries_count(feed.id).should eq 1
-      user2.unread_feed_entries_count(feed.id).should eq 1
+      entry_state.destroy
     end
 
-    it 'does not increment the cached count for unsubscribed users' do
-      feed = FactoryGirl.create :feed
-      user1 = FactoryGirl.create :user
-      user2 = FactoryGirl.create :user
-      user1.subscribe feed.fetch_url
+    it 'does not decrement the cached unread count when deleting a read state' do
+      entry_state = FactoryGirl.create :entry_state, read: true
+      SubscriptionsManager.should_not_receive :feed_decrement_count
 
-      entry = FactoryGirl.build :entry, feed_id: feed.id
-      entry.save!
-
-      user1.unread_feed_entries_count(feed.id).should eq 1
-      user2.unread_feed_entries_count(feed.id).should eq 0
+      entry_state.destroy
     end
 
-    it 'decrements the cached count when deleting an entry state' do
-      feed = FactoryGirl.create :feed
-      entry1 = FactoryGirl.build :entry, feed_id: feed.id
-      entry2 = FactoryGirl.build :entry, feed_id: feed.id
-      feed.entries << entry1 << entry2
-      user = FactoryGirl.create :user
-      user.subscribe feed.fetch_url
+    it 'increments the cached unread count when changing a state from read to unread' do
+      entry_state = FactoryGirl.create :entry_state, read: true
+      SubscriptionsManager.should_receive(:feed_increment_count).once.with do |feed, user|
+        entry_state.entry.feed.should eq feed
+        entry_state.user.should eq user
+      end
 
-      user.unread_feed_entries_count(feed.id).should eq 2
+      entry_state.read = false
+      entry_state.save!
+    end
 
-      entry1.destroy
+    it 'decrements the cached unread count when changing a state from unread to read' do
+      entry_state = FactoryGirl.create :entry_state, read: false
+      SubscriptionsManager.should_receive(:feed_decrement_count).once.with do |feed, user|
+        entry_state.entry.feed.should eq feed
+        entry_state.user.should eq user
+      end
 
-      user.unread_feed_entries_count(feed.id).should eq 1
+      entry_state.read = true
+      entry_state.save!
     end
 
   end
