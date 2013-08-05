@@ -74,9 +74,6 @@ gem 'god'
 gem 'capistrano', require: false
 gem 'rvm-capistrano', require: false
 
-# Enable TLS in God email notifications
-gem 'tlsmail', require: false
-
 # Authorization management
 gem 'cancan'
 
