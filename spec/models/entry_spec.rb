@@ -134,32 +134,31 @@ describe Entry do
 
   context 'read/unread state' do
 
-    it 'retrieves the read/unread states of an entry for subscribed users' do
-      entry_state1 = FactoryGirl.build :entry_state, entry_id: @entry.id
-      entry_state2 = FactoryGirl.build :entry_state, entry_id: @entry.id
-      @entry.entry_states << entry_state1 << entry_state2
+    it 'stores the read/unread states of an entry for subscribed users' do
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      user1 = FactoryGirl.create :user
+      user2 = FactoryGirl.create :user
+      user1.subscribe feed.fetch_url
+      user2.subscribe feed.fetch_url
 
-      @entry.entry_states.count.should eq 2
-      @entry.entry_states.should include entry_state1
-      @entry.entry_states.should include entry_state2
+      entry.entry_states.count.should eq 2
+      entry.entry_states.where(user_id: user1.id).count.should eq 1
+      entry.entry_states.where(user_id: user2.id).count.should eq 1
     end
 
     it 'deletes entry states when deleting an entry' do
-      entry_state1 = FactoryGirl.build :entry_state, entry_id: @entry.id
-      entry_state2 = FactoryGirl.build :entry_state, entry_id: @entry.id
-      @entry.entry_states << entry_state1 << entry_state2
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
 
-      EntryState.all.count.should eq 2
-      @entry.destroy
-      EntryState.all.count.should eq 0
-    end
+      EntryState.where(entry_id: entry.id).count.should eq 1
 
-    it 'does not allow duplicate entry states' do
-      entry_state = FactoryGirl.build :entry_state, entry_id: @entry.id
-      @entry.entry_states << entry_state
-      @entry.entry_states << entry_state
-
-      @entry.entry_states.count.should eq 1
+      entry.destroy
+      EntryState.where(entry_id: entry.id).count.should eq 0
     end
 
     it 'marks an entry as unread for all subscribed users when first saving it' do
