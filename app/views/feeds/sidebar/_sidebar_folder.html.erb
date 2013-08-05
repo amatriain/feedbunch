@@ -13,7 +13,10 @@
     <%# Links to read each individual feed in the folder %>
     <% feeds.all(order: 'title ASC').each do |feed| %>
 
-      <%= render 'feeds/sidebar/sidebar_feed', user: user, feed: feed %>
+      <%# Ensure user is actually subscribed to the feed, in case there is some data inconsistency %>
+      <% if user.feeds.include? feed %>
+        <%= render 'feeds/sidebar/sidebar_feed', user: user, feed: feed %>
+      <% end %>
 
     <% end %>
   </ul>
