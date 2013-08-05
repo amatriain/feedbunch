@@ -20,23 +20,41 @@ describe EntryState do
     end
 
     it 'does not accept multiple states for the same entry and user' do
-      entry_state = FactoryGirl.create :entry_state
-      entry_state_dupe = FactoryGirl.build :entry_state, entry_id: entry_state.entry.id, user_id: entry_state.user.id
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+
+      EntryState.exists?(entry_id: entry.id, user_id: user.id).should be_true
+
+      entry_state_dupe = FactoryGirl.build :entry_state, entry_id: entry.id, user_id: user.id
       entry_state_dupe.should_not be_valid
     end
 
     it 'accepts multiple states for the same entry and different users' do
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      user1 = FactoryGirl.create :user
+      user1.subscribe feed.fetch_url
       user2 = FactoryGirl.create :user
-      entry_state1 = FactoryGirl.create :entry_state
-      entry_state2 = FactoryGirl.build :entry_state, entry_id: entry_state1.entry.id, user_id: user2.id
-      entry_state2.should be_valid
+      user2.subscribe feed.fetch_url
+
+      EntryState.exists?(entry_id: entry.id, user_id: user1.id).should be_true
+      EntryState.exists?(entry_id: entry.id, user_id: user2.id).should be_true
     end
 
     it 'accepts multiple states for different entries and the same user' do
-      entry2 = FactoryGirl.create :entry
-      entry_state1 = FactoryGirl.create :entry_state
-      entry_state2 = FactoryGirl.build :entry_state, entry_id: entry2.id, user_id: entry_state1.user.id
-      entry_state2.should be_valid
+      feed = FactoryGirl.create :feed
+      entry1 = FactoryGirl.build :entry, feed_id: feed.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry1 << entry2
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+
+      EntryState.exists?(entry_id: entry1.id, user_id: user.id).should be_true
+      EntryState.exists?(entry_id: entry2.id, user_id: user.id).should be_true
     end
   end
 
@@ -60,10 +78,18 @@ describe EntryState do
     end
 
     it 'decrements the cached unread count when deleting an unread state' do
-      entry_state = FactoryGirl.create :entry_state, read: false
-      SubscriptionsManager.should_receive(:feed_decrement_count).once.with do |feed, user|
-        entry_state.entry.feed.should eq feed
-        entry_state.user.should eq user
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+
+      user.feed_unread_count(feed).should eq 1
+
+      entry_state = EntryState.where(entry_id: entry.id, user_id: user.id).first
+      SubscriptionsManager.should_receive(:feed_decrement_count).once.with do |feed_arg, user_arg|
+        entry_state.entry.feed.should eq feed_arg
+        entry_state.user.should eq user_arg
       end
 
       entry_state.destroy
@@ -88,10 +114,20 @@ describe EntryState do
     end
 
     it 'decrements the cached unread count when changing a state from unread to read' do
-      entry_state = FactoryGirl.create :entry_state, read: false
-      SubscriptionsManager.should_receive(:feed_decrement_count).once.with do |feed, user|
-        entry_state.entry.feed.should eq feed
-        entry_state.user.should eq user
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+
+      entry.read_by?(user).should be_false
+      user.feed_unread_count(feed).should eq 1
+
+      entry_state = EntryState.where(entry_id: entry.id, user_id: user.id).first
+
+      SubscriptionsManager.should_receive(:feed_decrement_count).once.with do |feed_arg, user_arg|
+        entry_state.entry.feed.should eq feed_arg
+        entry_state.user.should eq user_arg
       end
 
       entry_state.read = true
