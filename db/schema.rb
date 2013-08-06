@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130801122616) do
+ActiveRecord::Schema.define(:version => 20130806161913) do
 
   create_table "data_imports", :force => true do |t|
     t.integer  "user_id"
@@ -69,8 +69,9 @@ ActiveRecord::Schema.define(:version => 20130801122616) do
   create_table "folders", :force => true do |t|
     t.integer  "user_id"
     t.text     "title"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "unread_entries"
   end
 
   create_table "users", :force => true do |t|

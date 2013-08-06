@@ -26,10 +26,28 @@ class Folder < ActiveRecord::Base
   has_many :entries, through: :feeds
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
+  validates :unread_entries, presence: true, numericality: {only_integer: true, greater_than_or_equal_to: 0}
 
-  before_validation :sanitize_attributes
+  before_validation :before_folder_validation
 
   private
+
+  ##
+  # Before validation of the folder instance:
+  # - give default value to its attributes
+  # - sanitize those attributes that need it
+
+  def before_folder_validation
+    default_values
+    sanitize_attributes
+  end
+
+  ##
+  # By default the number of unread entries is zero, if not set.
+
+  def default_values
+    self.unread_entries = 0 if self.unread_entries.blank?
+  end
 
   ##
   # Sanitize the title of the folder.

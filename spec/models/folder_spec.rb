@@ -32,6 +32,22 @@ describe Folder do
       folder_dupe.user_id.should_not eq @folder.user_id
       folder_dupe.should be_valid
     end
+
+    it 'gives a default value of zero to the unread entries count' do
+      folder = FactoryGirl.build :folder, unread_entries: nil
+      folder.save!
+      folder.unread_entries.should eq 0
+    end
+
+    it 'does not accept decimal unread_entries count' do
+      folder = FactoryGirl.build :folder, unread_entries: 1.5
+      folder.should_not be_valid
+    end
+
+    it 'does not accept negative unread_entries count' do
+      folder = FactoryGirl.build :folder, unread_entries: -1
+      folder.should_not be_valid
+    end
   end
 
   context 'association with feeds' do
