@@ -58,7 +58,7 @@ describe EntryState do
     end
   end
 
-  context 'callbacks' do
+  context 'feed unread count' do
 
     it 'increments the cached unread count when creating an unread state' do
       entry_state = FactoryGirl.build :entry_state, read: false
@@ -134,5 +134,29 @@ describe EntryState do
       entry_state.save!
     end
 
+  end
+
+  context 'folder unread count' do
+
+    it 'increments the cached unread count when creating an unread state' do
+      user = FactoryGirl.create :user
+      feed = FactoryGirl.create :feed
+      user.subscribe feed.fetch_url
+      folder = FactoryGirl.build :folder, user_id: user.id
+      user.folders << folder
+      folder.feeds << feed
+
+      EntryState.where(user_id: user.id).count.should eq 0
+      folder.unread_entries.should eq 0
+
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+
+      EntryState.where(user_id: user.id, entry_id: entry.id).count.should eq 1
+      entry_state = EntryState.where(user_id: user.id, entry_id: entry.id).first
+      entry_state.read.should be_false
+
+      folder.reload.unread_entries.should eq 1
+    end
   end
 end

@@ -9,6 +9,9 @@ describe User do
     @feed.entries << @entry1 << @entry2
     @user.subscribe @feed.fetch_url
     @user.change_entry_state [@entry1.id], 'read'
+    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << @folder
+    @folder.feeds << @feed
   end
 
   context 'unread entries count caching' do
@@ -70,7 +73,11 @@ describe User do
 
     context 'folder unread entries count' do
 
-      it 'retrieves folder cached count'
+      it 'retrieves folder cached count' do
+        pending
+        unread_entries = @folder.unread_entries
+        unread_entries.should eq 1
+      end
 
       it 'decrements folder cached count when marking an entry as read'
 
