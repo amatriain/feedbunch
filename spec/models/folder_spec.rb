@@ -131,6 +131,7 @@ describe Folder do
         user2 = FactoryGirl.create :user
         folder3 = FactoryGirl.build :folder, user_id: user2.id
         user2.folders << folder3
+        user2.subscribe @feed1.fetch_url
         folder3.feeds << @feed1
 
         @folder.user_id.should eq @user.id
@@ -168,7 +169,6 @@ describe Folder do
       end
 
       it 'increments the unread entries count when adding a feed' do
-        pending
         entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
         entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
         @feed1.entries << entry1 << entry2
@@ -181,10 +181,6 @@ describe Folder do
         folder2.feeds << @feed1
 
         folder2.reload.unread_entries.should eq 1
-      end
-
-      it 'decrements the unread entries count when removing a feed' do
-        pending
       end
     end
 
@@ -208,6 +204,7 @@ describe Folder do
 
       it 'does not change feed association with other folders' do
         folder2 = FactoryGirl.create :folder
+        folder2.user.subscribe @feed1.fetch_url
         folder2.feeds << @feed1
 
         @folder.feeds.delete @feed1
@@ -217,6 +214,22 @@ describe Folder do
         folder2.feeds.should include @feed1
       end
 
+      it 'decrements the unread entries count when removing a feed' do
+        entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+        entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
+        @feed1.entries << entry1 << entry2
+        @user.change_entry_state [entry1.id], 'read'
+        folder2 = FactoryGirl.build :folder, user_id: @user.id
+        @user.folders << folder2
+        folder2.feeds << @feed1 << @feed2
+
+        folder2.reload.unread_entries.should eq 1
+
+        folder2.feeds.delete @feed1
+
+        folder2.reload.unread_entries.should eq 0
+      end
+
     end
   end
 
@@ -224,6 +237,8 @@ describe Folder do
     it 'retrieves all entries for all feeds in a folder' do
       feed1 = FactoryGirl.create :feed
       feed2 = FactoryGirl.create :feed
+      @user.subscribe feed1.fetch_url
+      @user.subscribe feed2.fetch_url
       @folder.feeds << feed1 << feed2
       entry1 = FactoryGirl.build :entry, feed_id: feed1.id
       entry2 = FactoryGirl.build :entry, feed_id: feed1.id

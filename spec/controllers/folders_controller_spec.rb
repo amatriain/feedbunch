@@ -11,6 +11,10 @@ describe FoldersController do
     @feed2 = FactoryGirl.create :feed
     @feed3 = FactoryGirl.create :feed
 
+    @user.subscribe @feed1.fetch_url
+    @user.subscribe @feed2.fetch_url
+    @user.subscribe @feed3.fetch_url
+
     @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
     @entry1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry1_1 << @entry1_2
@@ -25,9 +29,6 @@ describe FoldersController do
 
     @user.folders << @folder1
     @folder1.feeds << @feed1 << @feed2
-    @user.subscribe @feed1.fetch_url
-    @user.subscribe @feed2.fetch_url
-    @user.subscribe @feed3.fetch_url
 
     login_user_for_unit @user
   end

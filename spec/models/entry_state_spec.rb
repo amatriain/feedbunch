@@ -160,8 +160,6 @@ describe EntryState do
     end
 
     it 'decrements the cached unread count when deleting an unread state' do
-      pending
-
       feed = FactoryGirl.create :feed
       entry = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry
@@ -176,6 +174,72 @@ describe EntryState do
       entry_state = EntryState.where(entry_id: entry.id, user_id: user.id).first
       entry_state.destroy
 
+      folder.reload.unread_entries.should eq 0
+    end
+
+    it 'does not decrement the cached unread count when deleting a read state' do
+      feed = FactoryGirl.create :feed
+      entry1 = FactoryGirl.build :entry, feed_id: feed.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry1 << entry2
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+      user.change_entry_state [entry1.id], 'read'
+      folder = FactoryGirl.build :folder, user_id: user.id
+      user.folders << folder
+      folder.feeds << feed
+
+      EntryState.where(entry_id: entry1.id, user_id: user.id).first.read.should be_true
+      EntryState.where(entry_id: entry2.id, user_id: user.id).first.read.should be_false
+      folder.reload.unread_entries.should eq 1
+
+      feed.entries.destroy entry1
+
+      EntryState.exists?(entry_id: entry1.id).should be_false
+      folder.reload.unread_entries.should eq 1
+    end
+
+    it 'increments the cached unread count when changing a state from read to unread' do
+      feed = FactoryGirl.create :feed
+      entry1 = FactoryGirl.build :entry, feed_id: feed.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry1 << entry2
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+      user.change_entry_state [entry1.id], 'read'
+      folder = FactoryGirl.build :folder, user_id: user.id
+      user.folders << folder
+      folder.feeds << feed
+
+      EntryState.where(entry_id: entry1.id, user_id: user.id).first.read.should be_true
+      EntryState.where(entry_id: entry2.id, user_id: user.id).first.read.should be_false
+      folder.reload.unread_entries.should eq 1
+
+      user.change_entry_state [entry1.id], 'unread'
+
+      EntryState.where(entry_id: entry1.id, user_id: user.id).first.read.should be_false
+      folder.reload.unread_entries.should eq 2
+    end
+
+    it 'decrements the cached unread count when changing a state from unread to read' do
+      feed = FactoryGirl.create :feed
+      entry1 = FactoryGirl.build :entry, feed_id: feed.id
+      entry2 = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry1 << entry2
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+      user.change_entry_state [entry1.id], 'read'
+      folder = FactoryGirl.build :folder, user_id: user.id
+      user.folders << folder
+      folder.feeds << feed
+
+      EntryState.where(entry_id: entry1.id, user_id: user.id).first.read.should be_true
+      EntryState.where(entry_id: entry2.id, user_id: user.id).first.read.should be_false
+      folder.reload.unread_entries.should eq 1
+
+      user.change_entry_state [entry2.id], 'read'
+
+      EntryState.where(entry_id: entry2.id, user_id: user.id).first.read.should be_true
       folder.reload.unread_entries.should eq 0
     end
   end

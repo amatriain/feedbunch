@@ -25,7 +25,7 @@ class Folder < ActiveRecord::Base
 
   belongs_to :user
   validates :user_id, presence: true
-  has_and_belongs_to_many :feeds, uniq: true, before_add: :before_add_feed, after_remove: :remove_empty_folders
+  has_and_belongs_to_many :feeds, uniq: true, before_add: :before_add_feed, after_remove: :after_remove_feed
   has_many :entries, through: :feeds
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
@@ -84,7 +84,7 @@ class Folder < ActiveRecord::Base
   end
 
   ##
-  # Increment the current count of unread entries in the feed, by the count of unread entries
+  # Increment the current count of unread entries in the folder, by the count of unread entries
   # in the feed being added to the folder.
   #
   # Remember that unread entries counts for feeds are relative to the user; this is, different users
@@ -93,6 +93,21 @@ class Folder < ActiveRecord::Base
   def increment_unread_count(feed)
     count = self.user.feed_unread_count feed
     self.unread_entries += count
+    self.save!
+  end
+
+  ##
+  # After removing a feed from a folder:
+  # - delete the folder if it's now empty
+  # - otherwise, decrement the count of unread entries in the folder, by the count of unread entries
+  # in the feed being removed from the folder
+  #
+  # Remember that unread entries counts for feeds are relative to the user; this is, different users
+  # will likely have a different numer of unread entries in the same feed.
+
+  def after_remove_feed(feed)
+    remove_empty_folders feed
+    decrement_unread_count feed if !self.destroyed?
   end
 
   ##
@@ -103,5 +118,11 @@ class Folder < ActiveRecord::Base
     if self.feeds.blank?
       self.destroy
     end
+  end
+
+  def decrement_unread_count(feed)
+    count = self.user.feed_unread_count feed
+    self.unread_entries -= count
+    self.save!
   end
 end

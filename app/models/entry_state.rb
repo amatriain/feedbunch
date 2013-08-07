@@ -78,10 +78,27 @@ class EntryState < ActiveRecord::Base
 
   def entry_state_updated
     if self.read_changed?
+      feed = self.entry.feed
+      folder = feed.user_folder self.user
+
       if self.read
+        # Decrement the feed unread entries count
         SubscriptionsManager.feed_decrement_count self.entry.feed, self.user
+
+        # Decrement the folder unread entries count, if the feed is in a folder
+        if folder.present?
+          folder.unread_entries -= 1
+          folder.save!
+        end
       else
+        # Increment the feed unread entries count
         SubscriptionsManager.feed_increment_count self.entry.feed, self.user
+
+        # Increment the folder unread entries count, if the feed is in a folder
+        if folder.present?
+          folder.unread_entries += 1
+          folder.save!
+        end
       end
     end
   end
