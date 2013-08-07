@@ -74,22 +74,46 @@ describe User do
     context 'folder unread entries count' do
 
       it 'retrieves folder cached count' do
-        pending
-        unread_entries = @folder.unread_entries
+        unread_entries = @folder.reload.unread_entries
         unread_entries.should eq 1
       end
 
-      it 'decrements folder cached count when marking an entry as read'
+      it 'decrements folder cached count when marking an entry as read' do
+        @folder.reload.unread_entries.should eq 1
+        @user.change_entry_state [@entry2.id], 'read'
+        @folder.reload.unread_entries.should eq 0
+      end
 
-      it 'increments folder cached count when marking an entry as unread'
+      it 'increments folder cached count when marking an entry as unread' do
+        @folder.reload.unread_entries.should eq 1
+        @user.change_entry_state [@entry1.id], 'unread'
+        @folder.reload.unread_entries.should eq 2
+      end
 
-      it 'increments folder cached count when adding entries to a feed'
+      it 'increments folder cached count when adding entries to a feed' do
+        @folder.reload.unread_entries.should eq 1
 
-      it 'decrements folder cached count when deleting unread entries from a feed'
+        entry3 = FactoryGirl.build :entry, feed_id: @feed.id
+        @feed.entries << entry3
 
-      it 'does not decrement folder cached count when deleting read entries from a feed'
+        @folder.reload.unread_entries.should eq 2
+      end
 
-      it 'removes folder cached count when destroying a folder'
+      it 'decrements folder cached count when deleting unread entries from a feed' do
+        @folder.reload.unread_entries.should eq 1
+
+        @feed.entries.delete @entry2
+
+        @folder.reload.unread_entries.should eq 0
+      end
+
+      it 'does not decrement folder cached count when deleting read entries from a feed' do
+        @folder.reload.unread_entries.should eq 1
+
+        @feed.entries.delete @entry1
+
+        @folder.reload.unread_entries.should eq 1
+      end
 
       it 'decrements folder cached count when unsubscribing from a feed'
 
