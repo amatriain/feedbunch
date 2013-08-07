@@ -21,6 +21,9 @@ describe 'unread entries count' do
     @feed1.entries << @entry1_1 << @entry1_2 << @entry1_3
     @feed2.entries << @entry2_1
 
+    # Ensure unread entries count in the folder has been updated correctly
+    @folder1.reload.unread_entries.should eq 3
+
     login_user_for_feature @user
     visit feeds_path
   end
@@ -40,6 +43,10 @@ describe 'unread entries count' do
 
   it 'updates number of unread entries when adding a feed to a newly created folder', js: true do
     @folder1.feeds << @feed2
+
+    # Ensure folder unread entries count has been updated successfully
+    @folder1.reload.unread_entries.should eq 4
+
     visit feeds_path
     title = 'New folder'
     add_feed_to_new_folder @feed1.id, title
@@ -55,11 +62,16 @@ describe 'unread entries count' do
   it 'updates number of unread entries when moving a feed into an existing folder', js: true do
     # @folder1 has @feed1, @feed2. folder2 has feed3
     @folder1.feeds << @feed2
+
     folder2 = FactoryGirl.build :folder, user_id: @user.id
     @user.folders << folder2
     feed3 = FactoryGirl.create :feed
     @user.subscribe feed3.fetch_url
     folder2.feeds << feed3
+
+    # Ensure folder unread entries count has been updated successfully
+    @folder1.reload.unread_entries.should eq 4
+
     visit feeds_path
 
     add_feed_to_folder @feed1.id, folder2.id
@@ -72,6 +84,10 @@ describe 'unread entries count' do
 
   it 'updates number of unread entries when removing a feed from a folder', js: true do
     @folder1.feeds << @feed2
+
+    # Ensure folder unread entries count has been updated successfully
+    @folder1.reload.unread_entries.should eq 4
+
     visit feeds_path
 
     remove_feed_from_folder @feed1.id, @folder1.id
@@ -91,6 +107,10 @@ describe 'unread entries count' do
 
   it 'updates number of unread entries when unsubscribing from a feed', js: true do
     @folder1.feeds << @feed2
+
+    # Ensure folder unread entries count has been updated successfully
+    @folder1.reload.unread_entries.should eq 4
+
     visit feeds_path
     unsubscribe_feed @feed1.id
     unread_folder_entries_should_eq 'all', 1

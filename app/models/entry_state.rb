@@ -48,6 +48,7 @@ class EntryState < ActiveRecord::Base
       feed = self.entry.feed
       folder = feed.user_folder self.user
       if folder.present?
+        Rails.logger.debug "Unread entry #{self.entry.id} - #{self.entry.guid} created. Incrementing unread entries count for user #{self.user.id} - #{self.user.email}, folder #{folder.id} - #{folder.title}. Current: #{folder.unread_entries}, incremented by 1"
         folder.unread_entries += 1
         folder.save!
       end
@@ -66,6 +67,7 @@ class EntryState < ActiveRecord::Base
       feed = self.entry.feed
       folder = feed.user_folder self.user
       if folder.present?
+        Rails.logger.debug "Unread entry #{self.entry.id} - #{self.entry.guid} destroyed. Decrementing unread entries count for user #{self.user.id} - #{self.user.email}, folder #{folder.id} - #{folder.title}. Current: #{folder.unread_entries}, decremented by 1"
         folder.unread_entries -= 1
         folder.save!
       end
@@ -87,6 +89,7 @@ class EntryState < ActiveRecord::Base
 
         # Decrement the folder unread entries count, if the feed is in a folder
         if folder.present?
+          Rails.logger.debug "Entry #{self.entry.id} - #{self.entry.guid} marked as read. Decrementing unread entries count for user #{self.user.id} - #{self.user.email}, folder #{folder.id} - #{folder.title}. Current: #{folder.unread_entries}, decremented by 1"
           folder.unread_entries -= 1
           folder.save!
         end
@@ -96,6 +99,7 @@ class EntryState < ActiveRecord::Base
 
         # Increment the folder unread entries count, if the feed is in a folder
         if folder.present?
+          Rails.logger.debug "Entry #{self.entry.id} - #{self.entry.guid} marked as unread. Incrementing unread entries count for user #{self.user.id} - #{self.user.email}, folder #{folder.id} - #{folder.title}. Current: #{folder.unread_entries}, incremented by 1"
           folder.unread_entries += 1
           folder.save!
         end

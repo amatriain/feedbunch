@@ -92,6 +92,7 @@ class Folder < ActiveRecord::Base
 
   def increment_unread_count(feed)
     count = self.user.feed_unread_count feed
+    Rails.logger.debug "Feed #{feed.id} - #{feed.title} with #{count} unread entries added to folder #{self.id} - #{self.title}. Incrementing unread entries count, current: #{self.unread_entries}, incremented by #{count}"
     self.unread_entries += count
     self.save!
   end
@@ -122,6 +123,7 @@ class Folder < ActiveRecord::Base
 
   def decrement_unread_count(feed)
     count = self.user.feed_unread_count feed
+    Rails.logger.debug "Feed #{feed.id} - #{feed.title} with #{count} unread entries removed from folder #{self.id} - #{self.title}. Decrementing unread entries count, current: #{self.unread_entries}, decremented by #{count}"
     self.unread_entries -= count
     self.save!
   end

@@ -89,6 +89,7 @@ class SubscriptionsManager
     end
 
     feed_subscription = user.feed_subscriptions.where(feed_id: feed.id).first
+    Rails.logger.debug "Incrementing unread entries count for user #{user.id} - #{user.email}, feed #{feed.id} - #{feed.fetch_url}. Current: #{feed_subscription.unread_entries}, incremented by #{increment}"
     feed_subscription.unread_entries += increment
     feed_subscription.save!
   end
@@ -110,6 +111,7 @@ class SubscriptionsManager
     end
 
     feed_subscription = user.feed_subscriptions.where(feed_id: feed.id).first
+    Rails.logger.debug "Decrementing unread entries count for user #{user.id} - #{user.email}, feed #{feed.id} - #{feed.fetch_url}. Current: #{feed_subscription.unread_entries}, decremented by #{decrement}"
     feed_subscription.unread_entries -= decrement
     feed_subscription.save!
   end
