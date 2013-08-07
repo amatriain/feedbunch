@@ -158,5 +158,25 @@ describe EntryState do
 
       folder.reload.unread_entries.should eq 1
     end
+
+    it 'decrements the cached unread count when deleting an unread state' do
+      pending
+
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+      folder = FactoryGirl.build :folder, user_id: user.id
+      user.folders << folder
+      folder.feeds << feed
+
+      folder.reload.unread_entries.should eq 1
+
+      entry_state = EntryState.where(entry_id: entry.id, user_id: user.id).first
+      entry_state.destroy
+
+      folder.reload.unread_entries.should eq 0
+    end
   end
 end

@@ -166,6 +166,26 @@ describe Folder do
         @folder.feeds << @feed1
         Folder.where(id: folder2.id).should be_blank
       end
+
+      it 'increments the unread entries count when adding a feed' do
+        pending
+        entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+        entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
+        @feed1.entries << entry1 << entry2
+        @user.change_entry_state [entry1.id], 'read'
+        folder2 = FactoryGirl.build :folder, user_id: @user.id
+        @user.folders << folder2
+
+        folder2.reload.unread_entries.should eq 0
+
+        folder2.feeds << @feed1
+
+        folder2.reload.unread_entries.should eq 1
+      end
+
+      it 'decrements the unread entries count when removing a feed' do
+        pending
+      end
     end
 
     context 'remove feed from folder' do

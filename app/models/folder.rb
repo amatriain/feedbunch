@@ -14,6 +14,9 @@
 #
 # A given user cannot have two folders with the same title. Folders with the same title are allowed as long as they
 # belong to different users.
+#
+# The unread_entries attribute serves as a pre-calculated count of the unread entries in the folder. This enables us
+# to display this number without having to execute an expensive SQL count operation every time.
 
 class Folder < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -22,7 +25,7 @@ class Folder < ActiveRecord::Base
 
   belongs_to :user
   validates :user_id, presence: true
-  has_and_belongs_to_many :feeds, uniq: true, before_add: :single_user_folder, after_remove: :remove_empty_folders
+  has_and_belongs_to_many :feeds, uniq: true, before_add: :before_add_feed, after_remove: :remove_empty_folders
   has_many :entries, through: :feeds
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
@@ -60,14 +63,36 @@ class Folder < ActiveRecord::Base
   end
 
   ##
-  # Before adding a feed to a folder, check if the feed is already in another folder owned
-  # by the same user. In this case, remove it from the old folder before adding it to the new one.
+  # Before adding a feed to a folder:
+  # - ensure that the feed is only in this folder, for the current user.
+  # - increment the count of unread entries in the folder.
+
+  def before_add_feed(feed)
+    single_user_folder feed
+    increment_unread_count feed
+  end
+
+  ##
+  # Check if the feed is already in another folder owned by the same user.
+  # In this case, remove it from the old folder before adding it to the new one.
 
   def single_user_folder(feed)
     old_folder = feed.folders.where(user_id: self.user_id).first
     if old_folder.present?
       old_folder.feeds.delete feed
     end
+  end
+
+  ##
+  # Increment the current count of unread entries in the feed, by the count of unread entries
+  # in the feed being added to the folder.
+  #
+  # Remember that unread entries counts for feeds are relative to the user; this is, different users
+  # will likely have a different number of unread entries in the same feed.
+
+  def increment_unread_count(feed)
+    count = self.user.feed_unread_count feed
+    self.unread_entries += count
   end
 
   ##

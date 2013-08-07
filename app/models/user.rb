@@ -133,10 +133,10 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Change the read/unread state of an entry for this user. See EntryStateChange#change_entry_state
+  # Change the read/unread state of an array of entries for this user. See EntryStateChange#change_entry_state
 
-  def change_entry_state(entry_id, state)
-    EntryStateChange.change_entry_state entry_id, state, self
+  def change_entry_state(entry_ids, state)
+    EntryStateChange.change_entry_state entry_ids, state, self
   end
 
   ##
