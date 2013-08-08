@@ -5,7 +5,14 @@
      data-feed-path="<%= folder_path folder_id %>"
      data-feed-title="<%= t 'feeds.index.all_entries' %>">
     <em><strong>
-      <i class="icon-rss"></i> <%= "#{t 'feeds.index.all_entries'} (#{user.unread_folder_entries(folder_id).count})" %>
+      <%
+        if folder_id == 'all'
+          folder = 'all'
+        else
+          folder = Folder.find folder_id
+        end
+      %>
+      <i class="icon-rss"></i> <%= "#{t 'feeds.index.all_entries'} (#{user.folder_unread_count folder})" %>
     </strong></em> <i class="icon-spinner hidden"></i>
   </a>
 </li>

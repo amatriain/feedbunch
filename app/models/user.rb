@@ -91,6 +91,14 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Retrieve the number of unread entries in a folder for this user.
+  # See SubscriptionsManager#unread_folder_entries_count
+
+  def folder_unread_count(feed)
+    SubscriptionsManager.folder_unread_count feed, self
+  end
+
+  ##
   # Remove a feed from a folder. See FolderFeedRemove#remove_feed_from_folder
 
   def remove_feed_from_folder(feed_id)

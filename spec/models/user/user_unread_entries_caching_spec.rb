@@ -74,8 +74,17 @@ describe User do
     context 'folder unread entries count' do
 
       it 'retrieves folder cached count' do
-        unread_entries = @folder.reload.unread_entries
+        unread_entries = @user.folder_unread_count @folder
         unread_entries.should eq 1
+      end
+
+      it 'retrieves cached count of all unread entries in all subscribed feeds' do
+        feed2 = FactoryGirl.create :feed
+        entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+        feed2.entries << entry3
+        @user.subscribe feed2.fetch_url
+
+        @user.folder_unread_count('all').should eq 2
       end
 
       it 'decrements folder cached count when marking an entry as read' do
