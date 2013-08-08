@@ -115,11 +115,52 @@ describe User do
         @folder.reload.unread_entries.should eq 1
       end
 
-      it 'decrements folder cached count when unsubscribing from a feed'
+      it 'decrements folder cached count when unsubscribing from a feed' do
+        feed2 = FactoryGirl.create :feed
+        entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+        feed2.entries << entry3
+        @user.subscribe feed2.fetch_url
+        @folder.feeds << feed2
 
-      it 'increments folder cached count when adding a feed to a folder'
+        @folder.reload.unread_entries.should eq 2
 
-      it 'decrements folder cached count when removing a feed from a folder'
+        @user.unsubscribe feed2
+
+        @folder.reload.unread_entries.should eq 1
+      end
+
+      it 'increments folder cached count when adding a feed to a folder' do
+        feed2 = FactoryGirl.create :feed
+        entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+        feed2.entries << entry3
+        @user.subscribe feed2.fetch_url
+
+        @folder.reload.unread_entries.should eq 1
+
+        @folder.feeds << feed2
+
+        @folder.reload.unread_entries.should eq 2
+      end
+
+      it 'decrements folder cached count when removing a feed from a folder' do
+        feed2 = FactoryGirl.create :feed
+        entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+        feed2.entries << entry3
+        @user.subscribe feed2.fetch_url
+        @folder.feeds << feed2
+
+        # @user should be subscribed to feed2, and it is inside @folder
+        @user.feeds.include?(feed2).should be_true
+        feed2.user_folder(@user).should eq @folder
+        @folder.reload.unread_entries.should eq 2
+
+        @folder.feeds.delete feed2
+
+        # @user should still be subscribed to feed2, but without being inside any folder
+        @user.feeds.include?(feed2).should be_true
+        feed2.user_folder(@user).should be_nil
+        @folder.reload.unread_entries.should eq 1
+      end
     end
   end
 
