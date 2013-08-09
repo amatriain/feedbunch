@@ -89,7 +89,7 @@ class SubscriptionsManager
     unread_count = 0
 
     if folder == 'all'
-      unread_count = user.unread_folder_entries('all').count
+      unread_count = user.unread_entries
     else
       unread_count = folder.unread_entries
     end

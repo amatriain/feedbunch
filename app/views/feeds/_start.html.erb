@@ -10,7 +10,7 @@
         <%= t 'start.welcome' %>
         <p>
           <small>
-            <%= t 'start.stats', feeds: user.feeds.count, entries: user.unread_folder_entries('all').count %>
+            <%= t 'start.stats', feeds: user.feeds.count, entries: user.unread_entries %>
           </small>
         </p>
       </h1>

@@ -55,7 +55,7 @@ class FeedsController < ApplicationController
     @feed = current_user.feeds.find params[:id]
     @folder= @feed.user_folder current_user
     current_user.refresh_feed params[:id]
-    render 'show', locals: {user: current_user, feed: @feed, folder: @folder}
+    render 'show', locals: {user: current_user.reload, feed: @feed, folder: @folder}
   rescue => e
     handle_error e
   end
@@ -69,7 +69,7 @@ class FeedsController < ApplicationController
     @feed = current_user.subscribe url
 
     if @feed.present?
-      render 'create', locals: {user: current_user, feed: @feed}
+      render 'create', locals: {user: current_user.reload, feed: @feed}
     else
       Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
       #TODO respond with html for search results, for instance with head status:300 (Multiple Choices)
@@ -86,7 +86,7 @@ class FeedsController < ApplicationController
   def destroy
     @feed = Feed.find params[:id]
     @old_folder = current_user.unsubscribe @feed
-    render 'destroy', locals: {user: current_user,
+    render 'destroy', locals: {user: current_user.reload,
                                        old_folder: @old_folder}
   rescue => e
     handle_error e
