@@ -60,8 +60,8 @@ end
 # Receives as argument the folder id and the expected entry count.
 
 def unread_folder_entries_should_eq(folder_id, count)
-  within "#sidebar #folders-list #folder-#{folder_id} #feeds-#{folder_id} #folder-#{folder_id}-all-feeds" do
-    page.should have_content "Read all subscriptions (#{count})"
+  within "#sidebar #folders-list #folder-#{folder_id} #feeds-#{folder_id} #folder-#{folder_id}-all-feeds span.badge" do
+    page.should have_content "#{count}"
   end
 end
 
@@ -70,8 +70,8 @@ end
 # Receives as argument the feed title, the expected entry count and optionally what folder to look at (defaults to "all")
 
 def unread_feed_entries_should_eq(feed_title, count, folder_id='all')
-  within "#sidebar #folders-list #folder-#{folder_id} #feeds-#{folder_id}" do
-    page.should have_content "#{feed_title} (#{count})"
+  within "#sidebar #folders-list #folder-#{folder_id} #feeds-#{folder_id} a[data-feed-title='#{feed_title}'] span.badge" do
+    page.should have_content "#{count}"
   end
 end
 
