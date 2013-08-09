@@ -10,6 +10,22 @@ describe User do
       user_dupe = FactoryGirl.build :user, email: @user.email
       user_dupe.valid?.should be_false
     end
+
+    it 'gives a default value of zero to the unread entries count' do
+      user = FactoryGirl.build :user, unread_entries: nil
+      user.save!
+      user.unread_entries.should eq 0
+    end
+
+    it 'does not accept decimal unread_entries count' do
+      user = FactoryGirl.build :user, unread_entries: 1.5
+      user.should_not be_valid
+    end
+
+    it 'does not accept negative unread_entries count' do
+      user = FactoryGirl.build :user, unread_entries: -1
+      user.should_not be_valid
+    end
   end
 
   context 'relationship with feeds' do

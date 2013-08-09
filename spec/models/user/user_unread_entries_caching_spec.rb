@@ -171,6 +171,72 @@ describe User do
         @folder.reload.unread_entries.should eq 1
       end
     end
+
+    context 'user unread entries count' do
+
+      it 'decrements user cached count when marking an entry as read' do
+        @user.reload.unread_entries.should eq 1
+        @user.change_entry_state [@entry2.id], 'read'
+        @user.reload.unread_entries.should eq 0
+      end
+
+      it 'increments user cached count when marking an entry as unread' do
+        @user.reload.unread_entries.should eq 1
+        @user.change_entry_state [@entry1.id], 'unread'
+        @user.reload.unread_entries.should eq 2
+      end
+
+      it 'increments user cached count when adding entries to a feed' do
+        @user.reload.unread_entries.should eq 1
+
+        entry3 = FactoryGirl.build :entry, feed_id: @feed.id
+        @feed.entries << entry3
+
+        @user.reload.unread_entries.should eq 2
+      end
+
+      it 'decrements user cached count when deleting unread entries from a feed' do
+        @user.reload.unread_entries.should eq 1
+
+        @feed.entries.delete @entry2
+
+        @user.reload.unread_entries.should eq 0
+      end
+
+      it 'does not decrement user cached count when deleting read entries from a feed' do
+        @user.reload.unread_entries.should eq 1
+
+        @feed.entries.delete @entry1
+
+        @user.reload.unread_entries.should eq 1
+      end
+
+      it 'increments user cached count when subscribing to a feed' do
+        feed2 = FactoryGirl.create :feed
+        entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+        feed2.entries << entry3
+
+        @user.reload.unread_entries.should eq 1
+
+        @user.subscribe feed2.fetch_url
+
+        @user.reload.unread_entries.should eq 2
+      end
+
+      it 'decrements user cached count when unsubscribing from a feed' do
+        feed2 = FactoryGirl.create :feed
+        entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+        feed2.entries << entry3
+        @user.subscribe feed2.fetch_url
+
+        @user.reload.unread_entries.should eq 2
+
+        @user.unsubscribe feed2
+
+        @user.reload.unread_entries.should eq 1
+      end
+
+    end
   end
 
 end

@@ -10,6 +10,7 @@ FactoryGirl.define do
     remember_me true
     confirmed_at Time.now
     admin false
+    unread_entries 0
 
     factory :user_unconfirmed do
       confirmed_at nil
