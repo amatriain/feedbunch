@@ -12,6 +12,7 @@
      <% end %>
   >
 
-    <i class="icon-rss"></i> <%= "#{feed.title} (#{user.feed_unread_count feed})" %> <i class="icon-spinner hidden"></i>
+    <i class="icon-rss"></i> <%= feed.title %>&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
+    <span class="badge pull-right"><%= user.feed_unread_count feed %></span>
   </a>
 </li>

@@ -12,7 +12,7 @@
           folder = Folder.find folder_id
         end
       %>
-      <i class="icon-rss"></i> <%= "#{t 'feeds.index.all_entries'} (#{user.folder_unread_count folder})" %>
-    </strong></em> <i class="icon-spinner hidden"></i>
+      <i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></strong></em>&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
+      <span class="badge pull-right"><%= user.folder_unread_count folder %></span>
   </a>
 </li>
