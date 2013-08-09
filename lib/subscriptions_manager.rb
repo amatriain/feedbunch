@@ -83,15 +83,19 @@ class SubscriptionsManager
   # of the folder to which each feed belongs, and including feeds which are not in a folder).
   # - user to whom the folder belongs
   #
+  # In all cases the folder or user instance is reloaded from the database, because before calling this method
+  # the unread_entries column in the database may have changed. Reloading here simplifies code, avoiding the
+  # need to always reload before invoking this method.
+  #
   # Returns a positive (or zero) integer with the count.
 
   def self.folder_unread_count(folder, user)
     unread_count = 0
 
     if folder == 'all'
-      unread_count = user.unread_entries
+      unread_count = user.reload.unread_entries
     else
-      unread_count = folder.unread_entries
+      unread_count = folder.reload.unread_entries
     end
 
     return unread_count

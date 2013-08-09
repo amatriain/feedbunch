@@ -14,7 +14,7 @@ class EntriesController < ApplicationController
     @feeds = changed_data[:feeds]
     @folders = changed_data[:folders]
     render 'update',
-           locals: {user: current_user.reload, feeds: @feeds, folders: @folders}
+           locals: {user: current_user, feeds: @feeds, folders: @folders}
   rescue => e
     handle_error e
   end
