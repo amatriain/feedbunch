@@ -90,7 +90,7 @@ GEM
       simplecov (>= 0.7)
       thor
     curb (0.8.4)
-    database_cleaner (0.9.1)
+    database_cleaner (1.1.1)
     devise (3.0.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -267,7 +267,7 @@ DEPENDENCIES
   capybara-webkit
   coffee-rails
   coveralls
-  database_cleaner (= 0.9.1)
+  database_cleaner
   devise
   factory_girl_rails
   feedzirra!

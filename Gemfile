@@ -100,7 +100,7 @@ group :test do
   gem 'launchy'
 
   # To empty the database between acceptance tests
-  gem 'database_cleaner', '0.9.1'
+  gem 'database_cleaner'
 end
 
 group :staging, :production do
