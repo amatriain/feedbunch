@@ -12,7 +12,7 @@ describe ImportSubscriptionsJob do
     @user.data_import = @data_import
 
     @filename = '1371324422.opml'
-    @filepath = File.join File.dirname(__FILE__), '..', 'attachments', @filename
+    @filepath = File.join __dir__, '..', 'attachments', @filename
     @file_contents = File.read @filepath
 
     Feedbunch::Application.config.uploads_manager.stub :read do |filename|
@@ -46,7 +46,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'sets data import status to ERROR if the file is not well formed XML' do
-    not_valid_xml_filename = File.join File.dirname(__FILE__), '..', 'attachments', 'not-well-formed-xml.opml'
+    not_valid_xml_filename = File.join __dir__, '..', 'attachments', 'not-well-formed-xml.opml'
     file_contents = File.read not_valid_xml_filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
     ImportSubscriptionsJob.perform not_valid_xml_filename, @user.id
@@ -55,7 +55,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'sets data import status to ERROR if the file is not valid OPML' do
-    not_valid_opml_filename = File.join File.dirname(__FILE__), '..', 'attachments', 'not-valid-opml.opml'
+    not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
     file_contents = File.read not_valid_opml_filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
     ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id
@@ -90,7 +90,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'updates data import number of processed feeds when finding duplicated feeds' do
-    filename = File.join File.dirname(__FILE__), '..', 'attachments', '1371324422-with-duplicate-feed.opml'
+    filename = File.join __dir__, '..', 'attachments', '1371324422-with-duplicate-feed.opml'
     file_contents = File.read filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
     ImportSubscriptionsJob.perform filename, @user.id
@@ -100,7 +100,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'ignores feeds without xmlUrl attribute' do
-    filename = File.join File.dirname(__FILE__), '..', 'attachments', '1371324422-with-feed-without-attributes.opml'
+    filename = File.join __dir__, '..', 'attachments', '1371324422-with-feed-without-attributes.opml'
     file_contents = File.read filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
 

@@ -83,5 +83,5 @@ module Feedbunch
   end
 
   # Use Log4r instead of the default Rails logger
-  require File.join(File.dirname(__FILE__), 'log4r_init.rb')
+  require File.join(__dir__, 'log4r_init.rb')
 end

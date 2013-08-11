@@ -4,8 +4,8 @@ describe User do
   before :each do
     @user = FactoryGirl.create :user
 
-    @opml_data = File.read File.join(File.dirname(__FILE__), '..', '..', 'attachments', 'subscriptions.xml')
-    @data_file = File.open File.join(File.dirname(__FILE__), '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
+    @opml_data = File.read File.join(__dir__, '..', '..', 'attachments', 'subscriptions.xml')
+    @data_file = File.open File.join(__dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
 
     Feedbunch::Application.config.uploads_manager.stub read: @opml_data
     Feedbunch::Application.config.uploads_manager.stub :save
@@ -36,7 +36,7 @@ describe User do
     context 'unzipped opml file' do
 
       before :each do
-        @uploaded_filename = File.join(File.dirname(__FILE__), '..', '..', 'attachments', 'subscriptions.xml').to_s
+        @uploaded_filename = File.join(__dir__, '..', '..', 'attachments', 'subscriptions.xml').to_s
         @data_file = File.open @uploaded_filename
       end
 
@@ -54,7 +54,7 @@ describe User do
     context 'zipped subscriptions.xml file' do
 
       before :each do
-        @uploaded_filename = File.join(File.dirname(__FILE__), '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip').to_s
+        @uploaded_filename = File.join(__dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip').to_s
         @data_file = File.open @uploaded_filename
       end
 
@@ -71,7 +71,7 @@ describe User do
 
     context 'zipped opml file' do
       before :each do
-        @uploaded_filename = File.join(File.dirname(__FILE__), '..', '..', 'attachments', 'feedbunch@gmail.com-opml.zip').to_s
+        @uploaded_filename = File.join(__dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-opml.zip').to_s
         @data_file = File.open @uploaded_filename
       end
 
@@ -88,7 +88,7 @@ describe User do
 
     context 'zipped xml file' do
       before :each do
-        @uploaded_filename = File.join(File.dirname(__FILE__), '..', '..', 'attachments', 'feedbunch@gmail.com-xml.zip').to_s
+        @uploaded_filename = File.join(__dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-xml.zip').to_s
         @data_file = File.open @uploaded_filename
       end
 

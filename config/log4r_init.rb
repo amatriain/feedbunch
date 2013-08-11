@@ -29,7 +29,7 @@ require 'log4r/outputter/datefileoutputter'
 # outputters that make sense for the current environment, because ERB does not output those that belong to other
 # environments.
 
-config_file = File.read File.join(File.dirname(__FILE__), 'log4r.yml.erb')
+config_file = File.read File.join(__dir__, 'log4r.yml.erb')
 log4r_config = YAML.load(ERB.new(config_file).result)
 Log4r::YamlConfigurator.decode_yaml(log4r_config['log4r_config'])
 Feedbunch::Application.config.logger = Log4r::Logger[Rails.env]
