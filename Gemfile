@@ -46,7 +46,7 @@ gem 'font-awesome-rails'
 gem 'log4r'
 
 # Form generator compatible with Bootstrap
-gem 'simple_form', git: 'git@github.com:plataformatec/simple_form.git', tag: 'v3.0.0.rc'
+gem 'simple_form', '3.0.0.rc'
 
 # RSS/Atom parser
 gem 'feedzirra', git: 'git://github.com/pauldix/feedzirra.git', tag: 'v0.2.0.rc2'

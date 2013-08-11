@@ -10,15 +10,6 @@ GIT
       nokogiri (~> 1.5.3)
       sax-machine (~> 0.2.0.rc1)
 
-GIT
-  remote: git@github.com:plataformatec/simple_form.git
-  revision: d2f1c63fa4b3fc93ef8c12610261960c8b0a5ab9
-  tag: v3.0.0.rc
-  specs:
-    simple_form (3.0.0.rc)
-      actionpack (>= 4.0.0.rc1, < 4.1)
-      activemodel (>= 4.0.0.rc1, < 4.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -218,6 +209,9 @@ GEM
     sax-machine (0.2.0.rc1)
       nokogiri (~> 1.5.2)
     sexp_processor (4.2.1)
+    simple_form (3.0.0.rc)
+      actionpack (>= 4.0.0.rc1, < 4.1)
+      activemodel (>= 4.0.0.rc1, < 4.1)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
@@ -294,6 +288,6 @@ DEPENDENCIES
   rubyzip
   rvm-capistrano
   sass-rails
-  simple_form!
+  simple_form (= 3.0.0.rc)
   sqlite3
   uglifier
