@@ -144,6 +144,8 @@ GEM
     nokogiri (1.5.10)
     orm_adapter (0.4.0)
     polyglot (0.3.3)
+    protected_attributes (1.0.3)
+      activemodel (>= 4.0.0, < 5.0)
     rack (1.5.2)
     rack-protection (1.5.0)
       rack
@@ -275,6 +277,7 @@ DEPENDENCIES
   log4r
   mysql2
   nokogiri
+  protected_attributes
   rails (~> 4.0.0)
   resque
   resque-scheduler
