@@ -37,7 +37,7 @@ gem 'high_voltage'
 gem 'devise'
 
 # Bootstrap goodness!
-gem 'bootstrap-sass', '~> 2.3.2.0'
+gem 'bootstrap-sass'
 
 # Better glyphicons from FontAwesome
 gem 'font-awesome-rails'
