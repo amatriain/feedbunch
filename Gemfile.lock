@@ -123,7 +123,6 @@ GEM
     json (1.8.0)
     launchy (2.3.0)
       addressable (~> 2.3)
-    log4r (1.1.10)
     loofah (1.2.1)
       nokogiri (>= 1.4.4)
     mail (2.5.4)
@@ -276,7 +275,6 @@ DEPENDENCIES
   high_voltage
   jquery-rails
   launchy
-  log4r
   mysql2
   nokogiri
   protected_attributes

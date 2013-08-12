@@ -83,4 +83,7 @@ Feedbunch::Application.configure do
 
   # Upload files to Amazon S3
   Feedbunch::Application.config.uploads_manager = S3Client
+
+  # Log level
+  config.log_level = :info
 end

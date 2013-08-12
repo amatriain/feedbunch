@@ -42,9 +42,6 @@ gem 'bootstrap-sass', '~> 2.3.2.0'
 # Better glyphicons from FontAwesome
 gem 'font-awesome-rails'
 
-# Better logging
-gem 'log4r'
-
 # Form generator compatible with Bootstrap
 gem 'simple_form', '3.0.0.rc'
 

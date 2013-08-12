@@ -81,7 +81,4 @@ module Feedbunch
     # We really want links in feed entries to open in a new tab!
     config.action_view.sanitized_allowed_attributes = %w(target)
   end
-
-  # Use Log4r instead of the default Rails logger
-  require File.join(__dir__, 'log4r_init.rb')
 end

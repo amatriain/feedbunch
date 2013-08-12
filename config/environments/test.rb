@@ -40,4 +40,7 @@ Feedbunch::Application.configure do
 
   # Upload files to filesystem
   Feedbunch::Application.config.uploads_manager = FileClient
+
+  # Log level
+  config.log_level = :debug
 end
