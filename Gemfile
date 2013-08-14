@@ -46,7 +46,8 @@ gem 'font-awesome-rails'
 gem 'simple_form', '3.0.0.rc'
 
 # RSS/Atom parser
-gem 'feedzirra', git: 'git://github.com/pauldix/feedzirra.git', tag: 'v0.2.0.rc2'
+gem 'feedzirra', git: 'git@github.com:amatriain/feedzirra.git', tag: 'v0.2.0.rc3'
+gem 'sax-machine', git: 'git@github.com:amatriain/sax-machine.git', tag: 'v0.2.0.rc2'
 
 # HTTP client
 gem 'rest-client'
