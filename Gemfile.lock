@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:amatriain/feedzirra.git
+  remote: https://github.com/amatriain/feedzirra.git
   revision: e81aa617011aaa132b826f2606392c7945ef1120
   tag: v0.2.0.rc3
   specs:
@@ -10,7 +10,7 @@ GIT
       sax-machine (~> 0.2.0.rc1)
 
 GIT
-  remote: git@github.com:amatriain/sax-machine.git
+  remote: https://github.com/amatriain/sax-machine.git
   revision: 73ab69cc3441bdb6c8b410e2fb00954a73384827
   tag: v0.2.0.rc2
   specs:
