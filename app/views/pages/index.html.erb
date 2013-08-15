@@ -2,7 +2,14 @@
 <div class="row-fluid">
   <div class="span10 offset1 hero-unit">
     <div class="page-header">
-      <h1><a href="<%= root_url %>"><img src="/assets/feed128x128.png"></a> Feedbunch</h1>
+      <h1>
+        <%=
+            link_to root_url do
+              image_tag 'feed128x128.png', alt: 'feedbunch'
+            end
+        %>
+        &nbsp;Feedbunch
+      </h1>
     </div>
     <div class="span9 offset1">
       <p class="lead"><%= t '.tagline' %></p>
