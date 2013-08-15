@@ -11,7 +11,7 @@
     <%= render 'feeds/sidebar/sidebar_folder_read_all', user: user, folder_id: folder_id %>
 
     <%# Links to read each individual feed in the folder %>
-    <% feeds.all(order: 'title ASC').each do |feed| %>
+    <% feeds.order('title ASC').each do |feed| %>
 
       <%# Ensure user is actually subscribed to the feed, in case there is some data inconsistency %>
       <% if user.feeds.include? feed %>

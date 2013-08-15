@@ -1,5 +1,5 @@
 <% if entries.present? %>
-    <% entries.all(order: 'published DESC, created_at DESC').each do |entry| %>
+    <% entries.order('published DESC, created_at DESC').each do |entry| %>
         <li id="entry-<%= entry.id %>" class="accordion-group">
 
           <%# Link to open the entry summary %>
