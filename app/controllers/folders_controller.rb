@@ -2,7 +2,6 @@
 # Controller to access the Folder model.
 
 class FoldersController < ApplicationController
-  include ControllersErrorHandling
 
   before_filter :authenticate_user!
 

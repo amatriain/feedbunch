@@ -2,7 +2,6 @@
 # Controller to import and export subscriptions data
 
 class SubscriptionsDataController < ApplicationController
-  include ControllersErrorHandling
 
   before_filter :authenticate_user!
 

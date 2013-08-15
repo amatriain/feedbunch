@@ -2,7 +2,6 @@
 # Controller to access the Feed model.
 
 class EntriesController < ApplicationController
-  include ControllersErrorHandling
 
   before_filter :authenticate_user!
 
