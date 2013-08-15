@@ -57,14 +57,14 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
-  has_many :feed_subscriptions, dependent: :destroy, uniq: true,
+  has_many :feed_subscriptions, -> {uniq}, dependent: :destroy,
            after_add: :mark_unread_entries,
            before_remove: :before_remove_feed_subscription,
            after_remove: :removed_feed_subscription
   has_many :feeds, through: :feed_subscriptions
-  has_many :folders, dependent: :destroy, uniq: true
+  has_many :folders, -> {uniq}, dependent: :destroy
   has_many :entries, through: :feeds
-  has_many :entry_states, dependent: :destroy, uniq: true
+  has_many :entry_states, -> {uniq}, dependent: :destroy
   has_one :data_import, dependent: :destroy
 
   validates :unread_entries, presence: true, numericality: {only_integer: true, greater_than_or_equal_to: 0}

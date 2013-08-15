@@ -25,7 +25,7 @@ class Folder < ActiveRecord::Base
 
   belongs_to :user
   validates :user_id, presence: true
-  has_and_belongs_to_many :feeds, uniq: true, before_add: :before_add_feed, after_remove: :after_remove_feed
+  has_and_belongs_to_many :feeds, -> {uniq}, before_add: :before_add_feed, after_remove: :after_remove_feed
   has_many :entries, through: :feeds
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}

@@ -40,7 +40,7 @@ class Entry < ActiveRecord::Base
   belongs_to :feed
   validates :feed_id, presence: true
 
-  has_many :entry_states, dependent: :destroy, uniq: true
+  has_many :entry_states, -> {uniq}, dependent: :destroy
 
   validates :title, presence: true
   validates :url, presence: true, format: {with: /\Ahttps?:\/\/.+\..+\z/}

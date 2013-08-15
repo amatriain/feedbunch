@@ -34,10 +34,10 @@ class Feed < ActiveRecord::Base
 
   attr_accessible :fetch_url, :title
 
-  has_many :feed_subscriptions, dependent: :destroy, uniq: true
+  has_many :feed_subscriptions, -> {uniq}, dependent: :destroy
   has_many :users, through: :feed_subscriptions
-  has_and_belongs_to_many :folders, uniq: true, before_add: :single_user_folder
-  has_many :entries, dependent: :destroy, uniq: true
+  has_and_belongs_to_many :folders, -> {uniq}, before_add: :single_user_folder
+  has_many :entries, -> {uniq}, dependent: :destroy
 
   validates :fetch_url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
   validates :url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, allow_blank: true
