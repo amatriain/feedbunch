@@ -20,11 +20,17 @@ class SubscriptionsDataController < ApplicationController
   # to the feeds there.
 
   def create
-    file = params[:import_subscriptions][:file]
+    file = subscriptions_data_params[:file]
     current_user.import_subscriptions file.tempfile
     redirect_to feeds_path
   rescue => e
     handle_error e
+  end
+
+  private
+
+  def subscriptions_data_params
+    params.require(:import_subscriptions).permit(:file)
   end
 
 end

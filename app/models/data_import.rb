@@ -18,8 +18,6 @@ class DataImport < ActiveRecord::Base
   ERROR = 'ERROR'
   SUCCESS = 'SUCCESS'
 
-  attr_accessible # none
-
   belongs_to :user
   validates :user_id, presence: true
 

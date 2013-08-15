@@ -35,8 +35,6 @@ require 'nokogiri'
 class Entry < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessible #none
-
   belongs_to :feed
   validates :feed_id, presence: true
 

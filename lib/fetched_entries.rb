@@ -16,32 +16,28 @@ class FetchedEntries
   # instead of failing the whole process.
 
   def self.save_or_update_entries(feed, entries)
-    entries.each do |f|
+    entries.each do |entry|
       begin
-        # If entry is already in the database, update it
-        guid = f.entry_id || f.url
+        guid = entry.entry_id || entry.url
         if guid.blank?
           Rails.logger.error "Received entry without guid or url for feed #{feed.id} - #{feed.title}. Skipping it."
           next
         end
+
+        entry_hash = self.entry_to_hash entry, guid
+
         if Entry.exists? guid: guid
+          # If entry is already in the database, update it
+          Rails.logger.info "Updating already saved entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{guid}"
           e = Entry.where(guid: guid).first
-          Rails.logger.info "Updating already saved entry for feed #{feed.fetch_url} - title: #{f.title} - guid: #{guid}"
-          # Otherwise, save a new entry in the DB
+          e.update entry_hash
         else
+          # Otherwise, save a new entry in the DB
+          Rails.logger.info "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}"
           e = Entry.new
-          Rails.logger.info "Saving in the database new entry for feed #{feed.fetch_url} - title: #{f.title} - guid: #{f.entry_id}"
+          feed.entries.create entry_hash
         end
 
-        e.title = f.title
-        e.url = f.url
-        e.author = f.author
-        e.content = f.content
-        e.summary = f.summary
-        e.published = f.published
-        e.guid = guid
-        feed.entries << e
-        e.save
       rescue => e
         Rails.logger.error "There's been a problem processing a fetched entry from feed #{feed.id} - #{feed.title}. Skipping entry."
         Rails.logger.error e.message
@@ -49,5 +45,24 @@ class FetchedEntries
         next
       end
     end
+  end
+
+  private
+
+  ##
+  # Convert an entry created by Feedzirra to a hash, with just the keys needed to create an Entry instance.
+  #
+  # The whitelisted keys are: title, url, author, content, summary, published.
+  # Also the "guid" key is inserted. This may not come directly from the object created by Feedzirra, see above.
+  #
+  # Receives as arguments:
+  # - the entry created by Feedzirra
+  # - the guid for the entry
+  #
+  # Returns a hash with the key/values necessary to create an instance of the Entry model.
+
+  def self.entry_to_hash(entry, guid)
+    entry_hash = entry.to_h.slice! :title, :url, :author, :content, :summary, :published
+    entry_hash[:guid] = guid
   end
 end
