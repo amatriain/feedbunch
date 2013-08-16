@@ -16,18 +16,18 @@ $(document).ready ->
   #-------------------------------------------------------
   # Submit the "import subscriptions" form when clicking on the "Upload" button
   #-------------------------------------------------------
-  $("body").on "click", "#import-subscriptions-submit", ->
-    $("#form-import-subscriptions").submit()
+  $("body").on "click", "#data-import-submit", ->
+    $("#form-data-import").submit()
 
   #-------------------------------------------------------
   # Close the popup when submitting the form
   #-------------------------------------------------------
-  $("body").on "submit", "#form-import-subscriptions", ->
+  $("body").on "submit", "#form-data-import", ->
 
     # If the user has not selected a file to upload, close the popup and to not POST
     # Form submit will be a full browser POST, because POSTing files via Ajax is not
     # widely supported in older browsers.
-    if $("#import_subscriptions_file").val() == ''
+    if $("#data_import_file").val() == ''
       close_popup()
       return false
 
@@ -55,7 +55,7 @@ $(document).ready ->
           update_status_html data["status_html"]
 
       # Load the status via Ajax
-      $.get("/subscriptions_data", null, status_received, 'json')
+      $.get("/data_imports", null, status_received, 'json')
         .fail (xhr, textStatus, errorThrown) ->
           if xhr.status != 304
             Feedbunch.alertTimedShowHide $("#problem-updating-import-status")
@@ -66,7 +66,7 @@ $(document).ready ->
   # If the "import running" div is shown, periodically update import status
   #-------------------------------------------------------
 
-  if $("#import-subscriptions-running").length
+  if $("#data-import-running").length
     update_status_timer()
 
   ########################################################
@@ -77,14 +77,14 @@ $(document).ready ->
   # Show modal popup
   #-------------------------------------------------------
   show_popup = ->
-    $("#import-subscriptions-popup").modal "show"
+    $("#data-import-popup").modal "show"
 
   #-------------------------------------------------------
   # Clean file field and close modal popup
   #-------------------------------------------------------
   close_popup = ->
-    $("#import_subscriptions_file").val('')
-    $("#import-subscriptions-popup").modal 'hide'
+    $("#data_import_file").val('')
+    $("#data-import-popup").modal 'hide'
 
   #-------------------------------------------------------
   # Load the import status div sent by the server, replacing the current one

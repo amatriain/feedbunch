@@ -10,5 +10,5 @@
 
 {
   "status": "<%= status %>",
-  "status_html": <%= render(partial: 'subscriptions_data/import', locals: {user: user}, layout: false).to_json.html_safe %>
+  "status_html": <%= render(partial: 'data_imports/import', locals: {user: user}, layout: false).to_json.html_safe %>
 }

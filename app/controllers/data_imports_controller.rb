@@ -1,7 +1,7 @@
 ##
 # Controller to import and export subscriptions data
 
-class SubscriptionsDataController < ApplicationController
+class DataImportsController < ApplicationController
 
   before_filter :authenticate_user!
 
@@ -30,7 +30,7 @@ class SubscriptionsDataController < ApplicationController
   private
 
   def subscriptions_data_params
-    params.require(:import_subscriptions).permit(:file)
+    params.require(:data_imports).permit(:file)
   end
 
 end
