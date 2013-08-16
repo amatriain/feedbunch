@@ -54,9 +54,6 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :timeoutable
 
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me
-
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy,
            after_add: :mark_unread_entries,
            before_remove: :before_remove_feed_subscription,
@@ -182,9 +179,7 @@ class User < ActiveRecord::Base
     feed = feed_subscription.feed
     feed.entries.each do |entry|
       if !EntryState.exists? user_id: self.id, entry_id: entry.id
-        entry_state = self.entry_states.build read: false
-        entry_state.entry_id = entry.id
-        entry_state.save!
+        entry_state = self.entry_states.create entry_id: entry.id, read: false
       end
     end
   end

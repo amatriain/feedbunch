@@ -32,8 +32,6 @@ require 'uri'
 class Feed < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessible :fetch_url, :title
-
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy
   has_many :users, through: :feed_subscriptions
   has_and_belongs_to_many :folders, -> {uniq}, before_add: :single_user_folder

@@ -34,7 +34,6 @@ class FetchedEntries
         else
           # Otherwise, save a new entry in the DB
           Rails.logger.info "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}"
-          e = Entry.new
           feed.entries.create entry_hash
         end
 
@@ -62,7 +61,8 @@ class FetchedEntries
   # Returns a hash with the key/values necessary to create an instance of the Entry model.
 
   def self.entry_to_hash(entry, guid)
-    entry_hash = entry.to_h.slice! :title, :url, :author, :content, :summary, :published
-    entry_hash[:guid] = guid
+    entry_hash = {title: entry.title, url: entry.url, author: entry.author, content: entry.content,
+                  summary: entry.summary, published: entry.published, guid: guid}
+    return entry_hash
   end
 end

@@ -20,7 +20,6 @@
 # are shown to the user in the view, unless he manually indicates he wants to also see read entries.
 
 class EntryState < ActiveRecord::Base
-  attr_accessible :read
 
   belongs_to :user
   validates :user_id, presence: true, uniqueness: {scope: :entry_id}

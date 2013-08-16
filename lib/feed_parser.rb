@@ -30,20 +30,19 @@ class FeedParser
     # Warning: don't confuse url (the url of the website generating the feed) with fetch_url (the url from which the
     # XML of the feed is fetched).
     Rails.logger.info "Fetched from: #{feed.fetch_url} - title: #{feed_parsed.title} - url: #{feed_parsed.url}"
-    feed.title = feed_parsed.title
-    feed.url = feed_parsed.url
+    feed_attribs = {title: feed_parsed.title, url: feed_parsed.url}
 
     # Save the etag and last_modified headers. If one of these headers is not present, save a null in the database.
     if feed_response.headers.present?
       Rails.logger.info "HTTP headers in the response from #{feed.fetch_url} - etag: #{feed_response.headers[:etag]} - last-modified: #{feed_response.headers[:last_modified]}"
-      feed.etag = feed_response.headers[:etag]
-      feed.last_modified = feed_response.headers[:last_modified]
+      feed_attribs.merge!({etag: feed_response.headers[:etag], last_modified: feed_response.headers[:last_modified]})
     end
+
+    feed.update feed_attribs
 
     # Save entries in the database
     FetchedEntries.save_or_update_entries feed, feed_parsed.entries
 
-    feed.save!
     return feed
   end
 end

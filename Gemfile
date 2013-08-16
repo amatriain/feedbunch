@@ -4,11 +4,6 @@ ruby '2.0.0'
 
 gem 'rails', '~> 4.0.0'
 
-# protected_attributes is included only to ensure smooth migration from
-# rails 3 to rails 4. Eventually it will removed and rails 4 strong parameters
-# will be used instead
-gem 'protected_attributes'
-
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'

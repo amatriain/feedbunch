@@ -19,7 +19,6 @@
 # become unread).
 
 class FeedSubscription < ActiveRecord::Base
-  attr_accessible :unread_entries
 
   belongs_to :user
   validates :user_id, presence: true, uniqueness: {scope: :feed_id}
