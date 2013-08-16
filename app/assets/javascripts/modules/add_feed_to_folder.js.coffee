@@ -68,10 +68,8 @@ $(document).ready ->
     # If the user has written something in the form, POST the value via ajax
     if $("#new_folder_title").val()
       form_url = $("#form-new-folder").attr "action"
-      # Set the current folder id in a hidden field, to be sent with the POST
-      $("#new_folder_feed_id", this).val(Feedbunch.current_feed_id)
-      post_data = $(this).serialize()
-      $.post(form_url, post_data, new_folder_result, 'json')
+      folder_title = $("#new_folder_title").val()
+      $.post(form_url, {feed_id: Feedbunch.current_feed_id, title: folder_title}, new_folder_result, 'json')
         .fail ->
           Feedbunch.alertTimedShowHide $("#problem-new-folder")
 

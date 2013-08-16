@@ -32,10 +32,10 @@ $(document).ready ->
     # If the user has written something in the form, POST the value via ajax
     if $("#subscription_rss").val()
       form_url = $("#form-subscription").attr "action"
-      post_data = $(this).serialize()
+      rss_url = $("#subscription_rss").val()
       Feedbunch.loading_entries()
       Feedbunch.hide_feed_title()
-      $.post(form_url, post_data, subscription_result, 'json')
+      $.post(form_url, url: rss_url, subscription_result, 'json')
         .fail ->
           Feedbunch.hide_loading_message()
           Feedbunch.show_start_page()

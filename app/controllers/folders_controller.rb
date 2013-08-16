@@ -33,7 +33,7 @@ class FoldersController < ApplicationController
   # Associate a feed with a folder. The current user must own the folder and be subscribed to the feed.
 
   def update
-    @changed_data = current_user.add_feed_to_folder params[:feed_id], params[:id]
+    @changed_data = current_user.add_feed_to_folder folder_params[:feed_id], folder_params[:id]
     render 'update', locals: {user: current_user,
                                        new_folder: @changed_data[:new_folder],
                                        feed: @changed_data[:feed],
@@ -46,7 +46,7 @@ class FoldersController < ApplicationController
   # Remove the feed passed in params[:feed_id] from its current folder.
 
   def remove
-    @old_folder = current_user.remove_feed_from_folder params[:feed_id]
+    @old_folder = current_user.remove_feed_from_folder folder_params[:feed_id]
     render 'remove', locals: {user: current_user,
                                        old_folder: @old_folder}
   rescue => e
@@ -58,12 +58,18 @@ class FoldersController < ApplicationController
   # passed in params[:feed_id]
 
   def create
-    @changed_data = current_user.add_feed_to_new_folder params[:new_folder][:feed_id], params[:new_folder][:title]
+    @changed_data = current_user.add_feed_to_new_folder folder_params[:feed_id], folder_params[:title]
     render 'create', locals: {user: current_user,
                                        new_folder: @changed_data[:new_folder],
                                        old_folder: @changed_data[:old_folder]}
   rescue => e
     handle_error e
+  end
+
+  private
+
+  def folder_params
+    params.permit(:id, :feed_id, :title)
   end
 
 end
