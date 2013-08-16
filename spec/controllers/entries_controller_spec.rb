@@ -12,30 +12,31 @@ describe EntriesController do
   end
 
   context 'PUT update' do
+
     it 'returns success' do
-      put :update, entry_ids: [@entry.id], state: 'read', format: :json
+      put :update, entry: {ids: [@entry.id], state: 'read'}, format: :json
       response.should be_success
     end
 
     it 'returns 404 if the folder does not exist' do
-      put :update, entry_ids: [1234567890], state: 'read', format: :json
+      put :update, entry: {ids: [1234567890], state: 'read'}, format: :json
       response.status.should eq 404
     end
 
     it 'returns 404 if the user is not subscribed to the entries feed' do
       entry2 = FactoryGirl.create :entry
-      put :update, entry_ids: [entry2.id], state: 'read', format: :json
+      put :update, entry: {ids: [entry2.id], state: 'read'}, format: :json
       response.status.should eq 404
     end
 
     it 'returns 500 if there is a problem changing the entry state' do
       User.any_instance.stub(:change_entry_state).and_raise StandardError.new
-      put :update, entry_ids: [@entry.id], state: 'read', format: :json
+      put :update, entry: {ids: [@entry.id], state: 'read'}, format: :json
       response.status.should eq 500
     end
 
     it 'assigns the correct feed to @feeds' do
-      put :update, entry_ids: [@entry.id], state: 'read', format: :json
+      put :update, entry: {ids: [@entry.id], state: 'read'}, format: :json
       assigns(:feeds).should eq [@feed]
     end
 
@@ -44,7 +45,7 @@ describe EntriesController do
       @user.folders << folder
       folder.feeds << @feed
 
-      put :update, entry_ids: [@entry.id], state: 'read', format: :json
+      put :update, entry: {ids: [@entry.id], state: 'read'}, format: :json
       assigns(:folders).should eq [folder]
     end
   end
