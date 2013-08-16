@@ -20,7 +20,7 @@ class DataImportsController < ApplicationController
   # to the feeds there.
 
   def create
-    file = subscriptions_data_params[:file]
+    file = data_import_params[:file]
     current_user.import_subscriptions file.tempfile
     redirect_to feeds_path
   rescue => e
@@ -29,7 +29,7 @@ class DataImportsController < ApplicationController
 
   private
 
-  def subscriptions_data_params
+  def data_import_params
     params.require(:data_imports).permit(:file)
   end
 
