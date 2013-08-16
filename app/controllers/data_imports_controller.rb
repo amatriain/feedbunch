@@ -30,7 +30,7 @@ class DataImportsController < ApplicationController
   private
 
   def data_import_params
-    params.require(:data_imports).permit(:file)
+    params.require(:data_import).permit(:file)
   end
 
 end
