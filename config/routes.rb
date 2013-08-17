@@ -92,9 +92,6 @@ Feedbunch::Application.routes.draw do
   # Static pages served with High_voltage gem
   root :to => 'high_voltage/pages#show', id: 'index'
 
-  # Refresh feeds and folders; this causes a fetch from external servers
-  match '/feeds/:id/refresh' => 'feeds#refresh', via: :get, as: 'feed_refresh'
-
   # Remove a feed from folders
   match '/folders/remove' => 'folders#remove', via: :delete, as: 'folder_remove'
 
@@ -102,7 +99,7 @@ Feedbunch::Application.routes.draw do
   match '/entries/update' => 'entries#update', via: :put, as: 'entries_update'
 
   # Resourceful routes for feeds
-  resources :feeds, only: [:index, :show, :create, :destroy]
+  resources :feeds, only: [:index, :show, :create, :update, :destroy]
 
   # Resourceful routes for folders
   resources :folders, only: [:show, :update, :create]

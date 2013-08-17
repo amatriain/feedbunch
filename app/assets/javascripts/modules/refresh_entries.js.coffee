@@ -13,7 +13,7 @@ $(document).ready ->
   $("body").on "click", "#refresh-feed", ->
     if $(this).hasClass("disabled") == false
       # Only refresh if the global variable stores a feed refresh path
-      if Feedbunch.current_feed_refresh_path?.length
+      if Feedbunch.current_feed_path?.length
         start_icon_animation()
         Feedbunch.loading_entries()
 
@@ -25,7 +25,7 @@ $(document).ready ->
           if data["folder"]
             Feedbunch.update_folder_entry_count data["folder"]["id"], data["folder"]["sidebar_read_all"]
 
-        $.get(Feedbunch.current_feed_refresh_path, null, entries_received, 'json')
+        $.post(Feedbunch.current_feed_path, {"_method":"patch"}, entries_received, 'json')
           .fail ->
             Feedbunch.hide_loading_message()
             stop_icon_animation()

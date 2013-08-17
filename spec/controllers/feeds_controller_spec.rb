@@ -83,21 +83,21 @@ describe FeedsController do
     end
   end
 
-  context 'GET refresh' do
+  context 'PATCH update' do
 
     it 'returns a 404 for a feed the user is not suscribed to' do
-      get :refresh, id: @feed2.id
+      patch :update, id: @feed2.id
       response.status.should eq 404
     end
 
     it 'returns a 404 for a non-existing feed' do
-      get :refresh, id: 1234567890
+      patch :update, id: 1234567890
       response.status.should eq 404
     end
 
     it 'fetches new entries in the feed before returning' do
       FeedClient.should_receive(:fetch).with @feed1.id, anything
-      get :refresh, id: @feed1.id
+      patch :update, id: @feed1.id
     end
   end
 

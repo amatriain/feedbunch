@@ -77,7 +77,6 @@ $(document).ready ->
   #-------------------------------------------------------
   set_global_variables = (feed)->
     Feedbunch.current_feed_path = $(feed).attr "data-feed-path"
-    Feedbunch.current_feed_refresh_path = $(feed).attr "data-refresh-path"
     Feedbunch.current_feed_id = $(feed).attr "data-feed-id"
     Feedbunch.current_feed_folder_id = $(feed).attr "data-folder-id"
     Feedbunch.current_feed_folder_id ||= "none"

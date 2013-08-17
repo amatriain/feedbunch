@@ -48,9 +48,9 @@ class FeedsController < ApplicationController
   #
   # After that it does exactly the same as the show action: return HTML with all entries for the feed.
   #
-  # If the request asks to refresh a folder the user is not suscribed to, the response is a 404 error code (Not Found).
+  # If the request asks to refresh a feed the user is not suscribed to, the response is a 404 error code (Not Found).
 
-  def refresh
+  def update
     @feed = current_user.feeds.find feed_params[:id]
     @folder= @feed.user_folder current_user
     current_user.refresh_feed params[:id]
