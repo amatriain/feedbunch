@@ -160,7 +160,7 @@ describe User do
 
         # @user should be subscribed to feed2, and it is inside @folder
         @user.feeds.include?(feed2).should be_true
-        feed2.user_folder(@user).should eq @folder
+        feed2.reload.user_folder(@user).should eq @folder
         @folder.reload.unread_entries.should eq 2
 
         @folder.feeds.delete feed2

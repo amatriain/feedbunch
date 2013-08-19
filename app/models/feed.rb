@@ -58,7 +58,7 @@ class Feed < ActiveRecord::Base
   # If a matching folder is found, it is returned. Otherwise nil is returned.
 
   def user_folder(user)
-    if self.folders.present?
+    if self.folders.exists? user_id: user.id
       folders = self.folders.where(user_id: user.id)
       if folders.present?
         folder = folders.first

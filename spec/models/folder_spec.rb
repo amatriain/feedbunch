@@ -96,12 +96,14 @@ describe Folder do
       folder2.feeds << feed3
 
       folder1.feeds << feed
+
+      folder1.reload.feeds.should include feed
+      folder2.reload.feeds.should_not include feed
+
       folder2.feeds << feed
 
-      folder1.reload
-      folder2.reload
-      folder1.feeds.should_not include feed
-      folder2.feeds.should include feed
+      folder1.reload.feeds.should_not include feed
+      folder2.reload.feeds.should include feed
     end
 
     context 'add feed to folder' do
