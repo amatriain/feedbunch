@@ -1,6 +1,8 @@
 <% self.formats = [:html] %>
 
 {
+  <% if new_folder.present? && feed.present? %>
+
   "new_folder": <%=
     {
       id: new_folder.id,
@@ -8,6 +10,12 @@
       sidebar_read_all: render(partial: 'feeds/sidebar/sidebar_folder_read_all', locals: {user: user, folder_id: new_folder.id}, layout: false)
     }.to_json.html_safe
   %>
+
+  <% end %>
+
+  <% if new_folder.present? && feed.present? && old_folder.present? %>
+  ,
+  <% end %>
 
   <%
     if old_folder.present?
@@ -20,7 +28,7 @@
         old_folder_data[:sidebar_read_all] = render(partial: 'feeds/sidebar/sidebar_folder_read_all', locals: {user: user, folder_id: old_folder.id}, layout: false)
       end
   %>
-  ,
+
   "old_folder": <%= old_folder_data.to_json.html_safe %>
 
   <% end %>

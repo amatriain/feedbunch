@@ -132,9 +132,9 @@ describe FoldersController do
       response.status.should eq 404
     end
 
-    it 'assigns to @old_folder the folder in which the feed was previously' do
+    it 'assigns to the folder in which the feed was previously' do
       delete :remove, folder: {feed_id: @feed1.id}, format: :json
-      assigns(:old_folder).should eq @folder1
+      assigns(:changed_data)[:old_folder].should eq @folder1
     end
 
     it 'deletes the folder if the feed is successfully removed from the folder and there are no more feeds in the folder' do
@@ -146,7 +146,7 @@ describe FoldersController do
     end
 
     it 'returns 500 if there is a problem removing feed from folder' do
-      User.any_instance.stub(:remove_feed_from_folder).and_raise StandardError.new
+      User.any_instance.stub(:move_feed_to_folder).and_raise StandardError.new
       delete :remove, folder: {feed_id: @feed1.id}, format: :json
       response.status.should eq 500
     end

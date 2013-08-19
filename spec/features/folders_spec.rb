@@ -283,7 +283,7 @@ describe 'folders and feeds' do
       end
 
       it 'shows an alert when there is a problem removing a feed from a folder', js: true do
-        User.any_instance.stub(:remove_feed_from_folder).and_raise StandardError.new
+        User.any_instance.stub(:move_feed_to_folder).and_raise StandardError.new
 
         read_feed @feed1.id
         open_folder_dropdown

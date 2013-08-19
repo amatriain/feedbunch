@@ -14,12 +14,12 @@ describe User do
 
     it 'removes a feed from a folder' do
       @folder.feeds.count.should eq 1
-      @user.remove_feed_from_folder @feed.id
+      @user.move_feed_to_folder @feed.id, folder_id: Folder::NO_FOLDER
       @folder.feeds.count.should eq 0
     end
 
     it 'deletes the folder if it is empty' do
-      @user.remove_feed_from_folder @feed.id
+      @user.move_feed_to_folder @feed.id, folder_id: Folder::NO_FOLDER
       Folder.exists?(id: @folder.id).should be_false
     end
 
@@ -28,12 +28,20 @@ describe User do
       @user.subscribe feed2.fetch_url
       @folder.feeds << feed2
 
-      @user.remove_feed_from_folder @feed.id
+      @user.move_feed_to_folder @feed.id, folder_id: Folder::NO_FOLDER
       Folder.exists?(id: @folder.id).should be_true
     end
 
+    it 'returns the updated feed' do
+      changes = @user.move_feed_to_folder @feed.id, folder_id: Folder::NO_FOLDER
+      feed = changes[:feed]
+      feed.should eq @feed
+      feed.user_folder(@user).should be_nil
+    end
+
     it 'returns the folder object if it the feed was in a folder' do
-      folder = @user.remove_feed_from_folder @feed.id
+      changes = @user.move_feed_to_folder @feed.id, folder_id: Folder::NO_FOLDER
+      folder = changes[:old_folder]
       folder.should eq @folder
     end
 
@@ -41,12 +49,14 @@ describe User do
       feed2 = FactoryGirl.create :feed
       @user.subscribe feed2.fetch_url
 
-      folder = @user.remove_feed_from_folder feed2.id
+      changes = @user.move_feed_to_folder feed2.id, folder_id: Folder::NO_FOLDER
+      folder = changes[:old_folder]
       folder.should be_nil
     end
 
     it 'returns a folder object with no feeds if there are no more feeds in it' do
-      folder = @user.remove_feed_from_folder @feed.id
+      changes = @user.move_feed_to_folder @feed.id, folder_id: Folder::NO_FOLDER
+      folder = changes[:old_folder]
       folder.feeds.blank?.should be_true
     end
 
@@ -55,13 +65,14 @@ describe User do
       @user.subscribe feed2.fetch_url
       @folder.feeds << feed2
 
-      folder = @user.remove_feed_from_folder @feed.id
+      changes = @user.move_feed_to_folder @feed.id, folder_id: Folder::NO_FOLDER
+      folder = changes[:old_folder]
       folder.feeds.blank?.should be_false
     end
 
     it 'raises an error if the user is not subscribed to the feed' do
       feed2 = FactoryGirl.create :feed
-      expect {@user.remove_feed_from_folder feed2.id}.to raise_error ActiveRecord::RecordNotFound
+      expect {@user.move_feed_to_folder feed2.id, folder_id: Folder::NO_FOLDER}.to raise_error ActiveRecord::RecordNotFound
     end
 
   end

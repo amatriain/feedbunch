@@ -24,7 +24,7 @@ $(document).ready ->
         Feedbunch.update_folder_id Feedbunch.current_feed_id, "none"
         Feedbunch.read_feed Feedbunch.current_feed_id, "all"
 
-    $.post(delete_folder_path, {"_method":"delete", folder: {feed_id: Feedbunch.current_feed_id}}, remove_folder_result)
+    $.post(delete_folder_path, {"_method":"delete", folder: {feed_id: Feedbunch.current_feed_id}}, remove_folder_result, "json")
       .fail ->
         Feedbunch.alertTimedShowHide $("#problem-folder-management")
 

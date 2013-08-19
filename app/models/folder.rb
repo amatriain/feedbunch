@@ -21,6 +21,9 @@
 class Folder < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
+  # Class constant for the special "no folder" ID
+  NO_FOLDER = 'none'
+
   belongs_to :user
   validates :user_id, presence: true
   has_and_belongs_to_many :feeds, -> {uniq}, before_add: :before_add_feed, after_remove: :after_remove_feed

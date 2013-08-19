@@ -99,14 +99,6 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Remove a feed from a folder. See Feed#remove_from_folder
-
-  def remove_feed_from_folder(feed_id)
-    feed = self.feeds.find feed_id
-    feed.remove_from_folder self
-  end
-
-  ##
   # Move a feed to an existing folder. See FolderManager#move_feed_to_folder
 
   def move_feed_to_folder(feed_id, folder_id: nil, folder_title: nil)
