@@ -35,7 +35,7 @@ $(document).ready ->
       rss_url = $("#subscription_rss").val()
       Feedbunch.loading_entries()
       Feedbunch.hide_feed_title()
-      $.post(form_url, url: rss_url, subscription_result, 'json')
+      $.post(form_url, feed: {url: rss_url}, subscription_result, 'json')
         .fail ->
           Feedbunch.hide_loading_message()
           Feedbunch.show_start_page()

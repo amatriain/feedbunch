@@ -51,7 +51,7 @@ class FeedsController < ApplicationController
   # If the request asks to refresh a feed the user is not suscribed to, the response is a 404 error code (Not Found).
 
   def update
-    @feed = current_user.feeds.find feed_params[:id]
+    @feed = current_user.feeds.find params[:id]
     @folder= @feed.user_folder current_user
     current_user.refresh_feed params[:id]
     render 'show', locals: {user: current_user, feed: @feed, folder: @folder}
@@ -83,7 +83,7 @@ class FeedsController < ApplicationController
   # Unsubscribe the authenticated user from the feed passed in the params[:id] param.
 
   def destroy
-    @feed = Feed.find feed_params[:id]
+    @feed = Feed.find params[:id]
     @old_folder = current_user.unsubscribe @feed
     render 'destroy', locals: {user: current_user,
                                        old_folder: @old_folder}
@@ -94,6 +94,6 @@ class FeedsController < ApplicationController
   private
 
   def feed_params
-    params.permit(:id, :url)
+    params.require(:feed).permit(:url)
   end
 end
