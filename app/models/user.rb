@@ -109,15 +109,8 @@ class User < ActiveRecord::Base
   ##
   # Move a feed to an existing folder. See FolderManager#move_feed_to_folder
 
-  def move_feed_to_folder(feed_id, folder_id)
-    FolderManager.move_feed_to_folder feed_id, self, folder_id: folder_id
-  end
-
-  ##
-  # Move a feed to a new folder. See FolderManager#move_feed_to_folder
-
-  def move_feed_to_new_folder(feed_id, folder_title)
-    FolderManager.move_feed_to_folder feed_id, self, folder_title: folder_title
+  def move_feed_to_folder(feed_id, folder_id: nil, folder_title: nil)
+    FolderManager.move_feed_to_folder feed_id, self, folder_id: folder_id, folder_title: folder_title
   end
 
   ##

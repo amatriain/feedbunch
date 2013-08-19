@@ -107,7 +107,7 @@ class FolderManager
     Rails.logger.info "Creating folder with title #{folder_title} for user #{user.id} - #{user.email}"
     folder = user.folders.create title: folder_title
 
-    changes = user.move_feed_to_folder feed.id, folder.id
+    changes = self.move_feed_to_existing_folder feed.id, folder.id, user
     return changes
   end
 end

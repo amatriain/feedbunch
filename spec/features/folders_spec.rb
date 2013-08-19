@@ -432,7 +432,7 @@ describe 'folders and feeds' do
       end
 
       it 'shows an alert if there is a problem adding the feed to the new folder', js: true do
-        User.any_instance.stub(:move_feed_to_new_folder).and_raise StandardError.new
+        User.any_instance.stub(:move_feed_to_folder).and_raise StandardError.new
         title = 'New folder'
 
         read_feed @feed1.id
