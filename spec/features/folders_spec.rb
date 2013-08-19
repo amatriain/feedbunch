@@ -136,7 +136,7 @@ describe 'folders and feeds' do
       end
 
       it 'adds a feed to an existing folder', js: true do
-        add_feed_to_folder @feed2.id, @folder1.id
+        move_feed_to_folder @feed2.id, @folder1.id
 
         # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
         # is now inside @folder1
@@ -154,7 +154,7 @@ describe 'folders and feeds' do
         # @feed1 should be under @folder1
         page.should have_css "li#folder-#{@folder1.id} > ul#feeds-#{@folder1.id} > li > a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
 
-        add_feed_to_folder @feed1.id, @new_folder.id
+        move_feed_to_folder @feed1.id, @new_folder.id
 
         # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
         # is now inside "@new_folder"
@@ -168,7 +168,7 @@ describe 'folders and feeds' do
       end
 
       it 'removes folder if it has no more feeds', js: true do
-        add_feed_to_folder @feed1.id, @new_folder.id
+        move_feed_to_folder @feed1.id, @new_folder.id
 
         # Folder should be removed from the sidebar
         within '#sidebar #folders-list' do
@@ -187,7 +187,7 @@ describe 'folders and feeds' do
       # Regression test for bug #165
       it 'does not change feed/folder if user tries to move a feed to the same folder it already is at', js: true do
         # @feed1 is already in @folder1, user clicks on @folder1 in the dropdown
-        add_feed_to_folder @feed1.id, @folder1.id
+        move_feed_to_folder @feed1.id, @folder1.id
 
         # Folder should not be removed from the sidebar
         within '#sidebar #folders-list' do
@@ -218,7 +218,7 @@ describe 'folders and feeds' do
         @folder1.feeds << @feed2
 
         visit feeds_path
-        add_feed_to_folder @feed1.id, @new_folder.id
+        move_feed_to_folder @feed1.id, @new_folder.id
 
         # Folder should not be removed from the sidebar
         within '#sidebar #folders-list' do
@@ -235,7 +235,7 @@ describe 'folders and feeds' do
       end
 
       it 'shows an alert if there is a problem adding a feed to a folder', js: true do
-        User.any_instance.stub(:add_feed_to_folder).and_raise StandardError.new
+        User.any_instance.stub(:move_feed_to_folder).and_raise StandardError.new
 
         read_feed @feed2.id
         open_folder_dropdown
@@ -308,7 +308,7 @@ describe 'folders and feeds' do
 
       it 'adds a feed to a new folder', js: true do
         title = 'New folder'
-        add_feed_to_new_folder @feed1.id, title
+        move_feed_to_new_folder @feed1.id, title
 
         # data-folder-id attribute should indicate that @feed1 is in the new folder
         new_folder = Folder.where(user_id: @user.id, title: title).first
@@ -317,7 +317,7 @@ describe 'folders and feeds' do
 
       it 'removes old folder if it has no more feeds', js: true do
         title = 'New folder'
-        add_feed_to_new_folder @feed1.id, title
+        move_feed_to_new_folder @feed1.id, title
 
         # Folder should be deleted from the database
         Folder.where(id: @folder1.id).should be_blank
@@ -343,7 +343,7 @@ describe 'folders and feeds' do
         read_feed @feed1.id
 
         title = 'New folder'
-        add_feed_to_new_folder @feed1.id, title
+        move_feed_to_new_folder @feed1.id, title
 
         # Folder should not be deleted from the database
         Folder.where(id: @folder1.id).should be_present
@@ -374,7 +374,7 @@ describe 'folders and feeds' do
         end
 
         title = 'New folder'
-        add_feed_to_new_folder @feed1.id, title
+        move_feed_to_new_folder @feed1.id, title
 
         # @feed1 is no longer under @folder1
         within "#sidebar #folders-list li[data-folder-id='#{@folder1.id}']" do
@@ -384,7 +384,7 @@ describe 'folders and feeds' do
 
       it 'adds new folder to the sidebar', js: true do
         title = 'New folder'
-        add_feed_to_new_folder @feed1.id, title
+        move_feed_to_new_folder @feed1.id, title
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
         within '#sidebar #folders-list' do
@@ -398,7 +398,7 @@ describe 'folders and feeds' do
 
       it 'adds new folder to the dropdown', js: true do
         title = 'New folder'
-        add_feed_to_new_folder @feed1.id, title
+        move_feed_to_new_folder @feed1.id, title
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
         # Click on Folder button to open the dropdown
@@ -412,7 +412,7 @@ describe 'folders and feeds' do
 
       it 'allows clicking on the dynamically added folder in the dropdown to move another feed into it', js: true do
         title = 'New folder'
-        add_feed_to_new_folder @feed1.id, title
+        move_feed_to_new_folder @feed1.id, title
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
         # data-folder-id attribute should indicate that @feed1 is in the new folder
@@ -432,7 +432,7 @@ describe 'folders and feeds' do
       end
 
       it 'shows an alert if there is a problem adding the feed to the new folder', js: true do
-        User.any_instance.stub(:add_feed_to_new_folder).and_raise StandardError.new
+        User.any_instance.stub(:move_feed_to_new_folder).and_raise StandardError.new
         title = 'New folder'
 
         read_feed @feed1.id
@@ -452,7 +452,7 @@ describe 'folders and feeds' do
       end
 
       it 'shows an alert if the user already has a folder with the same title', js: true do
-        add_feed_to_new_folder @feed1.id, @folder1.title
+        move_feed_to_new_folder @feed1.id, @folder1.title
 
         should_show_alert 'folder-already-exists'
       end

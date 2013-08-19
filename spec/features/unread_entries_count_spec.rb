@@ -49,7 +49,7 @@ describe 'unread entries count' do
 
     visit feeds_path
     title = 'New folder'
-    add_feed_to_new_folder @feed1.id, title
+    move_feed_to_new_folder @feed1.id, title
 
     # Entry count in @folder1 should be updated
     unread_folder_entries_should_eq @folder1.id, 1
@@ -74,7 +74,7 @@ describe 'unread entries count' do
 
     visit feeds_path
 
-    add_feed_to_folder @feed1.id, folder2.id
+    move_feed_to_folder @feed1.id, folder2.id
 
     # Entry count in @folder1 should be updated
     unread_folder_entries_should_eq @folder1.id, 1

@@ -142,7 +142,7 @@ end
 #
 # Receives as arguments the id of the feed and the title of the new folder.
 
-def add_feed_to_new_folder(feed_id, title)
+def move_feed_to_new_folder(feed_id, title)
   read_feed feed_id
   open_folder_dropdown
   within '#folder-management-dropdown ul.dropdown-menu' do
@@ -164,7 +164,7 @@ end
 #
 # Receives as arguments the id of the feed and the id of the folder.
 
-def add_feed_to_folder(feed_id, folder_id)
+def move_feed_to_folder(feed_id, folder_id)
   read_feed feed_id
   open_folder_dropdown
   within '#folder-management-dropdown ul.dropdown-menu' do

@@ -1,4 +1,4 @@
-require 'folder_feed_add'
+require 'folder_manager'
 require 'feed_subscriber'
 require 'feed_refresh'
 require 'entry_state_change'
@@ -107,17 +107,17 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Add a feed to an existing folder. See FolderFeedAdd#add_feed_to_folder
+  # Move a feed to an existing folder. See FolderManager#move_feed_to_folder
 
-  def add_feed_to_folder(feed_id, folder_id)
-    FolderFeedAdd.add_feed_to_folder feed_id, folder_id, self
+  def move_feed_to_folder(feed_id, folder_id)
+    FolderManager.move_feed_to_folder feed_id, folder_id, self
   end
 
   ##
-  # Add a feed to a new folder. See FolderFeedAdd#add_feed_to_new_folder
+  # Move a feed to a new folder. See FolderManager#move_feed_to_new_folder
 
-  def add_feed_to_new_folder(feed_id, folder_title)
-    FolderFeedAdd.add_feed_to_new_folder feed_id, folder_title, self
+  def move_feed_to_new_folder(feed_id, folder_title)
+    FolderManager.move_feed_to_new_folder feed_id, folder_title, self
   end
 
   ##

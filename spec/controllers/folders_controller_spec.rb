@@ -108,7 +108,7 @@ describe FoldersController do
     end
 
     it 'returns 500 if there is a problem associating the feed with the folder' do
-      User.any_instance.stub(:add_feed_to_folder).and_raise StandardError.new
+      User.any_instance.stub(:move_feed_to_folder).and_raise StandardError.new
       put :update, id: @folder1.id, folder: {feed_id: @feed3.id}, format: :json
       response.status.should eq 500
     end

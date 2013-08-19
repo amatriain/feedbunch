@@ -1,13 +1,13 @@
 ##
-# This class has methods related to adding a feed to a folder
+# This class has methods related to managing the relationships between feeds and folders.
 
-class FolderFeedAdd
+class FolderManager
 
   ##
-  # Add a feed to a folder.
+  # Move a feed to a folder.
   #
   # Receives as arguments the id of the feed, the id of the folder and the user instance which is subscribed
-  # to the feed and to which owns the folder.
+  # to the feed and who owns the folder.
   #
   # The folder must belong to the user, and the user must be subscribed to the feed. If any of these
   # conditions is not met, an ActiveRecord::RecordNotFound error is raised.
@@ -25,7 +25,7 @@ class FolderFeedAdd
   # If the method detects that the feed is being moved to the same folder it's already at, no action is
   # taken at the database level, and the return hash has the same values in the :new_folder and :old_folder keys.
 
-  def self.add_feed_to_folder(feed_id, folder_id, user)
+  def self.move_feed_to_folder(feed_id, folder_id, user)
     # Ensure the user is subscribed to the feed and the folder is owned by the user.
     feed = user.feeds.find feed_id
     folder = user.folders.find folder_id
@@ -49,9 +49,9 @@ class FolderFeedAdd
   end
 
   ##
-  # Create a new folder owned by the user, and add a feed to it.
+  # Create a new folder owned by the user, and move a feed to it.
   #
-  # Receives as arguments the id of the feed, the title of the new folder and the user that will own the folder.
+  # Receives as arguments the id of the feed, the title of the new folder and the user who will own the folder.
   #
   # If the user already has a folder with the same title, raises a FolderAlreadyExistsError.
   # If the user is not subscribed to the feed, raises an ActiveRecord::RecordNotFound error.
@@ -65,7 +65,7 @@ class FolderFeedAdd
   # been deleted from the database, if there were no more feeds in it. If the feed wasn't in any folder, this key is
   # not present in the hash
 
-  def self.add_feed_to_new_folder(feed_id, folder_title, user)
+  def self.move_feed_to_new_folder(feed_id, folder_title, user)
     # Ensure that user is subscribed to the feed
     feed = user.feeds.find feed_id
 
@@ -77,7 +77,7 @@ class FolderFeedAdd
     Rails.logger.info "Creating folder with title #{folder_title} for user #{user.id} - #{user.email}"
     folder = user.folders.create title: folder_title
 
-    changes = user.add_feed_to_folder feed.id, folder.id
+    changes = user.move_feed_to_folder feed.id, folder.id
     # Only return the :old_folder, :new_folder keys
     return changes.except :feed
   end

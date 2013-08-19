@@ -11,14 +11,14 @@ describe User do
   context 'add feed to new folder' do
 
     it 'creates new folder' do
-      @user.add_feed_to_new_folder @feed.id, @title
+      @user.move_feed_to_new_folder @feed.id, @title
 
       @user.reload
       @user.folders.where(title: @title).should be_present
     end
 
     it 'adds feed to new folder' do
-      @user.add_feed_to_new_folder @feed.id, @title
+      @user.move_feed_to_new_folder @feed.id, @title
       @user.reload
 
       folder = @user.folders.where(title: @title).first
@@ -32,7 +32,7 @@ describe User do
       folder.feeds << @feed
 
       folder.feeds.count.should eq 1
-      @user.add_feed_to_new_folder @feed.id, @title
+      @user.move_feed_to_new_folder @feed.id, @title
       folder.feeds.count.should eq 0
     end
 
@@ -41,7 +41,7 @@ describe User do
       @user.folders << folder
       folder.feeds << @feed
 
-      @user.add_feed_to_new_folder @feed.id, @title
+      @user.move_feed_to_new_folder @feed.id, @title
       Folder.exists?(folder).should be_false
     end
 
@@ -52,12 +52,12 @@ describe User do
       @user.subscribe feed2.fetch_url
       folder.feeds << @feed << feed2
 
-      @user.add_feed_to_new_folder @feed.id, @title
+      @user.move_feed_to_new_folder @feed.id, @title
       Folder.exists?(folder).should be_true
     end
 
     it 'returns the new folder' do
-      changed_data = @user.add_feed_to_new_folder @feed.id, @title
+      changed_data = @user.move_feed_to_new_folder @feed.id, @title
       folder = @user.folders.where(title: @title).first
 
       changed_data[:new_folder].should eq folder
@@ -68,20 +68,20 @@ describe User do
       @user.folders << folder
       folder.feeds << @feed
 
-      changed_data = @user.add_feed_to_new_folder @feed.id, @title
+      changed_data = @user.move_feed_to_new_folder @feed.id, @title
 
       changed_data[:old_folder].should eq folder
     end
 
     it 'does not return the old folder if the feed was not in any folder' do
-      changed_data = @user.add_feed_to_new_folder @feed.id, @title
+      changed_data = @user.move_feed_to_new_folder @feed.id, @title
       changed_data.keys.should_not include :old_folder
     end
 
     it 'raises an error if the user already has a folder with the same title' do
       folder = FactoryGirl.build :folder, user_id: @user.id, title: @title
       @user.folders << folder
-      expect {@user.add_feed_to_new_folder @feed.id, @title}.to raise_error FolderAlreadyExistsError
+      expect {@user.move_feed_to_new_folder @feed.id, @title}.to raise_error FolderAlreadyExistsError
     end
 
     it 'does not raise an error if another user has a folder with the same title' do
@@ -89,12 +89,12 @@ describe User do
       folder2 = FactoryGirl.build :folder, user_id: user2.id, title: @title
       user2.folders << folder2
 
-      expect {@user.add_feed_to_new_folder @feed.id, @title}.to_not raise_error
+      expect {@user.move_feed_to_new_folder @feed.id, @title}.to_not raise_error
     end
 
     it 'raises an error if user is not subscribed to the feed' do
       feed2 = FactoryGirl.create :feed
-      expect {@user.add_feed_to_new_folder feed2.id, @title}.to raise_error ActiveRecord::RecordNotFound
+      expect {@user.move_feed_to_new_folder feed2.id, @title}.to raise_error ActiveRecord::RecordNotFound
     end
   end
 end

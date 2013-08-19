@@ -33,7 +33,7 @@ class FoldersController < ApplicationController
   # Associate a feed with a folder. The current user must own the folder and be subscribed to the feed.
 
   def update
-    @changed_data = current_user.add_feed_to_folder folder_params[:feed_id], params[:id]
+    @changed_data = current_user.move_feed_to_folder folder_params[:feed_id], params[:id]
     render 'update', locals: {user: current_user,
                                        new_folder: @changed_data[:new_folder],
                                        feed: @changed_data[:feed],
@@ -58,7 +58,7 @@ class FoldersController < ApplicationController
   # passed in params[:feed_id]
 
   def create
-    @changed_data = current_user.add_feed_to_new_folder folder_params[:feed_id], folder_params[:title]
+    @changed_data = current_user.move_feed_to_new_folder folder_params[:feed_id], folder_params[:title]
     render 'create', locals: {user: current_user,
                                        new_folder: @changed_data[:new_folder],
                                        old_folder: @changed_data[:old_folder]}
