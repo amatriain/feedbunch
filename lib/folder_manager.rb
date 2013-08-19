@@ -4,7 +4,36 @@
 class FolderManager
 
   ##
-  # Move a feed to a folder.
+  # Move a feed into a folder, for a given user.
+  #
+  # Receives as arguments:
+  #
+  # - feed_id: mandatory. ID of the feed to be moved.
+  # - user: mandatory. User who owns the folder. User must be subscribed to the feed.
+  # - folder_id: optional named argument. If present, move the feed to the folder with this ID, which must be owned by the passed user; ignore the folder_title argument.
+  # - folder_title: optional named argument. If present, and folder_id is not present, create a new folder with this title (owned by the passed user) and move the feed to it.
+  #
+  # Returns a hash with the following values:
+  # - :feed => the feed which has been added to the folder
+  # - :new_folder => the folder to which the feed has been added
+  # - :old_folder => the folder (owned by this user) in which the feed was previously. This object may have already
+  # been deleted from the database, if there were no more feeds in it. If the feed wasn't in any folder, this key is
+  # not present in the hash
+
+  def self.move_feed_to_folder(feed_id, user, folder_id: nil, folder_title: nil)
+    if folder_id.present?
+      changes = self.move_feed_to_existing_folder feed_id, folder_id, user
+    else
+      changes = self.move_feed_to_new_folder feed_id, folder_title, user
+    end
+
+    return changes
+  end
+
+  private
+
+  ##
+  # Move a feed to an existing folder.
   #
   # Receives as arguments the id of the feed, the id of the folder and the user instance which is subscribed
   # to the feed and who owns the folder.
@@ -25,7 +54,7 @@ class FolderManager
   # If the method detects that the feed is being moved to the same folder it's already at, no action is
   # taken at the database level, and the return hash has the same values in the :new_folder and :old_folder keys.
 
-  def self.move_feed_to_folder(feed_id, folder_id, user)
+  def self.move_feed_to_existing_folder(feed_id, folder_id, user)
     # Ensure the user is subscribed to the feed and the folder is owned by the user.
     feed = user.feeds.find feed_id
     folder = user.folders.find folder_id
@@ -60,7 +89,8 @@ class FolderManager
   # If there are no more feeds in that folder, it is deleted.
   #
   # Returns a hash with the following values:
-  # - :new_folder => the newly created folder to which the feed has been added
+  # - :feed => the feed which has been added to the folder
+  # - :new_folder => the folder to which the feed has been added
   # - :old_folder => the folder (owned by this user) in which the feed was previously. This object may have already
   # been deleted from the database, if there were no more feeds in it. If the feed wasn't in any folder, this key is
   # not present in the hash
@@ -78,7 +108,6 @@ class FolderManager
     folder = user.folders.create title: folder_title
 
     changes = user.move_feed_to_folder feed.id, folder.id
-    # Only return the :old_folder, :new_folder keys
-    return changes.except :feed
+    return changes
   end
 end
