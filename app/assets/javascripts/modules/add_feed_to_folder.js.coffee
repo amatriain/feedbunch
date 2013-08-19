@@ -29,7 +29,7 @@ $(document).ready ->
         Feedbunch.update_folder_entry_count data["new_folder"]["id"], data["new_folder"]["sidebar_read_all"]
         Feedbunch.read_feed Feedbunch.current_feed_id, folder_id
 
-    $.post(update_folder_path, {"_method":"put", feed_id: Feedbunch.current_feed_id}, update_folder_result, "json")
+    $.post(update_folder_path, {"_method":"put", folder: {feed_id: Feedbunch.current_feed_id}}, update_folder_result, "json")
       .fail ->
         Feedbunch.alertTimedShowHide $("#problem-folder-management")
 
@@ -69,7 +69,7 @@ $(document).ready ->
     if $("#new_folder_title").val()
       form_url = $("#form-new-folder").attr "action"
       folder_title = $("#new_folder_title").val()
-      $.post(form_url, {feed_id: Feedbunch.current_feed_id, title: folder_title}, new_folder_result, 'json')
+      $.post(form_url, folder: {feed_id: Feedbunch.current_feed_id, title: folder_title}, new_folder_result, 'json')
         .fail ->
           Feedbunch.alertTimedShowHide $("#problem-new-folder")
 

@@ -75,12 +75,12 @@ describe FoldersController do
   context 'PUT update' do
 
     it 'returns success' do
-      put :update, id: @folder1.id, feed_id: @feed3.id, format: :json
+      put :update, id: @folder1.id, folder: {feed_id: @feed3.id}, format: :json
       response.should be_success
     end
 
     it 'returns 404 for a folder that does not belong to the current user' do
-      put :update, id: @folder2.id, feed_id: @feed3.id, format: :json
+      put :update, id: @folder2.id, folder: {feed_id: @feed3.id}, format: :json
       response.status.should eq 404
     end
 
@@ -88,28 +88,28 @@ describe FoldersController do
       feed = FactoryGirl.create :feed
       @user.feeds.should_not include feed
 
-      put :update, id: @folder1.id, feed_id: feed.id, format: :json
+      put :update, id: @folder1.id, folder: {feed_id: feed.id}, format: :json
       response.status.should eq 404
     end
 
     it 'returns 404 for non-existing folder' do
-      put :update, id: '1234567890', feed_id: @feed3.id, format: :json
+      put :update, id: '1234567890', folder: {feed_id: @feed3.id}, format: :json
       response.status.should eq 404
     end
 
     it 'returns 404 for non-existing feed' do
-      put :update, id: @folder1.id, feed_id: '1234567890', format: :json
+      put :update, id: @folder1.id, folder: {feed_id: '1234567890'}, format: :json
       response.status.should eq 404
     end
 
     it 'returns 200 if the feed is already in the folder' do
-      put :update, id: @folder1.id, feed_id: @feed1.id, format: :json
+      put :update, id: @folder1.id, folder: {feed_id: @feed1.id}, format: :json
       response.status.should eq 200
     end
 
     it 'returns 500 if there is a problem associating the feed with the folder' do
       User.any_instance.stub(:add_feed_to_folder).and_raise StandardError.new
-      put :update, id: @folder1.id, feed_id: @feed3.id, format: :json
+      put :update, id: @folder1.id, folder: {feed_id: @feed3.id}, format: :json
       response.status.should eq 500
     end
   end
@@ -117,23 +117,23 @@ describe FoldersController do
   context 'DELETE destroy' do
 
     it 'returns success' do
-      delete :remove, feed_id: @feed1.id, format: :json
+      delete :remove, folder: {feed_id: @feed1.id}, format: :json
       response.should be_success
     end
 
     it 'returns 404 if the user is not subscribed to the feed' do
       feed = FactoryGirl.create :feed
-      delete :remove, feed_id: feed.id, format: :json
+      delete :remove, folder: {feed_id: feed.id}, format: :json
       response.status.should eq 404
     end
 
     it 'returns 404 if the feed does not exist' do
-      delete :remove, feed_id: 1234567890, format: :json
+      delete :remove, folder: {feed_id: 1234567890}, format: :json
       response.status.should eq 404
     end
 
     it 'assigns to @old_folder the folder in which the feed was previously' do
-      delete :remove, feed_id: @feed1.id, format: :json
+      delete :remove, folder: {feed_id: @feed1.id}, format: :json
       assigns(:old_folder).should eq @folder1
     end
 
@@ -141,13 +141,13 @@ describe FoldersController do
       # Ensure that @folder1 only has @feed1
       @folder1.feeds.delete @feed2
 
-      delete :remove, feed_id: @feed1.id, format: :json
+      delete :remove, folder: {feed_id: @feed1.id}, format: :json
       Folder.exists?(@folder1.id).should be_false
     end
 
     it 'returns 500 if there is a problem removing feed from folder' do
       User.any_instance.stub(:remove_feed_from_folder).and_raise StandardError.new
-      delete :remove, feed_id: @feed1.id, format: :json
+      delete :remove, folder: {feed_id: @feed1.id}, format: :json
       response.status.should eq 500
     end
   end
@@ -155,7 +155,7 @@ describe FoldersController do
   context 'POST create' do
 
     it 'returns success if sucessfully created folder' do
-      post :create, title: 'New folder title', feed_id: @feed1.id, format: :json
+      post :create, folder: {title: 'New folder title', feed_id: @feed1.id}, format: :json
       response.should be_success
     end
 
@@ -164,7 +164,7 @@ describe FoldersController do
       folder = FactoryGirl.build :folder, title: title, user_id: @user.id
       @user.folders << folder
 
-      post :create, title: title, feed_id: @feed1.id, format: :json
+      post :create, folder: {title: title, feed_id: @feed1.id}, format: :json
       response.status.should eq 304
     end
   end
