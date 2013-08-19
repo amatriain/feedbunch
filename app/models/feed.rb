@@ -69,6 +69,33 @@ class Feed < ActiveRecord::Base
   end
 
   ##
+  # Remove this feed from its current folder, if any, for a given user.
+  #
+  # Receives as argument a user.
+  #
+  # A feed can only be in a single folder owned by a given user, so it's not necessary to pass the folder id
+  # as an argument, it can be inferred from the user id and feed id.
+  #
+  # If the feed is in a folder owned by the passed user, it is removed from the folder.
+  # Otherwise nothing is done.
+  #
+  # Returns a Folder instance with the data of the folder in which the feed was previously, or nil
+  # if it wasn't in any folder. This object may have already  been deleted from the database,
+  # if there were no more feeds in it.
+
+  def remove_from_folder(user)
+    folder = self.user_folder user
+    if folder.present?
+      Rails.logger.info "user #{user.id} - #{user.email} is removing feed #{self.id} - #{self.fetch_url} from folder #{folder.id} - #{folder.title}"
+      folder.feeds.delete self
+    else
+      Rails.logger.info "user #{user.id} - #{user.email} is trying to remove feed #{self.id} - #{self.fetch_url} from its folder, but it's not in any folder"
+    end
+
+    return folder
+  end
+
+  ##
   # Check if a feed exists in the database matching a given URL. This is a class method.
   #
   # Receives as argument a URL.

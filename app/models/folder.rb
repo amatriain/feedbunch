@@ -62,23 +62,12 @@ class Folder < ActiveRecord::Base
 
   ##
   # Before adding a feed to a folder:
-  # - ensure that the feed is only in this folder, for the current user.
+  # - remove the feed from its old folder, if any.
   # - increment the count of unread entries in the folder.
 
   def before_add_feed(feed)
-    single_user_folder feed
+    feed.remove_from_folder self.user
     increment_unread_count feed
-  end
-
-  ##
-  # Check if the feed is already in another folder owned by the same user.
-  # In this case, remove it from the old folder before adding it to the new one.
-
-  def single_user_folder(feed)
-    old_folder = feed.folders.where(user_id: self.user_id).first
-    if old_folder.present?
-      old_folder.feeds.delete feed
-    end
   end
 
   ##

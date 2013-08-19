@@ -1,4 +1,3 @@
-require 'folder_feed_remove'
 require 'folder_feed_add'
 require 'feed_subscriber'
 require 'feed_refresh'
@@ -100,10 +99,11 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Remove a feed from a folder. See FolderFeedRemove#remove_feed_from_folder
+  # Remove a feed from a folder. See Feed#remove_from_folder
 
   def remove_feed_from_folder(feed_id)
-    FolderFeedRemove.remove_feed_from_folder feed_id, self
+    feed = self.feeds.find feed_id
+    feed.remove_from_folder self
   end
 
   ##
