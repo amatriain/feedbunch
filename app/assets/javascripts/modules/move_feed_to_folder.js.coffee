@@ -29,7 +29,7 @@ $(document).ready ->
         Feedbunch.update_folder_entry_count data["new_folder"]["id"], data["new_folder"]["sidebar_read_all"]
         Feedbunch.read_feed Feedbunch.current_feed_id, folder_id
 
-    $.post(update_folder_path, {"_method":"put", folder: {feed_id: Feedbunch.current_feed_id}}, update_folder_result, "json")
+    $.post(update_folder_path, {"_method":"patch", folder: {feed_id: Feedbunch.current_feed_id}}, update_folder_result, "json")
       .fail ->
         Feedbunch.alertTimedShowHide $("#problem-folder-management")
 
