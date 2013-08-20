@@ -13,14 +13,10 @@
     </div>
     <div class="span9 offset1">
       <p class="lead"><%= t '.tagline' %></p>
-      <% if current_user %>
-        <%= link_to t('.feeds'), feeds_path, class: 'btn btn-primary btn-large' %>
-      <% else %>
-        <p>
-          <%= link_to t('.sign_up'), new_user_registration_path, class: 'btn btn-primary btn-large', id: 'sign_up' %>
-          <%= t '.or' %> <%= link_to t('.sign_in'), new_user_session_path, id: 'sign_in' %>
-        </p>
-      <% end %>
+      <p>
+        <%= link_to t('.sign_up'), new_user_registration_path, class: 'btn btn-primary btn-large', id: 'sign_up' %>
+        <%= t '.or' %> <%= link_to t('.sign_in'), feeds_path, id: 'sign_in' %>
+      </p>
     </div>
   </div>
 </div>
