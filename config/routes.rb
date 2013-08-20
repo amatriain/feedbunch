@@ -92,9 +92,6 @@ Feedbunch::Application.routes.draw do
   # Static pages served with High_voltage gem
   root :to => 'high_voltage/pages#show', id: 'index'
 
-  # Remove a feed from folders
-  match '/folders/remove' => 'folders#remove', via: :delete, as: 'folder_remove'
-
   # Mark as read an array of entries
   match '/entries/update' => 'entries#update', via: :put, as: 'entries_update'
 

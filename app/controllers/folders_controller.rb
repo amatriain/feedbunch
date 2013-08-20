@@ -43,19 +43,6 @@ class FoldersController < ApplicationController
   end
 
   ##
-  # Remove the feed passed in params[:feed_id] from its current folder.
-
-  def remove
-    @changed_data = current_user.move_feed_to_folder folder_params[:feed_id], folder_id: Folder::NO_FOLDER
-    render 'update', locals: {user: current_user,
-                              new_folder: @changed_data[:new_folder],
-                              feed: @changed_data[:feed],
-                              old_folder: @changed_data[:old_folder]}
-  rescue => e
-    handle_error e
-  end
-
-  ##
   # Create a new folder with the title passed in params[:new_folder_title], and add to it the folder
   # passed in params[:feed_id]
 
