@@ -98,6 +98,7 @@ FEED_XML
 
       # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
       FeedClient.fetch @feed.id
+
       # After fetching, relevant fields should be updated with the values received in the XML
       entry.reload
       entry.feed_id.should eq @feed.id
@@ -107,6 +108,41 @@ FEED_XML
       entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
       entry.published.should eq @entry1.published
       entry.guid.should eq @entry1.guid
+    end
+
+    it 'does not update entry if another one with the same guid is received from another feed' do
+      feed2 = FactoryGirl.create :feed
+      # Create an entry for feed feed2 with the same guid as @entry1 (which is not saved in the DB) but all other
+      # fields with different values
+      entry = FactoryGirl.create :entry, feed_id: feed2.id, title: 'Original title',
+                                 url: 'http://origina.url.com', author: 'Original author',
+                                 content: 'Original content', summary: '<p>Original summary</p>',
+                                 published: DateTime.iso8601('2013-01-01T00:00:00'),
+                                 guid: @entry1.guid
+
+      # XML that will be fetched contains an entry with the same guid but different feed. Both entries
+      # should be treated as different entities.
+      FeedClient.fetch @feed.id
+
+      # After fetching, entry should remain untouched
+      entry.reload
+      entry.feed_id.should eq feed2.id
+      entry.title.should eq 'Original title'
+      entry.url.should eq 'http://origina.url.com'
+      entry.author.should eq 'Original author'
+      entry.summary.should eq '<p>Original summary</p>'
+      entry.published.should eq DateTime.iso8601('2013-01-01T00:00:00')
+      entry.guid.should eq @entry1.guid
+
+      # the fetched entry should be saved in the database as well
+      fetched_entry = Entry.where(guid: @entry1.guid, feed_id: @feed.id).first
+      fetched_entry.feed_id.should eq @feed.id
+      fetched_entry.title.should eq @entry1.title
+      fetched_entry.url.should eq @entry1.url
+      fetched_entry.author.should eq @entry1.author
+      fetched_entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
+      fetched_entry.published.should eq @entry1.published
+      fetched_entry.guid.should eq @entry1.guid
     end
 
     it 'retrieves the feed title and saves it in the database' do
@@ -200,6 +236,41 @@ FEED_XML
       entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
       entry.published.should eq @entry1.published
       entry.guid.should eq @entry1.guid
+    end
+
+    it 'does not update entry if another one with the same guid is received from another feed' do
+      feed2 = FactoryGirl.create :feed
+      # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
+      # fields with different values
+      entry = FactoryGirl.create :entry, feed_id: feed2.id, title: 'Original title',
+                                 url: 'http://origina.url.com', author: 'Original author',
+                                 content: 'Original content', summary: '<p>Original summary</p>',
+                                 published: DateTime.iso8601('2013-01-01T00:00:00'),
+                                 guid: @entry1.guid
+
+      # XML that will be fetched contains an entry with the same guid from a different feed. Both entries
+      # should be treated as separate entities.
+      FeedClient.fetch @feed.id
+
+      # After fetching, entry should be left untouched
+      entry.reload
+      entry.feed_id.should eq feed2.id
+      entry.title.should eq 'Original title'
+      entry.url.should eq 'http://origina.url.com'
+      entry.author.should eq 'Original author'
+      entry.summary.should eq '<p>Original summary</p>'
+      entry.published.should eq DateTime.iso8601('2013-01-01T00:00:00')
+      entry.guid.should eq @entry1.guid
+
+      # Fetched entry should also be saved in the database
+      fetched_entry = Entry.where(guid: @entry1.guid, feed_id: @feed.id).first
+      fetched_entry.feed_id.should eq @feed.id
+      fetched_entry.title.should eq @entry1.title
+      fetched_entry.url.should eq @entry1.url
+      fetched_entry.author.should eq @entry1.author
+      fetched_entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
+      fetched_entry.published.should eq @entry1.published
+      fetched_entry.guid.should eq @entry1.guid
     end
 
     it 'retrieves the feed title and saves it in the database' do

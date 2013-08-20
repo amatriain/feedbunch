@@ -42,7 +42,7 @@ class Entry < ActiveRecord::Base
 
   validates :title, presence: true
   validates :url, presence: true, format: {with: /\Ahttps?:\/\/.+\..+\z/}
-  validates :guid, presence: true, uniqueness: {case_sensitive: false}
+  validates :guid, presence: true, uniqueness: {case_sensitive: false, scope: :feed_id}
 
   before_validation :sanitize_attributes
   before_save :links_new_tab

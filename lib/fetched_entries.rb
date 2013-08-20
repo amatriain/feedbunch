@@ -26,7 +26,7 @@ class FetchedEntries
 
         entry_hash = self.entry_to_hash entry, guid
 
-        if Entry.exists? guid: guid
+        if Entry.exists? guid: guid, feed_id: feed.id
           # If entry is already in the database, update it
           Rails.logger.info "Updating already saved entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{guid}"
           e = Entry.where(guid: guid).first

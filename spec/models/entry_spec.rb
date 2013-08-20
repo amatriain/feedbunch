@@ -30,9 +30,15 @@ describe Entry do
       entry.should_not be_valid
     end
 
-    it 'does not accept duplicate guids' do
-      entry_dupe = FactoryGirl.build :entry, guid: @entry.guid
+    it 'does not accept duplicate guids for the same feed' do
+      entry_dupe = FactoryGirl.build :entry, guid: @entry.guid, feed_id: @entry.feed.id
       entry_dupe.should_not be_valid
+    end
+
+    it 'does accept duplicate guids for different feeds' do
+      feed2 = FactoryGirl.create :feed
+      entry_dupe = FactoryGirl.build :entry, guid: @entry.guid, feed_id: feed2.id
+      entry_dupe.should be_valid
     end
   end
 
