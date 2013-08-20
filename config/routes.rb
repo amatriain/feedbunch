@@ -93,7 +93,7 @@ Feedbunch::Application.routes.draw do
   root :to => 'high_voltage/pages#show', id: 'index'
 
   # Mark as read an array of entries
-  match '/entries/update' => 'entries#update', via: :put, as: 'entries_update'
+  match '/entries/update' => 'entries#update', via: :patch, as: 'entries_update'
 
   # Resourceful routes for feeds
   resources :feeds, only: [:index, :show, :create, :update, :destroy]
