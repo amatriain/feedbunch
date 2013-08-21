@@ -31,6 +31,10 @@ describe ImportSubscriptionsJob do
     @xkcd_feed = FactoryGirl.create :feed, title: 'xkcd.com', fetch_url: 'http://xkcd.com/rss.xml',
                                     url: 'http://xkcd.com/'
 
+    # Stub FeedClient.stub so that it does not actually fetch feeds, but returns them untouched
+    FeedClient.stub :fetch do |feed_id, perform_autodiscovery|
+      feed = Feed.find feed_id
+    end
   end
 
   it 'updates the data import total number of feeds' do
@@ -86,7 +90,7 @@ describe ImportSubscriptionsJob do
     @user.data_import.processed_feeds.should eq 0
     ImportSubscriptionsJob.perform @filename, @user.id
     @user.reload
-    @user.data_import.processed_feeds.should eq 2
+    @user.data_import.processed_feeds.should eq 4
   end
 
   it 'updates data import number of processed feeds when finding duplicated feeds' do
@@ -96,7 +100,7 @@ describe ImportSubscriptionsJob do
     ImportSubscriptionsJob.perform filename, @user.id
     @user.reload
     @user.data_import.total_feeds.should eq 5
-    @user.data_import.processed_feeds.should eq 3
+    @user.data_import.processed_feeds.should eq 5
   end
 
   it 'ignores feeds without xmlUrl attribute' do
@@ -104,34 +108,38 @@ describe ImportSubscriptionsJob do
     file_contents = File.read filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
 
-    Resque.should_receive(:enqueue) do |job_class, feed_id, user_id|
-      job_class.should eq FetchImportedFeedJob
+    FeedClient.should_receive(:fetch) do |feed_id, perform_autodiscovery|
       feed = Feed.find feed_id
       feed.fetch_url.should eq 'https://www.archlinux.org/feeds/news/'
-      user_id.should eq @user.id
+      perform_autodiscovery.should be_true
     end
+
     ImportSubscriptionsJob.perform filename, @user.id
+
     @user.reload
     @user.data_import.total_feeds.should eq 3
-    @user.data_import.processed_feeds.should eq 2
-    @user.data_import.status.should eq DataImport::RUNNING
+    @user.data_import.processed_feeds.should eq 3
+    @user.data_import.status.should eq DataImport::SUCCESS
   end
 
   it 'creates new feeds and subscribes user to them' do
-    Feed.exists?(fetch_url: 'http://www.galactanet.com/feed.xml').should be_false
-    Feed.exists?(fetch_url: 'https://www.archlinux.org/feeds/news/').should be_false
+    url1 = 'http://www.galactanet.com/feed.xml'
+    url2 = 'http://www.galactanet.com/feed.xml'
+
+    Feed.exists?(fetch_url: url1).should be_false
+    Feed.exists?(fetch_url: url2).should be_false
+
     ImportSubscriptionsJob.perform @filename, @user.id
+
     @user.reload
-    @user.feeds.where(fetch_url: 'http://www.galactanet.com/feed.xml').should be_present
-    @user.feeds.where(fetch_url: 'https://www.archlinux.org/feeds/news/').should be_present
+    @user.feeds.where(fetch_url: url1).should be_present
+    @user.feeds.where(fetch_url: url2).should be_present
   end
 
-  it 'enqueues job to fetch new feeds' do
+  it 'fetches new feeds' do
     andy_feed_enqueued = false
     arch_feed_enqueued = false
-    Resque.should_receive(:enqueue).twice do |job_class, feed_id, user_id|
-      job_class.should eq FetchImportedFeedJob
-      user_id.should eq @user.id
+    FeedClient.should_receive(:fetch).twice do |feed_id, perform_autodiscovery|
       feed = Feed.find feed_id
       andy_feed_enqueued = true if feed.fetch_url == 'http://www.galactanet.com/feed.xml'
       arch_feed_enqueued = true if feed.fetch_url == 'https://www.archlinux.org/feeds/news/'
@@ -178,14 +186,6 @@ describe ImportSubscriptionsJob do
     folder_webcomics.feeds.where(fetch_url: 'http://xkcd.com/rss.xml').should be_present
   end
 
-  it 'does not update data import number of processed feeds when subscribing user to new feeds' do
-    @brakeman_feed.destroy
-    @xkcd_feed.destroy
-    ImportSubscriptionsJob.perform @filename, @user.id
-    @user.reload
-    @user.data_import.processed_feeds.should eq 0
-  end
-
   it 'sets data import status to SUCCESS if all feeds already existed' do
     andy_weir_feed = FactoryGirl.create :feed, title: "Andy Weir's Writing",
                                         fetch_url: 'http://www.galactanet.com/feed.xml',
@@ -201,11 +201,11 @@ describe ImportSubscriptionsJob do
     @user.data_import.status.should eq DataImport::SUCCESS
   end
 
-  it 'leaves data import status as RUNNING if there were new feeds' do
+  it 'leaves data import status as SUCCESS if there were new feeds' do
     ImportSubscriptionsJob.perform @filename, @user.id
 
     @user.reload
-    @user.data_import.status.should eq DataImport::RUNNING
+    @user.data_import.status.should eq DataImport::SUCCESS
   end
 
   it 'creates a data_import for the user if one does not exist' do
