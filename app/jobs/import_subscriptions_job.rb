@@ -74,14 +74,14 @@ class ImportSubscriptionsJob
 
     # Process feeds that are not in a folder
     docXml.xpath('/opml/body/outline[@type="rss" and @xmlUrl]').each do |feed_node|
-      self.import_feed feed_node['title'], feed_node['xmlUrl'], feed_node['htmlUrl'], user
+      self.import_feed feed_node['xmlUrl'], user
     end
 
     # Process feeds in folders
     docXml.xpath('/opml/body/outline[not(@type="rss")]').each do |folder_node|
       folder = self.import_folder folder_node['title'], user
       folder_node.xpath('./outline[@type="rss" and @xmlUrl]').each do |feed_node|
-        self.import_feed feed_node['title'], feed_node['xmlUrl'], feed_node['htmlUrl'], user, folder
+        self.import_feed feed_node['xmlUrl'], user, folder
       end
     end
 
@@ -90,6 +90,8 @@ class ImportSubscriptionsJob
     user.reload
     if user.data_import.total_feeds == user.data_import.processed_feeds
       self.import_status_success user
+    else
+      self.import_status_error user
     end
   ensure
     Feedbunch::Application.config.uploads_manager.delete filename
@@ -138,39 +140,24 @@ class ImportSubscriptionsJob
   ##
   # Import a feed, subscribing the user to it.
   # Receives as arguments:
-  # - the title of the feed
   # - the fetch_url of the feed
-  # - the url of the feed
   # - the user who requested the import (and who will be subscribed to the feed)
   # - optionally, the folder in which the feed will be (defaults to none)
   #
   # If the feed already exists in the database, the user is subscribed to it.
 
-  def self.import_feed(title, fetch_url, url, user, folder=nil)
-    # Check if feed already exists in database
-    feed = Feed.url_variants_feed fetch_url
-
-    if feed.present?
-      Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to already existing feed #{feed.id} - #{feed.title}"
-      begin
-        user.subscribe feed.fetch_url
-      rescue
-        Rails.logger.error "Error trying to subscribe user #{user.id} - #{user.email} to feed at #{fetch_url} from OPML file. Skipping to next feed"
-        return
-      ensure
-        self.increment_processed_feeds_count user
+  def self.import_feed(fetch_url, user, folder=nil)
+    begin
+      feed = user.subscribe fetch_url
+      if folder.present?
+        Rails.logger.info "As part of OPML import, moving feed #{feed.id} - #{feed.title} to folder #{folder.title} owned by user #{user.id} - #{user.email}"
+        folder.feeds << feed
       end
-    else
-      Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to newly created feed #{title} - #{fetch_url}"
-      feed = Feed.new title: title, fetch_url: fetch_url
-      feed.save!
-      user.subscribe feed.fetch_url
-      Resque.enqueue FetchImportedFeedJob, feed.id, user.id
-    end
-
-    if folder.present?
-      Rails.logger.info "As part of OPML import, moving feed #{feed.id} - #{feed.title} into folder #{folder.title} owned by user #{user.id} - #{user.email}"
-      folder.feeds << feed
+    rescue
+      Rails.logger.error "Data import error: Error trying to subscribe user #{user.id} - #{user.email} to feed at #{fetch_url} from OPML file. Skipping to next feed"
+      return
+    ensure
+      self.increment_processed_feeds_count user
     end
   end
 
