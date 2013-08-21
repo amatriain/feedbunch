@@ -1,7 +1,7 @@
 ##
-# This class has methods related to recovering entries from the database
+# This class has methods related to retrieving entries from the database
 
-class EntryRecovery
+class EntryReader
 
   ##
   # Retrieve entries from the feed passed as argument, that are in the passed state for the passed user.

@@ -1,4 +1,4 @@
-require 'fetched_entries'
+require 'entry_manager'
 
 ##
 # Class to parse a fetched feed.
@@ -22,7 +22,7 @@ class FeedParser
   #
   # Returns the updated feed object.
 
-  def self.parse_feed(feed, feed_response)
+  def self.parse(feed, feed_response)
     feed_parsed = Feedzirra::Feed.parse feed_response
     Rails.logger.info "Correctly parsed feed from url #{feed.fetch_url}"
 
@@ -41,7 +41,7 @@ class FeedParser
     feed.update feed_attribs
 
     # Save entries in the database
-    FetchedEntries.save_or_update_entries feed, feed_parsed.entries
+    EntryManager.save_or_update_entries feed, feed_parsed.entries
 
     return feed
   end

@@ -3,7 +3,7 @@ require 'subscriptions_manager'
 ##
 # Class with methods related to changing the read/unread state of entries.
 
-class EntryStateChange
+class EntryStateManager
 
   ##
   # Change the read or unread state of several entries, for a given user.

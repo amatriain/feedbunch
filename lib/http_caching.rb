@@ -4,7 +4,7 @@
 # The headers returned by this class give the necessary information to the feed server
 # to leverage HTTP caching.
 
-class FeedCaching
+class HTTPCaching
 
   ##
   # Return the HTTP headers to be used for fetching a feed, in order to cache content as much as possible.
@@ -17,7 +17,7 @@ class FeedCaching
   # If the last time the feed was fetched no etag and no last-modified headers were in the response, no caching headers
   # are set, which means the full feed will be fetched unconditionally.
 
-  def self.fetch_headers(feed)
+  def self.headers(feed)
     headers = {}
 
     if feed.etag.present?

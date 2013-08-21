@@ -31,7 +31,7 @@ describe DataImportsController do
     end
 
     it 'redirects to feeds_path if an error happens' do
-      SubscriptionsImporter.stub(:read_data_file).and_raise StandardError.new
+      DataImportManager.stub(:read_data_file).and_raise StandardError.new
       post :create, data_import: {file: 'mock_file'}
       response.should redirect_to feeds_path
     end

@@ -4,7 +4,7 @@ require 'zip/zipfilesystem'
 ##
 # This class manages import of subscription data from Google Reader into Feedbunch
 
-class SubscriptionsImporter
+class DataImportManager
 
   ##
   # This method extracts subscriptions data from an OPML file (probably exported from Google Reader), and
@@ -18,7 +18,7 @@ class SubscriptionsImporter
   # If any error is raised during importing, this method raises an ImportDataError, to ensure that the user is
   # always redirected to the start page, instead of being left at a blank HTTP 500 page.
 
-  def self.import_subscriptions(file, user)
+  def self.import(file, user)
     Rails.logger.info "User #{user.id} - #{user.email} requested import of a data file"
     data_import = user.create_data_import
 

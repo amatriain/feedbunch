@@ -3,7 +3,7 @@ require 'subscriptions_manager'
 ##
 # This class has methods to subscribe a user to a feed.
 
-class FeedSubscriber
+class URLSubscriber
   extend UriHelpers
 
   ##

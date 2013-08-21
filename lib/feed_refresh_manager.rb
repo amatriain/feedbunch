@@ -1,7 +1,7 @@
 ##
 # This class has methods to refresh feeds, either one by one or all feeds in a folder at once.
 
-class FeedRefresh
+class FeedRefreshManager
 
   ##
   # Refresh a feed; this triggers a fetch of the feed from its server.
@@ -11,7 +11,7 @@ class FeedRefresh
   # Returns an ActiveRecord::Relation with the unread entries for the refreshed feed; this may or may
   # not contain new entries.
 
-  def self.refresh_feed(feed, user)
+  def self.refresh(feed, user)
 
     Rails.logger.info "User #{user.id} - #{user.email} is refreshing feed #{feed.id} - #{feed.fetch_url}"
     FeedClient.fetch feed.id, false

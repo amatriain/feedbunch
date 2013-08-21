@@ -1,9 +1,9 @@
 require 'folder_manager'
-require 'feed_subscriber'
-require 'feed_refresh'
-require 'entry_state_change'
-require 'entry_recovery'
-require 'subscriptions_importer'
+require 'url_subscriber'
+require 'feed_refresh_manager'
+require 'entry_state_manager'
+require 'entry_reader'
+require 'data_import_manager'
 require 'subscriptions_manager'
 
 ##
@@ -69,17 +69,17 @@ class User < ActiveRecord::Base
   before_save :encode_password
 
   ##
-  # Retrieve entries from a feed. See EntryRecovery#feed_entries
+  # Retrieve entries from a feed. See EntryReader#feed_entries
 
   def feed_entries(feed, include_read=false)
-    EntryRecovery.feed_entries feed, include_read, self
+    EntryReader.feed_entries feed, include_read, self
   end
 
   ##
-  # Retrieve unread entries from a folder. See EntryRecovery#unread_folder_entries
+  # Retrieve unread entries from a folder. See EntryReader#unread_folder_entries
 
   def unread_folder_entries(folder)
-    EntryRecovery.unread_folder_entries folder, self
+    EntryReader.unread_folder_entries folder, self
   end
 
   ##
@@ -106,17 +106,17 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Refresh a single feed. See FeedRefresh#refresh_feed
+  # Refresh a single feed. See FeedRefreshManager#refresh
 
   def refresh_feed(feed)
-    FeedRefresh.refresh_feed feed, self
+    FeedRefreshManager.refresh feed, self
   end
 
   ##
-  # Subscribe to a feed. See FeedSubscriber#subscribe
+  # Subscribe to a feed. See URLSubscriber#subscribe
 
   def subscribe(url)
-    FeedSubscriber.subscribe url, self
+    URLSubscriber.subscribe url, self
   end
 
   ##
@@ -127,18 +127,18 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Change the read/unread state of an array of entries for this user. See EntryStateChange#change_entries_state
+  # Change the read/unread state of an array of entries for this user. See EntryStateManager#change_entries_state
 
   def change_entries_state(entries, state)
-    EntryStateChange.change_entries_state entries, state, self
+    EntryStateManager.change_entries_state entries, state, self
   end
 
   ##
   # Import an OPML (optionally zipped) with subscription data, and subscribe the user to the feeds
-  # in it. See SubscriptionsImporter#import_subscriptions
+  # in it. See DataImportManager#import
 
   def import_subscriptions(file)
-    SubscriptionsImporter.import_subscriptions file, self
+    DataImportManager.import file, self
   end
 
   private

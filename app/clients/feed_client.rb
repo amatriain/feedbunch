@@ -3,7 +3,7 @@ require 'rest_client'
 require 'nokogiri'
 require 'uri'
 require 'feed_autodiscovery'
-require 'feed_caching'
+require 'http_caching'
 require 'feed_parser'
 
 ##
@@ -63,7 +63,7 @@ class FeedClient
 
   def self.fetch_valid_feed(feed)
     # Calculate HTTP headers to be used for fetching
-    headers = FeedCaching.fetch_headers feed
+    headers = HTTPCaching.headers feed
 
     # GET the feed
     Rails.logger.info "Fetching from URL #{feed.fetch_url}"
@@ -72,7 +72,7 @@ class FeedClient
     if feed_response.present?
       begin
         # Try to parse the response as a feed
-        FeedParser.parse_feed feed, feed_response
+        FeedParser.parse feed, feed_response
         return nil
       rescue
         return feed_response
@@ -105,7 +105,7 @@ class FeedClient
   def self.handle_html_response(feed, http_response, perform_autodiscovery)
     if perform_autodiscovery
       # If there was a problem parsing the feed assume we've downloaded an HTML webpage, try to perform feed autodiscovery
-      discovered_feed = FeedAutodiscovery.perform_feed_autodiscovery feed, http_response
+      discovered_feed = FeedAutodiscovery.discover feed, http_response
       if discovered_feed.present?
         # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
         # This second fetch will not try to perform autodiscovery, to avoid entering an infinite loop.

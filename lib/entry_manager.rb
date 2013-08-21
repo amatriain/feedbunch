@@ -1,7 +1,7 @@
 ##
-# Class to save or update in the database a collection of fetched feed entries.
+# Class to save or update in the database a collection of entries fetched from a feed.
 
-class FetchedEntries
+class EntryManager
   ##
   # Save or update feed entries in the database.
   #
