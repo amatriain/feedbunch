@@ -16,7 +16,13 @@ class FoldersController < ApplicationController
   # If the requests asks for a folder that does not belong to the current user, the response is a 404 error code (Not Found).
 
   def show
-    @entries = current_user.unread_folder_entries params[:id]
+    if params[:id] != Folder::ALL_FOLDERS
+      @folder = current_user.folders.find params[:id]
+    else
+      @folder = Folder::ALL_FOLDERS
+    end
+
+    @entries = current_user.unread_folder_entries @folder
 
     if @entries.present?
       # The folders#show and feeds#show actions use the same template, the only difference is the
@@ -33,7 +39,14 @@ class FoldersController < ApplicationController
   # Associate a feed with a folder. The current user must own the folder and be subscribed to the feed.
 
   def update
-    @changed_data = current_user.move_feed_to_folder folder_params[:feed_id], folder_id: params[:id]
+    @feed = current_user.feeds.find folder_params[:feed_id]
+    if params[:id] != Folder::NO_FOLDER
+      @folder = current_user.folders.find params[:id]
+    else
+      @folder = Folder::NO_FOLDER
+    end
+
+    @changed_data = current_user.move_feed_to_folder @feed, folder: @folder
     render 'update', locals: {user: current_user,
                                        new_folder: @changed_data[:new_folder],
                                        feed: @changed_data[:feed],
@@ -47,7 +60,8 @@ class FoldersController < ApplicationController
   # passed in params[:feed_id]
 
   def create
-    @changed_data = current_user.move_feed_to_folder folder_params[:feed_id], folder_title: folder_params[:title]
+    @feed = current_user.feeds.find folder_params[:feed_id]
+    @changed_data = current_user.move_feed_to_folder @feed, folder_title: folder_params[:title]
     render 'create', locals: {user: current_user,
                                        new_folder: @changed_data[:new_folder],
                                        old_folder: @changed_data[:old_folder]}

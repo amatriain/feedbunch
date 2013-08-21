@@ -8,7 +8,7 @@ describe User do
     @entry2 = FactoryGirl.build :entry, feed_id: @feed.id
     @feed.entries << @entry1 << @entry2
     @user.subscribe @feed.fetch_url
-    @user.change_entry_state [@entry1.id], 'read'
+    @user.change_entries_state [@entry1], 'read'
     @folder = FactoryGirl.build :folder, user_id: @user.id
     @user.folders << @folder
     @folder.feeds << @feed
@@ -23,13 +23,13 @@ describe User do
       end
 
       it 'decrements feed cached count when marking an entry as read' do
-        @user.change_entry_state [@entry2.id], 'read'
+        @user.change_entries_state [@entry2], 'read'
         unread_entries = @user.feed_unread_count @feed
         unread_entries.should eq 0
       end
 
       it 'increments feed cached count when marking an entry as unread' do
-        @user.change_entry_state [@entry1.id], 'unread'
+        @user.change_entries_state [@entry1], 'unread'
         unread_entries = @user.feed_unread_count @feed
         unread_entries.should eq 2
       end
@@ -89,13 +89,13 @@ describe User do
 
       it 'decrements folder cached count when marking an entry as read' do
         @folder.reload.unread_entries.should eq 1
-        @user.change_entry_state [@entry2.id], 'read'
+        @user.change_entries_state [@entry2], 'read'
         @folder.reload.unread_entries.should eq 0
       end
 
       it 'increments folder cached count when marking an entry as unread' do
         @folder.reload.unread_entries.should eq 1
-        @user.change_entry_state [@entry1.id], 'unread'
+        @user.change_entries_state [@entry1], 'unread'
         @folder.reload.unread_entries.should eq 2
       end
 
@@ -176,13 +176,13 @@ describe User do
 
       it 'decrements user cached count when marking an entry as read' do
         @user.reload.unread_entries.should eq 1
-        @user.change_entry_state [@entry2.id], 'read'
+        @user.change_entries_state [@entry2], 'read'
         @user.reload.unread_entries.should eq 0
       end
 
       it 'increments user cached count when marking an entry as unread' do
         @user.reload.unread_entries.should eq 1
-        @user.change_entry_state [@entry1.id], 'unread'
+        @user.change_entries_state [@entry1], 'unread'
         @user.reload.unread_entries.should eq 2
       end
 

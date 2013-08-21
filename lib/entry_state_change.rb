@@ -9,7 +9,7 @@ class EntryStateChange
   # Change the read or unread state of several entries, for a given user.
   #
   # Receives as arguments:
-  # - an array with the IDs of the entries to be changed state
+  # - an array with the entries to be changed state
   # - the state in which to put them. Supported values are only "read" and "unread"; this method
   # does nothing if a different value is passed
   # - the user for which the state will be set.
@@ -19,12 +19,11 @@ class EntryStateChange
   # - :folders - an Array with the folders, owned by the passed user, to which the
   # feeds in [:feeds] belong (no repetitions)
 
-  def self.change_entry_state(entry_ids, state, user)
+  def self.change_entries_state(entries, state, user)
     feeds = Set.new
     folders = Set.new
 
-    entry_ids.each do |entry_id|
-      entry = user.entries.find entry_id
+    entries.each do |entry|
       entry_state = EntryState.where(user_id: user.id, entry_id: entry.id).first
       if state == 'read'
         entry_state.read = true

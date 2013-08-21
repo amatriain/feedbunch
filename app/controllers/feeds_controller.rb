@@ -31,7 +31,8 @@ class FeedsController < ApplicationController
     else
       include_read = false
     end
-    @entries = current_user.feed_entries params[:id], include_read
+    @feed = current_user.feeds.find params[:id]
+    @entries = current_user.feed_entries @feed, include_read
 
     if @entries.present?
       render 'entries/index', locals: {entries: @entries, user: current_user}, layout: false
@@ -53,7 +54,7 @@ class FeedsController < ApplicationController
   def update
     @feed = current_user.feeds.find params[:id]
     @folder= @feed.user_folder current_user
-    current_user.refresh_feed params[:id]
+    current_user.refresh_feed @feed
     render 'show', locals: {user: current_user, feed: @feed, folder: @folder}
   rescue => e
     handle_error e

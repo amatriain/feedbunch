@@ -71,15 +71,15 @@ class User < ActiveRecord::Base
   ##
   # Retrieve entries from a feed. See EntryRecovery#feed_entries
 
-  def feed_entries(feed_id, include_read=false)
-    EntryRecovery.feed_entries feed_id, include_read, self
+  def feed_entries(feed, include_read=false)
+    EntryRecovery.feed_entries feed, include_read, self
   end
 
   ##
-  # Retrieve unread entries from a folder. See EntryRecovery#feed_entries
+  # Retrieve unread entries from a folder. See EntryRecovery#unread_folder_entries
 
-  def unread_folder_entries(folder_id)
-    EntryRecovery.unread_folder_entries folder_id, self
+  def unread_folder_entries(folder)
+    EntryRecovery.unread_folder_entries folder, self
   end
 
   ##
@@ -101,15 +101,15 @@ class User < ActiveRecord::Base
   ##
   # Move a feed to an existing folder. See FolderManager#move_feed_to_folder
 
-  def move_feed_to_folder(feed_id, folder_id: nil, folder_title: nil)
-    FolderManager.move_feed_to_folder feed_id, self, folder_id: folder_id, folder_title: folder_title
+  def move_feed_to_folder(feed, folder: nil, folder_title: nil)
+    FolderManager.move_feed_to_folder feed, self, folder: folder, folder_title: folder_title
   end
 
   ##
   # Refresh a single feed. See FeedRefresh#refresh_feed
 
-  def refresh_feed(feed_id)
-    FeedRefresh.refresh_feed feed_id, self
+  def refresh_feed(feed)
+    FeedRefresh.refresh_feed feed, self
   end
 
   ##
@@ -127,10 +127,10 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Change the read/unread state of an array of entries for this user. See EntryStateChange#change_entry_state
+  # Change the read/unread state of an array of entries for this user. See EntryStateChange#change_entries_state
 
-  def change_entry_state(entry_ids, state)
-    EntryStateChange.change_entry_state entry_ids, state, self
+  def change_entries_state(entries, state)
+    EntryStateChange.change_entries_state entries, state, self
   end
 
   ##

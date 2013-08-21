@@ -21,8 +21,9 @@
 class Folder < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
-  # Class constant for the special "no folder" ID
+  # Class constants for special "no folder" and "all folders" cases
   NO_FOLDER = 'none'
+  ALL_FOLDERS = 'all'
 
   belongs_to :user
   validates :user_id, presence: true

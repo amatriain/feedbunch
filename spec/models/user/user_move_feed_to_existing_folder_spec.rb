@@ -13,7 +13,7 @@ describe User do
 
     it 'adds a feed to a folder' do
       @folder.feeds.should be_blank
-      @user.move_feed_to_folder @feed.id, folder_id: @folder.id
+      @user.move_feed_to_folder @feed, folder: @folder
       @folder.reload
       @folder.feeds.count.should eq 1
       @folder.feeds.should include @feed
@@ -28,7 +28,7 @@ describe User do
       folder2 = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder2
 
-      @user.move_feed_to_folder @feed.id, folder_id: folder2.id
+      @user.move_feed_to_folder @feed, folder: folder2
 
       @folder.reload
       @folder.feeds.should_not include @feed
@@ -37,19 +37,19 @@ describe User do
     it 'does not change feed/folder if asked to move feed to the same folder' do
       @folder.feeds << @feed
 
-      @user.move_feed_to_folder @feed.id, folder_id: @folder.id
+      @user.move_feed_to_folder @feed, folder: @folder
 
       @folder.feeds.count.should eq 1
       @folder.feeds.should include @feed
     end
 
     it 'returns the feed' do
-      folders = @user.move_feed_to_folder @feed.id, folder_id: @folder.id
+      folders = @user.move_feed_to_folder @feed, folder: @folder
       folders[:feed].should eq @feed
     end
 
     it 'returns the new folder' do
-      folders = @user.move_feed_to_folder @feed.id, folder_id: @folder.id
+      folders = @user.move_feed_to_folder @feed, folder: @folder
       folders[:new_folder].should eq @folder
     end
 
@@ -58,12 +58,12 @@ describe User do
       folder2 = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder2
 
-      folders = @user.move_feed_to_folder @feed.id, folder_id: folder2.id
+      folders = @user.move_feed_to_folder @feed, folder: folder2
       folders[:old_folder].should eq @folder
     end
 
     it 'does not return the old folder if the feed was not in a folder' do
-      folders = @user.move_feed_to_folder @feed.id, folder_id: @folder.id
+      folders = @user.move_feed_to_folder @feed, folder: @folder
       folders[:old_folder].should be_nil
     end
 
@@ -72,7 +72,7 @@ describe User do
       folder2 = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder2
 
-      @user.move_feed_to_folder @feed.id, folder_id: folder2.id
+      @user.move_feed_to_folder @feed, folder: folder2
 
       Folder.exists?(id: @folder.id).should be_false
     end
@@ -84,19 +84,9 @@ describe User do
       folder2 = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder2
 
-      @user.move_feed_to_folder @feed.id, folder_id: folder2.id
+      @user.move_feed_to_folder @feed, folder: folder2
 
       Folder.exists?(id: @folder.id).should be_true
-    end
-
-    it 'raises an error if the folder does not belong to the user' do
-      folder = FactoryGirl.create :folder
-      expect {@user.move_feed_to_folder @feed.id, folder_id: folder.id}.to raise_error ActiveRecord::RecordNotFound
-    end
-
-    it 'raises an error if the user is not subscribed to the feed' do
-      feed = FactoryGirl.create :feed
-      expect {@user.move_feed_to_folder feed.id, folder_id: @folder.id}.to raise_error ActiveRecord::RecordNotFound
     end
   end
 end

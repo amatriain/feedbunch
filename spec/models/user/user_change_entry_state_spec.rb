@@ -15,7 +15,7 @@ describe User do
       entry_state = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
       entry_state.read.should be_false
 
-      @user.change_entry_state [@entry.id], 'read'
+      @user.change_entries_state [@entry], 'read'
       entry_state.reload
       entry_state.read.should be_true
     end
@@ -25,7 +25,7 @@ describe User do
       @user.folders << folder
       folder.feeds << @feed
 
-      changed_data = @user.change_entry_state [@entry.id], 'read'
+      changed_data = @user.change_entries_state [@entry], 'read'
 
       changed_data[:feeds].length.should eq 1
       changed_data[:feeds][0].should eq @feed
@@ -39,7 +39,7 @@ describe User do
       entry_state.read = true
       entry_state.save
 
-      @user.change_entry_state [@entry.id], 'unread'
+      @user.change_entries_state [@entry], 'unread'
       entry_state.reload
       entry_state.read.should be_false
     end
@@ -53,7 +53,7 @@ describe User do
       entry_state2 = EntryState.where(user_id: @user.id, entry_id: entry2.id).first
       entry_state2.read.should be_false
 
-      @user.change_entry_state [@entry.id, entry2.id], 'read'
+      @user.change_entries_state [@entry, entry2], 'read'
       entry_state1.reload
       entry_state1.read.should be_true
       entry_state2.reload
@@ -71,7 +71,7 @@ describe User do
       entry_state2.read = true
       entry_state2.save
 
-      @user.change_entry_state [@entry.id, entry2.id], 'unread'
+      @user.change_entries_state [@entry, entry2], 'unread'
       entry_state1.reload
       entry_state1.read.should be_false
       entry_state2.reload
@@ -82,28 +82,23 @@ describe User do
       entry_state = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
       entry_state.read.should be_false
 
-      @user.change_entry_state [@entry.id], 'somethingsomethingsomething'
+      @user.change_entries_state [@entry], 'somethingsomethingsomething'
       entry_state.reload
       entry_state.read.should be_false
 
       entry_state.read = true
       entry_state.save
 
-      @user.change_entry_state [@entry.id], 'somethingsomethingsomething'
+      @user.change_entries_state [@entry], 'somethingsomethingsomething'
       entry_state.reload
       entry_state.read.should be_true
-    end
-
-    it 'raises an error if the entry is not from a feed the user is subscribed to' do
-      entry2 = FactoryGirl.create :entry
-      expect {@user.change_entry_state [entry2.id], 'read'}.to raise_error ActiveRecord::RecordNotFound
     end
 
     it 'does not change state for other users' do
       user2 = FactoryGirl.create :user
       user2.subscribe @feed.fetch_url
 
-      @user.change_entry_state [@entry.id], 'read'
+      @user.change_entries_state [@entry], 'read'
 
       entry_state2 = EntryState.where(user_id: user2.id, entry_id: @entry.id).first
       entry_state2.read.should be false

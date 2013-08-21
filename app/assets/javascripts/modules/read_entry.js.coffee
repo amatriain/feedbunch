@@ -23,7 +23,7 @@ $(document).ready ->
         update_unread_counts data
 
       $.post(update_entry_state_path,
-        {_method:"patch", entry: {ids: [entry_id], state: "read"} },
+        {_method:"patch", entries: {ids: [entry_id], state: "read"} },
         entry_read_result, "json")
         .fail ->
           Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
@@ -47,7 +47,7 @@ $(document).ready ->
         update_unread_counts data
 
       $.post(update_entry_state_path,
-        {_method:"patch", entry: {ids: entries, state: "read"} },
+        {_method:"patch", entries: {ids: entries, state: "read"} },
         all_read_result, "json")
           .fail ->
             Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
@@ -67,7 +67,7 @@ $(document).ready ->
       update_unread_counts data
       
     $.post(update_entry_state_path,
-      {_method:"patch", entry: {ids: [entry_id], state: "unread"} },
+      {_method:"patch", entries: {ids: [entry_id], state: "unread"} },
       entry_unread_result, "json")
           .fail ->
             Feedbunch.alertTimedShowHide $("#problem-entry-state-change")

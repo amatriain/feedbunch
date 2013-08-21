@@ -84,7 +84,7 @@ describe User do
       entry_state1.read = true
       entry_state1.save!
 
-      entries = @user.unread_folder_entries @folder.id
+      entries = @user.unread_folder_entries @folder
       entries.count.should eq 2
       entries.should include entry2
       entries.should include entry3
@@ -112,11 +112,6 @@ describe User do
       entries.count.should eq 2
       entries.should include entry2
       entries.should include entry3
-    end
-
-    it 'raises an error trying to retrieve entries from a folder that does not belong to the user' do
-      folder2 = FactoryGirl.create :folder
-      expect{@user.unread_folder_entries folder2.id}.to raise_error ActiveRecord::RecordNotFound
     end
   end
 
@@ -230,7 +225,7 @@ describe User do
       entry_state.read = true
       entry_state.save!
 
-      entries = @user.feed_entries feed.id
+      entries = @user.feed_entries feed
       entries.count.should eq 2
       entries.should include entry1
       entries.should include entry2
@@ -250,19 +245,11 @@ describe User do
       entry_state.read = true
       entry_state.save!
 
-      entries = @user.feed_entries feed.id, true
+      entries = @user.feed_entries feed, true
       entries.count.should eq 3
       entries.should include entry1
       entries.should include entry2
       entries.should include entry3
-    end
-
-    it 'raises an error trying to retrieve unread entries from an unsubscribed feed' do
-      feed = FactoryGirl.create :feed
-      entry = FactoryGirl.build :entry, feed_id: feed.id
-      feed.entries << entry
-
-      expect {@user.feed_entries feed.id}.to raise_error ActiveRecord::RecordNotFound
     end
 
   end
@@ -297,7 +284,7 @@ describe User do
 
     it 'fetches a feed' do
       FeedClient.should_receive(:fetch).with @feed.id, anything
-      @user.refresh_feed @feed.id
+      @user.refresh_feed @feed
     end
 
     it 'returns unread entries from the feed' do
@@ -319,15 +306,10 @@ describe User do
       end
 
       # refresh should return the "old" unread entry and the new (just fetched) entry
-      entries = @user.refresh_feed feed2.id
+      entries = @user.refresh_feed feed2
       entries.count.should eq 2
       entries.should include entry2
       entries.should include entry3
-    end
-
-    it 'raises an error trying to refresh a feed the user is not subscribed to' do
-      feed2 = FactoryGirl.create :feed
-      expect {@user.refresh_feed feed2.id}.to raise_error ActiveRecord::RecordNotFound
     end
   end
 

@@ -9,7 +9,8 @@ class EntriesController < ApplicationController
   # Set an entry state for the current user as read or unread
 
   def update
-    changed_data = current_user.change_entry_state entry_params[:ids], entry_params[:state]
+    entries = current_user.entries.find entry_params[:ids]
+    changed_data = current_user.change_entries_state entries, entry_params[:state]
     @feeds = changed_data[:feeds]
     @folders = changed_data[:folders]
     render 'update',
@@ -21,6 +22,6 @@ class EntriesController < ApplicationController
   private
 
   def entry_params
-    params.require(:entry).permit({:ids => []}, :state)
+    params.require(:entries).permit({:ids => []}, :state)
   end
 end

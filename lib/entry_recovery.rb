@@ -7,19 +7,14 @@ class EntryRecovery
   # Retrieve entries from the feed passed as argument, that are in the passed state for the passed user.
   #
   # Receives as arguments:
-  # - id of the feed from which to retrieve entries.
+  # - feed from which to retrieve entries.
   # - user for whom the read/unread state of each entry will be considered.
   # - include_read (optional): boolean that indicates whether to include both read and unread entries
   # (if true) or just unread entries (if false). By default this argument is false.
   #
-  # Raises an ActiveRecord::RecordNotFound error if the user is not subscribed to the feed.
-  #
   # If successful, returns an ActiveRecord::Relation with the entries.
 
-  def self.feed_entries(feed_id, include_read=false, user)
-    # ensure user is subscribed to the feed
-    feed = user.feeds.find feed_id
-
+  def self.feed_entries(feed, include_read=false, user)
     if include_read
       return feed.entries
     else
@@ -32,24 +27,20 @@ class EntryRecovery
   # In this context, "entries in the folder" means "entries from all feeds in the folder".
   #
   # Receives as arguments:
-  # - the id of the folder from which to retrieve entries. The special value
+  # - the folder from which to retrieve entries. The special value
   # "all" means that unread entries should be retrieved from ALL subscribed feeds.
   # - the user for which entries are unread.
   #
-  # Raises an ActiveRecord::RecordNotFound error if the folder does not belong to the user.
-  #
   # If successful, returns an ActiveRecord::Relation with the entries.
 
-  def self.unread_folder_entries(folder_id, user)
-    if folder_id == 'all'
+  def self.unread_folder_entries(folder, user)
+    if folder == Folder::ALL_FOLDERS
       Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from all subscribed feeds"
       entries = Entry.joins(:entry_states).where entry_states: {read: false, user_id: user.id}
     else
-      # ensure folder belongs to user
-      folder = user.folders.find folder_id
       Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from folder #{folder.id} - #{folder.title}"
       entries = Entry.joins(:entry_states, feed: :folders).where entry_states: {read: false, user_id: user.id},
-                                                                 folders: {id: folder_id}
+                                                                 folders: {id: folder.id}
     end
 
     return entries
