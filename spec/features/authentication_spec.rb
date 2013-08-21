@@ -10,9 +10,11 @@ describe 'authentication' do
 
   context 'unauthenticated visitors' do
 
-    it 'shows a login link in the main page' do
+    it 'shows a link to the app in the main page' do
       visit '/'
-      page.should have_css "a#sign_in[href*=\"#{new_user_session_path}\"]"
+      within "a#sign_in[href*=\"#{feeds_path}\"]" do
+        page.should have_content 'Sign in'
+      end
     end
 
     it 'shows a signup link in the main page' do
