@@ -10,9 +10,19 @@ class UpdateFeedJob
   # Fetch and update entries for the passed feed.
   # Receives as argument the id of the feed to be fetched.
   #
+  # If the feed does not exist, further refreshes of the feed are unscheduled. This avoids the case
+  # in which scheduled updates for a deleted feed happened periodically.
+  #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 
   def self.perform(feed_id)
+    # Check that feed actually exists
+    if !Feed.exists? feed_id
+      Rails.logger.warn "Feed #{feed_id} scheduled to be updated, but it does not exist in the database. Unscheduling further updates."
+      self.unschedule_feed_updates feed_id
+      return
+    end
+
     FeedClient.fetch feed_id, false if Feed.exists? feed_id
   end
 

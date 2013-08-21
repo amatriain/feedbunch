@@ -12,6 +12,14 @@ describe UpdateFeedJob do
     UpdateFeedJob.perform @feed.id
   end
 
+  it 'unschedules updates if the feed has been deleted when the job runs' do
+    @feed.destroy
+    UpdateFeedJob.should_receive(:unschedule_feed_updates).with @feed.id
+    FeedClient.should_not_receive :fetch
+
+    UpdateFeedJob.perform @feed.id
+  end
+
   it 'does not update feed if it has been deleted' do
     FeedClient.should_not_receive :fetch
     @feed.destroy
@@ -34,4 +42,5 @@ describe UpdateFeedJob do
 
     UpdateFeedJob.unschedule_feed_updates @feed.id
   end
+
 end
