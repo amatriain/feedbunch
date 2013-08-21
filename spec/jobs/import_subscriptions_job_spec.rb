@@ -32,8 +32,8 @@ describe ImportSubscriptionsJob do
                                     url: 'http://xkcd.com/'
 
     # Stub FeedClient.stub so that it does not actually fetch feeds, but returns them untouched
-    FeedClient.stub :fetch do |feed_id, perform_autodiscovery|
-      feed = Feed.find feed_id
+    FeedClient.stub :fetch do |feed, perform_autodiscovery|
+      feed
     end
   end
 
@@ -108,8 +108,7 @@ describe ImportSubscriptionsJob do
     file_contents = File.read filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
 
-    FeedClient.should_receive(:fetch) do |feed_id, perform_autodiscovery|
-      feed = Feed.find feed_id
+    FeedClient.should_receive(:fetch) do |feed, perform_autodiscovery|
       feed.fetch_url.should eq 'https://www.archlinux.org/feeds/news/'
       perform_autodiscovery.should be_true
     end
@@ -139,8 +138,7 @@ describe ImportSubscriptionsJob do
   it 'fetches new feeds' do
     andy_feed_enqueued = false
     arch_feed_enqueued = false
-    FeedClient.should_receive(:fetch).twice do |feed_id, perform_autodiscovery|
-      feed = Feed.find feed_id
+    FeedClient.should_receive(:fetch).twice do |feed, perform_autodiscovery|
       andy_feed_enqueued = true if feed.fetch_url == 'http://www.galactanet.com/feed.xml'
       arch_feed_enqueued = true if feed.fetch_url == 'https://www.archlinux.org/feeds/news/'
     end

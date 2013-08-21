@@ -66,7 +66,7 @@ describe FoldersController do
     end
 
     it 'does not fetch new entries for any feed' do
-      FeedClient.should_not_receive(:fetch).with @feed1.id
+      FeedClient.should_not_receive(:fetch).with @feed1
       get :show, id: @folder1.id
     end
 

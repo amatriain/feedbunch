@@ -60,7 +60,7 @@ describe FeedsController do
     end
 
     it 'does not fetch new entries in the feed' do
-      FeedClient.should_not_receive(:fetch).with @feed1.id
+      FeedClient.should_not_receive(:fetch).with @feed1
       get :show, id: @feed1.id
     end
 
@@ -96,7 +96,7 @@ describe FeedsController do
     end
 
     it 'fetches new entries in the feed before returning' do
-      FeedClient.should_receive(:fetch).with @feed1.id, anything
+      FeedClient.should_receive(:fetch).with @feed1, anything
       patch :update, id: @feed1.id
     end
   end

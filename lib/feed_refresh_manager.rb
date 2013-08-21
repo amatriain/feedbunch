@@ -14,7 +14,7 @@ class FeedRefreshManager
   def self.refresh(feed, user)
 
     Rails.logger.info "User #{user.id} - #{user.email} is refreshing feed #{feed.id} - #{feed.fetch_url}"
-    FeedClient.fetch feed.id, false
+    FeedClient.fetch feed, false
     entries = user.feed_entries feed
     return entries
   end

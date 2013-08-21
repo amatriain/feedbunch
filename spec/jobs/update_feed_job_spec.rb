@@ -7,14 +7,14 @@ describe UpdateFeedJob do
   end
 
   it 'updates feed when the job runs' do
-    FeedClient.should_receive(:fetch).with @feed.id, anything
+    FeedClient.should_receive(:fetch).with @feed, anything
 
     UpdateFeedJob.perform @feed.id
   end
 
   it 'unschedules updates if the feed has been deleted when the job runs' do
     @feed.destroy
-    UpdateFeedJob.should_receive(:unschedule_feed_updates).with @feed.id
+    UpdateFeedJob.should_receive(:unschedule_feed_updates).with @feed
     FeedClient.should_not_receive :fetch
 
     UpdateFeedJob.perform @feed.id

@@ -23,8 +23,7 @@ describe User do
 
     it 'accepts URLs without scheme, defaults to http://' do
       url = 'xkcd.com'
-      FeedClient.stub :fetch do |id, perform_autodiscovery|
-        feed = Feed.find id
+      FeedClient.stub :fetch do |feed, perform_autodiscovery|
         feed
       end
 
@@ -39,8 +38,7 @@ describe User do
     it 'accepts URLs with feed:// scheme, defaults to http://' do
       url_feed = 'feed://xkcd.com'
       url_http = 'http://xkcd.com'
-      FeedClient.stub :fetch do |id, perform_autodiscovery|
-        feed = Feed.find id
+      FeedClient.stub :fetch do |feed, perform_autodiscovery|
         feed
       end
 
@@ -55,8 +53,7 @@ describe User do
     it 'accepts URLs with feed: scheme, defaults to http://' do
       url_feed = 'feed:http://xkcd.com'
       url_http = 'http://xkcd.com'
-      FeedClient.stub :fetch do |id, perform_autodiscovery|
-        feed = Feed.find id
+      FeedClient.stub :fetch do |feed, perform_autodiscovery|
         feed
       end
 

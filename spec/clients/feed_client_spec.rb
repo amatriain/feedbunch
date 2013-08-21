@@ -24,7 +24,7 @@ describe FeedClient do
 
   it 'downloads the feed XML and raises an error if response is empty' do
     RestClient.should_receive(:get).with @feed.fetch_url, anything
-    expect{FeedClient.fetch @feed.id}.to raise_error EmptyResponseError
+    expect{FeedClient.fetch @feed}.to raise_error EmptyResponseError
   end
 
   context 'RSS 2.0 feed fetching' do
@@ -61,12 +61,12 @@ FEED_XML
     end
 
     it 'returns true if successful' do
-      success = FeedClient.fetch @feed.id
+      success = FeedClient.fetch @feed
       success.should be_true
     end
 
     it 'fetches the right entries and saves them in the database' do
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       @feed.reload
       @feed.entries.count.should eq 2
 
@@ -97,7 +97,7 @@ FEED_XML
                                  guid: @entry1.guid
 
       # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
 
       # After fetching, relevant fields should be updated with the values received in the XML
       entry.reload
@@ -122,7 +122,7 @@ FEED_XML
 
       # XML that will be fetched contains an entry with the same guid but different feed. Both entries
       # should be treated as different entities.
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
 
       # After fetching, entry should remain untouched
       entry.reload
@@ -146,13 +146,13 @@ FEED_XML
     end
 
     it 'retrieves the feed title and saves it in the database' do
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       @feed.reload
       @feed.title.should eq @feed_title
     end
 
     it 'retrieves the feed URL and saves it in the database' do
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       @feed.reload
       @feed.url.should eq @feed_url
     end
@@ -190,12 +190,12 @@ FEED_XML
     end
 
     it 'returns feed if successful' do
-      feed = FeedClient.fetch @feed.id
+      feed = FeedClient.fetch @feed
       feed.should eq @feed
     end
 
     it 'fetches the right entries and saves them in the database' do
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       @feed.reload
       @feed.entries.count.should eq 2
 
@@ -226,7 +226,7 @@ FEED_XML
                                  guid: @entry1.guid
 
       # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       # After fetching, relevant fields should be updated with the values received in the XML
       entry.reload
       entry.feed_id.should eq @feed.id
@@ -250,7 +250,7 @@ FEED_XML
 
       # XML that will be fetched contains an entry with the same guid from a different feed. Both entries
       # should be treated as separate entities.
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
 
       # After fetching, entry should be left untouched
       entry.reload
@@ -274,13 +274,13 @@ FEED_XML
     end
 
     it 'retrieves the feed title and saves it in the database' do
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       @feed.reload
       @feed.title.should eq @feed_title
     end
 
     it 'retrieves the feed URL and saves it in the database' do
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       @feed.reload
       @feed.url.should eq @feed_url
     end
@@ -313,7 +313,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq feed_url
-      FeedClient.fetch @feed.id, true
+      FeedClient.fetch @feed, true
       @feed.reload
       @feed.fetch_url.should eq feed_url
     end
@@ -347,7 +347,7 @@ WEBPAGE_HTML
       end
 
       feed.fetch_url.should_not eq feed_fetch_url
-      FeedClient.fetch feed.id, true
+      FeedClient.fetch feed, true
       feed.reload
       feed.fetch_url.should eq feed_fetch_url
     end
@@ -397,7 +397,7 @@ FEED_XML
       end
 
       @feed.entries.should be_blank
-      FeedClient.fetch @feed.id, true
+      FeedClient.fetch @feed, true
       @feed.entries.count.should eq 1
       @feed.entries.where(guid: @entry1.guid).should be_present
     end
@@ -451,7 +451,7 @@ FEED_XML
 
       old_feed.entries.should be_blank
 
-      FeedClient.fetch new_feed.id, true
+      FeedClient.fetch new_feed, true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
@@ -491,7 +491,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq rss_url
-      FeedClient.fetch @feed.id, true
+      FeedClient.fetch @feed, true
       @feed.reload
       @feed.fetch_url.should eq rss_url
     end
@@ -525,7 +525,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq feed_url
-      FeedClient.fetch @feed.id, true
+      FeedClient.fetch @feed, true
       @feed.reload
       @feed.fetch_url.should eq feed_url
     end
@@ -559,7 +559,7 @@ WEBPAGE_HTML
       end
 
       feed.fetch_url.should_not eq feed_fetch_url
-      FeedClient.fetch feed.id, true
+      FeedClient.fetch feed, true
       feed.reload
       feed.fetch_url.should eq feed_fetch_url
     end
@@ -607,7 +607,7 @@ FEED_XML
       end
 
       @feed.entries.should be_blank
-      FeedClient.fetch @feed.id, true
+      FeedClient.fetch @feed, true
       @feed.entries.count.should eq 1
       @feed.entries.where(guid: @entry1.guid).should be_present
     end
@@ -659,7 +659,7 @@ FEED_XML
 
       old_feed.entries.should be_blank
 
-      FeedClient.fetch new_feed.id, true
+      FeedClient.fetch new_feed, true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
@@ -699,7 +699,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq atom_url
-      FeedClient.fetch @feed.id, true
+      FeedClient.fetch @feed, true
       @feed.reload
       @feed.fetch_url.should eq atom_url
     end
@@ -733,7 +733,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq feed_url
-      FeedClient.fetch @feed.id, true
+      FeedClient.fetch @feed, true
       @feed.reload
       @feed.fetch_url.should eq feed_url
     end
@@ -767,7 +767,7 @@ WEBPAGE_HTML
       end
 
       feed.fetch_url.should_not eq feed_fetch_url
-      FeedClient.fetch feed.id, true
+      FeedClient.fetch feed, true
       feed.reload
       feed.fetch_url.should eq feed_fetch_url
     end
@@ -815,7 +815,7 @@ FEED_XML
       end
 
       @feed.entries.should be_blank
-      FeedClient.fetch @feed.id, true
+      FeedClient.fetch @feed, true
       @feed.entries.count.should eq 1
       @feed.entries.where(guid: @entry1.guid).should be_present
     end
@@ -867,7 +867,7 @@ FEED_XML
 
       old_feed.entries.should be_blank
 
-      FeedClient.fetch new_feed.id, true
+      FeedClient.fetch new_feed, true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
@@ -907,7 +907,7 @@ WEBPAGE_HTML
       end
 
       @feed.fetch_url.should_not eq feed_url
-      FeedClient.fetch @feed.id, true
+      FeedClient.fetch @feed, true
       @feed.reload
       @feed.fetch_url.should eq feed_url
     end
@@ -935,7 +935,7 @@ FEED_XML
     end
 
     it 'saves etag and last-modified headers if they are in the response' do
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       @feed.reload
       @feed.etag.should eq @etag
       @feed.last_modified.to_i.should eq @last_modified.to_i
@@ -947,7 +947,7 @@ FEED_XML
       @headers = {last_modified: @last_modified}
       @feed_xml.stub(:headers).and_return @headers
 
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       @feed.reload
       @feed.etag.should be_nil
     end
@@ -958,7 +958,7 @@ FEED_XML
       @headers = {etag: @etag}
       @feed_xml.stub(:headers).and_return @headers
 
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       @feed.reload
       @feed.last_modified.should be_nil
     end
@@ -967,51 +967,47 @@ FEED_XML
       @headers = {etag: @etag}
       @feed_xml.stub(:headers).and_return @headers
       # Fetch the feed a first time, so the etag is saved
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
 
       # Next time the feed is fetched, the etag from the last time will be sent in the if-none-match header
       @feed.reload
       RestClient.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag}
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
     end
 
     it 'tries to cache data using last-modified' do
       @headers = {last_modified: @last_modified}
       @feed_xml.stub(:headers).and_return @headers
       # Fetch the feed a first time, so the last-modified is saved
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
 
       # Next time the feed is fetched, the last-modified from the last time will be sent in the if-modified-since header
       @feed.reload
       RestClient.should_receive(:get).with @feed.fetch_url, {if_modified_since: @feed.last_modified}
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
     end
 
     it 'tries to cache data using both etag and last-modified' do
       # Fetch the feed a first time, so the last-modified is saved
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
 
       # Next time the feed is fetched, the last-modified from the last time will be sent in the if-modified-since header
       @feed.reload
       RestClient.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag, if_modified_since: @feed.last_modified}
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
     end
 
     it 'does not raise errors if the server responds with 304-not modified' do
       RestClient.stub(:get).and_raise RestClient::NotModified.new
-      expect {FeedClient.fetch @feed.id}.to_not raise_error
+      expect {FeedClient.fetch @feed}.to_not raise_error
     end
   end
 
   context 'error handling' do
 
-    it 'raises error if trying to fetch non-existing feed' do
-      expect {FeedClient.fetch 1234567890}.to raise_error ActiveRecord::RecordNotFound
-    end
-
     it 'raises error if trying to fetch from an unreachable URL' do
       RestClient.stub(:get).and_raise SocketError.new
-      expect {FeedClient.fetch @feed.id}.to raise_error SocketError
+      expect {FeedClient.fetch @feed}.to raise_error SocketError
     end
 
     it 'raises error if trying to fetch from a webpage that does not have feed autodiscovery enabled' do
@@ -1028,7 +1024,7 @@ WEBPAGE_HTML
       webpage_html.stub headers: {}
       RestClient.stub get: webpage_html
 
-      expect {FeedClient.fetch @feed.id, true}.to raise_error FeedAutodiscoveryError
+      expect {FeedClient.fetch @feed, true}.to raise_error FeedAutodiscoveryError
     end
 
     it 'raises error if trying to fetch from a webpage and being told not to perform autodiscovery' do
@@ -1047,7 +1043,7 @@ WEBPAGE_HTML
       webpage_html.stub headers: {}
       RestClient.stub get: webpage_html
 
-      expect{FeedClient.fetch @feed.id, false}.to raise_error FeedFetchError
+      expect{FeedClient.fetch @feed, false}.to raise_error FeedFetchError
     end
 
     it 'raises error if trying to perform feed autodiscovery on a malformed webpage' do
@@ -1055,7 +1051,7 @@ WEBPAGE_HTML
       webpage_html.stub headers: {}
       RestClient.stub get: webpage_html
 
-      expect {FeedClient.fetch @feed.id, true}.to raise_error FeedAutodiscoveryError
+      expect {FeedClient.fetch @feed, true}.to raise_error FeedAutodiscoveryError
     end
 
     it 'does not enter an infinite loop during autodiscovery if the feed linked is not actually a feed' do
@@ -1074,7 +1070,7 @@ WEBPAGE_HTML
       RestClient.stub get: webpage_html
 
       RestClient.should_receive(:get).twice
-      expect {FeedClient.fetch @feed.id, true}.to raise_error FeedFetchError
+      expect {FeedClient.fetch @feed, true}.to raise_error FeedFetchError
     end
 
     it 'processes entries skipping those that have errors' do
@@ -1101,7 +1097,7 @@ FEED_XML
       feed_xml.stub(:headers).and_return {}
       RestClient.stub get: feed_xml
 
-      FeedClient.fetch @feed.id
+      FeedClient.fetch @feed
       @feed.reload
       @feed.entries.count.should eq 1
 

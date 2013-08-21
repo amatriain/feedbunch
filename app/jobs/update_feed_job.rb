@@ -22,8 +22,9 @@ class UpdateFeedJob
       self.unschedule_feed_updates feed_id
       return
     end
+    feed = Feed.find feed_id
 
-    FeedClient.fetch feed_id, false if Feed.exists? feed_id
+    FeedClient.fetch feed, false if Feed.exists? feed_id
   end
 
   ##

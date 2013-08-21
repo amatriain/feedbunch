@@ -15,7 +15,7 @@ class FeedClient
   ##
   # Fetch a feed, parse it and save the entries in the database. This is a class method.
   #
-  # Receives as argument the id of the feed to fetch. It must already be saved in the database and its
+  # Receives as argument the feed to fetch. It must already be saved in the database and its
   # fetch_url field must have value.
   #
   # Optionally receives as argument a boolean that tells the method whether to perform feed autodiscovery. It
@@ -34,8 +34,7 @@ class FeedClient
   #
   # Returns feed instance if fetch is successful, raises an error otherwise.
 
-  def self.fetch(feed_id, perform_autodiscovery=false)
-    feed = Feed.find feed_id
+  def self.fetch(feed, perform_autodiscovery=false)
     http_response = fetch_valid_feed feed
 
     if http_response.present?
@@ -109,7 +108,7 @@ class FeedClient
       if discovered_feed.present?
         # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
         # This second fetch will not try to perform autodiscovery, to avoid entering an infinite loop.
-        return FeedClient.fetch discovered_feed.id, false
+        return FeedClient.fetch discovered_feed, false
       else
         raise FeedAutodiscoveryError.new
       end
