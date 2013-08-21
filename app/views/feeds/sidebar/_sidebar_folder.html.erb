@@ -1,3 +1,11 @@
+<%
+   if folder == Folder::ALL_FOLDERS
+     folder_id = Folder::ALL_FOLDERS
+   else
+     folder_id = folder.id
+   end
+%>
+
 <li id="folder-<%= folder_id %>" data-folder-id="<%= folder_id %>">
 
   <%# Link to open the folder and close the folder %>
@@ -8,7 +16,7 @@
   <%# Content of the folder %>
   <ul class="nav nav-list collapse in" id="feeds-<%= folder_id %>">
 
-    <%= render 'feeds/sidebar/sidebar_folder_read_all', user: user, folder_id: folder_id %>
+    <%= render 'feeds/sidebar/sidebar_folder_read_all', user: user, folder: folder %>
 
     <%# Links to read each individual feed in the folder %>
     <% feeds.order('title ASC').each do |feed| %>

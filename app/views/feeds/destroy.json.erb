@@ -2,7 +2,7 @@
 
 {
   "all_subscriptions": {
-    "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all', locals: {user: user, folder_id: 'all'}, layout: false).to_json.html_safe %>
+    "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all', locals: {user: user, folder: Folder::ALL_FOLDERS}, layout: false).to_json.html_safe %>
   }
 
   <%
@@ -13,7 +13,7 @@
         deleted: old_folder_deleted
       }
       if !old_folder_deleted
-        old_folder_data[:sidebar_read_all] = render(partial: 'feeds/sidebar/sidebar_folder_read_all', locals: {user: user, folder_id: old_folder.id}, layout: false)
+        old_folder_data[:sidebar_read_all] = render(partial: 'feeds/sidebar/sidebar_folder_read_all', locals: {user: user, folder: old_folder}, layout: false)
       end
   %>
   ,

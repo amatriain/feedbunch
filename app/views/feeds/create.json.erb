@@ -4,5 +4,5 @@
   "id": <%= feed.id %>,
   "sidebar_feed": <%= render('feeds/sidebar/sidebar_feed', user: user, feed: feed).to_json.html_safe %>,
   "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all',
-                                locals: {user: user, folder_id: 'all'}, layout: false).to_json.html_safe %>
+                                locals: {user: user, folder: Folder::ALL_FOLDERS}, layout: false).to_json.html_safe %>
 }

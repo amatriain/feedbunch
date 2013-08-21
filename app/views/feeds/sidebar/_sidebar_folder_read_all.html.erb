@@ -1,17 +1,18 @@
 <%# Link to read all feeds in the folder in a single list of entries %>
+<%
+   if folder == Folder::ALL_FOLDERS
+     folder_id = Folder::ALL_FOLDERS
+   else
+     folder_id = folder.id
+   end
+%>
+
 <li id="folder-<%= folder_id %>-all-feeds">
   <a data-sidebar-feed
-     data-feed-id="all"
+     data-feed-id=<%= Folder::ALL_FOLDERS %>
      data-feed-path="<%= folder_path folder_id %>"
      data-feed-title="<%= t 'feeds.index.all_entries' %>">
     <em><strong>
-      <%
-        if folder_id == 'all'
-          folder = 'all'
-        else
-          folder = Folder.find folder_id
-        end
-      %>
       <i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></strong></em>&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
       <span class="badge pull-right"><%= user.folder_unread_count folder %></span>
   </a>

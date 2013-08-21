@@ -3,7 +3,7 @@
 {
     "folder_all": {
         "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all',
-                                locals: {user: user, folder_id: 'all'}, layout: false).to_json.html_safe %>
+                                locals: {user: user, folder: Folder::ALL_FOLDERS}, layout: false).to_json.html_safe %>
     },
     "feed":{
         "id": <%= feed.id %>,
@@ -15,7 +15,7 @@
     "folder": {
         "id": <%= folder.id %>,
         "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all',
-                                locals: {user: user, folder_id: folder.id}, layout: false).to_json.html_safe %>
+                                locals: {user: user, folder: folder}, layout: false).to_json.html_safe %>
     }
 <% end %>
 }

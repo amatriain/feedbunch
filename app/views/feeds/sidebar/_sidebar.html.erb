@@ -9,11 +9,11 @@
 
   <ul id="folders-list" class="nav nav-tabs nav-stacked">
 
-    <%= render 'feeds/sidebar/sidebar_folder', user: @user, feeds: @feeds, title: t('feeds.index.all_feeds'), folder_id: 'all' %>
+    <%= render 'feeds/sidebar/sidebar_folder', user: @user, feeds: @feeds, title: t('feeds.index.all_feeds'), folder: Folder::ALL_FOLDERS %>
 
     <% @folders.order('title ASC').each do |folder| %>
 
-      <%= render 'feeds/sidebar/sidebar_folder', user: @user, feeds: folder.feeds, title: folder.title, folder_id: folder.id %>
+      <%= render 'feeds/sidebar/sidebar_folder', user: @user, feeds: folder.feeds, title: folder.title, folder: folder %>
 
     <% end %>
 
