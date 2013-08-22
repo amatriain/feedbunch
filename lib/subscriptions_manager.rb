@@ -121,12 +121,7 @@ class SubscriptionsManager
   # If the user is not actually subscribed to the feed, a NotSubscribedError is raised.
 
   def self.feed_decrement_count(decrement=1, feed, user)
-    check_user_subscribed feed, user
-
-    feed_subscription = user.feed_subscriptions.where(feed_id: feed.id).first
-    Rails.logger.debug "Decrementing unread entries count for user #{user.id} - #{user.email}, feed #{feed.id} - #{feed.fetch_url}. Current: #{feed_subscription.unread_entries}, decremented by #{decrement}"
-    feed_subscription.unread_entries -= decrement
-    feed_subscription.save!
+    self.feed_increment_count -decrement, feed, user
   end
 
   private
