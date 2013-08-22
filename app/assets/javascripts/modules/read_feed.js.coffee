@@ -62,7 +62,7 @@ $(document).ready ->
     $("#feed-title a").text feed_title
     $("#feed-title").removeClass "hidden"
     feed_url = $(feed).attr "data-feed-url"
-    if feed_url.length > 0
+    if feed_url? && feed_url.length > 0
       $("#feed-title a").attr "href", feed_url
     else
       $("#feed-title a").removeAttr 'href'

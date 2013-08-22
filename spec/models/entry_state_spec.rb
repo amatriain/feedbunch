@@ -87,9 +87,10 @@ describe EntryState do
       user.feed_unread_count(feed).should eq 1
 
       entry_state = EntryState.where(entry_id: entry.id, user_id: user.id).first
-      SubscriptionsManager.should_receive(:feed_decrement_count).once.with do |feed_arg, user_arg|
+      SubscriptionsManager.should_receive(:feed_increment_count).once.with do |feed_arg, user_arg, increment|
         entry_state.entry.feed.should eq feed_arg
         entry_state.user.should eq user_arg
+        increment.should eq -1
       end
 
       entry_state.destroy
@@ -125,9 +126,10 @@ describe EntryState do
 
       entry_state = EntryState.where(entry_id: entry.id, user_id: user.id).first
 
-      SubscriptionsManager.should_receive(:feed_decrement_count).once.with do |feed_arg, user_arg|
+      SubscriptionsManager.should_receive(:feed_increment_count).once.with do |feed_arg, user_arg, increment|
         entry_state.entry.feed.should eq feed_arg
         entry_state.user.should eq user_arg
+        increment.should eq -1
       end
 
       entry_state.read = true

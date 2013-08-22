@@ -6,8 +6,8 @@ describe 'folders and feeds' do
     @user = FactoryGirl.create :user
 
     @folder1 = FactoryGirl.build :folder, user_id: @user.id
-    @folder2 = FactoryGirl.create :folder
     @user.folders << @folder1
+    @folder2 = FactoryGirl.create :folder
 
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
