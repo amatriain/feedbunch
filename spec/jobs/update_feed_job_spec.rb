@@ -14,7 +14,7 @@ describe UpdateFeedJob do
 
   it 'unschedules updates if the feed has been deleted when the job runs' do
     @feed.destroy
-    UpdateFeedJob.should_receive(:unschedule_feed_updates).with @feed
+    UpdateFeedJob.should_receive(:unschedule_feed_updates).with @feed.id
     FeedClient.should_not_receive :fetch
 
     UpdateFeedJob.perform @feed.id
