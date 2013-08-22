@@ -40,7 +40,7 @@ class EntryState < ActiveRecord::Base
 
   def entry_state_created
     if !self.read
-      increment_count
+      update_counts 1
     end
   end
 
@@ -49,7 +49,7 @@ class EntryState < ActiveRecord::Base
 
   def entry_state_destroyed
     if !self.read
-      decrement_count
+      update_counts -1
     end
   end
 
@@ -60,51 +60,32 @@ class EntryState < ActiveRecord::Base
   def entry_state_updated
     if self.read_changed?
       if self.read
-        decrement_count
+        update_counts -1
       else
-        increment_count
+        update_counts 1
       end
     end
   end
 
   ##
-  # Increment by 1 all the unread entries counts (in feed, user and folder)
+  # Add the passed number to the unread entries counts (in feed, user and folder)
+  #
+  # Receives as argument the delta (the number to add to the counts).
 
-  def increment_count
-    # Increment the feed unread entries count
+  def update_counts delta
+    # Update the feed unread entries count
     feed = self.entry.feed
-    SubscriptionsManager.feed_increment_count feed, self.user
+    SubscriptionsManager.feed_increment_count feed, self.user, delta
 
-    # Increment the user unread entries count
-    user.unread_entries += 1
+    # Update the user unread entries count
+    user.unread_entries += delta
     user.save!
 
-    # Increment the folder unread entries count, if the feed is in a folder
+    # Update the folder unread entries count, if the feed is in a folder
     folder = feed.user_folder self.user
     if folder.present?
-      Rails.logger.debug "Unread entry #{self.entry.id} - #{self.entry.guid} created. Incrementing unread entries count for user #{self.user.id} - #{self.user.email}, folder #{folder.id} - #{folder.title}. Current: #{folder.unread_entries}, incremented by 1"
-      folder.unread_entries += 1
-      folder.save!
-    end
-  end
-
-  ##
-  # Decrement by 1 all the unread entries counts (in feed, user and folder)
-
-  def decrement_count
-    # Decrement the feed unread entries count
-    feed = self.entry.feed
-    SubscriptionsManager.feed_decrement_count feed, self.user
-
-    # Decrement the user unread entries count
-    user.unread_entries -= 1
-    user.save!
-
-    # Decrement the folder unread entries count, if the feed is in a folder
-    folder = feed.user_folder self.user
-    if folder.present?
-      Rails.logger.debug "Unread entry #{self.entry.id} - #{self.entry.guid} destroyed. Decrementing unread entries count for user #{self.user.id} - #{self.user.email}, folder #{folder.id} - #{folder.title}. Current: #{folder.unread_entries}, decremented by 1"
-      folder.unread_entries -= 1
+      Rails.logger.debug "Unread entry #{self.entry.id} - #{self.entry.guid} created or destroyed. Updating unread entries count for user #{self.user.id} - #{self.user.email}, folder #{folder.id} - #{folder.title}. Current: #{folder.unread_entries}, incremented by #{delta}"
+      folder.unread_entries += delta
       folder.save!
     end
   end

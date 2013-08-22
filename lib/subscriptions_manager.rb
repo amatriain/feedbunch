@@ -101,7 +101,7 @@ class SubscriptionsManager
   #
   # If the user is not actually subscribed to the feed, a NotSubscribedError is raised.
 
-  def self.feed_increment_count(increment=1, feed, user)
+  def self.feed_increment_count(feed, user, increment=1)
     check_user_subscribed feed, user
 
     feed_subscription = user.feed_subscriptions.where(feed_id: feed.id).first
@@ -120,8 +120,8 @@ class SubscriptionsManager
   #
   # If the user is not actually subscribed to the feed, a NotSubscribedError is raised.
 
-  def self.feed_decrement_count(decrement=1, feed, user)
-    self.feed_increment_count -decrement, feed, user
+  def self.feed_decrement_count(feed, user, decrement=1)
+    self.feed_increment_count feed, user, -decrement
   end
 
   private
