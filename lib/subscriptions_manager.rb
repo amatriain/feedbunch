@@ -13,10 +13,7 @@ class SubscriptionsManager
   # If the user is already subscribed to the feed, an AlreadySubscribedError is raised.
 
   def self.add_subscription(feed, user)
-    if user_subscribed? feed, user
-      Rails.logger.warn "User #{user.id} - #{user.id} tried to subscribed to feed #{feed.id} - #{feed.fetch_url} to which he is already subscribed"
-      raise AlreadySubscribedError.new
-    end
+    check_user_unsubscribed feed, user
 
     Rails.logger.info "subscribing user #{user.id} - #{user.email} to feed #{feed.id} - #{feed.fetch_url}"
     feed_subscription = FeedSubscription.new feed_id: feed.id
@@ -35,10 +32,7 @@ class SubscriptionsManager
   # If the user is not subscribed to the feed, a NotSubscribedError is raised.
 
   def self.remove_subscription(feed, user)
-    if !user_subscribed? feed, user
-      Rails.logger.warn "User #{user.id} - #{user.id} tried to unsubscribe from feed #{feed.id} - #{feed.fetch_url} to which he is not subscribed"
-      raise NotSubscribedError.new
-    end
+    check_user_subscribed feed, user
 
     feed_subscription = FeedSubscription.where(feed_id: feed.id, user_id: user.id).first
     folder = feed.user_folder user
@@ -62,10 +56,7 @@ class SubscriptionsManager
   # If the user is not actually subscribed to the feed, a NotSubscribedError is raised.
 
   def self.feed_unread_count(feed, user)
-    if !user_subscribed? feed, user
-      Rails.logger.warn "User #{user.id} - #{user.id} tried to get unread entries count from feed #{feed.id} - #{feed.fetch_url} to which he is not subscribed"
-      raise NotSubscribedError.new
-    end
+    check_user_subscribed feed, user
 
     feed_subscription = user.feed_subscriptions.where(feed_id: feed.id).first
     return feed_subscription.unread_entries
@@ -111,10 +102,7 @@ class SubscriptionsManager
   # If the user is not actually subscribed to the feed, a NotSubscribedError is raised.
 
   def self.feed_increment_count(increment=1, feed, user)
-    if !user_subscribed? feed, user
-      Rails.logger.warn "User #{user.id} - #{user.id} tried to increment unread entries count for feed #{feed.id} - #{feed.fetch_url} to which he is not subscribed"
-      raise NotSubscribedError.new
-    end
+    check_user_subscribed feed, user
 
     feed_subscription = user.feed_subscriptions.where(feed_id: feed.id).first
     Rails.logger.debug "Incrementing unread entries count for user #{user.id} - #{user.email}, feed #{feed.id} - #{feed.fetch_url}. Current: #{feed_subscription.unread_entries}, incremented by #{increment}"
@@ -133,10 +121,7 @@ class SubscriptionsManager
   # If the user is not actually subscribed to the feed, a NotSubscribedError is raised.
 
   def self.feed_decrement_count(decrement=1, feed, user)
-    if !user_subscribed? feed, user
-      Rails.logger.warn "User #{user.id} - #{user.id} tried to decrement unread entries count for feed #{feed.id} - #{feed.fetch_url} to which he is not subscribed"
-      raise NotSubscribedError.new
-    end
+    check_user_subscribed feed, user
 
     feed_subscription = user.feed_subscriptions.where(feed_id: feed.id).first
     Rails.logger.debug "Decrementing unread entries count for user #{user.id} - #{user.email}, feed #{feed.id} - #{feed.fetch_url}. Current: #{feed_subscription.unread_entries}, decremented by #{decrement}"
@@ -159,5 +144,38 @@ class SubscriptionsManager
     else
       return false
     end
+  end
+
+  ##
+  # Check that a user is subscribed to a feed.
+  #
+  # Receives as arguments the feed and user to check.
+  #
+  # If the user is not subscribed to the feed a NotSubscribedError is raised.
+  # Otherwise nil is returned.
+
+  def self.check_user_subscribed (feed, user)
+    if !user_subscribed? feed, user
+      Rails.logger.warn "User #{user.id} - #{user.id} tried to change unread entries count for feed #{feed.id} - #{feed.fetch_url} to which he is not subscribed"
+      raise NotSubscribedError.new
+    end
+    return nil
+  end
+
+
+  ##
+  # Check that a user is not subscribed to a feed.
+  #
+  # Receives as arguments the feed and user to check.
+  #
+  # If the user is subscribed to the feed a NotSubscribedError is raised.
+  # Otherwise nil is returned.
+
+  def self.check_user_unsubscribed (feed, user)
+    if user_subscribed? feed, user
+      Rails.logger.warn "User #{user.id} - #{user.id} tried to subscribe to feed #{feed.id} - #{feed.fetch_url} to which he is already subscribed"
+      raise AlreadySubscribedError.new
+    end
+    return nil
   end
 end
