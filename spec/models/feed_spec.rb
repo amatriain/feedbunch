@@ -13,8 +13,9 @@ describe Feed do
     end
 
     it 'does not accept invalid URLs' do
-      @feed.url = 'invalid_url'
-      @feed.valid?.should be_false
+      old_url = @feed.url
+      @feed.update url: 'invalid_url'
+      @feed.url.should eq old_url
     end
 
     it 'accepts an empty URL' do
@@ -35,15 +36,17 @@ describe Feed do
     end
 
     it 'does not accept invalid fetch URLs' do
-      @feed.fetch_url = 'invalid_url'
-      @feed.valid?.should be_false
+      old_fetch_url = @feed.fetch_url
+      @feed.update fetch_url: 'invalid_url'
+      @feed.fetch_url.should eq old_fetch_url
     end
 
     it 'does not accept an empty fetch URL' do
-      @feed.fetch_url = ''
-      @feed.valid?.should be_false
-      @feed.fetch_url = nil
-      @feed.valid?.should be_false
+      old_fetch_url = @feed.fetch_url
+      @feed.update fetch_url: ''
+      @feed.fetch_url.should eq old_fetch_url
+      @feed.update fetch_url: nil
+      @feed.fetch_url.should eq old_fetch_url
     end
 
     it 'does not accept duplicate fetch URLs' do
