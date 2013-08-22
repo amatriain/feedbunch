@@ -77,6 +77,12 @@ describe Entry do
       entry = FactoryGirl.create :entry, url: @url, title: title
       entry.title.should eq title
     end
+
+    it 'defaults url to guid if url is not a valid HTTP URL' do
+      entry = FactoryGirl.create :entry, url: 'not a valid url', guid: @url
+      entry.guid.should eq @url
+      entry.url.should eq @url
+    end
   end
 
   context 'sanitization and summary manipulation' do

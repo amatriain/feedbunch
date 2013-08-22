@@ -34,7 +34,7 @@ class EntryManager
         else
           # Otherwise, save a new entry in the DB
           Rails.logger.info "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}"
-          feed.entries.create entry_hash
+          feed.entries.create! entry_hash
         end
 
       rescue => e
@@ -63,6 +63,7 @@ class EntryManager
   def self.entry_to_hash(entry, guid)
     entry_hash = {title: entry.title, url: entry.url, author: entry.author, content: entry.content,
                   summary: entry.summary, published: entry.published, guid: guid}
+    Rails.logger.debug "Obtained attributes hash for entry: #{entry_hash}"
     return entry_hash
   end
 end

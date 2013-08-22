@@ -35,13 +35,15 @@ require 'nokogiri'
 class Entry < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
+  URL_REGEX = /\Ahttps?:\/\/.+\..+\z/
+
   belongs_to :feed
   validates :feed_id, presence: true
 
   has_many :entry_states, -> {uniq}, dependent: :destroy
 
   validates :title, presence: true
-  validates :url, presence: true, format: {with: /\Ahttps?:\/\/.+\..+\z/}
+  validates :url, presence: true, format: {with: URL_REGEX}
   validates :guid, presence: true, uniqueness: {case_sensitive: false, scope: :feed_id}
 
   before_validation :sanitize_attributes
@@ -84,12 +86,23 @@ class Entry < ActiveRecord::Base
   # Give default values to the title and guid attributes if they are empty.
   # Their default value is the value of the "url" attribute.
   #
-  # This way, the only actually mandatory attribute when saving an entry is the url, the rest of the fields
-  # are given value before saving in the database (but they are mandatory in the database nonetheless).
+  # If the url attribute is not a valid URL but the guid is, the url attribute takes
+  # the value of the guid attribute. This probably breaks Atom/RSS spec, but I'd like to support feeds
+  # that do this.
 
   def default_attribute_values
+    # GUID defaults to the url attribute
     self.guid = self.url if self.guid.blank?
+
+    # title defaults to the url attribute
     self.title = self.url if self.title.blank?
+
+    # if the url attr is not actually a valid URL but the guid is, url attr takes the value of the guid attr
+    if (self.url =~ URL_REGEX).nil? && self.guid =~ URL_REGEX
+      self.url = self.guid
+      # If the url was blank before but now has taken the value of the guid, default the title to this value
+      self.title = self.url if self.title.blank?
+    end
   end
 
   ##
