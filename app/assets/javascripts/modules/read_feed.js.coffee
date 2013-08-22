@@ -62,7 +62,10 @@ $(document).ready ->
     $("#feed-title a").text feed_title
     $("#feed-title").removeClass "hidden"
     feed_url = $(feed).attr "data-feed-url"
-    $("#feed-title a").attr "href", feed_url
+    if feed_url.length > 0
+      $("#feed-title a").attr "href", feed_url
+    else
+      $("#feed-title a").removeAttr 'href'
 
   #-------------------------------------------------------
   # Mark with a tick the current feed's folder in the dropdown

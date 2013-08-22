@@ -32,13 +32,15 @@ require 'uri'
 class Feed < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
+  URL_REGEX = /\Ahttps?:\/\/.+\..+\z/
+
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy
   has_many :users, through: :feed_subscriptions
   has_and_belongs_to_many :folders, -> {uniq}, before_add: :single_user_folder
   has_many :entries, -> {uniq}, dependent: :destroy
 
-  validates :fetch_url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, presence: true, uniqueness: {case_sensitive: false}
-  validates :url, format: {with: /\Ahttps?:\/\/.+\..+\z/}, allow_blank: true
+  validates :fetch_url, format: {with: URL_REGEX}, presence: true, uniqueness: {case_sensitive: false}
+  validates :url, format: {with: URL_REGEX}, allow_blank: true
   validates :title, presence: true
 
   before_validation :sanitize_attributes
@@ -159,11 +161,17 @@ class Feed < ActiveRecord::Base
   #
   # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
   # Better paranoid than sorry!
+  #
+  # Also, if an update tries to set a value for url or fetch_url which is not a valid URL, ignore
+  # the update only for that attribute and keep the old value.
 
   def sanitize_attributes
     self.title = sanitize self.title
     self.fetch_url = sanitize self.fetch_url
     self.url = sanitize self.url
+
+    self.fetch_url = self.fetch_url_was if (self.fetch_url =~ URL_REGEX).nil?
+    self.url = self.url_was if (self.url =~ URL_REGEX).nil?
   end
 
   ##

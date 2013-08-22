@@ -38,6 +38,8 @@ class FeedParser
       feed_attribs.merge!({etag: feed_response.headers[:etag], last_modified: feed_response.headers[:last_modified]})
     end
 
+    Rails.logger.debug "Current feed attributes: #{feed.attributes}"
+    Rails.logger.debug "Updating feed with attributes #{feed_attribs}"
     feed.update feed_attribs
 
     # Save entries in the database
