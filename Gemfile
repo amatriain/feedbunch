@@ -31,12 +31,6 @@ gem 'high_voltage'
 # User authentication
 gem 'devise'
 
-# Bootstrap goodness!
-gem 'bootstrap-sass'
-
-# Better glyphicons from FontAwesome
-gem 'font-awesome-rails'
-
 # Form generator compatible with Bootstrap
 gem 'simple_form', '3.0.0.rc'
 

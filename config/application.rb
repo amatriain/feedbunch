@@ -45,5 +45,11 @@ module Feedbunch
     # create links with target="_blank" that open in a new tab.
     # We really want links in feed entries to open in a new tab!
     config.action_view.sanitized_allowed_attributes = %w(target)
+
+    # Add the fonts path to assets pipeline
+    config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')
+
+    # Precompile additional assets
+    config.assets.precompile += %w(.otf .eot .svg .ttf .woff)
   end
 end
