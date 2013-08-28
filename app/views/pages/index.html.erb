@@ -1,6 +1,7 @@
 <br>
-<div class="row">
-  <div class="col-md-10 col-md-offset-1 jumbotron">
+
+<div class="container">
+  <div class="jumbotron">
     <div class="page-header">
       <h1>
         <%=
@@ -11,18 +12,20 @@
         &nbsp;Feedbunch
       </h1>
     </div>
-    <div class="col-md-9 col-md-offset-1">
-      <p class="lead"><%= t '.tagline' %></p>
-      <p>
-        <%= link_to t('.sign_up'), new_user_registration_path, class: 'btn btn-primary btn-lg', id: 'sign_up' %>
-        <%= t '.or' %> <%= link_to t('.sign_in'), feeds_path, id: 'sign_in' %>
-      </p>
+    <div class="row">
+      <div class="col-md-9 col-md-offset-1">
+        <p class="lead"><%= t '.tagline' %></p>
+        <p>
+          <%= link_to t('.sign_up'), new_user_registration_path, class: 'btn btn-primary btn-lg', id: 'sign_up' %>
+          <%= t '.or' %> <%= link_to t('.sign_in'), feeds_path, id: 'sign_in' %>
+        </p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-md-8 col-md-offset-2">
-    <i class="icon-github icon-large"></i> <a href="https://github.com/amatriain/feedbunch" target="_blank"><%= t'.github' %></a>
+  <div class="row">
+    <div class="col-md-3 col-md-offset-5">
+      <i class="icon-github icon-large"></i> <a href="https://github.com/amatriain/feedbunch" target="_blank"><%= t'.github' %></a>
+    </div>
   </div>
 </div>

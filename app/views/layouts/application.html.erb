@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Feedbunch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%= favicon_link_tag '/favicon.ico' %>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= csrf_meta_tags %>
@@ -12,7 +13,7 @@
 
 <%= render 'data_imports/popups/import_subscriptions_form' %>
 
-<div class="col-md-8 col-md-offset-2 top-alert">
+<div class="container">
 
   <%= render 'layouts/alerts' %>
 

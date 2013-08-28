@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Feedbunch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%= favicon_link_tag '/favicon.ico' %>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= csrf_meta_tags %>
@@ -12,26 +13,24 @@
 
 <%= render 'data_imports/popups/import_subscriptions_form' %>
 
-<div class="col-md-8 col-md-offset-2 top-alert">
+<div class="container">
 
   <%= render 'layouts/alerts' %>
   <%= render 'devise/alerts' %>
 
 </div>
 
-<div class="row page-header">
-  <div class="col-md-10 col-md-offset-1">
-    <h1>
+<div class="page-header container">
+  <h1>
 
-      <%=
-          link_to root_url do
-            image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
-          end
-      %>
+    <%=
+        link_to root_url do
+          image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
+        end
+    %>
 
-      <%= yield :heading %>
-    </h1>
-  </div>
+    <%= yield :heading %>
+  </h1>
 </div>
 
 <div class="row">
