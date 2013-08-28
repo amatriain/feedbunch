@@ -3,9 +3,9 @@
 <% end %>
 
 
-<div class="row-fluid">
-  <div class="span10 offset1 well">
-    <div class="span8">
+<div class="row">
+  <div class="col-md-10 col-md-offset-1 well">
+    <div class="col-md-8">
       <%= simple_form_for resource, :as => resource_name,
                           :url => user_unlock_path,
                           html: {:method => :post, class: 'form-horizontal'},
@@ -14,7 +14,7 @@
 
         <div class="control-group">
           <div class="controls">
-            <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>
+            <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
               <i class="icon-share-alt"></i> <%= t 'devise.views.send_unlock' %>
             <% end %>
           </div>
@@ -23,7 +23,7 @@
       <% end %>
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       <%= render "devise/shared/links" %>
     </div>
   </div>

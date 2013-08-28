@@ -37,7 +37,7 @@
                 <% end %>
                 <%= sanitize link_entry %>
 
-                <a class="btn btn-small pull-right" data-unread-entry-id="<%= entry.id %>"
+                <a class="btn btn-default btn-sm pull-right" data-unread-entry-id="<%= entry.id %>"
                    data-entry-state-update-path="<%= entries_update_path %>">
                   <i class="icon-eye-close"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
                 </a>

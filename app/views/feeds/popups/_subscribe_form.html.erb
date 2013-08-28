@@ -1,17 +1,21 @@
-<div id="subscribe-feed-popup" class="modal hide fade">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h3><%= t 'feeds.index.subscribe_title' %></h3>
-  </div>
-  <div class="modal-body">
-    <%= simple_form_for :subscription, url: feeds_path,
-                        html: {:method => :post, class: 'form-horizontal', id: 'form-subscription'},
-                        wrapper: :prepend do |f| %>
-      <%= f.input :rss, as: :rss_icon, required: false %>
-    <% end %>
-  </div>
-  <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" ><%= t 'feeds.index.subscribe_close' %></button>
-    <button id="subscribe-submit" class="btn btn-primary"><%= t 'feeds.index.subscribe_submit' %></button>
+<div id="subscribe-feed-popup" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3><%= t 'feeds.index.subscribe_title' %></h3>
+      </div>
+      <div class="modal-body">
+        <%= simple_form_for :subscription, url: feeds_path,
+                            html: {:method => :post, class: 'form-horizontal', id: 'form-subscription'},
+                            wrapper: :prepend do |f| %>
+          <%= f.input :rss, as: :rss_icon, required: false %>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" ><%= t 'feeds.index.subscribe_close' %></button>
+        <button id="subscribe-submit" class="btn btn-primary"><%= t 'feeds.index.subscribe_submit' %></button>
+      </div>
+    </div>
   </div>
 </div>

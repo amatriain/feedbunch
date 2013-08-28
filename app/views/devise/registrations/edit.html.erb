@@ -2,13 +2,13 @@
   Feedbunch - <%= t 'devise.views.edit_account' %>
 <% end %>
 
-<div class="offset1 pull-left">
+<div class="col-md-offset-1 pull-left">
   <i class="icon-double-angle-left"></i>
   <%= link_to t('devise.views.return'), feeds_path, id: 'return' %>
 </div>
 
-<div class="row-fluid">
-  <div class="span10 offset1 well">
+<div class="row">
+  <div class="col-md-10 col-md-offset-1 well">
     <%= simple_form_for resource, :as => resource_name,
                         :url => profile_path,
                         html: {:method => :put, class: 'form-horizontal', autocomplete: 'off'},
@@ -26,7 +26,7 @@
                   input_html: {autocomplete: 'off'} %>
 
       <div class="form-actions">
-        <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>
+        <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
           <i class="icon-save"></i> <%= t 'devise.views.update_account' %>
         <% end %>
       </div>
@@ -34,8 +34,8 @@
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span10 offset1 well">
+<div class="row">
+  <div class="col-md-10 col-md-offset-1 well">
     <h2><%= t 'devise.views.cancel_account' %></h2>
     <p><%= t 'devise.views.cancel_account_text' %></p>
     <%= link_to profile_cancel_path,

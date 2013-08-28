@@ -1,13 +1,17 @@
-<div id="unsubscribe-feed-popup" class="modal hide fade">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h3><%= t 'feeds.index.unsubscribe_title' %></h3>
-  </div>
-  <div class="modal-body">
-    <%= t 'feeds.index.unsubscribe_confirm' %>
-  </div>
-  <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" ><%= t 'feeds.index.unsubscribe_cancel' %></button>
-    <button id="unsubscribe-submit" class="btn btn-danger"><%= t 'feeds.index.unsubscribe_submit' %></button>
+<div id="unsubscribe-feed-popup" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3><%= t 'feeds.index.unsubscribe_title' %></h3>
+      </div>
+      <div class="modal-body">
+        <%= t 'feeds.index.unsubscribe_confirm' %>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" ><%= t 'feeds.index.unsubscribe_cancel' %></button>
+        <button id="unsubscribe-submit" class="btn btn-danger"><%= t 'feeds.index.unsubscribe_submit' %></button>
+      </div>
+    </div>
   </div>
 </div>

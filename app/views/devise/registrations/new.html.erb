@@ -2,9 +2,9 @@
   Feedbunch - <%= t 'devise.views.sign_up' %>
 <% end %>
 
-<div class="row-fluid">
-  <div class="span10 offset1 well">
-    <div class="span8">
+<div class="row">
+  <div class="col-md-10 col-md-offset-1 well">
+    <div class="col-md-8">
       <%= simple_form_for resource, :as => resource_name,
                           :url => user_registration_path,
                           html: {class: 'form-horizontal'},
@@ -14,14 +14,14 @@
         <%= f.input :password_confirmation, as: :password_icon,
                     placeholder: t('simple_form.placeholders.user.password_confirmation')%>
         <div class="form-actions">
-          <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>
+          <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
             <i class="icon-plus-sign"></i> <%= t 'devise.views.sign_up' %>
           <% end %>
         </div>
     <% end %>
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       <%= render "devise/shared/links" %>
     </div>
   </div>

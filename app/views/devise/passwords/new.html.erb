@@ -2,9 +2,9 @@
   Feedbunch - <%= t 'devise.views.forgot_password' %>
 <% end %>
 
-<div class="row-fluid">
-  <div class="span10 offset1 well">
-    <div class="span8">
+<div class="row">
+  <div class="col-md-10 col-md-offset-1 well">
+    <div class="col-md-8">
       <%= simple_form_for resource, :as => resource_name,
                           :url => user_password_path,
                           html: {:method => :post, class: 'form-horizontal'},
@@ -12,14 +12,14 @@
         <%= f.input :email, as: :email_icon, autofocus:true %>
 
         <div class="form-actions">
-          <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>
+          <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
             <i class="icon-share-alt"></i> <%= t 'devise.views.send_password_reset' %>
           <% end %>
         </div>
       <% end %>
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       <%= render "devise/shared/links" %>
     </div>
   </div>

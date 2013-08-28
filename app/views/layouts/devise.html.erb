@@ -12,15 +12,15 @@
 
 <%= render 'data_imports/popups/import_subscriptions_form' %>
 
-<div class="span8 offset2 top-alert">
+<div class="col-md-8 col-md-offset-2 top-alert">
 
   <%= render 'layouts/alerts' %>
   <%= render 'devise/alerts' %>
 
 </div>
 
-<div class="row-fluid page-header">
-  <div class="span10 offset1">
+<div class="row page-header">
+  <div class="col-md-10 col-md-offset-1">
     <h1>
 
       <%=
@@ -34,10 +34,10 @@
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span2 offset9">
+<div class="row">
+  <div class="col-md-2 col-md-offset-9">
     <div class="btn-group">
-      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+      <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
         <i class="icon-flag"></i>
         <%= t 'devise.views.language' %>
         <span class="caret"></span>

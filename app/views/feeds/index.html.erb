@@ -6,13 +6,13 @@
 
 <%= render 'feeds/buttonbar/buttonbar' %>
 
-<div class="row-fluid">
+<div class="row">
 
-  <div class="span3">
+  <div class="col-md-3">
     <%= render 'feeds/sidebar/sidebar' %>
   </div>
 
-  <div class="span9">
+  <div class="col-md-9">
 
     <div class="hidden" id="feed-title">
       <strong class="lead">
@@ -21,7 +21,7 @@
       <hr>
     </div>
 
-    <div id="loading" class="offset1 hidden"><%= t '.loading' %></div>
+    <div id="loading" class="col-md-offset-1 hidden"><%= t '.loading' %></div>
 
     <%= render 'start', user: @user %>
 

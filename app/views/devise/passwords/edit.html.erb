@@ -2,9 +2,9 @@
   Feedbunch - <%= t 'devise.views.change_password' %>
 <% end %>
 
-<div class="row-fluid">
-  <div class="span10 offset1 well">
-    <div class="span8">
+<div class="row">
+  <div class="col-md-10 col-md-offset-1 well">
+    <div class="col-md-8">
       <%= simple_form_for resource, :as => resource_name,
                           :url => password_edit_path,
                           html: {:method => :put, class: 'form-horizontal', autocomplete: 'off'},
@@ -20,14 +20,14 @@
                     input_html: {autocomplete: 'off'} %>
 
         <div class="form-actions">
-          <%= button_tag type: 'submit', class: 'btn btn-primary btn-large' do %>
+          <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
             <i class="icon-key"></i> <%= t 'devise.views.change_password' %>
           <% end %>
         </div>
       <% end %>
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       <%= render "devise/shared/links" %>
     </div>
   </div>
