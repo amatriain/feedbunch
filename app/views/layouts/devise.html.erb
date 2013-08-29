@@ -35,13 +35,13 @@
 
 <div class="row">
   <div class="col-md-2 col-md-offset-9">
-    <div class="btn-group">
+    <div class="dropdown">
       <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
         <i class="icon-flag"></i>
         <%= t 'devise.views.language' %>
         <span class="caret"></span>
       </a>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+      <ul class="dropdown-menu text-left" role="menu" aria-labelledby="dropdownMenu">
         <li>
           <%= link_to url_for(locale: 'en') do %>
             <%= image_tag asset_path('flags/us.png') %>

@@ -74,6 +74,10 @@ $(document).ready ->
     $("#folder-management-dropdown a[data-folder-id] i.icon-ok").addClass "hidden"
     $("#folder-management-dropdown a[data-folder-id='#{Feedbunch.current_feed_folder_id}'] i.icon-ok")
       .removeClass "hidden"
+    if Feedbunch.current_feed_folder_id == 'none'
+      $("#folder-management-dropdown a[data-folder-id='none'] i.icon-ban-circle").addClass "hidden"
+    else
+      $("#folder-management-dropdown a[data-folder-id='none'] i.icon-ban-circle").removeClass "hidden"
 
   #-------------------------------------------------------
   # Set global variables with the currently selected feed, its folder, path and refresh path.

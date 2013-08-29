@@ -13,7 +13,7 @@
                         :url => profile_path,
                         html: {:method => :put, class: 'form-horizontal', autocomplete: 'off'},
                         wrapper: :prepend do |f| %>
-      <%= f.input :email, as: :email_icon, autofocus:true, input_html: {autocomplete: 'off'} %>
+      <%= f.input :email, as: :email_icon, input_html: {autocomplete: 'off'} %>
       <%= f.input :password, as: :password_icon, hint: t('simple_form.hints.user.blank_password'),
                   label: t('devise.views.new_password'),
                   placeholder: t('simple_form.placeholders.user.new_password'),

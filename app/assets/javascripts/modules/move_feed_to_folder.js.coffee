@@ -87,7 +87,7 @@ $(document).ready ->
   #-------------------------------------------------------
   add_folder = (folder_data) ->
     $("#sidebar #folders-list").append folder_data["sidebar"]
-    $("#folder-management-dropdown ul.dropdown-menu li.divider").first().after folder_data["dropdown"]
+    $("#folder-management-dropdown ul.dropdown-menu li.divider").first().before folder_data["dropdown"]
 
   #-------------------------------------------------------
   # Show modal popup
