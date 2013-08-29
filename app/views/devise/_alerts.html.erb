@@ -1,5 +1,5 @@
 <% if  devise_error_messages!.present? %>
-  <div id="devise-error" class="alert alert-error fade in">
+  <div id="devise-error" class="alert alert-danger fade in">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <ul>
       <% resource.errors.full_messages.each do |m| %>

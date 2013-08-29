@@ -9,7 +9,7 @@
 
 <%# Notice displayed when the import process finishes with an error %>
 <div id="import-process-error" class="hidden">
-  <div class="alert alert-error">
+  <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'start.import.finish_error' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -18,7 +18,7 @@
 
 <%# Alert displayed when there is a problem getting the import process status %>
 <div id="problem-updating-import-status" class="hidden">
-  <div class="alert alert-error">
+  <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'start.import.problem_updating' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>

@@ -1,6 +1,6 @@
 <%# Alert displayed when the feed selected has no entries %>
 <div id="no-entries" class="hidden">
-  <div class="alert">
+  <div class="alert alert-warning">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.no_entries' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -9,7 +9,7 @@
 
 <%# Alert displayed when there is a problem refreshing feeds %>
 <div id="problem-refreshing" class="hidden">
-  <div class="alert alert-error">
+  <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_refreshing' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -18,7 +18,7 @@
 
 <%# Alert displayed when there is a problem loading feeds %>
 <div id="problem-loading" class="hidden">
-  <div class="alert alert-error">
+  <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_loading' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -27,7 +27,7 @@
 
 <%# Alert displayed when there is a problem adding a subscription %>
 <div id="problem-subscribing" class="hidden">
-  <div class="alert alert-error">
+  <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_subscribing' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -36,7 +36,7 @@
 
 <%# Alert displayed when the user tries to subscribe to a feed he's already subscribed to %>
 <div id="already-subscribed" class="hidden">
-  <div class="alert">
+  <div class="alert alert-warning">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.already_subscribed' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -45,7 +45,7 @@
 
 <%# Alert displayed when there is a problem unsubscribing from a feed %>
 <div id="problem-unsubscribing" class="hidden">
-  <div class="alert alert-error">
+  <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_unsubscribing' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -54,7 +54,7 @@
 
 <%# Alert displayed when there is a problem adding or removing a feed from a folder %>
 <div id="problem-folder-management" class="hidden">
-  <div class="alert alert-error">
+  <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_folder_management' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -63,7 +63,7 @@
 
 <%# Alert displayed when the user tries to add a feed to a folder it's already associated to %>
 <div id="already-in-folder" class="hidden">
-  <div class="alert">
+  <div class="alert alert-warning">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.already_in_folder' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -72,7 +72,7 @@
 
 <%# Alert displayed when there is a problem adding a new feed %>
 <div id="problem-new-folder" class="hidden">
-  <div class="alert alert-error">
+  <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_new_folder' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -81,7 +81,7 @@
 
 <%# Alert displayed when the user tries to create a folder with the same title of another of his folders %>
 <div id="folder-already-exists" class="hidden">
-  <div class="alert">
+  <div class="alert alert-warning">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.folder_already_exists' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
@@ -90,7 +90,7 @@
 
 <%# Alert displayed when there is a problem changing an entry's read/unread state %>
 <div id="problem-entry-state-change" class="hidden">
-  <div class="alert alert-error">
+  <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_entry_state' %></p>
     <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
