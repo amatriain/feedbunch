@@ -14,6 +14,6 @@
      data-feed-title="<%= t 'feeds.index.all_entries' %>">
     <em><strong>
       <i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></strong></em>&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
-      <span class="badge pull-right"><%= user.folder_unread_count folder %></span>
+      <span class="badge pull-right"><%= user.folder_unread_count folder if user.folder_unread_count(folder) > 0%></span>
   </a>
 </li>

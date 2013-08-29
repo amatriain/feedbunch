@@ -12,6 +12,6 @@
   >
 
     <i class="icon-rss"></i> <%= feed.title %>&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
-    <span class="badge pull-right"><%= user.feed_unread_count feed %></span>
+    <span class="badge pull-right"><%= user.feed_unread_count feed if user.feed_unread_count(feed) > 0 %></span>
   </a>
 </li>
