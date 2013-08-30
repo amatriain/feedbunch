@@ -1,6 +1,7 @@
 <% if entries.present? %>
     <% entries.order('published DESC, created_at DESC').each do |entry| %>
-        <li id="entry-<%= entry.id %>" class="accordion-group">
+
+        <div id="entry-<%= entry.id %>" class="panel panel-default">
 
           <%# Link to open the entry summary %>
           <%
@@ -15,7 +16,7 @@
              data-target="#entry-<%= entry.id %>-summary"
              data-parent="#feed-entries"
              data-entry-id="<%= entry.id %>"
-             class="<%= entry_class %>">
+             class="<%= entry_class %> list-group-item">
 
             <%= sanitize entry.title %>
             <% if entry.published.present? %>
@@ -25,11 +26,11 @@
           </a>
 
           <%# Entry summary, initially collapsed %>
-          <div class="collapse"
+          <div class="panel-collapse collapse"
                id="entry-<%= entry.id %>-summary"
                data-entry-summary-id="<%= entry.id %>"
                data-entry-state-update-path="<%= entries_update_path %>">
-            <div class="entry-content">
+            <div class="panel-body entry-content">
               <p class="lead">
                 <% link_entry = link_to(entry.url, target: '_blank') do %>
                   <%= entry.title %>
@@ -51,6 +52,6 @@
               <% end %>
             </div>
           </div>
-        </li>
+        </div>
     <% end %>
 <% end %>
