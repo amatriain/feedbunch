@@ -1,29 +1,42 @@
-[class^="icon-"] {
+.entry [class^="icon-"] {
   text-decoration: none;
 }
 
-a.entry-unread{
+#feed-entries .entry{
+  margin-top: -1px;
+  margin-bottom: -1px;
+}
+
+.entry a.entry-unread{
   background-color: #F5F5F5;
 }
 
-a.entry-becoming-unread{
+.entry a.entry-becoming-unread{
   background-color: #F2F7E6;
 }
 
-a.entry-read{
+.entry a.entry-read{
   background-color: #e6ffce;
 }
 
-a.entry-becoming-read{
+.entry a.entry-becoming-read{
   background-color: #EAFFD6;
 }
 
-.nav > li > a.entry-read:hover{
+.entry a.entry-read:hover{
   background-color: #d6ffac;
 }
 
-.nav > li > a.entry-becoming-read:hover{
+.entry a.entry-becoming-read:hover{
   background-color: #d6ffac;
+}
+
+.entry a.entry-unread:hover{
+  background-color: #EFEFEF;
+}
+
+.entry a.entry-becoming-unread:hover{
+  background-color: #EFEFEF;
 }
 
 .entry-content{
