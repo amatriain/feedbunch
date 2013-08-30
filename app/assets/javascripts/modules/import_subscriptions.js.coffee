@@ -8,12 +8,6 @@ $(document).ready ->
   ########################################################
 
   #-------------------------------------------------------
-  # Show "Import subscriptions" popup when clicking on the import link
-  #-------------------------------------------------------
-  $("body").on "click", "a[data-import-subscriptions]", ->
-    show_popup()
-
-  #-------------------------------------------------------
   # Submit the "import subscriptions" form when clicking on the "Upload" button
   #-------------------------------------------------------
   $("body").on "click", "#data-import-submit", ->
@@ -72,12 +66,6 @@ $(document).ready ->
   ########################################################
   # COMMON FUNCTIONS
   ########################################################
-
-  #-------------------------------------------------------
-  # Show modal popup
-  #-------------------------------------------------------
-  show_popup = ->
-    $("#data-import-popup").modal "show"
 
   #-------------------------------------------------------
   # Clean file field and close modal popup
