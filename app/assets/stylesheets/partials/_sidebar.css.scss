@@ -1,7 +1,11 @@
-.arrow {
+.folder-arrow {
   margin-top: 4px;
 }
 
 a.sidebar-folder{
   background-color: #F5F5F5;
+}
+
+a.sidebar-folder:hover{
+  background-color: #EFEFEF;
 }

@@ -1,13 +1,11 @@
 <div id="sidebar">
-  <ul class="nav nav-list">
-    <li class="active">
+  <ul class="nav nav-pills nav-stacked">
+    <li>
       <a id="start-page"><i class="icon-asterisk"></i> <%= t 'feeds.index.start' %></a>
     </li>
   </ul>
 
-  <hr>
-
-  <ul id="folders-list" class="nav nav-tabs nav-stacked">
+  <div id="folders-list" class="list-group">
 
     <%= render 'feeds/sidebar/sidebar_folder', user: @user, feeds: @feeds, title: t('feeds.index.all_feeds'), folder: Folder::ALL_FOLDERS %>
 
@@ -17,5 +15,5 @@
 
     <% end %>
 
-  </ul>
+  </div>
 </div>

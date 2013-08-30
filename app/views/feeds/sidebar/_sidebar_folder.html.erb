@@ -6,26 +6,31 @@
    end
 %>
 
-<li id="folder-<%= folder_id %>" data-folder-id="<%= folder_id %>">
+<%# Link to open the folder and close the folder %>
+<a id="folder-<%= folder_id %>"
+   data-folder-id="<%= folder_id %>"
+   data-sidebar-folder
+   data-toggle="collapse"
+   data-target="#feeds-<%= folder_id %>"
+   class="sidebar-folder list-group-item">
 
-  <%# Link to open the folder and close the folder %>
-  <a data-sidebar-folder data-toggle="collapse" data-target="#feeds-<%= folder_id %>" class="sidebar-folder">
-    <i class="folder icon-folder-open-alt"></i> <%= title %><i class="arrow icon-chevron-down pull-right"></i>
-  </a>
+  <i class="folder icon-folder-open-alt"></i> <%= title %><i class="folder-arrow icon-chevron-down pull-right"></i>
 
-  <%# Content of the folder %>
-  <ul class="nav nav-list collapse in" id="feeds-<%= folder_id %>">
+</a>
 
-    <%= render 'feeds/sidebar/sidebar_folder_read_all', user: user, folder: folder %>
+<%# Content of the folder %>
+<ul class="nav nav-pills nav-stacked in" id="feeds-<%= folder_id %>">
 
-    <%# Links to read each individual feed in the folder %>
-    <% feeds.order('title ASC').each do |feed| %>
+  <%= render 'feeds/sidebar/sidebar_folder_read_all', user: user, folder: folder %>
 
-      <%# Ensure user is actually subscribed to the feed, in case there is some data inconsistency %>
-      <% if user.feeds.include? feed %>
-        <%= render 'feeds/sidebar/sidebar_feed', user: user, feed: feed %>
-      <% end %>
+  <%# Links to read each individual feed in the folder %>
+  <% feeds.order('title ASC').each do |feed| %>
 
+    <%# Ensure user is actually subscribed to the feed, in case there is some data inconsistency %>
+    <% if user.feeds.include? feed %>
+      <%= render 'feeds/sidebar/sidebar_feed', user: user, feed: feed %>
     <% end %>
-  </ul>
-</li>
+
+  <% end %>
+
+</ul>

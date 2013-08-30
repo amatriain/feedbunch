@@ -4,8 +4,8 @@ $(document).ready ->
   # Dynamic styling when clicking on the sidebar folders
   #-------------------------------------------------------
   $("body").on "click", "[data-sidebar-folder]", ->
-    $(this).children("i.arrow").toggleClass "icon-chevron-right"
-    $(this).children("i.arrow").toggleClass "icon-chevron-down"
+    $(this).children("i.folder-arrow").toggleClass "icon-chevron-right"
+    $(this).children("i.folder-arrow").toggleClass "icon-chevron-down"
     $(this).children("i.folder").toggleClass "icon-folder-close-alt"
     $(this).children("i.folder").toggleClass "icon-folder-open-alt"
 
