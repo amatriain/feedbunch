@@ -34,12 +34,6 @@ $(document).ready ->
         Feedbunch.alertTimedShowHide $("#problem-folder-management")
 
   #-------------------------------------------------------
-  # Show "New folder" popup when clicking on New Folder in the dropdown
-  #-------------------------------------------------------
-  $("body").on "click", "a[data-new-folder-path]", ->
-    show_popup()
-
-  #-------------------------------------------------------
   # Submit the "New Folder" form when clicking on the "Add" button
   #-------------------------------------------------------
   $("body").on "click", "#new-folder-submit", ->
@@ -88,12 +82,6 @@ $(document).ready ->
   add_folder = (folder_data) ->
     $("#sidebar #folders-list").append folder_data["sidebar"]
     $("#folder-management-dropdown ul.dropdown-menu li.divider").first().before folder_data["dropdown"]
-
-  #-------------------------------------------------------
-  # Show modal popup
-  #-------------------------------------------------------
-  show_popup = ->
-    $("#new-folder-popup").modal "show"
 
   #-------------------------------------------------------
   # Clean textfield and close modal popup

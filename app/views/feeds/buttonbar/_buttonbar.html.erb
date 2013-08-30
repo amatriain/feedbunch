@@ -38,7 +38,9 @@
         <% end %>
         <li class="divider"></li>
         <li>
-          <a data-new-folder-path="<%= folders_path format: :json %>" data-folder-id="new">
+          <a data-folder-id="new"
+             data-toggle="modal"
+             data-target="#new-folder-popup">
             <i class="icon-plus text-muted"></i>&nbsp;
             <%= t 'feeds.index.folder_new' %>
           </a>
