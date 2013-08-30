@@ -35,8 +35,8 @@ gem 'devise'
 gem 'simple_form', '3.0.0.rc'
 
 # RSS/Atom parser
-gem 'feedzirra', git: 'https://github.com/amatriain/feedzirra.git', tag: 'v0.2.0.rc3'
-gem 'sax-machine', git: 'https://github.com/amatriain/sax-machine.git', tag: 'v0.2.0.rc2'
+gem 'feedzirra', '0.2.0.rc2'
+gem 'sax-machine'
 
 # HTTP client
 gem 'rest-client'
