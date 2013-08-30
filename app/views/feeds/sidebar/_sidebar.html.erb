@@ -5,7 +5,9 @@
     </li>
   </ul>
 
-  <div id="folders-list" class="list-group">
+  <hr>
+
+  <div id="folders-list" class="panel-group">
 
     <%= render 'feeds/sidebar/sidebar_folder', user: @user, feeds: @feeds, title: t('feeds.index.all_feeds'), folder: Folder::ALL_FOLDERS %>
 
