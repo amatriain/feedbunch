@@ -7,8 +7,7 @@ Feedbunch - <%= t 'devise.views.sign_in' %>
     <div class="col-md-8">
       <%= simple_form_for resource, :as => resource_name,
                           :url => user_session_path,
-                          html: {class: 'form-horizontal'},
-                          wrapper: :prepend do |f| %>
+                          html: {class: 'form-horizontal'} do |f| %>
         <%= f.input :email, as: :email_icon, autofocus: true %>
         <%= f.input :password, as: :password_icon, hint: false %>
 
@@ -21,7 +20,7 @@ Feedbunch - <%= t 'devise.views.sign_in' %>
               <% end %>
             </div>
           </div>
-        <% end -%>
+        <% end %>
 
         <div class="form-actions">
           <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>

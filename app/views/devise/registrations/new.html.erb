@@ -7,8 +7,7 @@
     <div class="col-md-8">
       <%= simple_form_for resource, :as => resource_name,
                           :url => user_registration_path,
-                          html: {class: 'form-horizontal'},
-                          wrapper: :prepend do |f| %>
+                          html: {class: 'form-horizontal'} do |f| %>
         <%= f.input :email, as: :email_icon, autofocus: true %>
         <%= f.input :password, as: :password_icon %>
         <%= f.input :password_confirmation, as: :password_icon,

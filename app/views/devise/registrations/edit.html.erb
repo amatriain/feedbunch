@@ -11,8 +11,7 @@
   <div class="col-md-10 col-md-offset-1 well">
     <%= simple_form_for resource, :as => resource_name,
                         :url => profile_path,
-                        html: {:method => :put, class: 'form-horizontal', autocomplete: 'off'},
-                        wrapper: :prepend do |f| %>
+                        html: {:method => :put, class: 'form-horizontal', autocomplete: 'off'} do |f| %>
       <%= f.input :email, as: :email_icon, input_html: {autocomplete: 'off'} %>
       <%= f.input :password, as: :password_icon, hint: t('simple_form.hints.user.blank_password'),
                   label: t('devise.views.new_password'),

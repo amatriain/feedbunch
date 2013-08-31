@@ -7,8 +7,7 @@
     <div class="col-md-8">
       <%= simple_form_for resource, :as => resource_name,
                           :url => password_edit_path,
-                          html: {:method => :put, class: 'form-horizontal', autocomplete: 'off'},
-                          wrapper: :prepend do |f| %>
+                          html: {:method => :put, class: 'form-horizontal', autocomplete: 'off'} do |f| %>
         <%= f.hidden_field :reset_password_token %>
 
         <%= f.input :password, as: :password_icon, autofocus: true,
