@@ -10,7 +10,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Mark entry as read as soon as the user opens it
   #-------------------------------------------------------
-  $("body").on "show", "[data-entry-summary-id]", ->
+  $("body").on "shown.bs.collapse", "[data-entry-summary-id]", ->
     if opening_entry this
       update_entry_state_path = $(this).attr "data-entry-state-update-path"
       entry_id = $(this).attr "data-entry-summary-id"
