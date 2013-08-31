@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/plataformatec/simple_form.git
+  revision: 359606f222fa0972a4a14ec70140ac00f7c80839
+  specs:
+    simple_form (3.0.0.rc)
+      actionpack (>= 4.0.0, < 4.1)
+      activemodel (>= 4.0.0, < 4.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -196,9 +204,6 @@ GEM
     sax-machine (0.2.0.rc1)
       nokogiri (~> 1.5.2)
     sexp_processor (4.3.0)
-    simple_form (3.0.0.rc)
-      actionpack (>= 4.0.0.rc1, < 4.1)
-      activemodel (>= 4.0.0.rc1, < 4.1)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
@@ -272,6 +277,6 @@ DEPENDENCIES
   rvm-capistrano
   sass-rails
   sax-machine
-  simple_form (= 3.0.0.rc)
+  simple_form!
   sqlite3
   uglifier
