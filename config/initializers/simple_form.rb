@@ -10,7 +10,7 @@ SimpleForm.setup do |config|
     b.use :placeholder
     b.use :label
     b.wrapper tag: 'div', class: 'col-lg-10' do |input|
-      input.wrapper tag: 'div', class: 'input-prepend' do |prepend|
+      input.wrapper tag: 'div', class: 'input-group' do |prepend|
         prepend.use :input
       end
       input.use :error, wrap_with: { tag: 'strong', class: 'help-block' }
@@ -72,6 +72,9 @@ SimpleForm.setup do |config|
 
   # You can define the class to use on all forms. Default is simple_form.
   config.form_class = 'form-horizontal'
+
+  # You can define the class to use on all controls.
+  config.input_class = 'form-control'
 
   # You can define which elements should obtain additional classes
   # config.generate_additional_classes_for = [:wrapper, :label, :input]
