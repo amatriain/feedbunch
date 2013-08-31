@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         <%= simple_form_for :new_folder, url: folders_path(format: :json), type: :json,
-                            html: {:method => :post, class: 'form-horizontal', id: 'form-new-folder'} do |f| %>
+                            html: {:method => :post, id: 'form-new-folder'} do |f| %>
           <%= f.input :title, as: :folder_icon, required: false %>
         <% end %>
       </div>

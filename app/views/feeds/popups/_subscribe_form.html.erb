@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         <%= simple_form_for :subscription, url: feeds_path,
-                            html: {:method => :post, class: 'form-horizontal',
+                            html: {:method => :post,
                             id: 'form-subscription'} do |f| %>
           <%= f.input :rss, as: :rss_icon, required: false %>
         <% end %>

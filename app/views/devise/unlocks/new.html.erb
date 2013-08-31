@@ -8,7 +8,7 @@
     <div class="col-md-8">
       <%= simple_form_for resource, :as => resource_name,
                           :url => user_unlock_path,
-                          html: {:method => :post, class: 'form-horizontal'} do |f| %>
+                          html: {:method => :post} do |f| %>
         <%= f.input :email, as: :email_icon, autofocus: true %>
 
         <div class="control-group">

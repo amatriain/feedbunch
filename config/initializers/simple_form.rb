@@ -17,6 +17,7 @@ SimpleForm.setup do |config|
       input.use :hint,  :wrap_with => { :tag => 'em', :class => 'help-block' }
     end
   end
+
   # The default wrapper to be used by the FormBuilder.
   config.default_wrapper = :bootstrap3_prepend
 
@@ -27,7 +28,7 @@ SimpleForm.setup do |config|
   config.boolean_style = :nested
 
   # Default class for buttons
-  config.button_class = 'btn'
+  config.button_class = 'btn btn-default'
 
   # Method used to tidy up errors. Specify any Rails Array method.
   # :first lists the first message for each field.
@@ -70,7 +71,7 @@ SimpleForm.setup do |config|
   config.label_class = 'control-label'
 
   # You can define the class to use on all forms. Default is simple_form.
-  # config.form_class = :simple_form
+  config.form_class = 'form-horizontal'
 
   # You can define which elements should obtain additional classes
   # config.generate_additional_classes_for = [:wrapper, :label, :input]
@@ -80,7 +81,7 @@ SimpleForm.setup do |config|
 
   # Tell browsers whether to use default HTML5 validations (novalidate option).
   # Default is enabled.
-  config.browser_validations = false
+  #config.browser_validations = false
 
   # Collection of methods to detect if a file type was given.
   # config.file_methods = [ :mounted_as, :file?, :public_filename ]

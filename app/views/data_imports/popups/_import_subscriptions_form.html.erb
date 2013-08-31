@@ -16,7 +16,7 @@
         </div>
         <hr>
         <%= simple_form_for :data_import, url: data_imports_path, multipart: true,
-                            html: {:method => :post, class: 'form-horizontal', id: 'form-data-import'} do |f| %>
+                            html: {:method => :post, id: 'form-data-import'} do |f| %>
           <%= f.input :file, as: :file, required: false %>
         <% end %>
       </div>

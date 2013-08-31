@@ -6,8 +6,7 @@ Feedbunch - <%= t 'devise.views.sign_in' %>
   <div class="col-md-10 col-md-offset-1 well">
     <div class="col-md-8">
       <%= simple_form_for resource, :as => resource_name,
-                          :url => user_session_path,
-                          html: {class: 'form-horizontal'} do |f| %>
+                          :url => user_session_path do |f| %>
         <%= f.input :email, as: :email_icon, autofocus: true %>
         <%= f.input :password, as: :password_icon, hint: false %>
 
