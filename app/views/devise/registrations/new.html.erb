@@ -11,10 +11,13 @@
         <%= f.input :password, as: :password_icon %>
         <%= f.input :password_confirmation, as: :password_icon,
                     placeholder: t('simple_form.placeholders.user.password_confirmation')%>
-        <div class="form-actions">
-          <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
-            <i class="icon-plus-sign"></i> <%= t 'devise.views.sign_up' %>
-          <% end %>
+
+        <div class="form-group">
+          <div class="col-lg-offset-3 col-lg-7">
+            <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
+              <i class="icon-plus-sign"></i> <%= t 'devise.views.sign_up' %>
+            <% end %>
+          </div>
         </div>
     <% end %>
     </div>

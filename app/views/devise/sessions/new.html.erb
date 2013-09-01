@@ -11,20 +11,24 @@ Feedbunch - <%= t 'devise.views.sign_in' %>
         <%= f.input :password, as: :password_icon, hint: false %>
 
         <% if devise_mapping.rememberable? %>
-          <div class="control-group">
-            <div class="controls">
-              <%= f.label :remember_me, t('devise.views.remember_me'), class: 'checkbox' do %>
-                <%= f.check_box :remember_me, checked:true, class: 'checkbox' %>
-                <%= t 'devise.views.remember_me' %>
-              <% end %>
+          <div class="form-group">
+            <div class="col-lg-offset-3 col-lg-7">
+              <div class="checkbox">
+                <%= f.label :remember_me, t('devise.views.remember_me') do %>
+                  <%= f.check_box :remember_me, checked:true %>
+                  <%= t 'devise.views.remember_me' %>
+                <% end %>
+              </div>
             </div>
           </div>
         <% end %>
 
-        <div class="form-actions">
-          <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
-            <i class="icon-signin"></i> <%= t 'devise.views.sign_in' %>
-          <% end %>
+        <div class="form-group">
+          <div class="col-lg-offset-3 col-lg-7">
+            <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
+              <i class="icon-signin"></i> <%= t 'devise.views.sign_in' %>
+            <% end %>
+          </div>
         </div>
       <% end %>
     </div>

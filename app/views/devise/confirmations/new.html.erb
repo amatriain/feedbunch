@@ -11,10 +11,12 @@
                           html: {:method => :post} do |f| %>
         <%= f.input :email, as: :email_icon, autofocus: true %>
 
-        <div class="form-actions">
-          <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
-            <i class="icon-share-alt"></i> <%= t 'devise.views.resend_confirmation' %>
-          <% end %>
+        <div class="form-group">
+          <div class="col-lg-offset-3 col-lg-7">
+            <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
+              <i class="icon-share-alt"></i> <%= t 'devise.views.resend_confirmation' %>
+            <% end %>
+          </div>
         </div>
       <% end %>
     </div>
