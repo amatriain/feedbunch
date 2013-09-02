@@ -17,7 +17,7 @@ Feedbunch.remove_folder = (folder_id) ->
 Feedbunch.remove_feed_from_folders = (feed_id) ->
   $("[data-sidebar-feed][data-feed-id='#{feed_id}']").parent().each ->
     # Do not remove it from the "All Subscriptions" folder
-    $(this).remove() if $(this).parent().attr("id") != "feeds-all"
+    $(this).remove() if $(this).closest(".panel-collapse").attr("id") != "feeds-all"
 
 #-------------------------------------------------------
 # Insert feed in a folder in the sidebar

@@ -32,11 +32,11 @@ end
 # the All Subscriptions folder.
 
 def open_folder(folder_id)
-  page.should have_css "#folders-list li#folder-#{folder_id}"
+  page.should have_css "#folders-list #folder-#{folder_id}"
   # Open folder only if it is closed
-  if !page.has_css? "#folders-list ul#feeds-#{folder_id}.in"
+  if !page.has_css? "#folders-list #feeds-#{folder_id}.in"
     find("a[data-target='#feeds-#{folder_id}']").click
-    page.should have_css "#folders-list ul#feeds-#{folder_id}.in"
+    page.should have_css "#folders-list #feeds-#{folder_id}.in"
   end
 end
 
@@ -55,7 +55,7 @@ end
 
 def read_feed(feed_id, folder_id = 'all')
   open_folder folder_id
-  within "#folders-list li#folder-#{folder_id}" do
+  within "#folders-list #folder-#{folder_id}" do
     page.should have_css "[data-sidebar-feed][data-feed-id='#{feed_id}']"
 
     # Click on feed to read its entries
@@ -77,7 +77,7 @@ end
 
 def read_folder(folder_id)
   open_folder folder_id
-  within "#folders-list li#folder-#{folder_id}" do
+  within "#folders-list #folder-#{folder_id}" do
     find("[data-sidebar-feed][data-feed-id='all']").click
   end
 
@@ -91,12 +91,12 @@ end
 # If the entry is not currently in the entries list, the test will immediately fail.
 
 def read_entry(entry_id)
-  page.should have_css "#feed-entries li#entry-#{entry_id}"
+  page.should have_css "#feed-entries #entry-#{entry_id}"
 
   # Open entry only if it is closed
-  if !page.has_css? "#feed-entries div#entry-#{entry_id}-summary.in"
+  if !page.has_css? "#feed-entries #entry-#{entry_id}-summary.in"
     find("#feed-entries [data-entry-id='#{entry_id}']").click
-    page.should have_css "#feed-entries div#entry-#{entry_id}-summary.in"
+    page.should have_css "#feed-entries #entry-#{entry_id}-summary.in"
   end
 end
 
@@ -172,7 +172,7 @@ def move_feed_to_folder(feed_id, folder_id)
   end
 
   # Ensure feed has been moved to folder
-  page.should have_css "#folders-list li#folder-#{folder_id} [data-sidebar-feed][data-feed-id='#{feed_id}']"
+  page.should have_css "#folders-list #folder-#{folder_id} [data-sidebar-feed][data-feed-id='#{feed_id}']"
   within "#folder-management-dropdown ul.dropdown-menu a[data-folder-id='#{folder_id}']", visible: false do
     page.should have_css 'i.icon-ok', visible: false
     page.should_not have_css 'i.icon-ok.hidden', visible: false

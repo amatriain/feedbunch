@@ -79,8 +79,8 @@ describe 'unsubscribe from feed' do
     visit feeds_path
 
     # Feed should be in the folder and in the "all subscriptions" folder
-    page.should have_css "#sidebar li#folder-all li > a[data-feed-id='#{@feed1.id}']", visible: false
-    page.should have_css "#sidebar li#folder-#{folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
+    page.should have_css "#sidebar #folder-all a[data-feed-id='#{@feed1.id}']", visible: false
+    page.should have_css "#sidebar #folder-#{folder.id} a[data-feed-id='#{@feed1.id}']", visible: false
 
     unsubscribe_feed @feed1.id
 
@@ -108,7 +108,7 @@ describe 'unsubscribe from feed' do
 
     # user2 should still see the feed in his own list
     login_user_for_feature user2
-    page.should have_css "li#folder-all ul#feeds-all a[data-feed-id='#{@feed1.id}']", visible: false
+    page.should have_css "#folder-all #feeds-all a[data-feed-id='#{@feed1.id}']", visible: false
   end
 
   it 'removes folders without feeds', js: true do
@@ -152,7 +152,7 @@ describe 'unsubscribe from feed' do
     within '#sidebar #folders-list' do
       page.should have_content folder.title
     end
-    page.should have_css "#folders-list li[data-folder-id='#{folder.id}']"
+    page.should have_css "#folders-list [data-folder-id='#{folder.id}']"
 
     read_feed @feed2.id
     # Folder should not be removed from the dropdown

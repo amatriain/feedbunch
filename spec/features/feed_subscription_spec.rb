@@ -74,7 +74,7 @@ FEED_XML
     subscribe_feed alternate_webpage_url
 
     # Both the old and new feeds should be there, the new feed should be selected
-    within '#sidebar li#folder-all ul#feeds-all' do
+    within '#sidebar #folder-all #feeds-all' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title
@@ -264,7 +264,7 @@ FEED_XML
     subscribe_feed fetch_url
 
     # Both the old and new feeds should be there, the new feed should be selected
-    within '#sidebar li#folder-all ul#feeds-all' do
+    within '#sidebar #folder-all #feeds-all' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title
@@ -326,7 +326,7 @@ FEED_XML
     subscribe_feed webpage_url
 
     # Both the old and new feeds should be there, the new feed should be selected
-    within '#sidebar li#folder-all ul#feeds-all' do
+    within '#sidebar #folder-all #feeds-all' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title
@@ -389,7 +389,7 @@ FEED_XML
     subscribe_feed url_no_schema
 
     # Both the old and new feeds should be there, the new feed should be selected
-    within '#sidebar li#folder-all ul#feeds-all' do
+    within '#sidebar #folder-all #feeds-all' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title

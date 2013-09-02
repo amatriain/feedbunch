@@ -57,7 +57,7 @@ describe 'feeds' do
     end
 
     it 'shows a link to read entries for all subscriptions inside the All Subscriptions folder', js: true do
-      within '#sidebar li#folder-all' do
+      within '#sidebar #folder-all' do
         # Open "All feeds" folder
         find("a[data-target='#feeds-all']").click
 
@@ -82,7 +82,7 @@ describe 'feeds' do
       entry3_2 = FactoryGirl.build :entry, feed_id: feed3.id
       feed3.entries << entry3_1 << entry3_2
 
-      within "#sidebar li#folder-#{@folder1.id}" do
+      within "#sidebar #folder-#{@folder1.id}" do
         # Open folder
         find("a[data-target='#feeds-#{@folder1.id}']").click
 
