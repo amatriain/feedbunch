@@ -15,14 +15,15 @@
           </div>
         </div>
         <hr>
-        <form>
-          <div class="form-group">
-            <div class="col-lg-offset-1">
-              <label for="data_import_file">File</label>
-              <input type="file" name="data_import[file]" id="data_import_file">
-            </div>
+
+        <%= simple_form_for :data_import, url: data_imports_path, multipart: true,
+                            html: {:method => :post, id: 'form-data-import'} do |f| %>
+          <div class="col-lg-offset-1">
+          <label for="data_import_file"><%= t 'simple_form.labels.import_subscriptions.file' %></label>
+          <input type="file" name="data_import[file]" id="data_import_file">
           </div>
-        </form>
+        <% end %>
+
       </div>
       <div class="modal-footer">
         <button class="btn btn-default" data-dismiss="modal" ><%= t 'start.import.form_close' %></button>
