@@ -27,8 +27,12 @@
         %>
         <% if data_import.blank? || status==DataImport::ERROR %>
           <li>
-            <a data-toggle="modal" data-target="#data-import-popup">
+            <a id="nav-data-import"
+               data-toggle="modal"
+               data-target="#data-import-popup">
+
               <i class="icon-magic"></i>
+
               <%= t 'layouts.application.import' %>
             </a>
           </li>
