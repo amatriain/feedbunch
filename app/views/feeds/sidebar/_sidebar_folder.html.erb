@@ -6,11 +6,10 @@
    end
 %>
 
-<div id="folder-<%= folder_id %>" class="folder-panel panel panel-default">
+<div id="folder-<%= folder_id %>" class="folder-panel panel panel-default" data-folder-id="<%= folder_id %>">
 
   <%# Link to open the folder and close the folder %>
   <a data-sidebar-folder
-     data-folder-id="<%= folder_id %>"
      data-toggle="collapse"
      data-target="#feeds-<%= folder_id %>"
      data-parent="#folders-list"
