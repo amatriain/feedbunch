@@ -22,7 +22,6 @@ Resque.redis = resque_config[resque_conf_key]
 # In background servers we must require each job class individually, because we're not
 # running the full Rails app
 if resque_env=='background'
-  require "#{rails_root}/app/jobs/fetch_imported_feed_job"
   require "#{rails_root}/app/jobs/import_subscriptions_job"
   require "#{rails_root}/app/jobs/schedule_feed_updates_job"
   require "#{rails_root}/app/jobs/update_feed_job"
