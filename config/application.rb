@@ -49,7 +49,11 @@ module Feedbunch
     # Add the fonts path to assets pipeline
     config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')
 
+    # Add the fonts path to assets pipeline
+    config.assets.paths << Rails.root.join('vendor', 'assets', 'images')
+
     # Precompile additional assets
     config.assets.precompile += %w(.otf .eot .svg .ttf .woff)
+    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
   end
 end
