@@ -18,7 +18,9 @@ en:
         current_password: "Current password"
       subscription:
         rss: "Feed"
-      import_subscriptions:
+      new_folder:
+        title: "Title"
+      data_import:
         file: "Data file"
     hints:
       user:

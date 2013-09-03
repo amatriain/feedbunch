@@ -18,7 +18,9 @@ es:
         current_password: "Contraseña actual"
       subscription:
         rss: "Feed"
-      import_subscriptions:
+      new_folder:
+              title: "Título"
+      data_import:
         file: "Fichero de datos"
     hints:
       user:
@@ -36,5 +38,5 @@ es:
         new_password: "Tu nueva contraseña"
       subscription:
         rss: "URL"
-        new_folder:
-          title: "Título de la nueva carpeta"
+      new_folder:
+        title: "Título de la nueva carpeta"
