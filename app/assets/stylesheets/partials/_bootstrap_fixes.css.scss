@@ -1,0 +1,7 @@
+/* Various fixes to problems with Bootstrap. As new versions of Bootstrap
+that fix them are released, the fixes here will be removed */
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
