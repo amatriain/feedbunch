@@ -33,6 +33,12 @@
         </li>
 
         <li>
+          <button type="button" id="refresh-feed" class="btn btn-default navbar-btn disabled hidden">
+            <i class="icon-repeat"></i> <%= t 'feeds.index.refresh' %>
+          </button>
+        </li>
+
+        <li>
           <%= link_to feeds_path, id: 'feeds' do %>
             <i class="icon-rss"></i>
             <%= t 'layouts.application.my_feeds' %>
