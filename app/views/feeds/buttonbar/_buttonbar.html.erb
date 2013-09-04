@@ -1,35 +1,7 @@
 <div class="row buttonbar">
 
   <div class="col-md-2">
-    <div class="dropdown" id="folder-management-dropdown">
-      <a id="folder-management" class="btn btn-default dropdown-toggle disabled hidden" data-toggle="dropdown">
-        <i class="icon-folder-open"></i> <%= t 'feeds.index.folder_management' %>
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu pull-right text-left">
-        <% current_user.folders.each do |folder| %>
 
-          <%= render 'feeds/buttonbar/dropdown_folder', folder: folder %>
-
-        <% end %>
-        <li class="divider"></li>
-        <li>
-          <a data-folder-id="new"
-             data-toggle="modal"
-             data-target="#new-folder-popup">
-            <i class="icon-plus text-muted"></i>&nbsp;
-            <%= t 'feeds.index.folder_new' %>
-          </a>
-        </li>
-        <li>
-          <a data-folder-remove-path="<%= folder_path Folder::NO_FOLDER %>" data-folder-id="none">
-            <i class="icon-ban-circle text-muted"></i>
-            <i class="hidden icon-ok"></i>&nbsp;
-            <%= t 'feeds.index.folder_none' %>
-          </a>
-        </li>
-      </ul>
-    </div>
   </div>
 
   <div class="col-md-2">

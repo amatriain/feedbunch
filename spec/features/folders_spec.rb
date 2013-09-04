@@ -78,19 +78,19 @@ describe 'folders and feeds' do
 
     it 'hides folder management button until a feed is selected', js: true do
       visit feeds_path
-      page.should have_css 'a#folder-management.hidden', visible: false
+      page.should have_css '#folder-management.hidden', visible: false
     end
 
     it 'shows folder management button when a feed is selected', js: true do
-      page.should_not have_css 'a#folder-management.hidden', visible: false
-      page.should_not have_css 'a#folder-management.disabled', visible: false
-      page.should have_css 'a#folder-management'
+      page.should_not have_css '#folder-management.hidden', visible: false
+      page.should_not have_css '#folder-management.disabled', visible: false
+      page.should have_css '#folder-management'
     end
 
     it 'hides folder management button when reading a whole folder', js: true do
       read_feed 'all'
-      page.should have_css 'a#folder-management.hidden', visible: false
-      page.should have_css 'a#folder-management.disabled', visible: false
+      page.should have_css '#folder-management.hidden', visible: false
+      page.should have_css '#folder-management.disabled', visible: false
     end
 
     it 'drops down a list of all user folders', js: true do
