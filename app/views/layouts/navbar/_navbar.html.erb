@@ -49,7 +49,7 @@
             <ul class="dropdown-menu pull-right text-left">
               <% current_user.folders.each do |folder| %>
 
-                <%= render 'feeds/buttonbar/dropdown_folder', folder: folder %>
+                <%= render 'layouts/navbar/dropdown_folder', folder: folder %>
 
               <% end %>
               <li class="divider"></li>
