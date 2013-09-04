@@ -35,12 +35,12 @@ describe 'unsubscribe from feed' do
 
     # Read @feed2. All buttons should be visible and enabled
     read_feed @feed2.id
-    page.should have_css 'a#refresh-feed'
-    page.should_not have_css 'a#refresh-feed.disabled'
-    page.should have_css 'a#folder-management'
-    page.should_not have_css 'a#folder-management.disabled'
-    page.should have_css 'a#unsubscribe-feed'
-    page.should_not have_css 'a#unsubscribe-feed.disabled'
+    page.should have_css '#refresh-feed'
+    page.should_not have_css '#refresh-feed.disabled'
+    page.should have_css '#folder-management'
+    page.should_not have_css '#folder-management.disabled'
+    page.should have_css '#unsubscribe-feed'
+    page.should_not have_css '#unsubscribe-feed.disabled'
   end
 
   it 'hides unsubscribe button when reading a whole folder', js: true do

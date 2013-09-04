@@ -124,7 +124,7 @@ describe 'unread entries count' do
       @feed1.entries << entry
     end
 
-    find('a#refresh-feed').click
+    find('#refresh-feed').click
 
     unread_folder_entries_should_eq 'all', 5
     unread_folder_entries_should_eq @folder1.id, 4
