@@ -73,6 +73,12 @@
         </li>
 
         <li>
+          <button type="button" id="unsubscribe-feed" class="btn btn-danger navbar-btn disabled hidden">
+            <i class="icon-remove-sign"></i> <%= t 'feeds.index.unsubscribe' %>
+          </button>
+        </li>
+
+        <li>
           <%= link_to feeds_path, id: 'feeds' do %>
             <i class="icon-rss"></i>
             <%= t 'layouts.application.my_feeds' %>
