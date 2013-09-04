@@ -27,6 +27,12 @@
         </li>
 
         <li>
+          <button type="button" id="show-read-button" class="btn btn-default navbar-btn disabled hidden">
+            <i class="icon-eye-open"></i> <%= t 'feeds.index.show_read' %>
+          </button>
+        </li>
+
+        <li>
           <%= link_to feeds_path, id: 'feeds' do %>
             <i class="icon-rss"></i>
             <%= t 'layouts.application.my_feeds' %>
