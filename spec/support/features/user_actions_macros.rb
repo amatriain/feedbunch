@@ -129,6 +129,17 @@ def read_entry(entry_id)
 end
 
 ##
+# Click on the "refresh feed" button to fetch new entries for the feed
+
+def refresh_feed
+  open_entries_menu
+  page.should have_css '#refresh-feed'
+  find('#refresh-feed').click
+  # Ensure entries have finished loading
+  page.should_not have_css 'div#loading'
+end
+
+##
 # Click on the "mark all as read" button to mark all currently visible entries as read.
 #
 # If the button is not currently visible the test immediately fails.

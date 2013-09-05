@@ -22,7 +22,7 @@ describe 'refresh feeds' do
     entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
     FeedClient.should_receive(:fetch).with @feed1, anything
     @feed1.entries << entry2
-    find('#refresh-feed').click
+    refresh_feed
 
     # Page should have the new entries for the feed
     page.should have_content @entry1.title
@@ -43,7 +43,7 @@ describe 'refresh feeds' do
     end
 
     read_feed @feed1.id
-    find('#refresh-feed').click
+    refresh_feed
 
     # entry2 and entry3 should appear, @entry1 should not appear because it's already read
     page.should_not have_content @entry1.title
@@ -53,8 +53,7 @@ describe 'refresh feeds' do
 
   it 'shows an alert if there is a problem refreshing a feed', js: true do
     FeedClient.stub(:fetch).and_raise StandardError.new
-    # Refresh feed
-    find('#refresh-feed').click
+    refresh_feed
 
     should_show_alert 'problem-refreshing'
   end
@@ -66,7 +65,7 @@ describe 'refresh feeds' do
     entry_state.read=true
     entry_state.save
 
-    find('#refresh-feed').click
+    refresh_feed
 
     should_hide_alert 'problem-refreshing'
   end

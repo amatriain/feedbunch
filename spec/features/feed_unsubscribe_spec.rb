@@ -35,8 +35,8 @@ describe 'unsubscribe from feed' do
 
     # Read @feed2. All buttons should be visible and enabled
     read_feed @feed2.id
-    page.should have_css '#refresh-feed'
-    page.should_not have_css '#refresh-feed.disabled'
+    page.should have_css '#entries-management', visible: true
+    page.should_not have_css '#entries-management.disabled'
     page.should have_css '#folder-management'
     page.should_not have_css '#folder-management.disabled'
     page.should have_css '#unsubscribe-feed'
