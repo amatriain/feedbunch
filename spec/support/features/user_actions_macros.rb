@@ -27,7 +27,16 @@ end
 def open_user_menu
   user_should_be_logged_in
   find('#user-dropdown .dropdown-toggle').click
-  page.should have_css 'a#sign_out'
+  page.should have_css 'a#sign_out', visible: true
+end
+
+##
+# Open the entries dropdown menu, which contains the refresh etc links
+
+def open_entries_menu
+  user_should_be_logged_in
+  find('#entries-dropdown .dropdown-toggle').click
+  page.should have_css 'a#refresh-feed', visible: true
 end
 
 ##
@@ -125,6 +134,7 @@ end
 # If the button is not currently visible the test immediately fails.
 
 def mark_all_as_read
+  open_entries_menu
   page.should have_css '#read-all-button'
   find('#read-all-button').click
   page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
@@ -134,6 +144,7 @@ end
 # Click on the "Show read entries" button so that all feed entries are displayed, including read ones.
 
 def show_read_entries
+  open_entries_menu
   page.should have_css '#show-read-button'
   find('#show-read-button').click
 

@@ -131,9 +131,7 @@ Feedbunch.show_start_page = ()->
 # Disable the Refresh, Folder Management and Unsubscribe buttons
 #-------------------------------------------------------
 Feedbunch.disable_buttons = ->
-  disable_read_all_button()
-  disable_show_read_button()
-  disable_refresh_button()
+  disable_entries_management_button()
   disable_folder_management_button()
   disable_unsubscribe_button()
 
@@ -145,9 +143,7 @@ Feedbunch.enable_buttons = ->
   if Feedbunch.current_feed_id=="all"
     Feedbunch.hide_buttons()
   else
-    enable_read_all_button()
-    enable_show_read_button()
-    enable_refresh_button()
+    enable_entries_management_button()
     enable_folder_management_button()
     enable_unsubscribe_button()
 
@@ -155,9 +151,7 @@ Feedbunch.enable_buttons = ->
 # Hide the Refresh, Folder Management and Unsubscribe buttons
 #-------------------------------------------------------
 Feedbunch.hide_buttons = ->
-  hide_read_all_button()
-  hide_show_read_button()
-  hide_refresh_button()
+  hide_entries_management_button()
   hide_folder_management_button()
   hide_unsubscribe_button()
 
@@ -172,22 +166,10 @@ open_folder = (folder_id) ->
   $("#sidebar #feeds-#{folder_id}").not(".in").prev("a").click()
 
 #-------------------------------------------------------
-# Disable Read All button
+# Disable Entries Management button
 #-------------------------------------------------------
-disable_read_all_button = ->
-  $("#read-all-button").addClass "disabled"
-
-#-------------------------------------------------------
-# Disable Show Read button
-#-------------------------------------------------------
-disable_show_read_button = ->
-  $("#show-read-button").addClass "disabled"
-
-#-------------------------------------------------------
-# Disable Refresh button
-#-------------------------------------------------------
-disable_refresh_button = ->
-  $("#refresh-feed").addClass "disabled"
+disable_entries_management_button = ->
+  $("#entries-management").addClass "disabled"
 
 #-------------------------------------------------------
 # Disable Folder Management button
@@ -202,22 +184,10 @@ disable_unsubscribe_button = ->
   $("#unsubscribe-feed").addClass "disabled"
 
 #-------------------------------------------------------
-# Enable and show the Read All button
+# Enable and show the Entries Management button
 #-------------------------------------------------------
-enable_read_all_button = ->
-  $("#read-all-button").removeClass("hidden").removeClass("disabled")
-
-#-------------------------------------------------------
-# Enable and show the Show Read button
-#-------------------------------------------------------
-enable_show_read_button = ->
-  $("#show-read-button").removeClass("hidden").removeClass("disabled")
-
-#-------------------------------------------------------
-# Enable and show the Refresh button
-#-------------------------------------------------------
-enable_refresh_button = ->
-  $("#refresh-feed").removeClass("hidden").removeClass("disabled")
+enable_entries_management_button = ->
+  $("#entries-management").removeClass("hidden").removeClass("disabled")
 
 #-------------------------------------------------------
 # Enable and show the Folder Management button
@@ -232,22 +202,10 @@ enable_unsubscribe_button = ->
   $("#unsubscribe-feed").removeClass("hidden").removeClass("disabled")
 
 #-------------------------------------------------------
-# Hide Read All button
+# Hide Entries Management button
 #-------------------------------------------------------
-hide_read_all_button = ->
-  $("#read-all-button").addClass("hidden").addClass "disabled"
-
-#-------------------------------------------------------
-# Hide Show Read button
-#-------------------------------------------------------
-hide_show_read_button = ->
-  $("#show-read-button").addClass("hidden").addClass "disabled"
-
-#-------------------------------------------------------
-# Hide Refresh button
-#-------------------------------------------------------
-hide_refresh_button = ->
-  $("#refresh-feed").addClass("hidden").addClass "disabled"
+hide_entries_management_button = ->
+  $("#entries-management").addClass("hidden").addClass "disabled"
 
 #-------------------------------------------------------
 # Hide Folder Management button

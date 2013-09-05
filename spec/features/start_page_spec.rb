@@ -23,10 +23,8 @@ describe 'start page' do
     page.should have_css '#feed-entries.hidden', visible: false
   end
 
-  it 'hides refresh, unsubscribe and folder management buttons by default', js: true do
-    page.should have_css '#refresh-feed.hidden', visible: false
-    page.should have_css '#unsubscribe-feed.hidden', visible: false
-    page.should have_css '#folder-management.hidden', visible: false
+  it 'hides entries management button by default', js: true do
+    page.should have_css '#entries-management.hidden', visible: false
   end
 
   it 'hides start page when reading a feed', js: true do
@@ -57,10 +55,8 @@ describe 'start page' do
       page.should have_css '#feed-entries.hidden', visible: false
     end
 
-    it 'hides refresh, unsubscribe and folder management buttons', js: true do
-      page.should have_css '#refresh-feed.hidden', visible: false
-      page.should have_css '#unsubscribe-feed.hidden', visible: false
-      page.should have_css '#folder-management.hidden', visible: false
+    it 'hides entries management button', js: true do
+      page.should have_css '#entries-management.hidden', visible: false
     end
 
   end

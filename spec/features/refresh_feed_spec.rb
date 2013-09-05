@@ -14,16 +14,6 @@ describe 'refresh feeds' do
     read_feed @feed1.id
   end
 
-  it 'hides refresh button until a feed is selected', js: true do
-    visit feeds_path
-    page.should have_css '#refresh-feed.hidden', visible: false
-  end
-
-  it 'shows refresh button when a feed is selected', js: true do
-    page.should_not have_css 'a#refresh-feed.hidden', visible: false
-    page.should have_css '#refresh-feed'
-  end
-
   it 'refreshes a single feed', js: true do
     # Page should have current entries for the feed
     page.should have_content @entry1.title

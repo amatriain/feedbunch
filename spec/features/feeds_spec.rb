@@ -36,6 +36,16 @@ describe 'feeds' do
       visit feeds_path
     end
 
+    it 'hides entries menu button until a feed is selected', js: true do
+      visit feeds_path
+      page.should_not have_css '#entries-management', visible: true
+    end
+
+    it 'shows entries menu button when a feed is selected', js: true do
+      read_feed @feed1.id
+      page.should have_css '#entries-management', visible: true
+    end
+
     it 'shows entries for a feed in the All Subscriptions folder', js: true do
       read_feed @feed2.id, 'all'
 

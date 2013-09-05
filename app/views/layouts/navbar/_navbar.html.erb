@@ -27,23 +27,24 @@
             <b class="caret"></b>
             <ul class="dropdown-menu text-left">
               <li>
-                <a id="read-all-button" class="disabled hidden"
+                <a id="refresh-feed">
+                  <i class="icon-repeat"></i> <%= t 'feeds.index.refresh' %>
+                </a>
+              </li>
+
+              <li>
+                <a id="read-all-button"
                    data-entry-state-update-path="<%= entries_update_path %>">
                   <i class="icon-check"></i> <%= t 'feeds.index.read-all' %>
                 </a>
               </li>
 
               <li>
-                <a id="show-read-button" class="disabled hidden">
+                <a id="show-read-button">
                   <i class="icon-eye-open"></i> <%= t 'feeds.index.show_read' %>
                 </a>
               </li>
 
-              <li>
-                <a id="refresh-feed" class="disabled hidden">
-                  <i class="icon-repeat"></i> <%= t 'feeds.index.refresh' %>
-                </a>
-              </li>
             </ul>
            </a>
         </li>
