@@ -14,28 +14,38 @@
       <ul class="nav navbar-nav">
 
         <li>
-          <button type="button" id="add-subscription" class="btn btn-primary navbar-btn" data-target="#subscribe-feed-popup" data-toggle="modal">
+          <a id="add-subscription" data-target="#subscribe-feed-popup" data-toggle="modal">
             <i class="icon-plus"></i> <%= t 'feeds.index.subscribe_button' %>
-          </button>
-        </li>
-
-        <li>
-          <a id="read-all-button" class="disabled hidden"
-             data-entry-state-update-path="<%= entries_update_path %>">
-            <i class="icon-check"></i> <%= t 'feeds.index.read-all' %>
           </a>
         </li>
 
-        <li>
-          <a id="show-read-button" class="disabled hidden">
-            <i class="icon-eye-open"></i> <%= t 'feeds.index.show_read' %>
-          </a>
-        </li>
+        <li id="entries-dropdown" class="dropdown">
+          <a id="entries-management"
+             class="dropdown-toggle disabled hidden"
+             data-toggle="dropdown">
+            <i class="icon-rss"></i> <%= t 'feeds.index.entries' %>
+            <b class="caret"></b>
+            <ul class="dropdown-menu text-left">
+              <li>
+                <a id="read-all-button" class="disabled hidden"
+                   data-entry-state-update-path="<%= entries_update_path %>">
+                  <i class="icon-check"></i> <%= t 'feeds.index.read-all' %>
+                </a>
+              </li>
 
-        <li>
-          <a id="refresh-feed" class="disabled hidden">
-            <i class="icon-repeat"></i> <%= t 'feeds.index.refresh' %>
-          </a>
+              <li>
+                <a id="show-read-button" class="disabled hidden">
+                  <i class="icon-eye-open"></i> <%= t 'feeds.index.show_read' %>
+                </a>
+              </li>
+
+              <li>
+                <a id="refresh-feed" class="disabled hidden">
+                  <i class="icon-repeat"></i> <%= t 'feeds.index.refresh' %>
+                </a>
+              </li>
+            </ul>
+           </a>
         </li>
 
         <li id="folder-management-dropdown" class="dropdown" >

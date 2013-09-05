@@ -38,6 +38,7 @@ en:
   feeds:
     index:
       start: "Start"
+      entries: "Entries"
       open_new_tab: "Open in new tab"
       show_read: "Show read entries"
       refresh: "Refresh"

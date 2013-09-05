@@ -17,6 +17,7 @@ es:
   feeds:
     index:
       start: "Inicio"
+      entries: "Entradas"
       open_new_tab: "Abrir en una nueva pestaña"
       show_read: "Mostrar entradas leídas"
       refresh: "Actualizar"
