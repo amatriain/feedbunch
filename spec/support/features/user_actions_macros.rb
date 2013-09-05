@@ -12,6 +12,25 @@ def login_user_for_feature(user)
 end
 
 ##
+# Log out a currently logged in user
+
+def logout_user
+  user_should_be_logged_in
+  open_user_menu
+  find('a#sign_out').click
+  current_path.should eq root_path
+end
+
+##
+# Open the user dropdown menu, which contains the logout etc links
+
+def open_user_menu
+  user_should_be_logged_in
+  find('#user-dropdown .dropdown-toggle').click
+  page.should have_css 'a#sign_out'
+end
+
+##
 # Perform the actions a user would do to try and fail to login, be it
 # because of a wrong username, wrong password, locked user or any other reason.
 #

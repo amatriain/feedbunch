@@ -9,6 +9,7 @@ describe 'import subscriptions' do
     login_user_for_feature @user
     visit feeds_path
     find('#start-page').click
+    open_user_menu
   end
 
   it 'shows file upload popup', js: true do
@@ -28,6 +29,7 @@ describe 'import subscriptions' do
       data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::ERROR
       @user.data_import = data_import
       visit feeds_path
+      open_user_menu
       page.should have_css '.navbar a#nav-data-import', visible: true
     end
 
@@ -35,6 +37,7 @@ describe 'import subscriptions' do
       data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::RUNNING
       @user.data_import = data_import
       visit feeds_path
+      open_user_menu
       page.should_not have_css '.navbar a#nav-data-import', visible: true
     end
 
@@ -42,11 +45,13 @@ describe 'import subscriptions' do
       data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::SUCCESS
       @user.data_import = data_import
       visit feeds_path
+      open_user_menu
       page.should_not have_css '.navbar a#nav-data-import', visible: true
     end
 
     it 'opens popup even if user is not in feeds index view', js: true do
       visit edit_user_registration_path
+      open_user_menu
       page.should have_css '.navbar a#nav-data-import'
       find('.navbar a#nav-data-import').click
       page.should have_css '#data-import-popup', visible: true
