@@ -371,13 +371,6 @@ describe 'authentication' do
       user_should_not_be_logged_in
     end
 
-    it 'shows link to feeds page in the navbar' do
-      page.should have_css 'div.navbar ul li a#feeds'
-      visit '/'
-      find('div.navbar ul li a#feeds').click
-      current_path.should eq feeds_path
-    end
-
     it 'shows account details link in the navbar' do
       page.should have_css 'div.navbar ul li a#my_account'
       find('div.navbar ul li a#my_account').click

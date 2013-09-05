@@ -80,58 +80,62 @@
 
       </ul>
 
-      <ul class="nav navbar-nav navbar-right">
+      <% if current_user %>
 
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="icon-user"></i> <%= current_user.email %> <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <% if can? :manage, Resque %>
+        <ul class="nav navbar-nav navbar-right">
+
+          <li id="user-dropdown" class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="icon-user"></i> <%= current_user.email %> <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <% if can? :manage, Resque %>
+                <li>
+                  <%#= link_to resque_path, target: '_blank' do %>
+                  <%= link_to '/admin/resque', target: '_blank' do %>
+                    <i class="icon-code-fork"></i>
+                    <%= t 'layouts.application.background_jobs' %>
+                  <% end %>
+                </li>
+              <% end %>
+
+              <%# Show an "import subscriptions" link only if the user has not run an import, or if
+              his last import finished with an error %>
+              <%
+                 data_import = current_user.try :data_import
+                 status = data_import.try :status
+              %>
+              <% if data_import.blank? || status==DataImport::ERROR %>
+                <li>
+                  <a id="nav-data-import"
+                     data-toggle="modal"
+                     data-target="#data-import-popup">
+
+                    <i class="icon-magic"></i>
+
+                    <%= t 'layouts.application.import' %>
+                  </a>
+                </li>
+              <% end %>
+
               <li>
-                <%#= link_to resque_path, target: '_blank' do %>
-                <%= link_to '/admin/resque', target: '_blank' do %>
-                  <i class="icon-code-fork"></i>
-                  <%= t 'layouts.application.background_jobs' %>
+                <%=  link_to edit_user_registration_path, id: 'my_account' do %>
+                  <i class="icon-gear"></i>
+                  <%= t 'layouts.application.my_account' %>
                 <% end %>
               </li>
-            <% end %>
 
-            <%# Show an "import subscriptions" link only if the user has not run an import, or if
-            his last import finished with an error %>
-            <%
-               data_import = current_user.try :data_import
-               status = data_import.try :status
-            %>
-            <% if data_import.blank? || status==DataImport::ERROR %>
               <li>
-                <a id="nav-data-import"
-                   data-toggle="modal"
-                   data-target="#data-import-popup">
-
-                  <i class="icon-magic"></i>
-
-                  <%= t 'layouts.application.import' %>
-                </a>
+                <%= link_to destroy_user_session_path, :method => :delete, id: 'sign_out' do %>
+                  <%= t 'layouts.application.logout' %>
+                  <i class="icon-signout"></i>
+                <% end %>
               </li>
-            <% end %>
+            </ul>
+          </li>
+        </ul>
 
-            <li>
-              <%=  link_to edit_user_registration_path, id: 'my_account' do %>
-                <i class="icon-gear"></i>
-                <%= t 'layouts.application.my_account' %>
-              <% end %>
-            </li>
-
-            <li>
-              <%= link_to destroy_user_session_path, :method => :delete, id: 'sign_out' do %>
-                <%= t 'layouts.application.logout' %>
-                <i class="icon-signout"></i>
-              <% end %>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <% end %>
 
     </div>
 
