@@ -355,10 +355,10 @@ describe 'authentication' do
       page.should have_css 'div.navbar'
     end
 
-    it 'shows link to main page in the navbar' do
+    it 'shows link to feeds page in the navbar' do
       page.should have_css 'div.navbar div.navbar-header a.navbar-brand'
       find('div.navbar div.navbar-header a.navbar-brand').click
-      current_path.should eq root_path
+      current_path.should eq feeds_path
     end
 
     it 'shows logout link in the navbar' do
