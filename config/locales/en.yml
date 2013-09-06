@@ -26,7 +26,6 @@ en:
       sign_up: "Sign up"
       or: "or"
       sign_in: "Sign in"
-      github: "Visit us on Github"
   layouts:
     application:
       logout: "Logout"
@@ -35,6 +34,7 @@ en:
       my_feeds: "My feeds"
       closing_timer_html: "closing in <span data-timer></span>"
       import: "Import subscriptions"
+      github: "Visit us on Github"
   feeds:
     index:
       start: "Start"
@@ -101,4 +101,3 @@ en:
       finish_success: "Your subscribed feeds have been imported into Feedbunch. Refresh the page to see them."
       finish_error: "There has been an error while trying to import your subscribed feeds into Feedbunch."
     export_html: "If you want to download a copy of your Feedbunch data, <a class=\"alert-link\" href=\"#\">click here</a>."
-    github_html: "You can <a target=\"_blank\" href=\"%{github_url}\">visit us on Github</a>."

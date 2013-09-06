@@ -5,7 +5,6 @@ es:
       sign_up: "Date de alta"
       or: "o"
       sign_in: "Accede con tu cuenta"
-      github: "Visítanos en Github"
   layouts:
     application:
       logout: "Salir"
@@ -14,6 +13,7 @@ es:
       my_feeds: "Mis feeds"
       closing_timer_html: "cerrando en <span data-timer></span>"
       import: "Importar suscripciones"
+      github: "Visítanos en Github"
   feeds:
     index:
       start: "Inicio"
@@ -80,4 +80,3 @@ es:
       finish_success: "Tus suscripciones a feeds han sido importadas en Feedbunch. Refresca la página para verlas."
       finish_error: "Ha habido un error durante la importación en Feedbunch de tus suscripciones a feeds."
     export_html: "Si quieres descargar una copia de tus datos en Feedbunch, <a class=\"alert-link\" href=\"#\">haz click aquí</a>."
-    github_html: "Puedes <a target=\"_blank\" href=\"%{github_url}\">visitarnos en Github</a>."
