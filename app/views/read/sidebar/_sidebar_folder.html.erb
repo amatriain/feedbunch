@@ -25,14 +25,14 @@
       <%# Content of the folder %>
       <ul class="nav nav-pills nav-stacked">
 
-        <%= render 'feeds/sidebar/sidebar_folder_read_all', user: user, folder: folder %>
+        <%= render 'read/sidebar/sidebar_folder_read_all', user: user, folder: folder %>
 
         <%# Links to read each individual feed in the folder %>
         <% feeds.order('title ASC').each do |feed| %>
 
           <%# Ensure user is actually subscribed to the feed, in case there is some data inconsistency %>
           <% if user.feeds.include? feed %>
-            <%= render 'feeds/sidebar/sidebar_feed', user: user, feed: feed %>
+            <%= render 'read/sidebar/sidebar_feed', user: user, feed: feed %>
           <% end %>
 
         <% end %>

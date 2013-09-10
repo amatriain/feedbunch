@@ -2,19 +2,19 @@
 
 {
     "folder_all": {
-        "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all',
+        "sidebar_read_all": <%= render(partial: 'read/sidebar/sidebar_folder_read_all',
                                 locals: {user: user, folder: Folder::ALL_FOLDERS}, layout: false).to_json.html_safe %>
     },
     "feed":{
         "id": <%= feed.id %>,
-        "sidebar": <%= render('feeds/sidebar/sidebar_feed', user: user, feed: feed).to_json.html_safe %>
+        "sidebar": <%= render('read/sidebar/sidebar_feed', user: user, feed: feed).to_json.html_safe %>
     }
 
 <% if folder.present? %>
     ,
     "folder": {
         "id": <%= folder.id %>,
-        "sidebar_read_all": <%= render(partial: 'feeds/sidebar/sidebar_folder_read_all',
+        "sidebar_read_all": <%= render(partial: 'read/sidebar/sidebar_folder_read_all',
                                 locals: {user: user, folder: folder}, layout: false).to_json.html_safe %>
     }
 <% end %>
