@@ -12,7 +12,7 @@ describe 'authentication' do
 
     it 'shows a link to the app in the main page' do
       visit '/'
-      within "a#sign_in[href*=\"#{feeds_path}\"]" do
+      within "a#sign_in[href*=\"#{read_path}\"]" do
         page.should have_content 'Sign in'
       end
     end
@@ -24,7 +24,7 @@ describe 'authentication' do
 
     it 'redirects user to feeds page after a successful login' do
       login_user_for_feature @user
-      current_path.should eq feeds_path
+      current_path.should eq read_path
     end
 
     it 'stays on the login page after a failed login attempt' do
@@ -128,7 +128,7 @@ describe 'authentication' do
         click_on 'Change your password'
 
         # after password change, user should be logged in
-        current_path.should eq feeds_path
+        current_path.should eq read_path
         user_should_be_logged_in
         click_on 'Logout'
 
@@ -340,7 +340,7 @@ describe 'authentication' do
     end
 
     it 'redirects to feeds list after a successful login' do
-      current_path.should eq feeds_path
+      current_path.should eq read_path
     end
 
     it 'does not show the login link in the main page' do
@@ -358,7 +358,7 @@ describe 'authentication' do
     it 'shows link to feeds page in the navbar' do
       page.should have_css 'div.navbar div.navbar-header a.navbar-brand'
       find('div.navbar div.navbar-header a.navbar-brand').click
-      current_path.should eq feeds_path
+      current_path.should eq read_path
     end
 
     it 'shows logout link in the navbar' do
@@ -390,7 +390,7 @@ describe 'authentication' do
       it 'shows link to go to feeds list' do
         page.should have_css 'a#return'
         find('a#return').click
-        current_path.should eq feeds_path
+        current_path.should eq read_path
       end
 
       it 'allows email change' do

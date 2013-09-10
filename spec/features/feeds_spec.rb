@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'feeds' do
 
   it 'redirects unauthenticated visitors to login page' do
-    visit feeds_path
+    visit read_path
     current_path.should eq new_user_session_path
   end
 
@@ -33,11 +33,11 @@ describe 'feeds' do
       @feed2.entries << @entry2_1 << @entry2_2
 
       login_user_for_feature @user
-      visit feeds_path
+      visit read_path
     end
 
     it 'hides entries menu button until a feed is selected', js: true do
-      visit feeds_path
+      visit read_path
       page.should_not have_css '#entries-management', visible: true
     end
 
@@ -120,7 +120,7 @@ describe 'feeds' do
     it 'shows an alert if the feed clicked has no entries', js: true do
       feed3 = FactoryGirl.create :feed
       @user.subscribe feed3.fetch_url
-      visit feeds_path
+      visit read_path
       read_feed feed3.id
 
       should_show_alert 'no-entries'

@@ -12,11 +12,11 @@ describe 'unsubscribe from feed' do
     @feed1.entries << @entry1
 
     login_user_for_feature @user
-    visit feeds_path
+    visit read_path
   end
 
   it 'hides unsubscribe button until a feed is selected', js: true do
-    visit feeds_path
+    visit read_path
     page.should have_css '#unsubscribe-feed.hidden', visible: false
   end
 
@@ -76,7 +76,7 @@ describe 'unsubscribe from feed' do
     @user.folders << folder
     folder.feeds << @feed1
 
-    visit feeds_path
+    visit read_path
 
     # Feed should be in the folder and in the "all subscriptions" folder
     page.should have_css "#sidebar #folder-all a[data-feed-id='#{@feed1.id}']", visible: false
@@ -117,7 +117,7 @@ describe 'unsubscribe from feed' do
     @user.folders << folder
     folder.feeds << @feed1
 
-    visit feeds_path
+    visit read_path
     page.should have_content folder.title
 
     unsubscribe_feed @feed1.id
@@ -143,7 +143,7 @@ describe 'unsubscribe from feed' do
     @user.folders << folder
     folder.feeds << @feed1 << @feed2
 
-    visit feeds_path
+    visit read_path
     page.should have_content folder.title
 
     unsubscribe_feed @feed1.id

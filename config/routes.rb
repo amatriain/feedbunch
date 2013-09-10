@@ -92,11 +92,14 @@ Feedbunch::Application.routes.draw do
   # Static pages served with High_voltage gem
   root :to => 'high_voltage/pages#show', id: 'index'
 
+  # Main app page
+  get '/read' => 'read#index', as: :read
+
   # Mark as read an array of entries
   match '/entries/update' => 'entries#update', via: :patch, as: 'entries_update'
 
   # Resourceful routes for feeds
-  resources :feeds, only: [:index, :show, :create, :update, :destroy]
+  resources :feeds, only: [:show, :create, :update, :destroy]
 
   # Resourceful routes for folders
   resources :folders, only: [:show, :update, :create]

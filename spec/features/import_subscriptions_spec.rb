@@ -7,7 +7,7 @@ describe 'import subscriptions' do
     @user.subscribe @feed.fetch_url
 
     login_user_for_feature @user
-    visit feeds_path
+    visit read_path
     find('#start-page').click
     open_user_menu
   end
@@ -28,7 +28,7 @@ describe 'import subscriptions' do
     it 'shows link if user has an errored import', js: true do
       data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::ERROR
       @user.data_import = data_import
-      visit feeds_path
+      visit read_path
       open_user_menu
       page.should have_css '.navbar a#nav-data-import', visible: true
     end
@@ -36,7 +36,7 @@ describe 'import subscriptions' do
     it 'does not show link if user has a running import', js: true do
       data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::RUNNING
       @user.data_import = data_import
-      visit feeds_path
+      visit read_path
       open_user_menu
       page.should_not have_css '.navbar a#nav-data-import', visible: true
     end
@@ -44,7 +44,7 @@ describe 'import subscriptions' do
     it 'does not show link if user has a successful import', js: true do
       data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::SUCCESS
       @user.data_import = data_import
-      visit feeds_path
+      visit read_path
       open_user_menu
       page.should_not have_css '.navbar a#nav-data-import', visible: true
     end
@@ -85,7 +85,7 @@ describe 'import subscriptions' do
       data_import.status = DataImport::ERROR
       data_import.save!
 
-      visit feeds_path
+      visit read_path
 
       page.should have_content 'There\'s been an error importing your subscriptions'
     end
@@ -95,7 +95,7 @@ describe 'import subscriptions' do
       data_import.status = DataImport::SUCCESS
       data_import.save!
 
-      visit feeds_path
+      visit read_path
 
       page.should have_content 'Your subscriptions have been successfully imported into Feedbunch'
     end

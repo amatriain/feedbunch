@@ -24,16 +24,16 @@ describe DataImportsController do
       String.any_instance.stub :tempfile
     end
 
-    it 'redirects to feeds_path if successful' do
+    it 'redirects to main application page if successful' do
       User.any_instance.stub :import_subscriptions
       post :create, data_import: {file: 'mock_file'}
-      response.should redirect_to feeds_path
+      response.should redirect_to read_path
     end
 
-    it 'redirects to feeds_path if an error happens' do
+    it 'redirects to main application page if an error happens' do
       DataImportManager.stub(:read_data_file).and_raise StandardError.new
       post :create, data_import: {file: 'mock_file'}
-      response.should redirect_to feeds_path
+      response.should redirect_to read_path
     end
   end
 

@@ -5,20 +5,8 @@ class FeedsController < ApplicationController
 
   before_filter :authenticate_user!
 
-  respond_to :html, only: [:show, :index]
-  respond_to :json, except: [:show, :index]
-
-  ##
-  # list all feeds the currently authenticated is suscribed to
-
-  def index
-    @feeds = current_user.feeds
-    @folders = current_user.folders
-    @user = current_user
-    respond_with @user, @feeds, @folders
-  rescue => e
-    handle_error e
-  end
+  respond_to :html, only: [:show]
+  respond_to :json, except: [:show]
 
   ##
   # Return HTML with all entries for a given feed, as long as the currently authenticated user is suscribed to it.

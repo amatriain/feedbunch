@@ -22,7 +22,7 @@ class DataImportsController < ApplicationController
   def create
     file = data_import_params[:file]
     current_user.import_subscriptions file.tempfile
-    redirect_to feeds_path
+    redirect_to read_path
   rescue => e
     handle_error e
   end

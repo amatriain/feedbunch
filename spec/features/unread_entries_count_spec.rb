@@ -25,7 +25,7 @@ describe 'unread entries count' do
     @folder1.reload.unread_entries.should eq 3
 
     login_user_for_feature @user
-    visit feeds_path
+    visit read_path
   end
 
   it 'shows total number of unread entries', js: true do
@@ -47,7 +47,7 @@ describe 'unread entries count' do
     # Ensure folder unread entries count has been updated successfully
     @folder1.reload.unread_entries.should eq 4
 
-    visit feeds_path
+    visit read_path
     title = 'New folder'
     move_feed_to_new_folder @feed1.id, title
 
@@ -72,7 +72,7 @@ describe 'unread entries count' do
     # Ensure folder unread entries count has been updated successfully
     @folder1.reload.unread_entries.should eq 4
 
-    visit feeds_path
+    visit read_path
 
     move_feed_to_folder @feed1.id, folder2.id
 
@@ -88,7 +88,7 @@ describe 'unread entries count' do
     # Ensure folder unread entries count has been updated successfully
     @folder1.reload.unread_entries.should eq 4
 
-    visit feeds_path
+    visit read_path
 
     remove_feed_from_folder @feed1.id, @folder1.id
 
@@ -111,7 +111,7 @@ describe 'unread entries count' do
     # Ensure folder unread entries count has been updated successfully
     @folder1.reload.unread_entries.should eq 4
 
-    visit feeds_path
+    visit read_path
     unsubscribe_feed @feed1.id
     unread_folder_entries_should_eq 'all', 1
     unread_folder_entries_should_eq @folder1.id, 1

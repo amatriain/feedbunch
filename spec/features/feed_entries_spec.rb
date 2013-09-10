@@ -11,7 +11,7 @@ describe 'feed entries' do
     @user.subscribe @feed.fetch_url
 
     login_user_for_feature @user
-    visit feeds_path
+    visit read_path
     read_feed @feed.id
   end
 
@@ -69,7 +69,7 @@ describe 'feed entries' do
     entry_state1.read = true
     entry_state1.save!
 
-    visit feeds_path
+    visit read_path
     read_folder folder.id
 
     page.should_not have_content @entry1.title
@@ -92,7 +92,7 @@ describe 'feed entries' do
     entry_state1.read = true
     entry_state1.save!
 
-    visit feeds_path
+    visit read_path
     read_folder 'all'
 
     page.should_not have_content @entry1.title
@@ -106,7 +106,7 @@ describe 'feed entries' do
     entry_should_be_marked_read @entry1.id
 
     # On refresh, @entry1 should no longer appear
-    visit feeds_path
+    visit read_path
     read_feed @feed.id
     page.should_not have_content @entry1.title
   end
@@ -116,7 +116,7 @@ describe 'feed entries' do
     folder = FactoryGirl.build :folder, user_id: @user.id
     @user.folders << folder
     folder.feeds << @feed
-    visit feeds_path
+    visit read_path
 
     read_folder folder.id
     read_entry @entry1.id
@@ -127,7 +127,7 @@ describe 'feed entries' do
     entry_should_be_marked_read @entry1.id
 
     # On refresh, @entry1 should no longer appear
-    visit feeds_path
+    visit read_path
     read_feed @feed.id
     page.should_not have_content @entry1.title
   end
@@ -145,7 +145,7 @@ describe 'feed entries' do
     page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
 
     # On refresh, no entries should appear for @feed
-    visit feeds_path
+    visit read_path
     read_feed @feed.id
     page.should_not have_content @entry1.title
     page.should_not have_content @entry2.title
@@ -169,7 +169,7 @@ describe 'feed entries' do
     entry_state1.read = true
     entry_state1.save!
 
-    visit feeds_path
+    visit read_path
     read_feed @feed.id
 
     # @entry1 is read, should not appear on the page

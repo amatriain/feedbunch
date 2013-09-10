@@ -9,14 +9,14 @@ describe 'authorization' do
 
   it 'shows Resque link to admin users' do
     login_user_for_feature @admin_user
-    visit feeds_path
+    visit read_path
 
     page.should have_css 'a[href="/admin/resque"]'
   end
 
   it 'does not show Resque link to non-admin users' do
     login_user_for_feature @normal_user
-    visit feeds_path
+    visit read_path
 
     page.should_not have_css 'a[href="/admin/resque"]'
   end

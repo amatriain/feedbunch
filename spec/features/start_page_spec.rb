@@ -10,7 +10,7 @@ describe 'start page' do
     @feed1.entries << @entry1
 
     login_user_for_feature @user
-    visit feeds_path
+    visit read_path
   end
 
   it 'shows start page by default', js: true do
@@ -70,7 +70,7 @@ describe 'start page' do
       @entry3 = FactoryGirl.build :entry, feed_id: @feed2.id
       @feed2.entries << @entry2 << @entry3
 
-      visit feeds_path
+      visit read_path
     end
 
     it 'shows number of subscribed feeds', js: true do

@@ -10,7 +10,7 @@ describe 'refresh feeds' do
     @user.subscribe @feed1.fetch_url
 
     login_user_for_feature @user
-    visit feeds_path
+    visit read_path
     read_feed @feed1.id
   end
 

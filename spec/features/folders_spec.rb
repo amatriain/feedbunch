@@ -23,7 +23,7 @@ describe 'folders and feeds' do
     @feed2.entries << @entry2_1 << @entry2_2
 
     login_user_for_feature @user
-    visit feeds_path
+    visit read_path
   end
 
   it 'shows only folders that belong to the user' do
@@ -77,7 +77,7 @@ describe 'folders and feeds' do
     end
 
     it 'hides folder management button until a feed is selected', js: true do
-      visit feeds_path
+      visit read_path
       page.should have_css '#folder-management.hidden', visible: false
     end
 
@@ -132,7 +132,7 @@ describe 'folders and feeds' do
       before :each do
         @new_folder = FactoryGirl.build :folder, user_id: @user.id
         @user.folders << @new_folder
-        visit feeds_path
+        visit read_path
         read_feed @feed1.id
       end
 
@@ -151,7 +151,7 @@ describe 'folders and feeds' do
         # User has feeds @feed1, @feed2 in @folder1
         @folder1.feeds << @feed2
 
-        visit feeds_path
+        visit read_path
         # @feed1 should be under @folder1
         page.should have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
 
@@ -218,7 +218,7 @@ describe 'folders and feeds' do
         # User has feeds @feed1, @feed2 in @folder1
         @folder1.feeds << @feed2
 
-        visit feeds_path
+        visit read_path
         move_feed_to_folder @feed1.id, @new_folder.id
 
         # Folder should not be removed from the sidebar
@@ -264,7 +264,7 @@ describe 'folders and feeds' do
         # Ensure @folder1 contains @feed1 and @feed2
         @folder1.feeds << @feed2
 
-        visit feeds_path
+        visit read_path
         remove_feed_from_folder @feed1.id, @folder1.id
 
         # Page should still have @folder1 with @feed2 under it
@@ -340,7 +340,7 @@ describe 'folders and feeds' do
       it 'does not remove old folder if it has more feeds', js: true do
         # @folder1 contains @feed1, @feed2
         @folder1.feeds << @feed2
-        visit feeds_path
+        visit read_path
         read_feed @feed1.id
 
         title = 'New folder'
@@ -366,7 +366,7 @@ describe 'folders and feeds' do
       it 'removes feed from its old folder when adding it to a new one', js: true do
         # @folder1 contains @feed1, @feed2
         @folder1.feeds << @feed2
-        visit feeds_path
+        visit read_path
         read_feed @feed1.id
 
         # @feed1 can be found under @folder1 in the sidebar

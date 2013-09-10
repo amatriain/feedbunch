@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
   # After a successful login, a user is redirected to the feeds list
 
   def after_sign_in_path_for(resource)
-    feeds_path
+    read_path
   end
 
   ##
@@ -60,8 +60,8 @@ class ApplicationController < ActionController::Base
       # If user already has a folder with the same title, return 304
       head status: 304
     elsif error.is_a? ImportDataError
-      # If an error happens when importing subscription data, redirect to feeds view
-      redirect_to feeds_path
+      # If an error happens when importing subscription data, redirect to main application page
+      redirect_to read_path
     else
       Rails.logger.error error.message
       Rails.logger.error error.backtrace
