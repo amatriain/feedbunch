@@ -76,7 +76,7 @@ describe 'import subscriptions' do
     end
 
     it 'redirects to start page', js: true do
-      current_path.should eq feeds_path
+      current_path.should eq read_path
       page.should have_css '#start-info'
     end
 
