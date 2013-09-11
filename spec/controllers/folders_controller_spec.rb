@@ -41,7 +41,7 @@ describe FoldersController do
     end
 
     it 'assigns to @folders only folders owned by the user' do
-      get :index
+      get :index, format: :json
       assigns(:folders).should eq [@folder1]
     end
   end

@@ -13,7 +13,7 @@ class FeedsController < ApplicationController
 
   def index
     @feeds = current_user.feeds
-    render json: @feeds, only: [:id, :title, :url]
+    render 'index', locals: {user: current_user, feeds: @feeds}
   end
 
   ##

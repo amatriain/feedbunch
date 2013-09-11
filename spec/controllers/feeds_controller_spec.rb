@@ -19,18 +19,13 @@ describe FeedsController do
   context 'GET index' do
 
     it 'returns success' do
-      get :index
+      get :index, format: :json
       response.should be_success
     end
 
     it 'assigns to @feeds only feeds owned by the user' do
-      get :index
+      get :index, format: :json
       assigns(:feeds).should eq [@feed1]
-    end
-
-    it 'returns the correct JSON data' do
-      get :index
-      response.body.should eq [@feed1].to_json only: [:id, :title, :url]
     end
   end
 

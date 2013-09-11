@@ -42,16 +42,16 @@
               </a>
             </li>
 
-            <li ng-repeat="feed in folder.feeds | orderBy:'title'">
+            <li ng-repeat="feed in feeds | orderBy:'title'">
               <a data-sidebar-feed
                  data-feed-id="{{feed.id}}"
-                 data-feed-path="{{feed.path}}"
+                 data-feed-path="/feeds/{{feed.id}}"
                  data-feed-title="{{feed.title}}"
                  data-feed-url="{{feed.url}}"
                  data-folder-id="{{feed.folder_id}}" >
 
                 <i class="icon-rss"></i> {{feed.title}}&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
-                <span class="badge pull-right">{{feed.unread}}</span>
+                <span class="badge pull-right">{{feed.unread_entries}}</span>
               </a>
             </li>
 
