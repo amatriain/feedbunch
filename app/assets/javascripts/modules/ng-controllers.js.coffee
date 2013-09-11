@@ -2,7 +2,11 @@
 # AngularJS controllers file
 ########################################################
 
-angular.module('feedbunch').controller 'FoldersCtrl', ($scope)->
+angular.module('feedbunch').controller 'FoldersCtrl', ($scope, $http)->
+  $http.get('/folders.json').success (data)->
+    $scope.folders = data
+
+###
 
   $scope.folders = [
     {
@@ -86,3 +90,5 @@ angular.module('feedbunch').controller 'FoldersCtrl', ($scope)->
       ]
     }
   ]
+
+###
