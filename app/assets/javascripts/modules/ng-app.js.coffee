@@ -2,3 +2,4 @@
 # AngularJS main application file
 ########################################################
 
+angular.module 'feedbunch', []
