@@ -13,7 +13,9 @@ class FoldersController < ApplicationController
 
   def index
     @folders = current_user.folders
-    render json: @folders, only: [:id, :title, :unread_entries]
+    render 'index', locals: {user: current_user, folders: @folders}
+  rescue => e
+    handle_error e
   end
 
   ##

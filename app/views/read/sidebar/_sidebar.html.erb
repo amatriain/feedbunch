@@ -9,58 +9,6 @@
 
   <div id="folders-list" class="panel-group" ng-controller="FoldersCtrl">
 
-    <div id="folder-all"
-         class="folder-panel panel panel-default"
-         data-folder-id="all">
-
-      <%# Link to open the folder and close the folder %>
-      <a data-sidebar-folder
-         data-toggle="collapse"
-         data-target="#feeds-all"
-         data-parent="#folders-list"
-         class="sidebar-folder list-group-item">
-
-        <i class="folder icon-folder-close-alt"></i> <%= t 'feeds.index.all_feeds' %><i class="folder-arrow icon-chevron-right pull-right"></i>
-
-      </a>
-
-      <div id="feeds-all" class="panel-collapse collapse">
-        <div class="panel-body">
-
-          <%# Content of the folder %>
-          <ul class="nav nav-pills nav-stacked">
-
-            <li id="folder-all-all-feeds">
-              <a data-sidebar-feed
-                 data-feed-id="all"
-                 data-feed-path="/folders/all"
-                 data-feed-title="<%= t 'feeds.index.all_entries' %>">
-                <em><strong>
-                  <i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></strong></em>&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
-                <span class="badge pull-right">???</span>
-              </a>
-            </li>
-
-            <li ng-repeat="feed in feeds | orderBy:'title'">
-              <a data-sidebar-feed
-                 data-feed-id="{{feed.id}}"
-                 data-feed-path="{{feed.path}}"
-                 data-feed-title="{{feed.title}}"
-                 data-feed-url="{{feed.url}}"
-                 data-folder-id="{{feed.folder_id}}" >
-
-                <i class="icon-rss"></i> {{feed.title}}&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
-                <span class="badge pull-right">{{feed.unread}}</span>
-              </a>
-            </li>
-
-          </ul>
-
-        </div>
-      </div>
-
-    </div>
-
     <div ng-repeat="folder in folders | orderBy:'title'"
          id="folder-{{folder.id}}"
          class="folder-panel panel panel-default"
