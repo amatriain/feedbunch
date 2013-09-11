@@ -102,7 +102,7 @@ Feedbunch::Application.routes.draw do
   resources :feeds, only: [:show, :create, :update, :destroy]
 
   # Resourceful routes for folders
-  resources :folders, only: [:show, :update, :create]
+  resources :folders, only: [:index, :show, :update, :create]
 
   # Resourceful routes for subscription data
   resource :data_imports, only: [:create, :show]

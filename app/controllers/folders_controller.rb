@@ -9,6 +9,14 @@ class FoldersController < ApplicationController
   respond_to :json, except: [:show]
 
   ##
+  # Return JSON with the list of folders owned by the current user
+
+  def index
+    @folders = current_user.folders
+    render json: @folders, only: [:id, :title, :unread_entries]
+  end
+
+  ##
   # Return HTML with all entries for a given folder, containing all feeds subscribed to by the user inside the folder.
   #
   # If the param :id is "all", all entries for all feeds subscribed by the current user will be returned.
