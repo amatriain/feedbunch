@@ -42,7 +42,7 @@
               </a>
             </li>
 
-            <li ng-repeat="feed in feeds | orderBy:'title'">
+            <li ng-repeat="feed in feeds | filter:{folder_id: folder.id} | orderBy:'title'">
               <a data-sidebar-feed
                  data-feed-id="{{feed.id}}"
                  data-feed-path="/feeds/{{feed.id}}"
