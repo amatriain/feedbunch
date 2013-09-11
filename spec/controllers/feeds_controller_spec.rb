@@ -16,6 +16,24 @@ describe FeedsController do
     login_user_for_unit @user
   end
 
+  context 'GET index' do
+
+    it 'returns success' do
+      get :index
+      response.should be_success
+    end
+
+    it 'assigns to @feeds only feeds owned by the user' do
+      get :index
+      assigns(:feeds).should eq [@feed1]
+    end
+
+    it 'returns the correct JSON data' do
+      get :index
+      response.body.should eq [@feed1].to_json only: [:id, :title, :url]
+    end
+  end
+
   context 'GET show' do
 
     before :each do

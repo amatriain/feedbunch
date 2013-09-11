@@ -99,7 +99,7 @@ Feedbunch::Application.routes.draw do
   match '/entries/update' => 'entries#update', via: :patch, as: 'entries_update'
 
   # Resourceful routes for feeds
-  resources :feeds, only: [:show, :create, :update, :destroy]
+  resources :feeds, only: [:index, :show, :create, :update, :destroy]
 
   # Resourceful routes for folders
   resources :folders, only: [:index, :show, :update, :create]

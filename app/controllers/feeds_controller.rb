@@ -9,6 +9,14 @@ class FeedsController < ApplicationController
   respond_to :json, except: [:show]
 
   ##
+  # Return JSON with the list of feeds subscribed by the current user
+
+  def index
+    @feeds = current_user.feeds
+    render json: @feeds, only: [:id, :title, :url]
+  end
+
+  ##
   # Return HTML with all entries for a given feed, as long as the currently authenticated user is suscribed to it.
   #
   # If the requests asks for a feed the current user is not suscribed to, the response is a 404 error code (Not Found).
