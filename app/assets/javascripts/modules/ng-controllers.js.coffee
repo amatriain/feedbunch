@@ -9,3 +9,5 @@ angular.module('feedbunch').controller 'FoldersCtrl', ($scope, $http)->
 
   $http.get('/feeds.json').success (data)->
     $scope.feeds = data
+
+FoldersCtrl.$inject = ['$scope', '$http']
