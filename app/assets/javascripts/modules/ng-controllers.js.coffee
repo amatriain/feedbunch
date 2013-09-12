@@ -2,7 +2,7 @@
 # AngularJS controllers file
 ########################################################
 
-angular.module('feedbunch').controller 'FoldersCtrl', ($scope, $http)->
+angular.module('feedbunch').controller 'FoldersCtrl', ['$scope', '$http', ($scope, $http)->
 
   $http.get('/folders.json').success (data)->
     $scope.folders = data
@@ -10,4 +10,10 @@ angular.module('feedbunch').controller 'FoldersCtrl', ($scope, $http)->
   $http.get('/feeds.json').success (data)->
     $scope.feeds = data
 
-FoldersCtrl.$inject = ['$scope', '$http']
+  $scope.feed_in_folder = (folder)->
+    return (feed)->
+      if folder.id == 'all'
+        return true
+      else
+        return folder.id == feed.folder_id
+]

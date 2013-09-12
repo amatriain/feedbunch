@@ -2,15 +2,15 @@
   {
     "id": "all",
     "title": "<%= t 'feeds.index.all_feeds' %>",
-    "unread_entries": <%= user.unread_entries %>
+    "unread_entries": "<%= user.unread_entries %>"
   }
   <% folders.each do |folder| %>
 
     ,
     {
-      "id": <%= folder.id %>,
+      "id": "<%= folder.id %>",
       "title": "<%= folder.title %>",
-      "unread_entries": <%= folder.unread_entries %>
+      "unread_entries": "<%= folder.unread_entries %>"
     }
 
   <% end %>
