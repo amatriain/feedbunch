@@ -9,7 +9,60 @@
 
   <div id="folders-list" class="panel-group" ng-controller="FoldersCtrl">
 
-    <div ng-repeat="folder in folders | orderBy:'title'"
+    <div ng-repeat="folder in folders | filter:{title:'all'} |orderBy:'title'"
+         id="folder-{{folder.id}}"
+         class="folder-panel panel panel-default"
+         data-folder-id="{{folder.id}}">
+
+      <%# Link to open the folder and close the folder %>
+      <a data-sidebar-folder
+         data-toggle="collapse"
+         data-target="#feeds-{{folder.id}}"
+         data-parent="#folders-list"
+         class="sidebar-folder list-group-item">
+
+        <i class="folder icon-folder-close-alt"></i> {{folder.title}}<i class="folder-arrow icon-chevron-right pull-right"></i>
+
+      </a>
+
+      <div id="feeds-{{folder.id}}" class="panel-collapse collapse">
+        <div class="panel-body">
+
+          <%# Content of the folder %>
+          <ul class="nav nav-pills nav-stacked">
+
+            <li id="folder-{{folder.id}}-all-feeds">
+              <a data-sidebar-feed
+                 data-feed-id="all"
+                 data-feed-path="{{folder.path}}"
+                 data-feed-title="<%= t 'feeds.index.all_entries' %>">
+                <em><strong>
+                  <i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></strong></em>&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
+                <span class="badge pull-right">{{folder.unread_entries}}</span>
+              </a>
+            </li>
+
+            <li ng-repeat="feed in feeds | filter:feed_in_folder(folder) | orderBy:'title'">
+              <a data-sidebar-feed
+                 data-feed-id="{{feed.id}}"
+                 data-feed-path="/feeds/{{feed.id}}"
+                 data-feed-title="{{feed.title}}"
+                 data-feed-url="{{feed.url}}"
+                 data-folder-id="{{feed.folder_id}}" >
+
+                <i class="icon-rss"></i> {{feed.title}}&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
+                <span class="badge pull-right">{{feed.unread_entries}}</span>
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div ng-repeat="folder in folders | filter:{title: '!all'} | orderBy:'title'"
          id="folder-{{folder.id}}"
          class="folder-panel panel panel-default"
          data-folder-id="{{folder.id}}">
