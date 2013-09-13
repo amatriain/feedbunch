@@ -20,29 +20,9 @@
       <%# Content of the folder %>
       <ul class="nav nav-pills nav-stacked">
 
-        <li id="folder-{{folder.id}}-all-feeds">
-          <a data-sidebar-feed
-             data-feed-id="all"
-             data-feed-path="{{folder.path}}"
-             data-feed-title="<%= t 'feeds.index.all_entries' %>">
-            <em><strong>
-              <i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></strong></em>&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
-            <span class="badge pull-right">{{folder.unread_entries}}</span>
-          </a>
-        </li>
+        <%= render 'read/sidebar/sidebar_folder_read_all' %>
 
-        <li ng-repeat="feed in feeds | filter:feed_in_folder(folder) | orderBy:'title'">
-          <a data-sidebar-feed
-             data-feed-id="{{feed.id}}"
-             data-feed-path="/feeds/{{feed.id}}"
-             data-feed-title="{{feed.title}}"
-             data-feed-url="{{feed.url}}"
-             data-folder-id="{{feed.folder_id}}" >
-
-            <i class="icon-rss"></i> {{feed.title}}&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
-            <span class="badge pull-right">{{feed.unread_entries}}</span>
-          </a>
-        </li>
+        <%= render 'read/sidebar/sidebar_feed' %>
 
       </ul>
 
