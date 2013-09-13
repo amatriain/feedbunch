@@ -1,17 +1,12 @@
-<li>
+<li ng-repeat="feed in feeds | filter:feed_in_folder(folder) | orderBy:'title'">
   <a data-sidebar-feed
-     data-feed-id="<%= feed.id %>"
-     data-feed-path="<%= feed_path feed.id %>"
-     data-feed-title="<%= feed.title %>"
-     data-feed-url="<%= feed.url %>"
-     <% if feed.user_folder(current_user).present? %>
-      data-folder-id="<%= feed.user_folder(current_user).id %>"
-    <% else %>
-      data-folder-id="none"
-     <% end %>
-  >
+     data-feed-id="{{feed.id}}"
+     data-feed-path="/feeds/{{feed.id}}"
+     data-feed-title="{{feed.title}}"
+     data-feed-url="{{feed.url}}"
+     data-folder-id="{{feed.folder_id}}" >
 
-    <i class="icon-rss"></i> <%= feed.title %>&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
-    <span class="badge pull-right"><%= user.feed_unread_count feed if user.feed_unread_count(feed) > 0 %></span>
+    <i class="icon-rss"></i> {{feed.title}}&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
+    <span class="badge pull-right">{{feed.unread_entries}}</span>
   </a>
 </li>
