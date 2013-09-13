@@ -40,9 +40,10 @@ angular.module('feedbunch').controller 'FoldersCtrl',
     $scope.feeds.splice index, 1 if index != -1
 
     # Show the start page instead of the current feed
+    path = "/feeds/#{$rootScope.current_feed.id}.json"
     $rootScope.current_feed = null
 
-    $http.delete("/feeds/#{$rootScope.current_feed.id}.json").success (data)->
+    $http.delete(path).success (data)->
       alert "success"
     .error ->
       # Show alert
