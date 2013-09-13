@@ -17,6 +17,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Unsubscribe from feed via Ajax
   #-------------------------------------------------------
+  ###
   $("#unsubscribe-submit").on "click", ->
     close_popup()
 
@@ -35,6 +36,7 @@ $(document).ready ->
         Feedbunch.alertTimedShowHide $("#problem-unsubscribing")
 
     Feedbunch.show_start_page()
+  ###
 
   ########################################################
   # COMMON FUNCTIONS

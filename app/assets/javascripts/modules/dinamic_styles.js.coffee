@@ -19,15 +19,17 @@ $(document).ready ->
   #-------------------------------------------------------
   # Dynamic styling when clicking on the "Start" link in the sidebar
   #-------------------------------------------------------
+  ###
   $("body").on "click", "#start-page", ->
     $("[data-sidebar-feed]").parent().removeClass "active"
     $(this).parent().addClass "active"
+  ###
 
   #-------------------------------------------------------
   # Dynamic styling when clicking on a feed in the sidebar
   #-------------------------------------------------------
   $("body").on "click", "[data-sidebar-feed]", ->
-    $("#start-page").parent().removeClass "active"
+    #$("#start-page").parent().removeClass "active"
     $("[data-sidebar-feed]").parent().removeClass "active"
     $(this).parent().addClass "active"
 

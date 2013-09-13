@@ -10,12 +10,14 @@ $(document).ready ->
   #-------------------------------------------------------
   # Show the start page when clicking on the "Start" link
   #-------------------------------------------------------
+  ###
   $("body").on "click", "#start-page", ->
     Feedbunch.hide_entries()
     Feedbunch.hide_feed_title()
     Feedbunch.hide_loading_message()
     Feedbunch.hide_buttons()
     show_start_information()
+  ###
 
   ########################################################
   # COMMON FUNCTIONS
