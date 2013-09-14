@@ -12,18 +12,22 @@
 
   <div class="col-md-9">
 
-    <div class="hidden" id="feed-title">
-      <strong class="lead">
-        <a target="_blank"></a>
-      </strong>
-      <hr>
+    <div ng-show="current_feed">
+      <div class="hidden" id="feed-title">
+        <strong class="lead">
+          <a target="_blank"></a>
+        </strong>
+        <hr>
+      </div>
+
+      <div class="panel-group hidden" id="feed-entries"></div>
     </div>
 
     <div id="loading" class="col-md-offset-1 hidden"><%= t 'feeds.index.loading' %></div>
 
-    <%= render 'start', user: @user %>
-
-    <div class="panel-group hidden" id="feed-entries"></div>
+    <div ng-show="current_feed==null">
+      <%= render 'start', user: @user %>
+    </div>
 
   </div>
 </div>
