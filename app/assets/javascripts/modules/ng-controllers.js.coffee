@@ -31,6 +31,13 @@ angular.module('feedbunch').controller 'FoldersCtrl',
     $rootScope.current_feed = feed
 
   #--------------------------------------------
+  # Unset the currently selected feed in the global scope
+  #--------------------------------------------
+
+  $scope.unset_current_feed = ->
+    $rootScope.current_feed = null
+
+  #--------------------------------------------
   # Unsubscribe from a feed
   #--------------------------------------------
 

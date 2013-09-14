@@ -1,7 +1,7 @@
 <div id="sidebar">
   <ul class="nav nav-pills nav-stacked">
     <li ng-class="{active: current_feed==null}">
-      <a id="start-page"><i class="icon-asterisk"></i> <%= t 'feeds.index.start' %></a>
+      <a id="start-page" ng-click="unset_current_feed()"><i class="icon-asterisk"></i> <%= t 'feeds.index.start' %></a>
     </li>
   </ul>
 
