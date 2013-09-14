@@ -3,7 +3,7 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FoldersCtrl',
-['$rootScope', '$scope', '$http', '$timeout', ($rootScope, $scope, $http, $timeout)->
+['$rootScope', '$scope', '$http', '$timeout', '$filter', ($rootScope, $scope, $http, $timeout, $filter)->
 
   # Load folders and feeds via AJAX on startup
   $http.get('/folders.json').success (data)->
@@ -46,13 +46,27 @@ angular.module('feedbunch').controller 'FoldersCtrl',
     index = $scope.feeds.indexOf $rootScope.current_feed
     $scope.feeds.splice index, 1 if index != -1
 
-    # Show the start page instead of the current feed
+    # Tell the model that no feed is currently selected.
+    # Before deleting from the global scope, save some data we'll need later
     path = "/feeds/#{$rootScope.current_feed.id}.json"
+    unread_entries = $rootScope.current_feed.unread_entries
+    folder_id = $rootScope.current_feed.folder_id
+
     $rootScope.current_feed = null
 
-    $http.delete(path).success (data)->
-      alert "success"
-    .error ->
+    # Update folders
+    find_folder('all').unread_entries -= unread_entries
+    folder = find_folder folder_id
+    if folder != null
+      # Remove folder if it's empty
+      if find_folder_feeds(folder_id).length == 0
+        index = $scope.folders.indexOf folder
+        $scope.folders.splice index, 1 if index != -1
+      # Otherwise update unread entries in folder
+      else
+        folder.unread_entries -= unread_entries
+
+    $http.delete(path).error ->
       # Show alert
       $scope.error_unsubscribing = true
       # Close alert after 5 seconds
@@ -60,20 +74,22 @@ angular.module('feedbunch').controller 'FoldersCtrl',
         $scope.error_unsubscribing = false
       , 5000
 
-  ###
-        # Function to handle result returned by the server
-        unsubscribe_result = (data, status, xhr) ->
-          Feedbunch.update_folder_entry_count "all", data["all_subscriptions"]["sidebar_read_all"]
-          if data["old_folder"]
-            if data["old_folder"]["deleted"]
-              Feedbunch.remove_folder data["old_folder"]["id"]
-            else
-              Feedbunch.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
+  #--------------------------------------------
+  # Return a folder object given its id
+  #--------------------------------------------
 
-        $.post(Feedbunch.current_feed_path, {"_method":"delete"}, unsubscribe_result, 'json')
-        .fail ->
-            Feedbunch.alertTimedShowHide $("#problem-unsubscribing")
+  find_folder = (id)->
+    if id == 'none'
+      return null
+    else
+      folders = $filter('filter') $scope.folders, {id: id}
+      return folders[0]
 
-    ###
+  #--------------------------------------------
+  # Return an array of feeds in a folder given the folder id
+  #--------------------------------------------
+
+  find_folder_feeds = (folder_id)->
+    return $filter('filter') $scope.feeds, {folder_id: folder_id}
 
 ]
