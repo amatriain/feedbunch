@@ -59,7 +59,7 @@ Feedbunch.read_feed = (feed_id, folder_id) ->
 # Mark a sidebar feed or folder link as active
 #-------------------------------------------------------
 Feedbunch.make_active = (feed_id, folder_id) ->
-  $("#folders-list #folder-#{folder_id} a[data-feed-id='#{feed_id}']").parent().addClass "active"
+  #$("#folders-list #folder-#{folder_id} a[data-feed-id='#{feed_id}']").parent().addClass "active"
 
 #-------------------------------------------------------
 # Insert a list of entries, replacing the old one (if any)

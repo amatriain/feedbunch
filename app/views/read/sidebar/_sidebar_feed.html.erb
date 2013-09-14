@@ -1,4 +1,5 @@
-<li ng-repeat="feed in feeds | filter:feed_in_folder(folder) | orderBy:'title'">
+<li ng-repeat="feed in feeds | filter:feed_in_folder(folder) | orderBy:'title'"
+    ng-class="{active: current_feed==feed}">
   <a data-sidebar-feed
      data-feed-id="{{feed.id}}"
      data-feed-path="/feeds/{{feed.id}}"
