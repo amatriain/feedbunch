@@ -25,22 +25,16 @@ class SubscriptionsManager
   #
   # Receives as argument the feed to unsubscribe, and the user who is unsubscribing.
   #
-  # Returns a Folder instance with the data of the folder in which the feed was previously, or nil
-  # if it wasn't in any folder. This object may have already  been deleted from the database,
-  # if there were no more feeds in it.
-  #
   # If the user is not subscribed to the feed, a NotSubscribedError is raised.
 
   def self.remove_subscription(feed, user)
     check_user_subscribed feed, user
 
     feed_subscription = FeedSubscription.where(feed_id: feed.id, user_id: user.id).first
-    folder = feed.user_folder user
-
     Rails.logger.info "unsubscribing user #{user.id} - #{user.email} from feed #{feed.id} - #{feed.fetch_url}"
     user.feed_subscriptions.delete feed_subscription
 
-    return folder
+    return nil
   end
 
   ##

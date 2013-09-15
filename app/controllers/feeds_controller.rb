@@ -81,7 +81,7 @@ class FeedsController < ApplicationController
 
   def destroy
     @feed = Feed.find params[:id]
-    @old_folder = current_user.unsubscribe @feed
+    current_user.unsubscribe @feed
     head :ok
   rescue => e
     handle_error e

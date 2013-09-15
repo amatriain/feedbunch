@@ -119,17 +119,6 @@ describe FeedsController do
       response.should be_success
     end
 
-    it 'does not assign @old_folder if the feed was not in a folder' do
-      delete :destroy, id: @feed1.id, format: :json
-      assigns(:old_folder).should be_nil
-    end
-
-    it 'assigns @old_folder correctly if the feed was in a folder' do
-      @folder1.feeds << @feed1
-      delete :destroy, id: @feed1.id, format: :json
-      assigns(:old_folder).should eq @folder1
-    end
-
     it 'deletes the folder if the feed was in a folder without any other feeds' do
       @folder1.feeds << @feed1
 
