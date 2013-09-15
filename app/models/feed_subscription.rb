@@ -36,6 +36,6 @@ class FeedSubscription < ActiveRecord::Base
   # By default the number of unread entries is zero, if not set.
 
   def default_values
-    self.unread_entries = 0 if self.unread_entries.blank?
+    self.unread_entries = 0 if self.unread_entries.blank? || self.unread_entries < 0
   end
 end

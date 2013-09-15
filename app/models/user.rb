@@ -147,7 +147,7 @@ class User < ActiveRecord::Base
   # By default the number of unread entries is zero, if not set.
 
   def before_user_validation
-    self.unread_entries = 0 if self.unread_entries.blank?
+    self.unread_entries = 0 if self.unread_entries.blank? || self.unread_entries < 0
   end
 
   ##

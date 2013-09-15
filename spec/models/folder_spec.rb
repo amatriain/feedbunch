@@ -44,9 +44,10 @@ describe Folder do
       folder.should_not be_valid
     end
 
-    it 'does not accept negative unread_entries count' do
+    it 'gives a default value of zero if passed a negative unread_entries count' do
       folder = FactoryGirl.build :folder, unread_entries: -1
-      folder.should_not be_valid
+      folder.save!
+      folder.unread_entries.should eq 0
     end
   end
 

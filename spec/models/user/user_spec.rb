@@ -22,9 +22,10 @@ describe User do
       user.should_not be_valid
     end
 
-    it 'does not accept negative unread_entries count' do
+    it 'gives a default value of zero if passed a negative unread_entries count' do
       user = FactoryGirl.build :user, unread_entries: -1
-      user.should_not be_valid
+      user.save!
+      user.unread_entries.should eq 0
     end
   end
 

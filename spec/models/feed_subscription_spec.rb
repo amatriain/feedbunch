@@ -29,9 +29,10 @@ describe FeedSubscription do
       feed_subscription.should_not be_valid
     end
 
-    it 'does not accept negative unread_entries count' do
+    it 'defaults to zero if passed a negative unread_entries count' do
       feed_subscription = FactoryGirl.build :feed_subscription, unread_entries: -1
-      feed_subscription.should_not be_valid
+      feed_subscription.save!
+      feed_subscription.unread_entries.should eq 0
     end
 
     it 'does not accept multiple subscriptions for the same feed and user' do
