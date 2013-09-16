@@ -8,12 +8,6 @@ $(document).ready ->
   ########################################################
 
   #-------------------------------------------------------
-  # Submit the "add subscription" form when clicking on the "Add" button
-  #-------------------------------------------------------
-  $("body").on "click", "#subscribe-submit", ->
-    $("#form-subscription").submit()
-
-  #-------------------------------------------------------
   # Submit the "add subscription" form via Ajax
   #-------------------------------------------------------
   $("body").on "submit", "#form-subscription", ->

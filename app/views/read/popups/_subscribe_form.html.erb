@@ -13,8 +13,15 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-default" data-dismiss="modal" ><%= t 'feeds.index.subscribe_close' %></button>
-        <button id="subscribe-submit" class="btn btn-primary"><%= t 'feeds.index.subscribe_submit' %></button>
+        <button class="btn btn-default"
+                data-dismiss="modal" >
+          <%= t 'feeds.index.subscribe_close' %>
+        </button>
+        <button id="subscribe-submit"
+                type="submit"
+                class="btn btn-primary">
+          <%= t 'feeds.index.subscribe_submit' %>
+        </button>
       </div>
     </div>
   </div>
