@@ -14,12 +14,15 @@
       <ul class="nav navbar-nav">
 
         <li>
-          <a id="add-subscription" data-target="#subscribe-feed-popup" data-toggle="modal">
+          <a id="add-subscription"
+             data-target="#subscribe-feed-popup"
+             data-toggle="modal"
+             ng-class="{disabled: loading_entries}">
             <i class="icon-plus"></i> <%= t 'feeds.index.subscribe_button' %>
           </a>
         </li>
 
-        <li id="entries-dropdown" class="dropdown">
+        <li id="entries-dropdown" class="dropdown" ng-show="!loading_entries">
           <a id="entries-management"
              class="dropdown-toggle disabled hidden"
              data-toggle="dropdown">
@@ -49,7 +52,7 @@
            </a>
         </li>
 
-        <li id="folder-management-dropdown" class="dropdown" >
+        <li id="folder-management-dropdown" class="dropdown" ng-show="!loading_entries">
           <a id="folder-management"
                   class="dropdown-toggle disabled hidden"
                   data-toggle="dropdown">
@@ -81,7 +84,7 @@
           </ul>
         </li>
 
-        <li>
+        <li ng-show="!loading_entries">
           <a id="unsubscribe-feed"
              class="disabled hidden"
              data-toggle="modal"
