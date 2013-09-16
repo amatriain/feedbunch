@@ -1,8 +1,1 @@
-<% self.formats = [:html] %>
-
-{
-  "id": <%= feed.id %>,
-  "sidebar_feed": <%= render('read/sidebar/sidebar_feed', user: user, feed: feed).to_json.html_safe %>,
-  "sidebar_read_all": <%= render(partial: 'read/sidebar/sidebar_folder_read_all',
-                                locals: {user: user, folder: Folder::ALL_FOLDERS}, layout: false).to_json.html_safe %>
-}
+<%= render(partial: 'feed', locals: {user: user, feed: feed}) %>

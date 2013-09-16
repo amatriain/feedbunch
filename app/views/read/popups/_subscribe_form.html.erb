@@ -6,10 +6,10 @@
         <h3><%= t 'feeds.index.subscribe_title' %></h3>
       </div>
       <div class="modal-body">
-        <%= simple_form_for :subscription, url: feeds_path,
-                            html: {:method => :post,
-                            id: 'form-subscription'} do |f| %>
-          <%= f.input :rss, as: :rss_icon, required: false %>
+        <%= simple_form_for :subscription, url: '',
+                            html: {id: 'form-subscription',
+                            'ng-submit' => 'subscribe()'} do |f| %>
+          <%= f.input :rss, as: :rss_icon, input_html: {'ng-model'=>'subscription_url'}, required: false %>
         <% end %>
       </div>
       <div class="modal-footer">
@@ -18,7 +18,7 @@
           <%= t 'feeds.index.subscribe_close' %>
         </button>
         <button id="subscribe-submit"
-                type="submit"
+                ng-click="subscribe()"
                 class="btn btn-primary">
           <%= t 'feeds.index.subscribe_submit' %>
         </button>

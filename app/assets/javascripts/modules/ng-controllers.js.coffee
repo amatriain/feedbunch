@@ -75,6 +75,33 @@ angular.module('feedbunch').controller 'FoldersCtrl',
       , 5000
 
   #--------------------------------------------
+  # Subscribe to a feed
+  #--------------------------------------------
+
+  $scope.subscribe = ->
+    # Clear input, close modal
+    $("#subscribe-feed-popup").modal 'hide'
+
+    if $scope.subscription_url
+      $http.post('/feeds.json', feed:{url: $scope.subscription_url}).success (data)->
+        $scope.feeds.push data
+      .error (data, status)->
+        # Show alert
+        if status == 304
+          $scope.error_already_subscribed = true
+          # Close alert after 5 seconds
+          $timeout ->
+            $scope.error_already_subscribed = false
+          , 5000
+        else
+          $scope.error_subscribing = true
+          # Close alert after 5 seconds
+          $timeout ->
+            $scope.error_subscribing = false
+          , 5000
+    $scope.subscription_url = null
+
+  #--------------------------------------------
   # Return a folder object given its id
   #--------------------------------------------
 

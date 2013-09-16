@@ -1,0 +1,7 @@
+{
+  "id": "<%= feed.id %>",
+  "title": "<%= feed.title %>",
+  "url": "<%= feed.url %>",
+  "folder_id": "<%= feed.user_folder(user).try(:id) || 'none' %>",
+  "unread_entries": "<%= user.feed_unread_count feed %>"
+}

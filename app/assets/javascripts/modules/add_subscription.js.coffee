@@ -10,6 +10,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Submit the "add subscription" form via Ajax
   #-------------------------------------------------------
+  ###
   $("body").on "submit", "#form-subscription", ->
 
     # Function to handle result returned by the server
@@ -39,14 +40,4 @@ $(document).ready ->
 
     # prevent default form submit
     return false
-
-  ########################################################
-  # COMMON FUNCTIONS
-  ########################################################
-
-  #-------------------------------------------------------
-  # Clean textfield and close modal popup
-  #-------------------------------------------------------
-  close_popup = ->
-    $("#subscription_rss").val('')
-    $("#subscribe-feed-popup").modal 'hide'
+  ###

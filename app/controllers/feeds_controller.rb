@@ -68,7 +68,7 @@ class FeedsController < ApplicationController
       render 'create', locals: {user: current_user, feed: @feed}
     else
       Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
-      #TODO respond with html for search results, for instance with head status:300 (Multiple Choices)
+      #TODO respond with data for search results, for instance with head status:300 (Multiple Choices)
       head status: 404
     end
 

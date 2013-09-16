@@ -26,20 +26,18 @@
 </div>
 
 <%# Alert displayed when there is a problem adding a subscription %>
-<div id="problem-subscribing" class="hidden">
+<div id="problem-subscribing" ng-show="error_subscribing">
   <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_subscribing' %></p>
-    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
 
 <%# Alert displayed when the user tries to subscribe to a feed he's already subscribed to %>
-<div id="already-subscribed" class="hidden">
+<div id="already-subscribed" ng-show="error_already_subscribed">
   <div class="alert alert-warning">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.already_subscribed' %></p>
-    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
 
