@@ -17,23 +17,6 @@ $(document).ready ->
     $("[data-sidebar-folder]").not(this).children("i.folder").addClass "icon-folder-close-alt"
 
   #-------------------------------------------------------
-  # Dynamic styling when clicking on the "Start" link in the sidebar
-  #-------------------------------------------------------
-  ###
-  $("body").on "click", "#start-page", ->
-    $("[data-sidebar-feed]").parent().removeClass "active"
-    $(this).parent().addClass "active"
-  ###
-
-  #-------------------------------------------------------
-  # Dynamic styling when clicking on a feed in the sidebar
-  #-------------------------------------------------------
-  $("body").on "click", "[data-sidebar-feed]", ->
-    #$("#start-page").parent().removeClass "active"
-    $("[data-sidebar-feed]").parent().removeClass "active"
-    $(this).parent().addClass "active"
-
-  #-------------------------------------------------------
   # Give focus to the text input field when showing the "Add subscription" modal.
   #-------------------------------------------------------
   $("body").on "shown.bs.modal", "#subscribe-feed-popup",  ->

@@ -85,6 +85,8 @@ angular.module('feedbunch').controller 'FoldersCtrl',
     if $scope.subscription_url
       $http.post('/feeds.json', feed:{url: $scope.subscription_url}).success (data)->
         $scope.feeds.push data
+        $scope.set_current_feed data
+
       .error (data, status)->
         # Show alert
         if status == 304
