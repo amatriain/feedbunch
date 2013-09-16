@@ -79,15 +79,19 @@ angular.module('feedbunch').controller 'FoldersCtrl',
   #--------------------------------------------
 
   $scope.subscribe = ->
-    # Clear input, close modal
     $("#subscribe-feed-popup").modal 'hide'
 
     if $scope.subscription_url
+      $scope.unset_current_feed()
+      $scope.loading_entries = true
+
       $http.post('/feeds.json', feed:{url: $scope.subscription_url}).success (data)->
+        $scope.loading_entries = false
         $scope.feeds.push data
         $scope.set_current_feed data
-
+        find_folder('all').unread_entries += data.unread_entries
       .error (data, status)->
+        $scope.loading_entries = false
         # Show alert
         if status == 304
           $scope.error_already_subscribed = true

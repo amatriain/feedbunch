@@ -23,9 +23,11 @@
       <div class="panel-group hidden" id="feed-entries"></div>
     </div>
 
-    <div id="loading" class="col-md-offset-1 hidden"><%= t 'feeds.index.loading' %></div>
+    <div id="loading" class="col-md-offset-1" ng-show="loading_entries">
+      <%= t 'feeds.index.loading' %>
+    </div>
 
-    <div ng-show="current_feed==null">
+    <div ng-show="current_feed==null && !loading_entries">
       <%= render 'start', user: @user %>
     </div>
 

@@ -85,7 +85,7 @@ Feedbunch.show_loading_message = ->
 Feedbunch.loading_entries = (feed)->
   Feedbunch.disable_buttons()
   Feedbunch.hide_entries()
-  #$("#start-info").addClass "hidden"
+  $("#start-info").addClass "hidden"
   Feedbunch.show_loading_message()
   if feed
     $(".icon-spinner", feed).addClass("icon-spin").removeClass "hidden"
