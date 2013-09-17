@@ -16,25 +16,17 @@ class FolderManager
   # it to another one.
   # - folder_title: optional named argument. If present, and the folder argument is not present, create a new folder with this
   # title (owned by the passed user) and move the feed to it.
-  #
-  # Returns a hash with the following values:
-  # - :feed => the feed which has been moved
-  # - :new_folder => the folder to which the feed has been moved (unless folder=='none', in which case this key is
-  # not present)
-  # - :old_folder => the folder (owned by this user) in which the feed was previously. This object may have already
-  # been deleted from the database, if there were no more feeds in it. If the feed wasn't in any folder, this key is
-  # not present.
 
   def self.move_feed_to_folder(feed, user, folder: nil, folder_title: nil)
     if folder.present? && folder != Folder::NO_FOLDER
-      changes = self.move_feed_to_existing_folder feed, folder, user
+      self.move_feed_to_existing_folder feed, folder, user
     elsif  folder == Folder::NO_FOLDER
-      changes = self.remove_feed_from_folder feed, user
+      self.remove_feed_from_folder feed, user
     else
-      changes = self.move_feed_to_new_folder feed, folder_title, user
+      self.move_feed_to_new_folder feed, folder_title, user
     end
 
-    return changes
+    return nil
   end
 
   private
@@ -48,15 +40,8 @@ class FolderManager
   # If the feed was previously in another folder (owned by the same user), it is removed from that folder.
   # If there are no more feeds in that folder, it is deleted.
   #
-  # Returns a hash with the following values:
-  # - :feed => the feed which has been added to the folder
-  # - :new_folder => the folder to which the feed has been added
-  # - :old_folder => the folder (owned by this user) in which the feed was previously. This object may have already
-  # been deleted from the database, if there were no more feeds in it. If the feed wasn't in any folder, this key is
-  # not present in the hash
-  #
   # If the method detects that the feed is being moved to the same folder it's already at, no action is
-  # taken at the database level, and the return hash has the same values in the :new_folder and :old_folder keys.
+  # taken.
 
   def self.move_feed_to_existing_folder(feed, folder, user)
     # Retrieve the current folder the feed is in, if any
@@ -69,12 +54,7 @@ class FolderManager
       folder.feeds << feed
     end
 
-    changes = {}
-    changes[:new_folder] = folder.reload
-    changes[:feed] = feed.reload
-    changes[:old_folder] = old_folder if old_folder.present?
-
-    return changes
+    return nil
   end
 
   ##
@@ -86,13 +66,6 @@ class FolderManager
   #
   # If the feed was previously in another folder (owned by the same user), it is removed from that folder.
   # If there are no more feeds in that folder, it is deleted.
-  #
-  # Returns a hash with the following values:
-  # - :feed => the feed which has been added to the folder
-  # - :new_folder => the folder to which the feed has been added
-  # - :old_folder => the folder (owned by this user) in which the feed was previously. This object may have already
-  # been deleted from the database, if there were no more feeds in it. If the feed wasn't in any folder, this key is
-  # not present in the hash
 
   def self.move_feed_to_new_folder(feed, folder_title, user)
     if user.folders.where(title: folder_title).present?
@@ -102,9 +75,8 @@ class FolderManager
 
     Rails.logger.info "Creating folder with title #{folder_title} for user #{user.id} - #{user.email}"
     folder = user.folders.create title: folder_title
-
-    changes = self.move_feed_to_existing_folder feed, folder, user
-    return changes
+    self.move_feed_to_existing_folder feed, folder, user
+    return nil
   end
 
   ##
@@ -114,12 +86,6 @@ class FolderManager
   # be subscribed to the feed.
   #
   # If there are no more feeds in the folder, it is deleted.
-  #
-  # Returns a hash with the following values:
-  # - :feed => the feed which has been added to the folder
-  # - :old_folder => the folder (owned by this user) in which the feed was previously. This object may have already
-  # been deleted from the database, if there were no more feeds in it. If the feed wasn't in any folder, this key is
-  # not present in the hash
 
   def self.remove_feed_from_folder(feed, user)
     # Retrieve the current folder the feed is in, if any
@@ -132,10 +98,6 @@ class FolderManager
       Rails.logger.info "user #{user.id} - #{user.email} tried to remove feed #{feed.id} - #{feed.fetch_url} from its folder, but it's not in any folder"
     end
 
-    changes = {}
-    changes[:feed] = feed.reload
-    changes[:old_folder] = old_folder if old_folder.present?
-
-    return changes
+    return nil
   end
 end

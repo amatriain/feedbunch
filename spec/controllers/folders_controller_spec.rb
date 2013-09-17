@@ -145,11 +145,6 @@ describe FoldersController do
       response.status.should eq 404
     end
 
-    it 'assigns to the folder in which the feed was previously' do
-      patch :update, id: Folder::NO_FOLDER, folder: {feed_id: @feed1.id}, format: :json
-      assigns(:changed_data)[:old_folder].should eq @folder1
-    end
-
     it 'deletes the folder if the feed is successfully removed from the folder and there are no more feeds in the folder' do
       # Ensure that @folder1 only has @feed1
       @folder1.feeds.delete @feed2

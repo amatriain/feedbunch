@@ -56,11 +56,8 @@ class FoldersController < ApplicationController
       @folder = Folder::NO_FOLDER
     end
 
-    @changed_data = current_user.move_feed_to_folder @feed, folder: @folder
-    render 'update', locals: {user: current_user,
-                                       new_folder: @changed_data[:new_folder],
-                                       feed: @changed_data[:feed],
-                                       old_folder: @changed_data[:old_folder]}
+    current_user.move_feed_to_folder @feed, folder: @folder
+    head :ok
   rescue => e
     handle_error e
   end
@@ -71,10 +68,8 @@ class FoldersController < ApplicationController
 
   def create
     @feed = current_user.feeds.find folder_params[:feed_id]
-    @changed_data = current_user.move_feed_to_folder @feed, folder_title: folder_params[:title]
-    render 'create', locals: {user: current_user,
-                                       new_folder: @changed_data[:new_folder],
-                                       old_folder: @changed_data[:old_folder]}
+    current_user.move_feed_to_folder @feed, folder_title: folder_params[:title]
+    head :ok
   rescue => e
     handle_error e
   end
