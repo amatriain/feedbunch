@@ -127,20 +127,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     folder.unread_entries += $rootScope.current_feed.unread_entries
 
     $http.put("/folders/#{folder.id}", folder: {feed_id: $rootScope.current_feed.id}).error ->
-      if status == 304
-        # Show alert
-        $scope.error_already_in_folder = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $scope.error_already_in_folder = false
-        , 5000
-      else
-        # Show alert
-        $scope.error_managing_folders = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $scope.error_managing_folders = false
-        , 5000
+      # Show alert
+      $scope.error_managing_folders = true
+      # Close alert after 5 seconds
+      $timeout ->
+        $scope.error_managing_folders = false
+      , 5000
 
   #--------------------------------------------
   # Return a folder object given its id
