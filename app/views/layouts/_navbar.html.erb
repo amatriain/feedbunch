@@ -53,19 +53,25 @@
         </li>
 
         <li id="folder-management-dropdown" class="dropdown" ng-show="current_feed">
+
           <a id="folder-management"
                   class="dropdown-toggle"
                   data-toggle="dropdown">
             <i class="icon-folder-open"></i> <%= t 'feeds.index.folder_management' %>
             <b class="caret"></b>
           </a>
+
           <ul class="dropdown-menu text-left">
-            <% current_user.folders.each do |folder| %>
 
-              <%= render 'layouts/navbar/dropdown_folder', folder: folder %>
+            <li ng-repeat="folder in folders | filter:{title: '!all'} | orderBy:'title'">
+              <a data-folder-update-path="/folders/{{folder.id}}.json" data-folder-id="{{folder.id}}">
+                <i class="hidden icon-ok"></i>&nbsp;
+                {{folder.title}}
+              </a>
+            </li>
 
-            <% end %>
             <li class="divider"></li>
+
             <li>
               <a data-folder-id="new"
                  data-toggle="modal"
@@ -74,6 +80,7 @@
                 <%= t 'feeds.index.folder_new' %>
               </a>
             </li>
+
             <li>
               <a data-folder-remove-path="<%= folder_path Folder::NO_FOLDER %>"
                  data-folder-id="none"
@@ -83,6 +90,7 @@
                 <%= t 'feeds.index.folder_none' %>
               </a>
             </li>
+
           </ul>
         </li>
 
