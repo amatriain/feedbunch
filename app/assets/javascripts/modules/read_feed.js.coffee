@@ -14,7 +14,6 @@ $(document).ready ->
   #-------------------------------------------------------
   $("body").on "click", "[data-sidebar-feed]", ->
     set_global_variables(this)
-    mark_folder_in_dropdown()
     show_feed_title this
     Feedbunch.loading_entries this
 
@@ -66,18 +65,6 @@ $(document).ready ->
       $("#feed-title a").attr "href", feed_url
     else
       $("#feed-title a").removeAttr 'href'
-
-  #-------------------------------------------------------
-  # Mark with a tick the current feed's folder in the dropdown
-  #-------------------------------------------------------
-  mark_folder_in_dropdown = ->
-    $("#folder-management-dropdown a[data-folder-id] i.icon-ok").addClass "hidden"
-    $("#folder-management-dropdown a[data-folder-id='#{Feedbunch.current_feed_folder_id}'] i.icon-ok")
-      .removeClass "hidden"
-    if Feedbunch.current_feed_folder_id == 'none'
-      $("#folder-management-dropdown a[data-folder-id='none'] i.icon-ban-circle").addClass "hidden"
-    else
-      $("#folder-management-dropdown a[data-folder-id='none'] i.icon-ban-circle").removeClass "hidden"
 
   #-------------------------------------------------------
   # Set global variables with the currently selected feed, its folder, path and refresh path.

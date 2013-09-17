@@ -67,7 +67,7 @@
               <a data-folder-update-path="/folders/{{folder.id}}.json"
                  data-folder-id="{{folder.id}}"
                  ng-click="move_to_folder(folder)">
-                <i class="hidden icon-ok"></i>&nbsp;
+                <i class="icon-ok" ng-show="current_feed.folder_id==folder.id"></i>&nbsp;
                 {{folder.title}}
               </a>
             </li>
@@ -87,8 +87,8 @@
               <a data-folder-remove-path="<%= folder_path Folder::NO_FOLDER %>"
                  data-folder-id="none"
                  ng-click="remove_from_folder()">
-                <i class="icon-ban-circle text-muted"></i>
-                <i class="hidden icon-ok"></i>&nbsp;
+                <i class="icon-ban-circle text-muted" ng-hide="current_feed.folder_id=='none'"></i>
+                <i class="icon-ok" ng-show="current_feed.folder_id=='none'"></i>&nbsp;
                 <%= t 'feeds.index.folder_none' %>
               </a>
             </li>
