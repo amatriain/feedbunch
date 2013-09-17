@@ -16,17 +16,20 @@ class FolderManager
   # it to another one.
   # - folder_title: optional named argument. If present, and the folder argument is not present, create a new folder with this
   # title (owned by the passed user) and move the feed to it.
+  #
+  # Returns the folder instance to which the feed has been moved, or nil if "none" has been passed
+  # in the "folder" argument.
 
   def self.move_feed_to_folder(feed, user, folder: nil, folder_title: nil)
     if folder.present? && folder != Folder::NO_FOLDER
-      self.move_feed_to_existing_folder feed, folder, user
+      folder = self.move_feed_to_existing_folder feed, folder, user
     elsif  folder == Folder::NO_FOLDER
-      self.remove_feed_from_folder feed, user
+      folder = self.remove_feed_from_folder feed, user
     else
-      self.move_feed_to_new_folder feed, folder_title, user
+      folder = self.move_feed_to_new_folder feed, folder_title, user
     end
 
-    return nil
+    return folder
   end
 
   private
@@ -42,6 +45,8 @@ class FolderManager
   #
   # If the method detects that the feed is being moved to the same folder it's already at, no action is
   # taken.
+  #
+  # Returns the folder instance to which the feed has been moved
 
   def self.move_feed_to_existing_folder(feed, folder, user)
     # Retrieve the current folder the feed is in, if any
@@ -54,7 +59,7 @@ class FolderManager
       folder.feeds << feed
     end
 
-    return nil
+    return folder
   end
 
   ##
@@ -66,6 +71,8 @@ class FolderManager
   #
   # If the feed was previously in another folder (owned by the same user), it is removed from that folder.
   # If there are no more feeds in that folder, it is deleted.
+  #
+  # Returns the folder instance to which the feed has been moved.
 
   def self.move_feed_to_new_folder(feed, folder_title, user)
     if user.folders.where(title: folder_title).present?
@@ -76,7 +83,7 @@ class FolderManager
     Rails.logger.info "Creating folder with title #{folder_title} for user #{user.id} - #{user.email}"
     folder = user.folders.create title: folder_title
     self.move_feed_to_existing_folder feed, folder, user
-    return nil
+    return folder
   end
 
   ##
@@ -86,6 +93,8 @@ class FolderManager
   # be subscribed to the feed.
   #
   # If there are no more feeds in the folder, it is deleted.
+  #
+  # Returns nil.
 
   def self.remove_feed_from_folder(feed, user)
     # Retrieve the current folder the feed is in, if any

@@ -68,8 +68,14 @@ class FoldersController < ApplicationController
 
   def create
     @feed = current_user.feeds.find folder_params[:feed_id]
-    current_user.move_feed_to_folder @feed, folder_title: folder_params[:title]
-    head :ok
+    @folder = current_user.move_feed_to_folder @feed, folder_title: folder_params[:title]
+    if @folder.present?
+      render 'create', locals: {folder: @folder}
+    else
+      Rails.logger.error "Could not create folder #{folder_params[:title]} for user #{current_user.id}, returning a 404"
+      head status: 404
+    end
+
   rescue => e
     handle_error e
   end

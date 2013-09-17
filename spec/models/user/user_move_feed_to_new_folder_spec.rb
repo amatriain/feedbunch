@@ -57,25 +57,9 @@ describe User do
     end
 
     it 'returns the new folder' do
-      changed_data = @user.move_feed_to_folder @feed, folder_title: @title
-      folder = @user.folders.where(title: @title).first
-
-      changed_data[:new_folder].should eq folder
-    end
-
-    it 'returns the old folder' do
-      folder = FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << folder
-      folder.feeds << @feed
-
-      changed_data = @user.move_feed_to_folder @feed, folder_title: @title
-
-      changed_data[:old_folder].should eq folder
-    end
-
-    it 'does not return the old folder if the feed was not in any folder' do
-      changed_data = @user.move_feed_to_folder @feed, folder_title: @title
-      changed_data.keys.should_not include :old_folder
+      folder = @user.move_feed_to_folder @feed, folder_title: @title
+      folder.user_id.should eq @user.id
+      folder.title.should eq @title
     end
 
     it 'raises an error if the user already has a folder with the same title' do

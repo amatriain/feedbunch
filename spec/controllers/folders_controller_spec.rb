@@ -175,5 +175,11 @@ describe FoldersController do
       post :create, folder: {title: title, feed_id: @feed1.id}, format: :json
       response.status.should eq 304
     end
+
+    it 'assigns the new folder to @folder' do
+      title = 'New folder title'
+      post :create, folder: {title: title, feed_id: @feed1.id}, format: :json
+      assigns(:folder).title.should eq title
+    end
   end
 end
