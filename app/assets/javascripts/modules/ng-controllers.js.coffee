@@ -58,7 +58,8 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     # Tell the model that no feed is currently selected.
     $rootScope.current_feed = null
 
-    $http.delete(path).error ->
+    $http.delete(path)
+    .error ->
       # Show alert
       $scope.error_unsubscribing = true
       # Close alert after 5 seconds
@@ -77,7 +78,8 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
       $scope.unset_current_feed()
       $scope.loading_entries = true
 
-      $http.post('/feeds.json', feed:{url: $scope.subscription_url}).success (data)->
+      $http.post('/feeds.json', feed:{url: $scope.subscription_url})
+      .success (data)->
         $scope.loading_entries = false
         $scope.feeds.push data
         $scope.set_current_feed data
@@ -108,7 +110,8 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     $rootScope.current_feed.folder_id = 'none'
     feed_removed_from_folder $rootScope.current_feed, folder_id
 
-    $http.put('/folders/none', folder: {feed_id: $rootScope.current_feed.id}).error ->
+    $http.put('/folders/none.json', folder: {feed_id: $rootScope.current_feed.id})
+    .error ->
       # Show alert
       $scope.error_managing_folders = true
       # Close alert after 5 seconds
@@ -126,13 +129,43 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     feed_removed_from_folder $rootScope.current_feed, old_folder_id
     folder.unread_entries += $rootScope.current_feed.unread_entries
 
-    $http.put("/folders/#{folder.id}", folder: {feed_id: $rootScope.current_feed.id}).error ->
+    $http.put("/folders/#{folder.id}.json", folder: {feed_id: $rootScope.current_feed.id})
+    .error ->
       # Show alert
       $scope.error_managing_folders = true
       # Close alert after 5 seconds
       $timeout ->
         $scope.error_managing_folders = false
       , 5000
+
+  #--------------------------------------------
+  # Move a feed to a new folder
+  #--------------------------------------------
+
+  $scope.move_to_new_folder = ()->
+    $("#new-folder-popup").modal 'hide'
+
+    if $scope.new_folder_title
+      $http.post("/folders.json", folder: {feed_id: $rootScope.current_feed.id, title: $scope.new_folder_title})
+      .success (data)->
+          alert 'success'
+      .error (data, status)->
+        if status == 304
+          # Show alert
+          $scope.error_already_existing_folder = true
+          # Close alert after 5 seconds
+          $timeout ->
+            $scope.error_already_existing_folder = false
+          , 5000
+        else
+          # Show alert
+          $scope.error_creating_folder = true
+          # Close alert after 5 seconds
+          $timeout ->
+            $scope.error_creating_folder = false
+          , 5000
+
+    $scope.new_folder_title = null
 
   #--------------------------------------------
   # Return a folder object given its id

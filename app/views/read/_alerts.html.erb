@@ -58,20 +58,18 @@
 </div>
 
 <%# Alert displayed when there is a problem adding a feed to a new folder %>
-<div id="problem-new-folder" class="hidden">
+<div id="problem-new-folder" ng-show="error_creating_folder">
   <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_new_folder' %></p>
-    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
 
 <%# Alert displayed when the user tries to create a folder with the same title of another of his folders %>
-<div id="folder-already-exists" class="hidden">
+<div id="folder-already-exists" ng-show="error_already_existing_folder">
   <div class="alert alert-warning">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.folder_already_exists' %></p>
-    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
 

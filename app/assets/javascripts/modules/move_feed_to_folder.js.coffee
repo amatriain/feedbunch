@@ -8,36 +8,9 @@ $(document).ready ->
   ########################################################
 
   #-------------------------------------------------------
-  # Add feed to folder clicking on a folder in the dropdown
-  #-------------------------------------------------------
-  ###
-  $("body").on "click", "a[data-folder-update-path]", ->
-    update_folder_path = $(this).attr "data-folder-update-path"
-    folder_id = $(this).attr("data-folder-id")
-
-    # Function to handle result returned by the server
-    update_folder_result = (data, status, xhr) ->
-      if xhr.status == 304
-        Feedbunch.alertTimedShowHide $("#already-in-folder")
-      else
-        if data["old_folder"]
-          if data["old_folder"]["deleted"]
-            Feedbunch.remove_folder data["old_folder"]["id"]
-          else
-            Feedbunch.remove_feed_from_folders Feedbunch.current_feed_id
-            Feedbunch.update_folder_entry_count data["old_folder"]["id"], data["old_folder"]["sidebar_read_all"]
-        Feedbunch.insert_feed_in_folder Feedbunch.current_feed_id, folder_id, data["new_folder"]["sidebar_feed"]
-        Feedbunch.update_folder_entry_count data["new_folder"]["id"], data["new_folder"]["sidebar_read_all"]
-        Feedbunch.read_feed Feedbunch.current_feed_id, folder_id
-
-    $.post(update_folder_path, {"_method":"patch", folder: {feed_id: Feedbunch.current_feed_id}}, update_folder_result, "json")
-      .fail ->
-        Feedbunch.alertTimedShowHide $("#problem-folder-management")
-  ###
-
-  #-------------------------------------------------------
   # Submit the "New Folder" form when clicking on the "Add" button
   #-------------------------------------------------------
+  ###
   $("body").on "click", "#new-folder-submit", ->
     $("#form-new-folder").submit()
 
@@ -73,6 +46,7 @@ $(document).ready ->
 
     # prevent default form submit
     return false
+  ###
 
   ########################################################
   # COMMON FUNCTIONS
