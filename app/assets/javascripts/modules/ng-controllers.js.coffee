@@ -148,7 +148,10 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     if $scope.new_folder_title
       $http.post("/folders.json", folder: {feed_id: $rootScope.current_feed.id, title: $scope.new_folder_title})
       .success (data)->
-          alert 'success'
+        $scope.folders.push data
+        old_folder_id = $rootScope.current_feed.folder_id
+        $rootScope.current_feed.folder_id = data.id
+        feed_removed_from_folder $rootScope.current_feed, old_folder_id
       .error (data, status)->
         if status == 304
           # Show alert
@@ -164,7 +167,6 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
           $timeout ->
             $scope.error_creating_folder = false
           , 5000
-
     $scope.new_folder_title = null
 
   #--------------------------------------------
