@@ -75,7 +75,9 @@
               </a>
             </li>
             <li>
-              <a data-folder-remove-path="<%= folder_path Folder::NO_FOLDER %>" data-folder-id="none">
+              <a data-folder-remove-path="<%= folder_path Folder::NO_FOLDER %>"
+                 data-folder-id="none"
+                 ng-click="remove_from_folder()">
                 <i class="icon-ban-circle text-muted"></i>
                 <i class="hidden icon-ok"></i>&nbsp;
                 <%= t 'feeds.index.folder_none' %>

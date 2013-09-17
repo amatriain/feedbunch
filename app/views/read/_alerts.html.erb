@@ -50,11 +50,10 @@
 </div>
 
 <%# Alert displayed when there is a problem adding or removing a feed from a folder %>
-<div id="problem-folder-management" class="hidden">
+<div id="problem-folder-management" ng-show="error_managing_folders">
   <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_folder_management' %></p>
-    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
 
@@ -67,7 +66,7 @@
   </div>
 </div>
 
-<%# Alert displayed when there is a problem adding a new feed %>
+<%# Alert displayed when there is a problem adding a feed to a new folder %>
 <div id="problem-new-folder" class="hidden">
   <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>

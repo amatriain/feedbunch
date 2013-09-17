@@ -46,25 +46,17 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     index = $scope.feeds.indexOf $rootScope.current_feed
     $scope.feeds.splice index, 1 if index != -1
 
-    # Tell the model that no feed is currently selected.
     # Before deleting from the global scope, save some data we'll need later
     path = "/feeds/#{$rootScope.current_feed.id}.json"
     unread_entries = $rootScope.current_feed.unread_entries
     folder_id = $rootScope.current_feed.folder_id
 
-    $rootScope.current_feed = null
-
     # Update folders
     find_folder('all').unread_entries -= unread_entries
-    folder = find_folder folder_id
-    if folder != null
-      # Remove folder if it's empty
-      if find_folder_feeds(folder_id).length == 0
-        index = $scope.folders.indexOf folder
-        $scope.folders.splice index, 1 if index != -1
-      # Otherwise update unread entries in folder
-      else
-        folder.unread_entries -= unread_entries
+    feed_removed_from_folder $rootScope.current_feed, folder_id
+
+    # Tell the model that no feed is currently selected.
+    $rootScope.current_feed = null
 
     $http.delete(path).error ->
       # Show alert
@@ -108,6 +100,23 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     $scope.subscription_url = null
 
   #--------------------------------------------
+  # Remove a feed from a folder
+  #--------------------------------------------
+
+  $scope.remove_from_folder = ->
+    folder_id = $rootScope.current_feed.folder_id
+    $rootScope.current_feed.folder_id = 'none'
+    feed_removed_from_folder $rootScope.current_feed, folder_id
+
+    $http.put('/folders/none', folder: {feed_id: $rootScope.current_feed.id}).error ->
+      # Show alert
+      $scope.error_managing_folders = true
+      # Close alert after 5 seconds
+      $timeout ->
+        $scope.error_managing_folders = false
+      , 5000
+
+  #--------------------------------------------
   # Return a folder object given its id
   #--------------------------------------------
 
@@ -125,4 +134,18 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   find_folder_feeds = (folder_id)->
     return $filter('filter') $scope.feeds, {folder_id: folder_id}
 
+  #--------------------------------------------
+  # Update the model to account for a feed having been removed from a folder
+  #--------------------------------------------
+
+  feed_removed_from_folder = (feed, folder_id)->
+    folder = find_folder folder_id
+    if folder != null
+      # Remove folder if it's empty
+      if find_folder_feeds(folder_id).length == 0
+        index = $scope.folders.indexOf folder
+        $scope.folders.splice index, 1 if index != -1
+      # Otherwise update unread entries in folder
+      else
+        folder.unread_entries -= feed.unread_entries
 ]
