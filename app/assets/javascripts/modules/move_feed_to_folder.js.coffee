@@ -10,6 +10,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Add feed to folder clicking on a folder in the dropdown
   #-------------------------------------------------------
+  ###
   $("body").on "click", "a[data-folder-update-path]", ->
     update_folder_path = $(this).attr "data-folder-update-path"
     folder_id = $(this).attr("data-folder-id")
@@ -32,6 +33,7 @@ $(document).ready ->
     $.post(update_folder_path, {"_method":"patch", folder: {feed_id: Feedbunch.current_feed_id}}, update_folder_result, "json")
       .fail ->
         Feedbunch.alertTimedShowHide $("#problem-folder-management")
+  ###
 
   #-------------------------------------------------------
   # Submit the "New Folder" form when clicking on the "Add" button

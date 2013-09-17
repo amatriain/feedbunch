@@ -58,11 +58,10 @@
 </div>
 
 <%# Alert displayed when the user tries to add a feed to a folder it's already associated to %>
-<div id="already-in-folder" class="hidden">
+<div id="already-in-folder" ng-show="error_already_in_folder">
   <div class="alert alert-warning">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.already_in_folder' %></p>
-    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
 

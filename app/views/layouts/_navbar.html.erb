@@ -64,7 +64,9 @@
           <ul class="dropdown-menu text-left">
 
             <li ng-repeat="folder in folders | filter:{title: '!all'} | orderBy:'title'">
-              <a data-folder-update-path="/folders/{{folder.id}}.json" data-folder-id="{{folder.id}}">
+              <a data-folder-update-path="/folders/{{folder.id}}.json"
+                 data-folder-id="{{folder.id}}"
+                 ng-click="move_to_folder(folder)">
                 <i class="hidden icon-ok"></i>&nbsp;
                 {{folder.title}}
               </a>
