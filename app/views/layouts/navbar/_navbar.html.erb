@@ -22,9 +22,9 @@
           </a>
         </li>
 
-        <li id="entries-dropdown" class="dropdown" ng-show="!loading_entries">
+        <li id="entries-dropdown" class="dropdown" ng-show="current_feed">
           <a id="entries-management"
-             class="dropdown-toggle disabled hidden"
+             class="dropdown-toggle"
              data-toggle="dropdown">
             <i class="icon-rss"></i> <%= t 'feeds.index.entries' %>
             <b class="caret"></b>
@@ -52,9 +52,9 @@
            </a>
         </li>
 
-        <li id="folder-management-dropdown" class="dropdown" ng-show="!loading_entries">
+        <li id="folder-management-dropdown" class="dropdown" ng-show="current_feed">
           <a id="folder-management"
-                  class="dropdown-toggle disabled hidden"
+                  class="dropdown-toggle"
                   data-toggle="dropdown">
             <i class="icon-folder-open"></i> <%= t 'feeds.index.folder_management' %>
             <b class="caret"></b>
@@ -84,9 +84,8 @@
           </ul>
         </li>
 
-        <li ng-show="!loading_entries">
+        <li ng-show="current_feed">
           <a id="unsubscribe-feed"
-             class="disabled hidden"
              data-toggle="modal"
              data-target="#unsubscribe-feed-popup">
             <i class="icon-remove-sign"></i> <%= t 'feeds.index.unsubscribe' %>
