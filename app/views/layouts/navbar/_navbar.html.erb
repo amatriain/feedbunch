@@ -17,7 +17,7 @@
           <a id="add-subscription"
              data-target="#subscribe-feed-popup"
              data-toggle="modal"
-             ng-class="{disabled: loading_entries}">
+             ng-hide="loading_entries" >
             <i class="icon-plus"></i> <%= t 'feeds.index.subscribe_button' %>
           </a>
         </li>
