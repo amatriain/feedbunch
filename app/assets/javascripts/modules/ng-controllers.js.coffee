@@ -2,7 +2,7 @@
 # AngularJS controllers file
 ########################################################
 
-angular.module('feedbunch').controller 'FoldersCtrl',
+angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$http', '$timeout', '$filter', ($rootScope, $scope, $http, $timeout, $filter)->
 
   # Load folders and feeds via AJAX on startup
