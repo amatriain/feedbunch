@@ -13,9 +13,9 @@
   <div class="col-md-9">
 
     <div ng-show="current_feed">
-      <div class="hidden" id="feed-title">
+      <div id="feed-title">
         <strong class="lead">
-          <a target="_blank"></a>
+          <a href="{{current_feed.url}}" target="_blank">{{current_feed.title}}</a>
         </strong>
         <hr>
       </div>

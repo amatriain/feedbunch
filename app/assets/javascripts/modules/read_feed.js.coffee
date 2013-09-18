@@ -12,6 +12,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Load unread feed entries when clicking on a feed in the sidebar
   #-------------------------------------------------------
+  ###
   $("body").on "click", "[data-sidebar-feed]", ->
     set_global_variables(this)
     show_feed_title this
@@ -25,6 +26,7 @@ $(document).ready ->
           Feedbunch.alertTimedShowHide $("#no-entries")
         else
           Feedbunch.alertTimedShowHide $("#problem-loading")
+  ###
 
   #-------------------------------------------------------
   # Load read and unread feed entries when clicking on the "Show read entries" button

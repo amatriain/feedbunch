@@ -24,18 +24,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
         return folder.id == feed.folder_id
 
   #--------------------------------------------
-  # Store the currently selected feed in the global scope
+  # Function to filter feeds in a given folder
   #--------------------------------------------
 
-  $scope.set_current_feed = (feed)->
-    $rootScope.current_feed = feed
-
-  #--------------------------------------------
-  # Unset the currently selected feed in the global scope
-  #--------------------------------------------
-
-  $scope.unset_current_feed = ->
-    $rootScope.current_feed = null
+  $scope.show_start_page = ->
+    unset_current_feed()
+    $scope.loading_entries = false
 
   #--------------------------------------------
   # Unsubscribe from a feed
@@ -75,14 +69,14 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     $("#subscribe-feed-popup").modal 'hide'
 
     if $scope.subscription_url
-      $scope.unset_current_feed()
+      unset_current_feed()
       $scope.loading_entries = true
 
       $http.post('/feeds.json', feed:{url: $scope.subscription_url})
       .success (data)->
         $scope.loading_entries = false
         $scope.feeds.push data
-        $scope.set_current_feed data
+        $scope.load_feed data
         find_folder('all').unread_entries += data.unread_entries
       .error (data, status)->
         $scope.loading_entries = false
@@ -170,6 +164,20 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     $scope.new_folder_title = null
 
   #--------------------------------------------
+  # Read a feed's entries
+  #--------------------------------------------
+
+  $scope.load_feed = (feed)->
+    set_current_feed feed
+    $scope.loading_entries = true
+
+    $http.get("/feeds/#{feed.id}")
+    .success (data)->
+        alert 'success'
+    .error ->
+        alert 'error'
+
+  #--------------------------------------------
   # Return a folder object given its id
   #--------------------------------------------
 
@@ -201,4 +209,19 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
       # Otherwise update unread entries in folder
       else
         folder.unread_entries -= feed.unread_entries
+
+  #--------------------------------------------
+  # Store the currently selected feed in the global scope
+  #--------------------------------------------
+
+  set_current_feed = (feed)->
+    $rootScope.current_feed = feed
+
+  #--------------------------------------------
+  # Unset the currently selected feed in the global scope
+  #--------------------------------------------
+
+  unset_current_feed = ->
+    $rootScope.current_feed = null
+
 ]
