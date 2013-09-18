@@ -23,33 +23,36 @@
         </li>
 
         <li id="entries-dropdown" class="dropdown" ng-show="current_feed">
+
           <a id="entries-management"
              class="dropdown-toggle"
              data-toggle="dropdown">
             <i class="icon-rss"></i> <%= t 'feeds.index.entries' %>
             <b class="caret"></b>
-            <ul class="dropdown-menu text-left">
-              <li>
-                <a id="refresh-feed">
-                  <i class="icon-repeat"></i> <%= t 'feeds.index.refresh' %>
-                </a>
-              </li>
+          </a>
 
-              <li>
-                <a id="read-all-button"
-                   data-entry-state-update-path="<%= entries_update_path %>">
-                  <i class="icon-check"></i> <%= t 'feeds.index.read-all' %>
-                </a>
-              </li>
+          <ul class="dropdown-menu text-left">
 
-              <li>
-                <a id="show-read-button">
-                  <i class="icon-eye-open"></i> <%= t 'feeds.index.show_read' %>
-                </a>
-              </li>
+            <li>
+              <a id="refresh-feed" >
+                <i class="icon-repeat"></i> <%= t 'feeds.index.refresh' %>
+              </a>
+            </li>
 
-            </ul>
-           </a>
+            <li>
+              <a id="read-all-button"
+                 data-entry-state-update-path="<%= entries_update_path %>">
+                <i class="icon-check"></i> <%= t 'feeds.index.read-all' %>
+              </a>
+            </li>
+
+            <li>
+              <a id="show-read-button" ng-click="read_all_entries()">
+                <i class="icon-eye-open"></i> <%= t 'feeds.index.show_read' %>
+              </a>
+            </li>
+
+          </ul>
         </li>
 
         <li id="folder-management-dropdown" class="dropdown" ng-show="current_feed">

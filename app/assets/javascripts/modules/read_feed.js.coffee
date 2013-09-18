@@ -8,6 +8,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Load read and unread feed entries when clicking on the "Show read entries" button
   #-------------------------------------------------------
+  ###
   $("body").on "click", "#show-read-button", ->
     if $(this).hasClass("disabled") == false
       Feedbunch.loading_entries this
@@ -19,6 +20,7 @@ $(document).ready ->
             Feedbunch.alertTimedShowHide $("#no-entries")
           else
             Feedbunch.alertTimedShowHide $("#problem-loading")
+  ###
 
 
   ########################################################

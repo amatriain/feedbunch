@@ -21,8 +21,8 @@ class FeedsController < ApplicationController
   # If the requests asks for a feed the current user is not suscribed to, the response is a 404 error code (Not Found).
 
   def show
-    if params[:include_read].present?
-      include_read = params[:include_read]
+    if params[:include_read]=="true"
+      include_read = true
     else
       include_read = false
     end

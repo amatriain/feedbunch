@@ -164,14 +164,28 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     $scope.new_folder_title = null
 
   #--------------------------------------------
-  # Read a feed's entries
+  # Load a feed's unread entries
   #--------------------------------------------
 
-  $scope.load_feed = (feed)->
+  $scope.read_feed = (feed)->
     set_current_feed feed
+    load_feed feed, false
+
+  #--------------------------------------------
+  # Load all of a feed's entries regardless of state
+  #--------------------------------------------
+
+  $scope.read_all_entries = ->
+    load_feed $rootScope.current_feed, true
+
+  #--------------------------------------------
+  # Load a feed's entries
+  #--------------------------------------------
+
+  load_feed = (feed, include_read_entries)->
     $scope.loading_entries = true
 
-    $http.get("/feeds/#{feed.id}.json")
+    $http.get("/feeds/#{feed.id}.json?include_read=#{include_read_entries}")
     .success (data)->
       $scope.loading_entries = false
       $scope.entries = data["entries"]
