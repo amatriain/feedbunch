@@ -24,12 +24,19 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
         return folder.id == feed.folder_id
 
   #--------------------------------------------
-  # Function to filter feeds in a given folder
+  # Function to show the start page
   #--------------------------------------------
 
   $scope.show_start_page = ->
     unset_current_feed()
     $scope.loading_entries = false
+
+  #--------------------------------------------
+  # Function to convert an entry's id to an integer, for filtering purposes
+  #--------------------------------------------
+
+  $scope.entry_int_id = (entry)->
+    return parseInt entry.id
 
   #--------------------------------------------
   # Unsubscribe from a feed
