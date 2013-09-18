@@ -1,4 +1,6 @@
-[
+{
+"unread_entries": <%= user.feed_unread_count feed %>,
+"entries": [
 <% entries.each do |entry| %>
 {
   "id": "<%= entry.id %>",
@@ -15,3 +17,4 @@
   <% end %>
 <% end %>
 ]
+}

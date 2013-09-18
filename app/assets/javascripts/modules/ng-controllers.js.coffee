@@ -174,7 +174,8 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     $http.get("/feeds/#{feed.id}.json")
     .success (data)->
       $scope.loading_entries = false
-      $scope.entries = data
+      $scope.entries = data["entries"]
+      feed.unread_entries = data["unread_entries"]
     .error (data,status)->
       $rootScope.current_feed = null
       $scope.loading_entries = false
