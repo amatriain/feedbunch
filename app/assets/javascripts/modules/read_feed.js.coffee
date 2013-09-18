@@ -5,29 +5,6 @@ window.Feedbunch ||= {}
 
 $(document).ready ->
 
-  ########################################################
-  # EVENTS
-  ########################################################
-
-  #-------------------------------------------------------
-  # Load unread feed entries when clicking on a feed in the sidebar
-  #-------------------------------------------------------
-  ###
-  $("body").on "click", "[data-sidebar-feed]", ->
-    set_global_variables(this)
-    show_feed_title this
-    Feedbunch.loading_entries this
-
-    # Load the entries via Ajax
-    $.get(Feedbunch.current_feed_path, null, insert_entries)
-      .fail (xhr, textStatus, errorThrown) ->
-        Feedbunch.entries_loaded(Feedbunch.current_feed_id)
-        if xhr.status == 404
-          Feedbunch.alertTimedShowHide $("#no-entries")
-        else
-          Feedbunch.alertTimedShowHide $("#problem-loading")
-  ###
-
   #-------------------------------------------------------
   # Load read and unread feed entries when clicking on the "Show read entries" button
   #-------------------------------------------------------

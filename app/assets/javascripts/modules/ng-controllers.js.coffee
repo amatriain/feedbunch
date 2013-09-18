@@ -173,10 +173,23 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 
     $http.get("/feeds/#{feed.id}.json")
     .success (data)->
-        $scope.loading_entries = false
-        $scope.entries = data
-    .error ->
-        alert 'error'
+      $scope.loading_entries = false
+      $scope.entries = data
+    .error (data,status)->
+      $rootScope.current_feed = null
+      $scope.loading_entries = false
+      if status == 404
+        $scope.error_no_entries = true
+        # Close alert after 5 seconds
+        $timeout ->
+          $scope.error_no_entries = false
+        , 5000
+      else
+        $scope.error_loading_entries = true
+        # Close alert after 5 seconds
+        $timeout ->
+          $scope.error_loading_entries = false
+        , 5000
 
   #--------------------------------------------
   # Return a folder object given its id

@@ -1,9 +1,8 @@
 <%# Alert displayed when the feed selected has no entries %>
-<div id="no-entries" class="hidden">
+<div id="no-entries" ng-show="error_no_entries">
   <div class="alert alert-warning">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.no_entries' %></p>
-    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
 
@@ -17,11 +16,10 @@
 </div>
 
 <%# Alert displayed when there is a problem loading feeds %>
-<div id="problem-loading" class="hidden">
+<div id="problem-loading" ng-show="error_loading_entries">
   <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_loading' %></p>
-    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
 
