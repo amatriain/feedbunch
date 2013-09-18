@@ -37,6 +37,11 @@ describe FeedsController do
       @feed1.entries << @entry_1_1 << @entry_1_2
     end
 
+    it 'assigns to @feed the correct feed' do
+      get :show, id: @feed1.id
+      assigns(:feed).should eq @feed1
+    end
+
     it 'assigns to @entries the entries for a single feed' do
       get :show, id: @feed1.id
       assigns(:entries).count.should eq 2
@@ -76,6 +81,7 @@ describe FeedsController do
       assigns(:entries).should include entry1
       assigns(:entries).should include entry2
     end
+
   end
 
   context 'PATCH update' do
