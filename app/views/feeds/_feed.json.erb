@@ -1,6 +1,6 @@
 {
   "id": "<%= feed.id %>",
-  "title": "<%= feed.title.html_safe %>",
+  "title": <%= feed.title.to_json.html_safe %>,
   "url": "<%= feed.url %>",
   "folder_id": "<%= feed.user_folder(user).try(:id) || 'none' %>",
   "unread_entries": <%= user.feed_unread_count feed %>

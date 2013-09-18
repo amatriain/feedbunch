@@ -171,9 +171,10 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     set_current_feed feed
     $scope.loading_entries = true
 
-    $http.get("/feeds/#{feed.id}")
+    $http.get("/feeds/#{feed.id}.json")
     .success (data)->
-        alert 'success'
+        $scope.loading_entries = false
+        $scope.entries = data
     .error ->
         alert 'error'
 

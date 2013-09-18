@@ -12,7 +12,15 @@
 
   <div class="col-md-9">
 
-    <div ng-show="current_feed">
+    <div ng-show="current_feed==null && !loading_entries">
+      <%= render 'start', user: @user %>
+    </div>
+
+    <div id="loading" class="col-md-offset-1" ng-show="loading_entries" ng-cloak>
+      <%= t 'feeds.index.loading' %>
+    </div>
+
+    <div ng-show="current_feed && !loading_entries">
       <div id="feed-title">
         <strong class="lead">
           <a href="{{current_feed.url}}" target="_blank">{{current_feed.title}}</a>
@@ -20,15 +28,9 @@
         <hr>
       </div>
 
-      <div class="panel-group hidden" id="feed-entries"></div>
-    </div>
-
-    <div id="loading" class="col-md-offset-1" ng-show="loading_entries" ng-cloak>
-      <%= t 'feeds.index.loading' %>
-    </div>
-
-    <div ng-show="current_feed==null && !loading_entries">
-      <%= render 'start', user: @user %>
+      <div class="panel-group" id="feed-entries">
+        <%= render 'entries' %>
+      </div>
     </div>
 
   </div>

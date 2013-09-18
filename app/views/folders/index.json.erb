@@ -5,7 +5,6 @@
   "unread_entries": <%= user.unread_entries %>
 }
   <% folders.each do |folder| %>
-
 ,
 <%= render(partial: 'folder', locals: {folder: folder}) %>
   <% end %>

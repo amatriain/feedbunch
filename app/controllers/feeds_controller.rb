@@ -5,8 +5,7 @@ class FeedsController < ApplicationController
 
   before_filter :authenticate_user!
 
-  respond_to :html, only: [:show]
-  respond_to :json, except: [:show]
+  respond_to :json
 
   ##
   # Return JSON with the list of feeds subscribed by the current user
@@ -31,7 +30,7 @@ class FeedsController < ApplicationController
     @entries = current_user.feed_entries @feed, include_read
 
     if @entries.present?
-      render 'entries/index', locals: {entries: @entries, user: current_user}, layout: false
+      render 'show', locals: {entries: @entries, user: current_user}
     else
       Rails.logger.warn "Feed #{params[:id]} has no entries, returning a 404"
       head status: 404

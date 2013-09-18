@@ -1,0 +1,38 @@
+<div ng-cloak
+     ng-repeat="entry in entries | orderBy:['published','id']"
+     id="entry-{{entry.id}}"
+     class="panel panel-default entry">
+
+  <a data-toggle="collapse"
+     data-target="#entry-{{entry.id}}-summary"
+     data-parent="#feed-entries"
+     data-entry-id="{{entry.id}}"
+     class="list-group-item"
+     ng-class="{'entry-read': entry.read, 'entry-unread': !entry.read}">
+    {{entry.title}}
+    <span class="pull-right" ng-show="entry.published">{{entry.published}}</span>
+  </a>
+
+  <%# Entry summary, initially collapsed %>
+  <div class="panel-collapse collapse"
+       id="entry-{{entry.id}}-summary"
+       data-entry-summary-id="{{entry.id}}"
+       data-entry-state-update-path="<%= entries_update_path %>">
+    <div class="panel-body entry-content">
+      <p class="lead">
+        <a href="{{entry.url}}" target="_blank">
+          {{entry.title}} <i class="icon-external-link"></i>
+        </a>
+
+        <a class="btn btn-default btn-sm pull-right" data-unread-entry-id="{{entry.id}}"
+           data-entry-state-update-path="<%= entries_update_path %>">
+          <i class="icon-eye-close"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
+        </a>
+      </p>
+
+      <p class="hidden">{{entry.guid}}</p>
+      <p ng-show="entry.content.length > 0" ng-bind-html-unsafe="entry.content"></p>
+      <p ng-hide="entry.content.length > 0" ng-bind-html-unsafe="entry.summary"></p>
+    </div>
+  </div>
+</div>

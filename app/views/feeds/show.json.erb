@@ -1,21 +1,17 @@
-<% self.formats = [:html] %>
-
+[
+<% entries.each do |entry| %>
 {
-    "folder_all": {
-        "sidebar_read_all": <%= render(partial: 'read/sidebar/sidebar_folder_read_all',
-                                locals: {user: user, folder: Folder::ALL_FOLDERS}, layout: false).to_json.html_safe %>
-    },
-    "feed":{
-        "id": <%= feed.id %>,
-        "sidebar": <%= render('read/sidebar/sidebar_feed', user: user, feed: feed).to_json.html_safe %>
-    }
-
-<% if folder.present? %>
-    ,
-    "folder": {
-        "id": <%= folder.id %>,
-        "sidebar_read_all": <%= render(partial: 'read/sidebar/sidebar_folder_read_all',
-                                locals: {user: user, folder: folder}, layout: false).to_json.html_safe %>
-    }
-<% end %>
+  "id": "<%= entry.id %>",
+  "title": <%= entry.title.to_json.html_safe %>,
+  "read": <%= entry.read_by? user %>,
+  "published": "<%= l entry.published, format: :short if entry.published.present? %>",
+  "url": "<%= entry.url %>",
+  "guid": "<%= entry.guid %>",
+  "content": <%= entry.content.try(:to_json).html_safe %>,
+  "summary": <%= entry.summary.try(:to_json).html_safe %>
 }
+  <% if entry != entries.last %>
+,
+  <% end %>
+<% end %>
+]
