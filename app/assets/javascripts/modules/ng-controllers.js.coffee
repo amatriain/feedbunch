@@ -214,6 +214,13 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
         , 5000
 
   #--------------------------------------------
+  # Mark a single entry as read
+  #--------------------------------------------
+
+  $scope.read_entry = (entry)->
+    alert 'test'
+
+  #--------------------------------------------
   # Load a feed's entries
   #--------------------------------------------
 

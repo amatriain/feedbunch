@@ -8,7 +8,8 @@
      data-parent="#feed-entries"
      data-entry-id="{{entry.id}}"
      class="list-group-item"
-     ng-class="{'entry-read': entry.read, 'entry-unread': !entry.read}">
+     ng-class="{'entry-read': entry.read, 'entry-unread': !entry.read}"
+     ng-click="read_entry(entry)">
     {{entry.title}}
     <span class="pull-right" ng-show="entry.published">{{entry.published}}</span>
   </a>

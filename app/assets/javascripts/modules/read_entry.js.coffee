@@ -10,6 +10,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Mark entry as read as soon as the user opens it
   #-------------------------------------------------------
+  ###
   $("body").on "shown.bs.collapse", "[data-entry-summary-id]", ->
     if opening_entry this
       update_entry_state_path = $(this).attr "data-entry-state-update-path"
@@ -27,6 +28,7 @@ $(document).ready ->
         entry_read_result, "json")
         .fail ->
           Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
+  ###
 
   #-------------------------------------------------------
   # Mark all visible entries as read when clicking on the "mark all as read" button
