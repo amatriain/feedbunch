@@ -22,7 +22,7 @@
           </a>
         </li>
 
-        <li id="entries-dropdown" class="dropdown" ng-show="current_feed">
+        <li id="entries-dropdown" class="dropdown" ng-show="current_feed && !loading_entries">
 
           <a id="entries-management"
              class="dropdown-toggle"
@@ -55,7 +55,7 @@
           </ul>
         </li>
 
-        <li id="folder-management-dropdown" class="dropdown" ng-show="current_feed">
+        <li id="folder-management-dropdown" class="dropdown" ng-show="current_feed && !loading_entries">
 
           <a id="folder-management"
                   class="dropdown-toggle"
@@ -99,7 +99,7 @@
           </ul>
         </li>
 
-        <li ng-show="current_feed">
+        <li ng-show="current_feed && !loading_entries">
           <a id="unsubscribe-feed"
              data-toggle="modal"
              data-target="#unsubscribe-feed-popup">
