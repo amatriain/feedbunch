@@ -32,7 +32,7 @@ class FeedsController < ApplicationController
     if @entries.present?
       render 'show', locals: {feed: @feed, entries: @entries, user: current_user}
     else
-      Rails.logger.warn "Feed #{params[:id]} has no entries, returning a 404"
+      Rails.logger.warn "Feed #{params[:id]} has no unread entries, returning a 404"
       head status: 404
     end
   rescue => e
@@ -48,9 +48,14 @@ class FeedsController < ApplicationController
 
   def update
     @feed = current_user.feeds.find params[:id]
-    @folder= @feed.user_folder current_user
-    current_user.refresh_feed @feed
-    render 'show', locals: {user: current_user, feed: @feed, folder: @folder}
+    @entries = current_user.refresh_feed @feed
+
+    if @entries.present?
+      render 'show', locals: {feed: @feed, entries: @entries, user: current_user}
+    else
+      Rails.logger.warn "Feed #{params[:id]} has no unread entries, returning a 404"
+      head status: 404
+    end
   rescue => e
     handle_error e
   end

@@ -190,7 +190,28 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   #--------------------------------------------
 
   $scope.refresh_feed = ->
-    alert 'test'
+    $scope.loading_entries = true
+
+    $http.put("/feeds/#{$rootScope.current_feed.id}.json")
+    .success (data)->
+      $scope.loading_entries = false
+      $scope.entries = data["entries"]
+      $rootScope.current_feed.unread_entries = data["unread_entries"]
+    .error ->
+      $scope.loading_entries = false
+      if status == 404
+        $scope.error_no_entries = true
+        # Close alert after 5 seconds
+        $timeout ->
+          $scope.error_no_entries = false
+        , 5000
+      else
+        # Show alert
+        $scope.error_refreshing_feed = true
+        # Close alert after 5 seconds
+        $timeout ->
+          $scope.error_refreshing_feed = false
+        , 5000
 
   #--------------------------------------------
   # Load a feed's entries
