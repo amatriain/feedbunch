@@ -186,6 +186,13 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     load_feed $rootScope.current_feed, true
 
   #--------------------------------------------
+  # Refresh a feed and load its unread entries
+  #--------------------------------------------
+
+  $scope.refresh_feed = ->
+    alert 'test'
+
+  #--------------------------------------------
   # Load a feed's entries
   #--------------------------------------------
 

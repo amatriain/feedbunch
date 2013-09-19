@@ -10,6 +10,7 @@ $(document).ready ->
   #-------------------------------------------------------
   # Load new feed entries when clicking on the Refresh button (only if button enabled)
   #-------------------------------------------------------
+  ###
   $("body").on "click", "#refresh-feed", ->
     if $(this).hasClass("disabled") == false
       # Only refresh if the global variable stores a feed refresh path
@@ -30,6 +31,7 @@ $(document).ready ->
             Feedbunch.hide_loading_message()
             stop_icon_animation()
             Feedbunch.alertTimedShowHide $("#problem-refreshing")
+  ###
 
   ########################################################
   # COMMON FUNCTIONS
