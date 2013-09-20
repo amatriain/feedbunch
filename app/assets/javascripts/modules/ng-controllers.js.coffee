@@ -57,7 +57,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     feed_removed_from_folder $rootScope.current_feed, folder_id
 
     # Tell the model that no feed is currently selected.
-    $rootScope.current_feed = null
+    unset_current_feed()
 
     $http.delete(path)
     .error ->
@@ -83,7 +83,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
       .success (data)->
         $scope.loading_entries = false
         $scope.feeds.push data
-        $scope.load_feed data
+        $scope.read_feed data
         find_folder('all').unread_entries += data.unread_entries
       .error (data, status)->
         $scope.loading_entries = false
@@ -183,6 +183,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   #--------------------------------------------
 
   $scope.read_all_entries = ->
+    unset_open_entry()
     load_feed $rootScope.current_feed, true
 
   #--------------------------------------------
@@ -190,6 +191,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   #--------------------------------------------
 
   $scope.refresh_feed = ->
+    unset_open_entry()
     $scope.loading_entries = true
 
     $http.put("/feeds/#{$rootScope.current_feed.id}.json")
@@ -218,7 +220,20 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   #--------------------------------------------
 
   $scope.read_entry = (entry)->
-    alert 'test'
+    if $rootScope.open_entry == entry
+      # User is closing the open entry, do nothing
+      alert "closing #{entry.title}"
+      unset_open_entry()
+    else
+      set_open_entry entry
+      if !entry.read
+        # User is opening an unread entry
+        alert "reading #{entry.title}"
+      else
+        # User is opening a read entry
+        alert "opening read #{entry.title}"
+
+    alert $rootScope.open_entry.id
 
   #--------------------------------------------
   # Load a feed's entries
@@ -233,7 +248,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
       $scope.entries = data["entries"]
       feed.unread_entries = data["unread_entries"]
     .error (data,status)->
-      $rootScope.current_feed = null
+      unset_current_feed()
       $scope.loading_entries = false
       if status == 404
         $scope.error_no_entries = true
@@ -286,6 +301,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   #--------------------------------------------
 
   set_current_feed = (feed)->
+    unset_open_entry()
     $rootScope.current_feed = feed
 
   #--------------------------------------------
@@ -293,6 +309,21 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   #--------------------------------------------
 
   unset_current_feed = ->
+    unset_open_entry()
     $rootScope.current_feed = null
+
+  #--------------------------------------------
+  # Store the currently open entry in the global scope
+  #--------------------------------------------
+
+  set_open_entry = (entry)->
+    $rootScope.open_entry = entry
+
+  #--------------------------------------------
+  # Unset the currently open entry in the global scope
+  #--------------------------------------------
+
+  unset_open_entry = ->
+    $rootScope.open_entry = null
 
 ]
