@@ -227,17 +227,14 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
       set_open_entry entry
       if !entry.read
         # User is opening an unread entry, mark it as read
-        entry.read = true
-        $rootScope.current_feed.unread_entries -= 1
-        $http.put("/entries/update.json", entries: {ids: [entry.id], state: "read"})
-        .error ->
-          # Show alert
-          $rootScope.error_changing_entry_state = true
-          # Close alert after 5 seconds
-          $timeout ->
-            $rootScope.error_changing_entry_state = false
-          , 5000
+        mark_entries_read [entry]
 
+  #--------------------------------------------
+  # Mark all entries as read
+  #--------------------------------------------
+
+  $scope.mark_all_read = ->
+    mark_entries_read $scope.entries
 
   #--------------------------------------------
   # Load a feed's entries
@@ -265,6 +262,27 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
         # Close alert after 5 seconds
         $timeout ->
           $scope.error_loading_entries = false
+        , 5000
+
+  #--------------------------------------------
+  # Mark an array of entries as read. Receives an array of entries as argument.
+  #--------------------------------------------
+
+  mark_entries_read = (entries)->
+    # Mark entries as read in the model
+    for entry in entries
+      entry.read = true
+    # Decrement the unread entries count for the feed
+    $rootScope.current_feed.unread_entries -= entries.length
+    # Get array of IDs for the entries
+    entry_ids = entries.map (entry) -> entry.id
+    $http.put("/entries/update.json", entries: {ids: entry_ids, state: "read"})
+    .error ->
+        # Show alert
+        $rootScope.error_changing_entry_state = true
+        # Close alert after 5 seconds
+        $timeout ->
+          $rootScope.error_changing_entry_state = false
         , 5000
 
   #--------------------------------------------

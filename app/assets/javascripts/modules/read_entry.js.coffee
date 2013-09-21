@@ -8,30 +8,6 @@ $(document).ready ->
   ########################################################
 
   #-------------------------------------------------------
-  # Mark all visible entries as read when clicking on the "mark all as read" button
-  #-------------------------------------------------------
-  $("body").on "click", "#read-all-button", ->
-    if $(this).hasClass("disabled") == false
-      update_entry_state_path = $(this).attr "data-entry-state-update-path"
-      entries = []
-      $("[data-entry-id]").each ->
-        entry_id = $(this).attr "data-entry-id"
-        marking_entry_as_read entry_id
-        entries.push entry_id
-
-      # Function to handle result returned by the server
-      all_read_result = (data, status, xhr) ->
-        for id in entries
-          mark_entry_as_read id
-        update_unread_counts data
-
-      $.post(update_entry_state_path,
-        {_method:"patch", entries: {ids: entries, state: "read"} },
-        all_read_result, "json")
-          .fail ->
-            Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
-
-  #-------------------------------------------------------
   # Mark a single entry as unread when clicking on the "mark as unread" button
   #-------------------------------------------------------
   $("body").on "click", "[data-unread-entry-id]", ->
