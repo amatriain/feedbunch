@@ -20,20 +20,6 @@ describe User do
       entry_state.read.should be_true
     end
 
-    it 'returns changed feeds and folders' do
-      folder= FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << folder
-      folder.feeds << @feed
-
-      changed_data = @user.change_entries_state [@entry], 'read'
-
-      changed_data[:feeds].length.should eq 1
-      changed_data[:feeds][0].should eq @feed
-
-      changed_data[:folders].length.should eq 1
-      changed_data[:folders][0].should eq folder
-    end
-
     it 'marks entry as unread' do
       entry_state = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
       entry_state.read = true
