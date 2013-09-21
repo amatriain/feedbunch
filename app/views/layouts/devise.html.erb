@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="feedbunch">
 
 <%= render 'layouts/header' %>
 
-<body>
+<body ng-controller="DeviseCtrl">
 
 <%= render 'layouts/navbar' %>
 
 <%= render 'data_imports/popups/import_subscriptions_form' %>
 
-<div class="row top-alert" ng-cloak>
-  <div class="col-md-8 col-md-offset-2 text-center">
+<div class="row top-alert">
+  <div class="col-md-8 col-md-offset-2 text-center" ng-cloak>
 
     <%= render 'layouts/alerts' %>
     <%= render 'devise/alerts' %>
+    <%= render 'data_imports/alerts' %>
 
   </div>
 </div>

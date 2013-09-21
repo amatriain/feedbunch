@@ -1,11 +1,10 @@
 <% if  devise_error_messages!.present? %>
-  <div id="devise-error" class="alert alert-danger fade in">
+  <div id="devise-error" class="alert alert-danger fade in" ng-show="error_devise">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <ul>
       <% resource.errors.full_messages.each do |m| %>
         <li><%= m %></li>
       <% end %>
     </ul>
-    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 <% end %>

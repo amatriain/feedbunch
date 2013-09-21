@@ -54,9 +54,3 @@ $(document).ready ->
   #-------------------------------------------------------
   if $("#alert").length
     alertTimedClose $("#alert")
-
-  #-------------------------------------------------------
-  # Hide Devise errors with a timer
-  #-------------------------------------------------------
-  if $("#devise-error").length
-    alertTimedClose $("#devise-error")

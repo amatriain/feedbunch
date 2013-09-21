@@ -1,5 +1,5 @@
 ########################################################
-# AngularJS controllers file
+# AngularJS controller file
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',

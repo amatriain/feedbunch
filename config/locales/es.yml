@@ -11,7 +11,6 @@ es:
       background_jobs: "Tareas en background"
       my_account: "Mi cuenta"
       my_feeds: "Mis feeds"
-      closing_timer_html: "cerrando en <span data-timer></span>"
       import: "Importar suscripciones"
       github: "Visítanos en Github"
   feeds:
