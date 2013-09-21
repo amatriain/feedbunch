@@ -222,18 +222,22 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   $scope.read_entry = (entry)->
     if $rootScope.open_entry == entry
       # User is closing the open entry, do nothing
-      alert "closing #{entry.title}"
       unset_open_entry()
     else
       set_open_entry entry
       if !entry.read
-        # User is opening an unread entry
-        alert "reading #{entry.title}"
-      else
-        # User is opening a read entry
-        alert "opening read #{entry.title}"
+        # User is opening an unread entry, mark it as read
+        entry.read = true
+        $rootScope.current_feed.unread_entries -= 1
+        $http.put("/entries/update.json", entries: {ids: [entry.id], state: "read"})
+        .error ->
+          # Show alert
+          $rootScope.error_changing_entry_state = true
+          # Close alert after 5 seconds
+          $timeout ->
+            $rootScope.error_changing_entry_state = false
+          , 5000
 
-    alert $rootScope.open_entry.id
 
   #--------------------------------------------
   # Load a feed's entries

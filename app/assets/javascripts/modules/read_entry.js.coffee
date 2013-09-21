@@ -8,29 +8,6 @@ $(document).ready ->
   ########################################################
 
   #-------------------------------------------------------
-  # Mark entry as read as soon as the user opens it
-  #-------------------------------------------------------
-  ###
-  $("body").on "shown.bs.collapse", "[data-entry-summary-id]", ->
-    if opening_entry this
-      update_entry_state_path = $(this).attr "data-entry-state-update-path"
-      entry_id = $(this).attr "data-entry-summary-id"
-
-      marking_entry_as_read entry_id
-
-      # Function to handle result returned by the server
-      entry_read_result = (data, status, xhr) ->
-        mark_entry_as_read entry_id
-        update_unread_counts data
-
-      $.post(update_entry_state_path,
-        {_method:"patch", entries: {ids: [entry_id], state: "read"} },
-        entry_read_result, "json")
-        .fail ->
-          Feedbunch.alertTimedShowHide $("#problem-entry-state-change")
-  ###
-
-  #-------------------------------------------------------
   # Mark all visible entries as read when clicking on the "mark all as read" button
   #-------------------------------------------------------
   $("body").on "click", "#read-all-button", ->

@@ -10,11 +10,8 @@ class EntriesController < ApplicationController
 
   def update
     entries = current_user.entries.find entry_params[:ids]
-    changed_data = current_user.change_entries_state entries, entry_params[:state]
-    @feeds = changed_data[:feeds]
-    @folders = changed_data[:folders]
-    render 'update',
-           locals: {user: current_user, feeds: @feeds, folders: @folders}
+    current_user.change_entries_state entries, entry_params[:state]
+    head :ok
   rescue => e
     handle_error e
   end

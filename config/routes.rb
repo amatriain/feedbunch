@@ -96,7 +96,7 @@ Feedbunch::Application.routes.draw do
   get '/read' => 'read#index', as: :read
 
   # Mark as read an array of entries
-  match '/entries/update' => 'entries#update', via: :patch, as: 'entries_update'
+  match '/entries/update' => 'entries#update', via: [:patch, :put], as: 'entries_update'
 
   # Resourceful routes for feeds
   resources :feeds, only: [:index, :show, :create, :update, :destroy]

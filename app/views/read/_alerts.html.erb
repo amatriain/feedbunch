@@ -71,10 +71,9 @@
 </div>
 
 <%# Alert displayed when there is a problem changing an entry's read/unread state %>
-<div id="problem-entry-state-change" class="hidden">
+<div id="problem-entry-state-change" ng-show="error_changing_entry_state">
   <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
     <p><%= t 'feeds.index.problem_entry_state' %></p>
-    <p><em><%= t 'layouts.application.closing_timer_html' %></em></p>
   </div>
 </div>
