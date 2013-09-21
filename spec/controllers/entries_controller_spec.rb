@@ -34,19 +34,5 @@ describe EntriesController do
       put :update, entries: {ids: [@entry.id], state: 'read'}, format: :json
       response.status.should eq 500
     end
-
-    it 'assigns the correct feed to @feeds' do
-      put :update, entries: {ids: [@entry.id], state: 'read'}, format: :json
-      assigns(:feeds).should eq [@feed]
-    end
-
-    it 'assigns the correct folder to @folders' do
-      folder = FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << folder
-      folder.feeds << @feed
-
-      put :update, entries: {ids: [@entry.id], state: 'read'}, format: :json
-      assigns(:folders).should eq [folder]
-    end
   end
 end
