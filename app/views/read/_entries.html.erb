@@ -26,7 +26,7 @@
         </a>
 
         <a class="btn btn-default btn-sm pull-right" data-unread-entry-id="{{entry.id}}"
-           data-entry-state-update-path="<%= entries_update_path %>">
+           data-entry-state-update-path="<%= entries_update_path %>" ng-click="unread_entry()">
           <i class="icon-eye-close"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
         </a>
       </p>

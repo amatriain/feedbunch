@@ -227,14 +227,23 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
       set_open_entry entry
       if !entry.read
         # User is opening an unread entry, mark it as read
-        mark_entries_read [entry]
+        change_entries_state [entry], true
 
   #--------------------------------------------
   # Mark all entries as read
   #--------------------------------------------
 
   $scope.mark_all_read = ->
-    mark_entries_read $scope.entries
+    change_entries_state $scope.entries, true
+
+  #--------------------------------------------
+  # Mark a single entry as unread
+  #--------------------------------------------
+
+  $scope.unread_entry = ->
+    if $rootScope.open_entry.read
+      change_entries_state [$rootScope.open_entry], false
+
 
   #--------------------------------------------
   # Load a feed's entries
@@ -265,18 +274,29 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
         , 5000
 
   #--------------------------------------------
-  # Mark an array of entries as read. Receives an array of entries as argument.
+  # Mark an array of entries as read or unread.
+  # Receives as arguments an array of entries and a boolean indicating whether to mark
+  # them as read (true) or unread (false).
   #--------------------------------------------
 
-  mark_entries_read = (entries)->
+  change_entries_state = (entries, read)->
     # Mark entries as read in the model
     for entry in entries
-      entry.read = true
-    # Decrement the unread entries count for the feed
-    $rootScope.current_feed.unread_entries -= entries.length
+      entry.read = read
+
     # Get array of IDs for the entries
     entry_ids = entries.map (entry) -> entry.id
-    $http.put("/entries/update.json", entries: {ids: entry_ids, state: "read"})
+
+    if read
+      state = "read"
+      # Decrement the unread entries count for the feed
+      $rootScope.current_feed.unread_entries -= entries.length
+    else
+      state = "unread"
+      # Increment the unread entries count for the feed
+      $rootScope.current_feed.unread_entries += entries.length
+
+    $http.put("/entries/update.json", entries: {ids: entry_ids, state: state})
     .error ->
         # Show alert
         $rootScope.error_changing_entry_state = true
