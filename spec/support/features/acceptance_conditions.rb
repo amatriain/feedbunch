@@ -83,7 +83,6 @@ end
 
 def should_show_alert(alert_id)
   page.should have_css "div##{alert_id}", visible: true
-  page.should_not have_css "div##{alert_id}.hidden", visible: false
 
   # It should close automatically after 5 seconds
   sleep 5
@@ -95,7 +94,6 @@ end
 
 def should_hide_alert(alert_id)
   page.should_not have_css "div##{alert_id}", visible: true
-  page.should have_css "div##{alert_id}.hidden", visible: false
 end
 
 ##
