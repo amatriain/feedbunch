@@ -1,0 +1,10 @@
+{
+  "id": "<%= entry.id %>",
+  "title": <%= entry.title.to_json.html_safe %>,
+  "read": <%= entry.read_by? user %>,
+  "published": "<%= l entry.published, format: :short if entry.published.present? %>",
+  "url": "<%= entry.url %>",
+  "guid": "<%= entry.guid %>",
+  "content": <%= entry.content.try(:to_json).html_safe %>,
+  "summary": <%= entry.summary.try(:to_json).html_safe %>
+}

@@ -26,19 +26,18 @@ class FoldersController < ApplicationController
   # If the requests asks for a folder that does not belong to the current user, the response is a 404 error code (Not Found).
 
   def show
-    if params[:id] != Folder::ALL_FOLDERS
-      @folder = current_user.folders.find params[:id]
-    else
+    if params[:id] == Folder::ALL_FOLDERS
       @folder = Folder::ALL_FOLDERS
+    else
+      @folder = current_user.folders.find params[:id]
     end
 
     @entries = current_user.unread_folder_entries @folder
 
     if @entries.present?
-      # The folders#show and feeds#show actions use the same template, the only difference is the
-      # entries passed to it.
-      render 'entries/index', locals: {entries: @entries, user: current_user}, layout: false
+      render 'show', locals: {entries: @entries, user: current_user}
     else
+      Rails.logger.info "Folder #{params[:id]} has no unread entries, returning a 404"
       head status: 404
     end
   rescue => e

@@ -32,7 +32,7 @@ class FeedsController < ApplicationController
     if @entries.present?
       render 'show', locals: {feed: @feed, entries: @entries, user: current_user}
     else
-      Rails.logger.warn "Feed #{params[:id]} has no unread entries, returning a 404"
+      Rails.logger.info "Feed #{params[:id]} has no unread entries, returning a 404"
       head status: 404
     end
   rescue => e

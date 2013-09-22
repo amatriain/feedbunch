@@ -2,7 +2,8 @@
   <a data-sidebar-feed
      data-feed-id="all"
      data-feed-path="{{folder.path}}"
-     data-feed-title="<%= t 'feeds.index.all_entries' %>">
+     data-feed-title="<%= t 'feeds.index.all_entries' %>"
+     ng-click="read_folder(folder)">
     <em><strong>
       <i class="icon-rss"></i> <%= t 'feeds.index.all_entries' %></strong></em>&nbsp;&nbsp;&nbsp;<i class="icon-spinner hidden"></i>
     <span class="badge pull-right">{{folder.unread_entries}}</span>

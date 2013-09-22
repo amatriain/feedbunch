@@ -62,10 +62,10 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     $http.delete(path)
     .error ->
       # Show alert
-      $scope.error_unsubscribing = true
+      $rootScope.error_unsubscribing = true
       # Close alert after 5 seconds
       $timeout ->
-        $scope.error_unsubscribing = false
+        $rootScope.error_unsubscribing = false
       , 5000
 
   #--------------------------------------------
@@ -89,16 +89,16 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
         $scope.loading_entries = false
         # Show alert
         if status == 304
-          $scope.error_already_subscribed = true
+          $rootScope.error_already_subscribed = true
           # Close alert after 5 seconds
           $timeout ->
-            $scope.error_already_subscribed = false
+            $rootScope.error_already_subscribed = false
           , 5000
         else
-          $scope.error_subscribing = true
+          $rootScope.error_subscribing = true
           # Close alert after 5 seconds
           $timeout ->
-            $scope.error_subscribing = false
+            $rootScope.error_subscribing = false
           , 5000
     $scope.subscription_url = null
 
@@ -114,10 +114,10 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     $http.put('/folders/none.json', folder: {feed_id: $rootScope.current_feed.id})
     .error ->
       # Show alert
-      $scope.error_managing_folders = true
+      $rootScope.error_managing_folders = true
       # Close alert after 5 seconds
       $timeout ->
-        $scope.error_managing_folders = false
+        $rootScope.error_managing_folders = false
       , 5000
 
   #--------------------------------------------
@@ -133,10 +133,10 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     $http.put("/folders/#{folder.id}.json", folder: {feed_id: $rootScope.current_feed.id})
     .error ->
       # Show alert
-      $scope.error_managing_folders = true
+      $rootScope.error_managing_folders = true
       # Close alert after 5 seconds
       $timeout ->
-        $scope.error_managing_folders = false
+        $rootScope.error_managing_folders = false
       , 5000
 
   #--------------------------------------------
@@ -156,17 +156,17 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
       .error (data, status)->
         if status == 304
           # Show alert
-          $scope.error_already_existing_folder = true
+          $rootScope.error_already_existing_folder = true
           # Close alert after 5 seconds
           $timeout ->
-            $scope.error_already_existing_folder = false
+            $rootScope.error_already_existing_folder = false
           , 5000
         else
           # Show alert
-          $scope.error_creating_folder = true
+          $rootScope.error_creating_folder = true
           # Close alert after 5 seconds
           $timeout ->
-            $scope.error_creating_folder = false
+            $rootScope.error_creating_folder = false
           , 5000
     $scope.new_folder_title = null
 
@@ -177,6 +177,33 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   $scope.read_feed = (feed)->
     set_current_feed feed
     load_feed feed, false
+
+  #--------------------------------------------
+  # Load a folder's unread entries
+  #--------------------------------------------
+
+  $scope.read_folder = (folder)->
+    unset_current_feed
+    $scope.loading_entries = true
+
+    $http.get("/folders/#{folder.id}.json")
+    .success (data)->
+        $scope.loading_entries = false
+        $scope.entries = data["entries"]
+    .error (data,status)->
+      $scope.loading_entries = false
+      if status == 404
+        $rootScope.error_no_entries = true
+        # Close alert after 5 seconds
+        $timeout ->
+          $rootScope.error_no_entries = false
+        , 5000
+      else
+        $rootScope.error_loading_entries = true
+        # Close alert after 5 seconds
+        $timeout ->
+          $rootScope.error_loading_entries = false
+        , 5000
 
   #--------------------------------------------
   # Load all of a feed's entries regardless of state
@@ -202,17 +229,17 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     .error ->
       $scope.loading_entries = false
       if status == 404
-        $scope.error_no_entries = true
+        $rootScope.error_no_entries = true
         # Close alert after 5 seconds
         $timeout ->
-          $scope.error_no_entries = false
+          $rootScope.error_no_entries = false
         , 5000
       else
         # Show alert
-        $scope.error_refreshing_feed = true
+        $rootScope.error_refreshing_feed = true
         # Close alert after 5 seconds
         $timeout ->
-          $scope.error_refreshing_feed = false
+          $rootScope.error_refreshing_feed = false
         , 5000
 
   #--------------------------------------------
@@ -261,16 +288,16 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
       unset_current_feed()
       $scope.loading_entries = false
       if status == 404
-        $scope.error_no_entries = true
+        $rootScope.error_no_entries = true
         # Close alert after 5 seconds
         $timeout ->
-          $scope.error_no_entries = false
+          $rootScope.error_no_entries = false
         , 5000
       else
-        $scope.error_loading_entries = true
+        $rootScope.error_loading_entries = true
         # Close alert after 5 seconds
         $timeout ->
-          $scope.error_loading_entries = false
+          $rootScope.error_loading_entries = false
         , 5000
 
   #--------------------------------------------
@@ -298,12 +325,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 
     $http.put("/entries/update.json", entries: {ids: entry_ids, state: state})
     .error ->
-        # Show alert
-        $rootScope.error_changing_entry_state = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.error_changing_entry_state = false
-        , 5000
+      # Show alert
+      $rootScope.error_changing_entry_state = true
+      # Close alert after 5 seconds
+      $timeout ->
+        $rootScope.error_changing_entry_state = false
+      , 5000
 
   #--------------------------------------------
   # Return a folder object given its id

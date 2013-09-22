@@ -1,6 +1,6 @@
 [
   <% feeds.each do |feed| %>
-<%= render(partial: 'feed', locals: {user: user, feed: feed}) %>
+<%= render partial: 'feed', locals: {user: user, feed: feed} %>
     <% if feed != feeds.last %>
 ,
     <% end %>
