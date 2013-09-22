@@ -316,12 +316,10 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 
     if read
       state = "read"
-      # Decrement the unread entries count for the feed
-      $rootScope.current_feed.unread_entries -= entries.length
+      update_unread_count entries, false
     else
       state = "unread"
-      # Increment the unread entries count for the feed
-      $rootScope.current_feed.unread_entries += entries.length
+      update_unread_count entries, true
 
     $http.put("/entries/update.json", entries: {ids: entry_ids, state: state})
     .error ->
@@ -331,6 +329,38 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
       $timeout ->
         $rootScope.error_changing_entry_state = false
       , 5000
+
+  #--------------------------------------------
+  # Increment or decrement the count of unread entries in feeds corresponding to the passed entries.
+  # Receives as argument an array of entries and a boolean indicating whether to
+  # increment (true) or decrement (false) the count.
+  #--------------------------------------------
+
+  update_unread_count = (entries, increment)->
+    if $rootScope.current_feed
+      # if current_feed has value, all entries belong to the same feed which simplifies things
+      if increment
+        $rootScope.current_feed.unread_entries += entries.length
+      else
+        $rootScope.current_feed.unread_entries -= entries.length
+    else
+      # if current_feed has null value, each entry can belong to a different feed
+      # we process each entry individually
+      for entry in entries
+        feed = find_feed entry.feed_id
+        if increment
+          feed.unread_entries += 1
+        else
+          feed.unread_entries -= 1
+
+
+  #--------------------------------------------
+  # Return a feed object given its id
+  #--------------------------------------------
+
+  find_feed = (id)->
+    feeds = $filter('filter') $scope.feeds, {id: id}
+    return feeds[0]
 
   #--------------------------------------------
   # Return a folder object given its id

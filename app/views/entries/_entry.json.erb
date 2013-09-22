@@ -6,5 +6,6 @@
   "url": "<%= entry.url %>",
   "guid": "<%= entry.guid %>",
   "content": <%= entry.content.try(:to_json).html_safe %>,
-  "summary": <%= entry.summary.try(:to_json).html_safe %>
+  "summary": <%= entry.summary.try(:to_json).html_safe %>,
+  "feed_id": "<%= entry.feed_id %>"
 }
