@@ -26,7 +26,7 @@ describe 'folders and feeds' do
     visit read_path
   end
 
-  it 'shows only folders that belong to the user' do
+  it 'shows only folders that belong to the user', js: true do
     page.should have_content @folder1.title
     page.should_not have_content @folder2.title
   end
@@ -78,7 +78,7 @@ describe 'folders and feeds' do
 
     it 'hides folder management button until a feed is selected', js: true do
       visit read_path
-      page.should have_css '#folder-management.hidden', visible: false
+      page.should_not have_css '#folder-management', visible: true
     end
 
     it 'shows folder management button when a feed is selected', js: true do
@@ -89,8 +89,8 @@ describe 'folders and feeds' do
 
     it 'hides folder management button when reading a whole folder', js: true do
       read_feed 'all'
-      page.should have_css '#folder-management.hidden', visible: false
-      page.should have_css '#folder-management.disabled', visible: false
+      page.should_not have_css '#folder-management', visible: true
+      page.should_not have_css '#folder-management', visible: true
     end
 
     it 'drops down a list of all user folders', js: true do
@@ -313,6 +313,7 @@ describe 'folders and feeds' do
 
         # data-folder-id attribute should indicate that @feed1 is in the new folder
         new_folder = Folder.where(user_id: @user.id, title: title).first
+        open_folder new_folder.id
         page.should have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
       end
 
@@ -378,7 +379,7 @@ describe 'folders and feeds' do
         move_feed_to_new_folder @feed1.id, title
 
         # @feed1 is no longer under @folder1
-        within "#sidebar #folders-list [data-folder-id='#{@folder1.id}']" do
+        within "#sidebar #folders-list #folder-#{@folder1.id}" do
           page.should_not have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
         end
       end
@@ -388,6 +389,7 @@ describe 'folders and feeds' do
         move_feed_to_new_folder @feed1.id, title
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
+        open_folder new_folder.id
         within '#sidebar #folders-list' do
           # new folder should be in the sidebar
           page.should have_content title
@@ -417,8 +419,10 @@ describe 'folders and feeds' do
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
         # data-folder-id attribute should indicate that @feed1 is in the new folder
+        open_folder new_folder.id
         page.should have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
         # @feed2 is still in no folder
+        open_folder 'all'
         page.should have_css "#folder-all a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='none']"
 
         # Without reloading the page, move @feed2 to the new folder
@@ -429,6 +433,7 @@ describe 'folders and feeds' do
         end
 
         # feed2 should have moved to the new folder
+        open_folder new_folder.id
         page.should have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='#{new_folder.id}']"
       end
 
