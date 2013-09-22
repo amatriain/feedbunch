@@ -1,4 +1,5 @@
-<li id="folder-{{folder.id}}-all-feeds">
+<li id="folder-{{folder.id}}-all-feeds"
+    ng-class="{active: current_folder==folder}">
   <a data-sidebar-feed
      data-feed-id="all"
      data-feed-path="{{folder.path}}"

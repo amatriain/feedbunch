@@ -183,7 +183,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   #--------------------------------------------
 
   $scope.read_folder = (folder)->
-    unset_current_feed
+    set_current_folder folder
     $scope.loading_entries = true
 
     $http.get("/folders/#{folder.id}.json")
@@ -307,7 +307,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   #--------------------------------------------
 
   change_entries_state = (entries, read)->
-    # Mark entries as read in the model
+    # Mark entries as read or unread in the model
     for entry in entries
       entry.read = read
 
@@ -370,6 +370,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   #--------------------------------------------
 
   set_current_feed = (feed)->
+    unset_current_folder()
     unset_open_entry()
     $rootScope.current_feed = feed
 
@@ -380,6 +381,23 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   unset_current_feed = ->
     unset_open_entry()
     $rootScope.current_feed = null
+
+  #--------------------------------------------
+  # Store the currently selected folder in the global scope
+  #--------------------------------------------
+
+  set_current_folder = (folder)->
+    unset_current_feed()
+    unset_open_entry()
+    $rootScope.current_folder = folder
+
+  #--------------------------------------------
+  # Unset the currently selected folder in the global scope
+  #--------------------------------------------
+
+  unset_current_folder = ->
+    unset_open_entry()
+    $rootScope.current_folder = null
 
   #--------------------------------------------
   # Store the currently open entry in the global scope

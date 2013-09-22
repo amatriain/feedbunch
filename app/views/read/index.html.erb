@@ -18,7 +18,7 @@
 
   <div class="col-md-9">
 
-    <div ng-show="current_feed==null && !loading_entries">
+    <div ng-show="current_feed==null && current_folder==null && !loading_entries">
       <%= render 'start', user: @user %>
     </div>
 
@@ -26,7 +26,7 @@
       <%= t 'feeds.index.loading' %>
     </div>
 
-    <div ng-show="current_feed && !loading_entries" ng-cloak>
+    <div ng-show="(current_feed || current_folder) && !loading_entries" ng-cloak>
       <div id="feed-title">
         <strong class="lead">
           <a href="{{current_feed.url}}" target="_blank">{{current_feed.title}}</a>
