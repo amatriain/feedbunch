@@ -15,25 +15,25 @@ describe 'start page' do
 
   it 'shows start page by default', js: true do
     page.should have_css '#start-info'
-    page.should have_css '#feed-entries.hidden', visible: false
+    page.should_not have_css '#feed-entries', visible: true
   end
 
   it 'hides feed title and entries by default', js: true do
-    page.should have_css '#feed-title.hidden', visible: false
-    page.should have_css '#feed-entries.hidden', visible: false
+    page.should_not have_css '#feed-title', visible: true
+    page.should_not have_css '#feed-entries', visible: true
   end
 
   it 'hides entries management button by default', js: true do
-    page.should have_css '#entries-management.hidden', visible: false
+    page.should_not have_css '#entries-management', visible: true
   end
 
   it 'hides start page when reading a feed', js: true do
     page.should have_css '#start-info'
-    page.should have_css '#feed-entries.hidden', visible: false
+    page.should_not have_css '#feed-entries', visible: true
 
     read_feed @feed1.id
 
-    page.should have_css '#start-info.hidden', visible: false
+    page.should_not have_css '#start-info', visible: true
     page.should have_css '#feed-entries'
   end
 
@@ -47,16 +47,16 @@ describe 'start page' do
 
     it 'shows start page', js: true do
       page.should have_css '#start-info'
-      page.should have_css '#feed-entries.hidden', visible: false
+      page.should_not have_css '#feed-entries', visible: true
     end
 
     it 'hides feed title and entries', js: true do
-      page.should have_css '#feed-title.hidden', visible: false
-      page.should have_css '#feed-entries.hidden', visible: false
+      page.should_not have_css '#feed-title', visible: true
+      page.should_not have_css '#feed-entries', visible: true
     end
 
     it 'hides entries management button', js: true do
-      page.should have_css '#entries-management.hidden', visible: false
+      page.should_not have_css '#entries-management', visible: true
     end
 
   end
