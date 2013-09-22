@@ -10,6 +10,8 @@ describe 'unsubscribe from feed' do
     @user.subscribe @feed2.fetch_url
     @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry1
+    @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
+    @feed2.entries << @entry2
 
     login_user_for_feature @user
     visit read_path
@@ -17,7 +19,7 @@ describe 'unsubscribe from feed' do
 
   it 'hides unsubscribe button until a feed is selected', js: true do
     visit read_path
-    page.should have_css '#unsubscribe-feed.hidden', visible: false
+    page.should_not have_css '#unsubscribe-feed', visible: true
   end
 
   it 'shows unsubscribe button when a feed is selected', js: true do
@@ -36,17 +38,13 @@ describe 'unsubscribe from feed' do
     # Read @feed2. All buttons should be visible and enabled
     read_feed @feed2.id
     page.should have_css '#entries-management', visible: true
-    page.should_not have_css '#entries-management.disabled'
     page.should have_css '#folder-management'
-    page.should_not have_css '#folder-management.disabled'
     page.should have_css '#unsubscribe-feed'
-    page.should_not have_css '#unsubscribe-feed.disabled'
   end
 
   it 'hides unsubscribe button when reading a whole folder', js: true do
     read_feed 'all'
-    page.should have_css '#unsubscribe-feed.hidden', visible: false
-    page.should have_css '#unsubscribe-feed.disabled', visible: false
+    page.should_not have_css '#unsubscribe-feed', visible: true
   end
 
   it 'shows a confirmation popup', js: true do
@@ -91,11 +89,11 @@ describe 'unsubscribe from feed' do
 
   it 'shows start page after unsubscribing', js: true do
     read_feed @feed1.id
-    page.should have_css '#start-info.hidden', visible: false
+    page.should_not have_css '#start-info', visible: true
 
     unsubscribe_feed @feed1.id
 
-    page.should have_css '#start-info'
+    page.should have_css '#start-info', visible: true
   end
 
   it 'still shows the feed for other subscribed users', js: true do

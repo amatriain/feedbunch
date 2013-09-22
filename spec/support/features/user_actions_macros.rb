@@ -84,10 +84,10 @@ end
 def read_feed(feed_id, folder_id = 'all')
   open_folder folder_id
   within "#folders-list #folder-#{folder_id}" do
-    page.should have_css "[data-sidebar-feed][data-feed-id='#{feed_id}']"
+    page.should have_css "[data-sidebar-feed][data-feed-id='#{feed_id}']", visible: true
 
     # Click on feed to read its entries
-    find("[data-sidebar-feed][data-feed-id='#{feed_id}']").click
+    find("[data-sidebar-feed][data-feed-id='#{feed_id}']", visible: true).click
   end
 
   # Ensure entries have finished loading
