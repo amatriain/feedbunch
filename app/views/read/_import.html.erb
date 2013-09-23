@@ -1,9 +1,9 @@
 <% if user.data_import.blank? %>
-  <%= render 'data_imports/import_upload' %>
+  <%= render 'read/data_import/import_upload' %>
 <% elsif user.data_import.status == DataImport::RUNNING %>
-  <%= render 'data_imports/import_running', user: user %>
+  <%= render 'read/data_import/import_running', user: user %>
 <% elsif user.data_import.status == DataImport::ERROR %>
-  <%= render 'data_imports/import_error' %>
+  <%= render 'read/data_import/import_error' %>
 <% elsif user.data_import.status == DataImport::SUCCESS %>
-  <%= render 'data_imports/import_success' %>
+  <%= render 'read/data_import/import_success' %>
 <% end %>
