@@ -100,6 +100,7 @@ end
 # Test that the entry with the passed id is visible but marked as read
 
 def entry_should_be_marked_read(entry_id)
+  wait_for_ajax
   page.should have_css "a[data-entry-id='#{entry_id}'].entry-read"
 end
 
@@ -107,5 +108,6 @@ end
 # Test that the entry with the passed id is visible and marked as unread
 
 def entry_should_be_marked_unread(entry_id)
+  wait_for_ajax
   page.should have_css "a[data-entry-id='#{entry_id}'].entry-unread"
 end
