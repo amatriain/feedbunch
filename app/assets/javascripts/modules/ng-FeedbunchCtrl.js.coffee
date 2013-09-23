@@ -310,6 +310,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
     # Mark entries as read or unread in the model
     for entry in entries
       entry.read = read
+      entry.changing_state = true
 
     # Get array of IDs for the entries
     entry_ids = entries.map (entry) -> entry.id
@@ -322,6 +323,9 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
       update_unread_count entries, true
 
     $http.put("/entries/update.json", entries: {ids: entry_ids, state: state})
+    .success ->
+      for entry in entries
+        entry.changing_state = false
     .error ->
       # Show alert
       $rootScope.error_changing_entry_state = true

@@ -265,15 +265,3 @@ def unsubscribe_feed(feed_id)
   # Ensure user is shown the start page
   page.should have_css '#sidebar li.active a#start-page'
 end
-
-##
-# Wait until AJAX calls are completed
-
-def wait_for_ajax
-  Timeout.timeout(Capybara.default_wait_time) do
-    loop do
-      active = page.evaluate_script('jQuery.active')
-      break if active == 0
-    end
-  end
-end

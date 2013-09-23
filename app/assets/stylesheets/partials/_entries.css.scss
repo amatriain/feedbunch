@@ -11,15 +11,31 @@
   background-color: #F5F5F5;
 }
 
+.entry a.entry-becoming-unread{
+  background-color: #F2F7E6;
+}
+
 .entry a.entry-read{
   background-color: #e6ffce;
+}
+
+.entry a.entry-becoming-read{
+  background-color: #EAFFD6;
 }
 
 .entry a.entry-read:hover{
   background-color: #d6ffac;
 }
 
+.entry a.entry-becoming-read:hover{
+  background-color: #d6ffac;
+}
+
 .entry a.entry-unread:hover{
+  background-color: #E8E8E8;
+}
+
+.entry a.entry-becoming-unread:hover{
   background-color: #E8E8E8;
 }
 
