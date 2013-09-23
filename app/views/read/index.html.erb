@@ -2,7 +2,7 @@
   <div class="col-md-12 text-center">
 
     <%= render 'read/alerts' %>
-    <%= render 'read/import_alerts' %>
+    <%= render 'read/data_import_alerts' %>
 
   </div>
 </div>
@@ -18,17 +18,17 @@
     <%= render 'read/sidebar/sidebar' %>
   </div>
 
-  <div class="col-md-9">
+  <div class="col-md-9" ng-cloak>
 
     <div ng-show="current_feed==null && current_folder==null && !loading_entries">
       <%= render 'start', user: @user %>
     </div>
 
-    <div id="loading" class="col-md-offset-1" ng-show="loading_entries" ng-cloak>
+    <div id="loading" class="col-md-offset-1" ng-show="loading_entries">
       <%= t 'feeds.index.loading' %>
     </div>
 
-    <div ng-show="(current_feed || current_folder) && !loading_entries" ng-cloak>
+    <div ng-show="(current_feed || current_folder) && !loading_entries">
       <div id="feed-title">
         <strong class="lead">
           <a href="{{current_feed.url}}" target="_blank">{{current_feed.title}}</a>

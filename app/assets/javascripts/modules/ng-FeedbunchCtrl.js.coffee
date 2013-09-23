@@ -12,6 +12,8 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   $http.get('/feeds.json').success (data)->
     $scope.feeds = data
 
+  $scope.import_status = "NONE"
+
   #--------------------------------------------
   # Function to filter feeds in a given folder
   #--------------------------------------------
