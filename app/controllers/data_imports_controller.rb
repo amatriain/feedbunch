@@ -22,9 +22,11 @@ class DataImportsController < ApplicationController
   def create
     file = data_import_params[:file]
     current_user.import_subscriptions file.tempfile
-    redirect_to read_path
   rescue => e
-    handle_error e
+    Rails.logger.error "Error importing OPML for user #{current_user.id} - #{current_user.email}"
+    data_import = current_user.create_data_import status: DataImport::ERROR
+  ensure
+    redirect_to read_path
   end
 
   private

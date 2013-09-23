@@ -31,9 +31,16 @@ describe DataImportsController do
     end
 
     it 'redirects to main application page if an error happens' do
-      DataImportManager.stub(:read_data_file).and_raise StandardError.new
+      User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
       post :create, data_import: {file: 'mock_file'}
       response.should redirect_to read_path
+    end
+
+    it 'creates a DataImport instance with ERROR status if an error happens' do
+      User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
+      post :create, data_import: {file: 'mock_file'}
+      @user.data_import.should_not be_blank
+      @user.data_import.status.should eq DataImport::ERROR
     end
   end
 
