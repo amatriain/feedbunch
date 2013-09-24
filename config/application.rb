@@ -32,9 +32,6 @@ module Feedbunch
     # if the locale sent by the user does not exist
     config.i18n.fallbacks = true
 
-    # Enable escaping HTML in JSON.
-    config.active_support.escape_html_entities_in_json = true
-
     # Rails generators generate FactoryGirl factories instead of fixtures
     config.generators do |g|
       g.fixture_replacement :factory_girl
