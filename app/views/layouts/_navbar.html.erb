@@ -128,24 +128,18 @@
                 </li>
               <% end %>
 
-              <%# Show an "import subscriptions" link only if the user has not run an import, or if
-              his last import finished with an error %>
-              <%
-                 data_import = current_user.try :data_import
-                 status = data_import.try :status
-              %>
-              <% if data_import.blank? || status==DataImport::ERROR %>
-                <li>
-                  <a id="nav-data-import"
-                     data-toggle="modal"
-                     data-target="#data-import-popup">
+              <%# Show an "import subscriptions" link only if the user has not a currently running import %>
 
-                    <i class="icon-magic"></i>
+              <li ng-hide="import_status=='RUNNING'">
+                <a id="nav-data-import"
+                   data-toggle="modal"
+                   data-target="#data-import-popup">
 
-                    <%= t 'layouts.application.import' %>
-                  </a>
-                </li>
-              <% end %>
+                  <i class="icon-magic"></i>
+
+                  <%= t 'layouts.application.import' %>
+                </a>
+              </li>
 
               <li>
                 <%=  link_to edit_user_registration_path, id: 'my_account' do %>

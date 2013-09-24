@@ -1,5 +1,3 @@
-<% self.formats = [:html] %>
-
 <%
   if user.data_import.present?
     status = user.data_import.status
@@ -9,6 +7,12 @@
 %>
 
 {
-  "status": "<%= status %>",
-  "status_html": <%= render(partial: 'data_imports/import', locals: {user: user}, layout: false).to_json.html_safe %>
+  "status": "<%= status %>"
+<% if status == DataImport::RUNNING %>
+,
+  "import": {
+    "processed": <%= user.data_import.processed_feeds %>,
+    "total": <%= user.data_import.total_feeds %>
+  }
+<% end %>
 }

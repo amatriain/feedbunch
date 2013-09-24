@@ -72,7 +72,7 @@ es:
       error: "Ha habido un error importando tus suscripciones."
       retry_1: "Haz click aquí"
       retry_2: " para volver a importar un fichero de datos en Feedbunch."
-      progress: "Feeds importados: %{processed} de %{total}"
+      progress: "Feeds importados: {{import_processed}} de {{import_total}}"
       success: "Tus suscripciones han sido importadas en Feedbunch con éxito."
       problem_updating: "Ha habido un problema en la comunicación con el servidor."
       finish_success: "Tus suscripciones a feeds han sido importadas en Feedbunch. Refresca la página para verlas."

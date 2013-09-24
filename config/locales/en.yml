@@ -93,7 +93,7 @@ en:
       error: "There's been an error importing your subscriptions."
       retry_1: "Click here"
       retry_2: " to import a data file into Feedbunch again."
-      progress: "Feeds imported: %{processed} of %{total}"
+      progress: "Feeds imported: {{import_processed}} of {{import_total}}"
       success: "Your subscriptions have been successfully imported into Feedbunch."
       problem_updating: "There has been a problem communicating with the server."
       finish_success: "Your subscribed feeds have been imported into Feedbunch. Refresh the page to see them."
