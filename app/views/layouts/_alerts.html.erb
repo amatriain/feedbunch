@@ -1,12 +1,12 @@
 <% if  notice.present? %>
-  <div id="notice" class="alert alert-warning fade in">
+  <div id="notice" class="alert alert-warning fade in" ng-show="error_rails">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <p><%= notice %></p>
   </div>
 <% end %>
 
 <% if  alert.present? %>
-  <div id="alert" class="alert alert-danger fade in">
+  <div id="alert" class="alert alert-danger fade in" ng-show="error_rails">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <p><%= alert %></p>
   </div>

@@ -53,6 +53,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 
   load_import_status false
 
+  # If there is a rails alert, show it and close it after 5 seconds
+  $scope.error_rails = true
+  $timeout ->
+    $scope.error_rails = false
+  , 5000
+
   #--------------------------------------------
   # Function to filter feeds in a given folder
   #--------------------------------------------
