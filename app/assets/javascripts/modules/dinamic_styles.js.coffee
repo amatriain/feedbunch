@@ -1,22 +1,6 @@
 $(document).ready ->
 
   #-------------------------------------------------------
-  # Dynamic styling when clicking on the sidebar folders
-  #-------------------------------------------------------
-  $("body").on "click", "[data-sidebar-folder]", ->
-    # Toggle the down/right arrow and open/closed folder icons in this folder
-    $(this).children("i.folder-arrow").toggleClass "icon-chevron-down"
-    $(this).children("i.folder-arrow").toggleClass "icon-chevron-right"
-    $(this).children("i.folder").toggleClass "icon-folder-open-alt"
-    $(this).children("i.folder").toggleClass "icon-folder-close-alt"
-
-    # Use the closed folder and right arrow on the rest of folders
-    $("[data-sidebar-folder]").not(this).children("i.folder-arrow").removeClass "icon-chevron-down"
-    $("[data-sidebar-folder]").not(this).children("i.folder-arrow").addClass "icon-chevron-right"
-    $("[data-sidebar-folder]").not(this).children("i.folder").removeClass "icon-folder-open-alt"
-    $("[data-sidebar-folder]").not(this).children("i.folder").addClass "icon-folder-close-alt"
-
-  #-------------------------------------------------------
   # Give focus to the text input field when showing the "Add subscription" modal.
   #-------------------------------------------------------
   $("body").on "shown.bs.modal", "#subscribe-feed-popup",  ->
@@ -37,5 +21,6 @@ $(document).ready ->
   #-------------------------------------------------------
   # Give focus to the cancel button field when showing the "Import subscriptions" modal.
   #-------------------------------------------------------
+
   $("body").on "shown.bs.modal", "#data-import-popup",  ->
     $("#data-import-cancel", this).focus()

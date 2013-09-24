@@ -8,9 +8,12 @@
      data-toggle="collapse"
      data-target="#feeds-{{folder.id}}"
      data-parent="#folders-list"
-     class="sidebar-folder list-group-item">
+     class="sidebar-folder list-group-item"
+     ng-click="open_folder(folder)">
 
-    <i class="folder icon-folder-close-alt"></i> {{folder.title}}<i class="folder-arrow icon-chevron-right pull-right"></i>
+    <i class="folder" ng-class="{'icon-folder-open-alt':current_open_folder.id==folder.id, 'icon-folder-close-alt': current_open_folder!=folder}"></i>
+    &nbsp;{{folder.title}}
+    <i class="folder-arrow pull-right" ng-class="{'icon-chevron-down':current_open_folder==folder, 'icon-chevron-right': current_open_folder!=folder}"></i>
 
   </a>
 

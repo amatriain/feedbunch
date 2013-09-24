@@ -298,6 +298,17 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
         change_entries_state [entry], true
 
   #--------------------------------------------
+  # Mark a single folder as open in the scope
+  #--------------------------------------------
+
+  $scope.open_folder = (folder)->
+    if $rootScope.current_open_folder == folder
+      # User is closing the open folder
+      unset_open_folder()
+    else
+      set_open_folder folder
+
+  #--------------------------------------------
   # Mark all entries as read
   #--------------------------------------------
 
@@ -487,5 +498,19 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 
   unset_open_entry = ->
     $rootScope.open_entry = null
+
+  #--------------------------------------------
+  # Store the currently open folder in the global scope
+  #--------------------------------------------
+
+  set_open_folder = (folder)->
+    $rootScope.current_open_folder = folder
+
+  #--------------------------------------------
+  # Unset the currently open folder in the global scope
+  #--------------------------------------------
+
+  unset_open_folder = ->
+    $rootScope.current_open_folder = null
 
 ]
