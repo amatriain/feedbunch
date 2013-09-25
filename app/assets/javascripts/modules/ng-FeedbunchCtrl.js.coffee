@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
-['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc', 'importStatusSvc'
-($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc, importStatusSvc)->
+['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc'
+($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc, importStatusSvc, timerFlagSvc)->
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data $scope
@@ -13,10 +13,7 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   importStatusSvc.load_data $scope, false
 
   # If there is a rails alert, show it and close it after 5 seconds
-  $scope.error_rails = true
-  $timeout ->
-    $scope.error_rails = false
-  , 5000
+  timerFlagSvc.start 'error_rails'
 
   #--------------------------------------------
   # Function to filter feeds in a given folder
