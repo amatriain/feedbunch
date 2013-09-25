@@ -27,7 +27,7 @@ describe User do
     end
 
     it 'sets data_import status as ERROR if an error is raised' do
-      Zip::ZipFile.stub(:open).and_raise StandardError.new
+      Zip::File.stub(:open).and_raise StandardError.new
       expect{@user.import_subscriptions @data_file}.to raise_error StandardError
 
       @user.data_import.status.should eq DataImport::ERROR

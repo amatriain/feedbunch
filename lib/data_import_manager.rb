@@ -1,5 +1,5 @@
-require 'zip/zip'
-require 'zip/zipfilesystem'
+require 'zip'
+require 'zip/filesystem'
 
 ##
 # This class manages import of subscription data from Google Reader into Feedbunch
@@ -61,7 +61,7 @@ class DataImportManager
 
   def self.read_data_file(file)
     begin
-      zip_file = Zip::ZipFile.open file
+      zip_file = Zip::File.open file
       file_contents = self.search_zip zip_file, /subscriptions.xml\z/
       file_contents = self.search_zip zip_file, /.opml\z/ if file_contents.blank?
       file_contents = self.search_zip zip_file, /.OPML\z/ if file_contents.blank?
