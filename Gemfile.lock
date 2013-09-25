@@ -192,7 +192,7 @@ GEM
       sexp_processor (~> 4.0)
     ruby_parser (3.2.2)
       sexp_processor (~> 4.1)
-    rubyzip (0.9.9)
+    rubyzip (1.0.0)
     rufus-scheduler (2.0.24)
       tzinfo (>= 0.3.22)
     rvm-capistrano (1.4.4)
