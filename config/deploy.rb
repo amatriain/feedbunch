@@ -111,7 +111,7 @@ namespace :feedbunch_secret_data do
         "#{release_path}/config/initializers/secret_token.rb"
 
     run 'ln -sf /home/feedbunch/config/devise.rb ' \
-        '#{release_path}/config/initializers/devise.rb'
+        "#{release_path}/config/initializers/devise.rb"
 
     run "ln -sf /home/feedbunch/config/#{rails_env}.rb " \
         "#{release_path}/config/environments/#{rails_env}.rb"
