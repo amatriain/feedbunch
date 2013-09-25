@@ -32,7 +32,7 @@ gem 'high_voltage'
 gem 'devise'
 
 # Form generator compatible with Bootstrap
-gem 'simple_form', git: 'https://github.com/plataformatec/simple_form.git'
+gem 'simple_form'
 
 # RSS/Atom parser
 gem 'feedzirra', '0.2.0.rc2'
