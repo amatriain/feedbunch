@@ -3,8 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
-['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc'
-($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc, importStatusSvc, timerFlagSvc)->
+['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
+'currentFeedSvc', 'currentFolderSvc', 'openEntrySvc','openFolderSvc',
+($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
+currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data $scope
