@@ -3,17 +3,11 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
-['$rootScope', '$scope', '$http', '$timeout', '$filter', ($rootScope, $scope, $http, $timeout, $filter)->
+['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc',
+($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc)->
 
   # Load folders and feeds via AJAX on startup
-  load_feeds_and_folders = ->
-    $http.get('/folders.json').success (data)->
-      $scope.folders = data
-
-    $http.get('/feeds.json').success (data)->
-      $scope.feeds = data
-
-  load_feeds_and_folders()
+  feedsFoldersSvc.load_data($scope)
 
   # Load status of data import process for the current user
   load_import_status = (show_alerts)->
