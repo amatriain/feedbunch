@@ -16,17 +16,6 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
   timerFlagSvc.start 'error_rails'
 
   #--------------------------------------------
-  # Function to filter feeds in a given folder
-  #--------------------------------------------
-
-  $scope.feed_in_folder = (folder)->
-    return (feed)->
-      if folder.id == 'all'
-        return true
-      else
-        return folder.id == feed.folder_id
-
-  #--------------------------------------------
   # Function to show the start page
   #--------------------------------------------
 
@@ -474,5 +463,16 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 
   unset_open_folder = ->
     $rootScope.current_open_folder = null
+
+  #--------------------------------------------
+  # Function to filter feeds in a given folder
+  #--------------------------------------------
+
+  $scope.feed_in_folder = (folder)->
+    return (feed)->
+      if folder.id == 'all'
+        return true
+      else
+        return folder.id == feed.folder_id
 
 ]
