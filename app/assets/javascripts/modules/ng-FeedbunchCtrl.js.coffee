@@ -22,7 +22,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.show_start_page = ->
-    unset_current_feed()
+    currentFeedSvc.unset()
     $scope.loading_entries = false
 
   #--------------------------------------------
@@ -38,20 +38,20 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
 
   $scope.unsubscribe = ->
     # Delete feed model from the scope
-    index = $scope.feeds.indexOf $rootScope.current_feed
+    index = $scope.feeds.indexOf currentFeedSvc.get()
     $scope.feeds.splice index, 1 if index != -1
 
     # Before deleting from the global scope, save some data we'll need later
-    path = "/feeds/#{$rootScope.current_feed.id}.json"
-    unread_entries = $rootScope.current_feed.unread_entries
-    folder_id = $rootScope.current_feed.folder_id
+    path = "/feeds/#{currentFeedSvc.get().id}.json"
+    unread_entries = currentFeedSvc.get().unread_entries
+    folder_id = currentFeedSvc.get().folder_id
 
     # Update folders
     find_folder('all').unread_entries -= unread_entries
-    feed_removed_from_folder $rootScope.current_feed, folder_id
+    feed_removed_from_folder currentFeedSvc.get(), folder_id
 
     # Tell the model that no feed is currently selected.
-    unset_current_feed()
+    currentFeedSvc.unset()
 
     $http.delete(path)
     .error ->
@@ -70,7 +70,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
     $("#subscribe-feed-popup").modal 'hide'
 
     if $scope.subscription_url
-      unset_current_feed()
+      currentFeedSvc.unset()
       $scope.loading_entries = true
 
       $http.post('/feeds.json', feed:{url: $scope.subscription_url})
@@ -101,11 +101,11 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.remove_from_folder = ->
-    folder_id = $rootScope.current_feed.folder_id
-    $rootScope.current_feed.folder_id = 'none'
-    feed_removed_from_folder $rootScope.current_feed, folder_id
+    folder_id = currentFeedSvc.get().folder_id
+    currentFeedSvc.get().folder_id = 'none'
+    feed_removed_from_folder currentFeedSvc.get(), folder_id
 
-    $http.put('/folders/none.json', folder: {feed_id: $rootScope.current_feed.id})
+    $http.put('/folders/none.json', folder: {feed_id: currentFeedSvc.get().id})
     .error ->
       # Show alert
       $rootScope.error_managing_folders = true
@@ -119,12 +119,12 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.move_to_folder = (folder)->
-    old_folder_id = $rootScope.current_feed.folder_id
-    $rootScope.current_feed.folder_id = folder.id
-    feed_removed_from_folder $rootScope.current_feed, old_folder_id
-    folder.unread_entries += $rootScope.current_feed.unread_entries
+    old_folder_id = currentFeedSvc.get().folder_id
+    currentFeedSvc.get().folder_id = folder.id
+    feed_removed_from_folder currentFeedSvc.get(), old_folder_id
+    folder.unread_entries += currentFeedSvc.get().unread_entries
 
-    $http.put("/folders/#{folder.id}.json", folder: {feed_id: $rootScope.current_feed.id})
+    $http.put("/folders/#{folder.id}.json", folder: {feed_id: currentFeedSvc.get().id})
     .error ->
       # Show alert
       $rootScope.error_managing_folders = true
@@ -141,12 +141,12 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
     $("#new-folder-popup").modal 'hide'
 
     if $scope.new_folder_title
-      $http.post("/folders.json", folder: {feed_id: $rootScope.current_feed.id, title: $scope.new_folder_title})
+      $http.post("/folders.json", folder: {feed_id: currentFeedSvc.get().id, title: $scope.new_folder_title})
       .success (data)->
         $scope.folders.push data
-        old_folder_id = $rootScope.current_feed.folder_id
-        $rootScope.current_feed.folder_id = data.id
-        feed_removed_from_folder $rootScope.current_feed, old_folder_id
+        old_folder_id = currentFeedSvc.get().folder_id
+        currentFeedSvc.get().folder_id = data.id
+        feed_removed_from_folder currentFeedSvc.get(), old_folder_id
       .error (data, status)->
         if status == 304
           # Show alert
@@ -169,7 +169,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.read_feed = (feed)->
-    set_current_feed feed
+    currentFeedSvc.set feed
     load_feed feed, false
 
   #--------------------------------------------
@@ -177,7 +177,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.read_folder = (folder)->
-    set_current_folder folder
+    currentFolderSvc.set folder
     $scope.loading_entries = true
 
     $http.get("/folders/#{folder.id}.json")
@@ -204,22 +204,22 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.read_all_entries = ->
-    unset_open_entry()
-    load_feed $rootScope.current_feed, true
+    openEntrySvc.unset()
+    load_feed currentFeedSvc.get(), true
 
   #--------------------------------------------
   # Refresh a feed and load its unread entries
   #--------------------------------------------
 
   $scope.refresh_feed = ->
-    unset_open_entry()
+    openEntrySvc.unset()
     $scope.loading_entries = true
 
-    $http.put("/feeds/#{$rootScope.current_feed.id}.json")
+    $http.put("/feeds/#{currentFeedSvc.get().id}.json")
     .success (data)->
       $scope.loading_entries = false
       $scope.entries = data["entries"]
-      $rootScope.current_feed.unread_entries = data["unread_entries"]
+      currentFeedSvc.get().unread_entries = data["unread_entries"]
     .error ->
       $scope.loading_entries = false
       if status == 404
@@ -241,11 +241,11 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.read_entry = (entry)->
-    if $rootScope.open_entry == entry
+    if openEntrySvc.get() == entry
       # User is closing the open entry, do nothing
-      unset_open_entry()
+      openEntrySvc.unset()
     else
-      set_open_entry entry
+      openEntrySvc.set entry
       if !entry.read
         # User is opening an unread entry, mark it as read
         change_entries_state [entry], true
@@ -255,11 +255,11 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.open_folder = (folder)->
-    if $rootScope.current_open_folder == folder
+    if openFolderSvc.get() == folder
       # User is closing the open folder
-      unset_open_folder()
+      openFolderSvc.unset()
     else
-      set_open_folder folder
+      openFolderSvc.set folder
 
   #--------------------------------------------
   # Mark all entries as read
@@ -273,8 +273,8 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.unread_entry = ->
-    if $rootScope.open_entry.read
-      change_entries_state [$rootScope.open_entry], false
+    if openEntrySvc.get().read
+      change_entries_state [openEntrySvc.get()], false
 
 
   #--------------------------------------------
@@ -290,7 +290,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
       $scope.entries = data["entries"]
       feed.unread_entries = data["unread_entries"]
     .error (data,status)->
-      unset_current_feed()
+      currentFeedSvc.unset()
       $scope.loading_entries = false
       if status == 404
         $rootScope.error_no_entries = true
@@ -346,12 +346,12 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   update_unread_count = (entries, increment)->
-    if $rootScope.current_feed
+    if currentFeedSvc.get()
       # if current_feed has value, all entries belong to the same feed which simplifies things
       if increment
-        $rootScope.current_feed.unread_entries += entries.length
+        currentFeedSvc.get().unread_entries += entries.length
       else
-        $rootScope.current_feed.unread_entries -= entries.length
+        currentFeedSvc.get().unread_entries -= entries.length
     else
       # if current_feed has null value, each entry can belong to a different feed
       # we process each entry individually
@@ -403,68 +403,6 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
       # Otherwise update unread entries in folder
       else
         folder.unread_entries -= feed.unread_entries
-
-  #--------------------------------------------
-  # Store the currently selected feed in the global scope
-  #--------------------------------------------
-
-  set_current_feed = (feed)->
-    unset_current_folder()
-    unset_open_entry()
-    $rootScope.current_feed = feed
-
-  #--------------------------------------------
-  # Unset the currently selected feed in the global scope
-  #--------------------------------------------
-
-  unset_current_feed = ->
-    unset_open_entry()
-    $rootScope.current_feed = null
-
-  #--------------------------------------------
-  # Store the currently selected folder in the global scope
-  #--------------------------------------------
-
-  set_current_folder = (folder)->
-    unset_current_feed()
-    unset_open_entry()
-    $rootScope.current_folder = folder
-
-  #--------------------------------------------
-  # Unset the currently selected folder in the global scope
-  #--------------------------------------------
-
-  unset_current_folder = ->
-    unset_open_entry()
-    $rootScope.current_folder = null
-
-  #--------------------------------------------
-  # Store the currently open entry in the global scope
-  #--------------------------------------------
-
-  set_open_entry = (entry)->
-    $rootScope.open_entry = entry
-
-  #--------------------------------------------
-  # Unset the currently open entry in the global scope
-  #--------------------------------------------
-
-  unset_open_entry = ->
-    $rootScope.open_entry = null
-
-  #--------------------------------------------
-  # Store the currently open folder in the global scope
-  #--------------------------------------------
-
-  set_open_folder = (folder)->
-    $rootScope.current_open_folder = folder
-
-  #--------------------------------------------
-  # Unset the currently open folder in the global scope
-  #--------------------------------------------
-
-  unset_open_folder = ->
-    $rootScope.current_open_folder = null
 
   #--------------------------------------------
   # Function to filter feeds in a given folder
