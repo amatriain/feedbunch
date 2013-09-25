@@ -96,6 +96,6 @@ en:
       progress: "Feeds imported: {{import_processed}} of {{import_total}}"
       success: "Your subscriptions have been successfully imported into Feedbunch."
       problem_updating: "There has been a problem communicating with the server."
-      finish_success: "Your subscribed feeds have been imported into Feedbunch. Refresh the page to see them."
+      finish_success: "Your subscribed feeds have been imported into Feedbunch."
       finish_error: "There has been an error while trying to import your subscribed feeds into Feedbunch."
     export_html: "If you want to download a copy of your Feedbunch data, <a class=\"alert-link\" href=\"#\">click here</a>."
