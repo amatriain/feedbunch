@@ -26,13 +26,6 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
     $scope.loading_entries = false
 
   #--------------------------------------------
-  # Function to convert an entry's id to an integer, for filtering purposes
-  #--------------------------------------------
-
-  $scope.entry_int_id = (entry)->
-    return parseInt entry.id
-
-  #--------------------------------------------
   # Unsubscribe from a feed
   #--------------------------------------------
 
@@ -415,4 +408,11 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
       else
         return folder.id == feed.folder_id
 
+  #--------------------------------------------
+  # Function to convert an entry's id to an integer, for filtering purposes
+  #--------------------------------------------
+
+  $scope.entry_int_id = (entry)->
+    return parseInt entry.id
+    
 ]
