@@ -102,6 +102,9 @@ namespace :feedbunch_secret_data do
     run 'ln -sf /home/feedbunch/config/aws_key.rb ' \
         "#{release_path}/config/initializers/aws_key.rb"
 
+    run 'ln -sf /home/feedbunch/config/devise.rb ' \
+        "#{release_path}/config/initializers/devise.rb"
+
     copy_app
     copy_background
   end
@@ -109,9 +112,6 @@ namespace :feedbunch_secret_data do
   task :copy_app, roles: :app do
     run 'ln -sf /home/feedbunch/config/secret_token.rb ' \
         "#{release_path}/config/initializers/secret_token.rb"
-
-    run 'ln -sf /home/feedbunch/config/devise.rb ' \
-        "#{release_path}/config/initializers/devise.rb"
 
     run "ln -sf /home/feedbunch/config/#{rails_env}.rb " \
         "#{release_path}/config/environments/#{rails_env}.rb"
