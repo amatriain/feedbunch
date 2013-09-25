@@ -12,3 +12,4 @@ before_install:
 before_script:
   - "cp config/database.yml.ci config/database.yml"
   - "cp config/initializers/secret_token.rb.ci config/initializers/secret_token.rb"
+  - "cp config/initializers/devise.rb.ci config/initializers/devise.rb"
