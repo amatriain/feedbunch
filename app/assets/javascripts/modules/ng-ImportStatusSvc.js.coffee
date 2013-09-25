@@ -13,8 +13,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'importStatusSvc',
-['$rootScope', '$http', '$timeout', 'feedsFoldersSvc',
-($rootScope, $http, $timeout, feedsFoldersSvc)->
+['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'timerFlagSvc',
+($rootScope, $http, $timeout, feedsFoldersSvc, timerFlagSvc)->
 
   load_import_status = ($scope, show_alerts)->
     $http.get('/data_imports.json')
@@ -28,28 +28,13 @@ angular.module('feedbunch').service 'importStatusSvc',
           load_import_status $scope, true
         , 5000
       else if data["status"] == "ERROR" && show_alerts
-        # Show an alert when the process finishes with an error
-        $rootScope.error_importing = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.error_importing = false
-        , 5000
+        timerFlagSvc.start 'error_importing'
       else if data["status"] == "SUCCESS" && show_alerts
         # Automatically load new feeds and folders without needing a refresh
         feedsFoldersSvc.load_data $scope
-        # Show an alert when the process finishes successfully
-        $rootScope.success_importing = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.success_importing = false
-        , 5000
+        timerFlagSvc.start 'success_importing'
     .error ->
-      # Show alert
-      $rootScope.error_loading_import_status = true
-      # Close alert after 5 seconds
-      $timeout ->
-        $rootScope.error_loading_import_status = false
-    , 5000
+      timerFlagSvc.start 'error_loading_import_status'
 
   return load_data: load_import_status
 ]
