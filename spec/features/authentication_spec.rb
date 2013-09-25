@@ -61,13 +61,10 @@ describe 'authentication' do
         # Test that user cannot login before confirming the email address
         failed_login_user_for_feature new_email, new_password
 
-        # Follow link received by email, user should get logged in
+        # Follow link received by email, user should be able to log in afterwards
         visit confirmation_link
+        login_user_for_feature @user
         user_should_be_logged_in
-        click_on 'Logout'
-
-        # Test that user can login
-        login_user_for_feature user
       end
 
       it 'does not sign up user if email already registered' do
@@ -207,13 +204,10 @@ describe 'authentication' do
         # Check that user cannot log in before confirming
         failed_login_user_for_feature new_email, new_password
 
-        # Confirm email, user should be logged in automatically
+        # Confirm email, user should be able to log in afterwards
         visit confirmation_link
-        user_should_be_logged_in
 
         # Check that user can log in
-        click_on 'Logout'
-        visit new_user_session_path
         login_user_for_feature user
       end
 
@@ -231,7 +225,6 @@ describe 'authentication' do
         # Confirm email
         confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
         visit confirmation_link
-        click_on 'Logout'
 
         # Ask for resend of confirmation email
         visit new_user_confirmation_path
