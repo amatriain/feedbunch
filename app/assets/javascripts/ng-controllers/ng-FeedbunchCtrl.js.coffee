@@ -414,5 +414,5 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
 
   $scope.entry_int_id = (entry)->
     return parseInt entry.id
-    
+
 ]
