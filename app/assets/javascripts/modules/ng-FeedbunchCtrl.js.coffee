@@ -3,49 +3,14 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
-['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc',
-($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc)->
+['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc', 'importStatusSvc'
+($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc, importStatusSvc)->
 
   # Load folders and feeds via AJAX on startup
-  feedsFoldersSvc.load_data($scope)
+  feedsFoldersSvc.load_data $scope
 
   # Load status of data import process for the current user
-  load_import_status = (show_alerts)->
-    $http.get('/data_imports.json')
-    .success (data)->
-      $scope.import_status = data["status"]
-      if data["status"] == "RUNNING"
-        # Update status from the server periodically while import is running
-        $scope.import_processed = data["import"]["processed"]
-        $scope.import_total = data["import"]["total"]
-        $timeout ->
-          load_import_status true
-        , 5000
-      else if data["status"] == "ERROR" && show_alerts
-        # Show an alert when the process finishes with an error
-        $rootScope.error_importing = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.error_importing = false
-        , 5000
-      else if data["status"] == "SUCCESS" && show_alerts
-        # Automatically load new feeds and folders without needing a refresh
-        load_feeds_and_folders()
-        # Show an alert when the process finishes successfully
-        $rootScope.success_importing = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.success_importing = false
-        , 5000
-    .error ->
-      # Show alert
-      $rootScope.error_loading_import_status = true
-      # Close alert after 5 seconds
-      $timeout ->
-        $rootScope.error_loading_import_status = false
-      , 5000
-
-  load_import_status false
+  importStatusSvc.load_data $scope, false
 
   # If there is a rails alert, show it and close it after 5 seconds
   $scope.error_rails = true
