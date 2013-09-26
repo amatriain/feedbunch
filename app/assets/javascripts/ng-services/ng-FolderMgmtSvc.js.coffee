@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'folderMgmtSvc',
-['$rootScope', '$http', 'findSvc', 'currentFeedSvc',
-($rootScope, $http, findSvc, currentFeedSvc)->
+['$rootScope', '$http', 'findSvc', 'currentFeedSvc', 'timerFlagSvc',
+($rootScope, $http, findSvc, currentFeedSvc, timerFlagSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Update the model to account for a feed having been removed from a folder
