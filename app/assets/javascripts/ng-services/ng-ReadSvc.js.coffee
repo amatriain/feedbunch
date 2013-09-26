@@ -23,9 +23,9 @@ angular.module('feedbunch').service 'readSvc',
       currentFeedSvc.unset()
       $rootScope.loading_entries = false
       if status == 404
-        timerFlagSvc 'error_no_entries'
+        timerFlagSvc.start 'error_no_entries'
       else
-        timerFlagSvc 'error_loading_entries'
+        timerFlagSvc.start 'error_loading_entries'
 
   service =
     #---------------------------------------------

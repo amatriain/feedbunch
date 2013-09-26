@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'subscriptionSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'readSvc', 'findSvc', 'folderMgmtSvc',
-($rootScope, $http, currentFeedSvc, readSvc, findSvc, folderMgmtSvc)->
+['$rootScope', '$http', 'currentFeedSvc', 'readSvc', 'findSvc', 'folderMgmtSvc', 'timerFlagSvc',
+($rootScope, $http, currentFeedSvc, readSvc, findSvc, folderMgmtSvc, timerFlagSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
