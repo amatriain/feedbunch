@@ -3,12 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
-['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
-'currentFeedSvc', 'currentFolderSvc', 'openEntrySvc','openFolderSvc', 'subscriptionSvc', 'readSvc', 'findSvc',
-'folderSvc', 'entrySvc',
-($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
-currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, readSvc, findSvc,
-folderSvc, entrySvc)->
+['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
+'currentFeedSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc',
+($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
+currentFeedSvc, subscriptionSvc, readSvc, folderSvc, entrySvc)->
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data()
@@ -85,6 +83,12 @@ folderSvc, entrySvc)->
     readSvc.refresh_feed()
 
   #--------------------------------------------
+  # Mark a single folder as open in the scope
+  #--------------------------------------------
+  $scope.open_folder = (folder)->
+    readSvc.open_folder folder
+
+  #--------------------------------------------
   # Mark a single entry as read
   #--------------------------------------------
   $scope.read_entry = (entry)->
@@ -101,12 +105,6 @@ folderSvc, entrySvc)->
   #--------------------------------------------
   $scope.unread_entry = ->
     entrySvc.unread_entry()
-
-  #--------------------------------------------
-  # Mark a single folder as open in the scope
-  #--------------------------------------------
-  $scope.open_folder = (folder)->
-    readSvc.open_folder folder
 
   #--------------------------------------------
   # Function to filter feeds in a given folder
