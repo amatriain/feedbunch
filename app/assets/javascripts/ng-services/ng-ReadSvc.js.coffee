@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'readSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openEntrySvc',
-($rootScope, $http, currentFeedSvc, currentFolderSvc, timerFlagSvc, openEntrySvc)->
+['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openEntrySvc', 'openFolderSvc',
+($rootScope, $http, currentFeedSvc, currentFolderSvc, timerFlagSvc, openEntrySvc, openFolderSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load a feed's entries via AJAX in the root scope.
@@ -78,6 +78,16 @@ angular.module('feedbunch').service 'readSvc',
           timerFlagSvc.start 'error_no_entries'
         else
           timerFlagSvc.start 'error_refreshing_feed'
+
+    #--------------------------------------------
+    # Mark a single folder as open in the scope
+    #--------------------------------------------
+    open_folder: (folder)->
+      if openFolderSvc.get() == folder
+        # User is closing the open folder
+        openFolderSvc.unset()
+      else
+        openFolderSvc.set folder
 
   return service
 ]

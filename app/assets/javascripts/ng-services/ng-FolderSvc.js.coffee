@@ -1,5 +1,5 @@
 ########################################################
-# AngularJS service to manage subscribing and unsubscribing from feeds
+# AngularJS service to manage folders
 ########################################################
 
 angular.module('feedbunch').service 'folderSvc',

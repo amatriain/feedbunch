@@ -5,10 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'openEntrySvc','openFolderSvc', 'subscriptionSvc', 'readSvc', 'findSvc',
-'folderSvc',
+'folderSvc', 'entrySvc',
 ($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, readSvc, findSvc,
-folderSvc)->
+folderSvc, entrySvc)->
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data()
@@ -88,92 +88,25 @@ folderSvc)->
   # Mark a single entry as read
   #--------------------------------------------
   $scope.read_entry = (entry)->
-    if openEntrySvc.get() == entry
-      # User is closing the open entry, do nothing
-      openEntrySvc.unset()
-    else
-      openEntrySvc.set entry
-      if !entry.read
-        # User is opening an unread entry, mark it as read
-        change_entries_state [entry], true
-
-  #--------------------------------------------
-  # Mark a single folder as open in the scope
-  #--------------------------------------------
-  $scope.open_folder = (folder)->
-    if openFolderSvc.get() == folder
-      # User is closing the open folder
-      openFolderSvc.unset()
-    else
-      openFolderSvc.set folder
+    entrySvc.read_entry entry
 
   #--------------------------------------------
   # Mark all entries as read
   #--------------------------------------------
   $scope.mark_all_read = ->
-    change_entries_state $rootScope.entries, true
+    entrySvc.mark_all_read()
 
   #--------------------------------------------
   # Mark a single entry as unread
   #--------------------------------------------
   $scope.unread_entry = ->
-    if openEntrySvc.get().read
-      change_entries_state [openEntrySvc.get()], false
+    entrySvc.unread_entry()
 
   #--------------------------------------------
-  # Mark an array of entries as read or unread.
-  # Receives as arguments an array of entries and a boolean indicating whether to mark
-  # them as read (true) or unread (false).
+  # Mark a single folder as open in the scope
   #--------------------------------------------
-  change_entries_state = (entries, read)->
-    # Mark entries as read or unread in the model
-    for entry in entries
-      entry.read = read
-      entry.changing_state = true
-
-    # Get array of IDs for the entries
-    entry_ids = entries.map (entry) -> entry.id
-
-    if read
-      state = "read"
-      update_unread_count entries, false
-    else
-      state = "unread"
-      update_unread_count entries, true
-
-    $http.put("/entries/update.json", entries: {ids: entry_ids, state: state})
-    .success ->
-      for entry in entries
-        entry.changing_state = false
-    .error ->
-      # Show alert
-      $rootScope.error_changing_entry_state = true
-      # Close alert after 5 seconds
-      $timeout ->
-        $rootScope.error_changing_entry_state = false
-      , 5000
-
-  #--------------------------------------------
-  # Increment or decrement the count of unread entries in feeds corresponding to the passed entries.
-  # Receives as argument an array of entries and a boolean indicating whether to
-  # increment (true) or decrement (false) the count.
-  #--------------------------------------------
-  update_unread_count = (entries, increment)->
-    if currentFeedSvc.get()
-      # if current_feed has value, all entries belong to the same feed which simplifies things
-      if increment
-        currentFeedSvc.get().unread_entries += entries.length
-      else
-        currentFeedSvc.get().unread_entries -= entries.length
-    else
-      # if current_feed has null value, each entry can belong to a different feed
-      # we process each entry individually
-      for entry in entries
-        feed = findSvc.find_feed entry.feed_id
-        if increment
-          feed.unread_entries += 1
-        else
-          feed.unread_entries -= 1
+  $scope.open_folder = (folder)->
+    readSvc.open_folder folder
 
   #--------------------------------------------
   # Function to filter feeds in a given folder

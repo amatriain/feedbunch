@@ -3,7 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'timerFlagSvc',
-['$rootScope', '$timeout', ($rootScope, $timeout)->
+['$rootScope', '$timeout',
+($rootScope, $timeout)->
 
   #---------------------------------------------
   # Set a boolean flag in the root scope as true, and 5 seconds later set it as false.
