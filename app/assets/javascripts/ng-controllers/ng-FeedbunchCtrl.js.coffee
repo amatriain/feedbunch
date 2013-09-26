@@ -70,27 +70,7 @@ folderMgmtSvc)->
   # Load a folder's unread entries
   #--------------------------------------------
   $scope.read_folder = (folder)->
-    currentFolderSvc.set folder
-    $rootScope.loading_entries = true
-
-    $http.get("/folders/#{folder.id}.json")
-    .success (data)->
-      $rootScope.loading_entries = false
-      $rootScope.entries = data["entries"]
-    .error (data,status)->
-      $rootScope.loading_entries = false
-      if status == 404
-        $rootScope.error_no_entries = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.error_no_entries = false
-        , 5000
-      else
-        $rootScope.error_loading_entries = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.error_loading_entries = false
-        , 5000
+    readSvc.read_folder folder
 
   #--------------------------------------------
   # Load all of a feed's entries regardless of state
@@ -102,29 +82,7 @@ folderMgmtSvc)->
   # Refresh a feed and load its unread entries
   #--------------------------------------------
   $scope.refresh_feed = ->
-    openEntrySvc.unset()
-    $rootScope.loading_entries = true
-
-    $http.put("/feeds/#{currentFeedSvc.get().id}.json")
-    .success (data)->
-      $rootScope.loading_entries = false
-      $rootScope.entries = data["entries"]
-      currentFeedSvc.get().unread_entries = data["unread_entries"]
-    .error ->
-      $rootScope.loading_entries = false
-      if status == 404
-        $rootScope.error_no_entries = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.error_no_entries = false
-        , 5000
-      else
-        # Show alert
-        $rootScope.error_refreshing_feed = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.error_refreshing_feed = false
-        , 5000
+    readSvc.refresh_feed()
 
   #--------------------------------------------
   # Mark a single entry as read
