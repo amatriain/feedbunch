@@ -5,8 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'openEntrySvc','openFolderSvc', 'subscriptionSvc', 'readSvc', 'findSvc',
+'folderMgmtSvc',
 ($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
-currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, readSvc, findSvc)->
+currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, readSvc, findSvc,
+folderMgmtSvc)->
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data()
@@ -30,30 +32,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, 
   #--------------------------------------------
 
   $scope.unsubscribe = ->
-    # Delete feed model from the scope
-    index = $rootScope.feeds.indexOf currentFeedSvc.get()
-    $rootScope.feeds.splice index, 1 if index != -1
-
-    # Before deleting from the global scope, save some data we'll need later
-    path = "/feeds/#{currentFeedSvc.get().id}.json"
-    unread_entries = currentFeedSvc.get().unread_entries
-    folder_id = currentFeedSvc.get().folder_id
-
-    # Update folders
-    findSvc.find_folder('all').unread_entries -= unread_entries
-    feed_removed_from_folder currentFeedSvc.get(), folder_id
-
-    # Tell the model that no feed is currently selected.
-    currentFeedSvc.unset()
-
-    $http.delete(path)
-    .error ->
-      # Show alert
-      $rootScope.error_unsubscribing = true
-      # Close alert after 5 seconds
-      $timeout ->
-        $rootScope.error_unsubscribing = false
-      , 5000
+    subscriptionSvc.unsubscribe()
 
   #--------------------------------------------
   # Subscribe to a feed
@@ -71,7 +50,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, 
   $scope.remove_from_folder = ->
     folder_id = currentFeedSvc.get().folder_id
     currentFeedSvc.get().folder_id = 'none'
-    feed_removed_from_folder currentFeedSvc.get(), folder_id
+    folderMgmtSvc.feed_removed_from_folder currentFeedSvc.get(), folder_id
 
     $http.put('/folders/none.json', folder: {feed_id: currentFeedSvc.get().id})
     .error ->
@@ -89,7 +68,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, 
   $scope.move_to_folder = (folder)->
     old_folder_id = currentFeedSvc.get().folder_id
     currentFeedSvc.get().folder_id = folder.id
-    feed_removed_from_folder currentFeedSvc.get(), old_folder_id
+    folderMgmtSvc.feed_removed_from_folder currentFeedSvc.get(), old_folder_id
     folder.unread_entries += currentFeedSvc.get().unread_entries
 
     $http.put("/folders/#{folder.id}.json", folder: {feed_id: currentFeedSvc.get().id})
@@ -114,7 +93,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, 
         $rootScope.folders.push data
         old_folder_id = currentFeedSvc.get().folder_id
         currentFeedSvc.get().folder_id = data.id
-        feed_removed_from_folder currentFeedSvc.get(), old_folder_id
+        folderMgmtSvc.feed_removed_from_folder currentFeedSvc.get(), old_folder_id
       .error (data, status)->
         if status == 304
           # Show alert
@@ -298,21 +277,6 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, 
           feed.unread_entries += 1
         else
           feed.unread_entries -= 1
-
-  #--------------------------------------------
-  # Update the model to account for a feed having been removed from a folder
-  #--------------------------------------------
-
-  feed_removed_from_folder = (feed, folder_id)->
-    folder = findSvc.find_folder folder_id
-    if folder != null
-      # Remove folder if it's empty
-      if findSvc.find_folder_feeds(folder_id).length == 0
-        index = $rootScope.folders.indexOf folder
-        $rootScope.folders.splice index, 1 if index != -1
-      # Otherwise update unread entries in folder
-      else
-        folder.unread_entries -= feed.unread_entries
 
   #--------------------------------------------
   # Function to filter feeds in a given folder
