@@ -36,6 +36,10 @@ describe 'feeds' do
       visit read_path
     end
 
+    it 'shows feeds in the sidebar'
+
+    it 'shows an alert if it cannot load feeds'
+
     it 'hides entries menu button until a feed is selected', js: true do
       visit read_path
       page.should_not have_css '#entries-management', visible: true

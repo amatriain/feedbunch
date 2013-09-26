@@ -1,14 +1,19 @@
 ########################################################
-# AngularJS service to load feeds and folders data in the scope
+# AngularJS service to load feeds and folders data in the root scope
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$http', ($http)->
+['$rootScope', '$http', ($rootScope, $http)->
 
-  load_data: ($scope)->
-    $http.get('/folders.json').success (data)->
-      $scope.folders = data
+  #---------------------------------------------
+  # Load feeds and folders via AJAX into the root scope
+  #---------------------------------------------
+  load_data: ->
+    $http.get('/folders.json')
+    .success (data)->
+      $rootScope.folders = data
 
-    $http.get('/feeds.json').success (data)->
-      $scope.feeds = data
+    $http.get('/feeds.json')
+    .success (data)->
+      $rootScope.feeds = data
 ]

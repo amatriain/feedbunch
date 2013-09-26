@@ -4,15 +4,15 @@
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
-'currentFeedSvc', 'currentFolderSvc', 'openEntrySvc','openFolderSvc',
+'currentFeedSvc', 'currentFolderSvc', 'openEntrySvc','openFolderSvc', 'subscriptionSvc', 'readSvc', 'findSvc',
 ($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
-currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
+currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, readSvc, findSvc)->
 
   # Load folders and feeds via AJAX on startup
-  feedsFoldersSvc.load_data $scope
+  feedsFoldersSvc.load_data()
 
   # Load status of data import process for the current user
-  importStatusSvc.load_data $scope, false
+  importStatusSvc.load_data false
 
   # If there is a rails alert, show it and close it after 5 seconds
   timerFlagSvc.start 'error_rails'
@@ -23,7 +23,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
 
   $scope.show_start_page = ->
     currentFeedSvc.unset()
-    $scope.loading_entries = false
+    $rootScope.loading_entries = false
 
   #--------------------------------------------
   # Unsubscribe from a feed
@@ -31,8 +31,8 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
 
   $scope.unsubscribe = ->
     # Delete feed model from the scope
-    index = $scope.feeds.indexOf currentFeedSvc.get()
-    $scope.feeds.splice index, 1 if index != -1
+    index = $rootScope.feeds.indexOf currentFeedSvc.get()
+    $rootScope.feeds.splice index, 1 if index != -1
 
     # Before deleting from the global scope, save some data we'll need later
     path = "/feeds/#{currentFeedSvc.get().id}.json"
@@ -40,7 +40,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
     folder_id = currentFeedSvc.get().folder_id
 
     # Update folders
-    find_folder('all').unread_entries -= unread_entries
+    findSvc.find_folder('all').unread_entries -= unread_entries
     feed_removed_from_folder currentFeedSvc.get(), folder_id
 
     # Tell the model that no feed is currently selected.
@@ -61,32 +61,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
 
   $scope.subscribe = ->
     $("#subscribe-feed-popup").modal 'hide'
-
-    if $scope.subscription_url
-      currentFeedSvc.unset()
-      $scope.loading_entries = true
-
-      $http.post('/feeds.json', feed:{url: $scope.subscription_url})
-      .success (data)->
-        $scope.loading_entries = false
-        $scope.feeds.push data
-        $scope.read_feed data
-        find_folder('all').unread_entries += data.unread_entries
-      .error (data, status)->
-        $scope.loading_entries = false
-        # Show alert
-        if status == 304
-          $rootScope.error_already_subscribed = true
-          # Close alert after 5 seconds
-          $timeout ->
-            $rootScope.error_already_subscribed = false
-          , 5000
-        else
-          $rootScope.error_subscribing = true
-          # Close alert after 5 seconds
-          $timeout ->
-            $rootScope.error_subscribing = false
-          , 5000
+    subscriptionSvc.subscribe $scope.subscription_url
     $scope.subscription_url = null
 
   #--------------------------------------------
@@ -136,7 +111,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
     if $scope.new_folder_title
       $http.post("/folders.json", folder: {feed_id: currentFeedSvc.get().id, title: $scope.new_folder_title})
       .success (data)->
-        $scope.folders.push data
+        $rootScope.folders.push data
         old_folder_id = currentFeedSvc.get().folder_id
         currentFeedSvc.get().folder_id = data.id
         feed_removed_from_folder currentFeedSvc.get(), old_folder_id
@@ -162,8 +137,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.read_feed = (feed)->
-    currentFeedSvc.set feed
-    load_feed feed, false
+    readSvc.read_feed feed
 
   #--------------------------------------------
   # Load a folder's unread entries
@@ -171,14 +145,14 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
 
   $scope.read_folder = (folder)->
     currentFolderSvc.set folder
-    $scope.loading_entries = true
+    $rootScope.loading_entries = true
 
     $http.get("/folders/#{folder.id}.json")
     .success (data)->
-        $scope.loading_entries = false
-        $scope.entries = data["entries"]
+      $rootScope.loading_entries = false
+      $rootScope.entries = data["entries"]
     .error (data,status)->
-      $scope.loading_entries = false
+      $rootScope.loading_entries = false
       if status == 404
         $rootScope.error_no_entries = true
         # Close alert after 5 seconds
@@ -197,8 +171,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.read_all_entries = ->
-    openEntrySvc.unset()
-    load_feed currentFeedSvc.get(), true
+    readSvc.read_feed_all()
 
   #--------------------------------------------
   # Refresh a feed and load its unread entries
@@ -206,15 +179,15 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
 
   $scope.refresh_feed = ->
     openEntrySvc.unset()
-    $scope.loading_entries = true
+    $rootScope.loading_entries = true
 
     $http.put("/feeds/#{currentFeedSvc.get().id}.json")
     .success (data)->
-      $scope.loading_entries = false
-      $scope.entries = data["entries"]
+      $rootScope.loading_entries = false
+      $rootScope.entries = data["entries"]
       currentFeedSvc.get().unread_entries = data["unread_entries"]
     .error ->
-      $scope.loading_entries = false
+      $rootScope.loading_entries = false
       if status == 404
         $rootScope.error_no_entries = true
         # Close alert after 5 seconds
@@ -259,7 +232,7 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   #--------------------------------------------
 
   $scope.mark_all_read = ->
-    change_entries_state $scope.entries, true
+    change_entries_state $rootScope.entries, true
 
   #--------------------------------------------
   # Mark a single entry as unread
@@ -268,35 +241,6 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
   $scope.unread_entry = ->
     if openEntrySvc.get().read
       change_entries_state [openEntrySvc.get()], false
-
-
-  #--------------------------------------------
-  # Load a feed's entries
-  #--------------------------------------------
-
-  load_feed = (feed, include_read_entries)->
-    $scope.loading_entries = true
-
-    $http.get("/feeds/#{feed.id}.json?include_read=#{include_read_entries}")
-    .success (data)->
-      $scope.loading_entries = false
-      $scope.entries = data["entries"]
-      feed.unread_entries = data["unread_entries"]
-    .error (data,status)->
-      currentFeedSvc.unset()
-      $scope.loading_entries = false
-      if status == 404
-        $rootScope.error_no_entries = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.error_no_entries = false
-        , 5000
-      else
-        $rootScope.error_loading_entries = true
-        # Close alert after 5 seconds
-        $timeout ->
-          $rootScope.error_loading_entries = false
-        , 5000
 
   #--------------------------------------------
   # Mark an array of entries as read or unread.
@@ -349,50 +293,23 @@ currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc)->
       # if current_feed has null value, each entry can belong to a different feed
       # we process each entry individually
       for entry in entries
-        feed = find_feed entry.feed_id
+        feed = findSvc.find_feed entry.feed_id
         if increment
           feed.unread_entries += 1
         else
           feed.unread_entries -= 1
-
-
-  #--------------------------------------------
-  # Return a feed object given its id
-  #--------------------------------------------
-
-  find_feed = (id)->
-    feeds = $filter('filter') $scope.feeds, {id: id}
-    return feeds[0]
-
-  #--------------------------------------------
-  # Return a folder object given its id
-  #--------------------------------------------
-
-  find_folder = (id)->
-    if id == 'none'
-      return null
-    else
-      folders = $filter('filter') $scope.folders, {id: id}
-      return folders[0]
-
-  #--------------------------------------------
-  # Return an array of feeds in a folder given the folder id
-  #--------------------------------------------
-
-  find_folder_feeds = (folder_id)->
-    return $filter('filter') $scope.feeds, {folder_id: folder_id}
 
   #--------------------------------------------
   # Update the model to account for a feed having been removed from a folder
   #--------------------------------------------
 
   feed_removed_from_folder = (feed, folder_id)->
-    folder = find_folder folder_id
+    folder = findSvc.find_folder folder_id
     if folder != null
       # Remove folder if it's empty
-      if find_folder_feeds(folder_id).length == 0
-        index = $scope.folders.indexOf folder
-        $scope.folders.splice index, 1 if index != -1
+      if findSvc.find_folder_feeds(folder_id).length == 0
+        index = $rootScope.folders.indexOf folder
+        $rootScope.folders.splice index, 1 if index != -1
       # Otherwise update unread entries in folder
       else
         folder.unread_entries -= feed.unread_entries

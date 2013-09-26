@@ -31,6 +31,8 @@ describe 'folders and feeds' do
     page.should_not have_content @folder2.title
   end
 
+  it 'shows an alert if it cannot load folders'
+
   it 'shows an All Subscriptions folder with all feeds subscribed to', js: true do
     within '#sidebar' do
       page.should have_content 'All subscriptions'
