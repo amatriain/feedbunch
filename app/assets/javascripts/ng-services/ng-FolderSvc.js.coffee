@@ -2,7 +2,7 @@
 # AngularJS service to manage subscribing and unsubscribing from feeds
 ########################################################
 
-angular.module('feedbunch').service 'folderMgmtSvc',
+angular.module('feedbunch').service 'folderSvc',
 ['$rootScope', '$http', 'findSvc', 'currentFeedSvc', 'timerFlagSvc',
 ($rootScope, $http, findSvc, currentFeedSvc, timerFlagSvc)->
 

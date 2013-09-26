@@ -5,10 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$http', '$timeout', '$filter', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'openEntrySvc','openFolderSvc', 'subscriptionSvc', 'readSvc', 'findSvc',
-'folderMgmtSvc',
+'folderSvc',
 ($rootScope, $scope, $http, $timeout, $filter, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, openEntrySvc, openFolderSvc, subscriptionSvc, readSvc, findSvc,
-folderMgmtSvc)->
+folderSvc)->
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data()
@@ -44,20 +44,20 @@ folderMgmtSvc)->
   # Remove a feed from a folder
   #--------------------------------------------
   $scope.remove_from_folder = ->
-    folderMgmtSvc.remove_from_folder()
+    folderSvc.remove_from_folder()
 
   #--------------------------------------------
   # Move a feed to an already existing folder
   #--------------------------------------------
   $scope.move_to_folder = (folder)->
-    folderMgmtSvc.move_to_folder folder
+    folderSvc.move_to_folder folder
 
   #--------------------------------------------
   # Move a feed to a new folder
   #--------------------------------------------
   $scope.move_to_new_folder = ()->
     $("#new-folder-popup").modal 'hide'
-    folderMgmtSvc.move_to_new_folder $scope.new_folder_title
+    folderSvc.move_to_new_folder $scope.new_folder_title
     $scope.new_folder_title = null
 
   #--------------------------------------------

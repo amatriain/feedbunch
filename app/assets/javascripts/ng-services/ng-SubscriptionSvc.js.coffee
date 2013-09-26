@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'subscriptionSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'readSvc', 'findSvc', 'folderMgmtSvc', 'timerFlagSvc',
-($rootScope, $http, currentFeedSvc, readSvc, findSvc, folderMgmtSvc, timerFlagSvc)->
+['$rootScope', '$http', 'currentFeedSvc', 'readSvc', 'findSvc', 'folderSvc', 'timerFlagSvc',
+($rootScope, $http, currentFeedSvc, readSvc, findSvc, folderSvc, timerFlagSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
@@ -41,7 +41,7 @@ angular.module('feedbunch').service 'subscriptionSvc',
 
     # Update folders
     findSvc.find_folder('all').unread_entries -= unread_entries
-    folderMgmtSvc.feed_removed_from_folder currentFeedSvc.get(), folder_id
+    folderSvc.feed_removed_from_folder currentFeedSvc.get(), folder_id
 
     # Tell the model that no feed is currently selected.
     currentFeedSvc.unset()
