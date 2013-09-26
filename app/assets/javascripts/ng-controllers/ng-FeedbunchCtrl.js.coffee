@@ -20,9 +20,8 @@ folderMgmtSvc)->
   timerFlagSvc.start 'error_rails'
 
   #--------------------------------------------
-  # Function to show the start page
+  # Show the start page
   #--------------------------------------------
-
   $scope.show_start_page = ->
     currentFeedSvc.unset()
     $rootScope.loading_entries = false
@@ -30,14 +29,12 @@ folderMgmtSvc)->
   #--------------------------------------------
   # Unsubscribe from a feed
   #--------------------------------------------
-
   $scope.unsubscribe = ->
     subscriptionSvc.unsubscribe()
 
   #--------------------------------------------
   # Subscribe to a feed
   #--------------------------------------------
-
   $scope.subscribe = ->
     $("#subscribe-feed-popup").modal 'hide'
     subscriptionSvc.subscribe $scope.subscription_url
@@ -46,82 +43,32 @@ folderMgmtSvc)->
   #--------------------------------------------
   # Remove a feed from a folder
   #--------------------------------------------
-
   $scope.remove_from_folder = ->
-    folder_id = currentFeedSvc.get().folder_id
-    currentFeedSvc.get().folder_id = 'none'
-    folderMgmtSvc.feed_removed_from_folder currentFeedSvc.get(), folder_id
-
-    $http.put('/folders/none.json', folder: {feed_id: currentFeedSvc.get().id})
-    .error ->
-      # Show alert
-      $rootScope.error_managing_folders = true
-      # Close alert after 5 seconds
-      $timeout ->
-        $rootScope.error_managing_folders = false
-      , 5000
+    folderMgmtSvc.remove_from_folder()
 
   #--------------------------------------------
   # Move a feed to an already existing folder
   #--------------------------------------------
-
   $scope.move_to_folder = (folder)->
-    old_folder_id = currentFeedSvc.get().folder_id
-    currentFeedSvc.get().folder_id = folder.id
-    folderMgmtSvc.feed_removed_from_folder currentFeedSvc.get(), old_folder_id
-    folder.unread_entries += currentFeedSvc.get().unread_entries
-
-    $http.put("/folders/#{folder.id}.json", folder: {feed_id: currentFeedSvc.get().id})
-    .error ->
-      # Show alert
-      $rootScope.error_managing_folders = true
-      # Close alert after 5 seconds
-      $timeout ->
-        $rootScope.error_managing_folders = false
-      , 5000
+    folderMgmtSvc.move_to_folder folder
 
   #--------------------------------------------
   # Move a feed to a new folder
   #--------------------------------------------
-
   $scope.move_to_new_folder = ()->
     $("#new-folder-popup").modal 'hide'
-
-    if $scope.new_folder_title
-      $http.post("/folders.json", folder: {feed_id: currentFeedSvc.get().id, title: $scope.new_folder_title})
-      .success (data)->
-        $rootScope.folders.push data
-        old_folder_id = currentFeedSvc.get().folder_id
-        currentFeedSvc.get().folder_id = data.id
-        folderMgmtSvc.feed_removed_from_folder currentFeedSvc.get(), old_folder_id
-      .error (data, status)->
-        if status == 304
-          # Show alert
-          $rootScope.error_already_existing_folder = true
-          # Close alert after 5 seconds
-          $timeout ->
-            $rootScope.error_already_existing_folder = false
-          , 5000
-        else
-          # Show alert
-          $rootScope.error_creating_folder = true
-          # Close alert after 5 seconds
-          $timeout ->
-            $rootScope.error_creating_folder = false
-          , 5000
+    folderMgmtSvc.move_to_new_folder $scope.new_folder_title
     $scope.new_folder_title = null
 
   #--------------------------------------------
   # Load a feed's unread entries
   #--------------------------------------------
-
   $scope.read_feed = (feed)->
     readSvc.read_feed feed
 
   #--------------------------------------------
   # Load a folder's unread entries
   #--------------------------------------------
-
   $scope.read_folder = (folder)->
     currentFolderSvc.set folder
     $rootScope.loading_entries = true
@@ -148,14 +95,12 @@ folderMgmtSvc)->
   #--------------------------------------------
   # Load all of a feed's entries regardless of state
   #--------------------------------------------
-
   $scope.read_all_entries = ->
     readSvc.read_feed_all()
 
   #--------------------------------------------
   # Refresh a feed and load its unread entries
   #--------------------------------------------
-
   $scope.refresh_feed = ->
     openEntrySvc.unset()
     $rootScope.loading_entries = true
@@ -184,7 +129,6 @@ folderMgmtSvc)->
   #--------------------------------------------
   # Mark a single entry as read
   #--------------------------------------------
-
   $scope.read_entry = (entry)->
     if openEntrySvc.get() == entry
       # User is closing the open entry, do nothing
@@ -198,7 +142,6 @@ folderMgmtSvc)->
   #--------------------------------------------
   # Mark a single folder as open in the scope
   #--------------------------------------------
-
   $scope.open_folder = (folder)->
     if openFolderSvc.get() == folder
       # User is closing the open folder
@@ -209,14 +152,12 @@ folderMgmtSvc)->
   #--------------------------------------------
   # Mark all entries as read
   #--------------------------------------------
-
   $scope.mark_all_read = ->
     change_entries_state $rootScope.entries, true
 
   #--------------------------------------------
   # Mark a single entry as unread
   #--------------------------------------------
-
   $scope.unread_entry = ->
     if openEntrySvc.get().read
       change_entries_state [openEntrySvc.get()], false
@@ -226,7 +167,6 @@ folderMgmtSvc)->
   # Receives as arguments an array of entries and a boolean indicating whether to mark
   # them as read (true) or unread (false).
   #--------------------------------------------
-
   change_entries_state = (entries, read)->
     # Mark entries as read or unread in the model
     for entry in entries
@@ -260,7 +200,6 @@ folderMgmtSvc)->
   # Receives as argument an array of entries and a boolean indicating whether to
   # increment (true) or decrement (false) the count.
   #--------------------------------------------
-
   update_unread_count = (entries, increment)->
     if currentFeedSvc.get()
       # if current_feed has value, all entries belong to the same feed which simplifies things
@@ -281,7 +220,6 @@ folderMgmtSvc)->
   #--------------------------------------------
   # Function to filter feeds in a given folder
   #--------------------------------------------
-
   $scope.feed_in_folder = (folder)->
     return (feed)->
       if folder.id == 'all'
@@ -292,7 +230,6 @@ folderMgmtSvc)->
   #--------------------------------------------
   # Function to convert an entry's id to an integer, for filtering purposes
   #--------------------------------------------
-
   $scope.entry_int_id = (entry)->
     return parseInt entry.id
 
