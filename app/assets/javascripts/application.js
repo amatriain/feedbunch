@@ -11,5 +11,5 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery_ujs
-//= require modules/ng-app
+//= require ng-modules/ng-app
 //= require_tree .
