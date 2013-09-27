@@ -97,7 +97,7 @@ GEM
       loofah (~> 1.2.1)
       nokogiri (~> 1.5.3)
       sax-machine (~> 0.2.0.rc1)
-    god (0.13.2)
+    god (0.13.3)
     gorillib (0.1.11)
       json
     haml (4.0.3)
