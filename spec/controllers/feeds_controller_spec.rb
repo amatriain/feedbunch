@@ -82,6 +82,35 @@ describe FeedsController do
       assigns(:entries).should include entry2
     end
 
+    context 'pagination' do
+
+      before :each do
+        @entries = []
+        # Ensure there are exactly 26 entries
+        Entry.all.each {|e| e.destroy}
+        (1..26).each do |i|
+          e = FactoryGirl.build :entry, feed_id: @feed1.id, published: Date.new(2001, 01, i)
+          @feed1.entries << e
+          @entries << e
+        end
+      end
+
+      it 'returns the first page of entries' do
+        get :show, id: @feed1.id, page: 1
+        assigns(:entries).count.should eq 25
+        assigns(:entries).each do |entry, index|
+          entry.should eq @entries[i]
+        end
+      end
+
+      it 'returns the last page of entries' do
+        get :show, id: @feed1.id, page: 2
+        assigns(:entries).count.should eq 1
+        assigns(:entries)[0].should eq @entries[25]
+      end
+
+    end
+
   end
 
   context 'PATCH update' do
