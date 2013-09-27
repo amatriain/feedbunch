@@ -11,15 +11,26 @@ class EntryReader
   # - user for whom the read/unread state of each entry will be considered.
   # - include_read (optional): boolean that indicates whether to include both read and unread entries
   # (if true) or just unread entries (if false). By default this argument is false.
+  # - page (optional): results page to return.
+  #
+  # Entries are ordered by published (first) and id (second). If the page argument is nil, all entries
+  # are returned. If it has a value, entries are paginated and the requested page is returned. Results
+  # pagination is achieved with the Kaminari gem, which uses a default page size of 25 results.
   #
   # If successful, returns an ActiveRecord::Relation with the entries.
 
-  def self.feed_entries(feed, include_read=false, user)
+  def self.feed_entries(feed, user, include_read: false, page: nil)
     if include_read
-      return feed.entries
+      entries =  feed.entries order: 'published desc, id desc'
     else
-      return unread_feed_entries feed, user
+      entries = unread_feed_entries feed, user
     end
+
+    if page.present?
+      entries = entries.page page
+    end
+
+    return entries
   end
 
   ##
@@ -60,8 +71,8 @@ class EntryReader
 
   def self.unread_feed_entries(feed, user)
     Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from feed #{feed.id} - #{feed.fetch_url}"
-    entries = Entry.joins(:entry_states, :feed).where entry_states: {read: false, user_id: user.id},
-                                                      feeds: {id: feed.id}
+    entries = Entry.joins(:entry_states, :feed).where(entry_states: {read: false, user_id: user.id},
+                                                      feeds: {id: feed.id}).order 'published desc, id desc'
     return entries
   end
 

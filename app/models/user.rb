@@ -71,8 +71,8 @@ class User < ActiveRecord::Base
   ##
   # Retrieve entries from a feed. See EntryReader#feed_entries
 
-  def feed_entries(feed, include_read=false)
-    EntryReader.feed_entries feed, include_read, self
+  def feed_entries(feed, include_read: false, page: nil)
+    EntryReader.feed_entries feed, self, include_read: include_read, page: page
   end
 
   ##
