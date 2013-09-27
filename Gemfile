@@ -34,6 +34,9 @@ gem 'devise'
 # Form generator compatible with Bootstrap
 gem 'simple_form'
 
+# Data pagination
+gem 'kaminari'
+
 # RSS/Atom parser
 gem 'feedzirra', '0.2.0.rc2'
 gem 'sax-machine'
