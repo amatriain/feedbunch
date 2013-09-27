@@ -2,7 +2,7 @@
 # AngularJS main application file
 ########################################################
 
-module = angular.module 'feedbunch', []
+module = angular.module 'feedbunch', ['infinite-scroll']
 
 # Configure $http service to send the CSRF-prevention token, otherwise POST, DELETE etc requests will be rejected
 module.config ["$httpProvider", (provider)->
