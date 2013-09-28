@@ -42,8 +42,6 @@ class FeedsController < ApplicationController
   ##
   # Fetch a feed and save in the database any new entries, as long as the currently authenticated user is suscribed to it.
   #
-  # After that it does exactly the same as the show action: return HTML with all entries for the feed.
-  #
   # If the request asks to refresh a feed the user is not suscribed to, the response is a 404 error code (Not Found).
 
   def update
