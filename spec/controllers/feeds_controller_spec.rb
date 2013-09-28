@@ -86,27 +86,53 @@ describe FeedsController do
 
       before :each do
         @entries = []
-        # Ensure there are exactly 26 entries
+        # Ensure there are exactly 26 unread entries and 4 read entries
         Entry.all.each {|e| e.destroy}
-        (1..26).each do |i|
+        (0..29).each do |i|
           e = FactoryGirl.build :entry, feed_id: @feed1.id, published: Date.new(2001, 01, 30-i)
           @feed1.entries << e
           @entries << e
         end
+
+        @user.change_entries_state @entries[26..29], 'read'
       end
 
-      it 'returns the first page of entries' do
-        get :show, id: @feed1.id, page: 1, format: :json
-        assigns(:entries).count.should eq 25
-        assigns(:entries).each_with_index do |entry, index|
-          entry.should eq @entries[index]
+      context 'unread entries' do
+
+        it 'returns the first page of entries' do
+          get :show, id: @feed1.id, page: 1, format: :json
+          assigns(:entries).count.should eq 25
+          assigns(:entries).each_with_index do |entry, index|
+            entry.should eq @entries[index]
+          end
         end
+
+        it 'returns the last page of entries' do
+          get :show, id: @feed1.id, page: 2, format: :json
+          assigns(:entries).count.should eq 1
+          assigns(:entries)[0].should eq @entries[25]
+        end
+
       end
 
-      it 'returns the last page of entries' do
-        get :show, id: @feed1.id, page: 2, format: :json
-        assigns(:entries).count.should eq 1
-        assigns(:entries)[0].should eq @entries[25]
+      context 'all entries' do
+
+        it 'returns the first page of entries' do
+          get :show, id: @feed1.id, include_read: 'true', page: 1, format: :json
+          assigns(:entries).count.should eq 25
+          assigns(:entries).each_with_index do |entry, index|
+            entry.should eq @entries[index]
+          end
+        end
+
+        it 'returns the last page of entries' do
+          get :show, id: @feed1.id, include_read: 'true', page: 2, format: :json
+          assigns(:entries).count.should eq 5
+          assigns(:entries).each_with_index do |entry, index|
+            entry.should eq @entries[25 + index]
+          end
+        end
+
       end
 
     end
