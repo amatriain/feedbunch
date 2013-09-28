@@ -46,14 +46,9 @@ class FeedsController < ApplicationController
 
   def update
     @feed = current_user.feeds.find params[:id]
-    @entries = current_user.refresh_feed @feed
+    current_user.refresh_feed @feed
 
-    if @entries.present?
-      render 'show', locals: {feed: @feed, entries: @entries, user: current_user}
-    else
-      Rails.logger.warn "Feed #{params[:id]} has no unread entries, returning a 404"
-      head status: 404
-    end
+    head :ok
   rescue => e
     handle_error e
   end

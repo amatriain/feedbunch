@@ -69,15 +69,10 @@ angular.module('feedbunch').service 'readSvc',
 
       $http.put("/feeds/#{currentFeedSvc.get().id}.json")
       .success (data)->
-        $rootScope.loading_entries = false
-        $rootScope.entries = data["entries"]
-        currentFeedSvc.get().unread_entries = data["unread_entries"]
+        load_feed currentFeedSvc.get(), false
       .error ->
         $rootScope.loading_entries = false
-        if status == 404
-          timerFlagSvc.start 'error_no_entries'
-        else
-          timerFlagSvc.start 'error_refreshing_feed'
+        timerFlagSvc.start 'error_refreshing_feed'
 
     #--------------------------------------------
     # Mark a single folder as open in the scope
