@@ -246,7 +246,7 @@ describe User do
       entry_state.read = true
       entry_state.save!
 
-      entries = @user.feed_entries feed, true
+      entries = @user.feed_entries feed, include_read: true
       entries.count.should eq 3
       entries.should include entry1
       entries.should include entry2
