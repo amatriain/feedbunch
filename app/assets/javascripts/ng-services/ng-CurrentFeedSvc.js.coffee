@@ -8,6 +8,8 @@ angular.module('feedbunch').service 'currentFeedSvc',
   set: (feed)->
     $rootScope.current_folder = null
     $rootScope.open_entry = null
+    $rootScope.entries_page = 0
+    $rootScope.entries = []
     $rootScope.current_feed = feed
 
   unset: ->

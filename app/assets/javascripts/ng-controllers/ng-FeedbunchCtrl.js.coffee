@@ -59,6 +59,13 @@ currentFeedSvc, subscriptionSvc, readSvc, folderSvc, entrySvc)->
     $scope.new_folder_title = null
 
   #--------------------------------------------
+  # Set the currently selected feed
+  #--------------------------------------------
+  $scope.set_current_feed = (feed)->
+    currentFeedSvc.set feed
+    readSvc.read_feed feed
+
+  #--------------------------------------------
   # Load a feed's unread entries
   #--------------------------------------------
   $scope.read_feed = (feed)->

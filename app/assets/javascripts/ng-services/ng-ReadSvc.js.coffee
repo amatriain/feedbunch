@@ -12,19 +12,24 @@ angular.module('feedbunch').service 'readSvc',
   # to load all entries (true) or only unread ones (false).
   #--------------------------------------------
   load_feed = (feed, include_read_entries)->
-    $rootScope.loading_entries = true
+    return if $rootScope.loading_entries_busy == true || !feed
+    #$rootScope.loading_entries = true
+    $rootScope.entries_page += 1
+    $rootScope.loading_entries_busy = true
 
-    $http.get("/feeds/#{feed.id}.json?include_read=#{include_read_entries}")
+    $http.get("/feeds/#{feed.id}.json?include_read=#{include_read_entries}&page=#{$rootScope.entries_page}")
     .success (data)->
       $rootScope.loading_entries = false
-      $rootScope.entries = data["entries"]
+      $rootScope.loading_entries_busy = false
+      $rootScope.entries = $rootScope.entries.concat data["entries"]
       feed.unread_entries = data["unread_entries"]
     .error (data,status)->
-      currentFeedSvc.unset()
       $rootScope.loading_entries = false
+      $rootScope.loading_entries_busy = false
       if status == 404
-        timerFlagSvc.start 'error_no_entries'
+        timerFlagSvc.start 'error_no_entries' if $rootScope.entries_page == 1
       else
+        currentFeedSvc.unset()
         timerFlagSvc.start 'error_loading_entries'
 
   service =
@@ -32,7 +37,6 @@ angular.module('feedbunch').service 'readSvc',
     # Load a feed's unread entries in the root scope
     #---------------------------------------------
     read_feed: (feed)->
-      currentFeedSvc.set feed
       load_feed feed, false
     #---------------------------------------------
     # Load all of the current feed's entries, both read and unread
