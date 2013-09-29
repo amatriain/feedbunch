@@ -20,10 +20,12 @@ class EntryReader
   # If successful, returns an ActiveRecord::Relation with the entries.
 
   def self.feed_entries(feed, user, include_read: false, page: nil)
-    if include_read
+    if include_read && !page.present?
       entries =  feed.entries order: 'published desc, id desc'
+    elsif include_read && page.present?
+      entries =  feed.entries(order: 'published desc, id desc').page page
     else
-      entries = unread_feed_entries feed, user
+      entries = unread_feed_entries feed, user, page: page
     end
 
     if page.present?
@@ -62,17 +64,24 @@ class EntryReader
   #
   # Retrieve entries from the feed passed as argument that are marked as unread for the user passed.
   #
-  # Receives as arguments the feed from which entries are to be retrieved, and the
-  # user for which entries are unread.
+  # Receives as arguments:
+  # - feed from which entries are to be retrieved
+  # - user for which entries are unread.
+  # - page (optional): results page to return.
   #
   # Returns an ActiveRecord::Relation with the entries if successful.
   #
   # If the user is not subscribed to the feed an ActiveRecord::RecordNotFound error is raised.
 
-  def self.unread_feed_entries(feed, user)
+  def self.unread_feed_entries(feed, user, page: nil)
     Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from feed #{feed.id} - #{feed.fetch_url}"
-    entries = Entry.joins(:entry_states, :feed).where(entry_states: {read: false, user_id: user.id},
-                                                      feeds: {id: feed.id}).order 'published desc, id desc'
+    if page.present?
+      entries = Entry.joins(:entry_states, :feed).where(entry_states: {read: false, user_id: user.id},
+                                                        feeds: {id: feed.id}).order('published desc, id desc').page page
+    else
+      entries = Entry.joins(:entry_states, :feed).where(entry_states: {read: false, user_id: user.id},
+                                                        feeds: {id: feed.id}).order 'published desc, id desc'
+    end
     return entries
   end
 
