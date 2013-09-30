@@ -22,6 +22,7 @@ currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc)
   #--------------------------------------------
   $scope.show_start_page = ->
     currentFeedSvc.unset()
+    currentFolderSvc.unset()
     $rootScope.loading_entries = false
 
   #--------------------------------------------

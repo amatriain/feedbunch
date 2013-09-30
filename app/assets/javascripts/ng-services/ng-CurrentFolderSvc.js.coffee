@@ -3,17 +3,15 @@
 ########################################################
 
 angular.module('feedbunch').service 'currentFolderSvc',
-['$rootScope', ($rootScope)->
+['$rootScope', 'entriesPaginationSvc', ($rootScope, entriesPaginationSvc)->
 
   set: (folder)->
+    entriesPaginationSvc.reset_entries()
     $rootScope.current_feed = null
-    $rootScope.open_entry = null
-    $rootScope.entries_page = 0
-    $rootScope.entries = []
     $rootScope.current_folder = folder
 
   unset: ->
-    $rootScope.open_entry = null
+    entriesPaginationSvc.reset_entries()
     $rootScope.current_folder = null
 
   get: ->
