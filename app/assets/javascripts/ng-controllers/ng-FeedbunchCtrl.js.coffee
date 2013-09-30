@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
-'currentFeedSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc',
+'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc',
 ($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
-currentFeedSvc, subscriptionSvc, readSvc, folderSvc, entrySvc)->
+currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc)->
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data()
@@ -63,19 +63,18 @@ currentFeedSvc, subscriptionSvc, readSvc, folderSvc, entrySvc)->
   #--------------------------------------------
   $scope.set_current_feed = (feed)->
     currentFeedSvc.set feed
-    readSvc.read_feed feed
 
   #--------------------------------------------
-  # Load a feed's unread entries
+  # Set the currently selected folder
   #--------------------------------------------
-  $scope.read_feed = (feed)->
-    readSvc.read_feed feed
+  $scope.set_current_folder = (folder)->
+    currentFolderSvc.set folder
 
   #--------------------------------------------
-  # Load a folder's unread entries
+  # Load a page of entries for the currently selected feed or folder
   #--------------------------------------------
-  $scope.read_folder = (folder)->
-    readSvc.read_folder folder
+  $scope.read_entries_page = ->
+    readSvc.read_entries_page()
 
   #--------------------------------------------
   # Load all of a feed's entries regardless of state

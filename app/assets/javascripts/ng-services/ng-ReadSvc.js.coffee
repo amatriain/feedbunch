@@ -13,7 +13,7 @@ angular.module('feedbunch').service 'readSvc',
   #--------------------------------------------
   load_feed = (feed, include_read_entries)->
     return if $rootScope.loading_entries_busy == true || !feed
-    #$rootScope.loading_entries = true
+    $rootScope.loading_entries = true
     $rootScope.entries_page += 1
     $rootScope.loading_entries_busy = true
 
@@ -34,20 +34,33 @@ angular.module('feedbunch').service 'readSvc',
 
   service =
     #---------------------------------------------
+    # Load a page of entries for the currently selected feed or folder
+    #---------------------------------------------
+    read_entries_page: ->
+      load_feed currentFeedSvc.get(), false
+
+    #---------------------------------------------
     # Load a feed's unread entries in the root scope
     #---------------------------------------------
+    ###
     read_feed: (feed)->
+      currentFeedSvc.set feed
       load_feed feed, false
+    ###
+    
     #---------------------------------------------
     # Load all of the current feed's entries, both read and unread
     #---------------------------------------------
+    ###
     read_feed_all: ->
       openEntrySvc.unset()
       load_feed currentFeedSvc.get(), true
+    ###
 
     #--------------------------------------------
     # Load a folder's unread entries
     #--------------------------------------------
+    ###
     read_folder: (folder)->
       currentFolderSvc.set folder
       $rootScope.loading_entries = true
@@ -62,11 +75,12 @@ angular.module('feedbunch').service 'readSvc',
           timerFlagSvc.start 'error_no_entries'
         else
           timerFlagSvc.start 'error_loading_entries'
-
+    ###
 
     #--------------------------------------------
     # Refresh a feed and load its unread entries
     #--------------------------------------------
+    ###
     refresh_feed: ->
       openEntrySvc.unset()
       $rootScope.loading_entries = true
@@ -77,16 +91,19 @@ angular.module('feedbunch').service 'readSvc',
       .error ->
         $rootScope.loading_entries = false
         timerFlagSvc.start 'error_refreshing_feed'
+    ###
 
     #--------------------------------------------
     # Mark a single folder as open in the scope
     #--------------------------------------------
+    ###
     open_folder: (folder)->
       if openFolderSvc.get() == folder
         # User is closing the open folder
         openFolderSvc.unset()
       else
         openFolderSvc.set folder
+    ###
 
   return service
 ]
