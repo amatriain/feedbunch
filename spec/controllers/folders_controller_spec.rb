@@ -83,6 +83,66 @@ describe FoldersController do
       get :show, id: @folder1.id
     end
 
+    context 'pagination' do
+
+      before :each do
+        @entries = []
+        # Ensure there are exactly 26 unread entries
+        Entry.all.each {|e| e.destroy}
+        (0..25).each do |i|
+          e = FactoryGirl.build :entry, feed_id: @feed1.id, published: Date.new(2001, 01, 30-i)
+          @feed1.entries << e
+          @entries << e
+        end
+        (26..29).each do |i|
+          e = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2001, 01, 30-i)
+          @feed2.entries << e
+          @entries << e
+        end
+      end
+
+      context 'all feeds' do
+
+        it 'returns the first page of entries' do
+          get :show, id: 'all', page: 1, format: :json
+          assigns(:entries).count.should eq 25
+          assigns(:entries).each_with_index do |entry, index|
+            entry.should eq @entries[index]
+          end
+        end
+
+        it 'returns the last page of entries' do
+          get :show, id: 'all', page: 2, format: :json
+          assigns(:entries).count.should eq 5
+          assigns(:entries).each_with_index do |entry, index|
+            entry.should eq @entries[25+index]
+          end
+        end
+
+      end
+
+      context 'single folder' do
+
+        it 'returns the first page of entries' do
+          get :show, id: @folder1.id, page: 1, format: :json
+          assigns(:entries).count.should eq 25
+          assigns(:entries).each_with_index do |entry, index|
+            entry.should eq @entries[index]
+          end
+        end
+
+        it 'returns the last page of entries' do
+          get :show, id: @folder1.id, page: 2, format: :json
+          assigns(:entries).count.should eq 5
+          assigns(:entries).each_with_index do |entry, index|
+            entry.should eq @entries[25 + index]
+          end
+        end
+
+      end
+
+    end
+
   end
 
   context 'PATCH move to folder' do

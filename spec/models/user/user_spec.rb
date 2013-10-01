@@ -67,53 +67,6 @@ describe User do
       @user.folders.first.should eq @folder
     end
 
-    it 'retrieves unread entries from a folder' do
-      # feed1 and feed2 are in @folder
-      feed1 = FactoryGirl.create :feed
-      feed2 = FactoryGirl.create :feed
-      @user.subscribe feed1.fetch_url
-      @user.subscribe feed2.fetch_url
-      entry1 = FactoryGirl.build :entry, feed_id: feed1.id
-      entry2 = FactoryGirl.build :entry, feed_id: feed1.id
-      entry3 = FactoryGirl.build :entry, feed_id: feed1.id
-      feed1.entries << entry1 << entry2
-      feed2.entries << entry3
-      @folder.feeds << feed1 << feed2
-
-      # entry1 is read, entry2 and entry3 are unread
-      entry_state1 = EntryState.where(user_id: @user.id, entry_id: entry1.id).first
-      entry_state1.read = true
-      entry_state1.save!
-
-      entries = @user.unread_folder_entries @folder
-      entries.count.should eq 2
-      entries.should include entry2
-      entries.should include entry3
-    end
-
-    it 'retrieves unread entries for all subscribed feeds' do
-      # feed1 is in @folder; feed2 is subscribed, but it's not in any folder
-      feed1 = FactoryGirl.create :feed
-      feed2 = FactoryGirl.create :feed
-      @user.subscribe feed1.fetch_url
-      @user.subscribe feed2.fetch_url
-      entry1 = FactoryGirl.build :entry, feed_id: feed1.id
-      entry2 = FactoryGirl.build :entry, feed_id: feed1.id
-      entry3 = FactoryGirl.build :entry, feed_id: feed1.id
-      feed1.entries << entry1 << entry2
-      feed2.entries << entry3
-      @folder.feeds << feed1
-
-      # entry1 is read, entry2 and entry3 are unread
-      entry_state1 = EntryState.where(user_id: @user.id, entry_id: entry1.id).first
-      entry_state1.read = true
-      entry_state1.save!
-
-      entries = @user.unread_folder_entries 'all'
-      entries.count.should eq 2
-      entries.should include entry2
-      entries.should include entry3
-    end
   end
 
   context 'relationship with entries' do

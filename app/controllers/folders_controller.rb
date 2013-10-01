@@ -32,7 +32,7 @@ class FoldersController < ApplicationController
       @folder = current_user.folders.find params[:id]
     end
 
-    @entries = current_user.unread_folder_entries @folder
+    @entries = current_user.unread_folder_entries @folder, page: params[:page]
 
     if @entries.present?
       render 'show', locals: {entries: @entries, user: current_user}

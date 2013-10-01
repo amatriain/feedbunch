@@ -43,17 +43,31 @@ class EntryReader
   # - the folder from which to retrieve entries. The special value
   # "all" means that unread entries should be retrieved from ALL subscribed feeds.
   # - the user for which entries are unread.
+  # - page (optional): results page to return.
+  #
+  # Entries are ordered by published (first) and id (second). If the page argument is nil, all entries
+  # are returned. If it has a value, entries are paginated and the requested page is returned. Results
+  # pagination is achieved with the Kaminari gem, which uses a default page size of 25 results.
   #
   # If successful, returns an ActiveRecord::Relation with the entries.
 
-  def self.unread_folder_entries(folder, user)
+  def self.unread_folder_entries(folder, user, page: nil)
     if folder == Folder::ALL_FOLDERS
       Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from all subscribed feeds"
-      entries = Entry.joins(:entry_states).where entry_states: {read: false, user_id: user.id}
+      if page.present?
+        entries = Entry.joins(:entry_states).where(entry_states: {read: false, user_id: user.id}).order('published desc, id desc').page page
+      else
+        entries = Entry.joins(:entry_states).where(entry_states: {read: false, user_id: user.id}).order('published desc, id desc')
+      end
     else
       Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from folder #{folder.id} - #{folder.title}"
-      entries = Entry.joins(:entry_states, feed: :folders).where entry_states: {read: false, user_id: user.id},
-                                                                 folders: {id: folder.id}
+      if page.present?
+        entries = Entry.joins(:entry_states, feed: :folders).where(entry_states: {read: false, user_id: user.id},
+                                                                   folders: {id: folder.id}).order('published desc, id desc').page page
+      else
+        entries = Entry.joins(:entry_states, feed: :folders).where(entry_states: {read: false, user_id: user.id},
+                                                                   folders: {id: folder.id}).order('published desc, id desc')
+      end
     end
 
     return entries

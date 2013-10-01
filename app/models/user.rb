@@ -78,8 +78,8 @@ class User < ActiveRecord::Base
   ##
   # Retrieve unread entries from a folder. See EntryReader#unread_folder_entries
 
-  def unread_folder_entries(folder)
-    EntryReader.unread_folder_entries folder, self
+  def unread_folder_entries(folder, page: nil)
+    EntryReader.unread_folder_entries folder, self, page: page
   end
 
   ##
