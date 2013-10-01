@@ -3,7 +3,7 @@
      infinite-scroll="read_entries_page()"
      infinite-scroll-disabled="loading_entries_busy"
      infinite-scroll-distance="1">
-  <div ng-repeat="entry in entries | orderBy:['published',entry_int_id]:true"
+  <div ng-repeat="entry in entries | orderBy:['published_seconds',entry_int_id]:true"
        id="entry-{{entry.id}}"
        class="panel panel-default entry">
 

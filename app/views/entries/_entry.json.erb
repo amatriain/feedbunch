@@ -2,7 +2,10 @@
   "id": "<%= entry.id %>",
   "title": <%= entry.title.to_json.html_safe %>,
   "read": <%= entry.read_by? user %>,
-  "published": "<%= l entry.published, format: :short if entry.published.present? %>",
+<% if entry.published.present? %>
+  "published": "<%= l entry.published, format: :short %>",
+  "published_seconds": <%= entry.published.to_i %>,
+<% end %>
   "url": "<%= entry.url %>",
   "guid": "<%= entry.guid %>",
   "content": <%= entry.content.try(:to_json).html_safe %>,
