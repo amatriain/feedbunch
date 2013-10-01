@@ -19,7 +19,8 @@ angular.module('feedbunch').service 'subscriptionSvc',
       .success (data)->
         $rootScope.loading_entries = false
         $rootScope.feeds.push data
-        readSvc.read_feed data
+        currentFeedSvc.set data
+        readSvc.read_entries_page()
         findSvc.find_folder('all').unread_entries += data.unread_entries
       .error (data, status)->
         $rootScope.loading_entries = false
