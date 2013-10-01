@@ -21,9 +21,9 @@ class EntryReader
 
   def self.feed_entries(feed, user, include_read: false, page: nil)
     if include_read && !page.present?
-      entries =  feed.entries order: 'published desc, id desc'
+      entries =  feed.entries.order 'published desc, id desc'
     elsif include_read && page.present?
-      entries =  feed.entries(order: 'published desc, id desc').page page
+      entries =  feed.entries.order('published desc, id desc').page page
     else
       entries = unread_feed_entries feed, user, page: page
     end
