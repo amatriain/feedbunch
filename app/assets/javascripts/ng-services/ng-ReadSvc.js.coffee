@@ -71,12 +71,12 @@ angular.module('feedbunch').service 'readSvc',
     # Refresh a feed and load its unread entries
     #--------------------------------------------
     refresh_feed: ->
-      openEntrySvc.unset()
+      entriesPaginationSvc.reset_entries()
       $rootScope.loading_entries = true
 
       $http.put("/feeds/#{currentFeedSvc.get().id}.json")
       .success (data)->
-        load_feed currentFeedSvc.get(), false
+        load_entries()
       .error ->
         $rootScope.loading_entries = false
         timerFlagSvc.start 'error_refreshing_feed'
