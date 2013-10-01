@@ -1,6 +1,6 @@
 <div class="panel-group"
      id="feed-entries"
-     infinite-scroll="read_entries_page(current_feed, current_folder)"
+     infinite-scroll="read_entries_page()"
      infinite-scroll-disabled="loading_entries_busy"
      infinite-scroll-distance="1">
   <div ng-repeat="entry in entries | orderBy:['published',entry_int_id]:true"

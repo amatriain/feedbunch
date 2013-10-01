@@ -64,20 +64,20 @@ currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc)
   #--------------------------------------------
   $scope.set_current_feed = (feed)->
     currentFeedSvc.set feed
-    readSvc.read_entries_page feed, null
+    readSvc.read_entries_page()
 
   #--------------------------------------------
   # Set the currently selected folder
   #--------------------------------------------
   $scope.set_current_folder = (folder)->
     currentFolderSvc.set folder
-    readSvc.read_entries_page null, folder
+    readSvc.read_entries_page()
 
   #--------------------------------------------
   # Load a page of entries for the currently selected feed or folder
   #--------------------------------------------
-  $scope.read_entries_page = (current_feed, current_folder)->
-    readSvc.read_entries_page current_feed, current_folder
+  $scope.read_entries_page = ()->
+    readSvc.read_entries_page()
 
   #--------------------------------------------
   # Load all of a feed's entries regardless of state

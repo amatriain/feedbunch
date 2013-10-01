@@ -51,11 +51,11 @@ angular.module('feedbunch').service 'readSvc',
     #---------------------------------------------
     # Load a page of entries for the currently selected feed or folder
     #---------------------------------------------
-    read_entries_page: (current_feed, current_folder)->
-      if current_feed
-        load_feed current_feed
-      else if current_folder
-        load_folder current_folder
+    read_entries_page: ->
+      if currentFeedSvc.get()
+        load_feed currentFeedSvc.get()
+      else if currentFolderSvc.get()
+        load_folder currentFolderSvc.get()
 
     #---------------------------------------------
     # Load a feed's unread entries in the root scope
