@@ -63,8 +63,9 @@ angular.module('feedbunch').service 'readSvc',
     # Load all of the current feed's entries, both read and unread
     #---------------------------------------------
     read_feed_all: ->
-      openEntrySvc.unset()
-      load_feed currentFeedSvc.get(), true
+      entriesPaginationSvc.reset_entries()
+      $rootScope.load_read_entries = true
+      load_feed currentFeedSvc.get()
 
     #--------------------------------------------
     # Load a folder's unread entries
