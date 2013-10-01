@@ -8,8 +8,6 @@ angular.module('feedbunch').service 'readSvc',
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load a feed's entries via AJAX in the root scope.
-  # Receives as arguments the feed object and a boolean to indicate whether
-  # to load all entries (true) or only unread ones (false).
   #--------------------------------------------
   load_feed = (feed)->
     # If busy, do nothing
@@ -29,7 +27,7 @@ angular.module('feedbunch').service 'readSvc',
     # Include read entries in the results, or only unread ones?
     include_read = if $rootScope.load_read_entries then true else false
 
-    $http.get("/feeds/#{feed.id}.json?include_read=#{include_read}&page=#{$rootScope.entries_page}")
+    $http.get("/feeds/#{feed.id}.json?include_read=#{include_read}&page=#{entriesPaginationSvc.get_entries_page()}")
     .success (data)->
       entriesPaginationSvc.set_busy false
       $rootScope.entries = $rootScope.entries.concat data["entries"]
@@ -38,6 +36,41 @@ angular.module('feedbunch').service 'readSvc',
         $rootScope.loading_entries = false
         # On first page load, update unread entries count in the feed
         feed.unread_entries = data["unread_entries"]
+    .error (data,status)->
+      $rootScope.loading_entries = false
+      entriesPaginationSvc.set_busy false
+      if status == 404
+        entriesPaginationSvc.set_more_entries_available false
+        timerFlagSvc.start 'error_no_entries' if entriesPaginationSvc.is_first_page()
+      else
+        currentFeedSvc.unset()
+        timerFlagSvc.start 'error_loading_entries'
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Load a folder's entries via AJAX in the root scope.
+  #--------------------------------------------
+  load_folder = (folder)->
+    # If busy, do nothing
+    return if entriesPaginationSvc.is_busy()
+    # If no folder is passed, do nothing
+    return if !folder
+    # If a 404 has been received in a previous page (no more entries available), do nothing
+    return if !entriesPaginationSvc.more_entries_available()
+
+    # Increment the results page
+    entriesPaginationSvc.increment_entries_page()
+    # During the first page load show the "loading..." message
+    $rootScope.loading_entries = true if entriesPaginationSvc.is_first_page()
+    # Indicate that AJAX request/response cycle is busy so no more calls are done until finished
+    entriesPaginationSvc.set_busy true
+
+    $http.get("/folders/#{folder.id}.json?page=#{entriesPaginationSvc.get_entries_page()}")
+    .success (data)->
+      entriesPaginationSvc.set_busy false
+      $rootScope.entries = $rootScope.entries.concat data["entries"]
+      if entriesPaginationSvc.is_first_page()
+        # "Loading..." message is only shown while loading the first page of results
+        $rootScope.loading_entries = false
     .error (data,status)->
       $rootScope.loading_entries = false
       entriesPaginationSvc.set_busy false
@@ -66,24 +99,6 @@ angular.module('feedbunch').service 'readSvc',
       entriesPaginationSvc.reset_entries()
       $rootScope.load_read_entries = true
       load_feed currentFeedSvc.get()
-
-    #--------------------------------------------
-    # Load a folder's unread entries
-    #--------------------------------------------
-    read_folder: (folder)->
-      currentFolderSvc.set folder
-      $rootScope.loading_entries = true
-
-      $http.get("/folders/#{folder.id}.json")
-      .success (data)->
-        $rootScope.loading_entries = false
-        $rootScope.entries = data["entries"]
-      .error (data,status)->
-        $rootScope.loading_entries = false
-        if status == 404
-          timerFlagSvc.start 'error_no_entries'
-        else
-          timerFlagSvc.start 'error_loading_entries'
 
     #--------------------------------------------
     # Refresh a feed and load its unread entries
