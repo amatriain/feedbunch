@@ -13,3 +13,4 @@
 //= require jquery_ujs
 //= require ng-modules/ng-app
 //= require_tree .
+//= require ../../../vendor/assets/javascripts/ng-infinite-scroll.min
