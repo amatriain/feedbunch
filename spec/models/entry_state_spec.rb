@@ -186,7 +186,7 @@ describe EntryState do
       feed.entries << entry1 << entry2
       user = FactoryGirl.create :user
       user.subscribe feed.fetch_url
-      user.change_entries_state [entry1], 'read'
+      user.change_entries_state entry1, 'read'
       folder = FactoryGirl.build :folder, user_id: user.id
       user.folders << folder
       folder.feeds << feed
@@ -208,7 +208,7 @@ describe EntryState do
       feed.entries << entry1 << entry2
       user = FactoryGirl.create :user
       user.subscribe feed.fetch_url
-      user.change_entries_state [entry1], 'read'
+      user.change_entries_state entry1, 'read'
       folder = FactoryGirl.build :folder, user_id: user.id
       user.folders << folder
       folder.feeds << feed
@@ -217,7 +217,7 @@ describe EntryState do
       EntryState.where(entry_id: entry2.id, user_id: user.id).first.read.should be_false
       folder.reload.unread_entries.should eq 1
 
-      user.change_entries_state [entry1], 'unread'
+      user.change_entries_state entry1, 'unread'
 
       EntryState.where(entry_id: entry1.id, user_id: user.id).first.read.should be_false
       folder.reload.unread_entries.should eq 2
@@ -230,7 +230,7 @@ describe EntryState do
       feed.entries << entry1 << entry2
       user = FactoryGirl.create :user
       user.subscribe feed.fetch_url
-      user.change_entries_state [entry1], 'read'
+      user.change_entries_state entry1, 'read'
       folder = FactoryGirl.build :folder, user_id: user.id
       user.folders << folder
       folder.feeds << feed
@@ -239,7 +239,7 @@ describe EntryState do
       EntryState.where(entry_id: entry2.id, user_id: user.id).first.read.should be_false
       folder.reload.unread_entries.should eq 1
 
-      user.change_entries_state [entry2], 'read'
+      user.change_entries_state entry2, 'read'
 
       EntryState.where(entry_id: entry2.id, user_id: user.id).first.read.should be_true
       folder.reload.unread_entries.should eq 0
@@ -286,7 +286,7 @@ describe EntryState do
       entry1 = FactoryGirl.build :entry, feed_id: feed.id
       entry2 = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry1 << entry2
-      user.change_entries_state [entry1], 'read'
+      user.change_entries_state entry1, 'read'
 
       EntryState.exists?(user_id: user.id, entry_id: entry1.id, read: true).should be_true
       user.reload.unread_entries.should eq 1
@@ -303,12 +303,12 @@ describe EntryState do
       user.subscribe feed.fetch_url
       entry = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry
-      user.change_entries_state [entry], 'read'
+      user.change_entries_state entry, 'read'
 
       EntryState.exists?(user_id: user.id, entry_id: entry.id, read: true).should be_true
       user.reload.unread_entries.should eq 0
 
-      user.change_entries_state [entry], 'unread'
+      user.change_entries_state entry, 'unread'
 
       EntryState.exists?(user_id: user.id, entry_id: entry.id, read: false).should be_true
       user.reload.unread_entries.should eq 1
@@ -324,7 +324,7 @@ describe EntryState do
       EntryState.exists?(user_id: user.id, entry_id: entry.id, read: false).should be_true
       user.reload.unread_entries.should eq 1
 
-      user.change_entries_state [entry], 'read'
+      user.change_entries_state entry, 'read'
 
       EntryState.exists?(user_id: user.id, entry_id: entry.id, read: true).should be_true
       user.reload.unread_entries.should eq 0

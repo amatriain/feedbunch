@@ -93,8 +93,9 @@ describe FeedsController do
           @feed1.entries << e
           @entries << e
         end
-
-        @user.change_entries_state @entries[26..29], 'read'
+        (26..29).each do |i|
+          @user.change_entries_state @entries[i], 'read'
+        end
       end
 
       context 'unread entries' do

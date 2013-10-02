@@ -9,8 +9,13 @@ class EntriesController < ApplicationController
   # Set an entry state for the current user as read or unread
 
   def update
-    entries = current_user.entries.find entry_params[:ids]
-    current_user.change_entries_state entries, entry_params[:state]
+    if entry_params[:update_older]=='true'
+      update_older = true
+    else
+      update_older = false
+    end
+    @entry = current_user.entries.find entry_params[:id]
+    current_user.change_entries_state @entry, entry_params[:state], update_older: update_older
     head :ok
   rescue => e
     handle_error e
@@ -19,6 +24,6 @@ class EntriesController < ApplicationController
   private
 
   def entry_params
-    params.require(:entries).permit({:ids => []}, :state)
+    params.require(:entry).permit(:id, :state, :update_older)
   end
 end

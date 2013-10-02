@@ -129,8 +129,8 @@ class User < ActiveRecord::Base
   ##
   # Change the read/unread state of an array of entries for this user. See EntryStateManager#change_entries_state
 
-  def change_entries_state(entries, state)
-    EntryStateManager.change_entries_state entries, state, self
+  def change_entries_state(entry, state, update_older: false)
+    EntryStateManager.change_entries_state entry, state, self, update_older: update_older
   end
 
   ##

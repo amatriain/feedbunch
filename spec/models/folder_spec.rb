@@ -175,7 +175,7 @@ describe Folder do
         entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
         entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
         @feed1.entries << entry1 << entry2
-        @user.change_entries_state [entry1], 'read'
+        @user.change_entries_state entry1, 'read'
         folder2 = FactoryGirl.build :folder, user_id: @user.id
         @user.folders << folder2
 
@@ -221,7 +221,7 @@ describe Folder do
         entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
         entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
         @feed1.entries << entry1 << entry2
-        @user.change_entries_state [entry1], 'read'
+        @user.change_entries_state entry1, 'read'
         folder2 = FactoryGirl.build :folder, user_id: @user.id
         @user.folders << folder2
         folder2.feeds << @feed1 << @feed2

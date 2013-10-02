@@ -7,24 +7,20 @@ angular.module('feedbunch').service 'unreadCountSvc',
 (currentFeedSvc, findSvc)->
 
   #--------------------------------------------
-  # Increment or decrement the count of unread entries in feeds corresponding to the passed entries.
-  # Receives as argument an array of entries and a boolean indicating whether to
+  # Increment or decrement by 1 the count of unread entries in the feed corresponding to the passed entry.
+  # Receives as argument an entry and a boolean indicating whether to
   # increment (true) or decrement (false) the count.
   #--------------------------------------------
-  update_unread_count: (entries, increment)->
-    if currentFeedSvc.get()
-      # if current_feed has value, all entries belong to the same feed which simplifies things
-      if increment
-        currentFeedSvc.get().unread_entries += entries.length
-      else
-        currentFeedSvc.get().unread_entries -= entries.length
+  update_unread_count: (entry, increment)->
+    feed = findSvc.find_feed entry.feed_id
+    if increment
+      feed.unread_entries += 1
     else
-      # if current_feed has null value, each entry can belong to a different feed
-      # we process each entry individually
-      for entry in entries
-        feed = findSvc.find_feed entry.feed_id
-        if increment
-          feed.unread_entries += 1
-        else
-          feed.unread_entries -= 1
+      feed.unread_entries -= 1
+
+  #--------------------------------------------
+  # Set the unread entries count of a feed to zero
+  #--------------------------------------------
+  zero_unread_count: (feed)->
+    feed.unread_entries = 0
 ]

@@ -144,7 +144,7 @@ describe 'feed entries' do
       should_show_alert 'problem-entry-state-change'
     end
 
-    it 'marks all entries as read', js: true do
+    it 'marks all feed entries as read', js: true do
       mark_all_as_read
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
@@ -203,7 +203,10 @@ describe 'feed entries' do
         @feed.entries << e
         @entries << e
       end
-      @user.change_entries_state @entries[26..29], 'read'
+      (26..29).each do |i|
+        @user.change_entries_state @entries[i], 'read'
+      end
+
 
       @folder = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << @folder
@@ -270,6 +273,19 @@ describe 'feed entries' do
         page.should have_content @entries[i].title
       end
       (26..29).each do |i|
+        page.should_not have_content @entries[i].title
+      end
+    end
+
+    it 'marks all feed entries as read', js: true do
+      mark_all_as_read
+
+      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+
+      # On refresh, no entries should appear for @feed
+      visit read_path
+      read_feed @feed.id
+      (0..29).each do |i|
         page.should_not have_content @entries[i].title
       end
     end

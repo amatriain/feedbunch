@@ -75,8 +75,9 @@ describe User do
         @feed1.entries << e
         @entries << e
       end
-
-      @user.change_entries_state @entries[26..29], 'read'
+      (26..29).each do |i|
+        @user.change_entries_state @entries[i], 'read'
+      end
 
       # @feed2 has 1 unread entry
       @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
