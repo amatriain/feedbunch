@@ -12,7 +12,7 @@
      ng-click="open_folder(folder)">
 
     <i class="folder" ng-class="{'icon-folder-open-alt':current_open_folder.id==folder.id, 'icon-folder-close-alt': current_open_folder!=folder}"></i>
-    &nbsp;{{folder.title}}
+    &nbsp;<%= t 'feeds.index.all_feeds' %>
     <i class="folder-arrow pull-right" ng-class="{'icon-chevron-down':current_open_folder==folder, 'icon-chevron-right': current_open_folder!=folder}"></i>
 
   </a>
