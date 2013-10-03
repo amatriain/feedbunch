@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'subscriptionSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'readSvc', 'findSvc', 'folderSvc', 'timerFlagSvc',
-($rootScope, $http, currentFeedSvc, readSvc, findSvc, folderSvc, timerFlagSvc)->
+['$rootScope', '$http', 'currentFeedSvc', 'readSvc', 'findSvc', 'folderSvc', 'timerFlagSvc', 'scrollSvc',
+($rootScope, $http, currentFeedSvc, readSvc, findSvc, folderSvc, timerFlagSvc, scrollSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
@@ -14,6 +14,7 @@ angular.module('feedbunch').service 'subscriptionSvc',
     if url
       currentFeedSvc.unset()
       $rootScope.loading_entries = true
+      scrollSvc.scroll_top()
 
       $http.post('/feeds.json', feed:{url: url})
       .success (data)->
@@ -46,6 +47,8 @@ angular.module('feedbunch').service 'subscriptionSvc',
 
     # Tell the model that no feed is currently selected.
     currentFeedSvc.unset()
+
+    scrollSvc.scroll_top()
 
     $http.delete(path)
     .error ->

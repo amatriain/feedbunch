@@ -3,8 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').service 'readSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openEntrySvc', 'openFolderSvc', 'entriesPaginationSvc',
-($rootScope, $http, currentFeedSvc, currentFolderSvc, timerFlagSvc, openEntrySvc, openFolderSvc, entriesPaginationSvc)->
+['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openEntrySvc', 'openFolderSvc',
+ 'entriesPaginationSvc', 'scrollSvc',
+($rootScope, $http, currentFeedSvc, currentFolderSvc, timerFlagSvc, openEntrySvc, openFolderSvc,
+ entriesPaginationSvc, scrollSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load entries via AJAX in the root scope.
@@ -22,7 +24,7 @@ angular.module('feedbunch').service 'readSvc',
     # During the first page load show the "loading..." message and scroll to top
     if entriesPaginationSvc.is_first_page()
       $rootScope.loading_entries = true
-      $('html, body').animate({ scrollTop: 0 }, 300);
+      scrollSvc.scroll_top()
     # Indicate that AJAX request/response cycle is busy so no more calls are done until finished
     entriesPaginationSvc.set_busy true
 
