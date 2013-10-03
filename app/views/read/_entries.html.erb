@@ -20,17 +20,14 @@
 
     <%# Entry summary, initially collapsed %>
     <div class="panel-collapse collapse"
-         id="entry-{{entry.id}}-summary"
-         data-entry-summary-id="{{entry.id}}"
-         data-entry-state-update-path="<%= entries_update_path %>">
+         id="entry-{{entry.id}}-summary">
       <div class="panel-body entry-content">
         <p class="lead">
           <a href="{{entry.url}}" target="_blank">
             {{entry.title}} <i class="icon-external-link"></i>
           </a>
 
-          <a class="btn btn-default btn-sm pull-right" data-unread-entry-id="{{entry.id}}"
-             data-entry-state-update-path="<%= entries_update_path %>" ng-click="unread_entry()">
+          <a class="btn btn-default btn-sm pull-right" ng-click="unread_entry()">
             <i class="icon-eye-close"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
           </a>
         </p>

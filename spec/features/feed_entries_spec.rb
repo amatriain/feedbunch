@@ -161,7 +161,7 @@ describe 'feed entries' do
       read_entry @entry1.id
       entry_should_be_marked_read @entry1.id
 
-      find("[data-unread-entry-id='#{@entry1.id}']").click
+      find("div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry()']").click
 
       entry_should_be_marked_unread @entry1.id
 
