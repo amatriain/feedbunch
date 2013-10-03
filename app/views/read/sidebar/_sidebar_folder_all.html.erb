@@ -24,7 +24,7 @@
       <i class="icon-spinner icon-spin" ng-show="!feeds"></i>
 
       <%# Content of the folder %>
-      <ul class="nav nav-pills nav-stacked">
+      <ul class="nav nav-pills nav-stacked" ng-show="feeds">
 
         <%= render 'read/sidebar/sidebar_folder_read_all' %>
 
