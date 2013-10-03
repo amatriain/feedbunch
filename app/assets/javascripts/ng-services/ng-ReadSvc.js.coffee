@@ -19,8 +19,10 @@ angular.module('feedbunch').service 'readSvc',
 
     # Increment the results page
     entriesPaginationSvc.increment_entries_page()
-    # During the first page load show the "loading..." message
-    $rootScope.loading_entries = true if entriesPaginationSvc.is_first_page()
+    # During the first page load show the "loading..." message and scroll to top
+    if entriesPaginationSvc.is_first_page()
+      $rootScope.loading_entries = true
+      $('html, body').animate({ scrollTop: 0 }, 300);
     # Indicate that AJAX request/response cycle is busy so no more calls are done until finished
     entriesPaginationSvc.set_busy true
 
