@@ -20,6 +20,9 @@
   <div id="feeds-{{folder.id}}" class="panel-collapse collapse">
     <div class="panel-body">
 
+      <%# Animated spinner while feeds are loading %>
+      <i class="icon-spinner icon-spin" ng-show="!feeds"></i>
+
       <%# Content of the folder %>
       <ul class="nav nav-pills nav-stacked">
 
