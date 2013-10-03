@@ -68,11 +68,11 @@ end
 
 ##
 # Test that the count of unread entries in a feed equals the passed argument.
-# Receives as argument the feed title, the expected entry count and optionally what folder to look at (defaults to "all")
+# Receives as argument the feed id, the expected entry count and optionally what folder to look at (defaults to "all")
 
-def unread_feed_entries_should_eq(feed_title, count, folder_id='all')
+def unread_feed_entries_should_eq(feed_id, count, folder_id='all')
   open_folder folder_id
-  within "#sidebar #folders-list #folder-#{folder_id} #feeds-#{folder_id} a[data-feed-title='#{feed_title}'] span.badge" do
+  within "#sidebar #folders-list #folder-#{folder_id} #feeds-#{folder_id} a[data-feed-id='#{feed_id}'] span.badge" do
     page.should have_content "#{count}"
   end
 end

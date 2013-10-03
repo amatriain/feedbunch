@@ -2,9 +2,6 @@
     ng-class="{active: current_feed==feed}">
   <a data-sidebar-feed
      data-feed-id="{{feed.id}}"
-     data-feed-path="/feeds/{{feed.id}}"
-     data-feed-title="{{feed.title}}"
-     data-feed-url="{{feed.url}}"
      data-folder-id="{{feed.folder_id}}"
      ng-click="set_current_feed(feed)">
 
