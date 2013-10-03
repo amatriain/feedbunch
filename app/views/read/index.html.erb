@@ -23,10 +23,6 @@
       <%= render 'start', user: @user %>
     </div>
 
-    <div id="loading" class="col-md-offset-1" ng-show="loading_entries">
-      <%= t 'feeds.index.loading' %>
-    </div>
-
     <div ng-show="(current_feed || current_folder) && !loading_entries">
       <div id="feed-title">
         <strong class="lead">
@@ -37,6 +33,10 @@
 
       <%= render 'entries' %>
 
+    </div>
+
+    <div id="loading" class="col-md-offset-1" ng-show="loading_entries || loading_entries_busy">
+      <%= t 'feeds.index.loading' %> <i class="icon-spinner icon-spin"></i>
     </div>
 
   </div>
