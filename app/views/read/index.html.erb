@@ -26,7 +26,7 @@
     <div ng-show="(current_feed || current_folder) && !loading_entries">
       <div id="feed-title">
         <strong class="lead">
-          <a href="{{current_feed.url}}" target="_blank">{{current_feed.title}}</a>
+          <a href="{{current_feed.url}}" target="_blank">{{current_feed.title || current_folder.title}}</a>
         </strong>
         <hr>
       </div>
