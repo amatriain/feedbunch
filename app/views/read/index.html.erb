@@ -23,7 +23,7 @@
       <%= render 'start', user: @user %>
     </div>
 
-    <div ng-show="(current_feed || current_folder) && !loading_entries">
+    <div ng-show="current_feed || current_folder">
       <div id="feed-title">
         <strong class="lead">
           <a href="{{current_feed.url}}" target="_blank">{{current_feed.title || current_folder.title}}</a>
