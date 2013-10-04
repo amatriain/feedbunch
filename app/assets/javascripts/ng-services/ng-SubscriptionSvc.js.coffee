@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'subscriptionSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'readSvc', 'findSvc', 'folderSvc', 'timerFlagSvc', 'scrollSvc',
-($rootScope, $http, currentFeedSvc, readSvc, findSvc, folderSvc, timerFlagSvc, scrollSvc)->
+['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'findSvc', 'folderSvc', 'timerFlagSvc', 'scrollSvc',
+($rootScope, $http, currentFeedSvc, currentFolderSvc, readSvc, findSvc, folderSvc, timerFlagSvc, scrollSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
@@ -13,6 +13,7 @@ angular.module('feedbunch').service 'subscriptionSvc',
     # Feed URL
     if url
       currentFeedSvc.unset()
+      currentFolderSvc.unset()
       $rootScope.loading_entries = true
       scrollSvc.scroll_top()
 
