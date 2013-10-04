@@ -36,7 +36,7 @@ class EntryStateManager
     entry_state.save!
 
     if update_older
-      entries = Entry.where('feed_id=? AND (published < ? OR  (published == ? AND id < ?) )',
+      entries = Entry.where('feed_id=? AND (published < ? OR  (published = ? AND id < ?) )',
                             entry.feed_id, entry.published, entry.published, entry.id)
       entries.each do |e|
         entry_state = EntryState.where(user_id: user.id, entry_id: e.id).first
