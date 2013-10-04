@@ -3,8 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').service 'subscriptionSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'findSvc', 'folderSvc', 'timerFlagSvc', 'scrollSvc',
-($rootScope, $http, currentFeedSvc, currentFolderSvc, readSvc, findSvc, folderSvc, timerFlagSvc, scrollSvc)->
+['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'findSvc', 'folderSvc', 'timerFlagSvc',
+'scrollSvc', 'entriesPaginationSvc'
+($rootScope, $http, currentFeedSvc, currentFolderSvc, readSvc, findSvc, folderSvc, timerFlagSvc,
+scrollSvc, entriesPaginationSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
@@ -14,18 +16,18 @@ angular.module('feedbunch').service 'subscriptionSvc',
     if url
       currentFeedSvc.unset()
       currentFolderSvc.unset()
-      $rootScope.loading_entries = true
+      entriesPaginationSvc.set_busy true
       scrollSvc.scroll_top()
 
       $http.post('/feeds.json', feed:{url: url})
       .success (data)->
-        $rootScope.loading_entries = false
+        entriesPaginationSvc.set_busy false
         $rootScope.feeds.push data
         currentFeedSvc.set data
         readSvc.read_entries_page()
         findSvc.find_folder('all').unread_entries += data.unread_entries
       .error (data, status)->
-        $rootScope.loading_entries = false
+        entriesPaginationSvc.set_busy false
         # Show alert
         if status == 304
           timerFlagSvc.start 'error_already_subscribed'

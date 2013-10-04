@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
-'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc',
+'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 ($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
-currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc)->
+currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc)->
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data()
@@ -23,7 +23,7 @@ currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc)
   $scope.show_start_page = ->
     currentFeedSvc.unset()
     currentFolderSvc.unset()
-    $rootScope.loading_entries = false
+    entriesPaginationSvc.set_busy false
 
   #--------------------------------------------
   # Unsubscribe from a feed

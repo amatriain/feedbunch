@@ -19,7 +19,7 @@
 
   <div class="col-md-9" ng-cloak>
 
-    <div ng-show="current_feed==null && current_folder==null && !loading_entries">
+    <div ng-show="current_feed==null && current_folder==null && !loading_entries_busy">
       <%= render 'start', user: @user %>
     </div>
 
@@ -35,7 +35,7 @@
 
     </div>
 
-    <div id="loading" class="col-md-offset-1" ng-show="loading_entries || loading_entries_busy">
+    <div id="loading" class="col-md-offset-1" ng-show="loading_entries_busy">
       <i class="icon-spinner icon-spin"></i> <%= t 'feeds.index.loading' %>
     </div>
 

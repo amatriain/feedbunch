@@ -21,10 +21,8 @@ angular.module('feedbunch').service 'readSvc',
 
     # Increment the results page
     entriesPaginationSvc.increment_entries_page()
-    # During the first page load show the "loading..." message and scroll to top
-    if entriesPaginationSvc.is_first_page()
-      $rootScope.loading_entries = true
-      scrollSvc.scroll_top()
+    # During the first page scroll to top
+    scrollSvc.scroll_top() if entriesPaginationSvc.is_first_page()
     # Indicate that AJAX request/response cycle is busy so no more calls are done until finished
     entriesPaginationSvc.set_busy true
 
@@ -40,13 +38,9 @@ angular.module('feedbunch').service 'readSvc',
     .success (data)->
       entriesPaginationSvc.set_busy false
       $rootScope.entries = $rootScope.entries.concat data["entries"]
-      if entriesPaginationSvc.is_first_page()
-        # "Loading..." message is only shown while loading the first page of results
-        $rootScope.loading_entries = false
-        # On first page load, update unread entries count in the feed
-        currentFeedSvc.get().unread_entries = data["unread_entries"] if currentFeedSvc.get()
+      # On first page load, update unread entries count in the feed
+      currentFeedSvc.get().unread_entries = data["unread_entries"] if currentFeedSvc.get() && entriesPaginationSvc.is_first_page()
     .error (data,status)->
-      $rootScope.loading_entries = false
       entriesPaginationSvc.set_busy false
       if status == 404
         entriesPaginationSvc.set_more_entries_available false
@@ -78,13 +72,14 @@ angular.module('feedbunch').service 'readSvc',
     #--------------------------------------------
     refresh_feed: ->
       entriesPaginationSvc.reset_entries()
-      $rootScope.loading_entries = true
+      entriesPaginationSvc.set_busy true
 
       $http.put("/feeds/#{currentFeedSvc.get().id}.json")
       .success (data)->
+        entriesPaginationSvc.set_busy false
         load_entries()
       .error ->
-        $rootScope.loading_entries = false
+        entriesPaginationSvc.set_busy false
         timerFlagSvc.start 'error_refreshing_feed'
 
     #--------------------------------------------
