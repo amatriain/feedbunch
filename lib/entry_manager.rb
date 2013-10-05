@@ -16,7 +16,7 @@ class EntryManager
   # instead of failing the whole process.
 
   def self.save_or_update_entries(feed, entries)
-    entries.each do |entry|
+    entries.reverse_each do |entry|
       begin
         guid = entry.entry_id || entry.url
         if guid.blank?
