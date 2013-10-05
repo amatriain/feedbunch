@@ -89,6 +89,10 @@ class Entry < ActiveRecord::Base
   # If the url attribute is not a valid URL but the guid is, the url attribute takes
   # the value of the guid attribute. This probably breaks Atom/RSS spec, but I'd like to support feeds
   # that do this.
+  #
+  # If the publish date is not present, assume the current datetime as default value. This means
+  # entries will be shown as published in the moment they are fetched unless the feed specifies
+  # otherwise. This ensures all entries have a publish date which avoids major headaches when ordering.
 
   def default_attribute_values
     # GUID defaults to the url attribute
@@ -103,6 +107,9 @@ class Entry < ActiveRecord::Base
       # If the url was blank before but now has taken the value of the guid, default the title to this value
       self.title = self.url if self.title.blank?
     end
+
+    # published defaults to the current datetime
+    self.published = DateTime.now if self.published.blank?
   end
 
   ##
