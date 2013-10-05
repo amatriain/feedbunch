@@ -20,6 +20,9 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  time:
+    formats:
+      short_year: "%d %b %Y"
   pages:
     index:
       tagline: "An open-source feed reader"

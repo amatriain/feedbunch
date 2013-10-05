@@ -190,6 +190,26 @@ describe 'feed entries' do
       page.should have_css "a[data-entry-id='#{@entry1.id}'].entry-read"
       page.should have_css "a[data-entry-id='#{@entry2.id}'].entry-unread"
     end
+
+    it 'shows day, month and time for entries published in the current year', js: true do
+      today = Date.new 2000, 01, 01
+      Date.stub today: today
+      @entry1.update published: DateTime.new(2000, 07, 07)
+      read_feed @feed.id
+      within "#entry-#{@entry1.id}" do
+        page.should have_text '07 Jul 00:00'
+      end
+    end
+
+    it 'shows day, month and year for entries published in a previous year', js: true do
+      today = Date.new 2000, 01, 01
+      Date.stub today: today
+      @entry1.update published: DateTime.new(1999, 07, 07)
+      read_feed @feed.id
+      within "#entry-#{@entry1.id}" do
+        page.should have_text '07 Jul 1999'
+      end
+    end
   end
 
   context 'infinite scroll' do

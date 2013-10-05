@@ -1,4 +1,7 @@
 es:
+  time:
+    formats:
+      short_year: "%d de %b %Y"
   pages:
     index:
       tagline: "Un lector de feeds de código abierto"
