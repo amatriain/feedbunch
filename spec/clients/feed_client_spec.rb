@@ -39,18 +39,18 @@ describe FeedClient do
     <description>xkcd.com: A webcomic of romance and math humor.</description>
     <language>en</language>
     <item>
-      <title>#{@entry1.title}</title>
-      <link>#{@entry1.url}</link>
-      <description>#{@entry1.summary}</description>
-      <pubDate>#{@entry1.published}</pubDate>
-      <guid>#{@entry1.guid}</guid>
-    </item>
-    <item>
       <title>#{@entry2.title}</title>
       <link>#{@entry2.url}</link>
       <description>#{@entry2.summary}</description>
       <pubDate>#{@entry2.published}</pubDate>
       <guid>#{@entry2.guid}</guid>
+    </item>
+    <item>
+      <title>#{@entry1.title}</title>
+      <link>#{@entry1.url}</link>
+      <description>#{@entry1.summary}</description>
+      <pubDate>#{@entry1.published}</pubDate>
+      <guid>#{@entry1.guid}</guid>
     </item>
   </channel>
 </rss>
@@ -169,18 +169,18 @@ FEED_XML
   <id>http://xkcd.com/</id>
   <updated>2013-04-15T00:00:00Z</updated>
   <entry>
-    <title>#{@entry1.title}</title>
-    <link href="#{@entry1.url}" rel="alternate" />
-    <updated>#{@entry1.published}</updated>
-    <id>#{@entry1.guid}</id>
-    <summary type="html">#{@entry1.summary}</summary>
-  </entry>
-  <entry>
     <title>#{@entry2.title}</title>
     <link href="#{@entry2.url}" rel="alternate" />
     <updated>#{@entry2.published}</updated>
     <id>#{@entry2.guid}</id>
     <summary type="html">#{@entry2.summary}</summary>
+  </entry>
+  <entry>
+    <title>#{@entry1.title}</title>
+    <link href="#{@entry1.url}" rel="alternate" />
+    <updated>#{@entry1.published}</updated>
+    <id>#{@entry1.guid}</id>
+    <summary type="html">#{@entry1.summary}</summary>
   </entry>
 </feed>
 FEED_XML
