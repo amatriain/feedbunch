@@ -36,9 +36,22 @@ describe 'feeds' do
       visit read_path
     end
 
-    it 'shows feeds in the sidebar'
+    it 'shows feeds in the sidebar', js: true do
+      within "#sidebar #folder-all a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false do
+        page.should have_text @feed1.title, visible: false
+      end
+      within "#sidebar #folder-all a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false do
+        page.should have_text @feed2.title, visible: false
+      end
+    end
 
-    it 'shows an alert if it cannot load feeds'
+    it 'shows an alert if it cannot load feeds', js: true do
+      pending 'not yet working'
+      #User.any_instance.stub(:feeds).and_raise StandardError.new
+      FeedsController.any_instance.stub(:index).and_return 500
+      visit read_path
+      should_show_alert 'problem-loading-feeds'
+    end
 
     it 'hides entries menu button until a feed is selected', js: true do
       visit read_path
@@ -135,7 +148,7 @@ describe 'feeds' do
       # Try to read feed
       read_feed @feed1.id
 
-      should_show_alert 'problem-loading'
+      should_show_alert 'problem-loading-entries'
     end
   end
 end

@@ -14,11 +14,27 @@
   </div>
 </div>
 
-<%# Alert displayed when there is a problem loading feeds %>
-<div id="problem-loading" ng-show="error_loading_entries">
+<%# Alert displayed when there is a problem loading folders %>
+<div id="problem-loading-folders" ng-show="error_loading_folders">
   <div class="alert alert-danger">
     <button type="button" class="close" data-hide>&times;</button>
-    <p><%= t 'feeds.index.problem_loading' %></p>
+    <p><%= t 'feeds.index.problem_loading_folders' %></p>
+  </div>
+</div>
+
+<%# Alert displayed when there is a problem loading feeds %>
+<div id="problem-loading-feeds" ng-show="error_loading_feeds">
+  <div class="alert alert-danger">
+    <button type="button" class="close" data-hide>&times;</button>
+    <p><%= t 'feeds.index.problem_loading_feeds' %></p>
+  </div>
+</div>
+
+<%# Alert displayed when there is a problem loading entries %>
+<div id="problem-loading-entries" ng-show="error_loading_entries">
+  <div class="alert alert-danger">
+    <button type="button" class="close" data-hide>&times;</button>
+    <p><%= t 'feeds.index.problem_loading_entries' %></p>
   </div>
 </div>
 
