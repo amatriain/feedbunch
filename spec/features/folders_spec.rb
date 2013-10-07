@@ -31,7 +31,11 @@ describe 'folders and feeds' do
     page.should_not have_content @folder2.title
   end
 
-  it 'shows an alert if it cannot load folders'
+  it 'shows an alert if it cannot load folders', js: true do
+    User.any_instance.stub(:folders).and_raise StandardError.new
+    visit read_path
+    should_show_alert 'problem-loading-folders'
+  end
 
   it 'shows an All Subscriptions folder with all feeds subscribed to', js: true do
     within '#sidebar' do
