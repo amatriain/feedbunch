@@ -46,7 +46,6 @@ describe 'feeds' do
     end
 
     it 'shows an alert if it cannot load feeds', js: true do
-      pending 'not yet implemented'
       User.any_instance.stub(:feeds).and_raise StandardError.new
       visit read_path
       should_show_alert 'problem-loading-feeds'
