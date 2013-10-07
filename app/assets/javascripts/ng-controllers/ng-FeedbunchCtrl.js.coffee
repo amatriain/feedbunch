@@ -116,6 +116,15 @@ currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc,
     entrySvc.unread_entry()
 
   #--------------------------------------------
+  # Function to count total number of unread entries in feeds
+  #--------------------------------------------
+  $scope.total_unread_entries = ->
+    sum = 0
+    for feed in $rootScope.feeds
+      sum += feed.unread_entries
+    return sum
+
+  #--------------------------------------------
   # Function to filter feeds in a given folder
   #--------------------------------------------
   $scope.feed_in_folder = (folder)->

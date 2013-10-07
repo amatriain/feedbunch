@@ -22,15 +22,5 @@ describe ReadController do
       get :index
       response.should be_success
     end
-
-    it 'assigns to @feeds only feeds the user is suscribed to' do
-      get :index
-      assigns(:feeds).should eq [@feed1]
-    end
-
-    it 'assigns to @folders only folders that belong to the user' do
-      get :index
-      assigns(:folders).should eq [@folder1]
-    end
   end
 end

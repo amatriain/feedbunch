@@ -11,9 +11,6 @@ class ReadController < ApplicationController
   # return the main application page
 
   def index
-    @feeds = current_user.feeds
-    @folders = current_user.folders
-    @user = current_user
     render 'index'
   rescue => e
     handle_error e

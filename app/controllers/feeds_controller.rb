@@ -13,6 +13,8 @@ class FeedsController < ApplicationController
   def index
     @feeds = current_user.feeds
     render 'index', locals: {user: current_user, feeds: @feeds}
+  rescue => e
+    handle_error e
   end
 
   ##

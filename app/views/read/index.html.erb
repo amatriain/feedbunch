@@ -20,7 +20,7 @@
   <div class="col-md-9" ng-cloak>
 
     <div ng-show="current_feed==null && current_folder==null && !loading_entries_busy">
-      <%= render 'start', user: @user %>
+      <%= render 'start' %>
     </div>
 
     <div ng-show="current_feed || current_folder">

@@ -8,9 +8,9 @@
     <div class="col-md-10">
       <h1>
         <%= t 'start.welcome' %>
-        <p>
+        <p ng-cloak>
           <small>
-            <%= t 'start.stats', feeds: user.feeds.count, entries: user.unread_entries %>
+            <%= t 'start.stats', feeds: '{{feeds.length}}', entries: '{{total_unread_entries()}}' %>
           </small>
         </p>
       </h1>
@@ -30,7 +30,7 @@
 
   <div id="import-process-status" class="row">
 
-    <%= render 'read/data_import', user: user %>
+    <%= render 'read/data_import' %>
 
   </div>
 
