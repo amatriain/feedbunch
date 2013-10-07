@@ -8,8 +8,8 @@
     <div class="col-md-10">
       <h1>
         <%= t 'start.welcome' %>
-        <p ng-cloak>
-          <small>
+        <p>
+          <small ng-show="feeds">
             <%= t 'start.stats', feeds: '{{feeds.length}}', entries: '{{total_unread_entries()}}' %>
           </small>
         </p>
