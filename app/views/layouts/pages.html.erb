@@ -1,9 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="feedbunch">
 
 <%= render 'layouts/header' %>
 
-<body>
+<body ng-controller="PagesCtrl">
+
+<%= render 'layouts/navbar' %>
+
+<div class="row top-alert">
+  <div class="col-md-12 text-center" ng-cloak>
+
+    <%= render 'layouts/alerts' %>
+
+  </div>
+</div>
+
+<%= render 'layouts/popups/import_subscriptions_form' %>
 
 <%= yield %>
 
