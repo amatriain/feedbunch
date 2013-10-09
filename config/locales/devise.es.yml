@@ -8,11 +8,10 @@ es:
       not_saved:
         one: "Ha habido 1 error:"
         other: "Han habido %{count} errores:"
-
   devise:
     failure:
       already_authenticated: 'Ya iniciaste sesión.'
-      unauthenticated: 'Tienes que registrarte o iniciar sesión antes de continuar.'
+      unauthenticated: ''
       unconfirmed: 'Tienes que confirmar tu cuenta antes de continuar.'
       locked: 'Tu cuente está bloqueada.'
       invalid: 'Email o contraseña inválidos.'
