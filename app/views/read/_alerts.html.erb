@@ -17,7 +17,7 @@
 <%# Alert displayed when there is a problem loading folders %>
 <div id="problem-loading-folders" ng-show="error_loading_folders">
   <div class="alert alert-danger">
-    <button type="button" class="close" data-hide>&times;</button>
+    <button type="button" class="close" ng-click="reset_flag('error_loading_folders')">&times;</button>
     <p><%= t 'feeds.index.problem_loading_folders' %></p>
   </div>
 </div>
@@ -25,7 +25,7 @@
 <%# Alert displayed when there is a problem loading feeds %>
 <div id="problem-loading-feeds" ng-show="error_loading_feeds">
   <div class="alert alert-danger">
-    <button type="button" class="close" data-hide>&times;</button>
+    <button type="button" class="close" ng-click="reset_flag('error_loading_feeds')">&times;</button>
     <p><%= t 'feeds.index.problem_loading_feeds' %></p>
   </div>
 </div>
@@ -33,7 +33,7 @@
 <%# Alert displayed when there is a problem loading entries %>
 <div id="problem-loading-entries" ng-show="error_loading_entries">
   <div class="alert alert-danger">
-    <button type="button" class="close" data-hide>&times;</button>
+    <button type="button" class="close" ng-click="reset_flag('error_loading_entries')">&times;</button>
     <p><%= t 'feeds.index.problem_loading_entries' %></p>
   </div>
 </div>
@@ -41,7 +41,7 @@
 <%# Alert displayed when there is a problem adding a subscription %>
 <div id="problem-subscribing" ng-show="error_subscribing">
   <div class="alert alert-danger">
-    <button type="button" class="close" data-hide>&times;</button>
+    <button type="button" class="close" ng-click="reset_flag('error_subscribing')">&times;</button>
     <p><%= t 'feeds.index.problem_subscribing' %></p>
   </div>
 </div>
@@ -49,7 +49,7 @@
 <%# Alert displayed when the user tries to subscribe to a feed he's already subscribed to %>
 <div id="already-subscribed" ng-show="error_already_subscribed">
   <div class="alert alert-warning">
-    <button type="button" class="close" data-hide>&times;</button>
+    <button type="button" class="close" ng-click="reset_flag('error_already_subscribed')">&times;</button>
     <p><%= t 'feeds.index.already_subscribed' %></p>
   </div>
 </div>
@@ -57,7 +57,7 @@
 <%# Alert displayed when there is a problem unsubscribing from a feed %>
 <div id="problem-unsubscribing" ng-show="error_unsubscribing">
   <div class="alert alert-danger">
-    <button type="button" class="close" data-hide>&times;</button>
+    <button type="button" class="close" ng-click="reset_flag('error_unsubscribing')">&times;</button>
     <p><%= t 'feeds.index.problem_unsubscribing' %></p>
   </div>
 </div>
@@ -65,7 +65,7 @@
 <%# Alert displayed when there is a problem adding or removing a feed from a folder %>
 <div id="problem-folder-management" ng-show="error_managing_folders">
   <div class="alert alert-danger">
-    <button type="button" class="close" data-hide>&times;</button>
+    <button type="button" class="close" ng-click="reset_flag('error_managing_folders')">&times;</button>
     <p><%= t 'feeds.index.problem_folder_management' %></p>
   </div>
 </div>
@@ -73,7 +73,7 @@
 <%# Alert displayed when there is a problem adding a feed to a new folder %>
 <div id="problem-new-folder" ng-show="error_creating_folder">
   <div class="alert alert-danger">
-    <button type="button" class="close" data-hide>&times;</button>
+    <button type="button" class="close" ng-click="reset_flag('error_creating_folder')">&times;</button>
     <p><%= t 'feeds.index.problem_new_folder' %></p>
   </div>
 </div>
@@ -81,7 +81,7 @@
 <%# Alert displayed when the user tries to create a folder with the same title of another of his folders %>
 <div id="folder-already-exists" ng-show="error_already_existing_folder">
   <div class="alert alert-warning">
-    <button type="button" class="close" data-hide>&times;</button>
+    <button type="button" class="close" ng-click="reset_flag('error_already_existing_folder')">&times;</button>
     <p><%= t 'feeds.index.folder_already_exists' %></p>
   </div>
 </div>
@@ -89,7 +89,7 @@
 <%# Alert displayed when there is a problem changing an entry's read/unread state %>
 <div id="problem-entry-state-change" ng-show="error_changing_entry_state">
   <div class="alert alert-danger">
-    <button type="button" class="close" data-hide>&times;</button>
+    <button type="button" class="close" ng-click="reset_flag('error_changing_entry_state')">&times;</button>
     <p><%= t 'feeds.index.problem_entry_state' %></p>
   </div>
 </div>
