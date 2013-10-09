@@ -116,6 +116,13 @@ currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc,
     entrySvc.unread_entry()
 
   #--------------------------------------------
+  # Set a boolean flag in the root scope as false. The flag name must be passed as a string.
+  # This is used to hide alerts when clicking on their X button.
+  #--------------------------------------------
+  $scope.reset_flag = (flag)->
+    timerFlagSvc.reset flag
+
+  #--------------------------------------------
   # Function to count total number of unread entries in feeds
   #--------------------------------------------
   $scope.total_unread_entries = ->

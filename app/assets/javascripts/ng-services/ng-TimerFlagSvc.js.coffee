@@ -15,4 +15,11 @@ angular.module('feedbunch').service 'timerFlagSvc',
     $timeout ->
       eval "$rootScope.#{flag} = false"
     , 5000
+
+  #---------------------------------------------
+  # Set a boolean flag in the root scope as false.
+  # The flag name must be passed as a string argument.
+  #---------------------------------------------
+  reset: (flag)->
+    eval "$rootScope.#{flag} = false"
 ]
