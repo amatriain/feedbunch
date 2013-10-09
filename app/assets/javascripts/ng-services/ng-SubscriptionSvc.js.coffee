@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'subscriptionSvc',
 ['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'findSvc', 'folderSvc', 'timerFlagSvc',
-'scrollSvc', 'entriesPaginationSvc'
+'scrollSvc', 'entriesPaginationSvc', 'openFolderSvc',
 ($rootScope, $http, currentFeedSvc, currentFolderSvc, readSvc, findSvc, folderSvc, timerFlagSvc,
-scrollSvc, entriesPaginationSvc)->
+scrollSvc, entriesPaginationSvc, openFolderSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
@@ -26,6 +26,10 @@ scrollSvc, entriesPaginationSvc)->
         currentFeedSvc.set data
         readSvc.read_entries_page()
         findSvc.find_folder('all').unread_entries += data.unread_entries
+
+        # open the "all subscriptions" folder
+        folder_all = findSvc.find_folder 'all'
+        openFolderSvc.open folder_all
       .error (data, status)->
         entriesPaginationSvc.set_busy false
         # Show alert
