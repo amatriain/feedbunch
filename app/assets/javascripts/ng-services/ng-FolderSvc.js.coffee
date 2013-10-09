@@ -73,7 +73,6 @@ angular.module('feedbunch').service 'folderSvc',
           feed_removed currentFeedSvc.get(), old_folder_id
 
           # open the new folder
-          $rootScope.$apply()
           openFolderSvc.open data
         .error (data, status)->
           if status == 304

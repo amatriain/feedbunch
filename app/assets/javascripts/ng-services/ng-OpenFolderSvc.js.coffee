@@ -26,6 +26,7 @@ angular.module('feedbunch').service 'openFolderSvc',
   #---------------------------------------------
   open: (folder)->
     $rootScope.current_open_folder = folder
+    $rootScope.$apply()
     $("#feeds-#{folder.id}").collapse 'show'
 
     # close all other folders
