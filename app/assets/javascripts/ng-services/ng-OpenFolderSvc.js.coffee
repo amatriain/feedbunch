@@ -3,7 +3,7 @@
 ########################################################
 
 angular.module('feedbunch').service 'openFolderSvc',
-['$rootScope', ($rootScope)->
+['$rootScope', '$timeout', ($rootScope, $timeout)->
 
   #---------------------------------------------
   # Set the currently open folder in the root scope.
@@ -26,11 +26,16 @@ angular.module('feedbunch').service 'openFolderSvc',
   #---------------------------------------------
   open: (folder)->
     $rootScope.current_open_folder = folder
-    $rootScope.$apply()
-    $("#feeds-#{folder.id}").collapse 'show'
-    # close all other folders
-    for f in $rootScope.folders
-      $("#feeds-#{f.id}").collapse 'hide' if f != folder
+    $rootScope.$apply() if $rootScope.$$phase != '$apply' && $rootScope.$$phase != '$digest'
+    $timeout ->
+      # open the passed folder
+      $("#feeds-#{folder.id}").addClass("in").removeClass("collapse")
+    , 250
+    $timeout ->
+      # close all other folders
+      for f in $rootScope.folders
+        $("#feeds-#{f.id}").removeClass("in").addClass("collapse") if f != folder
+    , 350
 
   #---------------------------------------------
   # Unset the currently open folder in the root scope, and also
@@ -41,10 +46,12 @@ angular.module('feedbunch').service 'openFolderSvc',
   #---------------------------------------------
   close_all: ->
     $rootScope.current_open_folder = null
-    $rootScope.$apply()
-    # close all folders
-    for f in $rootScope.folders
-      $("#feeds-#{f.id}").collapse 'hide'
+    $rootScope.$apply() if $rootScope.$$phase != '$apply' && $rootScope.$$phase != '$digest'
+    $timeout ->
+      # close all folders
+      for f in $rootScope.folders
+        $("#feeds-#{f.id}").removeClass("in").addClass("collapse")
+    , 250
 
   #---------------------------------------------
   # Return the folder object which is currently open
