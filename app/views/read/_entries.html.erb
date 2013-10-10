@@ -22,13 +22,16 @@
     <div class="panel-collapse collapse"
          id="entry-{{entry.id}}-summary">
       <div class="panel-body entry-content">
+
+        <div class="entry-toolbar btn-toolbar">
+          <a class="btn btn-default btn-sm" ng-click="unread_entry()">
+            <i class="icon-eye-close"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
+          </a>
+        </div>
+
         <p class="lead">
           <a href="{{entry.url}}" target="_blank">
             {{entry.title}} <i class="icon-external-link"></i>
-          </a>
-
-          <a class="btn btn-default btn-sm pull-right" ng-click="unread_entry()">
-            <i class="icon-eye-close"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
           </a>
         </p>
 
