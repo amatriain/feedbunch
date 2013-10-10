@@ -42,3 +42,11 @@
 .entry-content{
   padding: 20px;
 }
+
+.entry-title  {
+  display:inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 75%;
+}
