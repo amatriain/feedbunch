@@ -47,11 +47,9 @@ angular.module('feedbunch').service 'openFolderSvc',
   close_all: ->
     $rootScope.current_open_folder = null
     $rootScope.$apply() if $rootScope.$$phase != '$apply' && $rootScope.$$phase != '$digest'
-    $timeout ->
-      # close all folders
-      for f in $rootScope.folders
-        $("#feeds-#{f.id}").removeClass("in").addClass("collapse")
-    , 250
+    # close all folders
+    for f in $rootScope.folders
+      $("#feeds-#{f.id}").removeClass("in").addClass("collapse")
 
   #---------------------------------------------
   # Return the folder object which is currently open
