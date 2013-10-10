@@ -17,3 +17,23 @@ a {
 .accordion-group{
   border: none;
 }
+
+[data-sidebar-feed] i {
+  margin-top: 4px;
+}
+
+.sidebar-feed-title{
+  display:inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 75%;
+}
+
+[data-folder-id] .panel-body {
+  padding: 8px;
+}
+
+[data-folder-id] .panel-body li a {
+  padding-top: 15px;
+}
