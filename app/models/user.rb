@@ -32,7 +32,6 @@ require 'subscriptions_manager'
 #
 # - admin: Boolean that indicates whether the user is an administrator. This attribute is used to restrict access to certain
 # functionality, like Resque administration.
-# - unread_entries: an up-to-date count of the number of unread entries in all the feeds subscribed by the user.
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -63,9 +62,6 @@ class User < ActiveRecord::Base
   has_many :entry_states, -> {uniq}, dependent: :destroy
   has_one :data_import, dependent: :destroy
 
-  validates :unread_entries, presence: true, numericality: {only_integer: true, greater_than_or_equal_to: 0}
-
-  before_validation :before_user_validation
   before_save :encode_password
 
   ##
@@ -142,13 +138,6 @@ class User < ActiveRecord::Base
   end
 
   private
-
-  ##
-  # By default the number of unread entries is zero, if not set.
-
-  def before_user_validation
-    self.unread_entries = 0 if self.unread_entries.blank? || self.unread_entries < 0
-  end
 
   ##
   # Before saving a user instance, ensure the encrypted_password is encoded as utf-8

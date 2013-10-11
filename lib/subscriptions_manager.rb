@@ -77,7 +77,10 @@ class SubscriptionsManager
     unread_count = 0
 
     if folder == 'all'
-      unread_count = user.reload.unread_entries
+      unread_count = 0
+      user.feeds.each do |f|
+        unread_count += user.feed_unread_count f
+      end
     else
       unread_count = folder.reload.unread_entries
     end

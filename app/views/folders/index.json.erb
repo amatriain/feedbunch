@@ -2,7 +2,7 @@
 {
   "id": "all",
   "title": "<%= t 'feeds.index.all_feeds' %>",
-  "unread_entries": <%= user.unread_entries %>
+  "unread_entries": <%= user.folder_unread_count 'all' %>
 }
   <% folders.each do |folder| %>
 ,
