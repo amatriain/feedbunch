@@ -16,9 +16,6 @@ angular.module('feedbunch').service 'folderSvc',
       if findSvc.find_folder_feeds(folder_id).length == 0
         index = $rootScope.folders.indexOf folder
         $rootScope.folders.splice index, 1 if index != -1
-        # Otherwise update unread entries in folder
-      else
-        folder.unread_entries -= feed.unread_entries
 
   service =
 
@@ -50,7 +47,6 @@ angular.module('feedbunch').service 'folderSvc',
       old_folder_id = currentFeedSvc.get().folder_id
       currentFeedSvc.get().folder_id = folder.id
       feed_removed currentFeedSvc.get(), old_folder_id
-      folder.unread_entries += currentFeedSvc.get().unread_entries
 
       # open the new folder
       openFolderSvc.open folder

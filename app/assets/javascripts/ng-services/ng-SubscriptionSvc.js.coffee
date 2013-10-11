@@ -25,7 +25,6 @@ scrollSvc, entriesPaginationSvc, openFolderSvc)->
         $rootScope.feeds.push data
         currentFeedSvc.set data
         readSvc.read_entries_page()
-        findSvc.find_folder('all').unread_entries += data.unread_entries
 
         # open the "all subscriptions" folder
         folder_all = findSvc.find_folder 'all'
@@ -45,11 +44,9 @@ scrollSvc, entriesPaginationSvc, openFolderSvc)->
 
     # Before deleting from the global scope, save some data we'll need later
     path = "/feeds/#{currentFeedSvc.get().id}.json"
-    unread_entries = currentFeedSvc.get().unread_entries
     folder_id = currentFeedSvc.get().folder_id
 
     # Update folders
-    findSvc.find_folder('all').unread_entries -= unread_entries
     folderSvc.feed_removed_from_folder currentFeedSvc.get(), folder_id
 
     # Tell the model that no feed is currently selected.

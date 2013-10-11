@@ -14,9 +14,6 @@
 #
 # A given user cannot have two folders with the same title. Folders with the same title are allowed as long as they
 # belong to different users.
-#
-# The unread_entries attribute serves as a pre-calculated count of the unread entries in the folder. This enables us
-# to display this number without having to execute an expensive SQL count operation every time.
 
 class Folder < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -31,7 +28,6 @@ class Folder < ActiveRecord::Base
   has_many :entries, through: :feeds
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
-  validates :unread_entries, presence: true, numericality: {only_integer: true, greater_than_or_equal_to: 0}
 
   before_validation :before_folder_validation
 
@@ -39,19 +35,10 @@ class Folder < ActiveRecord::Base
 
   ##
   # Before validation of the folder instance:
-  # - give default value to its attributes
   # - sanitize those attributes that need it
 
   def before_folder_validation
-    default_values
     sanitize_attributes
-  end
-
-  ##
-  # By default the number of unread entries is zero, if not set.
-
-  def default_values
-    self.unread_entries = 0 if self.unread_entries.blank? || self.unread_entries < 0
   end
 
   ##
@@ -71,21 +58,6 @@ class Folder < ActiveRecord::Base
 
   def before_add_feed(feed)
     feed.remove_from_folder self.user
-    increment_unread_count feed
-  end
-
-  ##
-  # Increment the current count of unread entries in the folder, by the count of unread entries
-  # in the feed being added to the folder.
-  #
-  # Remember that unread entries counts for feeds are relative to the user; this is, different users
-  # will likely have a different number of unread entries in the same feed.
-
-  def increment_unread_count(feed)
-    count = self.user.feed_unread_count feed
-    Rails.logger.debug "Feed #{feed.id} - #{feed.title} with #{count} unread entries added to folder #{self.id} - #{self.title}. Incrementing unread entries count, current: #{self.unread_entries}, incremented by #{count}"
-    self.unread_entries += count
-    self.save!
   end
 
   ##
@@ -99,7 +71,6 @@ class Folder < ActiveRecord::Base
 
   def after_remove_feed(feed)
     remove_empty_folders feed
-    decrement_unread_count feed if !self.destroyed?
   end
 
   ##
@@ -110,12 +81,5 @@ class Folder < ActiveRecord::Base
     if self.feeds.blank?
       self.destroy
     end
-  end
-
-  def decrement_unread_count(feed)
-    count = self.user.feed_unread_count feed
-    Rails.logger.debug "Feed #{feed.id} - #{feed.title} with #{count} unread entries removed from folder #{self.id} - #{self.title}. Decrementing unread entries count, current: #{self.unread_entries}, decremented by #{count}"
-    self.unread_entries -= count
-    self.save!
   end
 end

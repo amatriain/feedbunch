@@ -87,14 +87,6 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Retrieve the number of unread entries in a folder for this user.
-  # See SubscriptionsManager#unread_folder_entries_count
-
-  def folder_unread_count(feed)
-    SubscriptionsManager.folder_unread_count feed, self
-  end
-
-  ##
   # Move a feed to an existing folder. See FolderManager#move_feed_to_folder
 
   def move_feed_to_folder(feed, folder: nil, folder_title: nil)

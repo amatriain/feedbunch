@@ -32,23 +32,6 @@ describe Folder do
       folder_dupe.user_id.should_not eq @folder.user_id
       folder_dupe.should be_valid
     end
-
-    it 'gives a default value of zero to the unread entries count' do
-      folder = FactoryGirl.build :folder, unread_entries: nil
-      folder.save!
-      folder.unread_entries.should eq 0
-    end
-
-    it 'does not accept decimal unread_entries count' do
-      folder = FactoryGirl.build :folder, unread_entries: 1.5
-      folder.should_not be_valid
-    end
-
-    it 'gives a default value of zero if passed a negative unread_entries count' do
-      folder = FactoryGirl.build :folder, unread_entries: -1
-      folder.save!
-      folder.unread_entries.should eq 0
-    end
   end
 
   context 'association with feeds' do
@@ -170,21 +153,6 @@ describe Folder do
         @folder.feeds << @feed1
         Folder.where(id: folder2.id).should be_blank
       end
-
-      it 'increments the unread entries count when adding a feed' do
-        entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-        entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
-        @feed1.entries << entry1 << entry2
-        @user.change_entries_state entry1, 'read'
-        folder2 = FactoryGirl.build :folder, user_id: @user.id
-        @user.folders << folder2
-
-        folder2.reload.unread_entries.should eq 0
-
-        folder2.feeds << @feed1
-
-        folder2.reload.unread_entries.should eq 1
-      end
     end
 
     context 'remove feed from folder' do
@@ -215,22 +183,6 @@ describe Folder do
         @folder.reload
         @folder.feeds.should_not include @feed1
         folder2.feeds.should include @feed1
-      end
-
-      it 'decrements the unread entries count when removing a feed' do
-        entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-        entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
-        @feed1.entries << entry1 << entry2
-        @user.change_entries_state entry1, 'read'
-        folder2 = FactoryGirl.build :folder, user_id: @user.id
-        @user.folders << folder2
-        folder2.feeds << @feed1 << @feed2
-
-        folder2.reload.unread_entries.should eq 1
-
-        folder2.feeds.delete @feed1
-
-        folder2.reload.unread_entries.should eq 0
       end
 
     end

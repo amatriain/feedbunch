@@ -6,6 +6,5 @@ FactoryGirl.define do
   factory :folder do
     title {generate :folder_title_sequence}
     user
-    unread_entries 0
   end
 end

@@ -21,9 +21,6 @@ describe 'unread entries count' do
     @feed1.entries << @entry1_1 << @entry1_2 << @entry1_3
     @feed2.entries << @entry2_1
 
-    # Ensure unread entries count in the folder has been updated correctly
-    @folder1.reload.unread_entries.should eq 3
-
     login_user_for_feature @user
     visit read_path
   end
@@ -39,13 +36,10 @@ describe 'unread entries count' do
   it 'shows number of unread entries in a single feed', js: true do
     unread_feed_entries_should_eq @feed1.id, 3
     unread_feed_entries_should_eq @feed2.id, 1
-    end
+  end
 
   it 'updates number of unread entries when adding a feed to a newly created folder', js: true do
     @folder1.feeds << @feed2
-
-    # Ensure folder unread entries count has been updated successfully
-    @folder1.reload.unread_entries.should eq 4
 
     visit read_path
     title = 'New folder'
@@ -69,9 +63,6 @@ describe 'unread entries count' do
     @user.subscribe feed3.fetch_url
     folder2.feeds << feed3
 
-    # Ensure folder unread entries count has been updated successfully
-    @folder1.reload.unread_entries.should eq 4
-
     visit read_path
 
     move_feed_to_folder @feed1.id, folder2.id
@@ -84,9 +75,6 @@ describe 'unread entries count' do
 
   it 'updates number of unread entries when removing a feed from a folder', js: true do
     @folder1.feeds << @feed2
-
-    # Ensure folder unread entries count has been updated successfully
-    @folder1.reload.unread_entries.should eq 4
 
     visit read_path
 
@@ -107,9 +95,6 @@ describe 'unread entries count' do
 
   it 'updates number of unread entries when unsubscribing from a feed', js: true do
     @folder1.feeds << @feed2
-
-    # Ensure folder unread entries count has been updated successfully
-    @folder1.reload.unread_entries.should eq 4
 
     visit read_path
     unsubscribe_feed @feed1.id

@@ -57,38 +57,6 @@ class SubscriptionsManager
   end
 
   ##
-  # Retrieve the count of unread entries in a folder owned by a given user. This count is not
-  # calculated when this method is invoked, but rather it is retrieved from a pre-calculated
-  # field in the database.
-  #
-  # Receives as arguments:
-  # - folder for which to retrieve the count. It accepts the special value 'all' instead of a Folder instance;
-  # in this case the total number of unread entries in all the feeds subscribed by the user is returned (regardless
-  # of the folder to which each feed belongs, and including feeds which are not in a folder).
-  # - user to whom the folder belongs
-  #
-  # In all cases the folder or user instance is reloaded from the database, because before calling this method
-  # the unread_entries column in the database may have changed. Reloading here simplifies code, avoiding the
-  # need to always reload before invoking this method.
-  #
-  # Returns a positive (or zero) integer with the count.
-
-  def self.folder_unread_count(folder, user)
-    unread_count = 0
-
-    if folder == 'all'
-      unread_count = 0
-      user.feeds.each do |f|
-        unread_count += user.feed_unread_count f
-      end
-    else
-      unread_count = folder.reload.unread_entries
-    end
-
-    return unread_count
-  end
-
-  ##
   # Increment the count of unread entries in a feed for a given user.
   #
   # Receives as arguments:
