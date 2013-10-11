@@ -5,8 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
+'findSvc',
 ($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
-currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc)->
+currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
+findSvc)->
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data()
@@ -121,6 +123,16 @@ currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc,
   #--------------------------------------------
   $scope.reset_flag = (flag)->
     timerFlagSvc.reset flag
+
+  #--------------------------------------------
+  # Function to count the number of unread entries in a folder
+  #--------------------------------------------
+  $scope.folder_unread_entries = (folder)->
+    sum = 0
+    feeds = findSvc.find_folder_feeds folder.id
+    for feed in feeds
+      sum += feed.unread_entries
+    return sum
 
   #--------------------------------------------
   # Function to count total number of unread entries in feeds
