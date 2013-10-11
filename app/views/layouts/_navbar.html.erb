@@ -114,6 +114,7 @@
               <i class="icon-user"></i> <%= current_user.email %> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
+
               <% if can? :manage, Resque %>
                 <li>
                   <%#= link_to resque_path, target: '_blank' do %>
@@ -123,6 +124,13 @@
                   <% end %>
                 </li>
               <% end %>
+
+              <li>
+                <%=  link_to read_path, id: 'read_feeds' do %>
+                  <i class="icon-rss"></i>
+                  <%= t 'layouts.application.read_feeds' %>
+                <% end %>
+              </li>
 
               <%# Show an "import subscriptions" link only if the user has not a currently running import %>
 

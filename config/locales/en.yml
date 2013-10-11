@@ -34,7 +34,7 @@ en:
       logout: "Logout"
       background_jobs: "Background jobs"
       my_account: "My account"
-      my_feeds: "My feeds"
+      read_feeds: "Read feeds"
       import: "Import subscriptions"
       github: "Visit us on Github"
   feeds:

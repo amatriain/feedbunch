@@ -13,7 +13,7 @@ es:
       logout: "Salir"
       background_jobs: "Tareas en background"
       my_account: "Mi cuenta"
-      my_feeds: "Mis feeds"
+      read_feeds: "Leer feeds"
       import: "Importar suscripciones"
       github: "Visítanos en Github"
   feeds:
