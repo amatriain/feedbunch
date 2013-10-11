@@ -19,8 +19,14 @@ class FolderManager
   #
   # Returns the folder instance to which the feed has been moved, or nil if "none" has been passed
   # in the "folder" argument.
+  #
+  # Raises a NotSubscribedError if the user is not subscribed to the feed.
 
   def self.move_feed_to_folder(feed, user, folder: nil, folder_title: nil)
+    if !user.feeds.exists? feed
+      raise NotSubscribedError.new
+    end
+
     if folder.present? && folder != Folder::NO_FOLDER
       folder = self.move_feed_to_existing_folder feed, folder, user
     elsif  folder == Folder::NO_FOLDER
