@@ -10,6 +10,9 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc)->
 
+  # Show Add Subscription button in this view
+  $rootScope.show_add_subscription = true
+
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data()
 
