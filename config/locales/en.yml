@@ -63,7 +63,7 @@ en:
       new_folder_title: "Create new folder"
       new_folder_close: "Cancel"
       new_folder_submit: "Create folder"
-      no_entries: "No unread entries."
+      no_entries: "No entries"
       problem_refreshing: "There has been a problem refreshing the feed. Please try again later."
       problem_loading_entries: "There has been a problem loading entries. Please try again later."
       problem_loading_feeds: "There has been a problem loading feeds. Please try again later."

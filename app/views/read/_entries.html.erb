@@ -1,5 +1,10 @@
+<div id="no_entries" ng-show="error_no_entries">
+  <p><%= t 'feeds.index.no_entries' %></p>
+</div>
+
 <div class="panel-group"
      id="feed-entries"
+     ng-hide="error_no_entries"
      infinite-scroll="read_entries_page()"
      infinite-scroll-disabled="loading_entries_busy"
      infinite-scroll-distance="1">
