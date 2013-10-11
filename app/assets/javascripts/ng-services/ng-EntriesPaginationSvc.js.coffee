@@ -14,6 +14,7 @@ angular.module('feedbunch').service 'entriesPaginationSvc',
     $rootScope.entries = []
     $rootScope.load_read_entries = false
     $rootScope.more_entries_available = true
+    $rootScope.error_no_entries = false
 
   #---------------------------------------------
   # Get the AJAX call state: if busy, return true; otherwise return false
@@ -26,6 +27,12 @@ angular.module('feedbunch').service 'entriesPaginationSvc',
   #---------------------------------------------
   set_busy: (busy) ->
     $rootScope.loading_entries_busy = busy
+
+  #---------------------------------------------
+  # Set whether there are no entries available (server returns a 404)
+  #---------------------------------------------
+  set_error_no_entries: (error_no_entries) ->
+    $rootScope.error_no_entries = error_no_entries
 
   #---------------------------------------------
   # Get whether there are more entries available in the server (true) or not (false)

@@ -45,7 +45,7 @@ angular.module('feedbunch').service 'readSvc',
       if status == 404
         entriesPaginationSvc.set_more_entries_available false
         if entriesPaginationSvc.is_first_page()
-          timerFlagSvc.start 'error_no_entries'
+          entriesPaginationSvc.set_error_no_entries true
           currentFeedSvc.get().unread_entries = 0
       else
         currentFeedSvc.unset()

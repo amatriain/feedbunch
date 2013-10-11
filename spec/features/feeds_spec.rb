@@ -138,7 +138,7 @@ describe 'feeds' do
       visit read_path
       read_feed feed3.id
 
-      should_show_alert 'no-entries'
+      page.should have_text 'No entries'
     end
 
     it 'shows an alert if there is a problem loading a feed', js: true do

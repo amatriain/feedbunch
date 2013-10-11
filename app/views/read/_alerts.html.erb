@@ -1,11 +1,3 @@
-<%# Alert displayed when the feed selected has no entries %>
-<div id="no-entries" ng-show="error_no_entries">
-  <div class="alert alert-warning">
-    <button type="button" class="close" ng-click="reset_flag('error_no_entries')">&times;</button>
-    <p><%= t 'feeds.index.no_entries' %></p>
-  </div>
-</div>
-
 <%# Alert displayed when there is a problem refreshing feeds %>
 <div id="problem-refreshing" ng-show="error_refreshing_feed">
   <div class="alert alert-danger">
