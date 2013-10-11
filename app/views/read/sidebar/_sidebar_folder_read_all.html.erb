@@ -7,6 +7,6 @@
       <i class="icon-rss pull-left"></i>
       <span class="sidebar-feed-title"><%= t 'feeds.index.all_entries' %></span>
     </strong></em>
-    <span class="badge pull-right">{{folder.unread_entries}}</span>
+    <span class="badge pull-right">{{folder.unread_entries | numberBadgeFltr}}</span>
   </a>
 </li>
