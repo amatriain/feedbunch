@@ -8,6 +8,10 @@
   margin-right: 10px;
 }
 
+.folder {
+  margin-top: 4px;
+}
+
 a.sidebar-folder{
   background-color: #F5F5F5;
 }
@@ -27,4 +31,5 @@ a.sidebar-folder:hover{
   overflow: hidden;
   text-overflow: ellipsis;
   width: 60%;
+  margin-top: 2px;
 }
