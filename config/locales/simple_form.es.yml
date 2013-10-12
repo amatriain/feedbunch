@@ -21,7 +21,7 @@ es:
       new_folder:
               title: "Título"
       data_import:
-        file: "Fichero de datos"
+        file: "Archivo OPML"
     hints:
       user:
         password: "Tu contraseña debe tener entre 8 y 128 caracteres"
