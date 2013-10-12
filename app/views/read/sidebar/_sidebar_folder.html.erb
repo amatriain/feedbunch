@@ -11,8 +11,9 @@
      ng-click="open_folder(folder)">
 
     <i class="folder" ng-class="{'icon-folder-open-alt':current_open_folder==folder, 'icon-folder-close-alt': current_open_folder!=folder}"></i>
-    &nbsp;{{folder.title}}
+    &nbsp;<span class="sidebar-folder-title">{{folder.title}}</span>
     <i class="folder-arrow pull-right" ng-class="{'icon-chevron-down':current_open_folder==folder, 'icon-chevron-right': current_open_folder!=folder}"></i>
+    <span class="folder-unread-badge badge pull-right">{{folder_unread_entries(folder) | numberBadgeFltr}}</span>
 
   </a>
 
