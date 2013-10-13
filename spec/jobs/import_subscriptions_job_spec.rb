@@ -237,4 +237,25 @@ describe ImportSubscriptionsJob do
     ImportSubscriptionsJob.perform @filename, 1234567890
   end
 
+  context 'email notifications' do
+
+    before :each do
+      # Remove emails stil in the mail queue
+      ActionMailer::Base.deliveries.clear
+    end
+
+    it 'sends an email if it finishes successfully' do
+      ImportSubscriptionsJob.perform @filename, @user.id
+      mail_should_be_sent to: @user.email, text: 'Your feed subscriptions have been imported into Feedbunch'
+    end
+
+    it 'sends an email if it finishes with an error' do
+      not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
+      file_contents = File.read not_valid_opml_filename
+      Feedbunch::Application.config.uploads_manager.stub read: file_contents
+      ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id
+      mail_should_be_sent to: @user.email, text: 'Unfortunately we haven\'t been able to import all your subscriptions into Feedbunch'
+    end
+  end
+
 end

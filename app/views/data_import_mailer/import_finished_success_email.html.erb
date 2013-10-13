@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<h1>Your feed subscriptions have been imported into Feedbunch</h1>
+<p>
+  Good news, <%= @user.email %>: we have finished importing your feed subscriptions into Feedbunch.
+</p>
+<p>
+  You are now subscribed to <%= @user.feeds.count %> feeds.
+  To read them, just follow <a href="<%= @url %>">this link.</a>
+</p>
+<p>Thanks for using Feedbunch and have a great day!</p>
+</body>
+</html>

@@ -86,7 +86,6 @@ class ImportSubscriptionsJob
     end
 
     # If all feeds already existed in the database, mark import status as SUCCESS.
-    # If there were new feeds, the job will be marked as SUCCESS when all are fetched for the first time
     user.reload
     if user.data_import.total_feeds == user.data_import.processed_feeds
       self.import_status_success user
@@ -126,6 +125,8 @@ class ImportSubscriptionsJob
   def self.import_status_error(user)
     user.data_import.status = DataImport::ERROR
     user.data_import.save
+    Rails.logger.info "Sending data import error email to user #{user.id} - #{user.email}"
+    DataImportMailer.import_finished_error_email(user).deliver
   end
 
   ##
@@ -135,6 +136,8 @@ class ImportSubscriptionsJob
   def self.import_status_success(user)
     user.data_import.status = DataImport::SUCCESS
     user.data_import.save
+    Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
+    DataImportMailer.import_finished_success_email(user).deliver
   end
 
   ##

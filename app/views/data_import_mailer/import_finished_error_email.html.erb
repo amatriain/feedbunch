@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<h1>There has been an error importing your feed subscriptions into Feedbunch</h1>
+<p>
+  Unfortunately we haven't been able to import all your subscriptions into Feedbunch.
+</p>
+<p>
+  However we've tried to import as many subscriptions as we've been able to.
+  You are now subscribed to <%= @user.feeds.count %> feeds; to read them, just follow <a href="<%= @url %>">this link.</a>
+</p>
+<p>Thanks for using Feedbunch and have a great day, <%= @user.email %>!</p>
+</body>
+</html>
