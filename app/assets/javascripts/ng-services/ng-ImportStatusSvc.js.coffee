@@ -17,7 +17,8 @@ angular.module('feedbunch').service 'importStatusSvc',
   # a true to the "show_alerts" argument.
   #
   # Basically this means that if when the page is loaded the import is running, and it finishes
-  # afterwards, then and only then will an alert be displayed.
+  # afterwards, then and only then will an alert be displayed. Also when this happens new feeds and
+  # folders will be inserted in the model automatically.
   #---------------------------------------------
   load_import_status = (show_alerts)->
     $http.get('/data_imports.json')
@@ -34,7 +35,7 @@ angular.module('feedbunch').service 'importStatusSvc',
         timerFlagSvc.start 'error_importing'
       else if data["status"] == "SUCCESS" && show_alerts
         # Automatically load new feeds and folders without needing a refresh
-        feedsFoldersSvc.load_data
+        feedsFoldersSvc.load_data()
         timerFlagSvc.start 'success_importing'
     .error ->
       timerFlagSvc.start 'error_loading_import_status'

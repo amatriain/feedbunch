@@ -65,7 +65,7 @@ describe 'import subscriptions' do
       page.should have_css '#data_import_file'
       attach_file 'data_import_file', @data_file
       find('#data-import-submit').click
-      page.should have_text 'Your subscriptions are being imported into Feedbunch'
+      page.should have_text 'Your feed subscriptions are being imported'
     end
 
     after :each do
@@ -131,6 +131,23 @@ describe 'import subscriptions' do
       @user.data_import.status = DataImport::SUCCESS
       @user.data_import.save
       page.should have_content 'Your subscribed feeds have been imported into Feedbunch'
+    end
+
+    it 'shows new feeds and folders when import finishes successfully', js: true do
+      read_feed @feed.id
+      folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder
+      feed = FactoryGirl.create :feed
+      @user.subscribe feed.fetch_url
+      folder.feeds << feed
+      @user.data_import.status = DataImport::SUCCESS
+      @user.data_import.save
+      within '#sidebar #folders-list' do
+        page.should have_css "#folder-#{folder.id}"
+      end
+      within "#sidebar #folders-list #folder-#{folder.id}" do
+        page.should have_css "a[data-sidebar-feed][data-feed-id='#{feed.id}']", visible: false
+      end
     end
 
     it 'changes message when import finishes with an error', js: true do
