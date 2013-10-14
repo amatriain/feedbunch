@@ -20,7 +20,7 @@ class FeedAutodiscovery
   # Returns the updated feed object if autodiscovery is successful, or nil if the HTML didn't have a feed associated.
 
   def self.discover(feed, feed_response)
-    Rails.logger.info "Could not parse feed from url #{feed.fetch_url}. Trying to perform feed autodiscovery"
+    Rails.logger.info "Trying to perform feed autodiscovery on url #{feed.fetch_url}"
     doc = Nokogiri::HTML feed_response
 
     # In this order, give preference to Atom, then to RSS, then to generic "feed" links

@@ -158,7 +158,6 @@ class ImportSubscriptionsJob
       return
     rescue => e
       Rails.logger.error "Data import error: Error trying to subscribe user #{user.id} - #{user.email} to feed at #{fetch_url} from OPML file. Skipping to next feed"
-      feed.try :destroy
       return
     ensure
       user.data_import.processed_feeds += 1
