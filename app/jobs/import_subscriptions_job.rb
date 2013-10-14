@@ -153,8 +153,12 @@ class ImportSubscriptionsJob
         Rails.logger.info "As part of OPML import, moving feed #{feed.id} - #{feed.title} to folder #{folder.title} owned by user #{user.id} - #{user.email}"
         folder.feeds << feed
       end
-    rescue
+    rescue AlreadySubscribedError => e
+      Rails.logger.info "User #{user.id} - #{user.email} imported feed #{fetch_url} to which he is already subscribed"
+      return
+    rescue => e
       Rails.logger.error "Data import error: Error trying to subscribe user #{user.id} - #{user.email} to feed at #{fetch_url} from OPML file. Skipping to next feed"
+      feed.try :destroy
       return
     ensure
       user.data_import.processed_feeds += 1
