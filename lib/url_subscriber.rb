@@ -107,7 +107,6 @@ class URLSubscriber
     begin
       fetched_feed = FeedClient.fetch feed, true
       if fetched_feed
-        Rails.logger.error "DEBUG----- #{fetched_feed.id} - #{fetched_feed.url} - #{fetched_feed.fetch_url} - #{fetched_feed.title}"
         if user.feeds.include? fetched_feed
           # Only subscribe user to the actually fetched feed if he's not already subscribed
           Rails.logger.info "Fetched feed #{feed_url} was already subscribed by user #{user.id} - #{user.email}"
