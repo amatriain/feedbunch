@@ -147,6 +147,7 @@ class ImportSubscriptionsJob
 
   def self.import_feed(fetch_url, user, folder=nil)
     begin
+      Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to feed #{fetch_url}"
       feed = user.subscribe fetch_url
       if folder.present?
         Rails.logger.info "As part of OPML import, moving feed #{feed.id} - #{feed.title} to folder #{folder.title} owned by user #{user.id} - #{user.email}"
