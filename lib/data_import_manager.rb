@@ -7,7 +7,7 @@ require 'zip/filesystem'
 class DataImportManager
 
   ##
-  # This method extracts subscriptions data from an OPML file (probably exported from Google Reader), and
+  # This method extracts subscriptions data from an OPML file and
   # saves them in a (unzipped) OPML file in the filesystem. Afterwards it enqueues a background job
   # to import those subscriptions in the user's account.
   #

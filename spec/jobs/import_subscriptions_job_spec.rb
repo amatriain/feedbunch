@@ -67,6 +67,13 @@ describe ImportSubscriptionsJob do
     @user.data_import.status.should eq DataImport::ERROR
   end
 
+  it 'sets data import status to ERROR if an error is raised' do
+    ImportSubscriptionsJob.stub(:import_feed).and_raise StandardError.new
+    expect {ImportSubscriptionsJob.perform @filename, @user.id}.to raise_error
+    @user.reload
+    @user.data_import.status.should eq DataImport::ERROR
+  end
+
   it 'does nothing if the user does not exist' do
     Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, 1234567890
@@ -206,11 +213,10 @@ describe ImportSubscriptionsJob do
     @user.data_import.status.should eq DataImport::SUCCESS
   end
 
-  it 'creates a data_import for the user if one does not exist' do
+  it 'does nothing if the user does not have a data_import' do
     @user.data_import.destroy
+    Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, @user.id
-    @user.reload
-    @user.data_import.should be_present
   end
 
   it 'does nothing if the data_import for the user has status ERROR' do

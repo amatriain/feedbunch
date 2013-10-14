@@ -2,7 +2,7 @@ require 'nokogiri'
 
 ##
 # Background job to import an OPML data file with subscriptions data for a user.
-# It also enqueues updates of any new feeds created (existing feeds are assumed
+# It also fetches any new feeds created (existing feeds are assumed
 # to have been updated in the last hour and so don't need an update right now).
 #
 # Its perform method will be invoked from a Resque worker.
@@ -17,8 +17,7 @@ class ImportSubscriptionsJob
   # - the name of the file, including path from Rails.root (e.g. 'uploads/1371321122.opml')
   # - the id of the user who is importing the file
   #
-  # The file is normally in the $RAILS_ROOT/uploads folder, but the full pathname relative to Rails.root
-  # must be passed with the filename, so that this is not absolutely necessary.
+  # The file is retrieved using the currently configured uploads_manager (from the filesystem or from Amazon S3).
   #
   # After finishing the job the file will be deleted no matter what.
   #
@@ -36,11 +35,8 @@ class ImportSubscriptionsJob
     user = User.find user_id
 
     # Check that user has a data_import with status RUNNING
-    if user.data_import.blank?
-      Rails.logger.warn "User #{user.id} - #{user.email} has no data_import for the OPML import, creating one"
-      user.create_data_import
-    elsif user.data_import.status != DataImport::RUNNING
-      Rails.logger.error "User #{user.id} - #{user.email} has a data_import in status #{user.data_import.status}, aborting OPML import"
+    if user.data_import.try(:status) != DataImport::RUNNING
+      Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with status RUNNING, aborting OPML import"
       return
     end
 
@@ -85,13 +81,15 @@ class ImportSubscriptionsJob
       end
     end
 
-    # If all feeds already existed in the database, mark import status as SUCCESS.
-    user.reload
-    if user.data_import.total_feeds == user.data_import.processed_feeds
-      self.import_status_success user
-    else
-      self.import_status_error user
-    end
+    # Once finished, mark import status as SUCCESS.
+    self.import_status_success user
+  rescue => e
+    # If an exception is raised, set the import process status to ERROR
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    self.import_status_error user
+    # Re-raise the exception so that Resque takes care of it
+    raise e
   ensure
     Feedbunch::Application.config.uploads_manager.delete filename
   end
@@ -100,7 +98,9 @@ class ImportSubscriptionsJob
 
   ##
   # Count the number of feeds in an OPML file.
+  #
   # Receives as argument an OPML document parsed by Nokogiri.
+  #
   # Returns the number of feeds in the document.
 
   def self.count_total_feeds(docXml)
@@ -110,19 +110,13 @@ class ImportSubscriptionsJob
   end
 
   ##
-  # Increment the number of processed feeds in data import process by one, so user can see progress.
-  # Receives as argument the user who requested the import.
-
-  def self.increment_processed_feeds_count(user)
-    user.data_import.processed_feeds += 1
-    user.data_import.save
-  end
-
-  ##
   # Sets the data_import status for the user as ERROR.
+  # Creates a new data_import if the user doesn't already have one.
+  #
   # Receives as argument the user whose import process has failed.
 
   def self.import_status_error(user)
+    user.create_data_import if user.data_import.blank?
     user.data_import.status = DataImport::ERROR
     user.data_import.save
     Rails.logger.info "Sending data import error email to user #{user.id} - #{user.email}"
@@ -131,6 +125,7 @@ class ImportSubscriptionsJob
 
   ##
   # Sets the data_import status for the user as SUCCESS.
+  #
   # Receives as argument the user whose import process has finished successfully.
 
   def self.import_status_success(user)
@@ -142,6 +137,7 @@ class ImportSubscriptionsJob
 
   ##
   # Import a feed, subscribing the user to it.
+  #
   # Receives as arguments:
   # - the fetch_url of the feed
   # - the user who requested the import (and who will be subscribed to the feed)
@@ -160,14 +156,17 @@ class ImportSubscriptionsJob
       Rails.logger.error "Data import error: Error trying to subscribe user #{user.id} - #{user.email} to feed at #{fetch_url} from OPML file. Skipping to next feed"
       return
     ensure
-      self.increment_processed_feeds_count user
+      user.data_import.processed_feeds += 1
+      user.data_import.save
     end
   end
 
   ##
   # Import a folder, creating it if necessary. The folder will be owned by the passed user.
   # If the user already has a folder with the same title, no action will be taken.
+  #
   # Receives as arguments the title of the folder and the user who requested the import.
+  #
   # Returns the folder. It may be a newly created folder, if the user didn't have a folder with the same title,
   # or it may be an already existing folder if he did.
 
