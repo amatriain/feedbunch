@@ -2,8 +2,7 @@ require 'nokogiri'
 
 ##
 # Background job to import an OPML data file with subscriptions data for a user.
-# It also fetches any new feeds created (existing feeds are assumed
-# to have been updated in the last hour and so don't need an update right now).
+# It enqueues jobs to subscribe the user to each individual feed.
 #
 # Its perform method will be invoked from a Resque worker.
 
@@ -80,9 +79,6 @@ class ImportSubscriptionsJob
         self.import_feed feed_node['xmlUrl'], user, folder
       end
     end
-
-    # Once finished, mark import status as SUCCESS.
-    self.import_status_success user
   rescue => e
     # If an exception is raised, set the import process status to ERROR
     Rails.logger.error e.message
@@ -124,45 +120,16 @@ class ImportSubscriptionsJob
   end
 
   ##
-  # Sets the data_import status for the user as SUCCESS.
-  #
-  # Receives as argument the user whose import process has finished successfully.
-
-  def self.import_status_success(user)
-    user.data_import.status = DataImport::SUCCESS
-    user.data_import.save
-    Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
-    DataImportMailer.import_finished_success_email(user).deliver
-  end
-
-  ##
-  # Import a feed, subscribing the user to it.
+  # Import a feed, enqueing a job to subscribe the user to it.
   #
   # Receives as arguments:
   # - the fetch_url of the feed
   # - the user who requested the import (and who will be subscribed to the feed)
   # - optionally, the folder in which the feed will be (defaults to none)
-  #
-  # If the feed already exists in the database, the user is subscribed to it.
 
   def self.import_feed(fetch_url, user, folder=nil)
-    begin
-      Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to feed #{fetch_url}"
-      feed = user.subscribe fetch_url
-      if folder.present? && feed.present?
-        Rails.logger.info "As part of OPML import, moving feed #{feed.id} - #{feed.title} to folder #{folder.title} owned by user #{user.id} - #{user.email}"
-        folder.feeds << feed
-      end
-    rescue AlreadySubscribedError => e
-      Rails.logger.info "User #{user.id} - #{user.email} imported feed #{fetch_url} to which he is already subscribed"
-      return
-    rescue => e
-      Rails.logger.error "Data import error: Error trying to subscribe user #{user.id} - #{user.email} to feed at #{fetch_url} from OPML file. Skipping to next feed"
-      return
-    ensure
-      user.data_import.processed_feeds += 1
-      user.data_import.save
-    end
+    Rails.logger.info "As part of OPML import, enqueing job to subscribe user #{user.id} - #{user.email} to feed #{fetch_url}"
+    Resque.enqueue SubscribeUserJob, user.id, fetch_url, folder.try(:id), true
   end
 
   ##
