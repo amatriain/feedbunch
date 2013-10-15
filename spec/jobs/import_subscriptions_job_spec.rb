@@ -24,17 +24,6 @@ describe ImportSubscriptionsJob do
     end
     Feedbunch::Application.config.uploads_manager.stub :save
     Feedbunch::Application.config.uploads_manager.stub :delete
-
-    @brakeman_feed = FactoryGirl.create :feed, title: 'Brakeman - Rails Security Scanner',
-                                        fetch_url: 'http://brakemanscanner.org/atom.xml',
-                                        url: 'http://brakemanscanner.org/'
-    @xkcd_feed = FactoryGirl.create :feed, title: 'xkcd.com', fetch_url: 'http://xkcd.com/rss.xml',
-                                    url: 'http://xkcd.com/'
-
-    # Stub FeedClient.stub so that it does not actually fetch feeds, but returns them untouched
-    FeedClient.stub :fetch do |feed, perform_autodiscovery|
-      feed
-    end
   end
 
   it 'updates the data import total number of feeds' do
@@ -74,6 +63,16 @@ describe ImportSubscriptionsJob do
     @user.data_import.status.should eq DataImport::ERROR
   end
 
+  it 'sends an email if it finishes with an error' do
+    # Remove emails stil in the mail queue
+    ActionMailer::Base.deliveries.clear
+    not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
+    file_contents = File.read not_valid_opml_filename
+    Feedbunch::Application.config.uploads_manager.stub read: file_contents
+    ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id
+    mail_should_be_sent to: @user.email, text: 'Unfortunately we haven\'t been able to import your subscriptions into Feedbunch'
+  end
+
   it 'does nothing if the user does not exist' do
     Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, 1234567890
@@ -84,31 +83,20 @@ describe ImportSubscriptionsJob do
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
-  it 'subscribes user to already existing feeds' do
-    @user.feeds.should_not include @brakeman_feed
-    @user.feeds.should_not include @xkcd_feed
+  it 'enqueues jobs to subscribe the user to feeds' do
+    folder_linux = FactoryGirl.build :folder, user_id: @user.id, title: 'Linux'
+    folder_webcomics = FactoryGirl.build :folder, user_id: @user.id, title: 'Webcomics'
+    @user.folders << folder_linux << folder_webcomics
     ImportSubscriptionsJob.perform @filename, @user.id
-    @user.reload
-    @user.feeds.should include @brakeman_feed
-    @user.feeds.should include @xkcd_feed
+    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'http://brakemanscanner.org/atom.xml', nil, true
+    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'http://www.galactanet.com/feed.xml', nil, true
+    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'https://www.archlinux.org/feeds/news/', folder_linux.id, true
+    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'http://xkcd.com/rss.xml', folder_webcomics.id, true
   end
 
-  it 'updates data import number of processed feeds when subscribing user to existing feeds' do
-    @user.data_import.processed_feeds.should eq 0
-    ImportSubscriptionsJob.perform @filename, @user.id
-    @user.reload
-    @user.data_import.processed_feeds.should eq 4
-  end
 
-  it 'updates data import number of processed feeds when finding duplicated feeds' do
-    filename = File.join __dir__, '..', 'attachments', '1371324422-with-duplicate-feed.opml'
-    file_contents = File.read filename
-    Feedbunch::Application.config.uploads_manager.stub read: file_contents
-    ImportSubscriptionsJob.perform filename, @user.id
-    @user.reload
-    @user.data_import.total_feeds.should eq 5
-    @user.data_import.processed_feeds.should eq 5
-  end
+
+  ## TODO BELOW
 
   it 'ignores feeds without xmlUrl attribute' do
     filename = File.join __dir__, '..', 'attachments', '1371324422-with-feed-without-attributes.opml'
@@ -126,33 +114,6 @@ describe ImportSubscriptionsJob do
     @user.data_import.total_feeds.should eq 3
     @user.data_import.processed_feeds.should eq 3
     @user.data_import.status.should eq DataImport::SUCCESS
-  end
-
-  it 'creates new feeds and subscribes user to them' do
-    url1 = 'http://www.galactanet.com/feed.xml'
-    url2 = 'http://www.galactanet.com/feed.xml'
-
-    Feed.exists?(fetch_url: url1).should be_false
-    Feed.exists?(fetch_url: url2).should be_false
-
-    ImportSubscriptionsJob.perform @filename, @user.id
-
-    @user.reload
-    @user.feeds.where(fetch_url: url1).should be_present
-    @user.feeds.where(fetch_url: url2).should be_present
-  end
-
-  it 'fetches new feeds' do
-    andy_feed_enqueued = false
-    arch_feed_enqueued = false
-    FeedClient.should_receive(:fetch).twice do |feed, perform_autodiscovery|
-      andy_feed_enqueued = true if feed.fetch_url == 'http://www.galactanet.com/feed.xml'
-      arch_feed_enqueued = true if feed.fetch_url == 'https://www.archlinux.org/feeds/news/'
-    end
-
-    ImportSubscriptionsJob.perform @filename, @user.id
-    andy_feed_enqueued.should be_true
-    arch_feed_enqueued.should be_true
   end
 
   it 'creates folder structure' do
@@ -256,6 +217,8 @@ describe ImportSubscriptionsJob do
     end
 
     it 'sends an email if it finishes with an error' do
+      # Remove emails stil in the mail queue
+      ActionMailer::Base.deliveries.clear
       not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
       file_contents = File.read not_valid_opml_filename
       Feedbunch::Application.config.uploads_manager.stub read: file_contents

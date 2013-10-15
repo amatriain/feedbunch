@@ -6,11 +6,11 @@
 <body>
 <h1>There has been an error importing your feed subscriptions into Feedbunch</h1>
 <p>
-  Unfortunately we haven't been able to import all your subscriptions into Feedbunch.
+  Unfortunately we haven't been able to import your subscriptions into Feedbunch.
 </p>
 <p>
-  However we've tried to import as many subscriptions as we've been able to.
-  You are now subscribed to <%= @user.feeds.count %> feeds; to read them, just follow <a href="<%= @url %>">this link.</a>
+  If you're sure that the subscriptions file you uploaded to Feedbunch is correct, you can try again.
+  You are currently subscribed to <%= @user.feeds.count %> feeds; to read them, just follow <a href="<%= @url %>">this link.</a>
 </p>
 <p>Thanks for using Feedbunch and have a great day, <%= @user.email %>!</p>
 </body>
