@@ -13,13 +13,13 @@ class SubscribeUserJob
   # - id of the user
   # - url of the feed
   # - id of the folder. It must be owned by the user. If a nil is passed, ignore it
-  # - boolean indicating whether to update the user's running data_import
+  # - boolean indicating whether the subscription is part of an OPML import process
   #
   # If requested, the data_import of the user is updated so that the user can see the import progress.
   #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 
-  def self.perform(user_id, feed_url, folder_id, update_import)
+  def self.perform(user_id, feed_url, folder_id, running_data_import)
     # Check if the user actually exists
     if !User.exists? user_id
       Rails.logger.error "Trying to add subscription to non-existing user @#{user_id}, aborting job"
@@ -41,7 +41,7 @@ class SubscribeUserJob
     end
 
     # Check that user has a data_import with status RUNNING if requested to update it
-    if update_import
+    if running_data_import
       if user.data_import.try(:status) != DataImport::RUNNING
         Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with status RUNNING, aborting job"
         return
@@ -56,7 +56,7 @@ class SubscribeUserJob
     raise e
   ensure
     # Once finished, mark import status as SUCCESS if requested.
-    self.update_import_status user if update_import
+    self.update_import_status user if running_data_import && user.try(:data_import).present?
   end
 
   private
