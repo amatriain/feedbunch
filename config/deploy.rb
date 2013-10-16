@@ -93,6 +93,9 @@ end
 namespace :feedbunch_secret_data do
   task :copy, roles: [:app, :background], except: {no_release: true} do
 
+    run "ln -sf /home/feedbunch/config/#{rails_env}.rb " \
+        "#{release_path}/config/environments/#{rails_env}.rb"
+
     run 'ln -sf /home/feedbunch/config/database.yml ' \
         "#{release_path}/config/database.yml"
 
@@ -112,9 +115,6 @@ namespace :feedbunch_secret_data do
   task :copy_app, roles: :app do
     run 'ln -sf /home/feedbunch/config/secret_token.rb ' \
         "#{release_path}/config/initializers/secret_token.rb"
-
-    run "ln -sf /home/feedbunch/config/#{rails_env}.rb " \
-        "#{release_path}/config/environments/#{rails_env}.rb"
   end
 
   task :copy_background, roles: :background do
