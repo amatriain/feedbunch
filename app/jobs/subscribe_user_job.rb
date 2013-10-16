@@ -73,7 +73,7 @@ class SubscribeUserJob
   def self.update_import_status(user)
     user.data_import.processed_feeds += 1
     user.data_import.save
-    if user.data_import.total_feeds == user.data_import.processed_feeds
+    if self.import_finished? user
       user.data_import.status = DataImport::SUCCESS
       user.data_import.save
       Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
@@ -98,5 +98,17 @@ class SubscribeUserJob
       Rails.logger.info "As part of OPML import, moving feed #{feed.id} - #{feed.title} to folder #{folder.title} owned by user #{user.id} - #{user.email}"
       folder.feeds << feed
     end
+  end
+
+  ##
+  # Check if the OPML import process has finished (all enqueued jobs have finished running).
+  #
+  # Receives as argument the user whose import process is to be checked.
+  #
+  # Returns a boolean: true if import is finished, false otherwise.
+
+  def self.import_finished?(user)
+    # If ImportSubscriptionJob is still running, import process is not finished
+
   end
 end
