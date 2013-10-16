@@ -49,8 +49,12 @@ class SubscribeUserJob
     end
 
     self.subscribe_feed feed_url, user, folder
-  rescue RestClient::Exception, SocketError, Errno::ETIMEDOUT, AlreadySubscribedError, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError, FeedParseError, ImportDataError=> e
+  rescue RestClient::Exception, Errno::ETIMEDOUT, AlreadySubscribedError, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError, FeedParseError, ImportDataError => e
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+  rescue SocketError => e
+    # This error means the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
   rescue => e
