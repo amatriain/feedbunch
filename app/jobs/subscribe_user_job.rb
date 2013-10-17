@@ -60,7 +60,7 @@ class SubscribeUserJob
     raise e
   ensure
     # Once finished, mark import status as SUCCESS if requested.
-    self.update_import_status user if running_data_import && user.try(:data_import).present?
+    self.update_import_status user, feed_url, folder_id if running_data_import && user.try(:data_import).present?
   end
 
   private
@@ -68,12 +68,13 @@ class SubscribeUserJob
   ##
   # Sets the data_import status for the user as SUCCESS.
   #
-  # Receives as argument the user whose import process has finished successfully.
+  # Receives as argument the user whose import process has finished successfully, the
+  # URL of the feed just subscribed, and the ID of the folder into which the feed as been moved.
 
-  def self.update_import_status(user)
+  def self.update_import_status(user, feed_url, folder_id)
     user.data_import.processed_feeds += 1
     user.data_import.save
-    if self.import_finished? user
+    if self.import_finished? user, feed_url, folder_id
       user.data_import.status = DataImport::SUCCESS
       user.data_import.save
       Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
@@ -103,12 +104,41 @@ class SubscribeUserJob
   ##
   # Check if the OPML import process has finished (all enqueued jobs have finished running).
   #
-  # Receives as argument the user whose import process is to be checked.
+  # Receives as argument the user whose import process is to be checked, the URL of
+  # the feed just subscribed, and the ID of the folder into which it's been moved.
   #
   # Returns a boolean: true if import is finished, false otherwise.
 
-  def self.import_finished?(user)
-    # If ImportSubscriptionJob is still running, import process is not finished
+  def self.import_finished?(user, feed_url, folder_id)
+    # If the number of processed feeds equals the total number of feeds in the OPML, import is finished
+    if user.data_import.processed_feeds == user.data_import.total_feeds
+      return true
+    end
 
+    # If a ImportSubscriptionJob or another SubscribeUserJob for the user is still running, import process is not finished
+    Resque.working.each do |w|
+      working_class = w.job['payload']['class']
+      if working_class == 'ImportSubscriptionsJob'
+        return false if w.job['payload']['args'][1] == user.id
+      elsif working_class == 'SubscribeUserJob'
+        args = w.job['payload']['args']
+        return false if args[0] == user.id && (args[1] != feed_url || args[2] != folder_id) && args[3] == true
+      end
+    end
+
+    # If a SubscribeUserJob is enqueued, import process is not finished
+    peek_start = 0
+    job = Resque.peek 'update_feeds', peek_start
+    while job.present?
+      if job['class'] == 'SubscribeUserJob'
+        args = job['args']
+        return false if args[0] == user.id && (args[1] != feed_url || args[2] != folder_id) && args[3] == true
+      end
+      peek_start += 1
+      job = Resque.peek 'update_feeds', peek_start
+    end
+
+    # If no jobs related to the import are running or queued, the import process has finished
+    return true
   end
 end

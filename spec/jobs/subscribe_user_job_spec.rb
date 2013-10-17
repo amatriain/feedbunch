@@ -60,6 +60,10 @@ describe SubscribeUserJob do
       @data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::RUNNING,
                                        total_feeds: 10, processed_feeds: 5
       @user.data_import = @data_import
+
+      # Resque always informs there is one more instance of SubscribeUserJob enqueued
+      enqueued_job = {'class' => 'SubscribeUserJob', 'args' => [@user.id, @feed.fetch_url]}
+      Resque.stub(:peek).and_return enqueued_job
     end
 
     it 'does nothing if the user does not have a running data import' do
@@ -85,7 +89,7 @@ describe SubscribeUserJob do
     it 'updates number of processed feeds in the running import if the user is already subscribed to the feed' do
       @user.subscribe @feed.fetch_url
       # running the job will raise an AlreadySubscribedError
-      expect {SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true}.to raise_error
+      SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
       @user.reload
       @user.data_import.processed_feeds.should eq 6
     end
@@ -95,6 +99,45 @@ describe SubscribeUserJob do
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
       @user.reload
       @user.data_import.processed_feeds.should eq 10
+      @user.data_import.status.should eq DataImport::SUCCESS
+    end
+
+    it 'leaves data import as RUNNING if more SubscribeUserJob instances are running' do
+      this_job = {'payload' => {'class' => 'SubscribeUserJob', 'args' => [@user.id, @feed.fetch_url, @folder.id, true]}}
+      another_job = {'payload' => {'class' => 'SubscribeUserJob', 'args' => [@user.id, 'http://another.url', @folder.id, true]}}
+      this_working_mock = double 'Working', job: this_job
+      another_working_mock = double 'Working', job: another_job
+      Resque.stub(:working).and_return [this_working_mock, another_working_mock]
+      SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
+      @user.reload
+      @user.data_import.processed_feeds.should eq 6
+      @user.data_import.status.should eq DataImport::RUNNING
+    end
+
+    it 'sets data import status to SUCCESS if this is the only SubscribeUserJob running and no other is enqueued' do
+      this_job = {'payload' => {'class' => 'SubscribeUserJob', 'args' => [@user.id, @feed.fetch_url, @folder.id, true]}}
+      this_working_mock = double 'Working', job: this_job
+      Resque.stub(:working).and_return [this_working_mock]
+      Resque.stub(:peek).and_return nil
+      SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
+      @user.reload
+      @user.data_import.processed_feeds.should eq 6
+      @user.data_import.status.should eq DataImport::SUCCESS
+    end
+
+    it 'leaves data impot as RUNNING if more SubscribeUserJob instances are enqueued' do
+      SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
+      @user.reload
+      @user.data_import.processed_feeds.should eq 6
+      @user.data_import.status.should eq DataImport::RUNNING
+    end
+
+    it 'sets data import status to SUCCESS if no import-related jobs are running or enqueued' do
+      Resque.stub(:peek).and_return nil
+      Resque.stub(:working).and_return []
+      SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
+      @user.reload
+      @user.data_import.processed_feeds.should eq 6
       @user.data_import.status.should eq DataImport::SUCCESS
     end
 
