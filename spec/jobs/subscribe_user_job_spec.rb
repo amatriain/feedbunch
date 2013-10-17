@@ -61,9 +61,15 @@ describe SubscribeUserJob do
                                        total_feeds: 10, processed_feeds: 5
       @user.data_import = @data_import
 
-      # Resque always informs there is one more instance of SubscribeUserJob enqueued.
-      enqueued_job = {'class' => 'SubscribeUserJob', 'args' => [@user.id, @feed.fetch_url]}
-      Resque.stub(:peek).and_return enqueued_job
+      # Resque informs there is one more instance of SubscribeUserJob enqueued.
+      enqueued_job = {'class' => 'SubscribeUserJob', 'args' => [@user.id, 'http://some.url.com', nil, true]}
+      Resque.stub(:peek) do |queue, start|
+        if start == 0
+          enqueued_job
+        else
+          nil
+        end
+      end
 
       # Resque always informs there is only one running SubscribeUserJob running.
       this_job = {'payload' => {'class' => 'SubscribeUserJob', 'args' => [@user.id, @feed.fetch_url, @folder.id, true]}}
@@ -93,7 +99,6 @@ describe SubscribeUserJob do
 
     it 'updates number of processed feeds in the running import if the user is already subscribed to the feed' do
       @user.subscribe @feed.fetch_url
-      # running the job will raise an AlreadySubscribedError
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
       @user.reload
       @user.data_import.processed_feeds.should eq 6
@@ -125,7 +130,7 @@ describe SubscribeUserJob do
       @user.data_import.status.should eq DataImport::SUCCESS
     end
 
-    it 'leaves data impot as RUNNING if more SubscribeUserJob instances are enqueued' do
+    it 'leaves data import as RUNNING if more SubscribeUserJob instances are enqueued' do
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
       @user.reload
       @user.data_import.processed_feeds.should eq 6
@@ -134,7 +139,6 @@ describe SubscribeUserJob do
 
     it 'sets data import status to SUCCESS if no import-related jobs are running or enqueued' do
       Resque.stub(:peek).and_return nil
-      Resque.stub(:working).and_return []
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
       @user.reload
       @user.data_import.processed_feeds.should eq 6
