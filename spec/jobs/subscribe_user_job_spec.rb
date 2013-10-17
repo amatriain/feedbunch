@@ -61,9 +61,14 @@ describe SubscribeUserJob do
                                        total_feeds: 10, processed_feeds: 5
       @user.data_import = @data_import
 
-      # Resque always informs there is one more instance of SubscribeUserJob enqueued
+      # Resque always informs there is one more instance of SubscribeUserJob enqueued.
       enqueued_job = {'class' => 'SubscribeUserJob', 'args' => [@user.id, @feed.fetch_url]}
       Resque.stub(:peek).and_return enqueued_job
+
+      # Resque always informs there is only one running SubscribeUserJob running.
+      this_job = {'payload' => {'class' => 'SubscribeUserJob', 'args' => [@user.id, @feed.fetch_url, @folder.id, true]}}
+      @this_working_mock = double 'Working', job: this_job
+      Resque.stub(:working).and_return [@this_working_mock]
     end
 
     it 'does nothing if the user does not have a running data import' do
@@ -103,11 +108,9 @@ describe SubscribeUserJob do
     end
 
     it 'leaves data import as RUNNING if more SubscribeUserJob instances are running' do
-      this_job = {'payload' => {'class' => 'SubscribeUserJob', 'args' => [@user.id, @feed.fetch_url, @folder.id, true]}}
       another_job = {'payload' => {'class' => 'SubscribeUserJob', 'args' => [@user.id, 'http://another.url', @folder.id, true]}}
-      this_working_mock = double 'Working', job: this_job
       another_working_mock = double 'Working', job: another_job
-      Resque.stub(:working).and_return [this_working_mock, another_working_mock]
+      Resque.stub(:working).and_return [@this_working_mock, another_working_mock]
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
       @user.reload
       @user.data_import.processed_feeds.should eq 6
@@ -115,9 +118,6 @@ describe SubscribeUserJob do
     end
 
     it 'sets data import status to SUCCESS if this is the only SubscribeUserJob running and no other is enqueued' do
-      this_job = {'payload' => {'class' => 'SubscribeUserJob', 'args' => [@user.id, @feed.fetch_url, @folder.id, true]}}
-      this_working_mock = double 'Working', job: this_job
-      Resque.stub(:working).and_return [this_working_mock]
       Resque.stub(:peek).and_return nil
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true
       @user.reload
