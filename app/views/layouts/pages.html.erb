@@ -3,7 +3,11 @@
 
 <%= render 'layouts/header' %>
 
-<body ng-controller="PagesCtrl">
+<body
+    <% if user_signed_in? %>
+      class="navbar-visible"
+    <% end %>
+      ng-controller="PagesCtrl">
 
 <%= render 'layouts/navbar' %>
 

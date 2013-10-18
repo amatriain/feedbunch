@@ -3,7 +3,11 @@
 
 <%= render 'layouts/header' %>
 
-<body ng-controller="DeviseCtrl">
+<body
+    <% if user_signed_in? %>
+      class="navbar-visible"
+    <% end %>
+      ng-controller="DeviseCtrl">
 
 <%= render 'layouts/navbar' %>
 

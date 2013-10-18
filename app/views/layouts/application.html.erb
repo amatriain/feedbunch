@@ -3,7 +3,11 @@
 
 <%= render 'layouts/header' %>
 
-<body ng-controller="FeedbunchCtrl">
+<body
+    <% if user_signed_in? %>
+      class="navbar-visible"
+    <% end %>
+      ng-controller="FeedbunchCtrl">
 
 <%= render 'layouts/navbar' %>
 
