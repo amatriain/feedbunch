@@ -32,6 +32,7 @@ require 'subscriptions_manager'
 #
 # - admin: Boolean that indicates whether the user is an administrator. This attribute is used to restrict access to certain
 # functionality, like Resque administration.
+# - locale: locale (en, es etc) in which the user wants to see the application.
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -62,7 +63,10 @@ class User < ActiveRecord::Base
   has_many :entry_states, -> {uniq}, dependent: :destroy
   has_one :data_import, dependent: :destroy
 
+  validates :locale, presence: true
+
   before_save :encode_password
+  before_validation :default_locale
 
   ##
   # Retrieve entries from a feed. See EntryReader#feed_entries
@@ -136,6 +140,13 @@ class User < ActiveRecord::Base
 
   def encode_password
     self.encrypted_password.encode! 'utf-8'
+  end
+
+  ##
+  # Give the locale a default value of 'en'
+
+  def default_locale
+    self.locale = :en if !I18n.available_locales.include? self.locale
   end
 
   ##
