@@ -16,7 +16,11 @@ class ApplicationController < ActionController::Base
   #   config.i18n.fallbacks = true
 
   def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
+    if params[:locale].present?
+      I18n.locale = params[:locale]
+    else
+      I18n.locale = http_accept_language.compatible_language_from I18n.available_locales || I18n.default_locale
+    end
   end
 
   ##

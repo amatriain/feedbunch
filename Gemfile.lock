@@ -105,6 +105,7 @@ GEM
     high_voltage (1.2.4)
     highline (1.6.19)
     hike (1.2.3)
+    http_accept_language (2.0.0)
     i18n (0.6.5)
     jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
@@ -264,6 +265,7 @@ DEPENDENCIES
   feedzirra (= 0.2.0.rc2)
   god
   high_voltage
+  http_accept_language
   jquery-rails
   kaminari
   launchy

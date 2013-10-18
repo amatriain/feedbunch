@@ -64,6 +64,9 @@ gem 'cancan'
 # Manage zip files
 gem 'rubyzip'
 
+# Use the Accept-language HTTP header for i18n
+gem 'http_accept_language'
+
 group :test, :development do
   # Sqlite database for testing and development
   gem 'sqlite3'
