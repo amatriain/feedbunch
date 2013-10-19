@@ -1,0 +1,32 @@
+<div class="dropdown">
+  <!--<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+    <i class="icon-flag"></i>
+    <%= t 'devise.views.language' %>
+    <b class="caret"></b>
+  </a>-->
+  <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+    <% if I18n.locale == :en %>
+      <%= image_tag asset_path('flags/us.png'), class: 'locale-flag' %>
+      English
+      <b class="caret"></b>
+    <% elsif I18n.locale == :es %>
+      <%= image_tag asset_path('flags/es.png'), class: 'locale-flag' %>
+      Español
+      <b class="caret"></b>
+    <% end %>
+  </a>
+  <ul class="dropdown-menu text-left" role="menu" aria-labelledby="dropdownMenu">
+    <li>
+      <%= link_to url_for(locale: 'en') do %>
+        <%= image_tag asset_path('flags/us.png'), class: 'locale-flag' %>
+        English
+      <% end %>
+    </li>
+    <li>
+      <%= link_to url_for(locale: 'es') do %>
+        <%= image_tag asset_path('flags/es.png'), class: 'locale-flag' %>
+        Español
+      <% end %>
+    </li>
+  </ul>
+</div>

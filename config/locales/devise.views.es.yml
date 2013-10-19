@@ -10,7 +10,6 @@ es:
       new_confirmation: "¿No recibiste un email de confirmación?"
       unlock: "¿Necesitas desbloquear tu cuenta?"
       sign_in_with: "Acceder con %{provider}"
-      language: "Idioma"
       remember_me: "Recuérdame"
       resend_confirmation: "Confirmar dirección de email"
       send_password_reset: "Enviar email de cambio de contraseña"

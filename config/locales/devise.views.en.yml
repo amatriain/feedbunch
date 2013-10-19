@@ -10,7 +10,6 @@ en:
       new_confirmation: "You didn't receive a confirmation email?"
       unlock: "You need to unlock your account?"
       sign_in_with: "Sign in with %{provider}"
-      language: "Language"
       remember_me: "Remember me"
       resend_confirmation: "Confirm email address"
       send_password_reset: "Send password change email"

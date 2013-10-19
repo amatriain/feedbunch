@@ -37,27 +37,9 @@
 
 <div class="row">
   <div class="col-md-2 col-md-offset-9">
-    <div class="dropdown">
-      <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-        <i class="icon-flag"></i>
-        <%= t 'devise.views.language' %>
-        <b class="caret"></b>
-      </a>
-      <ul class="dropdown-menu text-left" role="menu" aria-labelledby="dropdownMenu">
-        <li>
-          <%= link_to url_for(locale: 'en') do %>
-            <%= image_tag asset_path('flags/us.png') %>
-            English
-          <% end %>
-        </li>
-        <li>
-          <%= link_to url_for(locale: 'es') do %>
-            <%= image_tag asset_path('flags/es.png') %>
-            Español
-          <% end %>
-        </li>
-      </ul>
-    </div>
+
+    <%= render 'layouts/locale_dropdown' %>
+
   </div>
 </div>
 
