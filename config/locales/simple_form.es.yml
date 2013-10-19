@@ -16,6 +16,7 @@ es:
         password: "Contraseña"
         password_confirmation: "Confirmar contraseña"
         current_password: "Contraseña actual"
+        locale: "Idioma"
       subscription:
         rss: "Feed"
       new_folder:

@@ -11,8 +11,18 @@
 #     ...
 #   <% end %>
 
-class FlagIconInput < SimpleForm::Inputs::Base
+class LocaleInput < SimpleForm::Inputs::Base
   def input
-    "<span class=\"input-group-addon\"><i class=\"icon-flag\"></i></span>#{@builder.input_field(attribute_name, collection: ['Español', 'English'])}".html_safe
+    "<span class=\"input-group-addon\"><i class=\"icon-flag\"></i></span>#{@builder.input_field(attribute_name, collection: I18n.available_locales, label_method: lambda{|loc| locale_name loc}, selected: I18n.locale)}".html_safe
+  end
+
+  private
+
+  def locale_name(locale)
+    if locale == :en
+      return 'English'
+    elsif locale == :es
+      return 'Español'
+    end
   end
 end
