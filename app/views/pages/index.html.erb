@@ -1,17 +1,25 @@
-<br>
-
 <div class="container">
-  <div class="jumbotron">
-    <div class="page-header">
-      <h1>
-        <%=
-            link_to root_url do
-              image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
-            end
-        %>
-        &nbsp;Feedbunch
-      </h1>
+  <div class="jumbotron index-jumbotron">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="page-header">
+          <h1>
+            <%=
+                link_to root_url do
+                  image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
+                end
+            %>
+            &nbsp;Feedbunch
+          </h1>
+        </div>
+      </div>
+      <div class="col-md-2">
+
+        <%= render 'layouts/locale_dropdown' %>
+
+      </div>
     </div>
+
     <div class="row">
       <div class="col-md-9 col-md-offset-1">
         <p class="lead"><%= t '.tagline' %></p>
