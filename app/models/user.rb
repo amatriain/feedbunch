@@ -146,7 +146,15 @@ class User < ActiveRecord::Base
   # Give the locale a default value of 'en'
 
   def default_locale
-    self.locale = :en if !I18n.available_locales.include? self.locale
+    # Convert the symbols for the available locales to strings, to be able to compare with the user locale
+    # NOTE.- don't do the opposite (converting the user locale to a symbol before checking if it's included in the
+    # array of available locales) because memory allocated for symbols is never released by ruby, which means an
+    # attacker could cause a memory leak by creating users with weird unavailable locales.
+    available_locales = I18n.available_locales.map {|l| l.to_s}
+    if !available_locales.include? self.locale
+      Rails.logger.info "User #{self.email} has unsupported locale #{self.locale}. Defaulting to locale #{'en'} instead"
+      self.locale = 'en'
+    end
   end
 
   ##
