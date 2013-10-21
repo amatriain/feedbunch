@@ -127,7 +127,7 @@ describe 'authentication' do
         # after password change, user should be logged in
         current_path.should eq read_path
         user_should_be_logged_in
-        click_on 'Logout'
+        logout_user
 
         # test that user cannot login with old password
         failed_login_user_for_feature @user.email, @user.password
@@ -160,7 +160,7 @@ describe 'authentication' do
 
         # test that user can login with old password
         login_user_for_feature @user
-        click_on 'Logout'
+        logout_user
 
         # test that user cannot login with new password
         failed_login_user_for_feature @user.email, new_password
@@ -391,14 +391,14 @@ describe 'authentication' do
         fill_in 'Email', with: new_email
         fill_in 'Current password', with: @user.password
         click_on 'Update account'
-        click_on 'Logout'
+        logout_user
 
         # test that a confirmation email is sent
         confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
 
         # test that before confirmation I can login with the old email
         login_user_for_feature @user
-        click_on 'Logout'
+        logout_user
 
         # test that after confirmation I cannot login with the old email
         visit confirmation_link
@@ -413,7 +413,7 @@ describe 'authentication' do
         new_email = 'new_email@test.com'
         fill_in 'Email', with: new_email
         click_on 'Update account'
-        click_on 'Logout'
+        logout_user
 
         # test that a confirmation email is not sent
         mail_should_not_be_sent
@@ -427,14 +427,14 @@ describe 'authentication' do
         fill_in 'Email', with: new_email
         fill_in 'Current password', with: 'wrong_password'
         click_on 'Update account'
-        click_on 'Logout'
+        logout_user
 
         # test that a confirmation email is not sent
         mail_should_not_be_sent
 
         # test that I can login with the old email
         login_user_for_feature @user
-        click_on 'Logout'
+        logout_user
       end
 
       it 'allows password change' do
@@ -443,7 +443,7 @@ describe 'authentication' do
         fill_in 'Confirm password', with: new_password
         fill_in 'Current password', with: @user.password
         click_on 'Update account'
-        click_on 'Logout'
+        logout_user
 
         # test that I cannot login with the old password
         failed_login_user_for_feature @user, @user.password
@@ -458,7 +458,7 @@ describe 'authentication' do
         fill_in 'New password', with: new_password
         fill_in 'Confirm password', with: new_password
         click_on 'Update account'
-        click_on 'Logout'
+        logout_user
 
         # test that I can login with the old password
         login_user_for_feature @user
@@ -470,7 +470,7 @@ describe 'authentication' do
         fill_in 'Confirm password', with: new_password
         fill_in 'Current password', with: 'wrong_password'
         click_on 'Update account'
-        click_on 'Logout'
+        logout_user
 
         # test that I can login with the old password
         login_user_for_feature @user
@@ -482,7 +482,7 @@ describe 'authentication' do
         fill_in 'Confirm password', with: 'different_new_password'
         fill_in 'Current password', with: @user.password
         click_on 'Update account'
-        click_on 'Logout'
+        logout_user
 
         # test that I can login with the old password
         login_user_for_feature @user
@@ -495,7 +495,21 @@ describe 'authentication' do
         User.all.blank?.should be_true
       end
 
-      it 'changes user language'
+      it 'changes user language', js: true do
+        # default language is english
+        page.should have_text 'Update account'
+
+        # change to spanish
+        fill_in 'Current password', with: @user.password
+        select 'Español', from: 'Language'
+        click_on 'Update account'
+        page.should have_text 'Accede con tu cuenta'
+        logout_user
+
+        # After relogin, app should be in spanish
+        login_user_for_feature @user
+        page.should have_text 'Bienvenido a Feedbunch'
+      end
 
     end
   end
