@@ -7,7 +7,7 @@
   <div class="col-md-10 col-md-offset-1 well">
     <div class="col-md-8">
       <%= simple_form_for resource, :as => resource_name,
-                          :url => user_unlock_path,
+                          :url => user_unlock_path(locale: I18n.locale),
                           html: {:method => :post} do |f| %>
         <%= f.input :email, as: :email_icon, autofocus: true %>
 

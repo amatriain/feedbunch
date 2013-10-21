@@ -5,7 +5,7 @@
         <div class="page-header">
           <h1>
             <%=
-                link_to root_url do
+                link_to root_url(locale: I18n.locale) do
                   image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
                 end
             %>
@@ -24,7 +24,7 @@
       <div class="col-md-9 col-md-offset-1">
         <p class="lead"><%= t '.tagline' %></p>
         <p>
-          <%= link_to t('.sign_up'), new_user_registration_path, class: 'btn btn-primary btn-lg', id: 'sign_up' %>
+          <%= link_to t('.sign_up'), new_user_registration_path(locale: I18n.locale), class: 'btn btn-primary btn-lg', id: 'sign_up' %>
           <%= t '.or' %> <%= link_to t('.sign_in'), read_path, id: 'sign_in' %>
         </p>
       </div>

@@ -30,7 +30,7 @@
       <h1>
 
         <%=
-            link_to root_url do
+            link_to root_url(locale: I18n.locale) do
               image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
             end
         %>

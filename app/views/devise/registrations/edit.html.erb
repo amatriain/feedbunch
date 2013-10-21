@@ -10,7 +10,7 @@
 <div class="row">
   <div class="col-md-10 col-md-offset-1 well">
     <%= simple_form_for resource, :as => resource_name,
-                        :url => profile_path,
+                        :url => profile_path(locale: I18n.locale),
                         html: {:method => :put, autocomplete: 'off'} do |f| %>
       <%= f.input :email, as: :email_icon, input_html: {autocomplete: 'off'} %>
       <%= f.input :password, as: :password_icon, hint: t('simple_form.hints.user.blank_password'),
@@ -43,7 +43,7 @@
       </div>
       <div class="panel-body col-lg-offset-1">
         <p><%= t 'devise.views.cancel_account_text' %></p>
-        <%= link_to profile_cancel_path,
+        <%= link_to profile_cancel_path(locale: I18n.locale),
                       :data => { :confirm => t('devise.views.cancel_account_confirm') }, :method => :delete,
                       class: 'btn btn-danger' do %>
           <i class="icon-trash"></i>
