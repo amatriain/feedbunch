@@ -33,6 +33,7 @@ require 'subscriptions_manager'
 # - admin: Boolean that indicates whether the user is an administrator. This attribute is used to restrict access to certain
 # functionality, like Resque administration.
 # - locale: locale (en, es etc) in which the user wants to see the application.
+# - timezone: name of the timezone (Europe/Madrid, UTC etc) to which the user wants to see times localized.
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -66,7 +67,7 @@ class User < ActiveRecord::Base
   validates :locale, presence: true
 
   before_save :encode_password
-  before_validation :default_locale
+  before_validation :default_values
 
   ##
   # Retrieve entries from a feed. See EntryReader#feed_entries
@@ -143,17 +144,24 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Give the locale a default value of 'en'
+  # Give the locale a default value of 'en' and
+  # the timezone a default value of 'UTC'
 
-  def default_locale
+  def default_values
     # Convert the symbols for the available locales to strings, to be able to compare with the user locale
     # NOTE.- don't do the opposite (converting the user locale to a symbol before checking if it's included in the
     # array of available locales) because memory allocated for symbols is never released by ruby, which means an
     # attacker could cause a memory leak by creating users with weird unavailable locales.
     available_locales = I18n.available_locales.map {|l| l.to_s}
     if !available_locales.include? self.locale
-      Rails.logger.info "User #{self.email} has unsupported locale #{self.locale}. Defaulting to locale #{'en'} instead"
+      Rails.logger.info "User #{self.email} has unsupported locale #{self.locale}. Defaulting to locale 'en' instead"
       self.locale = 'en'
+    end
+
+    timezone_names = ActiveSupport::TimeZone.all.map{|tz| tz.name}
+    if !timezone_names.include? self.timezone
+      Rails.logger.info "User #{self.email} has unsupported timezone #{self.timezone}. Defaulting to timezone 'UTC' instead"
+      self.timezone = 'UTC'
     end
   end
 

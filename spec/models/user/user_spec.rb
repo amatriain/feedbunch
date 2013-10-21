@@ -189,4 +189,20 @@ describe User do
 
   end
 
+  context 'timezone' do
+
+    it 'gives a default UTC timezone' do
+      user = FactoryGirl.build :user, timezone: nil
+      user.save!
+      user.timezone.should eq 'UTC'
+    end
+
+    it 'defaults to UTC if the passed timezone is not supported' do
+      user = FactoryGirl.build :user, timezone: 'Amber/Castle Amber'
+      user.save!
+      user.timezone.should eq 'UTC'
+    end
+
+  end
+
 end
