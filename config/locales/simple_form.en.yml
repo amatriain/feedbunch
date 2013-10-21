@@ -17,6 +17,7 @@ en:
         password_confirmation: "Confirm password"
         current_password: "Current password"
         locale: "Language"
+        timezone: "Time zone"
       subscription:
         rss: "Feed"
       new_folder:

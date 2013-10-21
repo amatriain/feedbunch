@@ -7,7 +7,7 @@
 # This class is intended to be used from simple_form[https://github.com/plataformatec/simple_form] forms like this:
 #
 #   <%= simple_form_for user, wrapper: :prepend do %>
-#     <%= f.input :email, as: :email_icon %>
+#     <%= f.input :locale, as: :locale %>
 #     ...
 #   <% end %>
 
