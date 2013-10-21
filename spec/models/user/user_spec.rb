@@ -178,13 +178,13 @@ describe User do
     it 'gives a default english locale' do
       user = FactoryGirl.build :user, locale: nil
       user.save!
-      user.locale.should eq :en
+      user.locale.should eq 'en'
     end
 
     it 'defaults to english if the passed locale is not supported' do
       user = FactoryGirl.build :user, locale: 'not-supported-locale'
       user.save!
-      user.locale.should eq :en
+      user.locale.should eq 'en'
     end
 
   end
