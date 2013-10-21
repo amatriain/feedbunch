@@ -11,16 +11,17 @@ class ApplicationController < ActionController::Base
 
   ##
   # Set locale for the current request.
-  # If a "locale" parameter is passed, this will be the value used. Otherwise the default locale :en will be used.
   #
-  # If the locale passed does not exist, the default locale :en will be used if the following is set in application.rb:
-  #   config.i18n.fallbacks = true
+  # The locale selected by the currently authenticated user, if any, takes precedence.
+  # Otherwise if a "locale" parameter is passed, this will be the value used.
+  # Otherwise the first available locale from the accept-language header sent by the client will be used.
+  # If no locale is available from the accept-language header, english locale will the last fallback.
 
   def set_locale
-    if params[:locale].present?
-      I18n.locale = params[:locale]
-    elsif current_user.try(:locale)
+    if current_user.try(:locale)
       I18n.locale = current_user.locale
+    elsif params[:locale].present?
+      I18n.locale = params[:locale]
     else
       I18n.locale = http_accept_language.compatible_language_from I18n.available_locales || I18n.default_locale
     end
