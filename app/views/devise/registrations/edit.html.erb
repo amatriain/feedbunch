@@ -29,6 +29,7 @@
                   input_html: {autocomplete: 'off'} %>
       <hr>
       <%= f.input :locale, as: :locale, required: false %>
+      <%= f.input :timezone, as: :timezone_clock_icon %>
       <hr>
       <%= f.input :current_password, as: :password_icon,
                   placeholder: t('simple_form.placeholders.user.current_password'),
