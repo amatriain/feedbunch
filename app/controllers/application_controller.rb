@@ -28,6 +28,14 @@ class ApplicationController < ActionController::Base
   end
 
   ##
+  # Locale parameter is appended to all generated URLs. This way even Devise redirects
+  # preserve the currently selected locale.
+
+  def self.default_url_options(options={})
+    options.merge({ :locale => I18n.locale })
+  end
+
+  ##
   # After a successful login, a user is redirected to the feeds list
 
   def after_sign_in_path_for(resource)
