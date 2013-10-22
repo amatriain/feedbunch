@@ -12,7 +12,7 @@ en:
       sign_in_with: "Sign in with %{provider}"
       remember_me: "Remember me"
       resend_confirmation: "Confirm email address"
-      send_password_reset: "Send password change email"
+      send_password_reset: "Send password reset email"
       send_unlock: "Send unlock email"
       edit_account: "My account"
       unconfirmed_email: "currently waiting confirmation for: %{email}"

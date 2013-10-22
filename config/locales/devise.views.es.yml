@@ -6,7 +6,7 @@ es:
       sign_up_link: "¿Aún no tienes una cuenta?"
       sign_up: "Crear cuenta"
       forgot_password_link: "¿Olvidaste tu contraseña?"
-      forgot_password: "Regenerar contraseña"
+      forgot_password: "Cambiar contraseña"
       new_confirmation: "¿No recibiste un email de confirmación?"
       unlock: "¿Necesitas desbloquear tu cuenta?"
       sign_in_with: "Acceder con %{provider}"

@@ -48,7 +48,13 @@ en:
         confirm_link: "Confirm my account"
         note_html: "You are receiving this email because somebody has attempted to register an account at %{link} using this email address. If you didn't try to sign up at %{link} please ignore this email."
       reset_password_instructions:
-        subject: "Reset password instructions"
+        subject: "Reset Feedbunch password"
+        header: "A password reset has been requested"
+        hello: "Hello, %{name}."
+        change: "If you want to reset your Feedbunch password, click on this link:"
+        change_link: "Reset my password"
+        note_1_html: "You are receiving this email because somebody has requested a reset of the password for account %{name} at %{link}."
+        note_2_html: "If you didn't request a password reset at %{link} please ignore this email."
       unlock_instructions:
         subject: "Unlock Instructions"
   errors:

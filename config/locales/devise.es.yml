@@ -44,7 +44,13 @@ es:
         confirm_link: "Confirmar mi cuenta"
         note_html: "Has recibido este email porque alguien ha intentado registrar una cuenta en %{link} usando esta dirección de email. Si no has intentado darte de alta en %{link} por favor ignora este email."
       reset_password_instructions:
-        subject: 'Instrucciones de cambio de contraseña'
+        subject: "Cambio de contraseña en Feedbunch"
+        header: "Se ha solicitado un cambio de contraseña"
+        hello: "Hola, %{name}"
+        change: "Si deseas cambiar tu contraseña en Feedbunch, haz click en este enlace:"
+        change_link: "Cambiar mi contraseña"
+        note_1_html: "Has recibido este email porque alguien ha solicitado un cambio de la contraseña de la cuenta %{name} en %{link}."
+        note_2_html: "Si no solicitaste un cambio de contraseña en %{link} por favor ignora este email."
       unlock_instructions:
         subject: 'Instrucciones de desbloqueo'
   errors:
