@@ -63,16 +63,6 @@ describe ImportSubscriptionsJob do
     @user.data_import.status.should eq DataImport::ERROR
   end
 
-  it 'sends an email if it finishes with an error' do
-    # Remove emails stil in the mail queue
-    ActionMailer::Base.deliveries.clear
-    not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
-    file_contents = File.read not_valid_opml_filename
-    Feedbunch::Application.config.uploads_manager.stub read: file_contents
-    ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id
-    mail_should_be_sent to: @user.email, text: 'Unfortunately we haven\'t been able to import your subscriptions into Feedbunch'
-  end
-
   it 'does nothing if the user does not exist' do
     Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, 1234567890
@@ -170,13 +160,11 @@ describe ImportSubscriptionsJob do
     end
 
     it 'sends an email if it finishes with an error' do
-      # Remove emails stil in the mail queue
-      ActionMailer::Base.deliveries.clear
       not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
       file_contents = File.read not_valid_opml_filename
       Feedbunch::Application.config.uploads_manager.stub read: file_contents
       ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id
-      mail_should_be_sent to: @user.email, text: 'Unfortunately we haven\'t been able to import your subscriptions into Feedbunch'
+      mail_should_be_sent to: @user.email, text: 'There has been an error importing your feed subscriptions into Feedbunch'
     end
   end
 
