@@ -109,7 +109,7 @@ describe 'authentication' do
 
       it 'allows password reset' do
         fill_in 'Email', with: @user.email
-        click_on 'Send password change email'
+        click_on 'Send password reset email'
 
         # test that a confirmation email is sent
         email_change_link = mail_should_be_sent path: edit_user_password_path, to: @user.email
@@ -139,7 +139,7 @@ describe 'authentication' do
 
       it 'does not allow password change if both fields do not match' do
         fill_in 'Email', with: @user.email
-        click_on 'Send password change email'
+        click_on 'Send password reset email'
 
         # test that a confirmation email is sent
         email_change_link = mail_should_be_sent path: edit_user_password_path, to: @user.email
@@ -169,7 +169,7 @@ describe 'authentication' do
 
       it 'does not send password change email to an unregistered address' do
         fill_in 'Email', with: 'unregistered_email@test.com'
-        click_on 'Send password change email'
+        click_on 'Send password reset email'
 
         # test that a confirmation email is not sent
         mail_should_not_be_sent
