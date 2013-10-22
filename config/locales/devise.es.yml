@@ -53,7 +53,14 @@ es:
         note_1_html: "Has recibido este email porque alguien ha solicitado un cambio de la contraseña de la cuenta %{name} en %{link}."
         note_2_html: "Si no solicitaste un cambio de contraseña en %{link} por favor ignora este email."
       unlock_instructions:
-        subject: 'Instrucciones de desbloqueo'
+        subject: "Desbloqueo de cuenta en Feedbunch"
+        header: "Tu cuenta en Feedbunch ha sido bloqueada"
+        hello: "Hola, %{name}."
+        locked: "Tu cuenta ha sido bloqueada debido a un número excesivo de intentos de acceso fallidos."
+        unlock: "Haz click en este enlace para desbloquear tu cuenta:"
+        unlock_link: "Desbloquear mi cuenta"
+        note_1_html: "Has recibido este email porque tu cuenta %{name} en %{link} ha sido bloqueada."
+        note_2_html: "No podrás utilizar tu cuenta en %{link} hasta que sea desbloqueada siguiendo estas instrucciones."
   errors:
     messages:
       expired: "ha expirado, por favor pide una nueva"

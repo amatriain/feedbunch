@@ -57,7 +57,14 @@ en:
         note_1_html: "You are receiving this email because somebody has requested a reset of the password for account %{name} at %{link}."
         note_2_html: "If you didn't request a password reset at %{link} please ignore this email."
       unlock_instructions:
-        subject: "Unlock Instructions"
+        subject: "Feedbunch account unlock"
+        header: "Your Feedbunch account has been locked"
+        hello: "Hello, %{name}."
+        locked: "Your account has been locked due to an excessive number of unsuccessful sign in attempts."
+        unlock: "Click on this link to unlock your account:"
+        unlock_link: "Unlock my account"
+        note_1_html: "You are receiving this email because your account %{name} at %{link} has been locked."
+        note_2_html: "You won't be able to use your account at %{link} until it is unlocked following these instructions."
   errors:
     messages:
       already_confirmed: "was already confirmed, please try signing in"
