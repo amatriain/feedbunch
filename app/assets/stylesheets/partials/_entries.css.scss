@@ -2,9 +2,13 @@
   text-decoration: none;
 }
 
-#feed-entries .entry{
+#feed-entries .entry {
   margin-top: -1px;
   margin-bottom: -1px;
+}
+
+#feed-entries .entry > a {
+  padding-bottom: 5px;
 }
 
 .entry a.entry-unread{
