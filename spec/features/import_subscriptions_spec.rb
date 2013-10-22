@@ -47,14 +47,6 @@ describe 'import subscriptions' do
       page.should have_css '.navbar a#nav-data-import', visible: true
     end
 
-    it 'opens popup even if user is not in feeds index view', js: true do
-      visit edit_user_registration_path
-      open_user_menu
-      page.should have_css '.navbar a#nav-data-import'
-      find('.navbar a#nav-data-import').click
-      page.should have_css '#data-import-popup', visible: true
-    end
-
   end
 
   context 'user uploads file' do
