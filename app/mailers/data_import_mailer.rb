@@ -7,7 +7,9 @@ class DataImportMailer < ActionMailer::Base
   def import_finished_success_email(user)
     @user = user
     @url = read_url
-    mail to: @user.email
+    I18n.with_locale user.locale do
+      mail to: @user.email
+    end
   end
 
   ##
@@ -16,6 +18,8 @@ class DataImportMailer < ActionMailer::Base
   def import_finished_error_email(user)
     @user = user
     @url = read_url
-    mail to: @user.email
+    I18n.with_locale user.locale do
+      mail to: @user.email
+    end
   end
 end
