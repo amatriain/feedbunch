@@ -4,10 +4,10 @@
 <%= render 'layouts/header' %>
 
 <body
-    <% if user_signed_in? %>
-      class="navbar-visible"
-    <% end %>
-      ng-controller="DeviseCtrl">
+  <% if user_signed_in? %>
+    class="navbar-visible"
+  <% end %>
+    ng-controller="DeviseCtrl">
 
 <%= render 'layouts/navbar' %>
 
@@ -19,8 +19,6 @@
 
   </div>
 </div>
-
-<%= render 'layouts/popups/import_subscriptions_form' %>
 
 <div class="page-header container">
   <div class="row">
