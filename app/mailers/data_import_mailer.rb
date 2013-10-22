@@ -7,7 +7,7 @@ class DataImportMailer < ActionMailer::Base
   def import_finished_success_email(user)
     @user = user
     @url = read_url
-    mail to: @user.email, subject: 'Your feed subscriptions have been imported into Feedbunch'
+    mail to: @user.email
   end
 
   ##
@@ -16,6 +16,6 @@ class DataImportMailer < ActionMailer::Base
   def import_finished_error_email(user)
     @user = user
     @url = read_url
-    mail to: @user.email, subject: 'There has been an error importing your feed subscriptions into Feedbunch'
+    mail to: @user.email
   end
 end

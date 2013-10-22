@@ -1,0 +1,19 @@
+# I18n strings for mailers
+en:
+  data_import_mailer:
+    import_finished_success_email:
+      subject: "Your feed subscriptions have been imported into Feedbunch"
+      header: "Your feed subscriptions have been imported into Feedbunch"
+      body_1: "Good news, %{name}: we have finished importing your feed subscriptions into Feedbunch."
+      body_2_html: "You are now subscribed to %{count} feeds. To read them, just %{link}."
+      app_link: "click here"
+      body_3: "Thanks for using Feedbunch and have a great day!"
+    import_finished_error_email:
+      subject: "There has been an error importing your feed subscriptions into Feedbunch"
+      header: "There has been an error importing your feed subscriptions into Feedbunch"
+      body_1: "We're sorry %{name}, but unfortunately we haven't been able to import your subscriptions into Feedbunch."
+      body_2_html: "If you're sure that the subscriptions file you uploaded to Feedbunch is correct, you can %{link}."
+      try_again_link: "try again"
+      body_3_html: "You are currently subscribed to %{count} feeds; to read them, just %{link}."
+      app_link: "click here"
+      body_4: "Thanks for using Feedbunch and have a great day!"
