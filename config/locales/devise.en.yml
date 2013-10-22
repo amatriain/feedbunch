@@ -42,7 +42,11 @@ en:
       unlocked: "Your account has been unlocked successfully. Please sign in to continue."
     mailer:
       confirmation_instructions:
-        subject: "Confirmation instructions"
+        subject: "Feedbunch signup confirmation"
+        header: "Welcome to Feedbunch, %{name} !"
+        confirmation: "Before you can use Feedbunch you have to confirm your account clicking on this link:"
+        confirm_link: "Confirm my account"
+        note_html: "You are receiving this email because somebody has attempted to register an account at %{link} using this email address. If you didn't try to sign up at %{link} please ignore this email."
       reset_password_instructions:
         subject: "Reset password instructions"
       unlock_instructions:

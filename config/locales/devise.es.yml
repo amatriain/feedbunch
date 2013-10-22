@@ -38,7 +38,11 @@ es:
       send_paranoid_instructions: 'Si tu cuenta existe, recibirás instrucciones para desbloquear tu cuenta en unos minutos'
     mailer:
       confirmation_instructions:
-        subject: 'Instrucciones de confirmación'
+        subject: 'Confirmación de alta en Feedbunch'
+        header: "Bienvenido a Feedbunch, %{name} !"
+        confirmation: "Antes de poder usar Feedbunch tienes que confirmar tu cuenta haciendo click en este enlace:"
+        confirm_link: "Confirmar mi cuenta"
+        note_html: "Has recibido este email porque alguien ha intentado registrar una cuenta en %{link} usando esta dirección de email. Si no has intentado darte de alta en %{link} por favor ignora este email."
       reset_password_instructions:
         subject: 'Instrucciones de cambio de contraseña'
       unlock_instructions:
