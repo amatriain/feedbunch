@@ -4,4 +4,8 @@
 
 <p><h2><%= link_to t('devise.mailer.confirmation_instructions.confirm_link'), confirmation_url(:confirmation_token => @token, locale: I18n.locale) %></h2></h2></p>
 
-<p><small><%= t 'devise.mailer.confirmation_instructions.note_html', link: link_to('feedbunch.com', root_url(locale: I18n.locale)) %></small></p>
+<% link_feedbunch = link_to 'Feedbunch', root_url(locale: I18n.locale) %>
+
+<p><small><%= t 'devise.mailer.confirmation_instructions.note_1_html', link: link_feedbunch, name: @email %></small></p>
+
+<p><small><%= t 'devise.mailer.confirmation_instructions.note_2_html', link: link_feedbunch %></small></p>
