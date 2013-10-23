@@ -70,6 +70,13 @@ class User < ActiveRecord::Base
   before_validation :default_values
 
   ##
+  # Retrieves feeds with unread entries.
+
+  def unread_feeds
+    return self.feeds.where('unread_entries > 0')
+  end
+
+  ##
   # Retrieve entries from a feed. See EntryReader#feed_entries
 
   def feed_entries(feed, include_read: false, page: nil)

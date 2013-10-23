@@ -13,18 +13,36 @@ describe User do
   end
 
   context 'relationship with feeds' do
+
+    before :each do
+      @feed1 = FactoryGirl.create :feed
+      @feed2 = FactoryGirl.create :feed
+      @feed3 = FactoryGirl.create :feed
+      @user.subscribe @feed1.fetch_url
+      @user.subscribe @feed2.fetch_url
+
+      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @feed1.entries << @entry1
+      @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @feed2.entries << @entry2
+
+      entry_state2 = EntryState.where(user_id: @user.id, entry_id: @entry2.id).first
+      entry_state2.update read: true
+    end
+
     it 'returns feeds the user is suscribed to' do
-      feed1 = FactoryGirl.create :feed
-      feed2 = FactoryGirl.create :feed
-      @user.subscribe feed1.fetch_url
-      @user.subscribe feed2.fetch_url
-      @user.feeds.include?(feed1).should be_true
-      @user.feeds.include?(feed2).should be_true
+      @user.feeds.include?(@feed1).should be_true
+      @user.feeds.include?(@feed2).should be_true
     end
 
     it 'does not return feeds the user is not suscribed to' do
-      feed = FactoryGirl.create :feed
-      @user.feeds.include?(feed).should be_false
+      @user.feeds.include?(@feed3).should be_false
+    end
+
+    it 'returns feeds with unread entries' do
+      feeds = @user.unread_feeds
+      feeds.include?(@feed1).should be_true
+      feeds.include?(@feed2).should be_false
     end
   end
 

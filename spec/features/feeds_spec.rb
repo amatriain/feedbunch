@@ -133,6 +133,7 @@ describe 'feeds' do
     end
 
     it 'shows an alert if the feed clicked has no entries', js: true do
+      pending 'currently not showing feeds without entries'
       feed3 = FactoryGirl.create :feed
       @user.subscribe feed3.fetch_url
       visit read_path
