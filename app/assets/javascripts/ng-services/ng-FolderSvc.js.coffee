@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'folderSvc',
-['$rootScope', '$http', 'findSvc', 'currentFeedSvc', 'timerFlagSvc', 'openFolderSvc',
-($rootScope, $http, findSvc, currentFeedSvc, timerFlagSvc, openFolderSvc)->
+['$rootScope', '$http', 'findSvc', 'currentFeedSvc', 'timerFlagSvc', 'openFolderSvc', 'feedsFoldersSvc',
+($rootScope, $http, findSvc, currentFeedSvc, timerFlagSvc, openFolderSvc, feedsFoldersSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Update the model to account for a feed having been removed from a folder
@@ -63,7 +63,7 @@ angular.module('feedbunch').service 'folderSvc',
       if title
         $http.post("/folders.json", folder: {feed_id: currentFeedSvc.get().id, title: title})
         .success (data)->
-          $rootScope.folders.push data
+          feedsFoldersSvc.add_folder data
           old_folder_id = currentFeedSvc.get().folder_id
           currentFeedSvc.get().folder_id = data.id
           feed_removed currentFeedSvc.get(), old_folder_id

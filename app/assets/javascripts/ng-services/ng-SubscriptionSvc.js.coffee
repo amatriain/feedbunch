@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'subscriptionSvc',
 ['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'findSvc', 'folderSvc', 'timerFlagSvc',
-'scrollSvc', 'entriesPaginationSvc', 'openFolderSvc',
+'scrollSvc', 'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc',
 ($rootScope, $http, currentFeedSvc, currentFolderSvc, readSvc, findSvc, folderSvc, timerFlagSvc,
-scrollSvc, entriesPaginationSvc, openFolderSvc)->
+scrollSvc, entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
@@ -22,7 +22,7 @@ scrollSvc, entriesPaginationSvc, openFolderSvc)->
       $http.post('/feeds.json', feed:{url: url})
       .success (data)->
         entriesPaginationSvc.set_busy false
-        $rootScope.feeds.push data
+        feedsFoldersSvc.add_feed data
         currentFeedSvc.set data
         readSvc.read_entries_page()
 
