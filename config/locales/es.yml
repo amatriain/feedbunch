@@ -9,6 +9,7 @@ es:
       or: "o"
       sign_in: "Accede con tu cuenta"
   layouts:
+    noscript: "Tu navegador no soporta JavaScript. Feedbunch necesita JavaScript para funcionar correctamente."
     application:
       logout: "Salir"
       background_jobs: "Tareas en background"

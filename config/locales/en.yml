@@ -30,6 +30,7 @@ en:
       or: "or"
       sign_in: "Sign in"
   layouts:
+    noscript: "Your browser does not support JavaScript. Feedbunch needs JavaScript to work correctly."
     application:
       logout: "Logout"
       background_jobs: "Background jobs"
