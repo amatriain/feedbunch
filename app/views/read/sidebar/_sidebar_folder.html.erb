@@ -13,7 +13,7 @@
     <i class="folder pull-left" ng-class="{'icon-folder-open-alt':current_open_folder==folder, 'icon-folder-close-alt': current_open_folder!=folder}"></i>
     &nbsp;<span class="sidebar-folder-title">{{folder.title}}</span>
     <i class="folder-arrow pull-right" ng-class="{'icon-chevron-down':current_open_folder==folder, 'icon-chevron-right': current_open_folder!=folder}"></i>
-    <span class="folder-unread-badge badge pull-right" ng-show="feeds">{{folder_unread_entries(folder) | numberBadgeFltr}}</span>
+    <span class="folder-unread-badge badge pull-right" ng-show="feeds_loaded">{{folder_unread_entries(folder) | numberBadgeFltr}}</span>
 
   </a>
 
@@ -21,10 +21,10 @@
     <div class="panel-body">
 
       <%# Animated spinner while feeds are loading %>
-      <i class="icon-spinner icon-spin" ng-show="!feeds"></i>
+      <i class="icon-spinner icon-spin" ng-show="!feeds_loaded"></i>
 
       <%# Content of the folder %>
-      <ul class="nav nav-pills nav-stacked" ng-show="feeds">
+      <ul class="nav nav-pills nav-stacked" ng-show="feeds_loaded">
 
         <%= render 'read/sidebar/sidebar_folder_read_all' %>
 
