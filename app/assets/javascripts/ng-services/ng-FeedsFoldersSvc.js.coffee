@@ -12,6 +12,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     $http.get('/folders.json')
     .success (data)->
       $rootScope.folders = data
+      $rootScope.folders_loaded = true
     .error ->
       timerFlagSvc.start 'error_loading_folders'
 
