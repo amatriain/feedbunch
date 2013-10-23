@@ -1,3 +1,5 @@
+require 'old_entry_cleaner'
+
 ##
 # Background job to fetch and update a feed's entries.
 #
@@ -25,6 +27,7 @@ class UpdateFeedJob
     feed = Feed.find feed_id
 
     FeedClient.fetch feed, false if Feed.exists? feed_id
+    OldEntryCleaner.cleanup feed
   end
 
   ##

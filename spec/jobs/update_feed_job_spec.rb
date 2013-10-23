@@ -43,4 +43,67 @@ describe UpdateFeedJob do
     UpdateFeedJob.unschedule_feed_updates @feed.id
   end
 
+  context 'cleanup old entries' do
+
+    before :each do
+      FeedClient.stub :fetch
+      DateTime.stub(:now).and_return DateTime.new(2000, 1, 1)
+    end
+
+    it 'destroys entries older than a year' do
+      old_entries = []
+      (0..10).each do |i|
+        old_entry = FactoryGirl.build :entry, feed_id: @feed.id, published: DateTime.new(1990, 1, 1+i)
+        @feed.entries << old_entry
+        old_entries << old_entry
+      end
+
+      UpdateFeedJob.perform @feed.id
+      Entry.exists?(old_entries[0].id).should be_false
+    end
+
+    it 'keeps 10 entries per feed' do
+      old_entries = []
+      (0..10).each do |i|
+        old_entry = FactoryGirl.build :entry, feed_id: @feed.id, published: DateTime.new(1990, 1, 1+i)
+        @feed.entries << old_entry
+        old_entries << old_entry
+      end
+
+      UpdateFeedJob.perform @feed.id
+      (1..10).each do |i|
+        Entry.exists?(old_entries[i].id).should be_true
+      end
+    end
+
+    it 'does not destroy entries newer than a year' do
+      entries = []
+      (0..10).each do |i|
+        entry = FactoryGirl.build :entry, feed_id: @feed.id, published: DateTime.new(1999, 1, 1+i)
+        @feed.entries << entry
+        entries << entry
+      end
+
+      UpdateFeedJob.perform @feed.id
+      (0..10).each do |i|
+        Entry.exists?(entries[i].id).should be_true
+      end
+    end
+
+    it 'does not destroy entries if there are less than 10' do
+      old_entries = []
+      (0..5).each do |i|
+        old_entry = FactoryGirl.build :entry, feed_id: @feed.id, published: DateTime.new(1990, 1, 1+i)
+        @feed.entries << old_entry
+        old_entries << old_entry
+      end
+
+      UpdateFeedJob.perform @feed.id
+      (0..5).each do |i|
+        Entry.exists?(old_entries[i].id).should be_true
+      end
+    end
+
+  end
+
 end
