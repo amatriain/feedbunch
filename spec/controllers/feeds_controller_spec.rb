@@ -7,10 +7,13 @@ describe FeedsController do
 
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
+    @feed3 = FactoryGirl.create :feed
     @user.subscribe @feed1.fetch_url
+    @user.subscribe @feed3.fetch_url
 
-    @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @feed1.entries << @entry1
+    @entry_1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @entry_1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @feed1.entries << @entry_1_1 << @entry_1_2
     @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
     @feed2.entries << @entry2
 
@@ -32,15 +35,19 @@ describe FeedsController do
       get :index, format: :json
       assigns(:feeds).should eq [@feed1]
     end
+
+    it 'assigns to @feeds only feeds with unread entries' do
+      get :index, format: :json
+      assigns(:feeds).should eq [@feed1]
+    end
+
+    it 'assigns to @feeds all feeds if requested' do
+      get :index, include_read: 'true', format: :json
+      assigns(:feeds).should eq [@feed1, @feed3]
+    end
   end
 
   context 'GET show' do
-
-    before :each do
-      @entry_1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @entry_1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @feed1.entries << @entry_1_1 << @entry_1_2
-    end
 
     it 'assigns to @feed the correct feed' do
       get :show, id: @feed1.id, format: :json

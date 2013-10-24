@@ -11,7 +11,12 @@ class FeedsController < ApplicationController
   # Return JSON with the list of feeds subscribed by the current user
 
   def index
-    @feeds = current_user.unread_feeds
+    if params[:include_read]=='true'
+      @feeds = current_user.feeds
+    else
+      @feeds = current_user.unread_feeds
+    end
+
     render 'index', locals: {user: current_user, feeds: @feeds}
   rescue => e
     handle_error e
