@@ -1,5 +1,5 @@
 <li id="folder-{{folder.id}}-all-feeds"
-    ng-class="{active: current_folder==folder}">
+    ng-class="{active: current_folder.id==folder.id}">
   <a data-sidebar-feed
      data-feed-id="all"
      ng-click="set_current_folder(folder)">

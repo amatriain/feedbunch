@@ -11,7 +11,7 @@ currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc,
 findSvc)->
 
   # Show Add Subscription button in this view
-  $rootScope.show_add_subscription = true
+  $rootScope.show_feed_buttons = true
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.load_data()
@@ -43,6 +43,13 @@ findSvc)->
     $("#subscribe-feed-popup").modal 'hide'
     subscriptionSvc.subscribe $scope.subscription_url
     $scope.subscription_url = null
+
+  #--------------------------------------------
+  # Reload feeds. Receives a boolean argument to indicate if
+  # we want to load all feeds (true) or only feeds with unread entries (false).
+  #--------------------------------------------
+  $scope.load_feeds = (include_read)->
+    feedsFoldersSvc.load_feeds include_read
 
   #--------------------------------------------
   # Remove a feed from a folder

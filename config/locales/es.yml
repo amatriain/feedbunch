@@ -36,6 +36,8 @@ es:
       subscribe_title: "Añadir nueva suscripción"
       subscribe_close: "Cancelar"
       subscribe_submit: "Añadir"
+      show_read_feeds_button: "Mostrar feeds leídos"
+      hide_read_feeds_button: "Ocultar feeds leídos"
       unsubscribe_title: "Anular suscripción"
       unsubscribe_confirm: "¿Está seguro de que quiere anular su suscripción a este feed?"
       unsubscribe_cancel: "Cancelar"
@@ -60,7 +62,7 @@ es:
       mark_unread: "Marcar como no leído"
   start:
     welcome: "Bienvenido a Feedbunch"
-    stats: "Estás suscrito a %{feeds} feeds con %{entries} entradas sin leer."
+    stats: "Mostrando %{feeds} feeds con %{entries} entradas sin leer."
     read: "Para leer un feed, haz click en su título en la barra lateral."
     import:
       introduction: "Si quieres importar tus suscripciones a feeds desde otro servicio:"
