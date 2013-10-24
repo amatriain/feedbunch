@@ -5,6 +5,8 @@ describe 'import subscriptions' do
     @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
     @user.subscribe @feed.fetch_url
+    @entry = FactoryGirl.build :entry, feed_id: @feed.id
+    @feed.entries << @entry
 
     login_user_for_feature @user
     visit read_path
@@ -130,6 +132,8 @@ describe 'import subscriptions' do
       folder = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder
       feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
       @user.subscribe feed.fetch_url
       folder.feeds << feed
       @user.data_import.status = DataImport::SUCCESS

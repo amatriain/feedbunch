@@ -9,6 +9,11 @@ describe FeedsController do
     @feed2 = FactoryGirl.create :feed
     @user.subscribe @feed1.fetch_url
 
+    @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @feed1.entries << @entry1
+    @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
+    @feed2.entries << @entry2
+
     @folder1 = FactoryGirl.build :folder, user_id: @user.id
     @folder2 = FactoryGirl.create :folder
     @user.folders << @folder1

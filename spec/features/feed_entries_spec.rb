@@ -148,13 +148,11 @@ describe 'feed entries' do
       mark_all_as_read
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      unread_feed_entries_should_eq @feed.id, 0
 
-      # On refresh, no entries should appear for @feed
+      # On refresh @feed should not appear
       visit read_path
-      read_feed @feed.id
-      page.should_not have_content @entry1.title
-      page.should_not have_content @entry2.title
-      page.should_not have_css '[data-entry-id]'
+      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
     end
 
     it 'marks an entry as unread', js: true do
@@ -301,13 +299,11 @@ describe 'feed entries' do
       mark_all_as_read
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      unread_feed_entries_should_eq @feed.id, 0
 
-      # On refresh, no entries should appear for @feed
+      # On refresh @feed should not appear
       visit read_path
-      read_feed @feed.id
-      (0..29).each do |i|
-        page.should_not have_content @entries[i].title
-      end
+      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
     end
 
   end
