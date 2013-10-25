@@ -37,10 +37,10 @@ describe 'feeds' do
     end
 
     it 'shows feeds in the sidebar', js: true do
-      within "#sidebar #folder-all a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false do
+      within "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false do
         page.should have_text @feed1.title, visible: false
       end
-      within "#sidebar #folder-all a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false do
+      within "#sidebar #folder-none a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false do
         page.should have_text @feed2.title, visible: false
       end
     end
@@ -57,12 +57,12 @@ describe 'feeds' do
     end
 
     it 'shows entries menu button when a feed is selected', js: true do
-      read_feed @feed1.id
+      read_feed @feed1.id, @folder1.id
       page.should have_css '#entries-management', visible: true
     end
 
     it 'shows entries for a feed in the All Subscriptions folder', js: true do
-      read_feed @feed2.id, 'all'
+      read_feed @feed2.id, 'none'
 
       # Only entries for the clicked feed should appear
       page.should have_content @entry2_1.title
@@ -81,16 +81,9 @@ describe 'feeds' do
       page.should_not have_content @entry2_2.title
     end
 
-    it 'shows a link to read entries for all subscriptions inside the All Subscriptions folder', js: true do
-      within '#sidebar #folder-all' do
-        # Open "All feeds" folder
-        find("a[data-target='#feeds-all']").click
-
-        page.should have_css 'li#folder-all-all-feeds'
-
-        # Click on link to read all feeds
-        find('li#folder-all-all-feeds > a').click
-      end
+    it 'shows a link to read entries for all subscriptions', js: true do
+      # Click on link to read all feeds
+      find("#sidebar a[data-sidebar-feed][data-feed-id='all']").click
 
       page.should have_content @entry1_1.title
       page.should have_content @entry1_2.title
@@ -128,7 +121,7 @@ describe 'feeds' do
     it 'shows entries without a published date', js: true do
       entry1_3 = FactoryGirl.build :entry, feed_id: @feed1.id, published: nil
       @feed1.entries << entry1_3
-      read_feed @feed1.id, 'all'
+      read_feed @feed1.id, @folder1.id
       page.should have_content entry1_3.title
     end
 
@@ -165,7 +158,7 @@ describe 'feeds' do
     it 'shows an alert if there is a problem loading a feed', js: true do
       User.any_instance.stub(:feeds).and_raise StandardError.new
       # Try to read feed
-      read_feed @feed1.id
+      read_feed @feed1.id, @folder1.id
 
       should_show_alert 'problem-loading-entries'
     end

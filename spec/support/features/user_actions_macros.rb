@@ -81,8 +81,8 @@ end
 #
 # If the feed is not under the folder passed as argument, the test will immediately fail.
 
-def read_feed(feed_id, folder_id = 'all')
-  open_folder folder_id
+def read_feed(feed_id, folder_id = 'none')
+  open_folder folder_id if folder_id != 'none'
   within "#folders-list #folder-#{folder_id}" do
     page.should have_css "[data-sidebar-feed][data-feed-id='#{feed_id}']", visible: true
 
