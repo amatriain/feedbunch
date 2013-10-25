@@ -8,7 +8,10 @@ angular.module('feedbunch').service 'currentFolderSvc',
   set: (folder)->
     entriesPaginationSvc.reset_entries()
     $rootScope.current_feed = null
-    $rootScope.current_folder = folder
+    if folder=="all"
+      $rootScope.current_folder = {id: "all"}
+    else
+      $rootScope.current_folder = folder
 
   unset: ->
     entriesPaginationSvc.reset_entries()

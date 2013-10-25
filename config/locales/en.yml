@@ -50,7 +50,6 @@ en:
       folder_management: "Move feed to"
       folder_none: "No folder"
       folder_new: "New folder"
-      all_feeds: "All subscriptions"
       all_entries: "All subscriptions"
       loading: "Loading..."
       subscribe_button: "Add subscription"

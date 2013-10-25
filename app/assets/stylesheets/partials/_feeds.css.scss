@@ -30,15 +30,15 @@ a {
   width: 60%;
 }
 
-[data-folder-id] .panel-body {
+#sidebar [data-folder-id] .panel-body {
   padding: 8px;
 }
 
-[data-folder-id] .panel-body li a {
+#sidebar a[data-sidebar-feed] {
   padding-top: 10px;
   padding-bottom: 5px;
 }
 
-[data-folder-id] .panel-body li a .badge {
+#sidebar a[data-sidebar-feed] .badge {
   margin-top: 2px;
 }

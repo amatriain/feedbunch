@@ -23,11 +23,11 @@ angular.module('feedbunch').service 'findSvc',
       return folders[0]
 
   #---------------------------------------------
-  # Find feeds in a folder given the folder id
+  # Find feeds in a folder given the folder
   #---------------------------------------------
-  find_folder_feeds: (folder_id)->
-    if folder_id != 'all'
-      return $filter('filter') $rootScope.feeds, {folder_id: folder_id}
+  find_folder_feeds: (folder)->
+    if folder != 'all'
+      return $filter('filter') $rootScope.feeds, {folder_id: folder.id}
     else
       return $rootScope.feeds
 ]

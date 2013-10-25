@@ -1,0 +1,12 @@
+<li id="all-feeds"
+    ng-class="{active: current_folder.id=='all'}">
+  <a data-sidebar-feed
+     data-feed-id="all"
+     ng-click="set_current_folder('all')">
+    <em><strong>
+      <i class="icon-rss pull-left"></i>
+      <span class="sidebar-feed-title"><%= t 'feeds.index.all_entries' %></span>
+    </strong></em>
+    <span class="badge pull-right">{{folder_unread_entries('all') | numberBadgeFltr}}</span>
+  </a>
+</li>

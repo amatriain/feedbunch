@@ -1,0 +1,12 @@
+<div id="folder-none">
+
+  <%# Animated spinner while feeds are loading %>
+  <i class="icon-spinner icon-spin" ng-show="!feeds_loaded"></i>
+
+  <%# Content of the folder %>
+  <ul class="nav nav-pills nav-stacked" ng-show="feeds_loaded">
+    <%= render 'read/sidebar/sidebar_read_all' %>
+    <%= render 'read/sidebar/sidebar_feed' %>
+  </ul>
+
+</div>

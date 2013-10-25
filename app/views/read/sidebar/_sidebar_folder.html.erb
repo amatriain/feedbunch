@@ -1,4 +1,4 @@
-<div ng-repeat="folder in folders | filter:{title: '!all'} | orderBy:'title'"
+<div ng-repeat="folder in folders | orderBy:'title'"
      id="folder-{{folder.id}}"
      class="folder-panel panel panel-default"
      data-folder-id="{{folder.id}}">
@@ -28,7 +28,7 @@
 
         <%= render 'read/sidebar/sidebar_folder_read_all' %>
 
-        <%= render 'read/sidebar/sidebar_feed' %>
+        <%= render 'read/sidebar/sidebar_folder_feed' %>
 
       </ul>
 

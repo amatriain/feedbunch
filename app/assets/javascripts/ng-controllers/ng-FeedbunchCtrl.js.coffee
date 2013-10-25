@@ -139,7 +139,7 @@ findSvc)->
   #--------------------------------------------
   $scope.folder_unread_entries = (folder)->
     sum = 0
-    feeds = findSvc.find_folder_feeds folder.id
+    feeds = findSvc.find_folder_feeds folder
     for feed in feeds
       sum += feed.unread_entries
     return sum
@@ -156,12 +156,9 @@ findSvc)->
   #--------------------------------------------
   # Function to filter feeds in a given folder
   #--------------------------------------------
-  $scope.feed_in_folder = (folder)->
+  $scope.feed_in_folder = (folder_id)->
     return (feed)->
-      if folder.id == 'all'
-        return true
-      else
-        return folder.id == feed.folder_id
+      return folder_id == feed.folder_id
 
   #--------------------------------------------
   # Function to convert an entry's id to an integer, for filtering purposes
