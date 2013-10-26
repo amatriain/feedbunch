@@ -56,38 +56,32 @@ def failed_login_user_for_feature(username, password)
 end
 
 ##
-# Open a folder in the sidebar. Receives the folder id as argument, accepts "all" to open
-# the All Subscriptions folder.
+# Open a folder in the sidebar. Receives the folder as argument.
 
-def open_folder(folder_id)
-  page.should have_css "#folders-list #folder-#{folder_id}"
+def open_folder(folder)
+  page.should have_css "#folders-list #folder-#{folder.id}"
   # Open folder only if it is closed
-  if !page.has_css? "#folders-list #feeds-#{folder_id}.in"
-    find("a[data-target='#feeds-#{folder_id}']").click
-    page.should have_css "#folders-list #feeds-#{folder_id}.in"
+  if !page.has_css? "#folders-list #feeds-#{folder.id}.in"
+    find("a[data-target='#feeds-#{folder.id}']").click
+    page.should have_css "#folders-list #feeds-#{folder.id}.in"
   end
 end
 
 ##
 # Click on a feed to read its entries during acceptance testing. Receives as arguments:
 #
-# - feed_id: mandatory argument, with the id of the id of the feed to read.
-# - folder_id: optional argument, with the id of the folder under which the feed will be clicked.
-#
-# The folder_id argument accepts the value "all"; this means the feed will be clicked under the All Subscriptions
-# folder.
-#
-# If the folder_id argument is not present, it defaults to "all".
-#
-# If the feed is not under the folder passed as argument, the test will immediately fail.
+# - feed: mandatory argument, with the feed to read.
+# - user: mandatory argument, with the user performing the action.
 
-def read_feed(feed_id, folder_id = 'none')
-  open_folder folder_id if folder_id != 'none'
+def read_feed(feed, user)
+  folder = feed.user_folder user
+  open_folder folder if folder.present?
+  folder_id = folder.try(:id) || 'none'
   within "#folders-list #folder-#{folder_id}" do
-    page.should have_css "[data-sidebar-feed][data-feed-id='#{feed_id}']", visible: true
+    page.should have_css "[data-sidebar-feed][data-feed-id='#{feed.id}']", visible: true
 
     # Click on feed to read its entries
-    find("[data-sidebar-feed][data-feed-id='#{feed_id}']", visible: true).click
+    find("[data-sidebar-feed][data-feed-id='#{feed.id}']", visible: true).click
   end
 
   # Ensure entries have finished loading
@@ -95,16 +89,18 @@ def read_feed(feed_id, folder_id = 'none')
 end
 
 ##
-# Click on the "read all subscriptions" link under a folder to read its entries during acceptance testing.
+# Click on the "all subscriptions" link under a folder to read its entries during acceptance testing.
 # Receives as argument:
 #
-# - folder_id: mandatory argument, with the id of the id of the feed to read. It accepts the special value "all",
-# which means clicking on "read all subscriptions" under the All Subscriptions folder.
+# - folder: mandatory argument, with the id of the id of the feed to read. It accepts the special value "all",
+# which means clicking on "all subscriptions" link above the folders list, which loads all entries for
+# all subscribed feeds.
 #
 # If the folder does not exist, the test will immediately fail.
 
-def read_folder(folder_id)
-  open_folder folder_id
+def read_folder(folder)
+  open_folder folder if folder != 'all'
+  folder_id = (folder == 'all')? 'none' : folder.id
   within "#folders-list #folder-#{folder_id}" do
     find("[data-sidebar-feed][data-feed-id='all']").click
   end
@@ -114,17 +110,17 @@ def read_folder(folder_id)
 end
 
 ##
-# Click on an entry to open and read it. Receives as argument the id of the entry to be read.
+# Click on an entry to open and read it. Receives as argument the entry to be read.
 #
 # If the entry is not currently in the entries list, the test will immediately fail.
 
-def read_entry(entry_id)
-  page.should have_css "#feed-entries #entry-#{entry_id}"
+def read_entry(entry)
+  page.should have_css "#feed-entries #entry-#{entry.id}"
 
   # Open entry only if it is closed
-  if !page.has_css? "#feed-entries #entry-#{entry_id}-summary.in"
-    find("#feed-entries [data-entry-id='#{entry_id}']").click
-    page.should have_css "#feed-entries #entry-#{entry_id}-summary.in"
+  if !page.has_css? "#feed-entries #entry-#{entry.id}-summary.in"
+    find("#feed-entries [data-entry-id='#{entry.id}']").click
+    page.should have_css "#feed-entries #entry-#{entry.id}-summary.in"
   end
 end
 
@@ -181,10 +177,13 @@ end
 ##
 # Click on a feed to read it, and then click on the Folder dropdown to move it to a newly created folder
 #
-# Receives as arguments the id of the feed and the title of the new folder.
+# Receives as arguments:
+# - the feed to be moved
+# - the title of the new folder
+# - the user performing the action
 
-def move_feed_to_new_folder(feed_id, title)
-  read_feed feed_id
+def move_feed_to_new_folder(feed, title, user)
+  read_feed feed, user
   open_folder_dropdown
   within '#folder-management-dropdown ul.dropdown-menu' do
     find('a[data-folder-id="new"]').click
@@ -203,19 +202,22 @@ end
 ##
 # Click on a feed to read it, and then click on the Folder dropdown to move it to an already existing folder
 #
-# Receives as arguments the id of the feed and the id of the folder.
+# Receives as arguments:
+# - the feed to be moved
+# - the folder to which it will be moved
+# - the user performing the action
 
-def move_feed_to_folder(feed_id, folder_id)
-  read_feed feed_id
+def move_feed_to_folder(feed, folder, user)
+  read_feed feed, user
   open_folder_dropdown
   within '#folder-management-dropdown ul.dropdown-menu' do
-    find("a[data-folder-id='#{folder_id}']").click
+    find("a[data-folder-id='#{folder.id}']").click
   end
 
   # Ensure feed has been moved to folder
-  open_folder folder_id
-  page.should have_css "#folders-list #folder-#{folder_id} [data-sidebar-feed][data-feed-id='#{feed_id}']"
-  within "#folder-management-dropdown ul.dropdown-menu a[data-folder-id='#{folder_id}']", visible: false do
+  open_folder folder.id
+  page.should have_css "#folders-list #folder-#{folder.id} [data-sidebar-feed][data-feed-id='#{feed_id}']"
+  within "#folder-management-dropdown ul.dropdown-menu a[data-folder-id='#{folder.id}']", visible: false do
     page.should have_css 'i.icon-ok', visible: false
     page.should_not have_css 'i.icon-ok.hidden', visible: false
   end
@@ -224,17 +226,21 @@ end
 ##
 # Click on a feed to read it, and then click on the Folder dropdown to remove it from its current folder.
 #
-# Receives as arguments the id of the feed and the id of the folder.
+# Receives as arguments:
+# - the feed to be removed from its folder
+# - the user performing the action
 
-def remove_feed_from_folder(feed_id, folder_id)
-  read_feed feed_id
+def remove_feed_from_folder(feed, user)
+  folder = feed.user_folder user
+  folder_id = folder.try(:id) || 'none'
+  read_feed feed, user
   open_folder_dropdown
   within '#folder-management-dropdown ul.dropdown-menu' do
     find('a[data-folder-id="none"]').click
   end
 
   # Ensure feed has been removed from folder
-  page.should_not have_css "#folders-list li#folder-#{folder_id} [data-sidebar-feed][data-feed-id='#{feed_id}']"
+  page.should_not have_css "#folders-list li#folder-#{folder_id} [data-sidebar-feed][data-feed-id='#{feed.id}']"
 end
 
 ##
@@ -255,10 +261,12 @@ end
 
 ##
 # Click on the Unsubscribe button and then click on Accept in the confirmation popup.
-# Receives as argument the id of the feed to unsubscribe
+# Receives as arguments:
+# - the feed to unsubscribe
+# - the user performing the action
 
-def unsubscribe_feed(feed_id)
-  read_feed feed_id
+def unsubscribe_feed(feed, user)
+  read_feed feed, user
   find('#unsubscribe-feed').click
   find('#unsubscribe-submit').click
 

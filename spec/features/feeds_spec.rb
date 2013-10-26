@@ -57,12 +57,12 @@ describe 'feeds' do
     end
 
     it 'shows entries menu button when a feed is selected', js: true do
-      read_feed @feed1.id, @folder1.id
+      read_feed @feed1, @user
       page.should have_css '#entries-management', visible: true
     end
 
     it 'shows entries for a feed in the All Subscriptions folder', js: true do
-      read_feed @feed2.id, 'none'
+      read_feed @feed2, @user
 
       # Only entries for the clicked feed should appear
       page.should have_content @entry2_1.title
@@ -72,7 +72,7 @@ describe 'feeds' do
     end
 
     it 'shows entries for a feed inside a user folder', js: true do
-      read_feed @feed1.id, @folder1.id
+      read_feed @feed1, @user
 
       # Only entries for the clicked feed should appear
       page.should have_content @entry1_1.title
@@ -121,7 +121,7 @@ describe 'feeds' do
     it 'shows entries without a published date', js: true do
       entry1_3 = FactoryGirl.build :entry, feed_id: @feed1.id, published: nil
       @feed1.entries << entry1_3
-      read_feed @feed1.id, @folder1.id
+      read_feed @feed1, @user
       page.should have_content entry1_3.title
     end
 
@@ -137,7 +137,7 @@ describe 'feeds' do
       find('#show-read-feeds').click
       page.should have_css "[data-sidebar-feed][data-feed-id='#{feed3.id}']", visible: false
 
-      read_feed feed3.id
+      read_feed feed3, @user
       page.should have_text 'No entries'
     end
 
@@ -158,7 +158,7 @@ describe 'feeds' do
     it 'shows an alert if there is a problem loading a feed', js: true do
       User.any_instance.stub(:feeds).and_raise StandardError.new
       # Try to read feed
-      read_feed @feed1.id, @folder1.id
+      read_feed @feed1, @user
 
       should_show_alert 'problem-loading-entries'
     end

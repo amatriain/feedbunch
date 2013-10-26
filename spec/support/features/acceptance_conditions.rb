@@ -64,22 +64,27 @@ end
 
 ##
 # Test that the count of unread entries in a folder equals the passed argument.
-# Receives as argument the folder id and the expected entry count.
+# Receives as argument the folder and the expected entry count.
 
-def unread_folder_entries_should_eq(folder_id, count)
-  open_folder folder_id
-  within "#sidebar #folders-list #folder-#{folder_id} #feeds-#{folder_id} #folder-#{folder_id}-all-feeds span.badge" do
+def unread_folder_entries_should_eq(folder, count)
+  open_folder folder
+  within "#sidebar #folders-list #folder-#{folder.id} #feeds-#{folder.id} #folder-#{folder.id}-all-feeds span.badge" do
     page.should have_content "#{count}"
   end
 end
 
 ##
 # Test that the count of unread entries in a feed equals the passed argument.
-# Receives as argument the feed id, the expected entry count and optionally what folder to look at (defaults to "all")
+# Receives as arguments:
+# - the feed to look at
+# - the expected entry count
+# - the user performing the action
 
-def unread_feed_entries_should_eq(feed_id, count, folder_id='all')
-  open_folder folder_id
-  within "#sidebar #folders-list #folder-#{folder_id} #feeds-#{folder_id} a[data-feed-id='#{feed_id}'] span.badge" do
+def unread_feed_entries_should_eq(feed, count, user)
+  folder = feed.user_folder user
+  folder_id = folder.try(:id) || 'none'
+  open_folder folder if folder.present?
+  within "#sidebar #folders-list #folder-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed.id}'] span.badge" do
     page.should have_content "#{count}"
   end
 end
@@ -104,15 +109,15 @@ def should_hide_alert(alert_id)
 end
 
 ##
-# Test that the entry with the passed id is visible but marked as read
+# Test that the passed entry is visible but marked as read
 
-def entry_should_be_marked_read(entry_id)
-  page.should have_css "a[data-entry-id='#{entry_id}'].entry-read"
+def entry_should_be_marked_read(entry)
+  page.should have_css "a[data-entry-id='#{entry.id}'].entry-read"
 end
 
 ##
-# Test that the entry with the passed id is visible and marked as unread
+# Test that the passed entry is visible and marked as unread
 
-def entry_should_be_marked_unread(entry_id)
-  page.should have_css "a[data-entry-id='#{entry_id}'].entry-unread"
+def entry_should_be_marked_unread(entry)
+  page.should have_css "a[data-entry-id='#{entry.id}'].entry-unread"
 end

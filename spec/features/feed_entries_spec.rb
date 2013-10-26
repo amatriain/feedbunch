@@ -17,20 +17,20 @@ describe 'feed entries' do
       @feed.entries << @entry1 << @entry2
 
       visit read_path
-      read_feed @feed.id
+      read_feed @feed, @user
     end
 
     it 'opens an entry', js: true do
       # Entry summary should not be visible
       page.should_not have_content @entry1.summary
 
-      read_entry @entry1.id
+      read_entry @entry1
 
       page.should have_content Nokogiri::HTML(@entry1.summary).text
     end
 
     it 'opens title link in a new tab', js: true do
-      read_entry @entry1.id
+      read_entry @entry1
 
       within "#entry-#{@entry1.id}-summary .entry-content .lead" do
         page.should have_css "a[target='_blank'][href='#{@entry1.url}']"
@@ -38,11 +38,11 @@ describe 'feed entries' do
     end
 
     it 'closes other entries when opening an entry', js: true do
-      read_entry @entry1.id
+      read_entry @entry1
       # Only summary of first entry should be visible
       page.should have_content Nokogiri::HTML(@entry1.summary).text
       page.should_not have_content Nokogiri::HTML(@entry2.summary).text
-      read_entry @entry2.id
+      read_entry @entry2
       # Only summary of second entry should be visible
       page.should_not have_content Nokogiri::HTML(@entry1.summary).text
       page.should have_content Nokogiri::HTML(@entry2.summary).text
@@ -53,7 +53,7 @@ describe 'feed entries' do
       entry_state.read = true
       entry_state.save!
 
-      read_feed @feed.id
+      read_feed @feed, @user
 
       page.should have_content @entry2.title
       page.should_not have_content @entry1.title
@@ -75,7 +75,7 @@ describe 'feed entries' do
       entry_state1.save!
 
       visit read_path
-      read_folder folder.id
+      read_folder folder
 
       page.should_not have_content @entry1.title
       page.should have_content @entry2.title
@@ -106,13 +106,13 @@ describe 'feed entries' do
     end
 
     it 'marks as read an entry when reading a feed and opening an entry', js: true do
-      read_entry @entry1.id
+      read_entry @entry1
 
-      entry_should_be_marked_read @entry1.id
+      entry_should_be_marked_read @entry1
 
       # On refresh, @entry1 should no longer appear
       visit read_path
-      read_feed @feed.id
+      read_feed @feed, @user
       page.should_not have_content @entry1.title
     end
 
@@ -123,23 +123,23 @@ describe 'feed entries' do
       folder.feeds << @feed
       visit read_path
 
-      read_folder folder.id
-      read_entry @entry1.id
+      read_folder folder
+      read_entry @entry1
 
       # No alert should appear
       should_hide_alert 'problem-entry-state-change'
 
-      entry_should_be_marked_read @entry1.id
+      entry_should_be_marked_read @entry1
 
       # On refresh, @entry1 should no longer appear
       visit read_path
-      read_feed @feed.id
+      read_feed @feed, @user
       page.should_not have_content @entry1.title
     end
 
     it 'shows an alert if it cannot mark entry as read', js: true do
       User.any_instance.stub(:change_entries_state).and_raise StandardError.new
-      read_entry @entry1.id
+      read_entry @entry1
 
       should_show_alert 'problem-entry-state-change'
     end
@@ -148,7 +148,7 @@ describe 'feed entries' do
       mark_all_as_read
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
-      unread_feed_entries_should_eq @feed.id, 0
+      unread_feed_entries_should_eq @feed, 0, @user
 
       # On refresh @feed should not appear
       visit read_path
@@ -156,14 +156,14 @@ describe 'feed entries' do
     end
 
     it 'marks an entry as unread', js: true do
-      read_entry @entry1.id
-      entry_should_be_marked_read @entry1.id
+      read_entry @entry1
+      entry_should_be_marked_read @entry1
 
       find("div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry()']").click
 
-      entry_should_be_marked_unread @entry1.id
+      entry_should_be_marked_unread @entry1
 
-      read_feed @feed.id
+      read_feed @feed, @user
       page.should have_content @entry1.title
     end
 
@@ -173,7 +173,7 @@ describe 'feed entries' do
       entry_state1.save!
 
       visit read_path
-      read_feed @feed.id
+      read_feed @feed, @user
 
       # @entry1 is read, should not appear on the page
       page.should_not have_content @entry1.title
@@ -193,7 +193,7 @@ describe 'feed entries' do
       today = Date.new 2000, 01, 01
       Date.stub today: today
       @entry1.update published: DateTime.new(2000, 07, 07)
-      read_feed @feed.id
+      read_feed @feed, @user
       within "#entry-#{@entry1.id}" do
         page.should have_text '07 Jul 00:00'
       end
@@ -203,7 +203,7 @@ describe 'feed entries' do
       today = Date.new 2000, 01, 01
       Date.stub today: today
       @entry1.update published: DateTime.new(1999, 07, 07)
-      read_feed @feed.id
+      read_feed @feed, @user
       within "#entry-#{@entry1.id}" do
         page.should have_text '07 Jul 1999'
       end
@@ -231,7 +231,7 @@ describe 'feed entries' do
       @folder.feeds << @feed
 
       visit read_path
-      read_feed @feed.id
+      read_feed @feed, @user
     end
 
     it 'loads the first page of unread feed entries', js: true do
@@ -274,7 +274,7 @@ describe 'feed entries' do
     end
 
     it 'loads the first page of unread folder entries', js: true do
-      read_folder @folder.id
+      read_folder @folder
       (0..24).each do |i|
         page.should have_content @entries[i].title
       end
@@ -284,7 +284,7 @@ describe 'feed entries' do
     end
 
     it 'loads the second page of unread folder entries when scrolling down', js: true do
-      read_folder @folder.id
+      read_folder @folder
       page.execute_script 'window.scrollTo(0,100000)'
       sleep 1
       (0..25).each do |i|
@@ -299,7 +299,7 @@ describe 'feed entries' do
       mark_all_as_read
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
-      unread_feed_entries_should_eq @feed.id, 0
+      unread_feed_entries_should_eq @feed, 0, @user
 
       # On refresh @feed should not appear
       visit read_path

@@ -12,6 +12,9 @@ describe 'unsubscribe from feed' do
     @feed1.entries << @entry1
     @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
     @feed2.entries << @entry2
+    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << @folder
+    @folder.feeds << @feed1
 
     login_user_for_feature @user
     visit read_path
@@ -23,7 +26,7 @@ describe 'unsubscribe from feed' do
   end
 
   it 'shows unsubscribe button when a feed is selected', js: true do
-    read_feed @feed1.id
+    read_feed @feed1, @user
     page.should_not have_css 'a#unsubscribe-feed.hidden', visible: false
     page.should_not have_css 'a#unsubscribe-feed.disabled', visible: false
     page.should have_css '#unsubscribe-feed'
@@ -33,28 +36,33 @@ describe 'unsubscribe from feed' do
     # Regression test for bug #152
 
     # Unsubscribe from @feed1
-    unsubscribe_feed @feed1.id
+    unsubscribe_feed @feed1, @user
 
     # Read @feed2. All buttons should be visible and enabled
-    read_feed @feed2.id
+    read_feed @feed2, @user
     page.should have_css '#entries-management', visible: true
     page.should have_css '#folder-management'
     page.should have_css '#unsubscribe-feed'
   end
 
+  it 'hides unsubscribe button when reading all feeds', js: true do
+    read_folder 'all'
+    page.should_not have_css '#unsubscribe-feed', visible: true
+  end
+
   it 'hides unsubscribe button when reading a whole folder', js: true do
-    read_feed 'all'
+    read_folder @folder
     page.should_not have_css '#unsubscribe-feed', visible: true
   end
 
   it 'shows a confirmation popup', js: true do
-    read_feed @feed1.id
+    read_feed @feed1, @user
     find('#unsubscribe-feed').click
     page.should have_css '#unsubscribe-feed-popup'
   end
 
   it 'unsubscribes from a feed', js: true do
-    unsubscribe_feed @feed1.id
+    unsubscribe_feed @feed1, @user
 
     # Only @feed2 should be present, @feed1 has been unsubscribed
     page.should_not have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']", visible: false
@@ -64,34 +72,26 @@ describe 'unsubscribe from feed' do
   it 'shows an alert if there is a problem unsubscribing from a feed', js: true do
     SubscriptionsManager.stub(:remove_subscription).and_raise StandardError.new
 
-    unsubscribe_feed @feed1.id
+    unsubscribe_feed @feed1, @user
 
     should_show_alert 'problem-unsubscribing'
   end
 
-  it 'makes feed disappear from folders', js: true do
-    folder = FactoryGirl.build :folder, user_id: @user.id
-    @user.folders << folder
-    folder.feeds << @feed1
+  it 'makes feed disappear from folder', js: true do
+    # Feed should be in the folder
+    page.should have_css "#sidebar #folder-#{@folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
 
-    visit read_path
+    unsubscribe_feed @feed1, @user
 
-    # Feed should be in the folder and in the "all subscriptions" folder
-    page.should have_css "#sidebar #folder-all a[data-feed-id='#{@feed1.id}']", visible: false
-    page.should have_css "#sidebar #folder-#{folder.id} a[data-feed-id='#{@feed1.id}']", visible: false
-
-    unsubscribe_feed @feed1.id
-
-    # Feed should disappear completely from both folders
-    page.should_not have_css "#sidebar > li#folder-all li > a[data-feed-id='#{@feed1.id}']", visible: false
-    page.should_not have_css "#sidebar > li#folder-#{folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
+    # Feed should disappear completely from the folder
+    page.should_not have_css "#sidebar > li#folder-#{@folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
   end
 
   it 'shows start page after unsubscribing', js: true do
-    read_feed @feed1.id
+    read_feed @feed1, @user
     page.should_not have_css '#start-info', visible: true
 
-    unsubscribe_feed @feed1.id
+    unsubscribe_feed @feed1, @user
 
     page.should have_css '#start-info', visible: true
   end
@@ -101,63 +101,53 @@ describe 'unsubscribe from feed' do
     user2.subscribe @feed1.fetch_url
 
     # Unsubscribe @user from @feed1 and logout
-    unsubscribe_feed @feed1.id
+    unsubscribe_feed @feed1, @user
     logout_user
 
     # user2 should still see the feed in his own list
     login_user_for_feature user2
-    page.should have_css "#folder-all #feeds-all a[data-feed-id='#{@feed1.id}']", visible: false
+    page.should have_css "#folder-none a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
   end
 
   it 'removes folders without feeds', js: true do
-    # @user has folder, and @feed1 is in it.
-    folder = FactoryGirl.build :folder, user_id: @user.id
-    @user.folders << folder
-    folder.feeds << @feed1
-
-    visit read_path
-    page.should have_content folder.title
-
-    unsubscribe_feed @feed1.id
+    unsubscribe_feed @feed1, @user
 
     # Folder should be removed from the sidebar
     within '#sidebar #folders-list' do
-      page.should_not have_content folder.title
+      page.should_not have_content @folder.title
     end
-    page.should_not have_css "#folders-list li[data-folder-id='#{folder.id}']"
+    page.should_not have_css "#folders-list li[data-folder-id='#{@folder.id}']"
 
-    read_feed @feed2.id
+    read_feed @feed2, @user
     # Folder should be removed from the dropdown
     find('#folder-management').click
     within '#folder-management-dropdown ul.dropdown-menu' do
-      page.should_not have_content folder.title
-      page.should_not have_css "a[data-folder-id='#{folder.id}']"
+      page.should_not have_content @folder.title
+      page.should_not have_css "a[data-folder-id='#{@folder.id}']"
     end
   end
 
   it 'does not remove folders with feeds', js: true do
     # @user has folder, and @feed1, @feed2 are in it.
-    folder = FactoryGirl.build :folder, user_id: @user.id
-    @user.folders << folder
-    folder.feeds << @feed1 << @feed2
+    @folder.feeds << @feed2
 
     visit read_path
-    page.should have_content folder.title
+    page.should have_content @folder.title
 
-    unsubscribe_feed @feed1.id
+    unsubscribe_feed @feed1, @user
 
     # Folder should not be removed from the sidebar
     within '#sidebar #folders-list' do
-      page.should have_content folder.title
+      page.should have_content @folder.title
     end
-    page.should have_css "#folders-list [data-folder-id='#{folder.id}']"
+    page.should have_css "#folders-list [data-folder-id='#{@folder.id}']"
 
-    read_feed @feed2.id
+    read_feed @feed2, @user
     # Folder should not be removed from the dropdown
     find('#folder-management').click
     within '#folder-management-dropdown ul.dropdown-menu' do
-      page.should have_content folder.title
-      page.should have_css "a[data-folder-id='#{folder.id}']"
+      page.should have_content @folder.title
+      page.should have_css "a[data-folder-id='#{@folder.id}']"
     end
   end
 

@@ -17,7 +17,6 @@ describe 'subscription to feeds' do
   end
 
   it 'shows feeds the user is subscribed to', js: true do
-    open_folder 'all'
     page.should have_content @feed1.title
   end
 
@@ -79,8 +78,7 @@ FEED_XML
     subscribe_feed alternate_webpage_url
 
     # Both the old and new feeds should be there, the new feed should be selected
-    open_folder 'all'
-    within '#sidebar #folder-all #feeds-all' do
+    within '#sidebar #folder-none' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title
@@ -170,7 +168,6 @@ FEED_XML
     subscribe_feed @feed2.fetch_url
 
     # Both the old and new feeds should be there, the new feed should be selected
-    open_folder 'all'
     page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
     page.should have_css "#sidebar li.active > a[data-feed-id='#{@feed2.id}']"
     # The entries for the just subscribed feed should be visible
@@ -185,7 +182,6 @@ FEED_XML
     subscribe_feed @feed2.url
 
     # Both the old and new feeds should be there, the new feed should be selected
-    open_folder 'all'
     page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
     page.should have_css "#sidebar li.active > a[data-feed-id='#{@feed2.id}']"
     # The entries for the just subscribed feed should be visible
@@ -203,7 +199,6 @@ FEED_XML
     subscribe_feed url_slash
 
     # Both the old and new feeds should be there, the new feed should be selected
-    open_folder 'all'
     page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
     page.should have_css "#sidebar li.active > a[data-feed-id='#{feed.id}']"
     # The entries for the just subscribed feed should be visible
@@ -221,7 +216,6 @@ FEED_XML
     subscribe_feed url_no_slash
 
     # Both the old and new feeds should be there, the new feed should be selected
-    open_folder 'all'
     page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
     page.should have_css "#sidebar li.active > a[data-feed-id='#{feed.id}']"
     # The entries for the just subscribed feed should be visible
@@ -239,7 +233,6 @@ FEED_XML
     subscribe_feed url_no_scheme
 
     # Both the old and new feeds should be there, the new feed should be selected
-    open_folder 'all'
     page.should have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']"
     page.should have_css "#sidebar li.active > a[data-feed-id='#{feed.id}']"
     # The entries for the just subscribed feed should be visible
@@ -275,8 +268,7 @@ FEED_XML
     subscribe_feed fetch_url
 
     # Both the old and new feeds should be there, the new feed should be selected
-    open_folder 'all'
-    within '#sidebar #folder-all #feeds-all' do
+    within '#sidebar #folder-none' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title
@@ -338,8 +330,7 @@ FEED_XML
     subscribe_feed webpage_url
 
     # Both the old and new feeds should be there, the new feed should be selected
-    open_folder 'all'
-    within '#sidebar #folder-all #feeds-all' do
+    within '#sidebar #folder-none' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title
@@ -402,8 +393,7 @@ FEED_XML
     subscribe_feed url_no_schema
 
     # Both the old and new feeds should be there, the new feed should be selected
-    open_folder 'all'
-    within '#sidebar #folder-all #feeds-all' do
+    within '#sidebar #folder-none' do
       page.should have_content @feed1.title
       within 'li.active' do
         page.should have_content feed_title
