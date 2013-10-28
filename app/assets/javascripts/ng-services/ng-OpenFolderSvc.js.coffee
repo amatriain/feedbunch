@@ -38,20 +38,6 @@ angular.module('feedbunch').service 'openFolderSvc',
     , 350
 
   #---------------------------------------------
-  # Unset the currently open folder in the root scope, and also
-  # close all folders.
-  # This method uses jquery and boostrap code, it's not pure angularjs but it gets the job done.
-  # There should be no need to invoke this method when user is clicking on a folder to open it,
-  # only when folders are closed programatically.
-  #---------------------------------------------
-  close_all: ->
-    $rootScope.current_open_folder = null
-    $rootScope.$apply() if $rootScope.$$phase != '$apply' && $rootScope.$$phase != '$digest'
-    # close all folders
-    for f in $rootScope.folders
-      $("#feeds-#{f.id}").removeClass("in").addClass("collapse")
-
-  #---------------------------------------------
   # Return the folder object which is currently open
   #---------------------------------------------
   get: ->

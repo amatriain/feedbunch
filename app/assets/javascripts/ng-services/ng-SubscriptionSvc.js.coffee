@@ -52,9 +52,6 @@ scrollSvc, entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
     # Tell the model that no feed is currently selected.
     currentFeedSvc.unset()
 
-    # Close all folders, indicate no folder is open
-    openFolderSvc.close_all()
-
     scrollSvc.scroll_top()
 
     $http.delete(path)
