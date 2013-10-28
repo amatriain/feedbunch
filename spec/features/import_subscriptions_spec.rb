@@ -121,14 +121,14 @@ describe 'import subscriptions' do
     end
 
     it 'shows alert when import finishes successfully', js: true do
-      read_feed @feed.id
+      read_feed @feed, @user
       @user.data_import.status = DataImport::SUCCESS
       @user.data_import.save
       should_show_alert 'import-process-success'
     end
 
     it 'shows new feeds and folders when import finishes successfully', js: true do
-      read_feed @feed.id
+      read_feed @feed, @user
       folder = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder
       feed = FactoryGirl.create :feed

@@ -31,7 +31,7 @@ describe 'start page' do
     page.should have_css '#start-info'
     page.should_not have_css '#feed-entries', visible: true
 
-    read_feed @feed1.id
+    read_feed @feed1, @user
 
     page.should_not have_css '#start-info', visible: true
     page.should have_css '#feed-entries'
@@ -41,7 +41,7 @@ describe 'start page' do
 
     before :each do
       # click on a feed, then click on the Start link
-      read_feed @feed1.id
+      read_feed @feed1, @user
       find('#start-page').click
     end
 

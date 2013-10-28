@@ -67,9 +67,15 @@ end
 # Receives as argument the folder and the expected entry count.
 
 def unread_folder_entries_should_eq(folder, count)
-  open_folder folder
-  within "#sidebar #folders-list #folder-#{folder.id} #feeds-#{folder.id} #folder-#{folder.id}-all-feeds span.badge" do
-    page.should have_content "#{count}"
+  if folder=='all'
+    within '#sidebar #folders-list #folder-none #all-feeds span.badge' do
+      page.should have_content "#{count}"
+    end
+  else
+    open_folder folder
+    within "#sidebar #folders-list #folder-#{folder.id} #feeds-#{folder.id} #folder-#{folder.id}-all-feeds span.badge" do
+      page.should have_content "#{count}"
+    end
   end
 end
 

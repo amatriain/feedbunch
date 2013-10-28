@@ -11,7 +11,7 @@ describe 'refresh feeds' do
 
     login_user_for_feature @user
     visit read_path
-    read_feed @feed1.id
+    read_feed @feed1, @user
   end
 
   it 'refreshes a single feed', js: true do
@@ -42,7 +42,7 @@ describe 'refresh feeds' do
       @feed1.entries << entry3
     end
 
-    read_feed @feed1.id
+    read_feed @feed1, @user
     refresh_feed
 
     # entry2 and entry3 should appear, @entry1 should not appear because it's already read

@@ -30,12 +30,12 @@ describe 'unread entries count' do
   end
 
   it 'shows number of unread entries in a folder', js: true do
-    unread_folder_entries_should_eq @folder1.id, 3
+    unread_folder_entries_should_eq @folder1, 3
   end
 
   it 'shows number of unread entries in a single feed', js: true do
-    unread_feed_entries_should_eq @feed1.id, 3
-    unread_feed_entries_should_eq @feed2.id, 1
+    unread_feed_entries_should_eq @feed1, 3, @user
+    unread_feed_entries_should_eq @feed2, 1, @user
   end
 
   it 'updates number of unread entries when adding a feed to a newly created folder', js: true do
@@ -43,14 +43,14 @@ describe 'unread entries count' do
 
     visit read_path
     title = 'New folder'
-    move_feed_to_new_folder @feed1.id, title
+    move_feed_to_new_folder @feed1, title, @user
 
     # Entry count in @folder1 should be updated
-    unread_folder_entries_should_eq @folder1.id, 1
+    unread_folder_entries_should_eq @folder1, 1
 
     # new folder should have the correct entry count
     new_folder = Folder.where(user_id: @user.id, title: title).first
-    unread_folder_entries_should_eq new_folder.id, 3
+    unread_folder_entries_should_eq new_folder, 3
   end
 
   it 'updates number of unread entries when moving a feed into an existing folder', js: true do
@@ -65,12 +65,12 @@ describe 'unread entries count' do
 
     visit read_path
 
-    move_feed_to_folder @feed1.id, folder2.id
+    move_feed_to_folder @feed1, folder2, @user
 
     # Entry count in @folder1 should be updated
-    unread_folder_entries_should_eq @folder1.id, 1
+    unread_folder_entries_should_eq @folder1, 1
     # Entry count in folder2 should be updated
-    unread_folder_entries_should_eq folder2.id, 3
+    unread_folder_entries_should_eq folder2, 3
   end
 
   it 'updates number of unread entries when removing a feed from a folder', js: true do
@@ -78,9 +78,9 @@ describe 'unread entries count' do
 
     visit read_path
 
-    remove_feed_from_folder @feed1.id, @folder1.id
+    remove_feed_from_folder @feed1, @folder1
 
-    unread_folder_entries_should_eq @folder1.id, 1
+    unread_folder_entries_should_eq @folder1, 1
   end
 
   it 'updates number of unread entries when subscribing to a feed', js: true do
@@ -90,20 +90,20 @@ describe 'unread entries count' do
     feed.entries << entry1 << entry2
     subscribe_feed feed.url
     unread_folder_entries_should_eq 'all', 6
-    unread_feed_entries_should_eq feed.id, 2
+    unread_feed_entries_should_eq feed, 2, @user
   end
 
   it 'updates number of unread entries when unsubscribing from a feed', js: true do
     @folder1.feeds << @feed2
 
     visit read_path
-    unsubscribe_feed @feed1.id
+    unsubscribe_feed @feed1, @user
     unread_folder_entries_should_eq 'all', 1
-    unread_folder_entries_should_eq @folder1.id, 1
+    unread_folder_entries_should_eq @folder1, 1
   end
 
   it 'updates number of unread entries when refreshing a feed', js: true do
-    read_feed @feed1.id
+    read_feed @feed1, @user
     User.any_instance.stub :refresh_feed do
       entry = FactoryGirl.build :entry, feed_id: @feed1.id
       @feed1.entries << entry
@@ -112,7 +112,7 @@ describe 'unread entries count' do
     refresh_feed
 
     unread_folder_entries_should_eq 'all', 5
-    unread_folder_entries_should_eq @folder1.id, 4
-    unread_feed_entries_should_eq @feed1.id, 4
+    unread_folder_entries_should_eq @folder1, 4
+    unread_feed_entries_should_eq @feed1, 4, @user
   end
 end

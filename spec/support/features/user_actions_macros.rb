@@ -215,8 +215,8 @@ def move_feed_to_folder(feed, folder, user)
   end
 
   # Ensure feed has been moved to folder
-  open_folder folder.id
-  page.should have_css "#folders-list #folder-#{folder.id} [data-sidebar-feed][data-feed-id='#{feed_id}']"
+  open_folder folder
+  page.should have_css "#folders-list #folder-#{folder.id} [data-sidebar-feed][data-feed-id='#{feed.id}']"
   within "#folder-management-dropdown ul.dropdown-menu a[data-folder-id='#{folder.id}']", visible: false do
     page.should have_css 'i.icon-ok', visible: false
     page.should_not have_css 'i.icon-ok.hidden', visible: false

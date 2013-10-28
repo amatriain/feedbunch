@@ -37,21 +37,10 @@ describe 'folders and feeds' do
     should_show_alert 'problem-loading-folders'
   end
 
-  it 'shows an All Subscriptions folder with all feeds subscribed to', js: true do
-    pending 'this has changed a lot!'
-    within '#sidebar' do
-      page.should have_content 'All subscriptions'
-
-      within '#folders-list #folder-none' do
-        page.should have_css "a[data-target='#feeds-all']"
-
-        # Should have all the feeds inside
-        within '#feeds-all' do
-          page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
-          page.should have_css "a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
-        end
-      end
-    end
+  it 'shows a list with feeds which are not in any folder', js: true do
+    # @feed1 is in a folder and should not be in the list. Only @feed2 should be there.
+    page.should have_css "#sidebar #folders-list #folder-none a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
+    page.should_not have_css "#sidebar #folders-list #folder-none a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
   end
 
   it 'shows folders containing their respective feeds', js: true do
@@ -93,7 +82,7 @@ describe 'folders and feeds' do
     end
 
     it 'hides folder management button when reading a whole folder', js: true do
-      read_feed @folder1
+      read_folder @folder1
       page.should_not have_css '#folder-management', visible: true
       page.should_not have_css '#folder-management', visible: true
     end
@@ -142,13 +131,9 @@ describe 'folders and feeds' do
       end
 
       it 'adds a feed to an existing folder', js: true do
-        move_feed_to_folder @feed2.id, @folder1.id
+        move_feed_to_folder @feed2, @folder1, @user
 
-        # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
-        # is now inside @folder1
-        page.should have_css "#folder-all #feeds-all a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
-
-        # the feed should have exactly the same link in the sidebar under the @folder1 folder
+        # the feed should be in the sidebar under the @folder1 folder
         page.should have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
       end
 
@@ -160,13 +145,9 @@ describe 'folders and feeds' do
         # @feed1 should be under @folder1
         page.should have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
 
-        move_feed_to_folder @feed1.id, @new_folder.id
+        move_feed_to_folder @feed1, @new_folder, @user
 
-        # feed under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that indicates the feed
-        # is now inside "@new_folder"
-        page.should have_css "#folder-all #feeds-all a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@new_folder.id}']", visible: false
-
-        # the feed should have exactly the same link in the sidebar under the @new_folder folder
+        # the feed should be in the sidebar under the @new_folder folder
         page.should have_css "#folder-#{@new_folder.id} #feeds-#{@new_folder.id} a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@new_folder.id}']", visible: false
 
         # the feed should have disappeared from @folder1
@@ -174,7 +155,7 @@ describe 'folders and feeds' do
       end
 
       it 'removes folder if it has no more feeds', js: true do
-        move_feed_to_folder @feed1.id, @new_folder.id
+        move_feed_to_folder @feed1, @new_folder, @user
 
         # Folder should be removed from the sidebar
         within '#sidebar #folders-list' do
@@ -193,7 +174,7 @@ describe 'folders and feeds' do
       # Regression test for bug #165
       it 'does not change feed/folder if user tries to move a feed to the same folder it already is at', js: true do
         # @feed1 is already in @folder1, user clicks on @folder1 in the dropdown
-        move_feed_to_folder @feed1.id, @folder1.id
+        move_feed_to_folder @feed1, @folder1, @user
 
         # Folder should not be removed from the sidebar
         within '#sidebar #folders-list' do
@@ -208,11 +189,7 @@ describe 'folders and feeds' do
           page.should have_css "a[data-folder-id='#{@folder1.id}']"
         end
 
-        # @feed1 under the "all subscriptions" folder in the sidebar should have a data-folder-id attribute that
-        # indicates it is inside @folder1
-        page.should have_css "#folder-all #feeds-all a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
-
-        # @feed1 should have exactly the same link in the sidebar under the @folder1 folder
+        # @feed1 should be in the sidebar under the @folder1 folder
         page.should have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
 
         # No alert should be shown
@@ -224,7 +201,7 @@ describe 'folders and feeds' do
         @folder1.feeds << @feed2
 
         visit read_path
-        move_feed_to_folder @feed1.id, @new_folder.id
+        move_feed_to_folder @feed1, @new_folder, @user
 
         # Folder should not be removed from the sidebar
         within '#sidebar #folders-list' do
@@ -243,7 +220,7 @@ describe 'folders and feeds' do
       it 'shows an alert if there is a problem adding a feed to a folder', js: true do
         User.any_instance.stub(:move_feed_to_folder).and_raise StandardError.new
 
-        read_feed @feed2.id
+        read_feed @feed2, @user
         open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           find("a[data-folder-id='#{@folder1.id}']").click
@@ -259,7 +236,7 @@ describe 'folders and feeds' do
         remove_feed_from_folder @feed1, @user
 
         # Feed should be under the "All subscriptions" folder, without a data-folder-id attribute (because it doesn't belong to a folder)
-        page.should have_css "#folder-all #feeds-all a[data-feed-id='#{@feed1.id}'][data-folder-id='none']", visible: false
+        page.should have_css "#sidebar #folder-none a[data-feed-id='#{@feed1.id}'][data-folder-id='none']", visible: false
 
         # Feed should have disappeared from @folder1
         page.should_not have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-feed-id='#{@feed1.id}']", visible: false
@@ -318,7 +295,7 @@ describe 'folders and feeds' do
 
         # data-folder-id attribute should indicate that @feed1 is in the new folder
         new_folder = Folder.where(user_id: @user.id, title: title).first
-        open_folder new_folder.id
+        open_folder new_folder
         page.should have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
       end
 
@@ -350,7 +327,7 @@ describe 'folders and feeds' do
         read_feed @feed1, @user
 
         title = 'New folder'
-        move_feed_to_new_folder @feed1.id, title
+        move_feed_to_new_folder @feed1, title, @user
 
         # Folder should not be deleted from the database
         Folder.where(id: @folder1.id).should be_present
@@ -381,7 +358,7 @@ describe 'folders and feeds' do
         end
 
         title = 'New folder'
-        move_feed_to_new_folder @feed1.id, title
+        move_feed_to_new_folder @feed1, title, @user
 
         # @feed1 is no longer under @folder1
         within "#sidebar #folders-list #folder-#{@folder1.id}" do
@@ -394,7 +371,7 @@ describe 'folders and feeds' do
         move_feed_to_new_folder @feed1, title, @user
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
-        open_folder new_folder.id
+        open_folder new_folder
         within '#sidebar #folders-list' do
           # new folder should be in the sidebar
           page.should have_content title
@@ -424,21 +401,18 @@ describe 'folders and feeds' do
 
         new_folder = Folder.where(user_id: @user.id, title: title).first
         # data-folder-id attribute should indicate that @feed1 is in the new folder
-        open_folder new_folder.id
+        open_folder new_folder
         page.should have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
-        # @feed2 is still in no folder
-        open_folder 'all'
-        page.should have_css "#folder-all a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='none']"
 
         # Without reloading the page, move @feed2 to the new folder
-        read_feed @feed2.id
+        read_feed @feed2, @user
         open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           find("a[data-folder-id='#{new_folder.id}']").click
         end
 
         # feed2 should have moved to the new folder
-        open_folder new_folder.id
+        open_folder new_folder
         page.should have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='#{new_folder.id}']"
       end
 
