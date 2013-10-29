@@ -125,7 +125,7 @@ describe 'feeds' do
       page.should have_content entry1_3.title
     end
 
-    it 'hides feeds after reading all their entries', js: true do
+    it 'hides feeds after reading all their entries and clicking on a feed', js: true do
       read_feed @feed1, @user
       mark_all_as_read
 
@@ -135,6 +135,28 @@ describe 'feeds' do
       read_feed @feed2, @user
       # @feed1 should disappear
       page.should_not have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+      # @folder1 should disappear
+      page.should_not have_css "#sidebar #folder-#{@folder1.id}", visible: false
+    end
+
+    it 'hides feeds after reading all their entries and clicking on a folder', js: true do
+      # @feed1 is in @folder1, @feed2 is in folder2
+      folder2 = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder2
+      folder2.feeds << @feed2
+
+      visit read_path
+      read_feed @feed1, @user
+      mark_all_as_read
+
+      # @feed1 should still be present
+      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+
+      read_folder folder2
+      # @feed1 should disappear
+      page.should_not have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+      # @folder1 should disappear
+      page.should_not have_css "#sidebar #folder-#{@folder1.id}", visible: false
     end
 
     it 'shows feeds without unread entries', js: true do

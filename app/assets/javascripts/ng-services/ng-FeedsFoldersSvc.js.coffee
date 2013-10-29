@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$rootScope', '$http', 'timerFlagSvc', 'findSvc',
-($rootScope, $http, timerFlagSvc, findSvc)->
+['$rootScope', '$http', '$filter', 'timerFlagSvc', 'findSvc',
+($rootScope, $http, $filter, timerFlagSvc, findSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds. Receives a boolean argument to indicate if
@@ -41,6 +41,17 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       if findSvc.find_folder_feeds(folder).length == 0
         index = $rootScope.folders.indexOf folder
         $rootScope.folders.splice index, 1 if index != -1
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Remove a feed from the feeds array.
+  #---------------------------------------------
+  remove_feed = (feed)->
+    folder_id = feed.folder_id
+    # Delete feed model from the scope
+    index = $rootScope.feeds.indexOf feed
+    $rootScope.feeds.splice index, 1 if index != -1
+    # Update folders
+    feed_removed folder_id
 
   service =
 
@@ -81,14 +92,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     #---------------------------------------------
     # Remove a feed from the feeds array.
     #---------------------------------------------
-    remove_feed: (feed)->
-      folder_id = feed.folder_id
-      # Delete feed model from the scope
-      index = $rootScope.feeds.indexOf feed
-      $rootScope.feeds.splice index, 1 if index != -1
-
-      # Update folders
-      feed_removed folder_id
+    remove_feed: remove_feed
 
     #--------------------------------------------
     # Update the model to account for a feed having been removed from a folder
@@ -100,10 +104,11 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     # selected to display all feeds including read ones.
     #--------------------------------------------
     remove_read_feeds: ->
-      alert 'test'
-      # TODO - WIP
-      #if !$rootScope.read_feeds_shown
-
+      if !$rootScope.read_feeds_shown
+        read_feeds = $filter('filter') $rootScope.feeds, (feed)->
+          return feed.unread_entries == 0
+        for feed in read_feeds
+          remove_feed feed
 
   return service
 ]
