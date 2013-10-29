@@ -1,0 +1,11 @@
+#sidebar-column {
+  overflow-y: auto;
+  padding-bottom: 10px;
+  position: fixed;
+  top:70px;
+  bottom:0;
+}
+
+#feed-entries, #folders-list {
+  margin-bottom: 1em;
+}
