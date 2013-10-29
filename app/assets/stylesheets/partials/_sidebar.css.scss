@@ -1,5 +1,18 @@
 #sidebar-column {
+  overflow-y: auto;
+  padding-bottom: 10px;
+  position: fixed;
+  top:50px;
+  bottom:0;
   background-color: #FFFFFF;
+}
+
+#sidebar #start-page {
+  margin-top: 20px;
+}
+
+#folders-list {
+  margin-bottom: 1em;
 }
 
 .folder-arrow {
