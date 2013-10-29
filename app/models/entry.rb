@@ -47,7 +47,7 @@ class Entry < ActiveRecord::Base
   validates :guid, presence: true, uniqueness: {case_sensitive: false, scope: :feed_id}
 
   before_validation :sanitize_attributes
-  before_save :links_new_tab
+  before_save :content_manipulation
   after_create :set_unread_state
 
   ##
@@ -126,25 +126,49 @@ class Entry < ActiveRecord::Base
   end
 
   ##
-  # Ensure that any links in the summary and content open in a new tab, by adding the target="_blank"
-  # attribute if necessary
+  # Manipulations in entries summary and content markup before saving the entry.
 
-  def links_new_tab
-    self.summary = add_target_blank self.summary
-    self.content = add_target_blank self.content
+  def content_manipulation
+    self.summary = markup_manipulation self.summary if self.summary.present?
+    self.content = markup_manipulation self.content if self.content.present?
+  end
+
+  ##
+  # Manipulations in the passed html fragment
+
+  def markup_manipulation(html_fragment)
+    html_doc = Nokogiri::HTML html_fragment
+    html_doc = add_target_blank html_doc
+    html_doc = add_max_width html_doc
+    return html_doc.css('body').children.to_s
   end
 
   ##
   # Add the target="_blank" attribute to any links in the passed HTML fragment.
-  # Receives as argument a string with an HTML fragment.
+  # Receives as argument a parsed HTML fragment.
   # The attribute will overwrite any target="" attribute that was present in the links
 
-  def add_target_blank(html_fragment)
-    htmlDoc = Nokogiri::HTML html_fragment
-    htmlDoc.css('a').each do |link|
+  def add_target_blank(html_doc)
+    html_doc.css('a').each do |link|
       link['target'] = '_blank'
     end
-    return htmlDoc.css('body').children.to_s
+    return html_doc
+  end
+
+
+  ##
+  # Remove any height and width attributes and add a CSS max-width:100% to any images
+  # in the passed fragment.
+  # Receives as argument a parsed HTML fragment.
+  # Any style="" attribute in images will be overwritten.
+
+  def add_max_width(html_doc)
+    html_doc.css('img').each do |img|
+      img['style'] = 'max-width:100%;'
+      img.remove_attribute 'height'
+      img.remove_attribute 'width'
+    end
+    return html_doc
   end
 
 end

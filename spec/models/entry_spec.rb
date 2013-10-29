@@ -98,7 +98,7 @@ describe Entry do
     end
   end
 
-  context 'sanitization and summary manipulation' do
+  context 'sanitization' do
 
     it 'sanitizes title' do
       unsanitized_title = '<script>alert("pwned!");</script>title'
@@ -135,26 +135,50 @@ describe Entry do
       entry.summary.should eq sanitized_summary
     end
 
-    it 'opens summary links in a new tab' do
-      unmodified_summary = '<a href="http://some.link">Click here to read full story</a>'
-      modified_summary = '<a href="http://some.link" target="_blank">Click here to read full story</a>'
-      entry = FactoryGirl.create :entry, summary: unmodified_summary
-      entry.summary.should eq modified_summary
-    end
-
-    it 'opens content links in a new tab' do
-      unmodified_content = '<a href="http://some.link">Click here to read full story</a>'
-      modified_content = '<a href="http://some.link" target="_blank">Click here to read full story</a>'
-      entry = FactoryGirl.create :entry, content: unmodified_content
-      entry.content.should eq modified_content
-    end
-
     it 'sanitizes guid' do
       unsanitized_guid = '<script>alert("pwned!");</script>guid'
       sanitized_guid = 'guid'
       entry = FactoryGirl.create :entry, guid: unsanitized_guid
       entry.guid.should eq sanitized_guid
     end
+  end
+
+  context 'markup manipulation' do
+
+    context 'summary' do
+
+      it 'opens summary links in a new tab' do
+        unmodified_summary = '<a href="http://some.link">Click here to read full story</a>'
+        modified_summary = '<a href="http://some.link" target="_blank">Click here to read full story</a>'
+        entry = FactoryGirl.create :entry, summary: unmodified_summary
+        entry.summary.should eq modified_summary
+      end
+
+      it 'removes width and height and adds max-width to images' do
+        unmodified_summary = '<img width="1000" height="337" alt="20131029" class="attachment-full wp-post-image" src="http://www.leasticoulddo.com/wp-content/uploads/2013/10/20131029.gif">'
+        modified_summary = '<img alt="20131029" class="attachment-full wp-post-image" src="http://www.leasticoulddo.com/wp-content/uploads/2013/10/20131029.gif" style="max-width:100%;">'
+        entry = FactoryGirl.create :entry, summary: unmodified_summary
+        entry.summary.should eq modified_summary
+      end
+    end
+
+    context 'content' do
+
+      it 'opens content links in a new tab' do
+        unmodified_content = '<a href="http://some.link">Click here to read full story</a>'
+        modified_content = '<a href="http://some.link" target="_blank">Click here to read full story</a>'
+        entry = FactoryGirl.create :entry, content: unmodified_content
+        entry.content.should eq modified_content
+      end
+
+      it 'removes width and height and adds max-width to images' do
+        unmodified_content = '<img width="1000" height="337" alt="20131029" class="attachment-full wp-post-image" src="http://www.leasticoulddo.com/wp-content/uploads/2013/10/20131029.gif">'
+        modified_content = '<img alt="20131029" class="attachment-full wp-post-image" src="http://www.leasticoulddo.com/wp-content/uploads/2013/10/20131029.gif" style="max-width:100%;">'
+        entry = FactoryGirl.create :entry, content: unmodified_content
+        entry.content.should eq modified_content
+      end
+    end
+
   end
 
   context 'read/unread state' do
