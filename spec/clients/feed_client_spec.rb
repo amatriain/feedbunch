@@ -10,14 +10,14 @@ describe FeedClient do
     @entry1 = FactoryGirl.build :entry
     @entry1.title = 'Silence'
     @entry1.url = 'http://xkcd.com/1199/'
-    @entry1.summary = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time."&gt;}
+    @entry1.summary = %{&lt;img src="http://imgs.xkcd.com/comics/silence.png" title="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." alt="All music is just performances of 4'33&amp;quot; in studios where another band happened to be playing at the time." style="max-width:100%;"&gt;}
     @entry1.published = 'Mon, 15 Apr 2013 04:00:00 -0000'
     @entry1.guid = 'http://xkcd.com/1199/'
 
     @entry2 = FactoryGirl.build :entry
     @entry2.title = 'Geologist'
     @entry2.url = 'http://xkcd.com/1198/'
-    @entry2.summary = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;"&gt;}
+    @entry2.summary = %{&lt;img src="http://imgs.xkcd.com/comics/geologist.png" title="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" alt="'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.&amp;quot;" style=\"max-width:100%;\"&gt;}
     @entry2.published = 'Fri, 12 Apr 2013 04:00:00 -0000'
     @entry2.guid = 'http://xkcd.com/1198/'
   end
