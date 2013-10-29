@@ -37,16 +37,11 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
           timerFlagSvc.start 'error_subscribing'
 
   unsubscribe: ->
-    # Delete feed model from the scope
-    index = $rootScope.feeds.indexOf currentFeedSvc.get()
-    $rootScope.feeds.splice index, 1 if index != -1
-
     # Before deleting from the global scope, save some data we'll need later
     path = "/feeds/#{currentFeedSvc.get().id}.json"
-    folder_id = currentFeedSvc.get().folder_id
 
-    # Update folders
-    folderSvc.feed_removed_from_folder currentFeedSvc.get(), folder_id
+    # Remove feed from feeds list
+    feedsFoldersSvc.remove_feed currentFeedSvc.get()
 
     # Tell the model that no feed is currently selected.
     currentFeedSvc.unset()

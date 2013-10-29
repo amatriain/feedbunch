@@ -3,7 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$rootScope', '$http', 'timerFlagSvc', ($rootScope, $http, timerFlagSvc)->
+['$rootScope', '$http', 'timerFlagSvc', 'findSvc',
+($rootScope, $http, timerFlagSvc, findSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds. Receives a boolean argument to indicate if
@@ -29,6 +30,17 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       $rootScope.folders_loaded = true
     .error ->
       timerFlagSvc.start 'error_loading_folders'
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Update the model to account for a feed having been removed from a folder
+  #--------------------------------------------
+  feed_removed = (folder_id)->
+    folder = findSvc.find_folder folder_id
+    if folder != null
+      # Remove folder if it's empty
+      if findSvc.find_folder_feeds(folder).length == 0
+        index = $rootScope.folders.indexOf folder
+        $rootScope.folders.splice index, 1 if index != -1
 
   service =
 
@@ -65,6 +77,33 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         $rootScope.folders = [folder]
       else
         $rootScope.folders.push folder
+
+    #---------------------------------------------
+    # Remove a feed from the feeds array.
+    #---------------------------------------------
+    remove_feed: (feed)->
+      folder_id = feed.folder_id
+      # Delete feed model from the scope
+      index = $rootScope.feeds.indexOf feed
+      $rootScope.feeds.splice index, 1 if index != -1
+
+      # Update folders
+      feed_removed folder_id
+
+    #--------------------------------------------
+    # Update the model to account for a feed having been removed from a folder
+    #--------------------------------------------
+    feed_removed_from_folder: feed_removed
+
+    #--------------------------------------------
+    # Remove feeds without unread entries from the root scope, unless the user has
+    # selected to display all feeds including read ones.
+    #--------------------------------------------
+    remove_read_feeds: ->
+      alert 'test'
+      # TODO - WIP
+      #if !$rootScope.read_feeds_shown
+
 
   return service
 ]

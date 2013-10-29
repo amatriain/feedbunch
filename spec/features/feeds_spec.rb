@@ -125,6 +125,18 @@ describe 'feeds' do
       page.should have_content entry1_3.title
     end
 
+    it 'hides feeds after reading all their entries', js: true do
+      read_feed @feed1, @user
+      mark_all_as_read
+
+      # @feed1 should still be present
+      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+
+      read_feed @feed2, @user
+      # @feed1 should disappear
+      page.should_not have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+    end
+
     it 'shows feeds without unread entries', js: true do
       feed3 = FactoryGirl.create :feed
       @user.subscribe feed3.fetch_url
