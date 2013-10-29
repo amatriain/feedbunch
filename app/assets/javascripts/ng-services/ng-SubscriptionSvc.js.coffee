@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'subscriptionSvc',
 ['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'findSvc', 'folderSvc', 'timerFlagSvc',
-'scrollSvc', 'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc',
+'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc',
 ($rootScope, $http, currentFeedSvc, currentFolderSvc, readSvc, findSvc, folderSvc, timerFlagSvc,
-scrollSvc, entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
+entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
@@ -17,7 +17,6 @@ scrollSvc, entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
       currentFeedSvc.unset()
       currentFolderSvc.unset()
       entriesPaginationSvc.set_busy true
-      scrollSvc.scroll_top()
 
       $http.post('/feeds.json', feed:{url: url})
       .success (data)->
@@ -51,8 +50,6 @@ scrollSvc, entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
 
     # Tell the model that no feed is currently selected.
     currentFeedSvc.unset()
-
-    scrollSvc.scroll_top()
 
     $http.delete(path)
     .error ->

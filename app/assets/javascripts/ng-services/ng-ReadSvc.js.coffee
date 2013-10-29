@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'readSvc',
 ['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openEntrySvc', 'openFolderSvc',
- 'entriesPaginationSvc', 'scrollSvc',
+ 'entriesPaginationSvc',
 ($rootScope, $http, currentFeedSvc, currentFolderSvc, timerFlagSvc, openEntrySvc, openFolderSvc,
- entriesPaginationSvc, scrollSvc)->
+ entriesPaginationSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load entries via AJAX in the root scope.
@@ -21,8 +21,6 @@ angular.module('feedbunch').service 'readSvc',
 
     # Increment the results page
     entriesPaginationSvc.increment_entries_page()
-    # During the first page scroll to top
-    scrollSvc.scroll_top() if entriesPaginationSvc.is_first_page()
     # Indicate that AJAX request/response cycle is busy so no more calls are done until finished
     entriesPaginationSvc.set_busy true
 
