@@ -9,7 +9,11 @@
 <% end %>
   "url": "<%= entry.url %>",
   "guid": "<%= entry.guid %>",
-  "content": <%= entry.content.try(:to_json).html_safe %>,
-  "summary": <%= entry.summary.try(:to_json).html_safe %>,
+<% if entry.content.present? %>
+  "content": <%= entry.content.to_json.html_safe %>,
+<% end %>
+<% if entry.summary.present? %>
+  "summary": <%= entry.summary.to_json.html_safe %>,
+<% end %>
   "feed_id": "<%= entry.feed_id %>"
 }
