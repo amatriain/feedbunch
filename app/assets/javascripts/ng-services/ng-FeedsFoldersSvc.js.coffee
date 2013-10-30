@@ -106,7 +106,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     remove_read_feeds: ->
       if !$rootScope.read_feeds_shown
         read_feeds = $filter('filter') $rootScope.feeds, (feed)->
-          return feed.unread_entries == 0
+          return feed.unread_entries <= 0
         for feed in read_feeds
           remove_feed feed
 
