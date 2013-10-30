@@ -139,6 +139,20 @@ describe 'feeds' do
       page.should_not have_css "#sidebar #folder-#{@folder1.id}", visible: false
     end
 
+    it 'does not hide feeds after reading all their entries and clicking on the same feed', js: true do
+      read_feed @feed1, @user
+      mark_all_as_read
+
+      # @feed1 should still be present
+      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+
+      read_feed @feed1, @user
+      # @feed1 should not disappear
+      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+      # @folder1 should not disappear
+      page.should have_css "#sidebar #folder-#{@folder1.id}", visible: false
+    end
+
     it 'hides feeds after reading all their entries and clicking on a folder', js: true do
       # @feed1 is in @folder1, @feed2 is in folder2
       folder2 = FactoryGirl.build :folder, user_id: @user.id
@@ -157,6 +171,21 @@ describe 'feeds' do
       page.should_not have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
       # @folder1 should disappear
       page.should_not have_css "#sidebar #folder-#{@folder1.id}", visible: false
+    end
+
+    it 'does not hide feeds after reading all their entries and clicking on their folder', js: true do
+      # @feed1 is in @folder1, @feed2 is in folder2
+      read_feed @feed1, @user
+      mark_all_as_read
+
+      # @feed1 should still be present
+      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+
+      read_folder @folder1
+      # @feed1 should not disappear
+      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+      # @folder1 should not disappear
+      page.should have_css "#sidebar #folder-#{@folder1.id}", visible: false
     end
 
     it 'shows feeds without unread entries', js: true do

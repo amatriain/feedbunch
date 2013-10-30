@@ -102,13 +102,15 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     #--------------------------------------------
     # Remove feeds without unread entries from the root scope, unless the user has
     # selected to display all feeds including read ones.
+    # If the user clicks on the same feed or on its folder, do nothing.
     #--------------------------------------------
     remove_read_feeds: ->
       if !$rootScope.read_feeds_shown
         read_feeds = $filter('filter') $rootScope.feeds, (feed)->
           return feed.unread_entries <= 0
         for feed in read_feeds
-          remove_feed feed
+          if $rootScope.current_feed?.id != feed.id && $rootScope.current_folder?.id != feed.folder_id
+            remove_feed feed
 
   return service
 ]
