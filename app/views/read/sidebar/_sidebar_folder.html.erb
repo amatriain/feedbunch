@@ -5,7 +5,7 @@
 
   <%# Link to open the folder and close the folder %>
   <a class="sidebar-folder list-group-item"
-     ng-click="open_folder(folder)">
+     ng-click="toggle_open_folder(folder)">
 
     <i class="folder pull-left" ng-class="{'icon-folder-open-alt':current_open_folder.id==folder.id, 'icon-folder-close-alt': current_open_folder.id!=folder.id}"></i>
     &nbsp;<span class="sidebar-folder-title">{{folder.title}}</span>

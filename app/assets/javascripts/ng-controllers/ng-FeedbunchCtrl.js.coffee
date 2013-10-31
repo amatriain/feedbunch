@@ -106,8 +106,8 @@ findSvc)->
   #--------------------------------------------
   # Mark a single folder as open in the scope
   #--------------------------------------------
-  $scope.open_folder = (folder)->
-    readSvc.open_folder folder
+  $scope.toggle_open_folder = (folder)->
+    readSvc.toggle_open_folder folder
 
   #--------------------------------------------
   # Mark a single entry as read

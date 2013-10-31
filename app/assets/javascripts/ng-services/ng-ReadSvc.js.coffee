@@ -81,9 +81,9 @@ angular.module('feedbunch').service 'readSvc',
         timerFlagSvc.start 'error_refreshing_feed'
 
     #--------------------------------------------
-    # Mark a single folder as open in the scope
+    # Toggle open folder in the root scope.
     #--------------------------------------------
-    open_folder: (folder)->
+    toggle_open_folder: (folder)->
       if openFolderSvc.get()?.id == folder.id
         # User is closing the open folder
         openFolderSvc.unset()
