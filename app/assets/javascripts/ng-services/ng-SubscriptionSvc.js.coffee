@@ -24,10 +24,6 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
         feedsFoldersSvc.add_feed data
         currentFeedSvc.set data
         readSvc.read_entries_page()
-
-        # open the "all subscriptions" folder
-        folder_all = findSvc.find_folder 'all'
-        openFolderSvc.open folder_all
       .error (data, status)->
         entriesPaginationSvc.set_busy false
         # Show alert

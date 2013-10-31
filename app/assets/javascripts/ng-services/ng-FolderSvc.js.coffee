@@ -12,13 +12,10 @@ angular.module('feedbunch').service 'folderSvc',
   remove_from_folder: ->
     folder_id = currentFeedSvc.get().folder_id
     currentFeedSvc.get().folder_id = 'none'
-    feedsFoldersSvc.feed_removed_from_folder folder_id
-
-    # open the "all subscriptions" folder
-    folder_all = findSvc.find_folder 'all'
-    openFolderSvc.open folder_all
 
     $http.put('/folders/none.json', folder: {feed_id: currentFeedSvc.get().id})
+    .success (data)->
+      feedsFoldersSvc.load_folders()
     .error ->
       timerFlagSvc.start 'error_managing_folders'
 
@@ -28,12 +25,12 @@ angular.module('feedbunch').service 'folderSvc',
   move_to_folder: (folder)->
     old_folder_id = currentFeedSvc.get().folder_id
     currentFeedSvc.get().folder_id = folder.id
-    feedsFoldersSvc.feed_removed_from_folder old_folder_id
-
     # open the new folder
-    openFolderSvc.open folder
+    openFolderSvc.set folder
 
     $http.put("/folders/#{folder.id}.json", folder: {feed_id: currentFeedSvc.get().id})
+    .success (data)->
+      feedsFoldersSvc.load_folders()
     .error ->
       timerFlagSvc.start 'error_managing_folders'
 
@@ -48,10 +45,10 @@ angular.module('feedbunch').service 'folderSvc',
         feedsFoldersSvc.add_folder data
         old_folder_id = currentFeedSvc.get().folder_id
         currentFeedSvc.get().folder_id = data.id
-        feedsFoldersSvc.feed_removed_from_folder old_folder_id
+        feedsFoldersSvc.load_folders()
 
         # open the new folder
-        openFolderSvc.open data
+        openFolderSvc.set data
       .error (data, status)->
         if status == 304
           timerFlagSvc.start 'error_already_existing_folder'

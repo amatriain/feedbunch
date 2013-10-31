@@ -63,11 +63,16 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       load_feeds false
 
     #---------------------------------------------
-    # Load feeds and folders via AJAX into the root scope. Receives a boolean argument to indicate if
+    # Load feeds via AJAX into the root scope. Receives a boolean argument to indicate if
     # We want to load all feeds (true) or only feeds with unread entries (false).
     #---------------------------------------------
     load_feeds: (include_read)->
       load_feeds include_read
+
+    #--------------------------------------------
+    # Load folders via AJAX into the root scope.
+    #--------------------------------------------
+    load_folders: load_folders
 
     #---------------------------------------------
     # Push a feed in the feeds array. If the feeds array is empty, create it anew,
@@ -93,11 +98,6 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     # Remove a feed from the feeds array.
     #---------------------------------------------
     remove_feed: remove_feed
-
-    #--------------------------------------------
-    # Update the model to account for a feed having been removed from a folder
-    #--------------------------------------------
-    feed_removed_from_folder: feed_removed
 
     #--------------------------------------------
     # Remove feeds without unread entries from the root scope, unless the user has

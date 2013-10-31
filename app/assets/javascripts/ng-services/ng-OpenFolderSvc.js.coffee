@@ -18,26 +18,6 @@ angular.module('feedbunch').service 'openFolderSvc',
     $rootScope.current_open_folder = null
 
   #---------------------------------------------
-  # Set the currently open folder in the root scope, and also
-  # display its entries.
-  # This method uses jquery and boostrap code, it's not pure angularjs but it gets the job done.
-  # There should be no need to invoke this method when user is clicking on a folder to open it,
-  # only when a folder is opened programatically.
-  #---------------------------------------------
-  open: (folder)->
-    $rootScope.current_open_folder = folder
-    $rootScope.$apply() if $rootScope.$$phase != '$apply' && $rootScope.$$phase != '$digest'
-    $timeout ->
-      # open the passed folder
-      $("#feeds-#{folder.id}").addClass("in").removeClass("collapse")
-    , 250
-    $timeout ->
-      # close all other folders
-      for f in $rootScope.folders
-        $("#feeds-#{f.id}").removeClass("in").addClass("collapse") if f != folder
-    , 350
-
-  #---------------------------------------------
   # Return the folder object which is currently open
   #---------------------------------------------
   get: ->

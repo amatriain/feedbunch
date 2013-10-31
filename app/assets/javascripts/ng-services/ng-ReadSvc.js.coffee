@@ -84,7 +84,7 @@ angular.module('feedbunch').service 'readSvc',
     # Mark a single folder as open in the scope
     #--------------------------------------------
     open_folder: (folder)->
-      if openFolderSvc.get() == folder
+      if openFolderSvc.get()?.id == folder.id
         # User is closing the open folder
         openFolderSvc.unset()
       else

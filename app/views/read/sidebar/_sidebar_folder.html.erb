@@ -4,20 +4,17 @@
      data-folder-id="{{folder.id}}">
 
   <%# Link to open the folder and close the folder %>
-  <a data-toggle="collapse"
-     data-target="#feeds-{{folder.id}}"
-     data-parent="#folders-list"
-     class="sidebar-folder list-group-item"
+  <a class="sidebar-folder list-group-item"
      ng-click="open_folder(folder)">
 
-    <i class="folder pull-left" ng-class="{'icon-folder-open-alt':current_open_folder==folder, 'icon-folder-close-alt': current_open_folder!=folder}"></i>
+    <i class="folder pull-left" ng-class="{'icon-folder-open-alt':current_open_folder.id==folder.id, 'icon-folder-close-alt': current_open_folder.id!=folder.id}"></i>
     &nbsp;<span class="sidebar-folder-title">{{folder.title}}</span>
-    <i class="folder-arrow pull-right" ng-class="{'icon-chevron-down':current_open_folder==folder, 'icon-chevron-right': current_open_folder!=folder}"></i>
+    <i class="folder-arrow pull-right" ng-class="{'icon-chevron-down':current_open_folder.id==folder.id, 'icon-chevron-right': current_open_folder.id!=folder.id}"></i>
     <span class="folder-unread-badge badge pull-right" ng-show="feeds_loaded">{{folder_unread_entries(folder) | numberBadgeFltr}}</span>
 
   </a>
 
-  <div id="feeds-{{folder.id}}" class="panel-collapse collapse">
+  <div id="feeds-{{folder.id}}" class="panel-collapse collapse" ng-class="{'in':current_open_folder.id==folder.id}">
     <div class="panel-body">
 
       <%# Animated spinner while feeds are loading %>
