@@ -12,7 +12,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   #--------------------------------------------
   load_feeds = (include_read)->
     $rootScope.feeds_loaded = false
-    $rootScope.read_feeds_shown = include_read
+    $rootScope.show_read = include_read
     $http.get("/feeds.json?include_read=#{include_read}")
     .success (data)->
       $rootScope.feeds = data
@@ -105,12 +105,31 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     # If the user clicks on the same feed or on its folder, do nothing.
     #--------------------------------------------
     remove_read_feeds: ->
-      if !$rootScope.read_feeds_shown
+      if !$rootScope.show_read
         read_feeds = $filter('filter') $rootScope.feeds, (feed)->
           return feed.unread_entries <= 0
         for feed in read_feeds
           if $rootScope.current_feed?.id != feed.id && $rootScope.current_folder?.id != feed.folder_id
             remove_feed feed
+
+    #--------------------------------------------
+    # Count the number of unread entries in a folder
+    #--------------------------------------------
+    folder_unread_entries: (folder)->
+      sum = 0
+      feeds = findSvc.find_folder_feeds folder
+      for feed in feeds
+        sum += feed.unread_entries
+      return sum
+
+    #--------------------------------------------
+    # Count the total number of unread entries in feeds
+    #--------------------------------------------
+    total_unread_entries: ->
+      sum = 0
+      for feed in $rootScope.feeds
+        sum += feed.unread_entries
+      return sum
 
   return service
 ]

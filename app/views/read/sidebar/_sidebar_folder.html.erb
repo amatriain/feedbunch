@@ -1,4 +1,4 @@
-<div ng-repeat="folder in folders | orderBy:'title'"
+<div ng-repeat="folder in folders | filter:show_folder(folder) | orderBy:'title'"
      id="folder-{{folder.id}}"
      class="folder-panel panel panel-default"
      data-folder-id="{{folder.id}}">

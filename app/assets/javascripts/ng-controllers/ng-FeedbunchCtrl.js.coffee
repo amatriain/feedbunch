@@ -135,23 +135,16 @@ findSvc)->
     timerFlagSvc.reset flag
 
   #--------------------------------------------
-  # Function to count the number of unread entries in a folder
+  # Count the number of unread entries in a folder
   #--------------------------------------------
   $scope.folder_unread_entries = (folder)->
-    sum = 0
-    feeds = findSvc.find_folder_feeds folder
-    for feed in feeds
-      sum += feed.unread_entries
-    return sum
+    feedsFoldersSvc.folder_unread_entries folder
 
   #--------------------------------------------
-  # Function to count total number of unread entries in feeds
+  # Count the total number of unread entries in feeds
   #--------------------------------------------
   $scope.total_unread_entries = ->
-    sum = 0
-    for feed in $rootScope.feeds
-      sum += feed.unread_entries
-    return sum
+    feedsFoldersSvc.total_unread_entries()
 
   #--------------------------------------------
   # Function to filter feeds in a given folder
@@ -159,6 +152,17 @@ findSvc)->
   $scope.feed_in_folder = (folder_id)->
     return (feed)->
       return folder_id == feed.folder_id
+
+  #--------------------------------------------
+  # Function to filter folders without unread entries, unless the global
+  # "show read feeds" flag is set.
+  #--------------------------------------------
+  $scope.show_folder = (folder)->
+    return (folder)->
+      if $rootScope.show_read
+        return true
+      else
+        return feedsFoldersSvc.folder_unread_entries(folder) > 0
 
   #--------------------------------------------
   # Function to convert an entry's id to an integer, for filtering purposes

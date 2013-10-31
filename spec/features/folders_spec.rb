@@ -64,6 +64,36 @@ describe 'folders and feeds' do
     end
   end
 
+  it 'only shows folders with unread entries by default', js: true do
+    # @user is subscribed to feed3, without unread entries, which is the only feed in folder3
+    folder3 = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder3
+    feed3 = FactoryGirl.create :feed
+    @user.subscribe feed3.fetch_url
+    folder3.feeds << feed3
+
+    visit read_path
+    # folder3 should be hidden
+    page.should_not have_content folder3.title
+  end
+
+  it 'shows folders without unread entries and hides them again when clicking on the button', js: true do
+    # @user is subscribed to feed3, without unread entries, which is the only feed in folder3
+    folder3 = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder3
+    feed3 = FactoryGirl.create :feed
+    @user.subscribe feed3.fetch_url
+    folder3.feeds << feed3
+
+    visit read_path
+    find('a#show-read-feeds').click
+    # folder3 should appear
+    page.should have_content folder3.title
+    find('a#hide-read-feeds').click
+    # folder3 should disappear
+    page.should_not have_content folder3.title
+  end
+
   context 'folder management' do
 
     before :each do
