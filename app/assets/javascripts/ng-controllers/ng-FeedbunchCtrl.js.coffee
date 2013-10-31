@@ -72,6 +72,12 @@ findSvc)->
     $scope.new_folder_title = null
 
   #--------------------------------------------
+  # Get the currently selected feed
+  #--------------------------------------------
+  $scope.get_current_feed = ->
+    return currentFeedSvc.get()
+
+  #--------------------------------------------
   # Set the currently selected feed
   #--------------------------------------------
   $scope.set_current_feed = (feed)->
@@ -88,7 +94,7 @@ findSvc)->
   #--------------------------------------------
   # Load a page of entries for the currently selected feed or folder
   #--------------------------------------------
-  $scope.read_entries_page = ()->
+  $scope.read_entries_page = ->
     readSvc.read_entries_page()
 
   #--------------------------------------------

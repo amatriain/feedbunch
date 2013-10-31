@@ -84,7 +84,7 @@
             <li ng-repeat="folder in folders | orderBy:'title'">
               <a data-folder-id="{{folder.id}}"
                  ng-click="move_to_folder(folder)">
-                <i class="icon-ok" ng-show="current_feed.folder_id==folder.id"></i>&nbsp;
+                <i class="icon-ok" ng-show="get_current_feed().folder_id==folder.id"></i>&nbsp;
                 {{folder.title}}
               </a>
             </li>
@@ -103,8 +103,8 @@
             <li>
               <a data-folder-id="none"
                  ng-click="remove_from_folder()">
-                <i class="icon-ban-circle text-muted" ng-hide="current_feed.folder_id=='none'"></i>
-                <i class="icon-ok" ng-show="current_feed.folder_id=='none'"></i>&nbsp;
+                <i class="icon-ban-circle text-muted" ng-hide="get_current_feed().folder_id=='none'"></i>
+                <i class="icon-ok" ng-show="get_current_feed().folder_id=='none'"></i>&nbsp;
                 <%= t 'feeds.index.folder_none' %>
               </a>
             </li>
