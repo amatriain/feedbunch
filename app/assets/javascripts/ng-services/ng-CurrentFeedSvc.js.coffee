@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'currentFeedSvc',
-['$rootScope', 'entriesPaginationSvc', 'feedsFoldersSvc',
-($rootScope, entriesPaginationSvc, feedsFoldersSvc)->
+['$rootScope', 'entriesPaginationSvc', 'feedsFoldersSvc', 'findSvc'
+($rootScope, entriesPaginationSvc, feedsFoldersSvc, findSvc)->
 
   set: (feed)->
     entriesPaginationSvc.reset_entries()
@@ -17,5 +17,5 @@ angular.module('feedbunch').service 'currentFeedSvc',
     $rootScope.current_feed = null
 
   get: ->
-    $rootScope.current_feed
+    return findSvc.find_feed $rootScope.current_feed?.id
 ]

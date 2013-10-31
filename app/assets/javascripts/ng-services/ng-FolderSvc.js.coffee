@@ -10,7 +10,6 @@ angular.module('feedbunch').service 'folderSvc',
   # Remove a feed from a folder
   #--------------------------------------------
   remove_from_folder: ->
-    folder_id = currentFeedSvc.get().folder_id
     currentFeedSvc.get().folder_id = 'none'
 
     $http.put('/folders/none.json', folder: {feed_id: currentFeedSvc.get().id})
@@ -42,7 +41,6 @@ angular.module('feedbunch').service 'folderSvc',
       $http.post("/folders.json", folder: {feed_id: currentFeedSvc.get().id, title: title})
       .success (data)->
         feedsFoldersSvc.add_folder data
-        old_folder_id = currentFeedSvc.get().folder_id
         currentFeedSvc.get().folder_id = data.id
         feedsFoldersSvc.load_folders()
 
