@@ -162,7 +162,11 @@ findSvc)->
       if $rootScope.show_read
         return true
       else
-        return feedsFoldersSvc.folder_unread_entries(folder) > 0
+        # Do not hide the currently selected folder, nor the folder of the currently selected feed
+        if $rootScope.current_feed?.folder_id == folder.id || $rootScope.current_folder?.id == folder.id
+          return true
+        else
+          return feedsFoldersSvc.folder_unread_entries(folder) > 0
 
   #--------------------------------------------
   # Function to convert an entry's id to an integer, for filtering purposes

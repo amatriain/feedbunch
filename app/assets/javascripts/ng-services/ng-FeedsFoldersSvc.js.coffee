@@ -110,7 +110,9 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
           return feed.unread_entries <= 0
         for feed in read_feeds
           if $rootScope.current_feed?.id != feed.id && $rootScope.current_folder?.id != feed.folder_id
-            remove_feed feed
+            # Delete feed from the scope
+            index = $rootScope.feeds.indexOf feed
+            $rootScope.feeds.splice index, 1 if index != -1
 
     #--------------------------------------------
     # Count the number of unread entries in a folder
