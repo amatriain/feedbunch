@@ -18,6 +18,8 @@ angular.module('feedbunch').service 'findSvc',
   find_folder: (id)->
     if id == 'none'
       return null
+    else if id == "all"
+      return {id: "all"}
     else
       folders = $filter('filter') $rootScope.folders, {id: id}
       return folders[0]
