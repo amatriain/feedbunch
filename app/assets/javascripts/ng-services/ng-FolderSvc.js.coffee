@@ -23,7 +23,6 @@ angular.module('feedbunch').service 'folderSvc',
   # Move a feed to an already existing folder
   #--------------------------------------------
   move_to_folder: (folder)->
-    old_folder_id = currentFeedSvc.get().folder_id
     currentFeedSvc.get().folder_id = folder.id
     # open the new folder
     openFolderSvc.set folder
