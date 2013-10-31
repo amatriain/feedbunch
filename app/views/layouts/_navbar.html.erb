@@ -81,7 +81,7 @@
 
           <ul class="dropdown-menu text-left">
 
-            <li ng-repeat="folder in folders | filter:{title: '!all'} | orderBy:'title'">
+            <li ng-repeat="folder in folders | orderBy:'title'">
               <a data-folder-id="{{folder.id}}"
                  ng-click="move_to_folder(folder)">
                 <i class="icon-ok" ng-show="current_feed.folder_id==folder.id"></i>&nbsp;
