@@ -102,7 +102,7 @@ describe 'feeds' do
 
       within "#sidebar #folder-#{@folder1.id}" do
         # Open folder
-        find("a[data-target='#feeds-#{@folder1.id}']").click
+        find("a#open-folder-#{@folder1.id}").click
 
         page.should have_css "li#folder-#{@folder1.id}-all-feeds"
 
