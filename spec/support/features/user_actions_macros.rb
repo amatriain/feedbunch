@@ -62,7 +62,7 @@ def open_folder(folder)
   page.should have_css "#folders-list #folder-#{folder.id}"
   # Open folder only if it is closed
   if !page.has_css? "#folders-list #feeds-#{folder.id}.in"
-    find("a[data-target='#feeds-#{folder.id}']").click
+    find("a#open-folder-#{folder.id}").click
     page.should have_css "#folders-list #feeds-#{folder.id}.in"
   end
 end
