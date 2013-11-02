@@ -50,7 +50,7 @@ describe 'folders and feeds' do
       open_folder @folder1
 
       within "#folders-list #folder-#{@folder1.id}" do
-        page.should have_css "a[data-target='#feeds-#{@folder1.id}']"
+        page.should have_css "a#open-folder-#{@folder1.id}"
 
         # Folder should be open (class "in" present)
         page.should have_css "#feeds-#{@folder1.id}.in"
