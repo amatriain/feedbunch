@@ -43,7 +43,6 @@ en:
       start: "Start"
       entries: "Entries"
       open_new_tab: "Open in new tab"
-      show_read: "Show read entries"
       refresh: "Refresh"
       read-all: "Mark all as read"
       unsubscribe: "Unsubscribe"

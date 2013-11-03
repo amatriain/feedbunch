@@ -22,7 +22,6 @@ es:
       start: "Inicio"
       entries: "Entradas"
       open_new_tab: "Abrir en una nueva pestaña"
-      show_read: "Mostrar entradas leídas"
       refresh: "Actualizar"
       read-all: "Marcar todos como leídos"
       unsubscribe: "Anular suscripción"

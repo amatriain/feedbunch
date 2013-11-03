@@ -12,7 +12,6 @@ angular.module('feedbunch').service 'entriesPaginationSvc',
     openEntrySvc.unset()
     $rootScope.entries_page = 0
     $rootScope.entries = []
-    $rootScope.load_read_entries = false
     $rootScope.more_entries_available = true
     $rootScope.error_no_entries = false
 

@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$rootScope', '$http', '$filter', 'timerFlagSvc', 'findSvc',
-($rootScope, $http, $filter, timerFlagSvc, findSvc)->
+['$rootScope', '$http', '$filter', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc'
+($rootScope, $http, $filter, timerFlagSvc, findSvc, entriesPaginationSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds. Reads the boolean flag "show_read" to know if
@@ -60,6 +60,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     #---------------------------------------------
     show_read: ->
       $rootScope.show_read = true
+      entriesPaginationSvc.reset_entries()
       load_feeds()
 
     #---------------------------------------------
@@ -68,6 +69,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     #---------------------------------------------
     hide_read: ->
       $rootScope.show_read = false
+      entriesPaginationSvc.reset_entries()
       load_feeds()
 
     #---------------------------------------------

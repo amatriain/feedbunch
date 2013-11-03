@@ -26,9 +26,7 @@ angular.module('feedbunch').service 'readSvc',
 
     # Load entries from a feed or from a folder?
     if currentFeedSvc.get()
-      # Include read entries in the results, or only unread ones?
-      include_read = if $rootScope.load_read_entries then true else false
-      url = "/feeds/#{currentFeedSvc.get().id}.json?include_read=#{include_read}&page=#{entriesPaginationSvc.get_entries_page()}"
+      url = "/feeds/#{currentFeedSvc.get().id}.json?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}"
     else if currentFolderSvc.get()
       url = "/folders/#{currentFolderSvc.get().id}.json?page=#{entriesPaginationSvc.get_entries_page()}"
 
@@ -55,14 +53,6 @@ angular.module('feedbunch').service 'readSvc',
     # Load a page of entries for the currently selected feed or folder
     #---------------------------------------------
     read_entries_page: ->
-      load_entries()
-
-    #---------------------------------------------
-    # Load all of the current feed's entries, both read and unread
-    #---------------------------------------------
-    read_feed_all: ->
-      entriesPaginationSvc.reset_entries()
-      $rootScope.load_read_entries = true
       load_entries()
 
     #--------------------------------------------

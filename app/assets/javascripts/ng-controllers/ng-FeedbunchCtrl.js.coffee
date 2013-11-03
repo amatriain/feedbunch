@@ -50,12 +50,14 @@ findSvc)->
   #--------------------------------------------
   $scope.show_read_feeds_entries = ->
     feedsFoldersSvc.show_read()
+    readSvc.read_entries_page()
 
   #--------------------------------------------
   # Show only feeds with unread entries and unread entries.
   #--------------------------------------------
   $scope.hide_read_feeds_entries = ->
     feedsFoldersSvc.hide_read()
+    readSvc.read_entries_page()
 
   #--------------------------------------------
   # Remove a feed from a folder
@@ -102,12 +104,6 @@ findSvc)->
   #--------------------------------------------
   $scope.read_entries_page = ->
     readSvc.read_entries_page()
-
-  #--------------------------------------------
-  # Load all of a feed's entries regardless of state
-  #--------------------------------------------
-  $scope.read_all_entries = ->
-    readSvc.read_feed_all()
 
   #--------------------------------------------
   # Refresh a feed and load its unread entries
