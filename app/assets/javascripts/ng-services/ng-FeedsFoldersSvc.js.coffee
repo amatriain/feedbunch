@@ -7,13 +7,12 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
 ($rootScope, $http, $filter, timerFlagSvc, findSvc)->
 
   #--------------------------------------------
-  # PRIVATE FUNCTION: Load feeds. Receives a boolean argument to indicate if
-  # We want to load all feeds (true) or only feeds with unread entries (false).
+  # PRIVATE FUNCTION: Load feeds. Reads the boolean flag "show_read" to know if
+  # we want to load all feeds (true) or only feeds with unread entries (false).
   #--------------------------------------------
-  load_feeds = (include_read)->
+  load_feeds = ->
     $rootScope.feeds_loaded = false
-    $rootScope.show_read = include_read
-    $http.get("/feeds.json?include_read=#{include_read}")
+    $http.get("/feeds.json?include_read=#{$rootScope.show_read}")
     .success (data)->
       $rootScope.feeds = data
       $rootScope.feeds_loaded = true
@@ -56,18 +55,34 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   service =
 
     #---------------------------------------------
-    # Load feeds and folders via AJAX into the root scope
+    # Set to true a flag that makes all feeds (whether they have unread entries or not) and
+    # all entries (whether they are read or unread) to be shown.
     #---------------------------------------------
-    load_data: ->
-      load_folders()
-      load_feeds false
+    show_read: ->
+      $rootScope.show_read = true
+      load_feeds()
 
     #---------------------------------------------
-    # Load feeds via AJAX into the root scope. Receives a boolean argument to indicate if
-    # We want to load all feeds (true) or only feeds with unread entries (false).
+    # Set to false a flag that makes only feeds with unread entries and
+    # unread entries to be shown.
     #---------------------------------------------
-    load_feeds: (include_read)->
-      load_feeds include_read
+    hide_read: ->
+      $rootScope.show_read = false
+      load_feeds()
+
+    #---------------------------------------------
+    # Load feeds and folders via AJAX into the root scope at startup.
+    # Only feeds with unread entries are retrieved.
+    #---------------------------------------------
+    load_data: ->
+      $rootScope.show_read = false
+      load_folders()
+      load_feeds()
+
+    #---------------------------------------------
+    # Load feeds via AJAX into the root scope.
+    #---------------------------------------------
+    load_feeds: load_feeds
 
     #--------------------------------------------
     # Load folders via AJAX into the root scope.

@@ -45,11 +45,17 @@ findSvc)->
     $scope.subscription_url = null
 
   #--------------------------------------------
-  # Reload feeds. Receives a boolean argument to indicate if
-  # we want to load all feeds (true) or only feeds with unread entries (false).
+  # Show all feeds (regardless of whether they have unread entries or not)
+  # and all entries (regardless of whether they are read or not).
   #--------------------------------------------
-  $scope.load_feeds = (include_read)->
-    feedsFoldersSvc.load_feeds include_read
+  $scope.show_read_feeds_entries = ->
+    feedsFoldersSvc.show_read()
+
+  #--------------------------------------------
+  # Show only feeds with unread entries and unread entries.
+  #--------------------------------------------
+  $scope.hide_read_feeds_entries = ->
+    feedsFoldersSvc.hide_read()
 
   #--------------------------------------------
   # Remove a feed from a folder

@@ -25,16 +25,16 @@
         </li>
 
         <li ng-show="show_feed_buttons && !show_read">
-          <a id="show-read-feeds"
-              ng-click="load_feeds(true)">
-            <i class="icon-eye-open"></i> <%= t 'feeds.index.show_read_feeds_button' %>
+          <a id="show-read"
+              ng-click="show_read_feeds_entries()">
+            <i class="icon-eye-open"></i> <%= t 'feeds.index.show_read_button' %>
           </a>
         </li>
 
         <li ng-show="show_feed_buttons && show_read">
-          <a id="hide-read-feeds"
-             ng-click="load_feeds(false)">
-            <i class="icon-eye-close"></i> <%= t 'feeds.index.hide_read_feeds_button' %>
+          <a id="hide-read"
+             ng-click="hide_read_feeds_entries()">
+            <i class="icon-eye-close"></i> <%= t 'feeds.index.hide_read_button' %>
           </a>
         </li>
 
