@@ -49,9 +49,8 @@
               </a>
             </li>
 
-            <li>
+            <li ng-show="current_feed">
               <a id="refresh-feed"
-                 ng-show="current_feed"
                  ng-click="refresh_feed()">
                 <i class="icon-repeat"></i> <%= t 'feeds.index.refresh' %>
               </a>
