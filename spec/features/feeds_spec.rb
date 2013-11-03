@@ -51,14 +51,14 @@ describe 'feeds' do
       should_show_alert 'problem-loading-feeds'
     end
 
-    it 'hides entries menu button until a feed is selected', js: true do
+    it 'hides Read All button until a feed is selected', js: true do
       visit read_path
-      page.should_not have_css '#entries-management', visible: true
+      page.should_not have_css '#read-all-button', visible: true
     end
 
-    it 'shows entries menu button when a feed is selected', js: true do
+    it 'shows Read All button when a feed is selected', js: true do
       read_feed @feed1, @user
-      page.should have_css '#entries-management', visible: true
+      page.should have_css '#read-all-button', visible: true
     end
 
     it 'shows entries for a feed in the All Subscriptions folder', js: true do
@@ -197,7 +197,7 @@ describe 'feeds' do
       page.should_not have_css "[data-sidebar-feed][data-feed-id='#{feed3.id}']", visible: false
 
       # Click on "show read feeds" button
-      find('#show-read-feeds').click
+      find('#show-read').click
       page.should have_css "[data-sidebar-feed][data-feed-id='#{feed3.id}']", visible: false
 
       read_feed feed3, @user
@@ -210,11 +210,11 @@ describe 'feeds' do
       visit read_path
 
       # Click on "show read feeds" button
-      find('#show-read-feeds').click
+      find('#show-read').click
       page.should have_css "[data-sidebar-feed][data-feed-id='#{feed3.id}']", visible: false
 
       # Click on "hide read feeds" button
-      find('#hide-read-feeds').click
+      find('#hide-read').click
       page.should_not have_css "[data-sidebar-feed][data-feed-id='#{feed3.id}']", visible: false
     end
 

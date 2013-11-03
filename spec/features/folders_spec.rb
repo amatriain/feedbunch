@@ -86,10 +86,10 @@ describe 'folders and feeds' do
     folder3.feeds << feed3
 
     visit read_path
-    find('a#show-read-feeds').click
+    find('a#show-read').click
     # folder3 should appear
     page.should have_content folder3.title
-    find('a#hide-read-feeds').click
+    find('a#hide-read').click
     # folder3 should disappear
     page.should_not have_content folder3.title
   end

@@ -22,14 +22,14 @@ describe 'unsubscribe from feed' do
 
   it 'hides unsubscribe button until a feed is selected', js: true do
     visit read_path
+    open_feeds_menu
     page.should_not have_css '#unsubscribe-feed', visible: true
   end
 
   it 'shows unsubscribe button when a feed is selected', js: true do
     read_feed @feed1, @user
-    page.should_not have_css 'a#unsubscribe-feed.hidden', visible: false
-    page.should_not have_css 'a#unsubscribe-feed.disabled', visible: false
-    page.should have_css '#unsubscribe-feed'
+    open_feeds_menu
+    page.should have_css '#unsubscribe-feed', visible: true
   end
 
   it 'still shows buttons after unsubscribing from a feed', js: true do
@@ -40,23 +40,27 @@ describe 'unsubscribe from feed' do
 
     # Read @feed2. All buttons should be visible and enabled
     read_feed @feed2, @user
-    page.should have_css '#entries-management', visible: true
-    page.should have_css '#folder-management'
-    page.should have_css '#unsubscribe-feed'
+    page.should have_css '#show-read', visible: true
+    page.should have_css '#feeds-management', visible: true
+    page.should have_css '#read-all-button', visible: true
+    page.should have_css '#folder-management', visible: true
   end
 
   it 'hides unsubscribe button when reading all feeds', js: true do
     read_folder 'all'
+    open_feeds_menu
     page.should_not have_css '#unsubscribe-feed', visible: true
   end
 
   it 'hides unsubscribe button when reading a whole folder', js: true do
     read_folder @folder
+    open_feeds_menu
     page.should_not have_css '#unsubscribe-feed', visible: true
   end
 
   it 'shows a confirmation popup', js: true do
     read_feed @feed1, @user
+    open_feeds_menu
     find('#unsubscribe-feed').click
     page.should have_css '#unsubscribe-feed-popup'
   end

@@ -31,12 +31,12 @@ def open_user_menu
 end
 
 ##
-# Open the entries dropdown menu, which contains the refresh etc links
+# Open the feeds dropdown menu, which contains the refresh etc links
 
-def open_entries_menu
+def open_feeds_menu
   user_should_be_logged_in
   find('#feed-dropdown .dropdown-toggle').click
-  page.should have_css 'a#refresh-feed', visible: true
+  page.should have_css 'a#add-subscription', visible: true
 end
 
 ##
@@ -128,7 +128,7 @@ end
 # Click on the "refresh feed" button to fetch new entries for the feed
 
 def refresh_feed
-  open_entries_menu
+  open_feeds_menu
   page.should have_css '#refresh-feed'
   find('#refresh-feed').click
   # Ensure entries have finished loading
@@ -141,19 +141,15 @@ end
 # If the button is not currently visible the test immediately fails.
 
 def mark_all_as_read
-  open_entries_menu
-  page.should have_css '#read-all-button'
   find('#read-all-button').click
   page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
 end
 
 ##
-# Click on the "Show read entries" button so that all feed entries are displayed, including read ones.
+# Click on the "Show read" button so that all feeds and entries are displayed, including read ones.
 
 def show_read_entries
-  open_entries_menu
-  page.should have_css '#show-read-button'
-  find('#show-read-button').click
+  find('#show-read').click
 
   # Ensure entries have finished loading
   page.should_not have_css 'div#loading'
@@ -248,6 +244,7 @@ end
 # Receives as argument the URL to enter in the Add Subscription popup form.
 
 def subscribe_feed(url)
+  open_feeds_menu
   find('#add-subscription').click
   page.should have_css '#subscribe-feed-popup'
   within '#subscribe-feed-popup' do
@@ -267,6 +264,7 @@ end
 
 def unsubscribe_feed(feed, user)
   read_feed feed, user
+  open_feeds_menu
   find('#unsubscribe-feed').click
   find('#unsubscribe-submit').click
 

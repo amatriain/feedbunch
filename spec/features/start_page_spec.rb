@@ -23,8 +23,12 @@ describe 'start page' do
     page.should_not have_css '#feed-entries', visible: true
   end
 
-  it 'hides entries management button by default', js: true do
-    page.should_not have_css '#entries-management', visible: true
+  it 'hides Read All button by default', js: true do
+    page.should_not have_css '#read-all-button', visible: true
+  end
+
+  it 'hides folder management button by default', js: true do
+    page.should_not have_css '#folder-management', visible: true
   end
 
   it 'hides start page when reading a feed', js: true do
@@ -55,8 +59,8 @@ describe 'start page' do
       page.should_not have_css '#feed-entries', visible: true
     end
 
-    it 'hides entries management button', js: true do
-      page.should_not have_css '#entries-management', visible: true
+    it 'hides feeds management button', js: true do
+      page.should_not have_css '#feeds-management', visible: true
     end
 
   end
