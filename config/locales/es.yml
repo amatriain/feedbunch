@@ -20,12 +20,12 @@ es:
   feeds:
     index:
       start: "Inicio"
-      entries: "Entradas"
+      feed_menu: "Feeds"
       open_new_tab: "Abrir en una nueva pestaña"
       refresh: "Actualizar"
-      read-all: "Marcar todos como leídos"
+      read-all: "Leer todos"
       unsubscribe: "Anular suscripción"
-      folder_management: "Mover feed a"
+      folder_management: "Carpeta"
       folder_none: "Ninguna carpeta"
       folder_new: "Nueva carpeta"
       all_entries: "Todas las suscripciones"

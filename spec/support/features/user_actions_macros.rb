@@ -35,7 +35,7 @@ end
 
 def open_entries_menu
   user_should_be_logged_in
-  find('#entries-dropdown .dropdown-toggle').click
+  find('#feed-dropdown .dropdown-toggle').click
   page.should have_css 'a#refresh-feed', visible: true
 end
 

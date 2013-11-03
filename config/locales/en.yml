@@ -41,12 +41,12 @@ en:
   feeds:
     index:
       start: "Start"
-      entries: "Entries"
+      feed_menu: "Feeds"
       open_new_tab: "Open in new tab"
       refresh: "Refresh"
-      read-all: "Mark all as read"
+      read-all: "Read all"
       unsubscribe: "Unsubscribe"
-      folder_management: "Move feed to"
+      folder_management: "Folder"
       folder_none: "No folder"
       folder_new: "New folder"
       all_entries: "All subscriptions"
