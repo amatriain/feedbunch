@@ -84,10 +84,10 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Retrieve unread entries from a folder. See EntryReader#unread_folder_entries
+  # Retrieve unread entries from a folder. See EntryReader#folder_entries
 
-  def unread_folder_entries(folder, page: nil)
-    EntryReader.unread_folder_entries folder, self, page: page
+  def folder_entries(folder, include_read: false, page: nil)
+    EntryReader.folder_entries folder, self, include_read: include_read, page: page
   end
 
   ##
@@ -127,7 +127,7 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Change the read/unread state of an array of entries for this user. See EntryStateManager#change_entries_state
+  # Change the read/unread state of an entry for this user. See EntryStateManager#change_entries_state
 
   def change_entries_state(entry, state, update_older: false)
     EntryStateManager.change_entries_state entry, state, self, update_older: update_older

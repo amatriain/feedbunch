@@ -167,7 +167,7 @@ describe 'feed entries' do
       page.should have_content @entry1.title
     end
 
-    it 'shows all entries, including read ones', js: true do
+    it 'shows all entries in a feed, including read ones', js: true do
       entry_state1 = EntryState.where(entry_id: @entry1.id, user_id: @user.id ).first
       entry_state1.read = true
       entry_state1.save!
@@ -177,8 +177,35 @@ describe 'feed entries' do
 
       # @entry1 is read, should not appear on the page
       page.should_not have_content @entry1.title
+      page.should have_content @entry2.title
 
-      show_read_entries
+      show_read
+
+      # both @entry1 and @entry2 should appear on the page
+      page.should have_content @entry1.title
+      page.should have_content @entry2.title
+
+      # entries should have the correct CSS class
+      page.should have_css "a[data-entry-id='#{@entry1.id}'].entry-read"
+      page.should have_css "a[data-entry-id='#{@entry2.id}'].entry-unread"
+    end
+
+    it 'shows all entries in a folder, including read ones', js: true do
+      entry_state1 = EntryState.where(entry_id: @entry1.id, user_id: @user.id ).first
+      entry_state1.read = true
+      entry_state1.save!
+      folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder
+      folder.feeds << @feed
+
+      visit read_path
+      read_folder folder
+
+      # @entry1 is read, should not appear on the page
+      page.should_not have_content @entry1.title
+      page.should have_content @entry2.title
+
+      show_read
 
       # both @entry1 and @entry2 should appear on the page
       page.should have_content @entry1.title
@@ -255,7 +282,7 @@ describe 'feed entries' do
     end
 
     it 'loads the first page of all entries in a feed', js: true do
-      show_read_entries
+      show_read
       (0..24).each do |i|
         page.should have_content @entries[i].title
       end
@@ -265,7 +292,7 @@ describe 'feed entries' do
     end
 
     it 'loads the second page of all entries in a feed when scrolling down', js: true do
-      show_read_entries
+      show_read
       page.execute_script 'window.scrollTo(0,100000)'
       sleep 1
       (0..29).each do |i|
@@ -292,6 +319,27 @@ describe 'feed entries' do
       end
       (26..29).each do |i|
         page.should_not have_content @entries[i].title
+      end
+    end
+
+    it 'loads the first page of all entries in a folder', js: true do
+      read_folder @folder
+      show_read
+      (0..24).each do |i|
+        page.should have_content @entries[i].title
+      end
+      (25..29).each do |i|
+        page.should_not have_content @entries[i].title
+      end
+    end
+
+    it 'loads the second page of all entries in a folder when scrolling down', js: true do
+      read_folder @folder
+      show_read
+      page.execute_script 'window.scrollTo(0,100000)'
+      sleep 1
+      (0..29).each do |i|
+        page.should have_content @entries[i].title
       end
     end
 

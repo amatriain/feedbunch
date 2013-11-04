@@ -28,21 +28,19 @@ class EntryReader
       entries = unread_feed_entries feed, user, page: page
     end
 
-    if page.present?
-      entries = entries.page page
-    end
-
     return entries
   end
 
   ##
-  # Retrieve entries in the folder passed as argument that are marked as unread for this user.
+  # Retrieve entries in the folder passed as argument, that are in the passed state for the passed user.
   # In this context, "entries in the folder" means "entries from all feeds in the folder".
   #
   # Receives as arguments:
   # - the folder from which to retrieve entries. The special value
   # "all" means that unread entries should be retrieved from ALL subscribed feeds.
-  # - the user for which entries are unread.
+  # - user for whom the read/unread state of each entry will be considered.
+  # - include_read (optional): boolean that indicates whether to include both read and unread entries
+  # (if true) or just unread entries (if false). By default this argument is false.
   # - page (optional): results page to return.
   #
   # Entries are ordered by published (first) and id (second). If the page argument is nil, all entries
@@ -51,22 +49,22 @@ class EntryReader
   #
   # If successful, returns an ActiveRecord::Relation with the entries.
 
-  def self.unread_folder_entries(folder, user, page: nil)
+  def self.folder_entries(folder, user, include_read: false, page: nil)
     if folder == Folder::ALL_FOLDERS
-      Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from all subscribed feeds"
-      if page.present?
-        entries = Entry.joins(:entry_states).where(entry_states: {read: false, user_id: user.id}).order('published desc, id desc').page page
+      if include_read && !page.present?
+        entries = user.entries.order 'published desc, id desc'
+      elsif include_read && page.present?
+        entries = user.entries.order('published desc, id desc').page page
       else
-        entries = Entry.joins(:entry_states).where(entry_states: {read: false, user_id: user.id}).order('published desc, id desc')
+        entries = all_unread_entries user, page: page
       end
     else
-      Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from folder #{folder.id} - #{folder.title}"
-      if page.present?
-        entries = Entry.joins(:entry_states, feed: :folders).where(entry_states: {read: false, user_id: user.id},
-                                                                   folders: {id: folder.id}).order('published desc, id desc').page page
+      if include_read && !page.present?
+        entries = folder.entries.order 'published desc, id desc'
+      elsif include_read && page.present?
+        entries = folder.entries.order('published desc, id desc').page page
       else
-        entries = Entry.joins(:entry_states, feed: :folders).where(entry_states: {read: false, user_id: user.id},
-                                                                   folders: {id: folder.id}).order('published desc, id desc')
+        entries = unread_folder_entries folder, user, page: page
       end
     end
 
@@ -75,7 +73,7 @@ class EntryReader
 
   private
   
-  #
+  ##
   # Retrieve entries from the feed passed as argument that are marked as unread for the user passed.
   #
   # Receives as arguments:
@@ -95,6 +93,47 @@ class EntryReader
     else
       entries = Entry.joins(:entry_states, :feed).where(entry_states: {read: false, user_id: user.id},
                                                         feeds: {id: feed.id}).order 'published desc, id desc'
+    end
+    return entries
+  end
+
+  ##
+  # Retrieve entries from the folder passed as argument that are marked as unread for the user passed.
+  #
+  # Receives as arguments:
+  # - folder from which entries are to be retrieved
+  # - user for which entries are unread.
+  # - page (optional): results page to return.
+  #
+  # Returns an ActiveRecord::Relation with the entries if successful.
+
+  def self.unread_folder_entries(folder, user, page: nil)
+    Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from folder #{folder.id} - #{folder.title}"
+    if page.present?
+      entries = Entry.joins(:entry_states, feed: :folders).where(entry_states: {read: false, user_id: user.id},
+                                                                 folders: {id: folder.id}).order('published desc, id desc').page page
+    else
+      entries = Entry.joins(:entry_states, feed: :folders).where(entry_states: {read: false, user_id: user.id},
+                                                                 folders: {id: folder.id}).order('published desc, id desc')
+    end
+    return entries
+  end
+
+  ##
+  # Retrieve entries from all subscribed feeds that are marked as unread for the user passed.
+  #
+  # Receives as arguments:
+  # - user for which entries are unread.
+  # - page (optional): results page to return.
+  #
+  # Returns an ActiveRecord::Relation with the entries if successful.
+
+  def self.all_unread_entries(user, page: nil)
+    Rails.logger.info "User #{user.id} - #{user.email} is retrieving entries from all subscribed feeds"
+    if page.present?
+      entries = Entry.joins(:entry_states).where(entry_states: {read: false, user_id: user.id}).order('published desc, id desc').page page
+    else
+      entries = Entry.joins(:entry_states).where(entry_states: {read: false, user_id: user.id}).order('published desc, id desc')
     end
     return entries
   end

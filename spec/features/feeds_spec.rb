@@ -196,8 +196,8 @@ describe 'feeds' do
       # Feed without unread entries is not visible by default
       page.should_not have_css "[data-sidebar-feed][data-feed-id='#{feed3.id}']", visible: false
 
-      # Click on "show read feeds" button
-      find('#show-read').click
+      # Click on "show read" button
+      show_read
       page.should have_css "[data-sidebar-feed][data-feed-id='#{feed3.id}']", visible: false
 
       read_feed feed3, @user
@@ -209,12 +209,12 @@ describe 'feeds' do
       @user.subscribe feed3.fetch_url
       visit read_path
 
-      # Click on "show read feeds" button
-      find('#show-read').click
+      # Click on "show read" button
+      show_read
       page.should have_css "[data-sidebar-feed][data-feed-id='#{feed3.id}']", visible: false
 
       # Click on "hide read feeds" button
-      find('#hide-read').click
+      hide_read
       page.should_not have_css "[data-sidebar-feed][data-feed-id='#{feed3.id}']", visible: false
     end
 

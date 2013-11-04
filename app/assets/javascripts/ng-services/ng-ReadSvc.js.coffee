@@ -28,7 +28,7 @@ angular.module('feedbunch').service 'readSvc',
     if currentFeedSvc.get()
       url = "/feeds/#{currentFeedSvc.get().id}.json?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}"
     else if currentFolderSvc.get()
-      url = "/folders/#{currentFolderSvc.get().id}.json?page=#{entriesPaginationSvc.get_entries_page()}"
+      url = "/folders/#{currentFolderSvc.get().id}.json?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}"
 
     $http.get(url)
     .success (data)->

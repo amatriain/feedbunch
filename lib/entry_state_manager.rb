@@ -6,7 +6,7 @@ require 'subscriptions_manager'
 class EntryStateManager
 
   ##
-  # Change the read or unread state of several entries, for a given user.
+  # Change the read or unread state of an entry, for a given user.
   #
   # Receives as arguments:
   # - the entry to be changed state

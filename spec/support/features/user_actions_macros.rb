@@ -148,8 +148,18 @@ end
 ##
 # Click on the "Show read" button so that all feeds and entries are displayed, including read ones.
 
-def show_read_entries
+def show_read
   find('#show-read').click
+
+  # Ensure entries have finished loading
+  page.should_not have_css 'div#loading'
+end
+
+##
+# Click on the "Hide read" button so that only unread feeds and entries are displayed.
+
+def hide_read
+  find('#hide-read').click
 
   # Ensure entries have finished loading
   page.should_not have_css 'div#loading'

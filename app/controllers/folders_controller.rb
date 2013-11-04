@@ -22,6 +22,7 @@ class FoldersController < ApplicationController
   # Return HTML with all entries for a given folder, containing all feeds subscribed to by the user inside the folder.
   #
   # If the param :id is "all", all entries for all feeds subscribed by the current user will be returned.
+  # If the "include_read" parameter has the "true" value, return all entries; otherwise return only read ones.
   #
   # If the requests asks for a folder that does not belong to the current user, the response is a 404 error code (Not Found).
 
@@ -32,12 +33,18 @@ class FoldersController < ApplicationController
       @folder = current_user.folders.find params[:id]
     end
 
-    @entries = current_user.unread_folder_entries @folder, page: params[:page]
+    if params[:include_read]=='true'
+      include_read = true
+    else
+      include_read = false
+    end
+
+    @entries = current_user.folder_entries @folder, include_read: include_read, page: params[:page]
 
     if @entries.present?
       render 'show', locals: {entries: @entries, user: current_user}
     else
-      Rails.logger.info "Folder #{params[:id]} has no unread entries, returning a 404"
+      Rails.logger.info "Folder #{params[:id]} has no entries, returning a 404"
       head status: 404
     end
   rescue => e

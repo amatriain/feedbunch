@@ -83,39 +83,114 @@ describe FoldersController do
       get :show, id: @folder1.id
     end
 
+    it 'assigns to @entries only unread folder entries by default' do
+      @user.change_entries_state @entry1_1, 'read'
+
+      get :show, id: @folder1.id, format: :json
+      assigns(:entries).count.should eq 3
+      assigns(:entries).should include @entry1_2
+      assigns(:entries).should include @entry2_1
+      assigns(:entries).should include @entry2_2
+    end
+
+    it 'assigns to @entries all folder entries' do
+      @user.change_entries_state @entry1_1, 'read'
+
+      get :show, id: @folder1.id, include_read: 'true', format: :json
+      assigns(:entries).count.should eq 4
+      assigns(:entries).should include @entry1_1
+      assigns(:entries).should include @entry1_2
+      assigns(:entries).should include @entry2_1
+      assigns(:entries).should include @entry2_2
+    end
+
+    it 'assigns to @entries only all unread entries by default' do
+      @user.change_entries_state @entry1_1, 'read'
+
+      get :show, id: 'all', format: :json
+      assigns(:entries).count.should eq 5
+      assigns(:entries).should include @entry1_2
+      assigns(:entries).should include @entry2_1
+      assigns(:entries).should include @entry2_2
+      assigns(:entries).should include @entry3_1
+      assigns(:entries).should include @entry3_2
+    end
+
+    it 'assigns to @entries all entries' do
+      @user.change_entries_state @entry1_1, 'read'
+
+      get :show, id: 'all', include_read: 'true', format: :json
+      assigns(:entries).count.should eq 6
+      assigns(:entries).should include @entry1_1
+      assigns(:entries).should include @entry1_2
+      assigns(:entries).should include @entry2_1
+      assigns(:entries).should include @entry2_2
+      assigns(:entries).should include @entry3_1
+      assigns(:entries).should include @entry3_2
+    end
+
     context 'pagination' do
 
       before :each do
         @entries = []
-        # Ensure there are exactly 26 unread entries
+
+        # Ensure there are exactly 26 unread and 4 read entries in @folder1
         Entry.all.each {|e| e.destroy}
-        (0..25).each do |i|
-          e = FactoryGirl.build :entry, feed_id: @feed1.id, published: Date.new(2001, 01, 30-i)
+        (0..29).each do |i|
+          e = FactoryGirl.build :entry, feed_id: @feed1.id, published: Date.new(2001, 03, 30-i)
           @feed1.entries << e
           @entries << e
         end
         (26..29).each do |i|
-          e = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2001, 01, 30-i)
-          @feed2.entries << e
+          @user.change_entries_state @entries[i], 'read'
+        end
+
+        #Also there are 1 unread and 1 read entries in @feed3. which is not in any folder
+        (30..31).each do |i|
+          e = FactoryGirl.build :entry, feed_id: @feed3.id, published: Date.new(2001, 01, 55-i)
+          @feed3.entries << e
           @entries << e
         end
+        @user.change_entries_state @entries[31], 'read'
       end
 
       context 'all feeds' do
 
-        it 'returns the first page of entries' do
-          get :show, id: 'all', page: 1, format: :json
-          assigns(:entries).count.should eq 25
-          assigns(:entries).each_with_index do |entry, index|
-            entry.should eq @entries[index]
+        context 'unread entries' do
+
+          it 'returns the first page of entries' do
+            get :show, id: 'all', page: 1, format: :json
+            assigns(:entries).count.should eq 25
+            assigns(:entries).each_with_index do |entry, index|
+              entry.should eq @entries[index]
+            end
+          end
+
+          it 'returns the last page of entries' do
+            get :show, id: 'all', page: 2, format: :json
+            assigns(:entries).count.should eq 2
+            # In the second page of entries only one entry from @feed1 and one from @feed3 should appear
+            assigns(:entries)[0].should eq @entries[25]
+            assigns(:entries)[1].should eq @entries[30]
           end
         end
 
-        it 'returns the last page of entries' do
-          get :show, id: 'all', page: 2, format: :json
-          assigns(:entries).count.should eq 5
-          assigns(:entries).each_with_index do |entry, index|
-            entry.should eq @entries[25+index]
+        context 'all entries' do
+
+          it 'returns the first page of entries' do
+            get :show, id: 'all', include_read: 'true', page: 1, format: :json
+            assigns(:entries).count.should eq 25
+            assigns(:entries).each_with_index do |entry, index|
+              entry.should eq @entries[index]
+            end
+          end
+
+          it 'returns the last page of entries' do
+            get :show, id: 'all', include_read: 'true', page: 2, format: :json
+            assigns(:entries).count.should eq 7
+            assigns(:entries).each_with_index do |entry, index|
+              entry.should eq @entries[25+index]
+            end
           end
         end
 
@@ -123,19 +198,39 @@ describe FoldersController do
 
       context 'single folder' do
 
-        it 'returns the first page of entries' do
-          get :show, id: @folder1.id, page: 1, format: :json
-          assigns(:entries).count.should eq 25
-          assigns(:entries).each_with_index do |entry, index|
-            entry.should eq @entries[index]
+        context 'unread entries' do
+
+          it 'returns the first page of entries' do
+            get :show, id: @folder1.id, page: 1, format: :json
+            assigns(:entries).count.should eq 25
+            assigns(:entries).each_with_index do |entry, index|
+              entry.should eq @entries[index]
+            end
+          end
+
+          it 'returns the last page of entries' do
+            get :show, id: @folder1.id, page: 2, format: :json
+            assigns(:entries).count.should eq 1
+            assigns(:entries)[0].should eq @entries[25]
           end
         end
 
-        it 'returns the last page of entries' do
-          get :show, id: @folder1.id, page: 2, format: :json
-          assigns(:entries).count.should eq 5
-          assigns(:entries).each_with_index do |entry, index|
-            entry.should eq @entries[25 + index]
+        context 'all entries' do
+
+          it 'returns the first page of entries' do
+            get :show, id: @folder1.id, include_read: 'true', page: 1, format: :json
+            assigns(:entries).count.should eq 25
+            assigns(:entries).each_with_index do |entry, index|
+              entry.should eq @entries[index]
+            end
+          end
+
+          it 'returns the last page of entries' do
+            get :show, id: @folder1.id, include_read: 'true', page: 2, format: :json
+            assigns(:entries).count.should eq 5
+            assigns(:entries).each_with_index do |entry, index|
+              entry.should eq @entries[25+index]
+            end
           end
         end
 

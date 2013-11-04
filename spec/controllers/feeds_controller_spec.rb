@@ -77,21 +77,20 @@ describe FeedsController do
     end
 
     it 'assigns to @entries only unread entries by default' do
-      feed3 = FactoryGirl.create :feed
-      entry1 = FactoryGirl.build :entry, feed_id: feed3.id
-      entry2 = FactoryGirl.build :entry, feed_id: feed3.id
-      entry3 = FactoryGirl.build :entry, feed_id: feed3.id
-      feed3.entries << entry1 << entry2 << entry3
-      @user.subscribe feed3.fetch_url
+      @user.change_entries_state @entry_1_1, 'read'
 
-      entry_state3 = EntryState.where(entry_id: entry3.id, user_id: @user.id).first
-      entry_state3.read = true
-      entry_state3.save!
+      get :show, id: @feed1.id, format: :json
+      assigns(:entries).count.should eq 1
+      assigns(:entries).should include @entry_1_2
+    end
 
-      get :show, id: feed3.id, format: :json
+    it 'assigns to @entries all entries' do
+      @user.change_entries_state @entry_1_1, 'read'
+
+      get :show, id: @feed1.id, include_read: 'true', format: :json
       assigns(:entries).count.should eq 2
-      assigns(:entries).should include entry1
-      assigns(:entries).should include entry2
+      assigns(:entries).should include @entry_1_1
+      assigns(:entries).should include @entry_1_2
     end
 
     context 'pagination' do

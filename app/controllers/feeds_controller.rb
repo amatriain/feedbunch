@@ -25,6 +25,8 @@ class FeedsController < ApplicationController
   ##
   # Return HTML with all entries for a given feed, as long as the currently authenticated user is suscribed to it.
   #
+  # If the "include_read" parameter has the "true" value, return all entries; otherwise return only read ones.
+  #
   # If the requests asks for a feed the current user is not suscribed to, the response is a 404 error code (Not Found).
 
   def show
@@ -39,7 +41,7 @@ class FeedsController < ApplicationController
     if @entries.present?
       render 'show', locals: {feed: @feed, entries: @entries, user: current_user}
     else
-      Rails.logger.info "Feed #{params[:id]} has no unread entries, returning a 404"
+      Rails.logger.info "Feed #{params[:id]} has no entries, returning a 404"
       head status: 404
     end
   rescue => e
