@@ -59,8 +59,8 @@ describe 'start page' do
       page.should_not have_css '#feed-entries', visible: true
     end
 
-    it 'hides feeds management button', js: true do
-      page.should_not have_css '#feeds-management', visible: true
+    it 'hides Read All button', js: true do
+      page.should_not have_css '#read-all-button', visible: true
     end
 
   end
