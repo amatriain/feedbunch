@@ -232,6 +232,8 @@ describe 'folders and feeds' do
         @folder1.feeds << @feed2
 
         visit read_path
+        page.should have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
+
         move_feed_to_folder @feed1, @new_folder, @user
 
         # Folder should not be removed from the sidebar
