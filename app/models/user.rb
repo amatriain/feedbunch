@@ -129,8 +129,9 @@ class User < ActiveRecord::Base
   ##
   # Change the read/unread state of entries for this user. See EntryStateManager#change_entries_state
 
-  def change_entries_state(entry, state, update_older: false, folder: nil)
-    EntryStateManager.change_entries_state entry, state, self, update_older: update_older, folder: folder
+  def change_entries_state(entry, state, whole_feed: false, whole_folder: false, all_entries: false)
+    EntryStateManager.change_entries_state entry, state, self, whole_feed: whole_feed,
+                                           whole_folder: whole_folder, all_entries: all_entries
   end
 
   ##

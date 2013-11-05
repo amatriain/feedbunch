@@ -13,21 +13,20 @@ class EntryStateManager
   # - the state in which to put it. Supported values are only "read" and "unread"; this method
   # does nothing if a different value is passed
   # - the user for which the state will be set.
-  # - update_older (optional): boolean to indicate whether other entries **older** than
+  # - whole_feed (optional): boolean to indicate whether other entries in the same feed **older** than
   # the one passed as argument are to be changed state as well.
-  # - folder (optional): this argument only matters if the "update_older" argument is set to true.
-  # If "update_older" is set to true but nothing is passed in "folder", this method will update older
-  # entries **in the same feed as the passed entry**. If "update_older" is set to true and a folder is passed
-  # in this argument, this method will update older entries **in the same folder as the passed entry** (which
-  # could mean updating entries in several feeds).
+  # - whole_folder (optional): boolean to indicate whether other entries in the same folder **older** than
+  # the one passed as argument are to be changed state as well.
+  # - all_entries (optional): boolean to indicate whether **ALL** entries from all subscribed feeds **older**
+  # than the one passed as argument are to be changed state as well.
   #
-  # If the update_older optional named argument is passed as true, entries in the same feed/folder as the
-  # passed entry which either:
+  # If the update_feed or update_folder optional named arguments are passed as true,
+  # entries in the same feed/folder as the passed entry which either:
   # - have an older publish date than the passed entry
   # - or have the same publish date but a smaller id
   # are considered to be older and therefore set as read or unread depending on the "state" argument.
 
-  def self.change_entries_state(entry, state, user, update_older: false, folder: nil)
+  def self.change_entries_state(entry, state, user, whole_feed: false, whole_folder: false, all_entries: false)
     if state == 'read'
       read = true
     elsif state == 'unread'
@@ -36,15 +35,15 @@ class EntryStateManager
       return nil
     end
 
-    if update_older
-      if folder.present?
-      else
-        change_feed_entries_state entry, read, user
-      end
-    else
+    if !whole_feed && !whole_folder && !all_entries
+      # Update a single entry
       entry_state = EntryState.where(user_id: user.id, entry_id: entry.id).first
       entry_state.read = read
       entry_state.save!
+    else
+      change_feed_entries_state entry, read, user if whole_feed
+      change_folder_entries_state entry, read, user if whole_folder
+      change_all_entries_state entry, read, user if all_entries
     end
 
     return nil
@@ -65,6 +64,48 @@ class EntryStateManager
     entries = Entry.joins(:entry_states).where(entry_states: {user_id: user.id, read: !read}).
       where('entries.feed_id=? AND (entries.published<? OR (entries.published=? AND entries.id<= ?))',
             entry.feed_id, entry.published, entry.published, entry.id)
+    entries.each do |e|
+      entry_state = EntryState.where(user_id: user.id, entry_id: e.id).first
+      entry_state.read = read
+      entry_state.save!
+    end
+  end
+
+  ##
+  # Change the read/unread state for all entries in a folder older than the passed entry.
+  #
+  # Receives as arguments:
+  # - entry: this entry, and all entries in the same feed older than this one, will be marked as read.
+  # - read: boolean argument indicating if entries will be marked as read (true) or unread (false).
+  # - user: user for whom the read/unread state will be set.
+
+  def self.change_folder_entries_state(entry, read, user)
+    folder = entry.feed.user_folder user
+    # Join with entry_states to select only those entries that don't already have the desired state.
+    entries = Entry.joins(:entry_states, feed: :folders).
+      where(entry_states: {user_id: user.id, read: !read}, folders: {id: folder.id}).
+      where('entries.published<? OR (entries.published=? AND entries.id<= ?)',
+            entry.published, entry.published, entry.id)
+    entries.each do |e|
+      entry_state = EntryState.where(user_id: user.id, entry_id: e.id).first
+      entry_state.read = read
+      entry_state.save!
+    end
+  end
+
+  ##
+  # Change the read/unread state for all entries in all subscribed feeds.
+  #
+  # Receives as arguments:
+  # - entry: this entry, and all entries in subscribed feeds older than this one, will be marked as read.
+  # - read: boolean argument indicating if entries will be marked as read (true) or unread (false).
+  # - user: user for whom the read/unread state will be set.
+
+  def self.change_all_entries_state(entry, read, user)
+    # Join with entry_states to select only those entries that don't already have the desired state.
+    entries = Entry.joins(:entry_states).where(entry_states: {user_id: user.id, read: !read}).
+      where('entries.published<? OR (entries.published=? AND entries.id<= ?)',
+            entry.published, entry.published, entry.id)
     entries.each do |e|
       entry_state = EntryState.where(user_id: user.id, entry_id: e.id).first
       entry_state.read = read

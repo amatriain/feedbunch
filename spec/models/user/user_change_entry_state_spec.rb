@@ -68,7 +68,7 @@ describe User do
           @entry2.read_by?(@user).should be_false
           @entry3.read_by?(@user).should be_false
 
-          @user.change_entries_state @entry3, 'read', update_older: true
+          @user.change_entries_state @entry3, 'read', whole_feed: true
 
           @entry1.read_by?(@user).should be_true
           @entry2.read_by?(@user).should be_true
@@ -86,7 +86,7 @@ describe User do
           entry_state3.read = true
           entry_state3.save!
 
-          @user.change_entries_state @entry3, 'unread', update_older: true
+          @user.change_entries_state @entry3, 'unread', whole_feed: true
 
           @entry1.read_by?(@user).should be_false
           @entry2.read_by?(@user).should be_false
@@ -101,7 +101,7 @@ describe User do
           entry4.read_by?(@user).should be_false
           entry5.read_by?(@user).should be_false
 
-          @user.change_entries_state @entry3, 'read', update_older: true
+          @user.change_entries_state @entry3, 'read', whole_feed: true
 
           entry4.read_by?(@user).should be_false
           entry5.read_by?(@user).should be_false
@@ -115,7 +115,7 @@ describe User do
 
           entry4.read_by?(@user).should be_false
 
-          @user.change_entries_state @entry3, 'read', update_older: true
+          @user.change_entries_state @entry3, 'read', whole_feed: true
 
           entry4.read_by?(@user).should be_false
         end
@@ -141,16 +141,150 @@ describe User do
           @entry4.read_by?(@user).should be_false
           @entry5.read_by?(@user).should be_false
 
-          @user.change_entries_state @entry5, 'read', update_older: true, folder: @folder
+          @user.change_entries_state @entry5, 'read', whole_folder: true
+
           @entry1.read_by?(@user).should be_true
           @entry2.read_by?(@user).should be_true
           @entry3.read_by?(@user).should be_true
           @entry4.read_by?(@user).should be_true
           @entry5.read_by?(@user).should be_true
         end
+
+        it 'marks several entries as unread' do
+          entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+          entry_state1.read = true
+          entry_state1.save!
+          entry_state2 = EntryState.where(user_id: @user.id, entry_id: @entry2.id).first
+          entry_state2.read = true
+          entry_state2.save!
+          entry_state3 = EntryState.where(user_id: @user.id, entry_id: @entry3.id).first
+          entry_state3.read = true
+          entry_state3.save!
+          entry_state4 = EntryState.where(user_id: @user.id, entry_id: @entry4.id).first
+          entry_state4.read = true
+          entry_state4.save!
+          entry_state5 = EntryState.where(user_id: @user.id, entry_id: @entry5.id).first
+          entry_state5.read = true
+          entry_state5.save!
+
+          @user.change_entries_state @entry5, 'unread', whole_folder: true
+
+          @entry1.read_by?(@user).should be_false
+          @entry2.read_by?(@user).should be_false
+          @entry3.read_by?(@user).should be_false
+          @entry4.read_by?(@user).should be_false
+          @entry5.read_by?(@user).should be_false
+        end
+
+        it 'does not change state of newer entries in the same folder' do
+          entry6 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2010, 01, 01)
+          entry7 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
+          @feed.entries << entry6
+          @feed2.entries << entry7
+
+          entry6.read_by?(@user).should be_false
+          entry7.read_by?(@user).should be_false
+
+          @user.change_entries_state @entry5, 'read', whole_folder: true
+
+          entry6.read_by?(@user).should be_false
+          entry7.read_by?(@user).should be_false
+        end
+
+        it 'does not change state of entries from other folders' do
+          # @feed, @feed2 are in @folder. feed2 is in folder2, and feed3 is not in any folder.
+          # @user is subscribed to all of them. feed2 and feed3 have one unread entry each.
+          feed2 = FactoryGirl.create :feed
+          @user.subscribe feed2.fetch_url
+          feed3 = FactoryGirl.create :feed
+          @user.subscribe feed3.fetch_url
+          folder2 = FactoryGirl.build :folder, user_id: @user.id
+          @user.folders << folder2
+          folder2.feeds << feed2
+          entry6 = FactoryGirl.build :entry, feed_id: feed2.id
+          feed2.entries << entry6
+          entry7 = FactoryGirl.build :entry, feed_id: feed3.id
+          feed3.entries << entry7
+
+          entry6.read_by?(@user).should be_false
+          entry7.read_by?(@user).should be_false
+
+          @user.change_entries_state @entry5, 'read', whole_folder: true
+
+          entry6.read_by?(@user).should be_false
+          entry7.read_by?(@user).should be_false
+        end
       end
 
       context 'from all subscribed feeds' do
+
+        before :each do
+          @feed2 = FactoryGirl.create :feed
+          @user.subscribe @feed2.fetch_url
+          @entry4 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 01, 01)
+          @entry5 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
+          @feed2.entries << @entry4 << @entry5
+          @folder = FactoryGirl.build :folder, user_id: @user.id
+          @user.folders << @folder
+          @folder.feeds << @feed
+        end
+
+        it 'marks several entries as read' do
+          @entry1.read_by?(@user).should be_false
+          @entry2.read_by?(@user).should be_false
+          @entry3.read_by?(@user).should be_false
+          @entry4.read_by?(@user).should be_false
+          @entry5.read_by?(@user).should be_false
+
+          @user.change_entries_state @entry5, 'read', all_entries: true
+
+          @entry1.read_by?(@user).should be_true
+          @entry2.read_by?(@user).should be_true
+          @entry3.read_by?(@user).should be_true
+          @entry4.read_by?(@user).should be_true
+          @entry5.read_by?(@user).should be_true
+        end
+
+        it 'marks several entries as unread' do
+          entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+          entry_state1.read = true
+          entry_state1.save!
+          entry_state2 = EntryState.where(user_id: @user.id, entry_id: @entry2.id).first
+          entry_state2.read = true
+          entry_state2.save!
+          entry_state3 = EntryState.where(user_id: @user.id, entry_id: @entry3.id).first
+          entry_state3.read = true
+          entry_state3.save!
+          entry_state4 = EntryState.where(user_id: @user.id, entry_id: @entry4.id).first
+          entry_state4.read = true
+          entry_state4.save!
+          entry_state5 = EntryState.where(user_id: @user.id, entry_id: @entry5.id).first
+          entry_state5.read = true
+          entry_state5.save!
+
+          @user.change_entries_state @entry5, 'unread', all_entries: true
+
+          @entry1.read_by?(@user).should be_false
+          @entry2.read_by?(@user).should be_false
+          @entry3.read_by?(@user).should be_false
+          @entry4.read_by?(@user).should be_false
+          @entry5.read_by?(@user).should be_false
+        end
+
+        it 'does not change state of newer entries' do
+          entry6 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2010, 01, 01)
+          entry7 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
+          @feed.entries << entry6
+          @feed2.entries << entry7
+
+          entry6.read_by?(@user).should be_false
+          entry7.read_by?(@user).should be_false
+
+          @user.change_entries_state @entry5, 'read', all_entries: true
+
+          entry6.read_by?(@user).should be_false
+          entry7.read_by?(@user).should be_false
+        end
 
       end
     end
