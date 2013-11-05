@@ -61,8 +61,10 @@ class EntryStateManager
   # - user: user for whom the read/unread state will be set.
 
   def self.change_feed_entries_state(entry, read, user)
-    entries = Entry.where('feed_id=? AND (published < ? OR  (published = ? AND id <= ?) )',
-                          entry.feed_id, entry.published, entry.published, entry.id)
+    # Join with entry_states to select only those entries that don't already have the desired state.
+    entries = Entry.joins(:entry_states).where(entry_states: {user_id: user.id, read: !read}).
+      where('entries.feed_id=? AND (entries.published<? OR (entries.published=? AND entries.id<= ?))',
+            entry.feed_id, entry.published, entry.published, entry.id)
     entries.each do |e|
       entry_state = EntryState.where(user_id: user.id, entry_id: e.id).first
       entry_state.read = read
