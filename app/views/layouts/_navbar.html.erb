@@ -67,7 +67,7 @@
           </ul>
         </li>
 
-        <li ng-show="show_feed_buttons && current_feed">
+        <li ng-show="show_feed_buttons && (current_feed || current_folder)">
           <a id="read-all-button" ng-click="mark_all_read()">
             <i class="icon-check"></i> <%= t 'feeds.index.read-all' %>
           </a>

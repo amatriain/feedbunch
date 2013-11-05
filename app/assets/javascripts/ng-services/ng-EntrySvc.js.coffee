@@ -33,16 +33,34 @@ angular.module('feedbunch').service 'entrySvc',
   # PRIVATE FUNCTION - Mark all entries from a feed as read .
   # Receives as arguments a feed.
   #--------------------------------------------
-  change_entries_read = (feed)->
+  change_entries_read = ->
     # Mark entries as read in the model
     first_entry = $rootScope.entries[0]
     for entry in $rootScope.entries
       entry.read = true
       entry.changing_state = true
 
-    unreadCountSvc.zero_unread_count feed
+    # Find out if the user wants to mark as read a whole feed, a whole folder, or all entries in
+    # all subscribed feeds.
+    if $rootScope.current_feed
+      whole_feed = "true"
+      whole_folder = "false"
+      all_entries = "false"
+      unreadCountSvc.zero_feed_count $rootScope.current_feed
+    else if $rootScope.current_folder && $rootScope.current_folder?.id != "all"
+      whole_feed = "false"
+      whole_folder = "true"
+      all_entries = "false"
+      unreadCountSvc.zero_folder_count $rootScope.current_folder
+    else if $rootScope.current_folder && $rootScope.current_folder?.id == "all"
+      whole_feed = "false"
+      whole_folder = "false"
+      all_entries = "true"
+      unreadCountSvc.zero_folder_count 'all'
+    else
+      return
 
-    $http.put("/entries/update.json", entry: {id: first_entry.id, state: 'read', update_older: 'true'})
+    $http.put("/entries/update.json", entry: {id: first_entry.id, state: 'read', whole_feed: whole_feed, whole_folder: whole_folder, all_entries: all_entries})
     .success ->
       for entry in $rootScope.entries
         entry.changing_state = false
@@ -68,7 +86,7 @@ angular.module('feedbunch').service 'entrySvc',
     # Mark all entries as read
     #--------------------------------------------
     mark_all_read: ->
-      change_entries_read $rootScope.current_feed
+      change_entries_read()
 
     #--------------------------------------------
     # Mark a single entry as unread

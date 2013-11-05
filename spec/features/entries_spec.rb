@@ -155,6 +155,42 @@ describe 'feed entries' do
       page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
     end
 
+    it 'marks all folder entries as read', js: true do
+      folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder
+      folder.feeds << @feed
+      visit read_path
+
+      read_folder folder
+      mark_all_as_read
+
+      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      unread_folder_entries_should_eq folder, 0
+
+      # On refresh @feed and folder should not appear
+      visit read_path
+      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
+      page.should_not have_css "#folder-#{folder.id}"
+    end
+
+    it 'marks all entries as read', js: true do
+      folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder
+      folder.feeds << @feed
+      visit read_path
+
+      read_folder 'all'
+      mark_all_as_read
+
+      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      unread_folder_entries_should_eq 'all', 0
+
+      # On refresh @feed and folder should not appear
+      visit read_path
+      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
+      page.should_not have_css "#folder-#{folder.id}"
+    end
+
     it 'marks an entry as unread', js: true do
       read_entry @entry1
       entry_should_be_marked_read @entry1
@@ -352,6 +388,42 @@ describe 'feed entries' do
       # On refresh @feed should not appear
       visit read_path
       page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
+    end
+
+    it 'marks all folder entries as read', js: true do
+      folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder
+      folder.feeds << @feed
+      visit read_path
+
+      read_folder folder
+      mark_all_as_read
+
+      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      unread_folder_entries_should_eq folder, 0
+
+      # On refresh @feed and folder should not appear
+      visit read_path
+      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
+      page.should_not have_css "#folder-#{folder.id}"
+    end
+
+    it 'marks all entries as read', js: true do
+      folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder
+      folder.feeds << @feed
+      visit read_path
+
+      read_folder 'all'
+      mark_all_as_read
+
+      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      unread_folder_entries_should_eq 'all', 0
+
+      # On refresh @feed and folder should not appear
+      visit read_path
+      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
+      page.should_not have_css "#folder-#{folder.id}"
     end
 
   end
