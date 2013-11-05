@@ -99,7 +99,7 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Move a feed to an existing folder. See FolderManager#move_feed_to_folder
+  # Move a feed to a folder. See FolderManager#move_feed_to_folder
 
   def move_feed_to_folder(feed, folder: nil, folder_title: nil)
     FolderManager.move_feed_to_folder feed, self, folder: folder, folder_title: folder_title
@@ -127,10 +127,10 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Change the read/unread state of an entry for this user. See EntryStateManager#change_entries_state
+  # Change the read/unread state of entries for this user. See EntryStateManager#change_entries_state
 
-  def change_entries_state(entry, state, update_older: false)
-    EntryStateManager.change_entries_state entry, state, self, update_older: update_older
+  def change_entries_state(entry, state, update_older: false, folder: nil)
+    EntryStateManager.change_entries_state entry, state, self, update_older: update_older, folder: folder
   end
 
   ##
