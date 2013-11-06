@@ -73,7 +73,7 @@ angular.module('feedbunch').service 'entrySvc',
     # Mark a single entry as read
     #--------------------------------------------
     read_entry: (entry)->
-      if openEntrySvc.get() == entry
+      if openEntrySvc.get()?.id == entry.id
         # User is closing the open entry, do nothing
         openEntrySvc.unset()
       else
