@@ -70,3 +70,12 @@
   color: #8F8F8F;
   text-align: center;
 }
+
+#feed-entries .entry > a.entry-anchor {
+  visibility: hidden;
+  display:block;
+  position: relative;
+  top: -93px;
+  padding-bottom: 0;
+  margin: 0;
+}
