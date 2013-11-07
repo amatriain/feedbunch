@@ -15,6 +15,10 @@ class UpdateFeedJob
   # If the feed does not exist, further refreshes of the feed are unscheduled. This avoids the case
   # in which scheduled updates for a deleted feed happened periodically.
   #
+  # Every time a feed update runs:
+  # - old entries are removed from the database. See OldEntryCleaner.cleanup
+  # - the unread entries count for each subscribed user are recalculated and corrected if necessary
+  #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 
   def self.perform(feed_id)
@@ -26,8 +30,19 @@ class UpdateFeedJob
     end
     feed = Feed.find feed_id
 
+    # Fetch feed
     FeedClient.fetch feed, false if Feed.exists? feed_id
+    # Remove old entries from database
     OldEntryCleaner.cleanup feed
+
+    # Update unread entries count if it's currently incorrect
+    feed.users.each do |user|
+      count = EntryState.joins(entry: :feed).where(read: false, user: user, feeds: {id: feed.id}).count
+      if user.feed_unread_count(feed) != count
+        feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: feed.id).first
+        feed_subscription.update unread_entries: count
+      end
+    end
   end
 
   ##
