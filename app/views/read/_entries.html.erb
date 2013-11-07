@@ -39,8 +39,10 @@
         </p>
 
         <p class="hidden">{{entry.guid}}</p>
-        <p ng-show="entry.content.length > 0" ng-bind-html-unsafe="entry.content"></p>
-        <p ng-hide="entry.content.length > 0" ng-bind-html-unsafe="entry.summary"></p>
+        <div class="entry-content">
+          <p ng-show="entry.content.length > 0" ng-bind-html-unsafe="entry.content"></p>
+          <p ng-hide="entry.content.length > 0" ng-bind-html-unsafe="entry.summary"></p>
+        </div>
       </div>
     </div>
   </div>
