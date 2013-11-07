@@ -90,11 +90,11 @@ FEED_XML
     it 'updates entry if it is received again' do
       # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
+      publish_date = DateTime.iso8601('2013-01-01T00:00:00')
       entry = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
-                                 url: 'http://origina.url.com', author: 'Original author',
+                                 url: 'http://original.url.com', author: 'Original author',
                                  content: 'Original content', summary: 'Original summary',
-                                 published: DateTime.iso8601('2013-01-01T00:00:00'),
-                                 guid: @entry1.guid
+                                 published: publish_date, guid: @entry1.guid
 
       # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
       FeedClient.fetch @feed
@@ -106,8 +106,12 @@ FEED_XML
       entry.url.should eq @entry1.url
       entry.author.should eq @entry1.author
       entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
-      entry.published.should eq @entry1.published
       entry.guid.should eq @entry1.guid
+
+      # Original publish date should not be changed.
+      # This is intended for feeds which do not return a publish date (therefore the fetch date is used by default) and
+      # which do not use HTTP caching (therefore they return the full entries list every time they are fetched).
+      entry.published.should eq publish_date
     end
 
     it 'does not update entry if another one with the same guid is received from another feed' do
@@ -219,11 +223,11 @@ FEED_XML
     it 'updates entry if it is received again' do
       # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
+      publish_date = DateTime.iso8601('2013-01-01T00:00:00')
       entry = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
-                                 url: 'http://origina.url.com', author: 'Original author',
+                                 url: 'http://original.url.com', author: 'Original author',
                                  content: 'Original content', summary: 'Original summary',
-                                 published: DateTime.iso8601('2013-01-01T00:00:00'),
-                                 guid: @entry1.guid
+                                 published: publish_date, guid: @entry1.guid
 
       # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
       FeedClient.fetch @feed
@@ -234,8 +238,12 @@ FEED_XML
       entry.url.should eq @entry1.url
       entry.author.should eq @entry1.author
       entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
-      entry.published.should eq @entry1.published
       entry.guid.should eq @entry1.guid
+
+      # Original publish date should not be changed.
+      # This is intended for feeds which do not return a publish date (therefore the fetch date is used by default) and
+      # which do not use HTTP caching (therefore they return the full entries list every time they are fetched).
+      entry.published.should eq publish_date
     end
 
     it 'does not update entry if another one with the same guid is received from another feed' do

@@ -2,10 +2,11 @@
 # Class to save or update in the database a collection of entries fetched from a feed.
 
 class EntryManager
+
   ##
   # Save or update feed entries in the database.
   #
-  # For each entry, if an entry with the same guid already exists in the database, update it with
+  # For each entry, if an entry with the same guid for the same feed already exists in the database, update it with
   # the values passed as argument to this method. Otherwise save it as a new entry in the database.
   #
   # The argument passed are:
@@ -14,6 +15,14 @@ class EntryManager
   #
   # If during processing there is a problem with an entry, it is skipped and the next one is processed,
   # instead of failing the whole process.
+  #
+  # Note: when updating an already existing entry, the original publish date is kept (this field is not updated).
+  # This is intended for the case in which a feed returns no publish date for its entries (therefore the fetch date
+  # is used by default) and also it doesn't support HTTP caching (it returns the full entries list every time it's
+  # fetched). If we updated the publish date in this case, the publish date of entries in this feed would be updated
+  # to the current datetime every time the feed was fetched, which would mean entries from this feed would always
+  # "float" to the top of the entries list. The fix is to use the publish date the entry had the first time it was
+  # fetched, and every time it's fetched again keep the original publish date.
 
   def self.save_or_update_entries(feed, entries)
     entries.reverse_each do |entry|
@@ -30,6 +39,7 @@ class EntryManager
           # If entry is already in the database, update it
           Rails.logger.info "Updating already saved entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{guid}"
           e = Entry.where(guid: guid).first
+          entry_hash.delete :published
           e.update entry_hash
         else
           # Otherwise, save a new entry in the DB
