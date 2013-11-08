@@ -154,9 +154,9 @@ describe Entry do
         entry.summary.should eq modified_summary
       end
 
-      it 'removes width and height and adds max-width to images' do
+      it 'modifies images' do
         unmodified_summary = '<img width="1000" height="337" alt="20131029" class="attachment-full wp-post-image" src="http://www.leasticoulddo.com/wp-content/uploads/2013/10/20131029.gif">'
-        modified_summary = '<img alt="20131029" class="attachment-full wp-post-image" src="http://www.leasticoulddo.com/wp-content/uploads/2013/10/20131029.gif" style="max-width:100%;">'
+        modified_summary = '<img alt="20131029" class="img-thumbnail center-block" src="http://www.leasticoulddo.com/wp-content/uploads/2013/10/20131029.gif" style="max-width:100%;">'
         entry = FactoryGirl.create :entry, summary: unmodified_summary
         entry.summary.should eq modified_summary
       end
@@ -171,9 +171,9 @@ describe Entry do
         entry.content.should eq modified_content
       end
 
-      it 'removes width and height and adds max-width to images' do
+      it 'modifies images' do
         unmodified_content = '<img width="1000" height="337" alt="20131029" class="attachment-full wp-post-image" src="http://www.leasticoulddo.com/wp-content/uploads/2013/10/20131029.gif">'
-        modified_content = '<img alt="20131029" class="attachment-full wp-post-image" src="http://www.leasticoulddo.com/wp-content/uploads/2013/10/20131029.gif" style="max-width:100%;">'
+        modified_content = '<img alt="20131029" class="img-thumbnail center-block" src="http://www.leasticoulddo.com/wp-content/uploads/2013/10/20131029.gif" style="max-width:100%;">'
         entry = FactoryGirl.create :entry, content: unmodified_content
         entry.content.should eq modified_content
       end
