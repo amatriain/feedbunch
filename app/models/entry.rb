@@ -161,7 +161,8 @@ class Entry < ActiveRecord::Base
   # in the passed fragment.
   # Any style="" attribute in images will be overwritten.
   #
-  # Also adds the "img-thumbnail" bootstrap CSS class for prettier images (subtle border).
+  # Also adds the "img-thumbnail" and "center-block" bootstrap CSS classes for prettier images
+  # (subtle border and image centering).
   #
   # Receives as argument a parsed HTML fragment.
 
@@ -170,7 +171,7 @@ class Entry < ActiveRecord::Base
       img['style'] = 'max-width:100%;'
       img.remove_attribute 'height'
       img.remove_attribute 'width'
-      img['class'] = 'img-thumbnail'
+      img['class'] = 'img-thumbnail center-block'
     end
     return html_doc
   end
