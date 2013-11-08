@@ -138,8 +138,8 @@ class Entry < ActiveRecord::Base
 
   def markup_manipulation(html_fragment)
     html_doc = Nokogiri::HTML html_fragment
-    html_doc = add_target_blank html_doc
-    html_doc = add_max_width html_doc
+    html_doc = link_manipulations html_doc
+    html_doc = image_manipulations html_doc
     return html_doc.css('body').children.to_s
   end
 
@@ -148,7 +148,7 @@ class Entry < ActiveRecord::Base
   # Receives as argument a parsed HTML fragment.
   # The attribute will overwrite any target="" attribute that was present in the links
 
-  def add_target_blank(html_doc)
+  def link_manipulations(html_doc)
     html_doc.css('a').each do |link|
       link['target'] = '_blank'
     end
@@ -159,14 +159,18 @@ class Entry < ActiveRecord::Base
   ##
   # Remove any height and width attributes and add a CSS max-width:100% to any images
   # in the passed fragment.
-  # Receives as argument a parsed HTML fragment.
   # Any style="" attribute in images will be overwritten.
+  #
+  # Also adds the "img-thumbnail" bootstrap CSS class for prettier images (subtle border).
+  #
+  # Receives as argument a parsed HTML fragment.
 
-  def add_max_width(html_doc)
+  def image_manipulations(html_doc)
     html_doc.css('img').each do |img|
       img['style'] = 'max-width:100%;'
       img.remove_attribute 'height'
       img.remove_attribute 'width'
+      img['class'] = 'img-thumbnail'
     end
     return html_doc
   end
