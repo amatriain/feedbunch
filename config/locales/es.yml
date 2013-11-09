@@ -57,7 +57,8 @@ es:
       problem_entry_state: "Ha habido un problema con el servidor"
   entries:
     index:
-      mark_unread: "Marcar como no leído"
+      mark_unread: "No leído"
+      mark_read: "Leído"
   start:
     welcome: "Bienvenido a Feedbunch"
     stats: "Mostrando %{feeds} feeds con %{entries} entradas sin leer."

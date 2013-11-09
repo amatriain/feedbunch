@@ -191,16 +191,49 @@ describe 'feed entries' do
       page.should_not have_css "#folder-#{folder.id}"
     end
 
+    it 'hides Read button for read entries', js: true do
+      read_entry @entry1
+      entry_should_be_marked_read @entry1
+      page.should have_css "div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']"
+      page.should_not have_css "div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']"
+    end
+
+    it 'hides Unead button for unread entries', js: true do
+      read_entry @entry1
+      entry_should_be_marked_read @entry1
+      find("div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']").click
+      entry_should_be_marked_unread @entry1
+
+      page.should_not have_css "div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']"
+      page.should have_css "div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']"
+    end
+
     it 'marks an entry as unread', js: true do
       read_entry @entry1
       entry_should_be_marked_read @entry1
 
-      find("div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry()']").click
-
+      find("div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']").click
       entry_should_be_marked_unread @entry1
 
+      # entry should still be present when reloading feed entries
       read_feed @feed, @user
       page.should have_content @entry1.title
+    end
+
+    it 'marks an entry as read', js: true do
+      # mark entry as unread
+      read_entry @entry1
+      entry_should_be_marked_read @entry1
+      find("div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']").click
+      entry_should_be_marked_unread @entry1
+
+      # mark entry as read using the entry buttonbar
+      find("div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']").click
+      entry_should_be_marked_read @entry1
+
+      # entry should not be present when reloading feed entries
+      read_feed @feed, @user
+      page.should_not have_content @entry1.title
     end
 
     it 'shows all entries in a feed, including read ones', js: true do

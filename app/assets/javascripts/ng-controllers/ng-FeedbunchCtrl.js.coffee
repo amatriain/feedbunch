@@ -118,10 +118,10 @@ findSvc)->
     readSvc.toggle_open_folder folder
 
   #--------------------------------------------
-  # Mark a single entry as read
+  # Toggle open/close for an entry. Mark it as read if opening.
   #--------------------------------------------
-  $scope.read_entry = (entry)->
-    entrySvc.read_entry entry
+  $scope.toggle_open_entry = (entry)->
+    entrySvc.toggle_open_entry entry
 
   #--------------------------------------------
   # Mark all entries as read
@@ -132,8 +132,14 @@ findSvc)->
   #--------------------------------------------
   # Mark a single entry as unread
   #--------------------------------------------
-  $scope.unread_entry = ->
-    entrySvc.unread_entry()
+  $scope.unread_entry = (entry)->
+    entrySvc.unread_entry(entry)
+
+  #--------------------------------------------
+  # Mark a single entry as read
+  #--------------------------------------------
+  $scope.read_entry = (entry)->
+    entrySvc.read_entry(entry)
 
   #--------------------------------------------
   # Set a boolean flag in the root scope as false. The flag name must be passed as a string.

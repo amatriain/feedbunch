@@ -70,9 +70,9 @@ angular.module('feedbunch').service 'entrySvc',
   service =
 
     #--------------------------------------------
-    # Mark a single entry as read
+    # Set (if opening) or unset (if closing) the currently open entry. If opening, mark it as read.
     #--------------------------------------------
-    read_entry: (entry)->
+    toggle_open_entry: (entry)->
       if openEntrySvc.get()?.id == entry.id
         # User is closing the open entry, do nothing
         openEntrySvc.unset()
@@ -83,17 +83,24 @@ angular.module('feedbunch').service 'entrySvc',
           change_entry_state entry, true
 
     #--------------------------------------------
+    # Mark a single entry as unread
+    #--------------------------------------------
+    read_entry: (entry)->
+      change_entry_state entry, true if !entry.read
+
+    #--------------------------------------------
+    # Mark a single entry as unread
+    #--------------------------------------------
+    unread_entry: (entry)->
+      change_entry_state entry, false if entry.read
+
+    #--------------------------------------------
     # Mark all entries as read
     #--------------------------------------------
     mark_all_read: ->
       change_entries_read()
 
-    #--------------------------------------------
-    # Mark a single entry as unread
-    #--------------------------------------------
-    unread_entry: ->
-      if openEntrySvc.get()
-        change_entry_state openEntrySvc.get(), false if openEntrySvc.get().read
+
 
   return service
 ]

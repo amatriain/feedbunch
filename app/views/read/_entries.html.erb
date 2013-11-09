@@ -17,7 +17,7 @@
     <a data-entry-id="{{entry.id}}"
        class="list-group-item"
        ng-class="{'entry-read':entry.read && !entry.changing_state, 'entry-unread': !entry.read && !entry.changing_state, 'entry-becoming-read':entry.read && entry.changing_state, 'entry-becoming-unread':!entry.read && entry.changing_state}"
-       ng-click="read_entry(entry)">
+       ng-click="toggle_open_entry(entry)">
       <span class="entry-title">{{entry.title}}</span>
       <span class="pull-right">{{entry.published}}</span>
     </a>
@@ -29,8 +29,15 @@
       <div class="panel-body entry-content">
 
         <div class="entry-toolbar btn-toolbar">
-          <a class="btn btn-default btn-sm" ng-click="unread_entry()">
+          <a class="btn btn-default btn-sm"
+             ng-click="unread_entry(entry)"
+             ng-show="entry.read">
             <i class="icon-eye-close"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
+          </a>
+          <a class="btn btn-default btn-sm"
+             ng-click="read_entry(entry)"
+             ng-show="!entry.read">
+            <i class="icon-eye-open"></i>&nbsp;<%= t 'entries.index.mark_read' %>
           </a>
         </div>
 
