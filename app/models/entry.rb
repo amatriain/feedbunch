@@ -171,7 +171,7 @@ class Entry < ActiveRecord::Base
       img['style'] = 'max-width:100%;'
       img.remove_attribute 'height'
       img.remove_attribute 'width'
-      img['class'] = 'img-thumbnail center-block'
+      img['class'] = 'center-block'
     end
     return html_doc
   end
