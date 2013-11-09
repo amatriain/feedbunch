@@ -1,7 +1,7 @@
 <div class="col-md-8 alert alert-danger alert-block" ng-show="import_status=='ERROR'">
 
   <div class="col-md-2">
-    <i class="icon-warning-sign icon-4x"></i>
+    <i class="fa fa-warning fa-4x"></i>
   </div>
 
   <div class="col-md-10">
@@ -16,7 +16,7 @@
 <div id="data-import-running" class="col-md-8 alert alert-info alert-block" ng-show="import_status=='RUNNING'">
 
   <div class="col-md-2">
-    <i class="icon-cogs icon-4x"></i>
+    <i class="fa fa-cogs fa-4x"></i>
   </div>
 
   <div class="col-md-10">
@@ -40,7 +40,7 @@
 <div class="col-md-8 alert alert-success alert-block" ng-show="import_status=='SUCCESS'">
 
   <div class="col-md-2">
-    <i class="icon-thumbs-up-alt icon-4x"></i>
+    <i class="fa fa-thumbs-o-up fa-4x"></i>
   </div>
 
   <div class="col-md-10">
@@ -56,7 +56,7 @@
 <div class="col-md-8 alert alert-warning alert-block" ng-show="import_status=='NONE'">
 
   <div class="col-md-2">
-    <i class="icon-magic icon-4x"></i>
+    <i class="fa fa-magic fa-4x"></i>
   </div>
 
   <div class="col-md-10">
@@ -64,11 +64,11 @@
     <p><%= t 'start.import.introduction' %></p>
     <ol class="start-list icons-ul">
       <li>
-        <i class="icon-angle-right"></i>
+        <i class="fa fa-angle-right"></i>
         <%= t 'start.import.download_data_html' %>
       </li>
       <li>
-        <i class="icon-angle-right"></i>
+        <i class="fa fa-angle-right"></i>
         <a id="start-data-import"
            class="alert-link"
            data-toggle="modal"

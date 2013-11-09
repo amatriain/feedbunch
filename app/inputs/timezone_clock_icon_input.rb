@@ -13,6 +13,6 @@
 
 class TimezoneClockIconInput < SimpleForm::Inputs::Base
   def input
-    "<span class=\"input-group-addon\"><i class=\"icon-time\"></i></span>#{@builder.input_field(attribute_name, as: :time_zone, priority: /UTC/)}".html_safe
+    "<span class=\"input-group-addon\"><i class=\"fa fa-clock-o\"></i></span>#{@builder.input_field(attribute_name, as: :time_zone, priority: /UTC/)}".html_safe
   end
 end

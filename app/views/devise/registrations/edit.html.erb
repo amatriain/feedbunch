@@ -9,7 +9,7 @@
 </div>
 
 <div class="col-md-offset-1 pull-left">
-  <i class="icon-double-angle-left"></i>
+  <i class="fa fa-angle-double-left"></i>
   <%= link_to t('devise.views.return'), read_path, id: 'return' %>
 </div>
 
@@ -38,7 +38,7 @@
       <div class="form-group">
         <div class="col-lg-offset-3 col-lg-7">
           <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
-            <i class="icon-save"></i> <%= t 'devise.views.update_account' %>
+            <i class="fa fa-save"></i> <%= t 'devise.views.update_account' %>
           <% end %>
         </div>
       </div>
@@ -57,7 +57,7 @@
         <%= link_to profile_cancel_path(locale: I18n.locale),
                       :data => { :confirm => t('devise.views.cancel_account_confirm') }, :method => :delete,
                       class: 'btn btn-danger' do %>
-          <i class="icon-trash"></i>
+          <i class="fa fa-trash-o"></i>
           <%= t('devise.views.cancel_account') %>
         <% end %>
       </div>

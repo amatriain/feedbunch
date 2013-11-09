@@ -1,14 +1,14 @@
 <div id="sidebar">
   <ul class="nav nav-pills nav-stacked">
     <li ng-class="{active: current_feed==null && current_folder==null}">
-      <a id="start-page" ng-click="show_start_page()"><i class="icon-asterisk"></i> <%= t 'feeds.index.start' %></a>
+      <a id="start-page" ng-click="show_start_page()"><i class="fa fa-asterisk"></i> <%= t 'feeds.index.start' %></a>
     </li>
   </ul>
 
   <hr>
 
   <%# Animated spinner while folders are loading %>
-  <i class="icon-spinner icon-spin" ng-show="!folders_loaded"></i>
+  <i class="fa fa-spinner fa-spin" ng-show="!folders_loaded"></i>
 
   <div id="folders-list" class="panel-group" ng-cloak>
 
