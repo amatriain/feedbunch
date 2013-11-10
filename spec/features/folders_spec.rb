@@ -138,8 +138,8 @@ describe 'folders and feeds' do
       open_folder_dropdown
       within '#folder-management-dropdown' do
         # tick should be only besides No Folder
-        page.should have_css 'a[data-folder-id="none"] > i.icon-ok'
-        page.should_not have_css "li[data-folder-id='#{@folder1.id}'] a > i.icon-ok"
+        page.should have_css 'a[data-folder-id="none"] > i.fa.fa-check'
+        page.should_not have_css "li[data-folder-id='#{@folder1.id}'] a > i.fa.fa-check"
       end
     end
 
@@ -147,8 +147,8 @@ describe 'folders and feeds' do
       open_folder_dropdown
       within '#folder-management-dropdown' do
         # tick should be only besides @folder1
-        page.should_not have_css 'li[data-folder-id="none"] a > i.icon-ok'
-        page.should have_css "a[data-folder-id='#{@folder1.id}'] > i.icon-ok"
+        page.should_not have_css 'li[data-folder-id="none"] a > i.fa.fa-check'
+        page.should have_css "a[data-folder-id='#{@folder1.id}'] > i.fa.fa-check"
       end
     end
 
@@ -424,7 +424,7 @@ describe 'folders and feeds' do
         within '#folder-management-dropdown ul.dropdown-menu' do
           page.should have_content title
           # New folder should be in the dropdown, with a tick to indicate @feed1 is in the folder
-          page.should have_css "a[data-folder-id='#{new_folder.id}'] i.icon-ok"
+          page.should have_css "a[data-folder-id='#{new_folder.id}'] i.fa.fa-check"
         end
       end
 
