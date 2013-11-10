@@ -190,8 +190,9 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     #--------------------------------------------
     total_unread_entries: ->
       sum = 0
-      for feed in $rootScope.feeds
-        sum += feed.unread_entries
+      if $rootScope.feeds
+        for feed in $rootScope.feeds
+          sum += feed.unread_entries
       return sum
 
   return service
