@@ -14,7 +14,7 @@ findSvc)->
   $rootScope.show_feed_buttons = true
 
   # Load folders and feeds via AJAX on startup
-  feedsFoldersSvc.load_data()
+  feedsFoldersSvc.start_refresh_data()
 
   # Load status of data import process for the current user
   importStatusSvc.load_data false

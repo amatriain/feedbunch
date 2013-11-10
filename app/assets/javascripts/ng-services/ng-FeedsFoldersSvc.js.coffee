@@ -3,21 +3,29 @@
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$rootScope', '$http', '$filter', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc'
-($rootScope, $http, $filter, timerFlagSvc, findSvc, entriesPaginationSvc)->
+['$rootScope', '$http', '$filter', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc'
+($rootScope, $http, $filter, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds. Reads the boolean flag "show_read" to know if
   # we want to load all feeds (true) or only feeds with unread entries (false).
   #--------------------------------------------
   load_feeds = ->
-    $rootScope.feeds_loaded = false
     $http.get("/feeds.json?include_read=#{$rootScope.show_read}")
     .success (data)->
       $rootScope.feeds = data
       $rootScope.feeds_loaded = true
     .error ->
       timerFlagSvc.start 'error_loading_feeds'
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Load feeds every minute.
+  #--------------------------------------------
+  refresh_feeds = ->
+    $timeout ->
+      load_feeds()
+      refresh_feeds()
+    , 60000
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load folders.
@@ -29,6 +37,13 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       $rootScope.folders_loaded = true
     .error ->
       timerFlagSvc.start 'error_loading_folders'
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Load feeds and folders.
+  #--------------------------------------------
+  load_data = ->
+    load_folders()
+    load_feeds()
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Update the model to account for a feed having been removed from a folder
@@ -61,6 +76,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     show_read: ->
       $rootScope.show_read = true
       entriesPaginationSvc.reset_entries()
+      $rootScope.feeds_loaded = false
       load_feeds()
 
     #---------------------------------------------
@@ -70,16 +86,25 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     hide_read: ->
       $rootScope.show_read = false
       entriesPaginationSvc.reset_entries()
+      $rootScope.feeds_loaded = false
       load_feeds()
 
     #---------------------------------------------
-    # Load feeds and folders via AJAX into the root scope at startup.
+    # Load feeds and folders via AJAX into the root scope.
+    # Start running a refresh of feeds every minute while the app is open.
+    #---------------------------------------------
+    start_refresh_data: ->
+      $rootScope.feeds_loaded = false
+      $rootScope.folders_loaded = false
+      $rootScope.show_read = false
+      load_data()
+      refresh_feeds()
+
+    #---------------------------------------------
+    # Load feeds and folders via AJAX into the root scope.
     # Only feeds with unread entries are retrieved.
     #---------------------------------------------
-    load_data: ->
-      $rootScope.show_read = false
-      load_folders()
-      load_feeds()
+    load_data: load_data
 
     #---------------------------------------------
     # Load feeds via AJAX into the root scope.
