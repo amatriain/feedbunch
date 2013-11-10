@@ -9,7 +9,8 @@ angular.module('feedbunch').service 'findSvc',
   # Find a feed given its id
   #---------------------------------------------
   find_feed: (id)->
-    feeds = $filter('filter') $rootScope.feeds, {id: id}
+    feeds = $filter('filter') $rootScope.feeds, (feed)->
+      return feed.id == id
     return feeds[0]
 
   #---------------------------------------------
@@ -21,7 +22,8 @@ angular.module('feedbunch').service 'findSvc',
     else if id == "all"
       return {id: "all"}
     else
-      folders = $filter('filter') $rootScope.folders, {id: id}
+      folders = $filter('filter') $rootScope.folders, (folder)->
+        return folder.id == id
       return folders[0]
 
   #---------------------------------------------
