@@ -9,9 +9,15 @@ angular.module('feedbunch').service 'findSvc',
   # Find a feed given its id
   #---------------------------------------------
   find_feed: (id)->
-    feeds = $filter('filter') $rootScope.feeds, (feed)->
-      return feed.id == id
-    return feeds[0]
+    if $rootScope.feeds
+      feeds = $filter('filter') $rootScope.feeds, (feed)->
+        return feed.id == id
+      if feeds?.length > 0
+        return feeds[0]
+      else
+        return null
+    else
+      return null
 
   #---------------------------------------------
   # Find a folder given its id
