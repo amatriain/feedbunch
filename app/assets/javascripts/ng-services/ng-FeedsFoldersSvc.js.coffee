@@ -181,8 +181,9 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     folder_unread_entries: (folder)->
       sum = 0
       feeds = findSvc.find_folder_feeds folder
-      for feed in feeds
-        sum += feed.unread_entries
+      if feeds?.length > 0
+        for feed in feeds
+          sum += feed.unread_entries
       return sum
 
     #--------------------------------------------
