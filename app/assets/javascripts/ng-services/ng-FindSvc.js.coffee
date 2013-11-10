@@ -42,9 +42,16 @@ angular.module('feedbunch').service 'findSvc',
   # Find feeds in a folder given the folder
   #---------------------------------------------
   find_folder_feeds: (folder)->
-    if folder != 'all'
-      return $filter('filter') $rootScope.feeds, (feed)->
-        return feed.folder_id == folder.id
+    if $rootScope.feeds
+      if folder != 'all'
+        feeds =  $filter('filter') $rootScope.feeds, (feed)->
+          return feed.folder_id == folder.id
+        if feeds?.length > 0
+          return feeds
+        else
+          return null
+      else
+        return $rootScope.feeds
     else
-      return $rootScope.feeds
+      return null
 ]
