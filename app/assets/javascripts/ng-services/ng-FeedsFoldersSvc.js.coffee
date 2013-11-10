@@ -13,7 +13,6 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   load_feeds = ->
     $http.get("/feeds.json?include_read=#{$rootScope.show_read}")
     .success (data)->
-      alert
       if !$rootScope.feeds || $rootScope.feeds?.length==0
         # If there are no feeds in scope, just store the feeds returned.
         $rootScope.feeds = data
