@@ -79,6 +79,21 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     # Update folders
     feed_removed folder_id
 
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Remove feeds without unread entries from the root scope, unless the user has
+  # selected to display all feeds including read ones.
+  # If the user clicks on the same feed or on its folder, do nothing.
+  #--------------------------------------------
+  remove_read_feeds = ->
+    if !$rootScope.show_read
+      read_feeds = $filter('filter') $rootScope.feeds, (feed)->
+        return feed.unread_entries <= 0
+      for feed in read_feeds
+        if $rootScope.current_feed?.id != feed.id && $rootScope.current_folder?.id != feed.folder_id
+          # Delete feed from the scope
+          index = $rootScope.feeds.indexOf feed
+          $rootScope.feeds.splice index, 1 if index != -1
+
   service =
 
     #---------------------------------------------
@@ -99,6 +114,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       $rootScope.show_read = false
       entriesPaginationSvc.reset_entries()
       $rootScope.feeds_loaded = false
+      remove_read_feeds()
       load_feeds()
 
     #---------------------------------------------
@@ -158,15 +174,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     # selected to display all feeds including read ones.
     # If the user clicks on the same feed or on its folder, do nothing.
     #--------------------------------------------
-    remove_read_feeds: ->
-      if !$rootScope.show_read
-        read_feeds = $filter('filter') $rootScope.feeds, (feed)->
-          return feed.unread_entries <= 0
-        for feed in read_feeds
-          if $rootScope.current_feed?.id != feed.id && $rootScope.current_folder?.id != feed.folder_id
-            # Delete feed from the scope
-            index = $rootScope.feeds.indexOf feed
-            $rootScope.feeds.splice index, 1 if index != -1
+    remove_read_feeds: remove_read_feeds
 
     #--------------------------------------------
     # Count the number of unread entries in a folder
