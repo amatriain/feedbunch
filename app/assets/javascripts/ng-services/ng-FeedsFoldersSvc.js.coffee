@@ -13,7 +13,19 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   load_feeds = ->
     $http.get("/feeds.json?include_read=#{$rootScope.show_read}")
     .success (data)->
-      $rootScope.feeds = data
+      alert
+      if !$rootScope.feeds || $rootScope.feeds?.length==0
+        # If there are no feeds in scope, just store the feeds returned.
+        $rootScope.feeds = data
+      else
+        # If there are feeds already loaded in scope, replace them with the ones returned, without removing any feed
+        # (i.e. if a feed in scope is not among the returned feeds, do not remove it from scope).
+        for feed_new in data
+          feed_old = findSvc.find_feed feed_new.id
+          if feed_old
+            feed_old.unread_entries = feed_new.unread_entries
+          else
+            $rootScope.feeds.push feed_new
       $rootScope.feeds_loaded = true
     .error ->
       timerFlagSvc.start 'error_loading_feeds'
