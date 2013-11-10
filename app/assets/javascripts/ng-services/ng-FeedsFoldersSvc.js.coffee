@@ -35,7 +35,9 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
 
         # Transform the working copy into the actual feeds list
         $rootScope.feeds = feeds_copy
+
       $rootScope.feeds_loaded = true
+
     .error ->
       timerFlagSvc.start 'error_loading_feeds'
 
