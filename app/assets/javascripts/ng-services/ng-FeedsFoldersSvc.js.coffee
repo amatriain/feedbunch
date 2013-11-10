@@ -17,14 +17,24 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         # If there are no feeds in scope, just store the feeds returned.
         $rootScope.feeds = data
       else
-        # If there are feeds already loaded in scope, replace them with the ones returned, without removing any feed
-        # (i.e. if a feed in scope is not among the returned feeds, do not remove it from scope).
+        # If there are feeds already loaded in scope, replace their unread counts with the ones returned (feeds
+        # not present in the returned JSON will have their unread_entries set to zero). Insert any new feeds returned.
+        feeds_copy = angular.copy $rootScope.feeds
+
+        # Set all unread counts to zero
+        for feed_old in feeds_copy
+          feed_old.unread_entries = 0
+
+        # Update unread counts with those returned, and insert any new feeds (not yet in the rootScope list).
         for feed_new in data
-          feed_old = findSvc.find_feed feed_new.id
+          feed_old = findSvc.find_feed feed_new.id, feeds_copy
           if feed_old
             feed_old.unread_entries = feed_new.unread_entries
           else
-            $rootScope.feeds.push feed_new
+            feeds_copy.push feed_new
+
+        # Transform the working copy into the actual feeds list
+        $rootScope.feeds = feeds_copy
       $rootScope.feeds_loaded = true
     .error ->
       timerFlagSvc.start 'error_loading_feeds'

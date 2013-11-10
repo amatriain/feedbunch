@@ -30,8 +30,7 @@ angular.module('feedbunch').service 'entrySvc',
       timerFlagSvc.start 'error_changing_entry_state'
 
   #--------------------------------------------
-  # PRIVATE FUNCTION - Mark all entries from a feed as read .
-  # Receives as arguments a feed.
+  # PRIVATE FUNCTION - Mark all entries in the currently selected feed or folder as read.
   #--------------------------------------------
   change_entries_read = ->
     # Mark entries as read in the model

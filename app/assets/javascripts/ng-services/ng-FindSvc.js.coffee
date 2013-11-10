@@ -8,9 +8,9 @@ angular.module('feedbunch').service 'findSvc',
   #---------------------------------------------
   # Find a feed given its id
   #---------------------------------------------
-  find_feed: (id)->
-    if $rootScope.feeds
-      feeds = $filter('filter') $rootScope.feeds, (feed)->
+  find_feed: (id, list = $rootScope.feeds)->
+    if list
+      feeds = $filter('filter') list, (feed)->
         return feed.id == id
       if feeds?.length > 0
         return feeds[0]
