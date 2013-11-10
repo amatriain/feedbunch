@@ -32,12 +32,12 @@
           <a class="btn btn-default btn-sm"
              ng-click="unread_entry(entry)"
              ng-show="entry.read">
-            <i class="fa fa-eye-slash"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
+            <i class="fa fa-square"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
           </a>
           <a class="btn btn-default btn-sm"
              ng-click="read_entry(entry)"
              ng-show="!entry.read">
-            <i class="fa fa-eye"></i>&nbsp;<%= t 'entries.index.mark_read' %>
+            <i class="fa fa-check-square"></i>&nbsp;<%= t 'entries.index.mark_read' %>
           </a>
         </div>
 
