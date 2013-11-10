@@ -38,7 +38,7 @@ class EntryManager
         if Entry.exists? guid: guid, feed_id: feed.id
           # If entry is already in the database, update it
           Rails.logger.info "Updating already saved entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{guid}"
-          e = Entry.where(guid: guid).first
+          e = Entry.where(guid: guid, feed_id: feed.id).first
           entry_hash.delete :published
           e.update entry_hash
         else
