@@ -38,8 +38,12 @@ class EntryStateManager
     if !whole_feed && !whole_folder && !all_entries
       # Update a single entry
       entry_state = EntryState.where(user_id: user.id, entry_id: entry.id).first
-      entry_state.read = read
-      entry_state.save!
+      entry_state.update read: read
+      if read
+        SubscriptionsManager.feed_decrement_count entry.feed, user
+      else
+        SubscriptionsManager.feed_increment_count entry.feed, user
+      end
     else
       change_feed_entries_state entry, read, user if whole_feed
       change_folder_entries_state entry, read, user if whole_folder
