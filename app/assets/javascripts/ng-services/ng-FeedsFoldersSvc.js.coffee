@@ -88,7 +88,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       folder_id = feed.folder_id
       # Delete feed model from the scope
       index = $rootScope.feeds.indexOf feed
-      if index =! -1
+      if index != -1
         $rootScope.feeds.splice index, 1
         # Update folders
         feed_removed folder_id
