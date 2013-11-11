@@ -36,7 +36,7 @@ class UpdateFeedJob
     # Remove old entries from database
     OldEntryCleaner.cleanup feed
 
-    # Update unread entries count if it's currently incorrect
+    # Update unread entries count for all subscribed users.
     feed.users.each do |user|
       SubscriptionsManager.recalculate_unread_count feed, user
     end

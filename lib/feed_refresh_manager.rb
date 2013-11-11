@@ -1,3 +1,5 @@
+require 'subscriptions_manager'
+
 ##
 # This class has methods to refresh feeds.
 
@@ -5,6 +7,8 @@ class FeedRefreshManager
 
   ##
   # Refresh a feed; this triggers a fetch of the feed from its server.
+  #
+  # After the refresh the unread entries count of the feed is recalculated.
   #
   # Receives as argument the feed to refresh and the user that requested the refresh, if any.
   #
@@ -17,6 +21,11 @@ class FeedRefreshManager
       raise NotSubscribedError.new
     end
     FeedClient.fetch feed, false
+
+    # Update unread entries count for all subscribed users.
+    feed.users.each do |u|
+      SubscriptionsManager.recalculate_unread_count feed, u
+    end
     return nil
   end
 end
