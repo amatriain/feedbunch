@@ -18,6 +18,7 @@ class SubscriptionsManager
     Rails.logger.info "subscribing user #{user.id} - #{user.email} to feed #{feed.id} - #{feed.fetch_url}"
     feed_subscription = FeedSubscription.new feed_id: feed.id
     user.feed_subscriptions << feed_subscription
+    self.recalculate_unread_count feed, user
   end
 
   ##
@@ -103,11 +104,15 @@ class SubscriptionsManager
   # not match the calculated count). This avoids unnecessary database writes, which are expensive
   # operations.
 
-  def self.recalculate_count(feed, user)
+  def self.recalculate_unread_count(feed, user)
+    Rails.logger.debug "Recalculating unread entries count for feed #{feed.id} - #{feed.title}, user #{user.id} - #{user.email}"
     count = EntryState.joins(entry: :feed).where(read: false, user: user, feeds: {id: feed.id}).count
     if user.feed_unread_count(feed) != count
+      Rails.logger.debug "Unread entries count calculated: #{count}, current value #{user.feed_unread_count(feed)}. Updating DB record."
       feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: feed.id).first
       feed_subscription.update unread_entries: count
+    else
+      Rails.logger.debug "Unread entries count calculated: #{count}, current value is correct. No need to update DB record."
     end
   end
 

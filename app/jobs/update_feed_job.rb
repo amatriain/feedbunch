@@ -38,7 +38,7 @@ class UpdateFeedJob
 
     # Update unread entries count if it's currently incorrect
     feed.users.each do |user|
-      SubscriptionsManager.recalculate_count feed, user
+      SubscriptionsManager.recalculate_unread_count feed, user
     end
   end
 
