@@ -120,8 +120,12 @@ class EntryStateManager
             entry.published, entry.published, entry.id)
     entries.each do |e|
       entry_state = EntryState.where(user_id: user.id, entry_id: e.id).first
-      entry_state.read = read
-      entry_state.save!
+      entry_state.update read: read
+    end
+
+    # Update unread entries count for the feeds
+    user.feeds.each do |f|
+      SubscriptionsManager.recalculate_unread_count f, user
     end
   end
 end
