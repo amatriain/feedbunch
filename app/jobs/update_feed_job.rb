@@ -1,4 +1,5 @@
 require 'old_entry_cleaner'
+require 'subscriptions_manager'
 
 ##
 # Background job to fetch and update a feed's entries.
@@ -37,11 +38,7 @@ class UpdateFeedJob
 
     # Update unread entries count if it's currently incorrect
     feed.users.each do |user|
-      count = EntryState.joins(entry: :feed).where(read: false, user: user, feeds: {id: feed.id}).count
-      if user.feed_unread_count(feed) != count
-        feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: feed.id).first
-        feed_subscription.update unread_entries: count
-      end
+      SubscriptionsManager.recalculate_count feed, user
     end
   end
 

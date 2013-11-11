@@ -79,14 +79,36 @@ class SubscriptionsManager
   # Decrement the count of unread entries in a feed for a given user.
   #
   # Receives as arguments:
-  # - decrement: how much to decrement the count. Optional, has default value of 1.
   # - feed which count will be decremented
   # - user for which the count will be decremented
+  # - decrement: how much to decrement the count. Optional, has default value of 1.
   #
   # If the user is not actually subscribed to the feed, a NotSubscribedError is raised.
 
   def self.feed_decrement_count(feed, user, decrement=1)
     self.feed_increment_count feed, user, -decrement
+  end
+
+  ##
+  # Recalculate the count of unread entries in a feed for a given user.
+  #
+  # This method counts the unread entries in the feed and updates the unread_entries field
+  # accordingly. It can be used to ensure the unread_entries field is correct.
+  #
+  # Receives as arguments:
+  # - feed: feed for which the count will be recalculated.
+  # - user: user for whom the count will be recalculated.
+  #
+  # This method writes in the database only if necessary (i.e. the currently saved unread_entries does
+  # not match the calculated count). This avoids unnecessary database writes, which are expensive
+  # operations.
+
+  def self.recalculate_count(feed, user)
+    count = EntryState.joins(entry: :feed).where(read: false, user: user, feeds: {id: feed.id}).count
+    if user.feed_unread_count(feed) != count
+      feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: feed.id).first
+      feed_subscription.update unread_entries: count
+    end
   end
 
   private
