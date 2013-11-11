@@ -46,7 +46,7 @@ angular.module('feedbunch').service 'entrySvc',
         whole_feed = "true"
         whole_folder = "false"
         all_entries = "false"
-        unreadCountSvc.zero_feed_count $rootScope.current_feed
+        unreadCountSvc.zero_feed_count $rootScope.current_feed.id
       else if $rootScope.current_folder && $rootScope.current_folder?.id != "all"
         whole_feed = "false"
         whole_folder = "true"

@@ -22,7 +22,8 @@ angular.module('feedbunch').service 'unreadCountSvc',
   #--------------------------------------------
   # Set the unread entries count of a feed to zero
   #--------------------------------------------
-  zero_feed_count: (feed)->
+  zero_feed_count: (feed_id)->
+    feed = findSvc.find_feed feed_id
     feed.unread_entries = 0
 
   #--------------------------------------------
