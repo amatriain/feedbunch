@@ -73,7 +73,7 @@ class EntryStateManager
       entry_state = EntryState.where(user_id: user.id, entry_id: e.id).first
       entry_state.update read: read
     end
-
+    # Update unread entries count for the feed
     SubscriptionsManager.recalculate_unread_count entry.feed, user
   end
 
@@ -88,14 +88,20 @@ class EntryStateManager
   def self.change_folder_entries_state(entry, read, user)
     folder = entry.feed.user_folder user
     # Join with entry_states to select only those entries that don't already have the desired state.
+    feeds = {}
     entries = Entry.joins(:entry_states, feed: :folders).
       where(entry_states: {user_id: user.id, read: !read}, folders: {id: folder.id}).
       where('entries.published<? OR (entries.published=? AND entries.id<= ?)',
             entry.published, entry.published, entry.id)
     entries.each do |e|
       entry_state = EntryState.where(user_id: user.id, entry_id: e.id).first
-      entry_state.read = read
-      entry_state.save!
+      entry_state.update read: read
+      feeds[e.feed.id] = e.feed
+    end
+
+    # Update unread entries count for the feeds
+    feeds.values.each do |f|
+      SubscriptionsManager.recalculate_unread_count f, user
     end
   end
 
