@@ -75,7 +75,8 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     folder = findSvc.find_folder folder_id
     if folder != null
       # Remove folder if it's empty
-      if findSvc.find_folder_feeds(folder).length == 0
+      feeds = findSvc.find_folder_feeds folder
+      if !feeds || feeds?.length == 0
         index = $rootScope.folders.indexOf folder
         $rootScope.folders.splice index, 1 if index != -1
 
