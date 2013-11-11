@@ -60,9 +60,9 @@ class SubscriptionsManager
   # Increment the count of unread entries in a feed for a given user.
   #
   # Receives as arguments:
-  # - increment: how much to increment the count. Optional, has default value of 1.
   # - feed which count will be incremented
   # - user for which the count will be incremented
+  # - increment: how much to increment the count. Optional, has default value of 1.
   #
   # If the user is not actually subscribed to the feed, a NotSubscribedError is raised.
 
