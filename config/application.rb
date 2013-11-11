@@ -47,5 +47,8 @@ module Feedbunch
     config.to_prepare do
       Devise::RegistrationsController.layout proc{|controller| user_signed_in? ? 'user_profile' : 'devise'}
     end
+
+    # Append the lib directory to the autoload path while in development
+    config.autoload_paths += %W(#{config.root}/lib)
   end
 end
