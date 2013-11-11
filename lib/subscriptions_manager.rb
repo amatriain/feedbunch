@@ -19,6 +19,8 @@ class SubscriptionsManager
     feed_subscription = FeedSubscription.new feed_id: feed.id
     user.feed_subscriptions << feed_subscription
     self.recalculate_unread_count feed, user
+
+    return nil
   end
 
   ##
@@ -74,6 +76,8 @@ class SubscriptionsManager
     Rails.logger.debug "Incrementing unread entries count for user #{user.id} - #{user.email}, feed #{feed.id} - #{feed.fetch_url}. Current: #{feed_subscription.unread_entries}, incremented by #{increment}"
     feed_subscription.unread_entries += increment
     feed_subscription.save!
+
+    return nil
   end
 
   ##
@@ -100,6 +104,8 @@ class SubscriptionsManager
   # - feed: feed for which the count will be recalculated.
   # - user: user for whom the count will be recalculated.
   #
+  # Returns the recalculated count.
+  #
   # This method writes in the database only if necessary (i.e. the currently saved unread_entries does
   # not match the calculated count). This avoids unnecessary database writes, which are expensive
   # operations.
@@ -114,6 +120,8 @@ class SubscriptionsManager
     else
       Rails.logger.debug "Unread entries count calculated: #{count}, current value is correct. No need to update DB record."
     end
+
+    return count
   end
 
   private
