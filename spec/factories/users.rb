@@ -10,7 +10,7 @@ FactoryGirl.define do
     remember_me true
     confirmed_at Time.now
     admin false
-    locale :en
+    locale 'en'
     timezone 'UTC'
 
     factory :user_unconfirmed do
