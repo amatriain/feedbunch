@@ -5,10 +5,8 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
-'findSvc',
 ($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
-currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
-findSvc)->
+currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc)->
 
   # Show Add Subscription button in this view
   $rootScope.show_feed_buttons = true

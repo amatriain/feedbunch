@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'readSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openEntrySvc', 'openFolderSvc',
+['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
  'entriesPaginationSvc',
-($rootScope, $http, currentFeedSvc, currentFolderSvc, timerFlagSvc, openEntrySvc, openFolderSvc,
+($rootScope, $http, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
  entriesPaginationSvc)->
 
   #--------------------------------------------
@@ -33,16 +33,21 @@ angular.module('feedbunch').service 'readSvc',
     $http.get(url)
     .success (data)->
       entriesPaginationSvc.set_busy false
-      $rootScope.entries = $rootScope.entries.concat data["entries"]
+      if !$rootScope.entries || $rootScope.entries?.length == 0
+        $rootScope.entries = data["entries"]
+      else
+        $rootScope.entries = $rootScope.entries.concat data["entries"]
       # On first page load, update unread entries count in the feed
-      currentFeedSvc.get().unread_entries = data["unread_entries"] if currentFeedSvc.get() && entriesPaginationSvc.is_first_page()
+      current_feed = currentFeedSvc.get()
+      if current_feed && entriesPaginationSvc.is_first_page()
+        current_feed.unread_entries = data["unread_entries"]
     .error (data,status)->
       entriesPaginationSvc.set_busy false
       if status == 404
         entriesPaginationSvc.set_more_entries_available false
         if entriesPaginationSvc.is_first_page()
           entriesPaginationSvc.set_error_no_entries true
-          currentFeedSvc.get().unread_entries = 0
+          currentFeedSvc.get()?.unread_entries = 0
       else
         currentFeedSvc.unset()
         timerFlagSvc.start 'error_loading_entries'
