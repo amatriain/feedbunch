@@ -5,7 +5,6 @@ describe 'feed entries' do
   before :each do
     @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
-    @user.subscribe @feed.fetch_url
     login_user_for_feature @user
   end
 
@@ -15,6 +14,7 @@ describe 'feed entries' do
       @entry1 = FactoryGirl.build :entry, feed_id: @feed.id
       @entry2 = FactoryGirl.build :entry, feed_id: @feed.id
       @feed.entries << @entry1 << @entry2
+      @user.subscribe @feed.fetch_url
 
       visit read_path
       read_feed @feed, @user
@@ -93,9 +93,7 @@ describe 'feed entries' do
       folder.feeds << @feed
 
       # @entry1 is read, @entry2 and entry3 are unread
-      entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
-      entry_state1.read = true
-      entry_state1.save!
+      @user.change_entries_state @entry1, 'read'
 
       visit read_path
       read_folder 'all'
@@ -317,10 +315,12 @@ describe 'feed entries' do
         @feed.entries << e
         @entries << e
       end
+
+      @user.subscribe @feed.fetch_url
+
       (26..29).each do |i|
         @user.change_entries_state @entries[i], 'read'
       end
-
 
       @folder = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << @folder
@@ -442,11 +442,6 @@ describe 'feed entries' do
     end
 
     it 'marks all entries as read', js: true do
-      folder = FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << folder
-      folder.feeds << @feed
-      visit read_path
-
       read_folder 'all'
       mark_all_as_read
 
@@ -456,7 +451,7 @@ describe 'feed entries' do
       # On refresh @feed and folder should not appear
       visit read_path
       page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
-      page.should_not have_css "#folder-#{folder.id}"
+      page.should_not have_css "#folder-#{@folder.id}"
     end
 
   end

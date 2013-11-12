@@ -105,7 +105,7 @@ describe 'unread entries count' do
 
   it 'updates number of unread entries when refreshing a feed', js: true do
     read_feed @feed1, @user
-    User.any_instance.stub :refresh_feed do
+    FeedClient.stub :fetch do
       entry = FactoryGirl.build :entry, feed_id: @feed1.id
       @feed1.entries << entry
     end

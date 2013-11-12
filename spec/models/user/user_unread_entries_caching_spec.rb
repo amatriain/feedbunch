@@ -34,25 +34,6 @@ describe User do
         unread_entries.should eq 2
       end
 
-      it 'increments feed cached count when adding entries to a feed' do
-        entry3 = FactoryGirl.build :entry, feed_id: @feed.id
-        @feed.entries << entry3
-        unread_entries = @user.feed_unread_count @feed
-        unread_entries.should eq 2
-      end
-
-      it 'decrements feed cached count when deleting unread entries from a feed' do
-        @entry2.destroy
-        unread_entries = @user.feed_unread_count @feed
-        unread_entries.should eq 0
-      end
-
-      it 'does not decrement feed cached count when deleting read entries from a feed' do
-        @entry1.destroy
-        unread_entries = @user.feed_unread_count @feed
-        unread_entries.should eq 1
-      end
-
       it 'removes feed cached count when unsubscribing from a feed' do
         @user.unsubscribe @feed
         FeedSubscription.exists?(feed_id: @feed.id, user_id: @user.id).should be_false

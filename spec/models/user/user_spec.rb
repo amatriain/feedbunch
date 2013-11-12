@@ -18,16 +18,20 @@ describe User do
       @feed1 = FactoryGirl.create :feed
       @feed2 = FactoryGirl.create :feed
       @feed3 = FactoryGirl.create :feed
-      @user.subscribe @feed1.fetch_url
-      @user.subscribe @feed2.fetch_url
 
       @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1
       @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
       @feed2.entries << @entry2
 
+      @user.subscribe @feed1.fetch_url
+      @user.subscribe @feed2.fetch_url
+
       entry_state2 = EntryState.where(user_id: @user.id, entry_id: @entry2.id).first
       entry_state2.update read: true
+
+      feed_subscription2 = FeedSubscription.where(feed_id: @feed2.id, user_id: @user.id).first
+      feed_subscription2.update unread_entries: 0
     end
 
     it 'returns feeds the user is suscribed to' do

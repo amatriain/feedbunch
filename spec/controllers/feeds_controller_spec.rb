@@ -8,14 +8,15 @@ describe FeedsController do
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
     @feed3 = FactoryGirl.create :feed
-    @user.subscribe @feed1.fetch_url
-    @user.subscribe @feed3.fetch_url
 
     @entry_1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
     @entry_1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry_1_1 << @entry_1_2
     @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
     @feed2.entries << @entry2
+
+    @user.subscribe @feed1.fetch_url
+    @user.subscribe @feed3.fetch_url
 
     @folder1 = FactoryGirl.build :folder, user_id: @user.id
     @folder2 = FactoryGirl.create :folder

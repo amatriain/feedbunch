@@ -11,9 +11,6 @@ describe 'folders and feeds' do
 
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
-    @user.subscribe @feed1.fetch_url
-    @user.subscribe @feed2.fetch_url
-    @folder1.feeds << @feed1
 
     @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
     @entry1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
@@ -21,6 +18,10 @@ describe 'folders and feeds' do
     @entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
     @feed1.entries << @entry1_1 << @entry1_2
     @feed2.entries << @entry2_1 << @entry2_2
+
+    @user.subscribe @feed1.fetch_url
+    @user.subscribe @feed2.fetch_url
+    @folder1.feeds << @feed1
 
     login_user_for_feature @user
     visit read_path

@@ -6,11 +6,13 @@ describe 'subscription to feeds' do
     @user = FactoryGirl.create :user
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
-    @user.subscribe @feed1.fetch_url
+
     @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry1
     @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
     @feed2.entries << @entry2
+
+    @user.subscribe @feed1.fetch_url
 
     login_user_for_feature @user
     visit read_path
