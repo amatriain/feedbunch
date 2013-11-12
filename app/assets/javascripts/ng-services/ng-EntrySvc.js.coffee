@@ -4,7 +4,9 @@
 
 angular.module('feedbunch').service 'entrySvc',
 ['$rootScope', '$http', 'openEntrySvc', 'timerFlagSvc', 'unreadCountSvc',
-($rootScope, $http, openEntrySvc, timerFlagSvc, unreadCountSvc)->
+'currentFolderSvc', 'currentFeedSvc',
+($rootScope, $http, openEntrySvc, timerFlagSvc, unreadCountSvc,
+currentFolderSvc, currentFeedSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark a single entry as read or unread.
@@ -42,17 +44,19 @@ angular.module('feedbunch').service 'entrySvc',
 
       # Find out if the user wants to mark as read a whole feed, a whole folder, or all entries in
       # all subscribed feeds.
-      if $rootScope.current_feed
+      current_feed = currentFeed.get()
+      current_folder = currentFolderSvc.get()
+      if current_feed
         whole_feed = "true"
         whole_folder = "false"
         all_entries = "false"
-        unreadCountSvc.zero_feed_count $rootScope.current_feed.id
-      else if $rootScope.current_folder && $rootScope.current_folder?.id != "all"
+        unreadCountSvc.zero_feed_count current_feed.id
+      else if current_folder && current_folder?.id != "all"
         whole_feed = "false"
         whole_folder = "true"
         all_entries = "false"
-        unreadCountSvc.zero_folder_count $rootScope.current_folder
-      else if $rootScope.current_folder && $rootScope.current_folder?.id == "all"
+        unreadCountSvc.zero_folder_count current_folder
+      else if current_folder && current_folder?.id == "all"
         whole_feed = "false"
         whole_folder = "false"
         all_entries = "true"

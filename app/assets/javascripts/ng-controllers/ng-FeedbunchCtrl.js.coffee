@@ -175,7 +175,9 @@ currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc,
         return true
       else
         # Do not hide the currently selected folder, nor the folder of the currently selected feed
-        if $rootScope.current_feed?.folder_id == folder.id || $rootScope.current_folder?.id == folder.id
+        current_feed = currentFeedSvc.get()
+        current_folder = currentFolderSvc.get()
+        if current_feed?.folder_id == folder.id || current_folder?.id == folder.id
           return true
         else
           return feedsFoldersSvc.folder_unread_entries(folder) > 0
