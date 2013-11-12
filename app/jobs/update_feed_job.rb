@@ -1,4 +1,3 @@
-require 'old_entry_cleaner'
 require 'subscriptions_manager'
 
 ##
@@ -33,8 +32,6 @@ class UpdateFeedJob
 
     # Fetch feed
     FeedClient.fetch feed, false if Feed.exists? feed_id
-    # Remove old entries from database
-    OldEntryCleaner.cleanup feed
 
     # Update unread entries count for all subscribed users.
     feed.users.each do |user|
