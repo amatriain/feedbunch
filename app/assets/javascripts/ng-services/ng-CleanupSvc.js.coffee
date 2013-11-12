@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'cleanupSvc',
-['$rootScope', 'findSvc',
-($rootScope, findSvc)->
+['$rootScope', '$filter', 'findSvc',
+($rootScope, $filter, findSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Update the model to account for a feed having been removed from a folder
