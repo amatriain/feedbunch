@@ -4,10 +4,10 @@
 class EntryManager
 
   ##
-  # Save or update feed entries in the database.
+  # Save new feed entries in the database.
   #
-  # For each entry, if an entry with the same guid for the same feed already exists in the database, update it with
-  # the values passed as argument to this method. Otherwise save it as a new entry in the database.
+  # For each entry passed, if an entry with the same guid for the same feed already exists in the database,
+  # ignore it. Otherwise save it as a new entry in the database.
   #
   # The argument passed are:
   # - the feed to which the entries belong (an instance of the Feed model)
@@ -15,16 +15,8 @@ class EntryManager
   #
   # If during processing there is a problem with an entry, it is skipped and the next one is processed,
   # instead of failing the whole process.
-  #
-  # Note: when updating an already existing entry, the original publish date is kept (this field is not updated).
-  # This is intended for the case in which a feed returns no publish date for its entries (therefore the fetch date
-  # is used by default) and also it doesn't support HTTP caching (it returns the full entries list every time it's
-  # fetched). If we updated the publish date in this case, the publish date of entries in this feed would be updated
-  # to the current datetime every time the feed was fetched, which would mean entries from this feed would always
-  # "float" to the top of the entries list. The fix is to use the publish date the entry had the first time it was
-  # fetched, and every time it's fetched again keep the original publish date.
 
-  def self.save_or_update_entries(feed, entries)
+  def self.save_new_entries(feed, entries)
     entries.reverse_each do |entry|
       begin
         guid = entry.entry_id || entry.url
@@ -35,16 +27,12 @@ class EntryManager
 
         entry_hash = self.entry_to_hash entry, guid
 
-        if Entry.exists? guid: guid, feed_id: feed.id
-          # If entry is already in the database, update it
-          Rails.logger.info "Updating already saved entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{guid}"
-          e = Entry.where(guid: guid, feed_id: feed.id).first
-          entry_hash.delete :published
-          e.update entry_hash
-        else
+        if !Entry.exists? guid: guid, feed_id: feed.id
           # Otherwise, save a new entry in the DB
-          Rails.logger.info "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}"
+          Rails.logger.debug "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}"
           feed.entries.create! entry_hash
+        else
+          Rails.logger.debug "Already existing entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}. Ignoring it"
         end
 
       rescue => e

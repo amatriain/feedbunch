@@ -87,34 +87,29 @@ FEED_XML
       entry2.guid.should eq @entry2.guid
     end
 
-    it 'updates entry if it is received again' do
+    it 'ignores entry if it is received again' do
       # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
-      publish_date = DateTime.iso8601('2013-01-01T00:00:00')
-      entry = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
+      entry_before = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
                                  url: 'http://original.url.com', author: 'Original author',
                                  content: 'Original content', summary: 'Original summary',
-                                 published: publish_date, guid: @entry1.guid
+                                 published: DateTime.iso8601('2013-01-01T00:00:00'), guid: @entry1.guid
 
-      # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
+      # XML that will be fetched contains an entry with the same guid. It will be ignored
       FeedClient.fetch @feed
 
-      # After fetching, relevant fields should be updated with the values received in the XML
-      entry.reload
-      entry.feed_id.should eq @feed.id
-      entry.title.should eq @entry1.title
-      entry.url.should eq @entry1.url
-      entry.author.should eq @entry1.author
-      entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
-      entry.guid.should eq @entry1.guid
-
-      # Original publish date should not be changed.
-      # This is intended for feeds which do not return a publish date (therefore the fetch date is used by default) and
-      # which do not use HTTP caching (therefore they return the full entries list every time they are fetched).
-      entry.published.should eq publish_date
+      # After fetching, entry should be unchanged
+      entry_after = Entry.where(guid: entry_before.guid, feed_id: entry_before.feed_id).first
+      entry_after.feed_id.should eq entry_before.feed_id
+      entry_after.title.should eq entry_before.title
+      entry_after.url.should eq entry_before.url
+      entry_after.author.should eq entry_before.author
+      entry_after.summary.should eq CGI.unescapeHTML(entry_before.summary)
+      entry_after.guid.should eq entry_before.guid
+      entry_after.published.should eq entry_before.published
     end
 
-    it 'does not update entry if another one with the same guid is received from another feed' do
+    it 'saves entry if another one with the same guid but from a different feed is already in the database' do
       feed2 = FactoryGirl.create :feed
       # Create an entry for feed feed2 with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
@@ -220,33 +215,29 @@ FEED_XML
       entry2.guid.should eq @entry2.guid
     end
 
-    it 'updates entry if it is received again' do
+    it 'ignores entry if it is received again' do
       # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
-      publish_date = DateTime.iso8601('2013-01-01T00:00:00')
-      entry = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
+      entry_before = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
                                  url: 'http://original.url.com', author: 'Original author',
                                  content: 'Original content', summary: 'Original summary',
-                                 published: publish_date, guid: @entry1.guid
+                                 published: DateTime.iso8601('2013-01-01T00:00:00'), guid: @entry1.guid
 
-      # XML that will be fetched contains an entry with the same guid. This means it's an update to this entry.
+      # XML that will be fetched contains an entry with the same guid. It will be ignored.
       FeedClient.fetch @feed
-      # After fetching, relevant fields should be updated with the values received in the XML
-      entry.reload
-      entry.feed_id.should eq @feed.id
-      entry.title.should eq @entry1.title
-      entry.url.should eq @entry1.url
-      entry.author.should eq @entry1.author
-      entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
-      entry.guid.should eq @entry1.guid
 
-      # Original publish date should not be changed.
-      # This is intended for feeds which do not return a publish date (therefore the fetch date is used by default) and
-      # which do not use HTTP caching (therefore they return the full entries list every time they are fetched).
-      entry.published.should eq publish_date
+      # After fetching, relevant fields should be updated with the values received in the XML
+      entry_after = Entry.where(guid: entry_before.guid, feed_id: entry_before.feed_id).first
+      entry_after.feed_id.should eq entry_before.feed_id
+      entry_after.title.should eq entry_before.title
+      entry_after.url.should eq entry_before.url
+      entry_after.author.should eq entry_before.author
+      entry_after.summary.should eq CGI.unescapeHTML(entry_before.summary)
+      entry_after.guid.should eq entry_before.guid
+      entry_after.published.should eq entry_before.published
     end
 
-    it 'does not update entry if another one with the same guid is received from another feed' do
+    it 'saves entry if another one with the same guid but from a different feed is already in the database' do
       feed2 = FactoryGirl.create :feed
       # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values

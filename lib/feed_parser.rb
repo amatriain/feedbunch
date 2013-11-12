@@ -43,7 +43,7 @@ class FeedParser
     feed.update feed_attribs
 
     # Save entries in the database
-    EntryManager.save_or_update_entries feed, feed_parsed.entries
+    EntryManager.save_new_entries feed, feed_parsed.entries
 
     return feed
   end
