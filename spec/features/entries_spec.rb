@@ -62,9 +62,9 @@ describe 'feed entries' do
     it 'by default only shows unread entries in a folder', js: true do
       # @feed and feed2 are in a folder
       feed2 = FactoryGirl.create :feed
-      @user.subscribe feed2.fetch_url
       entry3 = FactoryGirl.build :entry, feed_id: feed2.id
       feed2.entries << entry3
+      @user.subscribe feed2.fetch_url
       folder = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder
       folder.feeds << @feed << feed2
@@ -85,9 +85,9 @@ describe 'feed entries' do
     it 'by default only shows unread entries when reading all subscriptions', js: true do
       # @feed is in a folder, feed2 isn't in any folder
       feed2 = FactoryGirl.create :feed
-      @user.subscribe feed2.fetch_url
       entry3 = FactoryGirl.build :entry, feed_id: feed2.id
       feed2.entries << entry3
+      @user.subscribe feed2.fetch_url
       folder = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder
       folder.feeds << @feed
