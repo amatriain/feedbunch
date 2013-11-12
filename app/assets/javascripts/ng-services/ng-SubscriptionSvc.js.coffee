@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'subscriptionSvc',
 ['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'folderSvc', 'timerFlagSvc',
-'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc',
+'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc', 'cleanupSvc',
 ($rootScope, $http, currentFeedSvc, currentFolderSvc, readSvc, folderSvc, timerFlagSvc,
-entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
+entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
@@ -39,7 +39,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
       path = "/feeds/#{current_feed.id}.json"
 
       # Remove feed from feeds list
-      feedsFoldersSvc.remove_feed current_feed.id
+      cleanupSvc.remove_feed current_feed.id
 
       # Tell the model that no feed is currently selected.
       currentFeedSvc.unset()

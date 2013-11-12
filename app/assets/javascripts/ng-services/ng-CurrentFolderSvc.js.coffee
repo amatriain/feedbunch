@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'currentFolderSvc',
-['$rootScope', 'entriesPaginationSvc', 'feedsFoldersSvc', 'findSvc'
-($rootScope, entriesPaginationSvc, feedsFoldersSvc, findSvc)->
+['$rootScope', 'entriesPaginationSvc', 'cleanupSvc', 'findSvc',
+($rootScope, entriesPaginationSvc, cleanupSvc, findSvc)->
 
   set: (folder)->
     entriesPaginationSvc.reset_entries()
@@ -13,7 +13,7 @@ angular.module('feedbunch').service 'currentFolderSvc',
       $rootScope.current_folder = {id: "all"}
     else
       $rootScope.current_folder = folder
-    feedsFoldersSvc.remove_read_feeds()
+    cleanupSvc.hide_read_feeds()
 
   unset: ->
     entriesPaginationSvc.reset_entries()

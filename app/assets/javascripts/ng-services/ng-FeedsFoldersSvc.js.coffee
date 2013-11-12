@@ -3,8 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$rootScope', '$http', '$filter', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc'
-($rootScope, $http, $filter, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc)->
+['$rootScope', '$http', '$filter', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
+'cleanupSvc',
+($rootScope, $http, $filter, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
+cleanupSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds. Reads the boolean flag "show_read" to know if
@@ -68,48 +70,6 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     load_folders()
     load_feeds()
 
-  #--------------------------------------------
-  # PRIVATE FUNCTION: Update the model to account for a feed having been removed from a folder
-  #--------------------------------------------
-  feed_removed = (folder_id)->
-    folder = findSvc.find_folder folder_id
-    if folder
-      # Remove folder if it's empty
-      feeds = findSvc.find_folder_feeds folder
-      if !feeds || feeds?.length == 0
-        index = $rootScope.folders.indexOf folder
-        $rootScope.folders.splice index, 1 if index != -1
-
-  #---------------------------------------------
-  # PRIVATE FUNCTION: Remove a feed from the feeds array.
-  #---------------------------------------------
-  remove_feed = (feed_id)->
-    if $rootScope.feeds
-      feed = findSvc.find_feed feed_id
-      folder_id = feed.folder_id
-      # Delete feed model from the scope
-      index = $rootScope.feeds.indexOf feed
-      if index != -1
-        $rootScope.feeds.splice index, 1
-        # Update folders
-        feed_removed folder_id
-
-  #--------------------------------------------
-  # PRIVATE FUNCTION: Remove feeds without unread entries from the root scope, unless the user has
-  # selected to display all feeds including read ones.
-  # If the user clicks on the same feed or on its folder, do nothing.
-  #--------------------------------------------
-  remove_read_feeds = ->
-    if $rootScope.feeds && !$rootScope.show_read
-      read_feeds = $filter('filter') $rootScope.feeds, (feed)->
-        return feed.unread_entries <= 0
-      if read_feeds && read_feeds?.length > 0
-        for feed in read_feeds
-          if $rootScope.current_feed?.id != feed.id && $rootScope.current_folder?.id != feed.folder_id
-            # Delete feed from the scope
-            index = $rootScope.feeds.indexOf feed
-            $rootScope.feeds.splice index, 1 if index != -1
-
   service =
 
     #---------------------------------------------
@@ -130,7 +90,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       $rootScope.show_read = false
       entriesPaginationSvc.reset_entries()
       $rootScope.feeds_loaded = false
-      remove_read_feeds()
+      cleanupSvc.hide_read_feeds()
       load_feeds()
 
     #---------------------------------------------
@@ -179,18 +139,6 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         $rootScope.folders = [folder]
       else
         $rootScope.folders.push folder
-
-    #---------------------------------------------
-    # Remove a feed from the feeds array.
-    #---------------------------------------------
-    remove_feed: remove_feed
-
-    #--------------------------------------------
-    # Remove feeds without unread entries from the root scope, unless the user has
-    # selected to display all feeds including read ones.
-    # If the user clicks on the same feed or on its folder, do nothing.
-    #--------------------------------------------
-    remove_read_feeds: remove_read_feeds
 
     #--------------------------------------------
     # Count the number of unread entries in a folder
