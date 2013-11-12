@@ -37,7 +37,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
     path = "/feeds/#{currentFeedSvc.get().id}.json"
 
     # Remove feed from feeds list
-    feedsFoldersSvc.remove_feed currentFeedSvc.get()
+    feedsFoldersSvc.remove_feed currentFeedSvc.get().id
 
     # Tell the model that no feed is currently selected.
     currentFeedSvc.unset()

@@ -83,8 +83,9 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   #---------------------------------------------
   # PRIVATE FUNCTION: Remove a feed from the feeds array.
   #---------------------------------------------
-  remove_feed = (feed)->
+  remove_feed = (feed_id)->
     if $rootScope.feeds
+      feed = findSvc.find_feed feed_id
       folder_id = feed.folder_id
       # Delete feed model from the scope
       index = $rootScope.feeds.indexOf feed
