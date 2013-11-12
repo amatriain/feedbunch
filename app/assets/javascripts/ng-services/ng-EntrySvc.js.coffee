@@ -44,7 +44,7 @@ currentFolderSvc, currentFeedSvc)->
 
       # Find out if the user wants to mark as read a whole feed, a whole folder, or all entries in
       # all subscribed feeds.
-      current_feed = currentFeed.get()
+      current_feed = currentFeedSvc.get()
       current_folder = currentFolderSvc.get()
       if current_feed
         whole_feed = "true"
