@@ -33,17 +33,19 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc)->
           timerFlagSvc.start 'error_subscribing'
 
   unsubscribe: ->
-    # Before deleting from the global scope, save some data we'll need later
-    path = "/feeds/#{currentFeedSvc.get().id}.json"
+    current_feed = currentFeedSvc.get()
+    if current_feed
+      # Before deleting from the global scope, save some data we'll need later
+      path = "/feeds/#{current_feed.id}.json"
 
-    # Remove feed from feeds list
-    feedsFoldersSvc.remove_feed currentFeedSvc.get().id
+      # Remove feed from feeds list
+      feedsFoldersSvc.remove_feed current_feed.id
 
-    # Tell the model that no feed is currently selected.
-    currentFeedSvc.unset()
+      # Tell the model that no feed is currently selected.
+      currentFeedSvc.unset()
 
-    $http.delete(path)
-    .error ->
-      timerFlagSvc.start 'error_unsubscribing'
+      $http.delete(path)
+      .error ->
+        timerFlagSvc.start 'error_unsubscribing'
 
 ]
