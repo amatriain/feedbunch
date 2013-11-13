@@ -16,13 +16,35 @@ describe 'feed entries' do
       @feed.entries << @entry1 << @entry2
       @user.subscribe @feed.fetch_url
 
+      @feed2 = FactoryGirl.create :feed
+      @entry3 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @feed2.entries << @entry3
+      @user.subscribe @feed2.fetch_url
+
       visit read_path
       read_feed @feed, @user
     end
 
-    it 'displays each entry title'
+    it 'displays feed title and entry title for each entry', js: true do
+      read_folder 'all'
 
-    it 'displays feed title for each entry'
+      within '#feed-entries' do
+        within "#entry-#{@entry1.id}" do
+          page.should have_text @feed.title, visible: true
+          page.should have_text @entry1.title, visible: true
+        end
+
+        within "#entry-#{@entry2.id}" do
+          page.should have_text @feed.title, visible: true
+          page.should have_text @entry2.title, visible: true
+        end
+
+        within "#entry-#{@entry3.id}" do
+          page.should have_text @feed2.title, visible: true
+          page.should have_text @entry3.title, visible: true
+        end
+      end
+    end
 
     it 'opens an entry', js: true do
       # Entry summary should not be visible
