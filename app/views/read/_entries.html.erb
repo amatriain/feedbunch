@@ -18,6 +18,8 @@
        class="list-group-item"
        ng-class="{'entry-read':entry.read && !entry.changing_state, 'entry-unread': !entry.read && !entry.changing_state, 'entry-becoming-read':entry.read && entry.changing_state, 'entry-becoming-unread':!entry.read && entry.changing_state}"
        ng-click="toggle_open_entry(entry)">
+      <em><span class="entry-feed-title">{{entry_feed_title(entry)}}</span></em>
+      &nbsp;
       <span class="entry-title">{{entry.title}}</span>
       <span class="pull-right">{{entry.published}}</span>
     </a>

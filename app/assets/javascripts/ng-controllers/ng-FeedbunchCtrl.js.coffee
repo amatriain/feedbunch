@@ -140,6 +140,12 @@ currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc,
     entrySvc.read_entry(entry)
 
   #--------------------------------------------
+  # Return the title of the feed to which an entry belongs
+  #--------------------------------------------
+  $scope.entry_feed_title = (entry)->
+    entrySvc.entry_feed_title entry
+
+  #--------------------------------------------
   # Set a boolean flag in the root scope as false. The flag name must be passed as a string.
   # This is used to hide alerts when clicking on their X button.
   #--------------------------------------------

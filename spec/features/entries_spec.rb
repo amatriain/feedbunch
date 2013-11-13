@@ -20,6 +20,10 @@ describe 'feed entries' do
       read_feed @feed, @user
     end
 
+    it 'displays each entry title'
+
+    it 'displays feed title for each entry'
+
     it 'opens an entry', js: true do
       # Entry summary should not be visible
       page.should_not have_content @entry1.summary

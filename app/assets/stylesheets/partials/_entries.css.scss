@@ -56,7 +56,15 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 75%;
+  width: 55%;
+}
+
+.entry-feed-title  {
+  display:inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 20%;
 }
 
 .entry-toolbar {

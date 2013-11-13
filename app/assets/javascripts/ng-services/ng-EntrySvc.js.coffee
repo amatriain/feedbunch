@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'entrySvc',
 ['$rootScope', '$http', 'openEntrySvc', 'timerFlagSvc', 'unreadCountSvc',
-'currentFolderSvc', 'currentFeedSvc',
+'currentFolderSvc', 'currentFeedSvc', 'findSvc',
 ($rootScope, $http, openEntrySvc, timerFlagSvc, unreadCountSvc,
-currentFolderSvc, currentFeedSvc)->
+currentFolderSvc, currentFeedSvc, findSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark a single entry as read or unread.
@@ -104,7 +104,12 @@ currentFolderSvc, currentFeedSvc)->
     mark_all_read: ->
       change_entries_read()
 
-
+    #--------------------------------------------
+    # Return the title of the feed to which an entry belongs
+    #--------------------------------------------
+    entry_feed_title: (entry)->
+      feed = findSvc.find_feed entry.feed_id
+      return feed.title
 
   return service
 ]
