@@ -32,6 +32,9 @@ module Feedbunch
     # if the locale sent by the user does not exist
     config.i18n.fallbacks = true
 
+    # Use Rack::Deflater middleware to compress server responses when the client supports it.
+    config.middleware.use Rack::Deflater
+
     # Rails generators generate FactoryGirl factories instead of fixtures
     config.generators do |g|
       g.fixture_replacement :factory_girl
