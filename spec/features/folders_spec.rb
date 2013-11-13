@@ -6,8 +6,11 @@ describe 'folders and feeds' do
     @user = FactoryGirl.create :user
 
     @folder1 = FactoryGirl.build :folder, user_id: @user.id
-    @user.folders << @folder1
-    @folder2 = FactoryGirl.create :folder
+    @folder2 = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << @folder1 << @folder2
+
+    # Folder which exists but is not owned by @user
+    @folder3 = FactoryGirl.create :folder
 
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
@@ -29,7 +32,7 @@ describe 'folders and feeds' do
 
   it 'shows only folders that belong to the user', js: true do
     page.should have_content @folder1.title
-    page.should_not have_content @folder2.title
+    page.should_not have_content @folder3.title
   end
 
   it 'shows an alert if it cannot load folders', js: true do
@@ -155,13 +158,6 @@ describe 'folders and feeds' do
 
     context 'add feed to existing folder' do
       
-      before :each do
-        @new_folder = FactoryGirl.build :folder, user_id: @user.id
-        @user.folders << @new_folder
-        visit read_path
-        read_feed @feed1, @user
-      end
-
       it 'adds a feed to an existing folder', js: true do
         move_feed_to_folder @feed2, @folder1, @user
 
@@ -177,17 +173,17 @@ describe 'folders and feeds' do
         # @feed1 should be under @folder1
         page.should have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder1.id}']", visible: false
 
-        move_feed_to_folder @feed1, @new_folder, @user
+        move_feed_to_folder @feed1, @folder2, @user
 
-        # the feed should be in the sidebar under the @new_folder folder
-        page.should have_css "#folder-#{@new_folder.id} #feeds-#{@new_folder.id} a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@new_folder.id}']", visible: false
+        # the feed should be in the sidebar under the @folder2 folder
+        page.should have_css "#folder-#{@folder2.id} #feeds-#{@folder2.id} a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder2.id}']", visible: false
 
         # the feed should have disappeared from @folder1
         page.should_not have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-feed-id='#{@feed1.id}']", visible: false
       end
 
       it 'removes folder if it has no more feeds', js: true do
-        move_feed_to_folder @feed1, @new_folder, @user
+        move_feed_to_folder @feed1, @folder2, @user
 
         # Folder should be removed from the sidebar
         within '#sidebar #folders-list' do
@@ -235,7 +231,7 @@ describe 'folders and feeds' do
         visit read_path
         page.should have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
 
-        move_feed_to_folder @feed1, @new_folder, @user
+        move_feed_to_folder @feed1, @folder2, @user
 
         # Folder should not be removed from the sidebar
         within '#sidebar #folders-list' do
