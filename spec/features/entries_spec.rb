@@ -55,6 +55,16 @@ describe 'feed entries' do
       page.should have_content Nokogiri::HTML(@entry1.summary).text
     end
 
+    it 'displays feed title in entry content', js: true do
+      read_entry @entry1
+
+      read_entry @entry1
+
+      within "#entry-#{@entry1.id}-summary .entry-content .entry-feed-link" do
+        page.should have_text @feed.title
+      end
+    end
+
     it 'opens title link in a new tab', js: true do
       read_entry @entry1
 

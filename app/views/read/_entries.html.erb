@@ -43,8 +43,15 @@
           </a>
         </div>
 
-        <p class="lead">
-          <a href="{{entry.url}}" target="_blank">{{entry.title}}</a>
+        <p>
+          <div class="lead entry-lead">
+            <a href="{{entry.url}}" target="_blank">{{entry.title}}</a>
+          </div>
+          <div class="entry-feed-link">
+            <a href="#" ng-click="set_current_entry_feed(entry)">
+              {{entry_feed_title(entry)}}
+            </a>
+          </div>
         </p>
 
         <p class="hidden">{{entry.guid}}</p>

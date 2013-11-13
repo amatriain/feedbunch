@@ -5,8 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
+'findSvc',
 ($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
-currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc)->
+currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
+findSvc)->
 
   # Show Add Subscription button in this view
   $rootScope.show_feed_buttons = true
@@ -144,6 +146,14 @@ currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc,
   #--------------------------------------------
   $scope.entry_feed_title = (entry)->
     entrySvc.entry_feed_title entry
+
+  #--------------------------------------------
+  # Set the feed to which belongs the passed entry as the currently selected feed
+  #--------------------------------------------
+  $scope.set_current_entry_feed = (entry)->
+    feed = findSvc.find_feed entry.feed_id
+    currentFeedSvc.set feed
+    readSvc.read_entries_page()
 
   #--------------------------------------------
   # Set a boolean flag in the root scope as false. The flag name must be passed as a string.
