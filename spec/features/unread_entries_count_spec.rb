@@ -20,7 +20,7 @@ describe 'unread entries count' do
 
     @user.subscribe @feed1.fetch_url
     @user.subscribe @feed2.fetch_url
-    @folder1.feeds << @feed1
+    @folder1.feeds << @feed1 << @feed2
 
     login_user_for_feature @user
     visit read_path
@@ -31,7 +31,7 @@ describe 'unread entries count' do
   end
 
   it 'shows number of unread entries in a folder', js: true do
-    unread_folder_entries_should_eq @folder1, 3
+    unread_folder_entries_should_eq @folder1, 4
   end
 
   it 'shows number of unread entries in a single feed', js: true do
@@ -40,9 +40,6 @@ describe 'unread entries count' do
   end
 
   it 'updates number of unread entries when adding a feed to a newly created folder', js: true do
-    @folder1.feeds << @feed2
-
-    visit read_path
     title = 'New folder'
     move_feed_to_new_folder @feed1, title, @user
 
@@ -55,9 +52,6 @@ describe 'unread entries count' do
   end
 
   it 'updates number of unread entries when moving a feed into an existing folder', js: true do
-    # @folder1 has @feed1, @feed2. folder2 has feed3
-    @folder1.feeds << @feed2
-
     folder2 = FactoryGirl.build :folder, user_id: @user.id
     @user.folders << folder2
     feed3 = FactoryGirl.create :feed
@@ -75,11 +69,7 @@ describe 'unread entries count' do
   end
 
   it 'updates number of unread entries when removing a feed from a folder', js: true do
-    @folder1.feeds << @feed2
-
-    visit read_path
-
-    remove_feed_from_folder @feed1, @folder1
+    remove_feed_from_folder @feed1, @user
 
     unread_folder_entries_should_eq @folder1, 1
   end
@@ -95,9 +85,6 @@ describe 'unread entries count' do
   end
 
   it 'updates number of unread entries when unsubscribing from a feed', js: true do
-    @folder1.feeds << @feed2
-
-    visit read_path
     unsubscribe_feed @feed1, @user
     unread_folder_entries_should_eq 'all', 1
     unread_folder_entries_should_eq @folder1, 1
@@ -113,7 +100,7 @@ describe 'unread entries count' do
     refresh_feed
 
     unread_folder_entries_should_eq 'all', 5
-    unread_folder_entries_should_eq @folder1, 4
+    unread_folder_entries_should_eq @folder1, 5
     unread_feed_entries_should_eq @feed1, 4, @user
   end
 end
