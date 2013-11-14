@@ -94,18 +94,41 @@ describe ImportSubscriptionsJob do
     ImportSubscriptionsJob.perform filename, @user.id
   end
 
-  it 'creates folder structure' do
-    @user.folders.should be_blank
-    ImportSubscriptionsJob.perform @filename, @user.id
+  context 'folder structure' do
 
-    @user.reload
-    @user.folders.count.should eq 2
+    it 'creates folders from google-style opml (with folder title)' do
+      @user.folders.should be_blank
+      ImportSubscriptionsJob.perform @filename, @user.id
 
-    folder_linux = @user.folders.where(title: 'Linux').first
-    folder_linux.should be_present
+      @user.reload
+      @user.folders.count.should eq 2
 
-    folder_webcomics = @user.folders.where(title: 'Webcomics').first
-    folder_webcomics.should be_present
+      folder_linux = @user.folders.where(title: 'Linux').first
+      folder_linux.should be_present
+
+      folder_webcomics = @user.folders.where(title: 'Webcomics').first
+      folder_webcomics.should be_present
+    end
+
+    it 'creates folders from TinyTinyRSS-style opml (without folder title)' do
+      filename = File.join __dir__, '..', 'attachments', 'TinyTinyRSS.opml'
+      file_contents = File.read filename
+      Feedbunch::Application.config.uploads_manager.stub read: file_contents
+
+      @user.folders.should be_blank
+      ImportSubscriptionsJob.perform @filename, @user.id
+
+      # There are <outline> nodes in the XML which are not actually folders, they should
+      # not be imported as folders
+      @user.reload
+      @user.folders.count.should eq 2
+
+      folder_linux = @user.folders.where(title: 'Retro').first
+      folder_linux.should be_present
+
+      folder_webcomics = @user.folders.where(title: 'Webcomics').first
+      folder_webcomics.should be_present
+    end
   end
 
   it 'reuses folders already created by the user' do

@@ -64,8 +64,7 @@ class ImportSubscriptionsJob
       return
     end
     # Update total number of feeds, so user can see progress.
-    user.data_import.total_feeds = total_feeds
-    user.data_import.save
+    user.data_import.update total_feeds: total_feeds
 
     # Process feeds that are not in a folder
     docXml.xpath('/opml/body/outline[@type="rss" and @xmlUrl]').each do |feed_node|
@@ -74,9 +73,13 @@ class ImportSubscriptionsJob
 
     # Process feeds in folders
     docXml.xpath('/opml/body/outline[not(@type="rss")]').each do |folder_node|
-      folder = self.import_folder folder_node['title'], user
-      folder_node.xpath('./outline[@type="rss" and @xmlUrl]').each do |feed_node|
-        self.import_feed feed_node['xmlUrl'], user, folder
+      # Ignore <outline> nodes which contain no feeds
+      if folder_node.xpath('./outline[@type="rss" and @xmlUrl]').present?
+        folder_title = folder_node['title'] || folder_node['text']
+        folder = self.import_folder folder_title, user
+        folder_node.xpath('./outline[@type="rss" and @xmlUrl]').each do |feed_node|
+          self.import_feed feed_node['xmlUrl'], user, folder
+        end
       end
     end
   rescue => e
