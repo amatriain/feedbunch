@@ -102,7 +102,7 @@ GEM
       json
     haml (4.0.3)
       tilt
-    high_voltage (1.2.4)
+    high_voltage (2.0.0)
     highline (1.6.19)
     hike (1.2.3)
     http_accept_language (2.0.0)
