@@ -109,7 +109,10 @@ currentFolderSvc, currentFeedSvc, findSvc)->
     #--------------------------------------------
     entry_feed_title: (entry)->
       feed = findSvc.find_feed entry.feed_id
-      return feed.title
+      if feed
+        return feed.title
+      else
+        return ''
 
   return service
 ]

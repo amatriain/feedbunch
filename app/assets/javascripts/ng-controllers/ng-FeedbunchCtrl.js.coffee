@@ -152,8 +152,9 @@ findSvc)->
   #--------------------------------------------
   $scope.set_current_entry_feed = (entry)->
     feed = findSvc.find_feed entry.feed_id
-    currentFeedSvc.set feed
-    readSvc.read_entries_page()
+    if feed
+      currentFeedSvc.set feed
+      readSvc.read_entries_page()
 
   #--------------------------------------------
   # Set a boolean flag in the root scope as false. The flag name must be passed as a string.
