@@ -75,7 +75,7 @@ GEM
       term-ansicolor
       thor
     curb (0.8.4)
-    database_cleaner (1.1.1)
+    database_cleaner (1.2.0)
     devise (3.2.1)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
