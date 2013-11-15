@@ -17,8 +17,8 @@ angular.module('feedbunch').service 'folderSvc',
       $http.put('/folders/none.json', folder: {feed_id: current_feed.id})
       .success (data)->
         feedsFoldersSvc.load_folders()
-      .error ->
-        timerFlagSvc.start 'error_managing_folders'
+      .error (data, status)->
+        timerFlagSvc.start 'error_managing_folders' if status!=0
 
   #--------------------------------------------
   # Move a feed to an already existing folder
@@ -33,8 +33,8 @@ angular.module('feedbunch').service 'folderSvc',
       $http.put("/folders/#{folder.id}.json", folder: {feed_id: current_feed.id})
       .success (data)->
         feedsFoldersSvc.load_folders()
-      .error ->
-        timerFlagSvc.start 'error_managing_folders'
+      .error (data, status)->
+        timerFlagSvc.start 'error_managing_folders' if status!=0
 
   #--------------------------------------------
   # Move a feed to a new folder
@@ -54,6 +54,6 @@ angular.module('feedbunch').service 'folderSvc',
       .error (data, status)->
         if status == 304
           timerFlagSvc.start 'error_already_existing_folder'
-        else
+        else if status!=0
           timerFlagSvc.start 'error_creating_folder'
 ]

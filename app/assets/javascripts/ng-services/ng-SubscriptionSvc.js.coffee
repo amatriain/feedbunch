@@ -29,7 +29,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
         # Show alert
         if status == 304
           timerFlagSvc.start 'error_already_subscribed'
-        else
+        else if status!=0
           timerFlagSvc.start 'error_subscribing'
 
   unsubscribe: ->
@@ -45,7 +45,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
       currentFeedSvc.unset()
 
       $http.delete(path)
-      .error ->
-        timerFlagSvc.start 'error_unsubscribing'
+      .error (data, status)->
+        timerFlagSvc.start 'error_unsubscribing' if status!=0
 
 ]

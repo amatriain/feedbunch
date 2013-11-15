@@ -28,8 +28,8 @@ currentFolderSvc, currentFeedSvc, findSvc)->
     $http.put("/entries/update.json", entry: {id: entry.id, state: state})
     .success ->
       entry.changing_state = false
-    .error ->
-      timerFlagSvc.start 'error_changing_entry_state'
+    .error (data, status)->
+      timerFlagSvc.start 'error_changing_entry_state' if status!=0
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark all entries in the currently selected feed or folder as read.
@@ -68,8 +68,8 @@ currentFolderSvc, currentFeedSvc, findSvc)->
       .success ->
         for entry in $rootScope.entries
           entry.changing_state = false
-      .error ->
-        timerFlagSvc.start 'error_changing_entry_state'
+      .error (data, status)->
+        timerFlagSvc.start 'error_changing_entry_state' if status!=0
 
   service =
 

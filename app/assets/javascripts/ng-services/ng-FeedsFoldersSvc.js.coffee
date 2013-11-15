@@ -40,8 +40,8 @@ cleanupSvc)->
 
       $rootScope.feeds_loaded = true
 
-    .error ->
-      timerFlagSvc.start 'error_loading_feeds'
+    .error (data, status)->
+      timerFlagSvc.start 'error_loading_feeds' if status!=0
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds every minute.
@@ -60,8 +60,8 @@ cleanupSvc)->
     .success (data)->
       $rootScope.folders = data
       $rootScope.folders_loaded = true
-    .error ->
-      timerFlagSvc.start 'error_loading_folders'
+    .error (data, status)->
+      timerFlagSvc.start 'error_loading_folders' if status!=0
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds and folders.

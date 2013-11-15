@@ -37,8 +37,6 @@ angular.module('feedbunch').service 'importStatusSvc',
         # Automatically load new feeds and folders without needing a refresh
         feedsFoldersSvc.load_data()
         timerFlagSvc.start 'success_importing'
-    .error ->
-      timerFlagSvc.start 'error_loading_import_status'
 
   #---------------------------------------------
   # Load import process status via AJAX into the root scope

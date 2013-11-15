@@ -13,11 +13,3 @@
     <p><%= t 'start.import.finish_error' %></p>
   </div>
 </div>
-
-<%# Alert displayed when there is a problem getting the import process status %>
-<div id="problem-updating-import-status" ng-show="error_loading_import_status">
-  <div class="alert alert-danger">
-    <button type="button" class="close" ng-click="reset_flag('error_loading_import_status')">&times;</button>
-    <p><%= t 'start.import.problem_updating' %></p>
-  </div>
-</div>

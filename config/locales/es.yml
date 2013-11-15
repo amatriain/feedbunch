@@ -82,7 +82,6 @@ es:
       retry_error_2: " para volverlo a intentar."
       progress: "Suscripciones importadas: {{import_processed}} de {{import_total}}"
       success: "Tus suscripciones a feeds han sido importadas con éxito."
-      problem_updating: "Ha habido un problema en la comunicación con el servidor."
       finish_success: "Tus suscripciones a feeds han sido importadas con éxito."
       finish_error: "Ha habido un error intentando importar tus suscripciones a feeds."
     export_html: "Si quieres descargar una copia de tus datos en Feedbunch, <a class=\"alert-link\" href=\"#\">haz click aquí</a>."
