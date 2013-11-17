@@ -70,7 +70,7 @@ class EntryStateManager
       where(entry_states: {user_id: user.id, read: !read}).
       where('entries.feed_id=? AND (entries.published<? OR (entries.published=? AND entries.id<=?))',
             entry.feed_id, entry.published, entry.published, entry.id).
-      update_all read: true
+      update_all read: read
 
     # Update unread entries count for the feed
     SubscriptionsManager.recalculate_unread_count entry.feed, user
@@ -91,7 +91,7 @@ class EntryStateManager
       where(entry_states: {user_id: user.id, read: !read}, folders: {id: folder.id}).
       where('entries.published<? OR (entries.published=? AND entries.id<=?)',
             entry.published, entry.published, entry.id).
-      update_all read: true
+      update_all read: read
 
     # Update unread entries count for the feeds
     folder.feeds.each do |f|
@@ -112,7 +112,7 @@ class EntryStateManager
     EntryState.joins(:entry).where(entry_states: {user_id: user.id, read: !read}).
       where('entries.published<? OR (entries.published=? AND entries.id<=?)',
             entry.published, entry.published, entry.id).
-      update_all read: true
+      update_all read: read
 
     # Update unread entries count for the feeds
     user.feeds.each do |f|

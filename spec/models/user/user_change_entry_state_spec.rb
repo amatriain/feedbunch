@@ -4,7 +4,6 @@ describe User do
   before :each do
     @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
-    @user.subscribe @feed.fetch_url
     @entry1 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2000, 12, 31)
     @feed.entries << @entry1
   end
@@ -12,6 +11,10 @@ describe User do
   context 'change entry state' do
 
     context 'single entry' do
+
+      before :each do
+        @user.subscribe @feed.fetch_url
+      end
 
       it 'marks entry as read' do
         @entry1.read_by?(@user).should be_false
@@ -62,6 +65,10 @@ describe User do
       end
 
       context 'from a single feed' do
+
+        before :each do
+          @user.subscribe @feed.fetch_url
+        end
 
         it 'marks several entries as read' do
           @entry1.read_by?(@user).should be_false
@@ -132,6 +139,8 @@ describe User do
           @folder = FactoryGirl.build :folder, user_id: @user.id
           @user.folders << @folder
           @folder.feeds << @feed << @feed2
+
+          @user.subscribe @feed.fetch_url
         end
 
         it 'marks several entries as read' do
@@ -227,6 +236,8 @@ describe User do
           @folder = FactoryGirl.build :folder, user_id: @user.id
           @user.folders << @folder
           @folder.feeds << @feed
+
+          @user.subscribe @feed.fetch_url
         end
 
         it 'marks several entries as read' do
@@ -247,20 +258,15 @@ describe User do
 
         it 'marks several entries as unread' do
           entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
-          entry_state1.read = true
-          entry_state1.save!
+          entry_state1.update read: true
           entry_state2 = EntryState.where(user_id: @user.id, entry_id: @entry2.id).first
-          entry_state2.read = true
-          entry_state2.save!
+          entry_state2.update read: true
           entry_state3 = EntryState.where(user_id: @user.id, entry_id: @entry3.id).first
-          entry_state3.read = true
-          entry_state3.save!
+          entry_state3.update read: true
           entry_state4 = EntryState.where(user_id: @user.id, entry_id: @entry4.id).first
-          entry_state4.read = true
-          entry_state4.save!
+          entry_state4.update read: true
           entry_state5 = EntryState.where(user_id: @user.id, entry_id: @entry5.id).first
-          entry_state5.read = true
-          entry_state5.save!
+          entry_state5.update read: true
 
           @user.change_entries_state @entry5, 'unread', all_entries: true
 
