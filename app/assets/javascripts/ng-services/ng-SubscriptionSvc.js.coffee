@@ -45,6 +45,10 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
       currentFeedSvc.unset()
 
       $http.delete(path)
+      .success ->
+        # In case the folder has been deleted after unsubscribing from a feed (because there are no more feeds in the folder),
+        # reload folders from the server.
+        feedsFoldersSvc.load_folders()
       .error (data, status)->
         timerFlagSvc.start 'error_unsubscribing' if status!=0
 
