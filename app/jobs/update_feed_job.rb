@@ -15,9 +15,7 @@ class UpdateFeedJob
   # If the feed does not exist, further refreshes of the feed are unscheduled. This avoids the case
   # in which scheduled updates for a deleted feed happened periodically.
   #
-  # Every time a feed update runs:
-  # - old entries are removed from the database. See OldEntryCleaner.cleanup
-  # - the unread entries count for each subscribed user are recalculated and corrected if necessary
+  # Every time a feed update runs the unread entries count for each subscribed user are recalculated and corrected if necessary
   #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 

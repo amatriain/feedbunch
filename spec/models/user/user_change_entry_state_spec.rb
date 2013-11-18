@@ -126,6 +126,12 @@ describe User do
 
           entry4.read_by?(@user).should be_false
         end
+
+        it 'enqueues job to update the unread count for the feed' do
+          Resque.should_receive(:enqueue).with UpdateFeedUnreadCountJob, @feed.id, @user.id
+
+          @user.change_entries_state @entry3, 'read', whole_feed: true
+        end
       end
 
       context 'from a single folder' do
@@ -223,6 +229,13 @@ describe User do
           entry6.read_by?(@user).should be_false
           entry7.read_by?(@user).should be_false
         end
+
+        it 'enqueues job to update the unread count for all feeds in the folder' do
+          Resque.should_receive(:enqueue).with UpdateFeedUnreadCountJob, @feed.id, @user.id
+          Resque.should_receive(:enqueue).with UpdateFeedUnreadCountJob, @feed2.id, @user.id
+
+          @user.change_entries_state @entry5, 'read', whole_folder: true
+        end
       end
 
       context 'from all subscribed feeds' do
@@ -290,6 +303,13 @@ describe User do
 
           entry6.read_by?(@user).should be_false
           entry7.read_by?(@user).should be_false
+        end
+
+        it 'enqueues job to update the unread count for all feeds' do
+          Resque.should_receive(:enqueue).with UpdateFeedUnreadCountJob, @feed.id, @user.id
+          Resque.should_receive(:enqueue).with UpdateFeedUnreadCountJob, @feed2.id, @user.id
+
+          @user.change_entries_state @entry5, 'read', all_entries: true
         end
 
       end

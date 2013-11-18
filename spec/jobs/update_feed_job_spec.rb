@@ -16,9 +16,11 @@ describe UpdateFeedJob do
   it 'recalculates unread entries count in feed' do
     # user is subscribed to @feed with 1 entry
     user = FactoryGirl.create :user
-    user.subscribe @feed.fetch_url
+
     entry = FactoryGirl.build :entry, feed_id: @feed.id
     @feed.entries << entry
+
+    user.subscribe @feed.fetch_url
 
     # @feed has an incorrect unread entry count of 10 for user
     feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: @feed.id).first

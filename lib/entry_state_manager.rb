@@ -73,7 +73,7 @@ class EntryStateManager
       update_all read: read
 
     # Update unread entries count for the feed
-    SubscriptionsManager.recalculate_unread_count entry.feed, user
+    Resque.enqueue UpdateFeedUnreadCountJob, entry.feed_id, user.id
   end
 
   ##
@@ -95,7 +95,7 @@ class EntryStateManager
 
     # Update unread entries count for the feeds
     folder.feeds.each do |f|
-      SubscriptionsManager.recalculate_unread_count f, user
+      Resque.enqueue UpdateFeedUnreadCountJob, f.id, user.id
     end
   end
 
@@ -116,7 +116,7 @@ class EntryStateManager
 
     # Update unread entries count for the feeds
     user.feeds.each do |f|
-      SubscriptionsManager.recalculate_unread_count f, user
+      Resque.enqueue UpdateFeedUnreadCountJob, f.id, user.id
     end
   end
 end
