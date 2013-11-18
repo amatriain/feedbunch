@@ -183,10 +183,6 @@ describe 'feed entries' do
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
       unread_feed_entries_should_eq @feed, 0, @user
-
-      # On refresh @feed should not appear
-      visit read_path
-      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
     end
 
     it 'marks all folder entries as read', js: true do
@@ -200,11 +196,6 @@ describe 'feed entries' do
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
       unread_folder_entries_should_eq folder, 0
-
-      # On refresh @feed and folder should not appear
-      visit read_path
-      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
-      page.should_not have_css "#folder-#{folder.id}"
     end
 
     it 'marks all entries as read', js: true do
@@ -218,11 +209,6 @@ describe 'feed entries' do
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
       unread_folder_entries_should_eq 'all', 0
-
-      # On refresh @feed and folder should not appear
-      visit read_path
-      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
-      page.should_not have_css "#folder-#{folder.id}"
     end
 
     it 'hides Read button for read entries', js: true do
@@ -453,10 +439,6 @@ describe 'feed entries' do
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
       unread_feed_entries_should_eq @feed, 0, @user
-
-      # On refresh @feed should not appear
-      visit read_path
-      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
     end
 
     it 'marks all folder entries as read', js: true do
@@ -470,11 +452,6 @@ describe 'feed entries' do
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
       unread_folder_entries_should_eq folder, 0
-
-      # On refresh @feed and folder should not appear
-      visit read_path
-      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
-      page.should_not have_css "#folder-#{folder.id}"
     end
 
     it 'marks all entries as read', js: true do
@@ -483,11 +460,6 @@ describe 'feed entries' do
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
       unread_folder_entries_should_eq 'all', 0
-
-      # On refresh @feed and folder should not appear
-      visit read_path
-      page.should_not have_css "[data-sidebar-feed][data-feed-id='#{@feed.id}']", visible: false
-      page.should_not have_css "#folder-#{@folder.id}"
     end
 
   end
