@@ -5,10 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
-'findSvc',
+'findSvc', 'quickReadingSvc',
 ($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
-findSvc)->
+findSvc, quickReadingSvc)->
 
   # Show Add Subscription button in this view
   $rootScope.show_feed_buttons = true
@@ -18,6 +18,9 @@ findSvc)->
 
   # Load status of data import process for the current user
   importStatusSvc.load_data false
+
+  # Start running Quick Reading mode, if the user has selected it.
+  quickReadingSvc.start()
 
   # If there is a rails alert, show it and close it after 5 seconds
   timerFlagSvc.start 'error_rails'
