@@ -227,4 +227,20 @@ describe User do
 
   end
 
+  context 'quick reading' do
+
+    it 'gives a default value of false' do
+      user = FactoryGirl.build :user, quick_reading: nil
+      user.save!
+      user.quick_reading.should_not be_nil
+      user.quick_reading.should be_false
+    end
+
+    it 'defaults to false if the passed value is not supported' do
+      user = FactoryGirl.build :user, quick_reading: 'not-valid-boolean'
+      user.save!
+      user.quick_reading.should be_false
+    end
+  end
+
 end

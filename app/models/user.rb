@@ -34,6 +34,8 @@ require 'subscriptions_manager'
 # functionality, like Resque administration.
 # - locale: locale (en, es etc) in which the user wants to see the application.
 # - timezone: name of the timezone (Europe/Madrid, UTC etc) to which the user wants to see times localized.
+# - quick_reading: boolean indicating whether the user has enabled Quick Reading mode (in which entries are marked as read
+# as soon as they are scrolled by) or not.
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -65,6 +67,8 @@ class User < ActiveRecord::Base
   has_one :data_import, dependent: :destroy
 
   validates :locale, presence: true
+  validates :timezone, presence: true
+  #validates :quick_reading, inclusion: {in: [true, false]}
 
   before_save :encode_password
   before_validation :default_values
@@ -151,8 +155,10 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Give the locale a default value of 'en' and
-  # the timezone a default value of 'UTC'
+  # Give the following default values to the user, in case no value or an invalid value is set:
+  # - locale: 'en'
+  # - timezone: 'UTC'
+  # - quick_reading: false
 
   def default_values
     # Convert the symbols for the available locales to strings, to be able to compare with the user locale
@@ -169,6 +175,11 @@ class User < ActiveRecord::Base
     if !timezone_names.include? self.timezone
       Rails.logger.info "User #{self.email} has unsupported timezone #{self.timezone}. Defaulting to timezone 'UTC' instead"
       self.timezone = 'UTC'
+    end
+
+    if self.quick_reading == nil
+      self.quick_reading = false
+      Rails.logger.info "User #{self.email} has unsupported quick_reading #{self.quick_reading}. Defaulting to quick_reading 'false' instead"
     end
   end
 

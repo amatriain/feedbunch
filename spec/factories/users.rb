@@ -12,6 +12,7 @@ FactoryGirl.define do
     admin false
     locale 'en'
     timezone 'UTC'
+    quick_reading true
 
     factory :user_unconfirmed do
       confirmed_at nil
