@@ -11,6 +11,6 @@ angular.module('feedbunch').service 'quickReadingSvc',
   #---------------------------------------------
   start: ->
     $(window).scroll ->
-      $('a[data-entry-id]:above-the-top').each (index)->
+      $('a[data-entry-id]:above-the-top(35)').each (index)->
         alert $(this).attr('data-entry-id')
 ]
