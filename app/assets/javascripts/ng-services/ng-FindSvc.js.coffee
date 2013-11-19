@@ -54,4 +54,18 @@ angular.module('feedbunch').service 'findSvc',
         return $rootScope.feeds
     else
       return null
+
+  #---------------------------------------------
+  # Find an entry given its id
+  #---------------------------------------------
+  find_entry: (id)->
+    if $rootScope.entries
+      entries = $filter('filter') $rootScope.entries, (entry)->
+        return entry.id == id
+      if entries?.length > 0
+        return entries[0]
+      else
+        return null
+    else
+      return null
 ]
