@@ -14,4 +14,5 @@
 //= require ng-modules/ng-app
 //= require_tree .
 //= require ../../../vendor/assets/javascripts/ng-infinite-scroll.min
-//= require ../../../vendor/assets/javascripts/jquery.viewport.min
+//= require ../../../vendor/assets/javascripts/withinViewport
+//= require ../../../vendor/assets/javascripts/jquery.withinViewport

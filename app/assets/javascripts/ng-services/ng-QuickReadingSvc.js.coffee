@@ -16,7 +16,7 @@ angular.module('feedbunch').service 'quickReadingSvc',
         $timeout.cancel $rootScope.scrolling_timer
       $rootScope.scrolling_timer = $timeout ->
         delete $rootScope.scrolling_timer
-        $('div#feed-entries a[data-entry-id]:above-the-top(35)').each (index)->
-          alert $(this).attr('data-entry-id')
+        $('a[data-entry-id]').not($('a[data-entry-id]').withinViewportTop({top: 15})).each ->
+          alert $(this).attr 'data-entry-id'
       , 500
 ]
