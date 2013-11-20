@@ -69,6 +69,7 @@ en:
       problem_loading_entries: "There has been a problem loading entries. Please try again later."
       problem_loading_feeds: "There has been a problem loading feeds. Please try again later."
       problem_loading_folders: "There has been a problem loading folders. Please try again later."
+      problem_loading_user_data: "There has been a problem loading user data. Please try again later."
       problem_subscribing: "Could not add subscription."
       already_subscribed: "You are already subscribed to this feed."
       problem_unsubscribing: "There has been a problem unsubscribing from the feed. Please try again later."

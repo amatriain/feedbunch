@@ -22,6 +22,14 @@
   </div>
 </div>
 
+<%# Alert displayed when there is a problem loading user data %>
+<div id="problem-loading-user-data" ng-show="error_loading_user_data">
+  <div class="alert alert-danger">
+    <button type="button" class="close" ng-click="reset_flag('error_loading_user_data')">&times;</button>
+    <p><%= t 'feeds.index.problem_loading_user_data' %></p>
+  </div>
+</div>
+
 <%# Alert displayed when there is a problem loading entries %>
 <div id="problem-loading-entries" ng-show="error_loading_entries">
   <div class="alert alert-danger">
