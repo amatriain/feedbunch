@@ -25,5 +25,5 @@ angular.module('feedbunch').service 'quickReadingSvc',
             id = $(this).attr 'data-entry-id'
             entry = findSvc.find_entry id
             entrySvc.read_entry entry
-      , 500
+      , 250
 ]
