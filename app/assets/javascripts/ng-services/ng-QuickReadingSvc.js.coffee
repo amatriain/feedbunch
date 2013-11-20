@@ -20,10 +20,9 @@ angular.module('feedbunch').service 'quickReadingSvc',
         delete $rootScope.scrolling_timer
 
         # Select entries above the viewport.
-        $('a[data-entry-id]').not($('a[data-entry-id]').withinViewportTop({top: 15})).each ->
-          if $(this).hasClass 'entry-unread'
-            id = $(this).attr 'data-entry-id'
-            entry = findSvc.find_entry id
-            entrySvc.read_entry entry
+        $('a[data-entry-id].entry-unread').not($('a[data-entry-id].entry-unread').withinViewportTop({top: 15})).each ->
+          id = $(this).attr 'data-entry-id'
+          entry = findSvc.find_entry id
+          entrySvc.read_entry entry
       , 250
 ]
