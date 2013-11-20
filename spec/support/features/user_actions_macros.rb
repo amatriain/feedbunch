@@ -281,3 +281,16 @@ def unsubscribe_feed(feed, user)
   # Ensure user is shown the start page
   page.should have_css '#sidebar li.active a#start-page'
 end
+
+##
+# Enter the edit registration page, check the "enable quick reading" checkbox if it isn't already,
+# enter the current password and save the changes.
+# Receives as argument the user performing the action.
+
+def enable_quick_reading(user)
+  visit edit_user_registration_path
+  check 'user_quick_reading'
+  fill_in 'user_current_password', with: user.password
+  click_on 'Update account'
+  current_path.should eq root_path
+end
