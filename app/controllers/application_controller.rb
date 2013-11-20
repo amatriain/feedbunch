@@ -71,7 +71,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) << :locale << :timezone
-    devise_parameter_sanitizer.for(:account_update) << :locale << :timezone
+    devise_parameter_sanitizer.for(:account_update) << :locale << :timezone << :quick_reading
   end
 
 end

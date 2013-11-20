@@ -18,8 +18,11 @@
     <%= simple_form_for resource, :as => resource_name,
                         :url => profile_path(locale: I18n.locale),
                         html: {:method => :put, autocomplete: 'off'} do |f| %>
+
       <%= f.input :email, as: :email_icon, input_html: {autocomplete: 'off'} %>
+
       <hr>
+
       <%= f.input :password, as: :password_icon, hint: t('simple_form.hints.user.blank_password'),
                   label: t('devise.views.new_password'),
                   placeholder: t('simple_form.placeholders.user.new_password'),
@@ -27,10 +30,18 @@
       <%= f.input :password_confirmation, as: :password_icon,
                   placeholder: t('simple_form.placeholders.user.password_confirmation'),
                   input_html: {autocomplete: 'off'} %>
+
       <hr>
+
       <%= f.input :locale, as: :locale, required: false %>
-      <%= f.input :timezone, as: :timezone_clock_icon %>
+      <%= f.input :timezone, as: :timezone_clock_icon, required: false %>
+
       <hr>
+
+      <%= f.input :quick_reading, as: :boolean %>
+
+      <hr>
+
       <%= f.input :current_password, as: :password_icon,
                   placeholder: t('simple_form.placeholders.user.current_password'),
                   input_html: {autocomplete: 'off'} %>
@@ -42,6 +53,8 @@
           <% end %>
         </div>
       </div>
+
+
     <% end %>
   </div>
 </div>

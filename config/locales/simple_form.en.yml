@@ -18,6 +18,7 @@ en:
         current_password: "Current password"
         locale: "Language"
         timezone: "Time zone"
+        quick_reading: "Enable Quick Reading mode"
       subscription:
         rss: "Feed"
       new_folder:
@@ -29,6 +30,7 @@ en:
         password: "Password length must be between 8 and 128 characters"
         current_password: "(we need your current password to confirm your changes)"
         blank_password: "(leave blank if you don't want to change it)"
+        quick_reading: "In Quick Reading mode, entries automatically marked as read while scrolling."
       subscription:
         rss: "Enter a webpage or feed URL"
     placeholders:
