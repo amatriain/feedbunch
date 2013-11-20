@@ -289,7 +289,13 @@ end
 
 def enable_quick_reading(user)
   visit edit_user_registration_path
-  check 'user_quick_reading'
+
+  # capybara check method currently not working because of a capybara-webkit bug: see https://github.com/thoughtbot/capybara-webkit/issues/494
+  #check 'user_quick_reading'
+
+  # instead we click the checkbox with javascript (dirty hach suggested in the above bug comments):
+  page.execute_script('$("#user_quick_reading").click()')
+
   fill_in 'user_current_password', with: user.password
   click_on 'Update account'
   current_path.should eq root_path
