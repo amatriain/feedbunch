@@ -95,7 +95,7 @@ Feedbunch::Application.routes.draw do
   # Main app page
   get '/read' => 'read#index', as: :read
 
-  # Mark as read an array of entries
+  # Change entries state
   match '/entries/update' => 'entries#update', via: [:patch, :put], as: 'entries_update'
 
   # Resourceful routes for feeds
@@ -104,8 +104,11 @@ Feedbunch::Application.routes.draw do
   # Resourceful routes for folders
   resources :folders, only: [:index, :show, :update, :create]
 
-  # Resourceful routes for subscription data
+  # Resourceful routes for subscriptions import process status
   resource :data_imports, only: [:create, :show]
+
+  # Resourceful routes for user data
+  resource :user_data, only: [:show]
 
   # Resque queue monitoring app will live in the /resque subpath
   # Resque-web is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/

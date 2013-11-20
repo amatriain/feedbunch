@@ -23,7 +23,7 @@ class FeedsController < ApplicationController
   end
 
   ##
-  # Return HTML with all entries for a given feed, as long as the currently authenticated user is suscribed to it.
+  # Return all entries for a given feed, as long as the currently authenticated user is suscribed to it.
   #
   # If the "include_read" parameter has the "true" value, return all entries; otherwise return only read ones.
   #
