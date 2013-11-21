@@ -19,7 +19,7 @@ es:
         locale: "Idioma"
         timezone: "Zona horaria"
         quick_reading: "Activar modo de Lectura Rápida"
-        open_all_entries: "Abrir todas las entradas por defecto"
+        open_all_entries: "Abrir por defecto todas las entradas"
       subscription:
         rss: "Feed"
       new_folder:
