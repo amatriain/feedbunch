@@ -67,7 +67,7 @@ describe 'quick reading mode' do
     page.execute_script "document.getElementById('entry-#{@entries[99].id}').scrollIntoView(true);"
 
     # first entry should be read
-    page.should have_css "a[data-entry-id='#{@entries[99].id}'].entry-becoming-read"
+    page.should have_css "a[data-entry-id='#{@entries[99].id}'].entry-read"
     # after refresh first entry should not be visible
     read_feed @feed, @user
     page.should_not have_text @entries[99].title
