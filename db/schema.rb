@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131121185359) do
+ActiveRecord::Schema.define(version: 20131121205700) do
 
   create_table "data_imports", force: true do |t|
     t.integer  "user_id",                     null: false
@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 20131121185359) do
     t.text     "locale",                                 null: false
     t.text     "timezone",                               null: false
     t.boolean  "quick_reading",          default: false, null: false
+    t.boolean  "open_all_entries",       default: false, null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

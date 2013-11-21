@@ -243,4 +243,20 @@ describe User do
     end
   end
 
+  context 'open all entries by default' do
+
+    it 'gives a default value of false' do
+      user = FactoryGirl.build :user, open_all_entries: nil
+      user.save!
+      user.open_all_entries.should_not be_nil
+      user.open_all_entries.should be_false
+    end
+
+    it 'defaults to false if the passed value is not supported' do
+      user = FactoryGirl.build :user, open_all_entries: 'not-valid-boolean'
+      user.save!
+      user.open_all_entries.should be_false
+    end
+  end
+
 end

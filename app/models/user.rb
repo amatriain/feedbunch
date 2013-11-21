@@ -32,10 +32,12 @@ require 'subscriptions_manager'
 #
 # - admin: Boolean that indicates whether the user is an administrator. This attribute is used to restrict access to certain
 # functionality, like Resque administration.
-# - locale: locale (en, es etc) in which the user wants to see the application.
-# - timezone: name of the timezone (Europe/Madrid, UTC etc) to which the user wants to see times localized.
+# - locale: locale (en, es etc) in which the user wants to see the application. By default "en".
+# - timezone: name of the timezone (Europe/Madrid, UTC etc) to which the user wants to see times localized. By default "UTC".
 # - quick_reading: boolean indicating whether the user has enabled Quick Reading mode (in which entries are marked as read
-# as soon as they are scrolled by) or not.
+# as soon as they are scrolled by) or not. False by default.
+# - open_all_entries: boolean indicating whether the user wants to see all entries open by default when they are loaded.
+# False by default.
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -68,7 +70,8 @@ class User < ActiveRecord::Base
 
   validates :locale, presence: true
   validates :timezone, presence: true
-  #validates :quick_reading, inclusion: {in: [true, false]}
+  validates :quick_reading, inclusion: {in: [true, false]}
+  validates :open_all_entries, inclusion: {in: [true, false]}
 
   before_save :encode_password
   before_validation :default_values
@@ -180,6 +183,11 @@ class User < ActiveRecord::Base
     if self.quick_reading == nil
       self.quick_reading = false
       Rails.logger.info "User #{self.email} has unsupported quick_reading #{self.quick_reading}. Defaulting to quick_reading 'false' instead"
+    end
+
+    if self.open_all_entries == nil
+      self.open_all_entries = false
+      Rails.logger.info "User #{self.email} has unsupported open_all_entries #{self.open_all_entries}. Defaulting to open_all_entries 'false' instead"
     end
   end
 
