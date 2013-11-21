@@ -11,15 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131120115233) do
+ActiveRecord::Schema.define(version: 20131121122420) do
 
   create_table "data_imports", force: true do |t|
     t.integer  "user_id",                             null: false
     t.text     "status",          default: "RUNNING", null: false
     t.integer  "total_feeds",     default: 0,         null: false
     t.integer  "processed_feeds", default: 0,         null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "entries", force: true do |t|
@@ -31,31 +31,31 @@ ActiveRecord::Schema.define(version: 20131120115233) do
     t.datetime "published",                   default: '2000-01-01 00:00:00',      null: false
     t.text     "guid",                        default: "",                         null: false
     t.integer  "feed_id",                                                          null: false
-    t.datetime "created_at",                                                       null: false
-    t.datetime "updated_at",                                                       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "entry_states", force: true do |t|
     t.boolean  "read",       default: false, null: false
     t.integer  "user_id",                    null: false
     t.integer  "entry_id",                   null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "feed_subscriptions", force: true do |t|
     t.integer  "user_id",                    null: false
     t.integer  "feed_id",                    null: false
     t.integer  "unread_entries", default: 0, null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "feeds", force: true do |t|
     t.text     "title",         default: "",                         null: false
     t.text     "url",           default: "http://www.feedbunch.com"
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "fetch_url",     default: "http://www.feedbunch.com", null: false
     t.text     "etag"
     t.text     "last_modified"
@@ -69,8 +69,8 @@ ActiveRecord::Schema.define(version: 20131120115233) do
   create_table "folders", force: true do |t|
     t.integer  "user_id",                 null: false
     t.text     "title",      default: "", null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", force: true do |t|
@@ -91,8 +91,8 @@ ActiveRecord::Schema.define(version: 20131120115233) do
     t.integer  "failed_attempts",        default: 0
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "admin",                  default: false, null: false
     t.text     "locale",                 default: "en",  null: false
     t.text     "timezone",               default: "UTC", null: false
