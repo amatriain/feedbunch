@@ -12,6 +12,7 @@ angular.module('feedbunch').service 'userDataSvc',
   load_data: ->
     $http.get('/user_data.json')
     .success (data)->
+      $rootScope.open_all_entries = data["open_all_entries"]
       $rootScope.quick_reading = data["quick_reading"]
       # Start running Quick Reading mode, if the user has selected it.
       quickReadingSvc.start() if $rootScope.quick_reading
