@@ -19,6 +19,7 @@ en:
         locale: "Language"
         timezone: "Time zone"
         quick_reading: "Enable Quick Reading mode"
+        open_all_entries: "Open all entries by default"
       subscription:
         rss: "Feed"
       new_folder:
@@ -31,6 +32,7 @@ en:
         current_password: "(we need your current password to confirm your changes)"
         blank_password: "(leave blank if you don't want to change it)"
         quick_reading: "In Quick Reading mode, entries automatically marked as read while scrolling."
+        open_all_entries: "If checked, all entries will be open when they are loaded."
       subscription:
         rss: "Enter a webpage or feed URL"
     placeholders:

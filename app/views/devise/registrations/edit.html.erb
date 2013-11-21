@@ -39,12 +39,13 @@
       <hr>
 
       <%= f.input :quick_reading, as: :boolean %>
+      <%= f.input :open_all_entries, as: :boolean %>
 
       <hr>
 
       <%= f.input :current_password, as: :password_icon,
                   placeholder: t('simple_form.placeholders.user.current_password'),
-                  input_html: {autocomplete: 'off'} %>
+                  input_html: {autocomplete: 'off'}, required: true %>
 
       <div class="form-group">
         <div class="col-lg-offset-3 col-lg-7">
