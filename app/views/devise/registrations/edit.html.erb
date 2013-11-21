@@ -38,8 +38,10 @@
 
       <hr>
 
-      <%= f.input :quick_reading, as: :boolean %>
-      <%= f.input :open_all_entries, as: :boolean %>
+      <%= f.input :quick_reading, as: :boolean, wrapper: :checkbox,
+                  label: false, inline_label: t('simple_form.labels.user.quick_reading') %>
+      <%= f.input :open_all_entries, as: :boolean, wrapper: :checkbox,
+                  label: false, inline_label: t('simple_form.labels.user.open_all_entries') %>
 
       <hr>
 

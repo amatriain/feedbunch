@@ -18,6 +18,15 @@ SimpleForm.setup do |config|
     end
   end
 
+  config.wrappers :checkbox, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
+    b.use :html5
+    b.wrapper tag: 'div', class: 'col-lg-7 col-lg-offset-3' do |input|
+      input.use :input
+      input.use :error, wrap_with: { tag: 'strong', class: 'help-block' }
+      input.use :hint,  wrap_with: { tag: 'em', class: 'help-block' }
+    end
+  end
+
   # The default wrapper to be used by the FormBuilder.
   config.default_wrapper = :bootstrap3_prepend
 
