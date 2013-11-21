@@ -11,64 +11,64 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131119203038) do
+ActiveRecord::Schema.define(version: 20131121185359) do
 
   create_table "data_imports", force: true do |t|
-    t.integer  "user_id"
-    t.text     "status"
-    t.integer  "total_feeds"
-    t.integer  "processed_feeds"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.integer  "user_id",                     null: false
+    t.text     "status",                      null: false
+    t.integer  "total_feeds",     default: 0, null: false
+    t.integer  "processed_feeds", default: 0, null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "entries", force: true do |t|
-    t.text     "title"
-    t.text     "url"
+    t.text     "title",                       null: false
+    t.text     "url",                         null: false
     t.text     "author"
     t.text     "content",    limit: 16777215
     t.text     "summary"
-    t.datetime "published"
-    t.text     "guid"
-    t.integer  "feed_id"
+    t.datetime "published",                   null: false
+    t.text     "guid",                        null: false
+    t.integer  "feed_id",                     null: false
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end
 
   create_table "entry_states", force: true do |t|
-    t.boolean  "read"
-    t.integer  "user_id"
-    t.integer  "entry_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.boolean  "read",       default: false, null: false
+    t.integer  "user_id",                    null: false
+    t.integer  "entry_id",                   null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "feed_subscriptions", force: true do |t|
-    t.integer  "user_id",        null: false
-    t.integer  "feed_id",        null: false
-    t.integer  "unread_entries"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.integer  "user_id",                    null: false
+    t.integer  "feed_id",                    null: false
+    t.integer  "unread_entries", default: 0, null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "feeds", force: true do |t|
-    t.text     "title"
+    t.text     "title",         null: false
     t.text     "url"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
-    t.text     "fetch_url"
+    t.text     "fetch_url",     null: false
     t.text     "etag"
     t.text     "last_modified"
   end
 
   create_table "feeds_folders", force: true do |t|
-    t.integer "feed_id"
-    t.integer "folder_id"
+    t.integer "feed_id",   null: false
+    t.integer "folder_id", null: false
   end
 
   create_table "folders", force: true do |t|
-    t.integer  "user_id"
-    t.text     "title"
+    t.integer  "user_id",    null: false
+    t.text     "title",      null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -94,9 +94,9 @@ ActiveRecord::Schema.define(version: 20131119203038) do
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
     t.boolean  "admin",                  default: false, null: false
-    t.text     "locale"
-    t.text     "timezone"
-    t.boolean  "quick_reading"
+    t.text     "locale",                                 null: false
+    t.text     "timezone",                               null: false
+    t.boolean  "quick_reading",          default: false, null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
