@@ -9,7 +9,7 @@ angular.module('feedbunch').service 'entriesPaginationSvc',
   # Reset the entries list: clear the entries list, unset the currently open entry and reset pagination.
   #---------------------------------------------
   reset_entries: ->
-    openEntrySvc.unset()
+    openEntrySvc.reset()
     $rootScope.entries_page = 0
     $rootScope.entries = []
     $rootScope.more_entries_available = true

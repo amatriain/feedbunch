@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$rootScope', '$http', '$filter', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
+['$rootScope', '$http', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
 'cleanupSvc',
-($rootScope, $http, $filter, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
+($rootScope, $http, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
 cleanupSvc)->
 
   #--------------------------------------------

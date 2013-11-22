@@ -1,5 +1,5 @@
 ########################################################
-# AngularJS service to remove feeds, folders, and hide read feeds in the view
+# AngularJS service to remove feeds, and hide read feeds in the view
 ########################################################
 
 angular.module('feedbunch').service 'cleanupSvc',

@@ -7,37 +7,40 @@ angular.module('feedbunch').service 'openEntrySvc',
 ($rootScope, $location, $anchorScroll)->
 
   #---------------------------------------------
-  # Set the currently open entry
+  # Set an entry as open
   #---------------------------------------------
-  set: (entry)->
-    $rootScope.open_entries = [entry]
+  open: (entry)->
+    if $rootScope.open_entries
+      $rootScope.open_entries.push entry
+    else
+      $rootScope.open_entries = [entry]
     # Scroll so that the entry link is at the top of the viewport, for maximum visibility of
     # the entry body
     $location.hash "entry-#{entry.id}-anchor"
     $anchorScroll()
 
   #---------------------------------------------
-  # Unset the currently open entry
+  # Set an entry as closed
   #---------------------------------------------
-  unset: ->
-    $rootScope.open_entries = []
+  close: (entry)->
+    index = $rootScope.open_entries.indexOf entry
+    $rootScope.open_entries.splice index, 1 if index != -1
     $location.hash('')
 
   #---------------------------------------------
-  # Get the currently open entry
+  # Reset the entries open/close state. If the user has selected the "open all entries" option for
+  # his profile, all entries will be open. Otherwise no entry will be open
   #---------------------------------------------
-  get: ->
-    if $rootScope.open_entries?.length > 0
-      return $rootScope.open_entries[0]
-    else
-      return null
+  reset: ->
+    $rootScope.open_entries = []
+    $location.hash('')
 
   #---------------------------------------------
   # Return true if the passed entry is open, false otherwise
   #---------------------------------------------
   is_open: (entry)->
-    if $rootScope.open_entries?.length > 0
-      return $rootScope.open_entries[0].id==entry.id
+    if $rootScope.open_entries
+      return entry in $rootScope.open_entries
     else
       return false
 ]
