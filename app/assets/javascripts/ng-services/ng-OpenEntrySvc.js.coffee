@@ -10,8 +10,10 @@ angular.module('feedbunch').service 'openEntrySvc',
   # Set an entry as open
   #---------------------------------------------
   open: (entry)->
-    if $rootScope.open_entries
+    # If user has selected to open all entries by default, add the entry to the list of open entries
+    if $rootScope.open_entries && $rootScope.open_all_entries
       $rootScope.open_entries.push entry
+    # Otherwise there is at most a single open entry.
     else
       $rootScope.open_entries = [entry]
     # Scroll so that the entry link is at the top of the viewport, for maximum visibility of
