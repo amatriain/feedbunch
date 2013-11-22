@@ -45,4 +45,16 @@ angular.module('feedbunch').service 'openEntrySvc',
       return entry in $rootScope.open_entries
     else
       return false
+
+  #---------------------------------------------
+  # Set the correct state (open/close) for newly loaded entries. If the user has selected the "open all entries" checkbox,
+  # all new entries are initially open. Otherwise all new entries are initially closed.
+  # Receives as argument an array of entries
+  #---------------------------------------------
+  add_entries: (entries)->
+    if $rootScope.open_all_entries
+      if $rootScope.open_entries?.length > 0
+        $rootScope.open_entries = $rootScope.open_entries.concat entries
+      else
+        $rootScope.open_entries = entries
 ]

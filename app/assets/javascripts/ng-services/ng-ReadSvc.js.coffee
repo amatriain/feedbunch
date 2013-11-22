@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'readSvc',
 ['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
- 'entriesPaginationSvc',
+ 'entriesPaginationSvc', 'openEntrySvc',
 ($rootScope, $http, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
- entriesPaginationSvc)->
+ entriesPaginationSvc, openEntrySvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load entries via AJAX in the root scope.
@@ -37,6 +37,8 @@ angular.module('feedbunch').service 'readSvc',
         $rootScope.entries = data["entries"]
       else
         $rootScope.entries = $rootScope.entries.concat data["entries"]
+      # Set correct state (open or closed) for new entries, based on user configuration
+      openEntrySvc.add_entries data["entries"]
       # On first page load, update unread entries count in the feed
       current_feed = currentFeedSvc.get()
       if current_feed && entriesPaginationSvc.is_first_page()
