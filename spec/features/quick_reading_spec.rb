@@ -9,7 +9,7 @@ describe 'quick reading mode' do
       @feed = FactoryGirl.create :feed
 
       @entries = []
-      (1..100).each do
+      (1..10).each do
         entry = FactoryGirl.build :entry, feed_id: @feed.id
         @feed.entries << entry
         @entries << entry
@@ -31,7 +31,7 @@ describe 'quick reading mode' do
       read_feed @feed, @user
 
       # first entry of the list (the one created most recently) is unread
-      entry_should_be_marked_unread @entries[99]
+      entry_should_be_marked_unread @entries[9]
 
       # scroll to bottom of page
       page.execute_script 'window.scrollBy(0,10000)'
@@ -41,10 +41,10 @@ describe 'quick reading mode' do
       page.execute_script 'window.scrollBy(0,-10000)'
 
       # first entry should still be unread
-      entry_should_be_marked_unread @entries[99]
+      entry_should_be_marked_unread @entries[9]
       # after refresh first entry should still be visible
       read_feed @feed, @user
-      page.should have_text @entries[99].title
+      page.should have_text @entries[9].title
     end
 
     it 'enables quick reading mode', js: true do
@@ -58,23 +58,23 @@ describe 'quick reading mode' do
       read_feed @feed, @user
 
       # first entry of the list (the one created most recently) is unread
-      entry_should_be_marked_unread @entries[99]
+      entry_should_be_marked_unread @entries[9]
 
       # scroll down enough to hide the top entry
-      page.execute_script "document.getElementById('entry-#{@entries[99].id}').scrollIntoView(true);"
+      page.execute_script "document.getElementById('entry-#{@entries[9].id}').scrollIntoView(true);"
       page.execute_script 'window.scrollBy(0,50)'
       # wait 0.5 seconds for entries to be marked as read, if quick reading were enabled
       sleep 0.5
       # scroll to top of page again
-      page.execute_script "document.getElementById('entry-#{@entries[99].id}').scrollIntoView(true);"
+      page.execute_script "document.getElementById('entry-#{@entries[9].id}').scrollIntoView(true);"
 
       # first entry should be read
-      entry_read = page.has_css? "a[data-entry-id='#{@entries[99].id}'].entry-read"
-      entry_becoming_read = page.has_css? "a[data-entry-id='#{@entries[99].id}'].entry-becoming-read"
+      entry_read = page.has_css? "a[data-entry-id='#{@entries[9].id}'].entry-read"
+      entry_becoming_read = page.has_css? "a[data-entry-id='#{@entries[9].id}'].entry-becoming-read"
       (entry_read || entry_becoming_read).should be_true
       # after refresh first entry should not be visible
       read_feed @feed, @user
-      page.should_not have_text @entries[99].title
+      page.should_not have_text @entries[9].title
     end
   end
 
