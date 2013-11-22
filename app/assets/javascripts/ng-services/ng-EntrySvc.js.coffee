@@ -77,8 +77,8 @@ currentFolderSvc, currentFeedSvc, findSvc)->
     # Set (if opening) or unset (if closing) the currently open entry. If opening, mark it as read.
     #--------------------------------------------
     toggle_open_entry: (entry)->
-      if openEntrySvc.get()?.id == entry.id
-        # User is closing the open entry, do nothing
+      if openEntrySvc.is_open entry
+        # User is closing the open entry
         openEntrySvc.unset()
       else
         openEntrySvc.set entry

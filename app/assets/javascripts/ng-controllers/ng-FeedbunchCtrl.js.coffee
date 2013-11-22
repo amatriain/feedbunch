@@ -5,10 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
-'findSvc', 'userDataSvc',
+'findSvc', 'userDataSvc', 'openEntrySvc',
 ($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
-findSvc, userDataSvc)->
+findSvc, userDataSvc, openEntrySvc)->
 
   # Show Add Subscription button in this view
   $rootScope.show_feed_buttons = true
@@ -127,6 +127,12 @@ findSvc, userDataSvc)->
     entrySvc.toggle_open_entry entry
 
   #--------------------------------------------
+  # Function to decide if an entry should be displayed as open (return true) or closed (return false).
+  #--------------------------------------------
+  $scope.is_open = (entry)->
+    openEntrySvc.is_open entry
+
+  #--------------------------------------------
   # Mark all entries as read
   #--------------------------------------------
   $scope.mark_all_read = ->
@@ -201,12 +207,6 @@ findSvc, userDataSvc)->
           return true
         else
           return feedsFoldersSvc.folder_unread_entries(folder) > 0
-
-  #--------------------------------------------
-  # Function to decide if an entry should be displayed as open (return true) or closed (return false).
-  #--------------------------------------------
-  $scope.entry_opened = (entry)->
-    return $rootScope.open_entry?.id==entry.id
 
   #--------------------------------------------
   # Function to convert an entry's id to an integer, for filtering purposes
