@@ -203,6 +203,12 @@ findSvc, userDataSvc)->
           return feedsFoldersSvc.folder_unread_entries(folder) > 0
 
   #--------------------------------------------
+  # Function to decide if an entry should be displayed as open (return true) or closed (return false).
+  #--------------------------------------------
+  $scope.entry_opened = (entry)->
+    return $rootScope.open_entry?.id==entry.id
+
+  #--------------------------------------------
   # Function to convert an entry's id to an integer, for filtering purposes
   #--------------------------------------------
   $scope.entry_int_id = (entry)->
