@@ -293,8 +293,27 @@ def enable_quick_reading(user)
   # capybara check method currently not working because of a capybara-webkit bug: see https://github.com/thoughtbot/capybara-webkit/issues/494
   #check 'user_quick_reading'
 
-  # instead we click the checkbox with javascript (dirty hach suggested in the above bug comments):
+  # instead we click the checkbox with javascript (dirty hack suggested in the above bug comments):
   page.execute_script('$("#user_quick_reading").click()')
+
+  fill_in 'user_current_password', with: user.password
+  click_on 'Update account'
+  current_path.should eq root_path
+end
+
+##
+# Enter the edit registration page, check the "open all entries" checkbox if it isn't already,
+# enter the current password and save the changes.
+# Receives as argument the user performing the action.
+
+def check_open_all_entries(user)
+  visit edit_user_registration_path
+
+  # capybara check method currently not working because of a capybara-webkit bug: see https://github.com/thoughtbot/capybara-webkit/issues/494
+  #check 'user_open_all_entries'
+
+  # instead we click the checkbox with javascript (dirty hack suggested in the above bug comments):
+  page.execute_script('$("#user_open_all_entries").click()')
 
   fill_in 'user_current_password', with: user.password
   click_on 'Update account'

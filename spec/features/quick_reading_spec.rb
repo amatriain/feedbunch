@@ -2,25 +2,25 @@ require 'spec_helper'
 
 describe 'quick reading mode' do
 
-  context 'mark entries open when scrolling' do
+  before :each do
+    @user = FactoryGirl.create :user
+    @feed = FactoryGirl.create :feed
 
-    before :each do
-      @user = FactoryGirl.create :user
-      @feed = FactoryGirl.create :feed
-
-      @entries = []
-      (1..10).each do
-        entry = FactoryGirl.build :entry, feed_id: @feed.id
-        @feed.entries << entry
-        @entries << entry
-      end
-
-      @user.subscribe @feed.fetch_url
-
-      login_user_for_feature @user
-
-      page.driver.resize_window(800, 600)
+    @entries = []
+    (0..9).each do |i|
+      entry = FactoryGirl.build :entry, feed_id: @feed.id, summary: "entry summary #{i}"
+      @feed.entries << entry
+      @entries << entry
     end
+
+    @user.subscribe @feed.fetch_url
+
+    login_user_for_feature @user
+
+    page.driver.resize_window(800, 600)
+  end
+
+  context 'mark entries open when scrolling' do
 
     it 'does not enable quick reading mode by default', js: true do
       # Quick Reading checkbox should not be checked in edit registration page
@@ -75,6 +75,40 @@ describe 'quick reading mode' do
       # after refresh first entry should not be visible
       read_feed @feed, @user
       page.should_not have_text @entries[9].title
+    end
+  end
+
+  context 'open all entries by default' do
+
+    it 'does not open all entries by default', js: true do
+      # Open All Entries checkbox should not be checked in edit registration page
+      visit edit_user_registration_path
+      find('#user_open_all_entries').should_not be_checked
+
+      visit read_path
+      read_feed @feed, @user
+
+      # all entries should be closed
+      (0..9).each do |i|
+        entry_should_be_closed @entries[i]
+      end
+    end
+
+    it 'opens all entries by default if user selects this option', js: true do
+      check_open_all_entries @user
+
+      # Open All Entries checkbox should be checked in edit registration page
+      visit edit_user_registration_path
+      find('#user_open_all_entries').should be_checked
+
+      visit read_path
+      read_feed @feed, @user
+
+      # all entries should be open
+      (0..9).each do |i|
+        entry_should_be_open @entries[i]
+        page.should have_text "entry summary #{i}"
+      end
     end
   end
 

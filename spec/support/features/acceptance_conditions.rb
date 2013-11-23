@@ -127,3 +127,19 @@ end
 def entry_should_be_marked_unread(entry)
   page.should have_css "a[data-entry-id='#{entry.id}'].entry-unread"
 end
+
+##
+# Test that the passed entry is open.
+
+def entry_should_be_open(entry)
+  page.should have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.in"
+end
+
+##
+# Test that the passed entry is open.
+
+def entry_should_be_closed(entry)
+  page.should have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary", visible: false
+  page.should_not have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.in", visible: false
+  page.should_not have_text entry.summary
+end
