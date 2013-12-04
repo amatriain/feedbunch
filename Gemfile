@@ -54,10 +54,6 @@ gem 'resque-scheduler', :require => 'resque_scheduler'
 # Process monitoring
 gem 'god'
 
-# Automate deployments
-gem 'capistrano', require: false
-gem 'rvm-capistrano', require: false
-
 # Authorization management
 gem 'cancan'
 
@@ -66,6 +62,11 @@ gem 'rubyzip'
 
 # Use the Accept-language HTTP header for i18n
 gem 'http_accept_language'
+
+group :development do
+  # Automate deployments
+  gem 'capistrano-rails', require: false
+end
 
 group :test, :development do
   # Sqlite database for testing and development
