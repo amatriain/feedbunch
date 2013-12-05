@@ -79,10 +79,8 @@ namespace :feedbunch_god do
 
   desc 'Restart God-managed tasks: Redis, Resque'
   task :restart do
-    on roles :background do
-      feedbunch_god.stop
-      feedbunch_god.start
-    end
+    invoke 'feedbunch_god:stop'
+    invoke 'feedbunch_god:start'
   end
 end
 
@@ -110,9 +108,10 @@ namespace :feedbunch_secret_data do
       execute 'ln -sf /home/feedbunch/config/devise.rb ' \
         "#{release_path}/config/initializers/devise.rb"
 
-      execute :copy_app
-      copy_background
     end
+
+    invoke :copy_app
+    invoke :copy_background
   end
 
   desc 'Copy secret files in web servers'
@@ -126,14 +125,14 @@ namespace :feedbunch_secret_data do
   desc 'Copy secret files in background servers'
   task :copy_background do
     on roles :background do
-      run 'ln -sf /home/feedbunch/config/notifications.god ' \
+      execute 'ln -sf /home/feedbunch/config/notifications.god ' \
         "#{release_path}/config/notifications.god"
 
       # Redis working directory is in the capistrano shared folder, so that the
       # append-only file and the dump file are not lost on each deployment. Create it if necessary.
-      run "mkdir -p #{shared_path}/redis"
+      execute "mkdir -p #{shared_path}/redis"
 
-      run 'ln -sf /home/feedbunch/config/redis.conf ' \
+      execute 'ln -sf /home/feedbunch/config/redis.conf ' \
         "#{release_path}/redis/redis.conf"
     end
   end
@@ -154,9 +153,9 @@ namespace :feedbunch_shared_folders do
     on roles :app, :background do
       # Uploads directory is in the capistrano shared folder, so that the
       # uploaded files are not lost on each deployment. Create it if necessary.
-      run "mkdir -p #{shared_path}/uploads"
-      run "rm -rf #{release_path}/uploads"
-      run "ln -sf #{shared_path}/uploads #{release_path}/uploads"
+      execute "mkdir -p #{shared_path}/uploads"
+      execute "rm -rf #{release_path}/uploads"
+      execute "ln -sf #{shared_path}/uploads #{release_path}/uploads"
     end
   end
 
@@ -165,18 +164,16 @@ namespace :feedbunch_shared_folders do
     on roles :background do
       # God PIDs directory is in the capistrano shared folder, so that the
       # PID files are not lost on each deployment. Create it if necessary.
-      run "mkdir -p #{shared_path}/tmp/pids"
-      run "rm -rf #{release_path}/tmp"
-      run "ln -sf #{shared_path}/tmp #{release_path}/tmp"
+      execute "mkdir -p #{shared_path}/tmp/pids"
+      execute "rm -rf #{release_path}/tmp"
+      execute "ln -sf #{shared_path}/tmp #{release_path}/tmp"
     end
   end
 
   desc 'Create shared folders and link them into the current folder'
   task :create do
-    on roles :app, :background do
-      create_uploads_folder
-      create_god_pid_folder
-    end
+    invoke :create_uploads_folder
+    invoke :create_god_pid_folder
   end
 end
 
@@ -188,24 +185,18 @@ namespace :deploy do
 
   desc 'Start the application'
   task :start do
-    on roles :app, :background do
-      feedbunch_god.start
-    end
+    invoke 'feedbunch_god:start'
   end
 
   desc 'Stop the application'
   task :stop do
-    on roles :app, :background do
-      feedbunch_god.stop
-    end
+    invoke 'feedbunch_god:stop'
   end
 
   desc 'Restart the application'
   task :restart do
-    on roles :app, :background do
-      feedbunch_god.restart
-      feedbunch_passenger.restart
-    end
+    invoke 'feedbunch_god:restart'
+    invoke 'feedbunch_passenger:restart'
   end
 
   # copy secret files just before compiling assets
