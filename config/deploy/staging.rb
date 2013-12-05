@@ -17,7 +17,7 @@ set :stage, :staging
 # extended properties on the server.
 #server 'example.com', user: 'deploy', roles: %w{web app}, my_property: :my_value
 
-server 'staging.feedbunch.com', user: 'feedbunch', roles: %w{:app :web :db}, primary: true
+server 'staging.feedbunch.com', user: 'feedbunch', roles: %w{app web db}, primary: true
 server 'background.staging.feedbunch.com', user: 'feedbunch', roles: %w{background}
 
 # you can set custom ssh options
