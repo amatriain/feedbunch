@@ -110,7 +110,7 @@ namespace :feedbunch_secret_data do
       execute 'ln -sf /home/feedbunch/config/devise.rb ' \
         "#{release_path}/config/initializers/devise.rb"
 
-      copy_app
+      execute 'feedbunch_secret_data:copy_app'
       copy_background
     end
   end
