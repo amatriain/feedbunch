@@ -61,7 +61,7 @@ namespace :feedbunch_god do
   task :start do
     on roles :background do
       execute "cd #{current_path};
-        RAILS_ENV=#{rails_env} RESQUE_ENV=background bundle exec god -c #{File.join(current_path,'config','background_jobs.god')} --log #{shared_path}/log/god.log"
+        RAILS_ENV=#{fetch(:rails_env)} RESQUE_ENV=background bundle exec god -c #{File.join(current_path,'config','background_jobs.god')} --log #{shared_path}/log/god.log"
     end
   end
 
@@ -95,8 +95,8 @@ namespace :feedbunch_secret_data do
   desc 'Copy secret files in all servers'
   task :copy do
     on roles :app, :background do
-      execute "ln -sf /home/feedbunch/config/#{rails_env}.rb " \
-        "#{release_path}/config/environments/#{rails_env}.rb"
+      execute "ln -sf /home/feedbunch/config/#{fetch(:rails_env)}.rb " \
+        "#{release_path}/config/environments/#{fetch(:rails_env)}.rb"
 
       execute 'ln -sf /home/feedbunch/config/database.yml ' \
         "#{release_path}/config/database.yml"
