@@ -66,6 +66,7 @@ gem 'http_accept_language'
 group :development do
   # Automate deployments
   gem 'capistrano-rails', require: false
+  gem 'capistrano-rvm', require: false
 end
 
 group :test, :development do
