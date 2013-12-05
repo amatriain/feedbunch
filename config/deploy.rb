@@ -71,9 +71,7 @@ namespace :feedbunch_god do
       # We run a "true" shell command after issuing a "god terminate" command because otherwise if
       # God were not running before this, we would get a return value of false which
       # Capistrano would intepret as an error and the deployment would be rolled back
-      execute "cd #{current_path};
-        bundle exec god terminate;
-        true"
+      execute "cd #{current_path}", 'bundle exec god terminate', 'true'
     end
   end
 
