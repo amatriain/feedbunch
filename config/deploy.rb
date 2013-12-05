@@ -78,7 +78,7 @@ namespace :feedbunch_god do
   end
 
   desc 'Restart God-managed tasks: Redis, Resque'
-  task :restart, roles: :background do
+  task :restart do
     on roles :background do
       feedbunch_god.stop
       feedbunch_god.start
@@ -124,7 +124,7 @@ namespace :feedbunch_secret_data do
   end
 
   desc 'Copy secret files in background servers'
-  task :copy_background, roles: :background do
+  task :copy_background do
     on roles :background do
       run 'ln -sf /home/feedbunch/config/notifications.god ' \
         "#{release_path}/config/notifications.god"
@@ -194,14 +194,14 @@ namespace :deploy do
   end
 
   desc 'Stop the application'
-  task :stop, roles: :background, except: {no_release: true} do
+  task :stop do
     on roles :app, :background do
       feedbunch_god.stop
     end
   end
 
   desc 'Restart the application'
-  task :restart, roles: [:app, :background], except: {no_release: true} do
+  task :restart do
     on roles :app, :background do
       feedbunch_god.restart
       feedbunch_passenger.restart
