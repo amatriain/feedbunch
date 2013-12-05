@@ -110,8 +110,8 @@ namespace :feedbunch_secret_data do
 
     end
 
-    invoke :copy_app
-    invoke :copy_background
+    invoke 'feedbunch_secret_data:copy_app'
+    invoke 'feedbunch_secret_data:copy_background'
   end
 
   desc 'Copy secret files in web servers'
@@ -172,8 +172,8 @@ namespace :feedbunch_shared_folders do
 
   desc 'Create shared folders and link them into the current folder'
   task :create do
-    invoke :create_uploads_folder
-    invoke :create_god_pid_folder
+    invoke 'feedbunch_shared_folders:create_uploads_folder'
+    invoke 'feedbunch_shared_folders:create_god_pid_folder'
   end
 end
 
