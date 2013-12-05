@@ -203,7 +203,7 @@ namespace :deploy do
   before 'assets:precompile', 'feedbunch_secret_data:copy'
 
   # clean up old releases on each deploy, keep only 5 most recent releases
-  after :restart, :cleanup
+  after 'deploy:restart', 'deploy:cleanup'
 end
 
 
