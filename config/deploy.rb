@@ -45,7 +45,7 @@ set :branch, 'master'
 namespace :feedbunch_passenger do
   desc 'Restart passenger-deployed application'
   task :restart do
-    on roles :app do
+    on roles :web do
       # Tell passenger to restart the app
       execute :touch, File.join(current_path,'tmp','restart.txt')
     end
@@ -92,7 +92,7 @@ namespace :feedbunch_secret_data do
   
   desc 'Copy secret files in all servers'
   task :copy do
-    on roles :app, :background do
+    on roles :web, :background do
       execute "ln -sf /home/feedbunch/config/#{fetch(:rails_env)}.rb " \
         "#{release_path}/config/environments/#{fetch(:rails_env)}.rb"
 
@@ -110,13 +110,13 @@ namespace :feedbunch_secret_data do
 
     end
 
-    invoke 'feedbunch_secret_data:copy_app'
+    invoke 'feedbunch_secret_data:copy_web'
     invoke 'feedbunch_secret_data:copy_background'
   end
 
   desc 'Copy secret files in web servers'
-  task :copy_app do
-    on roles :app do
+  task :copy_web do
+    on roles :web do
       execute 'ln -sf /home/feedbunch/config/secret_token.rb ' \
         "#{release_path}/config/initializers/secret_token.rb"
     end
@@ -150,7 +150,7 @@ namespace :feedbunch_shared_folders do
 
   desc 'Create uploads folder in shared folder and link it into the current folder'
   task :create_uploads_folder do
-    on roles :app, :background do
+    on roles :web, :background do
       # Uploads directory is in the capistrano shared folder, so that the
       # uploaded files are not lost on each deployment. Create it if necessary.
       execute "mkdir -p #{shared_path}/uploads"

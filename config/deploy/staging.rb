@@ -18,7 +18,7 @@ set :stage, :staging
 #server 'example.com', user: 'deploy', roles: %w{web app}, my_property: :my_value
 
 server 'staging.feedbunch.com', user: 'feedbunch', roles: %w{app web db}, primary: true
-server 'background.staging.feedbunch.com', user: 'feedbunch', roles: %w{background}
+server 'background.staging.feedbunch.com', user: 'feedbunch', roles: %w{app background}
 
 # you can set custom ssh options
 # it's possible to pass any option but you need to keep in mind that net/ssh understand limited list of options
