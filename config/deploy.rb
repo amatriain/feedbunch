@@ -24,11 +24,28 @@ set :log_level, :debug
 
 set :deploy_to, '/var/rails/feedbunch'
 set :keep_releases, 5
-
-# TODO: use the linked_files setting instead of manually running a "ln -s" command below for each secret file
-# set :linked_files, %w{config/database.yml}
-# TODO: use the linked_dirs setting instead of manually creating and linking the uploads and god_pid folders below
-# set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_files, %w{
+                      config/database.yml
+                      config/notifications.god
+                      config/resque.yml
+                      config/environments/staging.rb
+                      config/environments/production.rb
+                      config/initializers/aws_key.rb
+                      config/initializers/devise.rb
+                      config/initializers/secret_token.rb
+                      redis/redis.conf
+                  }
+set :linked_dirs, %w{
+                      bin
+                      log
+                      uploads
+                      public/assets
+                      public/system
+                      tmp/cache
+                      tmp/pids
+                      tmp/sockets
+                      vendor/bundle
+                  }
 
 #############################################################
 #	Git
@@ -85,99 +102,6 @@ namespace :feedbunch_god do
 end
 
 #############################################################
-#	Copy per-environment config files to deployment
-#############################################################
-
-namespace :feedbunch_secret_data do
-  
-  desc 'Copy secret files in all servers'
-  task :copy do
-    on roles :web, :background do
-      execute "ln -sf /home/feedbunch/config/#{fetch(:rails_env)}.rb " \
-        "#{release_path}/config/environments/#{fetch(:rails_env)}.rb"
-
-      execute 'ln -sf /home/feedbunch/config/database.yml ' \
-        "#{release_path}/config/database.yml"
-
-      execute 'ln -sf /home/feedbunch/config/resque.yml ' \
-        "#{release_path}/config/resque.yml"
-
-      execute 'ln -sf /home/feedbunch/config/aws_key.rb ' \
-        "#{release_path}/config/initializers/aws_key.rb"
-
-      execute 'ln -sf /home/feedbunch/config/devise.rb ' \
-        "#{release_path}/config/initializers/devise.rb"
-
-    end
-
-    invoke 'feedbunch_secret_data:copy_web'
-    invoke 'feedbunch_secret_data:copy_background'
-  end
-
-  desc 'Copy secret files in web servers'
-  task :copy_web do
-    on roles :web do
-      execute 'ln -sf /home/feedbunch/config/secret_token.rb ' \
-        "#{release_path}/config/initializers/secret_token.rb"
-    end
-  end
-
-  desc 'Copy secret files in background servers'
-  task :copy_background do
-    on roles :background do
-      execute 'ln -sf /home/feedbunch/config/notifications.god ' \
-        "#{release_path}/config/notifications.god"
-
-      # Redis working directory is in the capistrano shared folder, so that the
-      # append-only file and the dump file are not lost on each deployment. Create it if necessary.
-      execute "mkdir -p #{shared_path}/redis"
-
-      execute 'ln -sf /home/feedbunch/config/redis.conf ' \
-        "#{release_path}/redis/redis.conf"
-    end
-  end
-
-  # Create shared folders after copying secret data
-  after :copy, 'feedbunch_shared_folders:create'
-end
-
-#############################################################
-#	Create and link "uploads" and "tmp/pids" folder in the shared folder.
-# "uploads" is created in both server roles, "tmp/pids" only in the background server.
-#############################################################
-
-namespace :feedbunch_shared_folders do
-
-  desc 'Create uploads folder in shared folder and link it into the current folder'
-  task :create_uploads_folder do
-    on roles :web, :background do
-      # Uploads directory is in the capistrano shared folder, so that the
-      # uploaded files are not lost on each deployment. Create it if necessary.
-      execute "mkdir -p #{shared_path}/uploads"
-      execute "rm -rf #{release_path}/uploads"
-      execute "ln -sf #{shared_path}/uploads #{release_path}/uploads"
-    end
-  end
-
-  desc 'Create folder for the God PID in shared folder and link it into the current folder'
-  task :create_god_pid_folder do
-    on roles :background do
-      # God PIDs directory is in the capistrano shared folder, so that the
-      # PID files are not lost on each deployment. Create it if necessary.
-      execute "mkdir -p #{shared_path}/tmp/pids"
-      execute "rm -rf #{release_path}/tmp"
-      execute "ln -sf #{shared_path}/tmp #{release_path}/tmp"
-    end
-  end
-
-  desc 'Create shared folders and link them into the current folder'
-  task :create do
-    invoke 'feedbunch_shared_folders:create_uploads_folder'
-    invoke 'feedbunch_shared_folders:create_god_pid_folder'
-  end
-end
-
-#############################################################
 #	Deployment start/stop/restart hooks
 #############################################################
 
@@ -198,9 +122,6 @@ namespace :deploy do
     invoke 'feedbunch_god:restart'
     invoke 'feedbunch_passenger:restart'
   end
-
-  # copy secret files just before compiling assets
-  before 'assets:precompile', 'feedbunch_secret_data:copy'
 
   # clean up old releases on each deploy, keep only 5 most recent releases
   after 'deploy:restart', 'deploy:cleanup'
