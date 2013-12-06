@@ -63,7 +63,7 @@ namespace :feedbunch_god do
   desc 'Start God-managed tasks: Redis, Resque'
   task :start do
     on roles :background do
-      within fetch(:current_path) do
+      within current_path do
         with rails_env: fetch(:rails_env) do
           execute "RESQUE_ENV=background bundle exec god -c #{File.join(current_path,'config','background_jobs.god')} --log #{shared_path}/log/god.log"
         end
@@ -74,7 +74,7 @@ namespace :feedbunch_god do
   desc 'Stop God-managed tasks: Redis, Resque'
   task :stop do
     on roles :background do
-      within fetch(:current_path) do
+      within current_path do
         # We run a "true" shell command after issuing a "god terminate" command because otherwise if
         # God were not running before this, we would get a return value of false which
         # Capistrano would intepret as an error and the deployment would be rolled back
