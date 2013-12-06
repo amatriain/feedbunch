@@ -106,9 +106,10 @@ namespace :deploy do
   desc 'Restart the application'
   task :restart do
     on roles :web do
-      within File.join(current_path,'tmp')
-      # Tell passenger to restart the app
-      execute :touch, 'restart.txt'
+      within File.join(current_path,'tmp') do
+        # Tell passenger to restart the app
+        execute :touch, 'restart.txt'
+      end
     end
     invoke 'feedbunch_god:restart'
   end
