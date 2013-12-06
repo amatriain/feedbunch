@@ -56,20 +56,6 @@ set :repo_url,  'git://github.com/amatriain/feedbunch.git'
 set :branch, 'master'
 
 #############################################################
-#	Passenger
-#############################################################
-
-namespace :feedbunch_passenger do
-  desc 'Restart passenger-deployed application'
-  task :restart do
-    on roles :web do
-      # Tell passenger to restart the app
-      execute :touch, File.join(current_path,'tmp','restart.txt')
-    end
-  end
-end
-
-#############################################################
 #	God (manages Redis, Resque)
 #############################################################
 
@@ -119,8 +105,12 @@ namespace :deploy do
 
   desc 'Restart the application'
   task :restart do
+    on roles :web do
+      within File.join(current_path,'tmp')
+      # Tell passenger to restart the app
+      execute :touch, 'restart.txt'
+    end
     invoke 'feedbunch_god:restart'
-    invoke 'feedbunch_passenger:restart'
   end
 
   # clean up old releases on each deploy, keep only 5 most recent releases
