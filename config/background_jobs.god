@@ -17,8 +17,8 @@ rails_env = ENV["RAILS_ENV"] || 'development'
 resque_env = ENV["RESQUE_ENV"] || 'app'
 
 God.watch do |w|
-  w.name = 'redis'
-  w.group = 'background'
+  w.name = 'redis-server'
+  w.group = 'redis-server-group'
   w.start = "redis-server #{File.join(APP_ROOT, 'redis', 'redis.conf')}"
   w.stop = 'redis-cli -p 6379 shutdown'
 
@@ -48,7 +48,7 @@ end
 
 God.watch do |w|
   w.name = 'resque-work'
-  w.group = 'background'
+  w.group = 'resque-group'
   w.env = {'RAILS_ENV' => rails_env,
            'RESQUE_ENV' => resque_env,
            'QUEUE' => 'update_feeds',
@@ -78,7 +78,7 @@ end
 
 God.watch do |w|
   w.name = 'resque-scheduler'
-  w.group = 'background'
+  w.group = 'resque-group'
   w.env = {'RAILS_ENV' => rails_env,
            'RESQUE_ENV' => resque_env,
            'TERM_CHILD' => '1',
