@@ -53,7 +53,7 @@ God.watch do |w|
            'RESQUE_ENV' => resque_env,
            'QUEUE' => 'update_feeds',
            'TERM_CHILD' => '1',
-           'RESQUE_TERM_TIMEOUT' => ' 10'}
+           'RESQUE_TERM_TIMEOUT' => '300'}
   w.start = "rake -f #{File.join(APP_ROOT, 'Rakefile')} resque:work"
 
   # Uncomment one of the following two lines, depending on whether resource usage limit is desired
@@ -82,7 +82,7 @@ God.watch do |w|
   w.env = {'RAILS_ENV' => rails_env,
            'RESQUE_ENV' => resque_env,
            'TERM_CHILD' => '1',
-           'RESQUE_TERM_TIMEOUT' => ' 10'}
+           'RESQUE_TERM_TIMEOUT' => ' 300'}
   w.start = "rake -f #{File.join(APP_ROOT, 'Rakefile')} resque:scheduler"
 
   # Uncomment one of the following two lines, depending on whether resource usage limit is desired
