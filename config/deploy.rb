@@ -17,6 +17,7 @@ set :rvm_ruby_version, 'ruby-2.0.0-p353'
 
 set :format, :pretty
 set :log_level, :debug
+SSHKit.config.command_map[:god] = 'bundle exec god'
 
 #############################################################
 #	Servers
@@ -63,20 +64,23 @@ namespace :feedbunch_god do
   desc 'Start God and God-managed tasks: Redis, Resque'
   task :start do
     on roles :background do
-      execute "cd #{current_path};",
-              "RAILS_ENV=#{fetch(:rails_env)} RESQUE_ENV=background bundle exec god -c #{File.join(current_path,'config','background_jobs.god')} --log #{shared_path}/log/god.log"
+      within current_path do
+        with resque_env: 'background' do
+          execute :god, '-c', "#{File.join(current_path,'config','background_jobs.god')}", '--log', "#{shared_path}/log/god.log"
+        end
+      end
     end
   end
 
   desc 'Stop God and God-managed tasks: Redis, Resque'
   task :stop do
     on roles :background do
-      # We run a "true" shell command after issuing a "god terminate" command because otherwise if
-      # God were not running before this, we would get a return value of false which
-      # Capistrano would intepret as an error and the deployment would be rolled back
-      execute "cd #{current_path};",
-              'bundle exec god terminate;',
-              'true'
+      within current_path do
+        # We run a "true" shell command after issuing a "god terminate" command because otherwise if
+        # God were not running before this, we would get a return value of false which
+        # Capistrano would intepret as an error and the deployment would be rolled back
+        execute :god, 'terminate', ';true'
+      end
     end
   end
 
@@ -89,8 +93,11 @@ namespace :feedbunch_god do
   desc 'Restart only Resque watches (resque-worker, resque-scheduler)'
   task :restart_resque do
     on roles :background do
-      execute "cd #{current_path};",
-              "RAILS_ENV=#{fetch(:rails_env)} RESQUE_ENV=background bundle exec god restart resque-group"
+      within current_path do
+        with resque_env: 'background' do
+          execute :god, 'restart', 'resque-group'
+        end
+      end
     end
   end
 end
