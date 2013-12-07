@@ -60,7 +60,7 @@ set :branch, 'master'
 #############################################################
 
 namespace :feedbunch_god do
-  desc 'Start God-managed tasks: Redis, Resque'
+  desc 'Start God and God-managed tasks: Redis, Resque'
   task :start do
     on roles :background do
       execute "cd #{current_path};",
@@ -68,7 +68,7 @@ namespace :feedbunch_god do
     end
   end
 
-  desc 'Stop God-managed tasks: Redis, Resque'
+  desc 'Stop God and God-managed tasks: Redis, Resque'
   task :stop do
     on roles :background do
       # We run a "true" shell command after issuing a "god terminate" command because otherwise if
@@ -80,10 +80,18 @@ namespace :feedbunch_god do
     end
   end
 
-  desc 'Restart God-managed tasks: Redis, Resque'
-  task :restart do
+  desc 'Restart God and God-managed tasks: Redis, Resque'
+  task :restart_god do
     invoke 'feedbunch_god:stop'
     invoke 'feedbunch_god:start'
+  end
+
+  desc 'Restart only Resque watches (resque-worker, resque-scheduler)'
+  task :restart_resque do
+    on roles :background do
+      execute "cd #{current_path};",
+              "RAILS_ENV=#{fetch(:rails_env)} RESQUE_ENV=background bundle exec god restart resque-group"
+    end
   end
 end
 
@@ -111,7 +119,7 @@ namespace :deploy do
         execute :touch, 'restart.txt'
       end
     end
-    invoke 'feedbunch_god:restart'
+    invoke 'feedbunch_god:restart_resque'
   end
 
   # clean up old releases on each deploy, keep only 5 most recent releases
