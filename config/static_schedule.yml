@@ -1,5 +1,6 @@
 FixSchedulesJob:
   description: "Add any missing feed update schedules"
+  queue: update_feeds
   every:
     - "1h"
     - :first_in: "10s"
