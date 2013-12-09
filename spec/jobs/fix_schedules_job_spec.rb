@@ -7,7 +7,7 @@ describe FixSchedulesJob do
   end
 
   it 'adds missing scheduled feed updates' do
-    feed_unscheduled = FactoryGirl.create :feed, created_at: (Time.now - 2.days)
+    feed_unscheduled = FactoryGirl.create :feed
     # @feed has scheduled updates, feed_unscheduled does not
     Resque.stub :get_schedule do |name|
       if name == "update_feed_#{@feed.id}"
@@ -18,10 +18,12 @@ describe FixSchedulesJob do
     end
 
     # A job to schedule updates for feed_unscheduled should be enqueued to be run in the next hour
-    Resque.should_receive(:enqueue_in).once do |delay, job_class, args|
-      delay.should be_between 0.minutes, 60.minutes
-      job_class.should eq ScheduleFeedUpdatesJob
-      args.should eq feed_unscheduled.id
+    Resque.should_receive(:set_schedule).once do |name, config|
+      name.should eq "update_feed_#{feed_unscheduled.id}"
+      config[:class].should eq 'UpdateFeedJob'
+      config[:args].should eq feed_unscheduled.id
+      config[:every][0].should eq '1h'
+      config[:every][1][:first_in].should be_between 0.minutes, 60.minutes
     end
 
     FixSchedulesJob.perform
@@ -39,24 +41,7 @@ describe FixSchedulesJob do
     end
 
     # No job to schedule updates should be enqueued
-    Resque.should_not_receive :enqueue_in
-
-    FixSchedulesJob.perform
-  end
-
-  it 'does nothing for feeds created less than 1h30m ago' do
-    feed_recent = FactoryGirl.create :feed, created_at: (Time.now - 30.minutes)
-    # @feed has scheduled updates. feed_recent does not, but it has been created less than 90 minutes ago.
-    Resque.stub :get_schedule do |name|
-      if name == "update_feed_#{@feed.id}"
-        {"class"=>"UpdateFeedJob", "args"=>@feed.id, "every"=>"1h"}
-      else
-        nil
-      end
-    end
-
-    # No job to schedule updates should be enqueued
-    Resque.should_not_receive :enqueue_in
+    Resque.should_not_receive :set_schedule
 
     FixSchedulesJob.perform
   end

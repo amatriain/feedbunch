@@ -54,7 +54,12 @@ class UpdateFeedJob
   def self.schedule_feed_updates(feed_id)
     delay = Random.rand 61
     Rails.logger.info "Scheduling updates of feed #{feed_id} every hour, starting #{delay} minutes from now at #{Time.now + delay.minutes}"
-    Resque.enqueue_in delay.minutes, ScheduleFeedUpdatesJob, feed_id
+    name = "update_feed_#{feed_id}"
+    config = {}
+    config[:class] = 'UpdateFeedJob'
+    config[:args] = feed_id
+    config[:every] = ['1h', {first_in: delay.minutes}]
+    Resque.set_schedule name, config
   end
 
   ##

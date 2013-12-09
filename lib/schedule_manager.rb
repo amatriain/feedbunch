@@ -10,12 +10,6 @@ class ScheduleManager
   #
   # After invoking this method all feeds have scheduled updates that run every hour.
   #
-  # Feeds created less than 1h30m ago are ignored by this method. Feeds normally get their updates scheduled
-  # inside the first hour after they are first saved in the database; however the actual time could be over an hour
-  # if the job queue is saturated. A feed without scheduled updates that was created less than 90 minutes ago probably
-  # still hasn't had its updates scheduled (ScheduleFeedUpdatesJob has not yet run for this feed), and can be ignored
-  # safely, at least until it's older than 90 minutes.
-  #
   # Note.- This methods relies on the schedule to run updates for a feed being named "update_feed_#{feed.id}". If this
   # naming scheme ever changes, this method will have to be changed accordingly.
 
@@ -24,7 +18,7 @@ class ScheduleManager
     feeds_unscheduled = []
 
     # examine only feeds older than 90 minutes
-    Feed.where('created_at < ?', Time.now - 90.minutes).each do |feed|
+    Feed.all.each do |feed|
       # get update schedule for the feed
       schedule = Resque.get_schedule "update_feed_#{feed.id}"
       Rails.logger.debug "Update schedule for feed #{feed.id}  #{feed.title}: #{schedule}"
