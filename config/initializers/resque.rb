@@ -39,7 +39,7 @@ Resque::Scheduler.dynamic = true
 # Load static schedule
 # The schedule doesn't need to be stored in a YAML, it just needs to
 # be a hash.  YAML is usually the easiest.
-#Resque.schedule = YAML.load_file File.join(rails_root.to_s, 'config', 'static_schedule.yml')
+Resque.schedule = YAML.load_file File.join(rails_root.to_s, 'config', 'static_schedule.yml')
 
 Resque.before_fork do |job|
   # Reconnect to the DB before running each job. Otherwise we get errors if the DB

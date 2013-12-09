@@ -1,0 +1,5 @@
+FixSchedulesJob:
+  description: "Add any missing feed update schedules"
+  every:
+    - "1h"
+    - :first_in: "10s"
