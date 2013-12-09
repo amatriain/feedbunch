@@ -1,6 +1,5 @@
 ##
-# This class has methods related to recovering and updating the cached unread entries count
-# for feeds and folders.
+# This class has methods related to managing users' subscriptions to feeds.
 
 class SubscriptionsManager
 
