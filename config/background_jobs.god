@@ -3,35 +3,39 @@
 # god -c config/background_jobs.god
 
 # IMPORTANT! all paths are relative to this path, which defaults to the directory god is called from.
-# Therefore god MUST be called from the rails root, or all paths in this file will be incorrect.
-APP_ROOT = Dir.pwd
+# Therefore god MUST be called from the rails root if $APP_ROOT is not set, or all paths in this file will be incorrect.
+app_root = ENV['APP_ROOT'] || Dir.pwd
 
 # Where God should put pid files for those watches it daemonizes
-God.pid_file_directory = File.join APP_ROOT, %w(tmp pids)
+pid_path = ENV['PID_PATH'] || File.join(app_root, 'tmp', 'pids')
+God.pid_file_directory = pid_path
 
 # Notifications config for God. This file will be different in production and staging environments.
-God.load(File.join(APP_ROOT, 'config', 'notifications.god'))
+God.load(File.join(app_root, 'config', 'notifications.god'))
 
 # Pass current environment to processes that need it
-rails_env = ENV["RAILS_ENV"] || 'development'
-resque_env = ENV["RESQUE_ENV"] || 'app'
+rails_env = ENV['RAILS_ENV'] || 'development'
+resque_env = ENV['RESQUE_ENV'] || 'app'
+log_path = ENV['LOG_PATH'] || File.join(app_root, 'log')
 
 God.watch do |w|
+  redis_path = ENV['REDIS_PATH'] || File.join(app_root, 'redis')
+
   w.name = 'redis-server'
   w.group = 'redis-server-group'
-  w.start = "redis-server #{File.join(APP_ROOT, 'redis', 'redis.conf')}"
+  w.start = "redis-server #{File.join(redis_path, 'redis.conf')}"
   w.stop = 'redis-cli -p 6379 shutdown'
 
   # This is not necessary if redis.conf does not specify that redis should be daemonized
-  #w.pid_file = File.join APP_ROOT, 'pids', 'redis.pid'
+  #w.pid_file = File.join app_root, 'pids', 'redis.pid'
   #w.behavior :clean_pid_file
 
   # Uncomment one of the following two lines, depending on whether resource usage limit is desired
   #w.keepalive memory_max: 256.megabyte, cpu_max: 50.percent
   w.keepalive
 
-  w.dir = APP_ROOT
-  w.log = File.join APP_ROOT, 'log', 'redis.log'
+  w.dir = app_root
+  w.log = File.join log_path, 'redis.log'
 
   w.lifecycle do |on|
     on.condition(:flapping) do |c|
@@ -54,14 +58,14 @@ God.watch do |w|
            'QUEUE' => 'update_feeds',
            'TERM_CHILD' => '1',
            'RESQUE_TERM_TIMEOUT' => '300'}
-  w.start = "rake -f #{File.join(APP_ROOT, 'Rakefile')} resque:work"
+  w.start = "rake -f #{File.join(app_root, 'Rakefile')} resque:work"
 
   # Uncomment one of the following two lines, depending on whether resource usage limit is desired
   #w.keepalive memory_max: 256.megabytes, cpu_max: 50.percent
   w.keepalive
 
-  w.dir = APP_ROOT
-  w.log = File.join APP_ROOT, 'log', 'resque.log'
+  w.dir = app_root
+  w.log = File.join log_path, 'resque.log'
 
   w.lifecycle do |on|
     on.condition(:flapping) do |c|
@@ -83,14 +87,14 @@ God.watch do |w|
            'RESQUE_ENV' => resque_env,
            'TERM_CHILD' => '1',
            'RESQUE_TERM_TIMEOUT' => ' 300'}
-  w.start = "rake -f #{File.join(APP_ROOT, 'Rakefile')} resque:scheduler"
+  w.start = "rake -f #{File.join(app_root, 'Rakefile')} resque:scheduler"
 
   # Uncomment one of the following two lines, depending on whether resource usage limit is desired
   #w.keepalive memory_max: 256.megabytes, cpu_max: 25.percent
   w.keepalive
 
-  w.dir = APP_ROOT
-  w.log = File.join APP_ROOT, 'log', 'resque.log'
+  w.dir = app_root
+  w.log = File.join log_path, 'resque.log'
 
   w.lifecycle do |on|
     on.condition(:flapping) do |c|
