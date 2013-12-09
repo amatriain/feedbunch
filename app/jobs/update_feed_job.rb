@@ -1,5 +1,4 @@
 require 'subscriptions_manager'
-require 'schedule_manager'
 
 ##
 # Background job to fetch and update a feed's entries.
@@ -36,10 +35,6 @@ class UpdateFeedJob
     feed.users.each do |user|
       SubscriptionsManager.recalculate_unread_count feed, user
     end
-
-  ensure
-    # Every time a feed update is run, schedules are reviewed and fixed as necessary
-    ScheduleManager.fix_update_schedules
   end
 
   ##
