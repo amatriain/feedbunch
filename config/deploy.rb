@@ -61,15 +61,12 @@ set :branch, 'master'
 #############################################################
 
 namespace :feedbunch_god do
-  pid_path = File.join shared_path, 'tmp', 'pids'
-  redis_path = File.join shared_path, 'redis'
-  log_path = File.join shared_path, 'log'
 
   desc 'Start God and God-managed tasks: Redis, Resque'
   task :start do
     on roles :background do
       within current_path do
-        with resque_env: 'background', app_root: current_path, pid_path: pid_path, redis_path: redis_path, log_path: log_path do
+        with resque_env: 'background' do
           execute :god, '-c', File.join(current_path,'config','background_jobs.god'),
                   '--log', File.join(shared_path, 'log', 'god.log')
         end
@@ -99,7 +96,7 @@ namespace :feedbunch_god do
   task :restart_resque do
     on roles :background do
       within current_path do
-        with resque_env: 'background', app_root: current_path, pid_path: pid_path, redis_path: redis_path, log_path: log_path do
+        with resque_env: 'background' do
           # reload god config, in case it has changed
           execute :god, 'load', File.join(current_path,'config','background_jobs.god')
           # reload watches in resque-group group

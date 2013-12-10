@@ -2,24 +2,30 @@
 # From the rails root, execute:
 # god -c config/background_jobs.god
 
-# IMPORTANT! all paths are relative to this path, which defaults to the directory god is called from.
-# Therefore god MUST be called from the rails root if $APP_ROOT is not set, or all paths in this file will be incorrect.
-app_root = ENV['APP_ROOT'] || Dir.pwd
+# Rails environment defaults to development
+rails_env = ENV['RAILS_ENV'] || 'development'
 
-# Where God should put pid files for those watches it daemonizes
-pid_path = ENV['PID_PATH'] || File.join(app_root, 'tmp', 'pids')
-God.pid_file_directory = pid_path
+# Paths in staging, production environments are in the capistrano deployment folder.
+# In other environments they are relative to the directory god is run from.
+if %w{staging production}.include? rails_env
+  app_root = File.join %w{/ var rails feedbunch current}
+  log_path = File.join %w{/ var rails feedbunch shared log}
+  God.pid_file_directory = File.join %w{/ var rails feedbunch shared tmp pids}
+else
+  app_root = Dir.pwd
+  log_path = File.join app_root, 'log'
+  God.pid_file_directory = File.join app_root, 'tmp', 'pids'
+end
 
 # Notifications config for God. This file will be different in production and staging environments.
 God.load(File.join(app_root, 'config', 'notifications.god'))
 
-# Pass current environment to processes that need it
-rails_env = ENV['RAILS_ENV'] || 'development'
-resque_env = ENV['RESQUE_ENV'] || 'app'
-log_path = ENV['LOG_PATH'] || File.join(app_root, 'log')
-
 God.watch do |w|
-  redis_path = ENV['REDIS_PATH'] || File.join(app_root, 'redis')
+  if %w{staging production}.include? rails_env
+    redis_path = File.join %w{/ var rails feedbunch shared redis}
+  else
+    redis_path = File.join app_root, 'redis'
+  end
 
   w.name = 'redis-server'
   w.group = 'redis-server-group'
@@ -34,7 +40,7 @@ God.watch do |w|
   #w.keepalive memory_max: 256.megabyte, cpu_max: 50.percent
   w.keepalive
 
-  w.dir = app_root
+  w.dir = redis_path
   w.log = File.join log_path, 'redis.log'
 
   w.lifecycle do |on|
@@ -51,6 +57,8 @@ God.watch do |w|
 end
 
 God.watch do |w|
+  resque_env = ENV['RESQUE_ENV'] || 'app'
+
   w.name = 'resque-work'
   w.group = 'resque-group'
   w.env = {'RAILS_ENV' => rails_env,
@@ -81,6 +89,8 @@ God.watch do |w|
 end
 
 God.watch do |w|
+  resque_env = ENV['RESQUE_ENV'] || 'app'
+
   w.name = 'resque-scheduler'
   w.group = 'resque-group'
   w.env = {'RAILS_ENV' => rails_env,
