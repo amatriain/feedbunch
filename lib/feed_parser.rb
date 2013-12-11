@@ -15,7 +15,7 @@ class FeedParser
   #
   # Any errors raised are bubbled to be handled higher up the call chain. In particular, if the response being parsed
   # is not a feed, it's likely that it's an HTML webpage, possibly with feed autodiscovery enabled. In this case
-  # this function will raise an error and it's the responability of the calling function to capture this error and
+  # this function will raise an error and it's the responsibility of the calling function to capture this error and
   # handle feed autodiscovery on the HTML.
   #
   # Receives as arguments the feed object corresponding to the feed being fetched and the response to be parsed.
