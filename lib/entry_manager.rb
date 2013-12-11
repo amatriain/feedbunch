@@ -25,11 +25,10 @@ class EntryManager
           next
         end
 
-        entry_hash = self.entry_to_hash entry, guid
-
         if !Entry.exists? guid: guid, feed_id: feed.id
           # Otherwise, save a new entry in the DB
           Rails.logger.debug "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}"
+          entry_hash = self.entry_to_hash entry, guid
           feed.entries.create! entry_hash
         else
           Rails.logger.debug "Already existing entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}. Ignoring it"
