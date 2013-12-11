@@ -58,8 +58,21 @@ class EntryManager
   # Returns a hash with the key/values necessary to create an instance of the Entry model.
 
   def self.entry_to_hash(entry, guid)
-    entry_hash = {title: entry.title, url: entry.url, author: entry.author, content: entry.content,
-                  summary: entry.summary, published: entry.published, guid: guid}
+    # Some feed parser types do not give a "content" attribute to their entries. In
+    # this case we default to the entry summary.
+    if entry.respond_to? :content
+      content = entry.content
+    else
+      content = entry.summary
+    end
+
+    entry_hash = {title: entry.title,
+                  url: entry.url,
+                  author: entry.author,
+                  content: content,
+                  summary: entry.summary,
+                  published: entry.published,
+                  guid: guid}
     Rails.logger.debug "Obtained attributes hash for entry: #{entry_hash}"
     return entry_hash
   end
