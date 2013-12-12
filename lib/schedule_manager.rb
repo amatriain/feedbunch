@@ -17,7 +17,6 @@ class ScheduleManager
     Rails.logger.debug 'Fixing feed update schedules'
     feeds_unscheduled = []
 
-    # examine only feeds older than 90 minutes
     Feed.all.each do |feed|
       # get update schedule for the feed
       schedule = Resque.get_schedule "update_feed_#{feed.id}"
