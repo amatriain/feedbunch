@@ -24,7 +24,7 @@ class FixSchedulesJob
 
   ##
   # Fix feed update schedules. Any feed which does not have scheduled updates
-  # will be detected, and the mission scheduled update for the feed will be
+  # will be detected, and the missing scheduled update for the feed will be
   # added to resque-schedule.
   #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
