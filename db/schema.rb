@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131212131929) do
+ActiveRecord::Schema.define(version: 20131213124416) do
 
   create_table "data_imports", force: true do |t|
     t.integer  "user_id",                             null: false
