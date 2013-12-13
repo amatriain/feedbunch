@@ -65,7 +65,7 @@ class Entry < ActiveRecord::Base
   private
 
   ##
-  # Sanitize the title, url, author, content, summary and guid of the entry.
+  # Sanitize and trim the title, url, author, content, summary and guid of the entry.
   #
   # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
   # Better paranoid than sorry!
@@ -74,12 +74,12 @@ class Entry < ActiveRecord::Base
 
   def sanitize_attributes
     default_attribute_values
-    self.title = sanitize self.title
-    self.url = sanitize self.url
-    self.author = sanitize self.author
-    self.content = sanitize self.content
-    self.summary = sanitize self.summary
-    self.guid = sanitize self.guid
+    self.title = sanitize(self.title).try :strip
+    self.url = sanitize(self.url).try :strip
+    self.author = sanitize(self.author).try :strip
+    self.content = sanitize(self.content).try :strip
+    self.summary = sanitize(self.summary).try :strip
+    self.guid = sanitize(self.guid).try :strip
   end
 
   ##

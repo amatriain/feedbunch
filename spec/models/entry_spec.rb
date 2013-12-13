@@ -143,6 +143,51 @@ describe Entry do
     end
   end
 
+  context 'trimming' do
+
+    it 'trims title' do
+      untrimmed_title = "\n      title"
+      trimmed_title = 'title'
+      entry = FactoryGirl.create :entry, title: untrimmed_title
+      entry.title.should eq trimmed_title
+    end
+
+    it 'trims url' do
+      untrimmed_url = "\n    http://xkcd.com"
+      trimmed_url = 'http://xkcd.com'
+      entry = FactoryGirl.create :entry, url: untrimmed_url
+      entry.url.should eq trimmed_url
+    end
+
+    it 'trims author' do
+      untrimmed_author = "\n    author"
+      trimmed_author = 'author'
+      entry = FactoryGirl.create :entry, author: untrimmed_author
+      entry.author.should eq trimmed_author
+    end
+
+    it 'trims content' do
+      untrimmed_content = "\n    content"
+      trimmed_content = '<p>content</p>'
+      entry = FactoryGirl.create :entry, content: untrimmed_content
+      entry.content.should eq trimmed_content
+    end
+
+    it 'trims summary' do
+      untrimmed_summary = "\n    <p>summary</p>"
+      trimmed_summary = '<p>summary</p>'
+      entry = FactoryGirl.create :entry, summary: untrimmed_summary
+      entry.summary.should eq trimmed_summary
+    end
+
+    it 'trims guid' do
+      untrimmed_guid = "\n       guid"
+      trimmed_guid = 'guid'
+      entry = FactoryGirl.create :entry, guid: untrimmed_guid
+      entry.guid.should eq trimmed_guid
+    end
+  end
+
   context 'markup manipulation' do
 
     context 'summary' do
