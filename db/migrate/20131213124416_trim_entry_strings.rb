@@ -1,6 +1,6 @@
 class TrimEntryStrings < ActiveRecord::Migration
   def change
-    Entry.all.each do |entry|
+    Entry.all.find_each do |entry|
       begin
         entry.title = entry.title.try :strip
         entry.url = entry.url.try :strip
