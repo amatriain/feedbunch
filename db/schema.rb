@@ -14,49 +14,49 @@
 ActiveRecord::Schema.define(version: 20131213124416) do
 
   create_table "data_imports", force: true do |t|
-    t.integer  "user_id",                             null: false
-    t.text     "status",          default: "RUNNING", null: false
-    t.integer  "total_feeds",     default: 0,         null: false
-    t.integer  "processed_feeds", default: 0,         null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "user_id",                     null: false
+    t.text     "status",                      null: false
+    t.integer  "total_feeds",     default: 0, null: false
+    t.integer  "processed_feeds", default: 0, null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "entries", force: true do |t|
-    t.text     "title",                       default: "",                         null: false
-    t.text     "url",                         default: "http://www.feedbunch.com", null: false
+    t.text     "title",                       null: false
+    t.text     "url",                         null: false
     t.text     "author"
     t.text     "content",    limit: 16777215
     t.text     "summary",    limit: 16777215
-    t.datetime "published",                   default: '2000-01-01 00:00:00',      null: false
-    t.text     "guid",                        default: "",                         null: false
-    t.integer  "feed_id",                                                          null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "published",                   null: false
+    t.text     "guid",                        null: false
+    t.integer  "feed_id",                     null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "entry_states", force: true do |t|
     t.boolean  "read",       default: false, null: false
     t.integer  "user_id",                    null: false
     t.integer  "entry_id",                   null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "feed_subscriptions", force: true do |t|
     t.integer  "user_id",                    null: false
     t.integer  "feed_id",                    null: false
     t.integer  "unread_entries", default: 0, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "feeds", force: true do |t|
-    t.text     "title",         default: "",                         null: false
-    t.text     "url",           default: "http://www.feedbunch.com"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "fetch_url",     default: "http://www.feedbunch.com", null: false
+    t.text     "title",         null: false
+    t.text     "url"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.text     "fetch_url",     null: false
     t.text     "etag"
     t.text     "last_modified"
   end
@@ -67,10 +67,10 @@ ActiveRecord::Schema.define(version: 20131213124416) do
   end
 
   create_table "folders", force: true do |t|
-    t.integer  "user_id",                 null: false
-    t.text     "title",      default: "", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "user_id",    null: false
+    t.text     "title",      null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: true do |t|
@@ -91,11 +91,11 @@ ActiveRecord::Schema.define(version: 20131213124416) do
     t.integer  "failed_attempts",        default: 0
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.boolean  "admin",                  default: false, null: false
-    t.text     "locale",                 default: "en",  null: false
-    t.text     "timezone",               default: "UTC", null: false
+    t.text     "locale",                                 null: false
+    t.text     "timezone",                               null: false
     t.boolean  "quick_reading",          default: false, null: false
     t.boolean  "open_all_entries",       default: false, null: false
   end
