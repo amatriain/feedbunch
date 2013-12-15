@@ -87,7 +87,7 @@ namespace :feedbunch_god do
   end
 
   desc 'Restart God and God-managed tasks: Redis, Resque'
-  task :restart_god do
+  task :restart_all do
     invoke 'feedbunch_god:stop'
     invoke 'feedbunch_god:start'
   end
@@ -97,9 +97,12 @@ namespace :feedbunch_god do
     on roles :background do
       within current_path do
         with resque_env: 'background' do
-          # reload god config, in case it has changed
-          execute :god, 'load', File.join(current_path,'config','background_jobs.god')
-          # reload watches in resque-group group
+          # terminate the god process without terminating any god-watched processes
+          execute :god, 'quit'
+          # start again the god process
+          execute :god, '-c', File.join(current_path,'config','background_jobs.god'),
+                  '--log', File.join(shared_path, 'log', 'god.log')
+          # restart only watches in resque-group group
           execute :god, 'restart', 'resque-group'
         end
       end
