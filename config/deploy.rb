@@ -17,7 +17,7 @@ set :rvm_ruby_version, 'ruby-2.0.0-p353'
 
 set :format, :pretty
 set :log_level, :debug
-SSHKit.config.command_map[:god] = 'bootup_god'
+SSHKit.config.command_map[:god] = 'bundle exec god'
 
 #############################################################
 #	Servers
