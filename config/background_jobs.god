@@ -31,6 +31,7 @@ God.watch do |w|
   w.group = 'redis-server-group'
   w.start = "redis-server #{File.join(redis_path, 'redis.conf')}"
   w.stop = 'redis-cli -p 6379 shutdown'
+  w.stop_timeout = 5.minutes
 
   # This is not necessary if redis.conf does not specify that redis should be daemonized
   #w.pid_file = File.join app_root, 'pids', 'redis.pid'
@@ -67,6 +68,7 @@ God.watch do |w|
            'TERM_CHILD' => '1',
            'RESQUE_TERM_TIMEOUT' => '300'}
   w.start = "rake -f #{File.join(app_root, 'Rakefile')} resque:work"
+  w.stop_timeout = 5.minutes
 
   # Uncomment one of the following two lines, depending on whether resource usage limit is desired
   #w.keepalive memory_max: 256.megabytes, cpu_max: 50.percent
@@ -98,6 +100,7 @@ God.watch do |w|
            'TERM_CHILD' => '1',
            'RESQUE_TERM_TIMEOUT' => ' 300'}
   w.start = "rake -f #{File.join(app_root, 'Rakefile')} resque:scheduler"
+  w.stop_timeout = 5.minutes
 
   # Uncomment one of the following two lines, depending on whether resource usage limit is desired
   #w.keepalive memory_max: 256.megabytes, cpu_max: 25.percent
