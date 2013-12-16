@@ -6,6 +6,10 @@ that fix them are released, the fixes here will be removed */
   margin-right: 0px;
 }
 
+.navbar-nav.navbar-right:last-child {
+  margin-right: 0;
+}
+
 .well hr {
   border-top: 1px solid #BFBFBF
 }
