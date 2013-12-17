@@ -188,6 +188,57 @@ describe Entry do
     end
   end
 
+  context 'convert to utf-8' do
+    it 'converts title' do
+      todo
+      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+      not_utf8_title = "\xE8 title"
+      utf8_title = 'title'
+      entry = FactoryGirl.create :entry, title: not_utf8_title
+      entry.title.should eq utf8_title
+    end
+
+    it 'converts url' do
+      todo
+      untrimmed_url = "\n    http://xkcd.com"
+      trimmed_url = 'http://xkcd.com'
+      entry = FactoryGirl.create :entry, url: untrimmed_url
+      entry.url.should eq trimmed_url
+    end
+
+    it 'converts author' do
+      todo
+      untrimmed_author = "\n    author"
+      trimmed_author = 'author'
+      entry = FactoryGirl.create :entry, author: untrimmed_author
+      entry.author.should eq trimmed_author
+    end
+
+    it 'converts content' do
+      todo
+      untrimmed_content = "\n    content"
+      trimmed_content = '<p>content</p>'
+      entry = FactoryGirl.create :entry, content: untrimmed_content
+      entry.content.should eq trimmed_content
+    end
+
+    it 'converts summary' do
+      todo
+      untrimmed_summary = "\n    <p>summary</p>"
+      trimmed_summary = '<p>summary</p>'
+      entry = FactoryGirl.create :entry, summary: untrimmed_summary
+      entry.summary.should eq trimmed_summary
+    end
+
+    it 'converts guid' do
+      todo
+      untrimmed_guid = "\n       guid"
+      trimmed_guid = 'guid'
+      entry = FactoryGirl.create :entry, guid: untrimmed_guid
+      entry.guid.should eq trimmed_guid
+    end
+  end
+
   context 'markup manipulation' do
 
     context 'summary' do
