@@ -7,8 +7,8 @@
 <% else %>
   "published": "<%= l entry.published, format: :short_year %>",
 <% end %>
-  "url": "<%= entry.url %>",
-  "guid": "<%= entry.guid %>",
+  "url": <%= entry.url.to_json.html_safe %>,
+  "guid": <%= entry.guid.to_json.html_safe %>,
 <% if entry.content.present? %>
   "content": <%= entry.content.to_json.html_safe %>,
 <% end %>
