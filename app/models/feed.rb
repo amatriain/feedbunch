@@ -1,4 +1,5 @@
 require 'uri'
+require 'encoding_manager'
 
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which users can be suscribed.
@@ -162,7 +163,18 @@ class Feed < ActiveRecord::Base
   # - sanitize values, removing script tags from entry bodies etc.
 
   def fix_attributes
+    fix_encoding
     sanitize_attributes
+  end
+
+  ##
+  # Fix problems with encoding in text attributes.
+  # Specifically, convert from ISO-8859-1 to UTF-8 if necessary.
+
+  def fix_encoding
+    self.title = EncodingManager.fix_encoding self.title
+    self.url = EncodingManager.fix_encoding self.url
+    self.fetch_url = EncodingManager.fix_encoding self.fetch_url
   end
 
   ##

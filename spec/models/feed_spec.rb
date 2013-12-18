@@ -113,6 +113,32 @@ describe Feed do
     end
   end
 
+  context 'convert to utf-8' do
+    it 'converts title' do
+      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+      not_utf8_title = "\xE8 title"
+      utf8_title = 'è title'
+      feed = FactoryGirl.create :feed, title: not_utf8_title
+      feed.title.should eq utf8_title
+    end
+
+    it 'converts url' do
+      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+      not_utf8_url = "http://xkcd.com/\xE8"
+      utf8_url = 'http://xkcd.com/è'
+      feed = FactoryGirl.create :feed, url: not_utf8_url
+      feed.url.should eq utf8_url
+    end
+
+    it 'converts fetch url' do
+      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+      not_utf8_url = "http://xkcd.com/\xE8"
+      utf8_url = 'http://xkcd.com/è'
+      feed = FactoryGirl.create :feed, fetch_url: not_utf8_url
+      feed.fetch_url.should eq utf8_url
+    end
+  end
+
   context 'feed entries' do
     it 'deletes entries when deleting a feed' do
       entry1 = FactoryGirl.build :entry
