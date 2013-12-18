@@ -10,12 +10,12 @@ class EncodingManager
   # Receives as argument a string.
 
   def self.fix_encoding(text)
-    fixed_attribute = text
+    fixed_text = text
     if !text.nil?
       if !text.valid_encoding?
-        fixed_attribute = text.encode('UTF-8', 'iso-8859-1', {:invalid => :replace, :undef => :replace, :replace => '?'})
+        fixed_text = text.encode('UTF-8', 'iso-8859-1', {:invalid => :replace, :undef => :replace, :replace => '?'})
       end
     end
-    return fixed_attribute
+    return fixed_text
   end
 end
