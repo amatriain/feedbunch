@@ -46,7 +46,7 @@ class Entry < ActiveRecord::Base
   validates :url, presence: true, format: {with: URL_REGEX}
   validates :guid, presence: true, uniqueness: {case_sensitive: false, scope: :feed_id}
 
-  before_validation :sanitize_attributes
+  before_validation :fix_attributes
   before_save :content_manipulation
   after_create :set_unread_state
 
@@ -65,6 +65,45 @@ class Entry < ActiveRecord::Base
   private
 
   ##
+  # Fix any problems with attribute values before validation:
+  # - fix any encoding problems, converting to utf-8 if necessary
+  # - sanitize values, removing script tags from entry bodies etc.
+  # - give default values to missing mandatory attributes
+
+  def fix_attributes
+    fix_encoding
+    sanitize_attributes
+    default_attribute_values
+  end
+
+  ##
+  # Fix problems with encoding in text attributes.
+  # Specifically, convert from ISO-8859-1 to UTF-8 if necessary.
+
+  def fix_encoding
+    self.title = fix_attribute_encoding self.title
+    self.url = fix_attribute_encoding self.url
+    self.author = fix_attribute_encoding self.author
+    self.content = fix_attribute_encoding self.content
+    self.summary = fix_attribute_encoding self.summary
+    self.guid = fix_attribute_encoding self.guid
+  end
+
+  ##
+  # Fix problems with encoding in a single text attribute.
+  # Specifically, convert from ISO-8859-1 to UTF-8 if necessary.
+
+  def fix_attribute_encoding(attribute)
+    fixed_attribute = attribute
+    if !attribute.nil?
+      if !attribute.valid_encoding?
+        fixed_attribute = attribute.encode('UTF-8', 'iso-8859-1', {:invalid => :replace, :undef => :replace, :replace => '?'})
+      end
+    end
+    return fixed_attribute
+  end
+
+  ##
   # Sanitize and trim the title, url, author, content, summary and guid of the entry.
   #
   # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
@@ -73,7 +112,6 @@ class Entry < ActiveRecord::Base
 
 
   def sanitize_attributes
-    default_attribute_values
     self.title = sanitize(self.title).try :strip
     self.url = sanitize(self.url).try :strip
     self.author = sanitize(self.author).try :strip
