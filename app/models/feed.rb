@@ -43,7 +43,7 @@ class Feed < ActiveRecord::Base
   validates :url, format: {with: URL_REGEX}, allow_blank: true
   validates :title, presence: true
 
-  before_validation :sanitize_attributes
+  before_validation :fix_attributes
 
   after_create :schedule_updates
   after_destroy :unschedule_updates
@@ -157,7 +157,16 @@ class Feed < ActiveRecord::Base
   end
 
   ##
-  # Sanitize the title and URL of the feed.
+  # Fix any problems with attribute values before validation:
+  # - fix any encoding problems, converting to utf-8 if necessary
+  # - sanitize values, removing script tags from entry bodies etc.
+
+  def fix_attributes
+    sanitize_attributes
+  end
+
+  ##
+  # Sanitize and trim the title, URL and fetch URL of the feed.
   #
   # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
   # Better paranoid than sorry!
@@ -166,9 +175,9 @@ class Feed < ActiveRecord::Base
   # the update only for that attribute and keep the old value.
 
   def sanitize_attributes
-    self.title = sanitize self.title
-    self.fetch_url = sanitize self.fetch_url
-    self.url = sanitize self.url
+    self.title = sanitize(self.title).try :strip
+    self.fetch_url = sanitize(self.fetch_url).try :strip
+    self.url = sanitize(self.url).try :strip
 
     self.fetch_url = self.fetch_url_was if (self.fetch_url =~ URL_REGEX).nil?
     self.url = self.url_was if (self.url =~ URL_REGEX).nil?

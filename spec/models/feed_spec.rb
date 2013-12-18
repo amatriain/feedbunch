@@ -89,6 +89,30 @@ describe Feed do
 
   end
 
+  context 'trimming' do
+
+    it 'trims title' do
+      untrimmed_title = "\n      title"
+      trimmed_title = 'title'
+      feed = FactoryGirl.create :feed, title: untrimmed_title
+      feed.title.should eq trimmed_title
+    end
+
+    it 'trims url' do
+      untrimmed_url = "\n    http://xkcd.com"
+      trimmed_url = 'http://xkcd.com'
+      feed = FactoryGirl.create :feed, url: untrimmed_url
+      feed.url.should eq trimmed_url
+    end
+
+    it 'trims fetch url' do
+      untrimmed_url = "\n    http://xkcd.com"
+      trimmed_url = 'http://xkcd.com'
+      feed = FactoryGirl.create :feed, fetch_url: untrimmed_url
+      feed.fetch_url.should eq trimmed_url
+    end
+  end
+
   context 'feed entries' do
     it 'deletes entries when deleting a feed' do
       entry1 = FactoryGirl.build :entry
