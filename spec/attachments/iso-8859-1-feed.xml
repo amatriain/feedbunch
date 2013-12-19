@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns="http://purl.org/rss/1.0/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+>
+
+	<channel rdf:about="http://crisei.blogalia.com/rdf.xml">
+		<title>CRISEI</title>
+		<link>http://crisei.blogalia.com/</link>
+		<description>LA BITÁCORA DE RAFAEL MARIN
+
+</description>
+		<dc:language>es-ES</dc:language>
+		<dc:rights>Copyright rafamarin</dc:rights>
+		<dc:publisher>rafamarin</dc:publisher>
+  		<dc:creator>rafamarin</dc:creator>
+		<items>
+			<rdf:Seq>
+				<rdf:li resource="http://crisei.blogalia.com//historias/74115" />
+				<rdf:li resource="http://crisei.blogalia.com//historias/74112" />
+			</rdf:Seq>
+		</items>
+	</channel>
+
+	
+	<item rdf:about="http://crisei.blogalia.com//historias/74115">
+		<title>PRÍNCIPE VALIENTE: NUEVA EDICIÓN GIGANTE Y EN COLOR</title>
+		<link>http://crisei.blogalia.com//historias/74115</link>
+		<description>
+      Nueva edición restaurada, y a color, de Príncipe Valiente. A partir de la restauración en blanco y negro de Manuel Caldas y con los colores originales reconstruidos, pero no a partir de los viejos periódicos escaneados.
+    </description>
+	</item>
+
+	<item rdf:about="http://crisei.blogalia.com//historias/74112">
+		<title>SIR GAWAIN: GALLARDO Y CALAVERA</title>
+		<link>http://crisei.blogalia.com//historias/74112</link>
+		<description>
+      Hijo de reina hada, aunque el detalle pase por alto en la saga, sobrino del rey Arturo y hermanastro a su pesar del traidor Mordred, escocés de isla pero latino de corazón, el jovial Sir Gawain es el personaje que, sin ser familia directa de Valiente, se convierte en la serie en lo más parecido a un padre, primero, a un hermano mayor, más tarde, y en ocasiones incluso a un atolondrado hermano pequeño.
+    </description>
+	</item>
+</rdf:RDF>

@@ -68,6 +68,11 @@ class FeedClient
     Rails.logger.info "Fetching from URL #{feed.fetch_url}"
     feed_response = RestClient.get feed.fetch_url, headers
 
+    # Specify encoding ISO-8859-1 if necessary
+    if feed_response.encoding==Encoding::UTF_8 && !feed_response.valid_encoding?
+      feed_response.force_encoding 'iso-8859-1'
+    end
+
     if feed_response.present?
       begin
         # Try to parse the response as a feed
