@@ -27,7 +27,6 @@ angular.module('feedbunch').service 'openEntrySvc',
   close: (entry)->
     index = $rootScope.open_entries.indexOf entry
     $rootScope.open_entries.splice index, 1 if index != -1
-    $location.hash('')
 
   #---------------------------------------------
   # Reset the entries open/close state. If the user has selected the "open all entries" option for
