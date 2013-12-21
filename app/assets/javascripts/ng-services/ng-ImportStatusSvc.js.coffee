@@ -21,7 +21,8 @@ angular.module('feedbunch').service 'importStatusSvc',
   # folders will be inserted in the model automatically.
   #---------------------------------------------
   load_import_status = (show_alerts)->
-    $http.get('/data_imports.json')
+    now = new Date()
+    $http.get("/data_imports.json?time=#{now.getTime()}")
     .success (data)->
       $rootScope.import_status = data["status"]
       if data["status"] == "RUNNING"

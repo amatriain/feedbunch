@@ -26,11 +26,12 @@ angular.module('feedbunch').service 'readSvc',
 
     # Load entries from a feed or from a folder?
     if currentFeedSvc.get()
-      url = "/feeds/#{currentFeedSvc.get().id}.json?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}"
+      url = "/feeds/#{currentFeedSvc.get().id}.json"
     else if currentFolderSvc.get()
-      url = "/folders/#{currentFolderSvc.get().id}.json?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}"
+      url = "/folders/#{currentFolderSvc.get().id}.json"
 
-    $http.get(url)
+    now = new Date()
+    $http.get("#{url}?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}&time=#{now.getTime()}")
     .success (data)->
       entriesPaginationSvc.set_busy false
       if !$rootScope.entries || $rootScope.entries?.length == 0

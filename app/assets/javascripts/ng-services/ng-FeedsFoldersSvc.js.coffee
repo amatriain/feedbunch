@@ -13,7 +13,8 @@ cleanupSvc)->
   # we want to load all feeds (true) or only feeds with unread entries (false).
   #--------------------------------------------
   load_feeds = ->
-    $http.get("/feeds.json?include_read=#{$rootScope.show_read}")
+    now = new Date()
+    $http.get("/feeds.json?include_read=#{$rootScope.show_read}&time=#{now.getTime()}")
     .success (data)->
       if !$rootScope.feeds || $rootScope.feeds?.length==0
         # If there are no feeds in scope, just store the feeds returned.
@@ -56,7 +57,8 @@ cleanupSvc)->
   # PRIVATE FUNCTION: Load folders.
   #--------------------------------------------
   load_folders = ->
-    $http.get('/folders.json')
+    now = new Date()
+    $http.get("/folders.json?time=#{now.getTime()}")
     .success (data)->
       $rootScope.folders = data
       $rootScope.folders_loaded = true
