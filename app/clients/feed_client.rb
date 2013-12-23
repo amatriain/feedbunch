@@ -69,7 +69,7 @@ class FeedClient
     feed_response = RestClient.get feed.fetch_url, headers
 
     # Specify encoding ISO-8859-1 if necessary
-    if feed_response.encoding==Encoding::UTF_8 && !feed_response.valid_encoding?
+    if feed_response.try(:encoding)==Encoding::UTF_8 && !feed_response.try(:valid_encoding?)
       feed_response.force_encoding 'iso-8859-1'
     end
 
