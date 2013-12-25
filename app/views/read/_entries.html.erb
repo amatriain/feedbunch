@@ -31,13 +31,13 @@
       <div class="panel-body entry-content">
 
         <div class="entry-toolbar btn-toolbar">
-          <a class="btn btn-default btn-sm hint--bottom"
+          <a class="btn btn-default btn-sm hint--bottom hint--rounded"
              ng-click="unread_entry(entry)"
              ng-show="entry.read"
              data-hint="<%= t 'entries.index.mark_unread_tooltip' %>">
             <i class="fa fa-square"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
           </a>
-          <a class="btn btn-default btn-sm hint--bottom"
+          <a class="btn btn-default btn-sm hint--bottom hint--rounded"
              ng-click="read_entry(entry)"
              ng-show="!entry.read"
              data-hint="<%= t 'entries.index.mark_read_tooltip' %>">
@@ -49,7 +49,7 @@
           <div class="lead entry-lead">
             <a href="{{entry.url}}"
                target="_blank"
-               class="hint--top"
+               class="hint--top hint--rounded"
                data-hint="<%= t 'entries.index.title_tooltip' %>">
               {{entry.title}}
             </a>
@@ -57,7 +57,7 @@
           <div class="entry-feed-link">
             <a href="#"
                ng-click="set_current_entry_feed(entry)"
-               class="hint--bottom"
+               class="hint--bottom hint--rounded"
                data-hint="<%= t 'entries.index.feed_tooltip' %>">
               {{entry_feed_title(entry)}}
             </a>
