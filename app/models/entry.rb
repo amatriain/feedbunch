@@ -73,6 +73,7 @@ class Entry < ActiveRecord::Base
 
   def fix_attributes
     fix_encoding
+    remove_comments
     sanitize_attributes
     default_attribute_values
   end
@@ -88,6 +89,26 @@ class Entry < ActiveRecord::Base
     self.content = EncodingManager.fix_encoding self.content
     self.summary = EncodingManager.fix_encoding self.summary
     self.guid = EncodingManager.fix_encoding self.guid
+  end
+
+  ##
+  # Remove HTML comments from entries summary and content markup.
+
+  def remove_comments
+    self.summary = remove_xml_comments self.summary if self.summary.present?
+    self.content = remove_xml_comments self.content if self.content.present?
+  end
+
+  ##
+  # Remove all HTML comments (<!-- ... -->) from entries.
+  # Receives as argument a string with an HTML fragment.
+
+  def remove_xml_comments(html_fragment)
+    html_doc = Nokogiri::HTML html_fragment
+    html_doc.css('//comment()').each do |comment|
+      comment.remove
+    end
+    return html_doc.css('body').children.to_s
   end
 
   ##
@@ -185,8 +206,8 @@ class Entry < ActiveRecord::Base
   # in the passed fragment.
   # Any style="" attribute in images will be overwritten.
   #
-  # Also adds the "img-thumbnail" and "center-block" bootstrap CSS classes for prettier images
-  # (subtle border and image centering).
+  # Also adds the "center-block" bootstrap CSS class for prettier images
+  # (image centering).
   #
   # Receives as argument a parsed HTML fragment.
 
