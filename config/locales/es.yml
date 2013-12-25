@@ -20,9 +20,9 @@ es:
   feeds:
     index:
       start: "Inicio"
+      feed_tooltip: "Abrir página web en una pestaña nueva"
       feed_menu_button: "Feeds"
       feed_menu_button_tooltip: "Administrar suscripciones a feeds"
-      open_new_tab: "Abrir en una nueva pestaña"
       refresh: "Actualizar"
       read_all_button: "Leer todos"
       read_all_button_tooltip: "Marcar todas las entradas como leídas"

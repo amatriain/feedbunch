@@ -41,9 +41,9 @@ en:
   feeds:
     index:
       start: "Start"
+      feed_tooltip: "Open web page in a new tab"
       feed_menu_button: "Feeds"
       feed_menu_button_tooltip: "Manage feed subscriptions"
-      open_new_tab: "Open in new tab"
       refresh: "Refresh"
       read_all_button: "Read all"
       read_all_button_tooltip: "Mark all entries as read"
