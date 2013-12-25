@@ -59,7 +59,11 @@ es:
   entries:
     index:
       mark_unread: "No leído"
+      mark_unread_tooltip: "Marcar esta entrada como no leída"
       mark_read: "Leído"
+      mark_read_tooltip: "Marcar esta entrada como leída"
+      title_tooltip: "Abrir página web en una pestaña nueva"
+      feed_tooltip: "Leer entradas de este feed"
   start:
     welcome: "Bienvenido a Feedbunch"
     stats: "Mostrando %{feeds} feeds con %{entries} entradas sin leer."

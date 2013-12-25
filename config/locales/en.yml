@@ -80,7 +80,11 @@ en:
   entries:
     index:
       mark_unread: "Unread"
+      mark_unread_tooltip: "Mark this entry as unread"
       mark_read: "Read"
+      mark_read_tooltip: "Mark this entry as read"
+      title_tooltip: "Open web page in a new tab"
+      feed_tooltip: "Read entries from this feed"
   start:
     welcome: "Welcome to Feedbunch"
     stats: "Displaying %{feeds} feeds with %{entries} unread entries."

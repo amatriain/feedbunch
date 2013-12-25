@@ -31,24 +31,34 @@
       <div class="panel-body entry-content">
 
         <div class="entry-toolbar btn-toolbar">
-          <a class="btn btn-default btn-sm"
+          <a class="btn btn-default btn-sm hint--bottom"
              ng-click="unread_entry(entry)"
-             ng-show="entry.read">
+             ng-show="entry.read"
+             data-hint="<%= t 'entries.index.mark_unread_tooltip' %>">
             <i class="fa fa-square"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
           </a>
-          <a class="btn btn-default btn-sm"
+          <a class="btn btn-default btn-sm hint--bottom"
              ng-click="read_entry(entry)"
-             ng-show="!entry.read">
+             ng-show="!entry.read"
+             data-hint="<%= t 'entries.index.mark_read_tooltip' %>">
             <i class="fa fa-check-square"></i>&nbsp;<%= t 'entries.index.mark_read' %>
           </a>
         </div>
 
         <p>
           <div class="lead entry-lead">
-            <a href="{{entry.url}}" target="_blank">{{entry.title}}</a>
+            <a href="{{entry.url}}"
+               target="_blank"
+               class="hint--top"
+               data-hint="<%= t 'entries.index.title_tooltip' %>">
+              {{entry.title}}
+            </a>
           </div>
           <div class="entry-feed-link">
-            <a href="#" ng-click="set_current_entry_feed(entry)">
+            <a href="#"
+               ng-click="set_current_entry_feed(entry)"
+               class="hint--bottom"
+               data-hint="<%= t 'entries.index.feed_tooltip' %>">
               {{entry_feed_title(entry)}}
             </a>
           </div>
