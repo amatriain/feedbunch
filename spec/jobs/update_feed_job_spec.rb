@@ -34,7 +34,7 @@ describe UpdateFeedJob do
 
   it 'unschedules updates if the feed has been deleted when the job runs' do
     @feed.destroy
-    UpdateFeedJob.should_receive(:unschedule_feed_updates).with @feed.id
+    Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
     FeedClient.should_not_receive :fetch
 
     UpdateFeedJob.perform @feed.id
@@ -45,27 +45,6 @@ describe UpdateFeedJob do
     @feed.destroy
 
     UpdateFeedJob.perform @feed.id
-  end
-
-  context 'schedule updates' do
-
-    it 'schedules hourly updates of the feed at a random time in the next hour' do
-      Resque.should_receive(:set_schedule).once do |name, config|
-        name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
-        config[:args].should eq @feed.id
-        config[:every][0].should eq '1h'
-        config[:every][1][:first_in].should be_between 0.minutes, 60.minutes
-      end
-
-      UpdateFeedJob.schedule_feed_updates @feed.id
-    end
-  end
-
-  it 'unschedules a job to update a feed' do
-    Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
-
-    UpdateFeedJob.unschedule_feed_updates @feed.id
   end
 
 end

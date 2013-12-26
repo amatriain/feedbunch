@@ -249,9 +249,12 @@ describe Feed do
 
     it 'schedules updates for a feed when it is created' do
       feed = FactoryGirl.build :feed
-      UpdateFeedJob.should_receive :schedule_feed_updates do |feed_id|
-        f = Feed.find feed_id
-        f.should eq feed.reload
+      Resque.should_receive(:set_schedule).once do |name, config|
+        name.should eq "update_feed_#{feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:args].should eq feed.id
+        config[:every][0].should eq '1h'
+        config[:every][1][:first_in].should be_between 0.minutes, 60.minutes
       end
       feed.save
     end
@@ -263,7 +266,7 @@ describe Feed do
     end
 
     it 'unschedules updates for a feed when it is destroyed' do
-      UpdateFeedJob.should_receive(:unschedule_feed_updates).with @feed.id
+      Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
       @feed.destroy
     end
   end

@@ -1,5 +1,6 @@
 require 'uri'
 require 'encoding_manager'
+require 'schedule_manager'
 
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which users can be suscribed.
@@ -137,14 +138,14 @@ class Feed < ActiveRecord::Base
   # After saving a new feed in the database, a scheduled job will be created to update it periodically
 
   def schedule_updates
-    UpdateFeedJob.schedule_feed_updates self.id
+    ScheduleManager.schedule_feed_updates self.id
   end
 
   ##
   # After removing a feed from the database, the scheduled job that updated it will be unscheduled.
 
   def unschedule_updates
-    UpdateFeedJob.unschedule_feed_updates self.id
+    ScheduleManager.unschedule_feed_updates self.id
   end
 
   ##
