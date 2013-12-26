@@ -72,6 +72,7 @@ class Entry < ActiveRecord::Base
 
   def fix_attributes
     fix_encoding
+    strip_attributes
     remove_comments
     sanitize_attributes
     content_manipulation
@@ -89,6 +90,19 @@ class Entry < ActiveRecord::Base
     self.content = EncodingManager.fix_encoding self.content
     self.summary = EncodingManager.fix_encoding self.summary
     self.guid = EncodingManager.fix_encoding self.guid
+  end
+
+  ##
+  # Trim the title, url, author, content, summary and guid of the entry, removing any
+  # heading or trailing blank characters.
+
+  def strip_attributes
+    self.title = self.title.try :strip
+    self.url = self.url.try :strip
+    self.author = self.author.try :strip
+    self.content = self.content.try :strip
+    self.summary = self.summary.try :strip
+    self.guid = self.guid.try :strip
   end
 
   ##
@@ -112,62 +126,18 @@ class Entry < ActiveRecord::Base
   end
 
   ##
-  # Sanitize and trim the title, url, author, content, summary and guid of the entry.
+  # Sanitize the title, url, author, content, summary and guid of the entry.
   #
   # Despite this sanitization happening before saving in the database, sanitize helpers must still be used in the views.
   # Better paranoid than sorry!
-  #
 
   def sanitize_attributes
-    self.title = sanitize(self.title).try :strip
-    self.url = sanitize(self.url).try :strip
-    self.author = sanitize(self.author).try :strip
-    self.content = sanitize(self.content).try :strip
-    self.summary = sanitize(self.summary).try :strip
-    self.guid = sanitize(self.guid).try :strip
-  end
-
-  ##
-  # Give default values to the title and guid attributes if they are empty.
-  # Their default value is the value of the "url" attribute.
-  #
-  # If the url attribute is not a valid URL but the guid is, the url attribute takes
-  # the value of the guid attribute. This probably breaks Atom/RSS spec, but I'd like to support feeds
-  # that do this.
-  #
-  # If the publish date is not present, assume the current datetime as default value. This means
-  # entries will be shown as published in the moment they are fetched unless the feed specifies
-  # otherwise. This ensures all entries have a publish date which avoids major headaches when ordering.
-
-  def default_attribute_values
-    # GUID defaults to the url attribute
-    self.guid = self.url if self.guid.blank?
-
-    # title defaults to the url attribute
-    self.title = self.url if self.title.blank?
-
-    # if the url attr is not actually a valid URL but the guid is, url attr takes the value of the guid attr
-    if (self.url =~ URL_REGEX).nil? && self.guid =~ URL_REGEX
-      self.url = self.guid
-      # If the url was blank before but now has taken the value of the guid, default the title to this value
-      self.title = self.url if self.title.blank?
-    end
-
-    # published defaults to the current datetime
-    self.published = DateTime.now if self.published.blank?
-  end
-
-  ##
-  # For each user subscribed to this entry's feed, save an entry_state instance with the "read" attribute set to false.
-  #
-  # Or in layman's terms: mark this entry as unread for all users subscribed to the feed.
-
-  def set_unread_state
-    self.feed.users(true).each do |user|
-      if !EntryState.exists? user_id: user.id, entry_id: self.id
-        entry_state = user.entry_states.create entry_id: self.id, read: false
-      end
-    end
+    self.title = sanitize self.title
+    self.url = sanitize self.url
+    self.author = sanitize self.author
+    self.content = sanitize self.content
+    self.summary = sanitize self.summary
+    self.guid = sanitize self.guid
   end
 
   ##
@@ -219,6 +189,49 @@ class Entry < ActiveRecord::Base
       img['class'] = 'center-block'
     end
     return html_doc
+  end
+
+  ##
+  # Give default values to the title and guid attributes if they are empty.
+  # Their default value is the value of the "url" attribute.
+  #
+  # If the url attribute is not a valid URL but the guid is, the url attribute takes
+  # the value of the guid attribute. This probably breaks Atom/RSS spec, but I'd like to support feeds
+  # that do this.
+  #
+  # If the publish date is not present, assume the current datetime as default value. This means
+  # entries will be shown as published in the moment they are fetched unless the feed specifies
+  # otherwise. This ensures all entries have a publish date which avoids major headaches when ordering.
+
+  def default_attribute_values
+    # GUID defaults to the url attribute
+    self.guid = self.url if self.guid.blank?
+
+    # title defaults to the url attribute
+    self.title = self.url if self.title.blank?
+
+    # if the url attr is not actually a valid URL but the guid is, url attr takes the value of the guid attr
+    if (self.url =~ URL_REGEX).nil? && self.guid =~ URL_REGEX
+      self.url = self.guid
+      # If the url was blank before but now has taken the value of the guid, default the title to this value
+      self.title = self.url if self.title.blank?
+    end
+
+    # published defaults to the current datetime
+    self.published = DateTime.now if self.published.blank?
+  end
+
+  ##
+  # For each user subscribed to this entry's feed, save an entry_state instance with the "read" attribute set to false.
+  #
+  # Or in layman's terms: mark this entry as unread for all users subscribed to the feed.
+
+  def set_unread_state
+    self.feed.users(true).each do |user|
+      if !EntryState.exists? user_id: user.id, entry_id: self.id
+        entry_state = user.entry_states.create entry_id: self.id, read: false
+      end
+    end
   end
 
 end
