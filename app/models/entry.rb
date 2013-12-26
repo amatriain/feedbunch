@@ -48,7 +48,6 @@ class Entry < ActiveRecord::Base
   validates :guid, presence: true, uniqueness: {case_sensitive: false, scope: :feed_id}
 
   before_validation :fix_attributes
-  before_save :content_manipulation
   after_create :set_unread_state
 
   ##
@@ -75,6 +74,7 @@ class Entry < ActiveRecord::Base
     fix_encoding
     remove_comments
     sanitize_attributes
+    content_manipulation
     default_attribute_values
   end
 
