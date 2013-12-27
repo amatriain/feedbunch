@@ -1,3 +1,5 @@
+require 'rspec/core/rake_task'
+
 namespace :spec do
 
   desc 'Run tests depending on the TEST_SUITE env variable: "unit"=>unit tests, "acceptance"=>acceptance tests'
