@@ -4,7 +4,7 @@ rvm:
 script:
   - "bundle exec brakeman -z  --skip-files config/initializers/secret_token.rb"
   - "bundle exec rake db:migrate"
-  - "bundle exec rspec spec:travisci"
+  - "bundle exec rake spec:travisci"
 env:
   global:
     - RAILS_ENV=ci
