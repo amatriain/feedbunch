@@ -9,7 +9,7 @@ set :application, 'feedbunch'
 #############################################################
 
 set :rvm_type, :system
-set :rvm_ruby_version, 'ruby-2.0.0-p353'
+set :rvm_ruby_version, 'ruby-2.1.0'
 
 #############################################################
 #	Settings
