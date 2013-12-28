@@ -10,6 +10,7 @@ set :application, 'feedbunch'
 
 set :rvm_type, :user
 set :rvm_ruby_version, 'ruby-2.1.0'
+set :rvm_user_path, '~/.rvm/'
 
 #############################################################
 #	Settings
@@ -17,7 +18,7 @@ set :rvm_ruby_version, 'ruby-2.1.0'
 
 set :format, :pretty
 set :log_level, :debug
-SSHKit.config.command_map[:god] = "#{fetch :rvm_path}/bin/rvm #{fetch :rvm_ruby_version} do bundle exec god"
+SSHKit.config.command_map[:god] = "#{fetch :rvm_user_path}/bin/rvm #{fetch :rvm_ruby_version} do bundle exec god"
 
 #############################################################
 #	Servers
