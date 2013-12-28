@@ -17,7 +17,8 @@ set :rvm_ruby_version, 'ruby-2.1.0'
 
 set :format, :pretty
 set :log_level, :debug
-SSHKit.config.command_map[:god] = 'bundle exec god'
+SSHKit.config.command_map[:god] = 'god'
+set :bundle_bins, fetch(:bundle_bins, []).push %w(god)
 
 #############################################################
 #	Servers
