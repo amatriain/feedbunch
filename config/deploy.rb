@@ -82,7 +82,11 @@ namespace :feedbunch_god do
         # We run a "true" shell command after issuing a "god terminate" command because otherwise if
         # God were not running before this, we would get a return value of false which
         # Capistrano would intepret as an error and the deployment would be rolled back
-        execute :god, 'terminate', ';true'
+        begin
+          execute :god, 'terminate', ';true'
+        rescue => e
+          puts "Error terminating God: #{e.to_s}"
+        end
       end
     end
   end
@@ -99,7 +103,11 @@ namespace :feedbunch_god do
       within current_path do
         with resque_env: 'background' do
           # terminate the god process without terminating any god-watched processes
-          execute :god, 'quit'
+          begin
+            execute :god, 'quit'
+          rescue => e
+            puts "Error quitting God: #{e.to_s}"
+          end
           # start again the god process
           execute :god, '-c', File.join(current_path,'config','background_jobs.god'),
                   '--log', File.join(shared_path, 'log', 'god.log')
