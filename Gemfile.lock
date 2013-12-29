@@ -28,7 +28,7 @@ GEM
     addressable (2.3.5)
     arel (4.0.1)
     atomic (1.1.14)
-    aws-sdk (1.31.0)
+    aws-sdk (1.31.3)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
       uuidtools (~> 2.1)
