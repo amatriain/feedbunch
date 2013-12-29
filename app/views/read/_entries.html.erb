@@ -18,9 +18,9 @@
        class="list-group-item"
        ng-class="{'entry-read':entry.read && !entry.changing_state, 'entry-unread': !entry.read && !entry.changing_state, 'entry-becoming-read':entry.read && entry.changing_state, 'entry-becoming-unread':!entry.read && entry.changing_state}"
        ng-click="toggle_open_entry(entry)">
-      <em><span class="entry-feed-title" ng-bind-html-unsafe="entry_feed_title(entry)"></span></em>
+      <em><span class="entry-feed-title" ng-bind-html="entry_feed_title(entry)"></span></em>
       &nbsp;
-      <span class="entry-title" ng-bind-html-unsafe="entry.title"></span>
+      <span class="entry-title" ng-bind-html="entry.title"></span>
       <span class="pull-right">{{entry.published}}</span>
     </a>
 
@@ -49,7 +49,7 @@
           <div class="lead entry-lead hint--top hint--rounded" data-hint="<%= t 'entries.index.title_tooltip' %>">
             <a href="{{entry.url}}"
                target="_blank"
-               ng-bind-html-unsafe="entry.title">
+               ng-bind-html="entry.title">
             </a>
           </div>
           <div class="entry-feed-link">
@@ -57,15 +57,15 @@
                ng-click="set_current_entry_feed(entry)"
                class="hint--bottom hint--rounded"
                data-hint="<%= t 'entries.index.feed_tooltip' %>"
-               ng-bind-html-unsafe="entry_feed_title(entry)">
+               ng-bind-html="entry_feed_title(entry)">
             </a>
           </div>
         </p>
 
         <p class="hidden">{{entry.guid}}</p>
         <div class="entry-content">
-          <p ng-show="entry.content.length > 0" ng-bind-html-unsafe="entry.content"></p>
-          <p ng-hide="entry.content.length > 0" ng-bind-html-unsafe="entry.summary"></p>
+          <p ng-show="entry.content.length > 0" ng-bind-html="entry.content"></p>
+          <p ng-hide="entry.content.length > 0" ng-bind-html="entry.summary"></p>
         </div>
       </div>
     </div>

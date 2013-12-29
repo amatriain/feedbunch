@@ -29,7 +29,7 @@
           <div class="hint--bottom hint--rounded"
                ng-show="current_feed"
                data-hint="<%= t 'feeds.index.feed_tooltip' %>">
-            <a ng-bind-html-unsafe="current_feed.title"
+            <a ng-bind-html="current_feed.title"
                href="{{current_feed.url}}"
                target="_blank">
             </a>
