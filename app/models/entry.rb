@@ -36,15 +36,13 @@ require 'encoding_manager'
 class Entry < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
-  URL_REGEX = /\Ahttps?:\/\/.+\..+\z/
-
   belongs_to :feed
   validates :feed_id, presence: true
 
   has_many :entry_states, -> {uniq}, dependent: :destroy
 
   validates :title, presence: true
-  validates :url, presence: true, format: {with: URL_REGEX}
+  validates :url, presence: true, format: {with: URI::regexp(%w{http https})}
   validates :guid, presence: true, uniqueness: {case_sensitive: false, scope: :feed_id}
 
   before_validation :fix_attributes
@@ -208,7 +206,7 @@ class Entry < ActiveRecord::Base
     self.title = self.url if self.title.blank?
 
     # if the url attr is not actually a valid URL but the guid is, url attr takes the value of the guid attr
-    if (self.url =~ URL_REGEX).nil? && self.guid =~ URL_REGEX
+    if (self.url =~ URI::regexp(%w{http https})).nil? && self.guid =~ URI::regexp(%w{http https})
       self.url = self.guid
       # If the url was blank before but now has taken the value of the guid, default the title to this value
       self.title = self.url if self.title.blank?
