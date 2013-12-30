@@ -72,6 +72,7 @@ class Entry < ActiveRecord::Base
     sanitize_attributes
     content_manipulation
     default_attribute_values
+    fix_url
   end
 
   ##
@@ -81,7 +82,6 @@ class Entry < ActiveRecord::Base
   def fix_encoding
     self.title = EncodingManager.fix_encoding self.title
     self.url = EncodingManager.fix_encoding self.url
-    self.url = URI.encode self.url if !self.url.nil?
     self.author = EncodingManager.fix_encoding self.author
     self.content = EncodingManager.fix_encoding self.content
     self.summary = EncodingManager.fix_encoding self.summary
@@ -210,10 +210,22 @@ class Entry < ActiveRecord::Base
       self.title = self.url if self.title.blank?
     end
 
-    # if the entry url is relative, try to make it absolute using the feed's host
+    # published defaults to the current datetime
+    self.published = DateTime.now if self.published.blank?
+  end
+
+  ##
+  # Fix problems with the entry URL, by URL-encoding any illegal characters and converting relative URLs to absolute ones.
+
+  def fix_url
     if self.url.present?
+      # URL-encode illegal characters
+      self.url = URI.encode self.url.to_str
+
+      # if the entry url is relative, try to make it absolute using the feed's host
       uri = URI self.url
       if uri.relative?
+        # Use host from feed URL, or if the feed only has a fetch URL use it instead.
         if self.feed.url.present?
           uri_feed = URI self.feed.url
         else
@@ -228,9 +240,6 @@ class Entry < ActiveRecord::Base
         self.url = absolute_uri.to_s
       end
     end
-
-    # published defaults to the current datetime
-    self.published = DateTime.now if self.published.blank?
   end
 
   ##
