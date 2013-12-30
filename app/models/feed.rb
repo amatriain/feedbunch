@@ -161,6 +161,7 @@ class Feed < ActiveRecord::Base
   def fix_attributes
     fix_encoding
     sanitize_attributes
+    fix_urls
   end
 
   ##
@@ -189,6 +190,14 @@ class Feed < ActiveRecord::Base
 
     self.fetch_url = self.fetch_url_was if (self.fetch_url =~ URI::regexp(%w{http https})).nil?
     self.url = self.url_was if (self.url =~ URI::regexp(%w{http https})).nil?
+  end
+
+  ##
+  # Fix problems with URLs, by URL-encoding any illegal characters.
+
+  def fix_urls
+      self.url = URI.encode self.url.to_str if self.url.present?
+      self.fetch_url = URI.encode self.fetch_url.to_str if self.fetch_url.present?
   end
 
   ##

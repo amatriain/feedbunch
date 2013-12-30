@@ -125,7 +125,7 @@ describe Feed do
     it 'converts url' do
       # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
       not_utf8_url = "http://xkcd.com/\xE8"
-      utf8_url = 'http://xkcd.com/è'
+      utf8_url = 'http://xkcd.com/%C3%A8'
       feed = FactoryGirl.create :feed, url: not_utf8_url
       feed.url.should eq utf8_url
     end
@@ -133,7 +133,7 @@ describe Feed do
     it 'converts fetch url' do
       # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
       not_utf8_url = "http://xkcd.com/\xE8"
-      utf8_url = 'http://xkcd.com/è'
+      utf8_url = 'http://xkcd.com/%C3%A8'
       feed = FactoryGirl.create :feed, fetch_url: not_utf8_url
       feed.fetch_url.should eq utf8_url
     end
