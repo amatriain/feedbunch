@@ -172,20 +172,17 @@ class Entry < ActiveRecord::Base
 
 
   ##
-  # Remove any height and width attributes and add a CSS max-width:100% to any images
-  # in the passed fragment.
-  # Any style="" attribute in images will be overwritten.
-  #
-  # Also adds the "center-block" bootstrap CSS class for prettier images
-  # (image centering).
+  # Remove any height, width and style attributes and set a CSS class to horzintally center
+  # any images in the passed fragment.
+  # Any class attribute in images will be overwritten.
   #
   # Receives as argument a parsed HTML fragment.
 
   def image_manipulations(html_doc)
     html_doc.css('img').each do |img|
-      img['style'] = 'max-width:100%;'
       img.remove_attribute 'height'
       img.remove_attribute 'width'
+      img.remove_attribute 'style'
       img['class'] = 'center-block'
     end
     return html_doc
