@@ -27,9 +27,6 @@ require 'encoding_manager'
 # - published
 # - guid
 #
-# Title, url and guid are mandatory. Urls are validated with this regex:
-#   /\Ahttps?:\/\/.+\..+\z/
-#
 # All fields except "published" are sanitized before validation; this is, before saving/updating each
 # instance in the database.
 

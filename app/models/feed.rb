@@ -25,24 +25,19 @@ require 'schedule_manager'
 # - etag (etag http header received last time the feed was fetched, used for caching)
 # - last_modified (last-modified http header received last time the feed was fetched, user for caching)
 #
-# Both title and fetch_url are mandatory. url and fetch_url are validated with the following regex:
-#   /\Ahttps?:\/\/.+\..+\z/
-#
 # Title, fetch_url and url are sanitized (with ActionView::Helpers::SanitizeHelper) before validation; this is,
 # before saving/updating each instance in the database.
 
 class Feed < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
-  URL_REGEX = /\Ahttps?:\/\/.+\..+\z/
-
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy
   has_many :users, through: :feed_subscriptions
   has_and_belongs_to_many :folders, -> {uniq}, before_add: :single_user_folder
   has_many :entries, -> {uniq}, dependent: :destroy
 
-  validates :fetch_url, format: {with: URL_REGEX}, presence: true, uniqueness: {case_sensitive: false}
-  validates :url, format: {with: URL_REGEX}, allow_blank: true
+  validates :fetch_url, format: {with: URI::regexp(%w{http https})}, presence: true, uniqueness: {case_sensitive: false}
+  validates :url, format: {with: URI::regexp(%w{http https})}, allow_blank: true
   validates :title, presence: true
 
   before_validation :fix_attributes
@@ -192,8 +187,8 @@ class Feed < ActiveRecord::Base
     self.fetch_url = sanitize(self.fetch_url).try :strip
     self.url = sanitize(self.url).try :strip
 
-    self.fetch_url = self.fetch_url_was if (self.fetch_url =~ URL_REGEX).nil?
-    self.url = self.url_was if (self.url =~ URL_REGEX).nil?
+    self.fetch_url = self.fetch_url_was if (self.fetch_url =~ URI::regexp(%w{http https})).nil?
+    self.url = self.url_was if (self.url =~ URI::regexp(%w{http https})).nil?
   end
 
   ##
