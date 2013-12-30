@@ -25,9 +25,13 @@ describe Entry do
       entry.should be_valid
     end
 
-    it 'does not accept invalid URLs' do
-      entry = FactoryGirl.build :entry, url: 'not-a-url'
-      entry.should_not be_valid
+    it 'converts relative URLs to absolute' do
+      host = 'feed.server.com'
+      feed = FactoryGirl.create :feed, url: "http://#{host}"
+      relative_url = '/entry.html'
+      entry = FactoryGirl.build :entry, feed_id: feed.id, url: relative_url
+      feed.entries << entry
+      entry.url.should eq "http://#{host}#{relative_url}"
     end
 
     it 'does not accept duplicate guids for the same feed' do
@@ -200,7 +204,7 @@ describe Entry do
     it 'converts url' do
       # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
       not_utf8_url = "http://xkcd.com/\xE8"
-      utf8_url = 'http://xkcd.com/è'
+      utf8_url = 'http://xkcd.com/%C3%A8'
       entry = FactoryGirl.create :entry, url: not_utf8_url
       entry.url.should eq utf8_url
     end

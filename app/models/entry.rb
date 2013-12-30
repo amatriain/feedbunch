@@ -81,6 +81,7 @@ class Entry < ActiveRecord::Base
   def fix_encoding
     self.title = EncodingManager.fix_encoding self.title
     self.url = EncodingManager.fix_encoding self.url
+    self.url = URI.encode self.url if !self.url.nil?
     self.author = EncodingManager.fix_encoding self.author
     self.content = EncodingManager.fix_encoding self.content
     self.summary = EncodingManager.fix_encoding self.summary
@@ -207,6 +208,25 @@ class Entry < ActiveRecord::Base
       self.url = self.guid
       # If the url was blank before but now has taken the value of the guid, default the title to this value
       self.title = self.url if self.title.blank?
+    end
+
+    # if the entry url is relative, try to make it absolute using the feed's host
+    if self.url.present?
+      uri = URI self.url
+      if uri.relative?
+        if self.feed.url.present?
+          uri_feed = URI self.feed.url
+        else
+          uri_feed = URI self.feed.fetch_url
+        end
+        absolute_uri = URI uri
+        absolute_uri.scheme = uri_feed.scheme
+        absolute_uri.host = uri_feed.host
+        # Path must begin with a '/'
+        uri.path = '/' + uri.path if uri.path[0] != '/'
+        absolute_uri.path = uri.path
+        self.url = absolute_uri.to_s
+      end
     end
 
     # published defaults to the current datetime
