@@ -1,5 +1,6 @@
 <li id="folder-{{folder.id}}-all-feeds"
-    ng-class="{active: current_folder.id==folder.id}">
+    ng-class="{active: current_folder.id==folder.id}"
+    ng-show="show_all_subscriptions(folder)">
   <a data-sidebar-feed
      data-feed-id="all"
      ng-click="set_current_folder(folder)">

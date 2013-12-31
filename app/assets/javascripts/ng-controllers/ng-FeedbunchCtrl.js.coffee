@@ -209,6 +209,15 @@ findSvc, userDataSvc, openEntrySvc)->
           return feedsFoldersSvc.folder_unread_entries(folder) > 0
 
   #--------------------------------------------
+  # Return a boolean indicating whether the "all subscriptions" link in a folder
+  # should be show (if true) or not (if false).
+  # The "all subscriptions" link is shown only when there is more than one visible feed in the folder.
+  #--------------------------------------------
+  $scope.show_all_subscriptions = (folder)->
+    feeds = findSvc.find_folder_feeds folder
+    return feeds?.length > 1
+
+  #--------------------------------------------
   # Function to convert an entry's id to an integer, for filtering purposes
   #--------------------------------------------
   $scope.entry_int_id = (entry)->
