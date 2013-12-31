@@ -117,6 +117,14 @@ describe 'folders and feeds' do
     end
 
     it 'hides folder management button when reading a whole folder', js: true do
+      # @feed1 and feed3 are in @folder1
+      feed3 = FactoryGirl.create :feed
+      entry3 = FactoryGirl.build :entry, feed_id: feed3.id
+      feed3.entries << entry3
+      @user.subscribe feed3.fetch_url
+      @folder1.feeds << feed3
+      visit read_path
+
       read_folder @folder1
       page.should_not have_css '#folder-management', visible: true
       page.should_not have_css '#folder-management', visible: true

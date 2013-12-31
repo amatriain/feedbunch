@@ -145,36 +145,23 @@ describe 'feeds' do
     end
 
     it 'hides feeds after reading all their entries and clicking on another folder', js: true do
-      # @feed1 is in @folder1, @feed3 is in folder2
+      # @feed1 and @feed2 are in @folder1, @feed3 is in folder2
       folder2 = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << folder2
       folder2.feeds << @feed3
 
       visit read_path
-      read_feed @feed1, @user
+      read_feed @feed3, @user
       mark_all_as_read
 
-      # @feed1 should still be present
-      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+      # @feed3 should still be present
+      page.should have_css "#sidebar #folder-#{folder2.id} a[data-sidebar-feed][data-feed-id='#{@feed3.id}']", visible: false
 
-      read_folder folder2
-      # @feed1 should disappear
-      page.should_not have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
-      # @folder1 should not disappear
-      page.should have_css "#sidebar #folder-#{@folder1.id}", visible: false
-
-      read_feed @feed2, @user
-      mark_all_as_read
-
-      # @feed1 should still be present
-      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
-
-      read_folder folder2
-      # @feed1 and @feed2 should disappear
-      page.should_not have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
-      page.should_not have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
-      # @folder1 should disappear
-      page.should_not have_css "#sidebar #folder-#{@folder1.id}", visible: false
+      read_folder @folder1
+      # @feed3 should disappear
+      page.should_not have_css "#sidebar #folder-#{folder2.id} a[data-sidebar-feed][data-feed-id='#{@feed3.id}']", visible: false
+      # folder2 should disappear
+      page.should_not have_css "#sidebar #folder-#{folder2.id}", visible: false
     end
 
     it 'does not hide feeds after reading all their entries and clicking on their folder', js: true do
@@ -188,19 +175,6 @@ describe 'feeds' do
       read_folder @folder1
       # @feed1 should not disappear
       page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
-      # @folder1 should not disappear
-      page.should have_css "#sidebar #folder-#{@folder1.id}", visible: false
-
-      read_feed @feed2, @user
-      mark_all_as_read
-
-      # @feed2 should still be present
-      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
-
-      read_folder @folder1
-      # @feed1, @feed2 should not disappear
-      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
-      page.should have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
       # @folder1 should not disappear
       page.should have_css "#sidebar #folder-#{@folder1.id}", visible: false
     end
@@ -236,7 +210,7 @@ describe 'feeds' do
     end
 
     it 'shows an alert if there is a problem loading a feed', js: true do
-      User.any_instance.stub(:feeds).and_raise StandardError.new
+      User.any_instance.stub(:feed_entries).and_raise StandardError.new
       # Try to read feed
       read_feed @feed1, @user
 
@@ -291,7 +265,6 @@ describe 'feeds' do
         within "#sidebar #folder-#{@folder2.id}" do
           # Open folder
           find("a#open-folder-#{@folder2.id}").click
-
           page.should_not have_css "li#folder-#{@folder2.id}-all-feeds"
         end
       end
@@ -306,7 +279,6 @@ describe 'feeds' do
         within "#sidebar #folder-#{@folder2.id}" do
           # Open folder
           find("a#open-folder-#{@folder2.id}").click
-
           page.should_not have_css "li#folder-#{@folder2.id}-all-feeds"
         end
       end

@@ -53,6 +53,14 @@ describe 'unsubscribe from feed' do
   end
 
   it 'hides unsubscribe button when reading a whole folder', js: true do
+    # @feed1, feed3 are in @folder
+    feed3 = FactoryGirl.create :feed
+    entry3 = FactoryGirl.build :entry, feed_id: feed3.id
+    feed3.entries << entry3
+    @user.subscribe feed3.fetch_url
+    @folder.feeds << feed3
+    visit read_path
+
     read_folder @folder
     open_feeds_menu
     page.should_not have_css '#unsubscribe-feed', visible: true
