@@ -58,16 +58,6 @@ describe 'feed entries' do
       page.should have_content Nokogiri::HTML(@entry1.summary).text
     end
 
-    it 'displays feed title in entry content', js: true do
-      read_entry @entry1
-
-      read_entry @entry1
-
-      within "#entry-#{@entry1.id}-summary .entry-content .entry-feed-link" do
-        page.should have_text @feed1.title
-      end
-    end
-
     it 'opens title link in a new tab', js: true do
       read_entry @entry1
 
@@ -295,6 +285,39 @@ describe 'feed entries' do
       read_feed @feed1, @user
       within "#entry-#{@entry1.id}" do
         page.should have_text '07 Jul 1999'
+      end
+    end
+
+    context 'link to read feed' do
+
+      it 'displays feed title in entry content', js: true do
+        read_entry @entry1
+        within "#entry-#{@entry1.id}-summary .entry-content .entry-feed-link" do
+          page.should have_text @feed1.title
+        end
+      end
+
+      it 'shows only entries from feed when clicking on it', js: true do
+        read_folder @folder
+        # entries from @feed1 and @feed2 should be visible
+        entry_should_be_visible @entry1
+        entry_should_be_visible @entry2
+        entry_should_be_visible @entry3
+
+        read_entry @entry1
+        entry_should_be_marked_read @entry1
+        find("#entry-#{@entry1.id}-summary .entry-content .entry-feed-link a").click
+
+        # @feed1 should be selected for reading
+        feed_should_be_selected @feed1
+
+        # only entries from @feed1 should be visible
+        entry_should_be_visible @entry1
+        entry_should_be_visible @entry2
+        entry_should_not_be_visible @entry3
+
+        # @entry1 should be marked as unread again.
+        entry_should_be_marked_unread @entry1
       end
     end
   end

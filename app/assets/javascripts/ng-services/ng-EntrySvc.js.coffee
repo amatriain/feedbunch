@@ -4,16 +4,19 @@
 
 angular.module('feedbunch').service 'entrySvc',
 ['$rootScope', '$http', 'openEntrySvc', 'timerFlagSvc', 'unreadCountSvc',
-'currentFolderSvc', 'currentFeedSvc', 'findSvc',
+'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc',
 ($rootScope, $http, openEntrySvc, timerFlagSvc, unreadCountSvc,
-currentFolderSvc, currentFeedSvc, findSvc)->
+currentFolderSvc, currentFeedSvc, findSvc, readSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark a single entry as read or unread.
   # Receives as arguments an entry and a boolean indicating whether to mark
   # it as read (true) or unread (false).
+  #
+  # It also optionally receives a feed ID;  if received, invoke the read_feed
+  # private function after the entry has changed state in the server.
   #--------------------------------------------
-  change_entry_state = (entry, read)->
+  change_entry_state = (entry, read, feed_id = null)->
     # Mark entry as read or unread in the model
     entry.read = read
     entry.changing_state = true
@@ -28,8 +31,19 @@ currentFolderSvc, currentFeedSvc, findSvc)->
     $http.put("/entries/update.json", entry: {id: entry.id, state: state})
     .success ->
       entry.changing_state = false
+      read_feed feed_id if feed_id?
     .error (data, status)->
       timerFlagSvc.start 'error_changing_entry_state' if status!=0
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION - Set the feed with the passed ID as the currently selected one, and
+  # load its list of entries
+  #--------------------------------------------
+  read_feed = (feed_id)->
+    feed = findSvc.find_feed feed_id
+    if feed?
+      currentFeedSvc.set feed
+      readSvc.read_entries_page()
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark all entries in the currently selected feed or folder as read.
@@ -113,6 +127,12 @@ currentFolderSvc, currentFeedSvc, findSvc)->
         return feed.title
       else
         return ''
+
+    #--------------------------------------------
+    # Mark an entry as unread and load its feed's list of entries
+    #--------------------------------------------
+    load_entry_feed: (entry)->
+      change_entry_state entry, false, entry.feed_id
 
   return service
 ]

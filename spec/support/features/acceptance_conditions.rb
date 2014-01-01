@@ -114,7 +114,24 @@ def should_hide_alert(alert_id)
 end
 
 ##
-# Test that the passed entry is visible but marked as read
+# Test that the passed entry is visible.
+
+def entry_should_be_visible(entry)
+  page.should have_css "#feed-entries #entry-#{entry.id}"
+  within "#feed-entries #entry-#{entry.id}" do
+    page.should have_text entry.title, visible: true
+  end
+end
+
+##
+# Test that the passed entry is not visible.
+
+def entry_should_not_be_visible(entry)
+  page.should_not have_css "#feed-entries #entry-#{entry.id}"
+end
+
+##
+# Test that the passed entry is visible and marked as read
 
 def entry_should_be_marked_read(entry)
   page.should have_css "a[data-entry-id='#{entry.id}'].entry-read"
@@ -141,4 +158,12 @@ def entry_should_be_closed(entry)
   page.should have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary", visible: false
   page.should_not have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.in", visible: false
   page.should_not have_text entry.summary
+end
+
+
+##
+# Test that the passed feed is currently selected for reading
+
+def feed_should_be_selected(feed)
+  page.should have_css "#sidebar .active > [data-sidebar-feed][data-feed-id='#{feed.id}']"
 end

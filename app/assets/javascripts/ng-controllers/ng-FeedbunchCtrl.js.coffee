@@ -142,13 +142,13 @@ findSvc, userDataSvc, openEntrySvc)->
   # Mark a single entry as unread
   #--------------------------------------------
   $scope.unread_entry = (entry)->
-    entrySvc.unread_entry(entry)
+    entrySvc.unread_entry entry
 
   #--------------------------------------------
   # Mark a single entry as read
   #--------------------------------------------
   $scope.read_entry = (entry)->
-    entrySvc.read_entry(entry)
+    entrySvc.read_entry entry
 
   #--------------------------------------------
   # Return the title of the feed to which an entry belongs
@@ -157,13 +157,11 @@ findSvc, userDataSvc, openEntrySvc)->
     entrySvc.entry_feed_title entry
 
   #--------------------------------------------
-  # Set the feed to which belongs the passed entry as the currently selected feed
+  # Set the feed to which belongs the passed entry as the currently selected feed.
+  # Also the passed entry is marked as unread, so that it's visible in the new list of entries.
   #--------------------------------------------
   $scope.set_current_entry_feed = (entry)->
-    feed = findSvc.find_feed entry.feed_id
-    if feed
-      currentFeedSvc.set feed
-      readSvc.read_entries_page()
+    entrySvc.load_entry_feed entry
 
   #--------------------------------------------
   # Set a boolean flag in the root scope as false. The flag name must be passed as a string.
