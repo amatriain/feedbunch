@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$rootScope', '$http', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
+['$rootScope', '$http', '$timeout', '$window', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
 'cleanupSvc',
-($rootScope, $http, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
+($rootScope, $http, $timeout, $window, timerFlagSvc, findSvc, entriesPaginationSvc,
 cleanupSvc)->
 
   #--------------------------------------------
@@ -42,7 +42,10 @@ cleanupSvc)->
       $rootScope.feeds_loaded = true
 
     .error (data, status)->
-      timerFlagSvc.start 'error_loading_feeds' if status!=0
+      if status == 401
+        $window.location.href = '/login'
+      else if status!=0
+        timerFlagSvc.start 'error_loading_feeds'
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds every minute.
@@ -63,7 +66,10 @@ cleanupSvc)->
       $rootScope.folders = data
       $rootScope.folders_loaded = true
     .error (data, status)->
-      timerFlagSvc.start 'error_loading_folders' if status!=0
+      if status == 401
+        $window.location.href = '/login'
+      else if status!=0
+        timerFlagSvc.start 'error_loading_folders'
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds and folders.

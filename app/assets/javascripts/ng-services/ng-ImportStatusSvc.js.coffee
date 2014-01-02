@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'importStatusSvc',
-['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'timerFlagSvc',
-($rootScope, $http, $timeout, feedsFoldersSvc, timerFlagSvc)->
+['$rootScope', '$http', '$timeout', '$window', 'feedsFoldersSvc', 'timerFlagSvc',
+($rootScope, $http, $timeout, $window, feedsFoldersSvc, timerFlagSvc)->
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load import process status via AJAX
@@ -38,6 +38,9 @@ angular.module('feedbunch').service 'importStatusSvc',
         # Automatically load new feeds and folders without needing a refresh
         feedsFoldersSvc.load_data()
         timerFlagSvc.start 'success_importing'
+    .error (data, status)->
+      if status == 401
+        $window.location.href = '/login'
 
   #---------------------------------------------
   # Load import process status via AJAX into the root scope

@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'entrySvc',
-['$rootScope', '$http', 'openEntrySvc', 'timerFlagSvc', 'unreadCountSvc',
+['$rootScope', '$http', '$window', 'openEntrySvc', 'timerFlagSvc', 'unreadCountSvc',
 'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc',
-($rootScope, $http, openEntrySvc, timerFlagSvc, unreadCountSvc,
+($rootScope, $http, $window, openEntrySvc, timerFlagSvc, unreadCountSvc,
 currentFolderSvc, currentFeedSvc, findSvc, readSvc)->
 
   #--------------------------------------------
@@ -33,7 +33,10 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc)->
       entry.changing_state = false
       read_feed feed_id if feed_id?
     .error (data, status)->
-      timerFlagSvc.start 'error_changing_entry_state' if status!=0
+      if status == 401
+        $window.location.href = '/login'
+      else if status!=0
+        timerFlagSvc.start 'error_changing_entry_state'
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Set the feed with the passed ID as the currently selected one, and
@@ -83,7 +86,10 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc)->
         for entry in $rootScope.entries
           entry.changing_state = false
       .error (data, status)->
-        timerFlagSvc.start 'error_changing_entry_state' if status!=0
+        if status == 401
+          $window.location.href = '/login'
+        else if status!=0
+          timerFlagSvc.start 'error_changing_entry_state'
 
   service =
 

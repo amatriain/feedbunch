@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'folderSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'timerFlagSvc', 'openFolderSvc', 'feedsFoldersSvc',
-($rootScope, $http, currentFeedSvc, timerFlagSvc, openFolderSvc, feedsFoldersSvc)->
+['$rootScope', '$http', '$window', 'currentFeedSvc', 'timerFlagSvc', 'openFolderSvc', 'feedsFoldersSvc',
+($rootScope, $http, $window, currentFeedSvc, timerFlagSvc, openFolderSvc, feedsFoldersSvc)->
 
   #--------------------------------------------
   # Remove a feed from a folder
@@ -18,7 +18,10 @@ angular.module('feedbunch').service 'folderSvc',
       .success (data)->
         feedsFoldersSvc.load_folders()
       .error (data, status)->
-        timerFlagSvc.start 'error_managing_folders' if status!=0
+        if status == 401
+          $window.location.href = '/login'
+        else if status!=0
+          timerFlagSvc.start 'error_managing_folders'
 
   #--------------------------------------------
   # Move a feed to an already existing folder
@@ -34,7 +37,10 @@ angular.module('feedbunch').service 'folderSvc',
       .success (data)->
         feedsFoldersSvc.load_folders()
       .error (data, status)->
-        timerFlagSvc.start 'error_managing_folders' if status!=0
+        if status == 401
+          $window.location.href = '/login'
+        else if status!=0
+          timerFlagSvc.start 'error_managing_folders'
 
   #--------------------------------------------
   # Move a feed to a new folder
@@ -54,6 +60,8 @@ angular.module('feedbunch').service 'folderSvc',
       .error (data, status)->
         if status == 304
           timerFlagSvc.start 'error_already_existing_folder'
+        else if status == 401
+          $window.location.href = '/login'
         else if status!=0
           timerFlagSvc.start 'error_creating_folder'
 ]

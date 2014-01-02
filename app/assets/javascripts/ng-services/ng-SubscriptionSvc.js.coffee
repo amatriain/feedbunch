@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'subscriptionSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'folderSvc', 'timerFlagSvc',
+['$rootScope', '$http', '$window', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'folderSvc', 'timerFlagSvc',
 'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc', 'cleanupSvc',
-($rootScope, $http, currentFeedSvc, currentFolderSvc, readSvc, folderSvc, timerFlagSvc,
+($rootScope, $http, $window, currentFeedSvc, currentFolderSvc, readSvc, folderSvc, timerFlagSvc,
 entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
 
   #---------------------------------------------
@@ -26,8 +26,10 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
         readSvc.read_entries_page()
       .error (data, status)->
         entriesPaginationSvc.set_busy false
+        if status == 401
+          $window.location.href = '/login'
         # Show alert
-        if status == 304
+        else if status == 304
           timerFlagSvc.start 'error_already_subscribed'
         else if status!=0
           timerFlagSvc.start 'error_subscribing'
@@ -50,6 +52,9 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
         # reload folders from the server.
         feedsFoldersSvc.load_folders()
       .error (data, status)->
-        timerFlagSvc.start 'error_unsubscribing' if status!=0
+        if status == 401
+          $window.location.href = '/login'
+        else if status!=0
+          timerFlagSvc.start 'error_unsubscribing'
 
 ]
