@@ -336,6 +336,20 @@ describe 'authentication' do
       current_path.should eq read_path
     end
 
+    it 'redirects to login page if an AJAX request is returned an HTTP 401 Unauthorized', js: true do
+      pending
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      @user.subscribe feed.fetch_url
+
+      visit read_path
+      FeedsController.any_instance.stub(:show).and_return(status: 401)
+      read_feed feed, @user
+
+      current_path.should eq new_user_session_path
+    end
+
     it 'does not show the login link in the main page' do
       page.should_not have_css "a#sign_in[href*=\"#{new_user_session_path}\"]"
     end
