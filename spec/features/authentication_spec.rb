@@ -344,7 +344,10 @@ describe 'authentication' do
       @user.subscribe feed.fetch_url
 
       visit read_path
-      FeedsController.any_instance.stub(:show).and_return(status: 401)
+      User.any_instance.stub(:feed_entries) do
+        #throw :warden
+        #sign_out :user
+      end
       read_feed feed, @user
 
       current_path.should eq new_user_session_path
