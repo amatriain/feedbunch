@@ -91,4 +91,8 @@ RSpec.configure do |config|
     Resque.stub :enqueue
     Resque.stub :enqueue_in
   end
+
+  # Include Warden helpers: login_as, logout...
+  # For more about these helpers see Warden wiki: https://github.com/hassox/warden/wiki/Testing
+  config.include Warden::Test::Helpers
 end

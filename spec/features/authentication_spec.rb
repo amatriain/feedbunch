@@ -337,17 +337,14 @@ describe 'authentication' do
     end
 
     it 'redirects to login page if an AJAX request is returned an HTTP 401 Unauthorized', js: true do
-      pending
       feed = FactoryGirl.create :feed
       entry = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry
       @user.subscribe feed.fetch_url
 
       visit read_path
-      User.any_instance.stub(:feed_entries) do
-        #throw :warden
-        #sign_out :user
-      end
+      read_feed feed, @user
+      logout
       read_feed feed, @user
 
       current_path.should eq new_user_session_path
