@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'entrySvc',
 ['$rootScope', '$http', '$window', 'openEntrySvc', 'timerFlagSvc', 'unreadCountSvc',
-'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc',
+'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc', 'feedsFoldersSvc',
 ($rootScope, $http, $window, openEntrySvc, timerFlagSvc, unreadCountSvc,
-currentFolderSvc, currentFeedSvc, findSvc, readSvc)->
+currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark a single entry as read or unread.
@@ -31,7 +31,13 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc)->
     $http.put("/entries/update.json", entry: {id: entry.id, state: state})
     .success ->
       entry.changing_state = false
-      read_feed feed_id if feed_id?
+      # Reset here the timer that updates feeds every minute only if feed_id argument has not been passed
+      # (if it has been passed, now entries from the feed will be loaded from the server and the
+      # update timer will be reset as part of that process).
+      if feed_id?
+        read_feed feed_id
+      else
+        feedsFoldersSvc.reset_refresh_timer()
     .error (data, status)->
       if status == 401
         $window.location.href = '/login'
@@ -83,6 +89,8 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc)->
 
       $http.put("/entries/update.json", entry: {id: first_entry.id, state: 'read', whole_feed: whole_feed, whole_folder: whole_folder, all_entries: all_entries})
       .success ->
+        # after marking multiple entries as read, reset the timer that updates feeds every minute
+        feedsFoldersSvc.reset_refresh_timer()
         for entry in $rootScope.entries
           entry.changing_state = false
       .error (data, status)->
