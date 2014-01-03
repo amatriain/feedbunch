@@ -17,7 +17,7 @@ findSvc, userDataSvc, openEntrySvc)->
   userDataSvc.load_data()
 
   # Load folders and feeds via AJAX on startup
-  feedsFoldersSvc.start_refresh_data()
+  feedsFoldersSvc.start_refresh_timer()
 
   # Load status of data import process for the current user
   importStatusSvc.load_data false

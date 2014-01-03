@@ -51,7 +51,16 @@ cleanupSvc)->
   # PRIVATE FUNCTION: Load feeds every minute.
   #--------------------------------------------
   refresh_feeds = ->
-    $timeout ->
+    $rootScope.refresh_timer = $timeout ->
+      load_feeds()
+      refresh_feeds()
+    , 60000
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Load feeds every minute.
+  #--------------------------------------------
+  refresh_feeds = ->
+    $rootScope.refresh_timer = $timeout ->
       load_feeds()
       refresh_feeds()
     , 60000
@@ -105,11 +114,19 @@ cleanupSvc)->
     # Load feeds and folders via AJAX into the root scope.
     # Start running a refresh of feeds every minute while the app is open.
     #---------------------------------------------
-    start_refresh_data: ->
+    start_refresh_timer: ->
       $rootScope.feeds_loaded = false
       $rootScope.folders_loaded = false
       $rootScope.show_read = false
       load_data()
+      refresh_feeds()
+
+    #---------------------------------------------
+    # Reset the timer that refreshes feeds every minute.
+    # This means that the next refresh will happen one minute after invoking this method.
+    #---------------------------------------------
+    reset_refresh_timer: ->
+      $timeout.cancel $rootScope.refresh_timer
       refresh_feeds()
 
     #---------------------------------------------

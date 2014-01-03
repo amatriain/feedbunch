@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'readSvc',
 ['$rootScope', '$http', '$window', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
- 'entriesPaginationSvc', 'openEntrySvc',
+ 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc',
 ($rootScope, $http, $window, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
- entriesPaginationSvc, openEntrySvc)->
+ entriesPaginationSvc, openEntrySvc, feedsFoldersSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load entries via AJAX in the root scope.
@@ -63,6 +63,7 @@ angular.module('feedbunch').service 'readSvc',
     # Load a page of entries for the currently selected feed or folder
     #---------------------------------------------
     read_entries_page: ->
+      feedsFoldersSvc.reset_refresh_timer()
       load_entries()
 
     #--------------------------------------------
