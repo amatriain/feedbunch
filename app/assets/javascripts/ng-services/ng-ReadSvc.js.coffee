@@ -12,6 +12,8 @@ angular.module('feedbunch').service 'readSvc',
   # PRIVATE FUNCTION: Load entries via AJAX in the root scope.
   #--------------------------------------------
   load_entries = ->
+    # Reset the timer that updates feeds every minute
+    feedsFoldersSvc.reset_refresh_timer()
     # If busy, do nothing
     return if entriesPaginationSvc.is_busy()
     # If no feed or folder is selected, do nothing
@@ -63,7 +65,6 @@ angular.module('feedbunch').service 'readSvc',
     # Load a page of entries for the currently selected feed or folder
     #---------------------------------------------
     read_entries_page: ->
-      feedsFoldersSvc.reset_refresh_timer()
       load_entries()
 
     #--------------------------------------------
