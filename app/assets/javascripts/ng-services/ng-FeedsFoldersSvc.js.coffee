@@ -57,12 +57,21 @@ cleanupSvc)->
     , 60000
 
   #--------------------------------------------
+  # PRIVATE FUNCTION: Reset the timer that loads feeds every minute.
+  #--------------------------------------------
+  reset_timer = ->
+    if $rootScope.refresh_timer?
+      $timeout.cancel $rootScope.refresh_timer
+    refresh_feeds()
+
+  #--------------------------------------------
   # PRIVATE FUNCTION: Load folders.
   #--------------------------------------------
   load_folders = ->
     now = new Date()
     $http.get("/folders.json?time=#{now.getTime()}")
     .success (data)->
+      reset_timer()
       $rootScope.folders = data
       $rootScope.folders_loaded = true
     .error (data, status)->
@@ -116,9 +125,7 @@ cleanupSvc)->
     # Reset the timer that refreshes feeds every minute.
     # This means that the next refresh will happen one minute after invoking this method.
     #---------------------------------------------
-    reset_refresh_timer: ->
-      $timeout.cancel $rootScope.refresh_timer
-      refresh_feeds()
+    reset_refresh_timer: reset_timer
 
     #---------------------------------------------
     # Load feeds and folders via AJAX into the root scope.

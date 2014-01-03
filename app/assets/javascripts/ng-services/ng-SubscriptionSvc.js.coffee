@@ -48,8 +48,6 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
 
       $http.delete(path)
       .success ->
-        # Reset the timer that updates feeds every minute
-        feedsFoldersSvc.reset_refresh_timer()
         # In case the folder has been deleted after unsubscribing from a feed (because there are no more feeds in the folder),
         # reload folders from the server.
         feedsFoldersSvc.load_folders()
