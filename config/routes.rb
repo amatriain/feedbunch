@@ -89,6 +89,11 @@ Feedbunch::Application.routes.draw do
     get '/unlock_account' => 'devise/unlocks#show'
   end
 
+  # Redirect authenticated users that access the root URL to '/read'
+  authenticated :user do
+    get '/'  => redirect('/read')
+  end
+
   # Static pages served with High_voltage gem
   root :to => 'high_voltage/pages#show', id: 'index'
 
