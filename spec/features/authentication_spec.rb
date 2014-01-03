@@ -10,6 +10,11 @@ describe 'authentication' do
 
   context 'unauthenticated visitors' do
 
+    it 'does not redirect to read view when user tries to access the root URL' do
+      visit root_path
+      current_path.should eq root_path
+    end
+
     it 'shows a link to the app in the main page' do
       visit '/'
       within "a#sign_in[href*=\"#{read_path}\"]" do
@@ -332,7 +337,12 @@ describe 'authentication' do
       login_user_for_feature @user
     end
 
-    it 'redirects to feeds list after a successful login' do
+    it 'redirects to read view after a successful login' do
+      current_path.should eq read_path
+    end
+
+    it 'redirects to read view if user tries to access the root URL' do
+      visit root_path
       current_path.should eq read_path
     end
 
