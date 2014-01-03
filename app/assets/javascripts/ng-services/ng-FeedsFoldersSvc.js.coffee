@@ -57,15 +57,6 @@ cleanupSvc)->
     , 60000
 
   #--------------------------------------------
-  # PRIVATE FUNCTION: Load feeds every minute.
-  #--------------------------------------------
-  refresh_feeds = ->
-    $rootScope.refresh_timer = $timeout ->
-      load_feeds()
-      refresh_feeds()
-    , 60000
-
-  #--------------------------------------------
   # PRIVATE FUNCTION: Load folders.
   #--------------------------------------------
   load_folders = ->
