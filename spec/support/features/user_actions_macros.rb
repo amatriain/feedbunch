@@ -298,7 +298,7 @@ def enable_quick_reading(user)
 
   fill_in 'user_current_password', with: user.password
   click_on 'Update account'
-  current_path.should eq root_path
+  current_path.should eq read_path
 end
 
 ##
@@ -317,5 +317,5 @@ def check_open_all_entries(user)
 
   fill_in 'user_current_password', with: user.password
   click_on 'Update account'
-  current_path.should eq root_path
+  current_path.should eq read_path
 end

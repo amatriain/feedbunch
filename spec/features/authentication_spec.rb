@@ -527,7 +527,7 @@ describe 'authentication' do
         fill_in 'Current password', with: @user.password
         select 'Español', from: 'Language'
         click_on 'Update account'
-        page.should have_text 'Accede con tu cuenta'
+        page.should have_text 'Mostrar leídos'
         logout_user
 
         # After relogin, app should be in spanish
