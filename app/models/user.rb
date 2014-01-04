@@ -2,7 +2,7 @@ require 'folder_manager'
 require 'url_subscriber'
 require 'feed_refresh_manager'
 require 'entry_state_manager'
-require 'entry_reader'
+require 'entries_pagination'
 require 'data_import_manager'
 require 'subscriptions_manager'
 
@@ -84,17 +84,17 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Retrieve entries from a feed. See EntryReader#feed_entries
+  # Retrieve entries from a feed. See EntriesPagination#feed_entries
 
   def feed_entries(feed, include_read: false, page: nil)
-    EntryReader.feed_entries feed, self, include_read: include_read, page: page
+    EntriesPagination.feed_entries feed, self, include_read: include_read, page: page
   end
 
   ##
-  # Retrieve unread entries from a folder. See EntryReader#folder_entries
+  # Retrieve unread entries from a folder. See EntriesPagination#folder_entries
 
   def folder_entries(folder, include_read: false, page: nil)
-    EntryReader.folder_entries folder, self, include_read: include_read, page: page
+    EntriesPagination.folder_entries folder, self, include_read: include_read, page: page
   end
 
   ##

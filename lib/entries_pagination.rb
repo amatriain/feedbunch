@@ -1,7 +1,7 @@
 ##
 # This class has methods related to retrieving entries from the database
 
-class EntryReader
+class EntriesPagination
 
   ##
   # Retrieve entries from the feed passed as argument, that are in the passed state for the passed user.
