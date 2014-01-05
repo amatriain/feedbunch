@@ -19,17 +19,17 @@
        ng-class="{'in':current_open_folder.id==folder.id}">
     <div class="panel-body">
 
-      <%# Animated spinner while feeds are loading %>
-      <i class="fa fa-spinner fa-spin" ng-show="!feeds_loaded"></i>
-
       <%# Content of the folder %>
-      <ul class="nav nav-pills nav-stacked" ng-show="feeds_loaded">
+      <ul class="nav nav-pills nav-stacked">
 
         <%= render 'read/sidebar/sidebar_folder_read_all' %>
 
         <%= render 'read/sidebar/sidebar_folder_feed' %>
 
       </ul>
+
+      <%# Animated spinner while feeds are loading %>
+      <i class="fa fa-spinner fa-spin" ng-show="!feeds_loaded"></i>
 
     </div>
   </div>
