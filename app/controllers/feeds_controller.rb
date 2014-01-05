@@ -12,12 +12,18 @@ class FeedsController < ApplicationController
 
   def index
     if params[:include_read]=='true'
-      @feeds = current_user.feeds
+      include_read = true
     else
-      @feeds = current_user.unread_feeds
+      include_read = false
     end
+    @feeds = current_user.subscribed_feeds include_read: include_read, page: params[:page]
 
-    render 'index', locals: {user: current_user, feeds: @feeds}
+    if @feeds.present?
+      render 'index', locals: {user: current_user, feeds: @feeds}
+    else
+      Rails.logger.info "User #{current_user.id} - #{current_user.email} has no feeds to return, returning a 404"
+      head status: 404
+    end
   rescue => e
     handle_error e
   end

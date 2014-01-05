@@ -3,6 +3,7 @@ require 'url_subscriber'
 require 'feed_refresh_manager'
 require 'entry_state_manager'
 require 'entries_pagination'
+require 'feeds_pagination'
 require 'data_import_manager'
 require 'subscriptions_manager'
 
@@ -77,10 +78,10 @@ class User < ActiveRecord::Base
   before_validation :default_values
 
   ##
-  # Retrieves feeds with unread entries.
+  # Retrieves feeds subscribed by the user. See FeedsPagination#subscribed_feeds.
 
-  def unread_feeds
-    return self.feeds.where('unread_entries > 0')
+  def subscribed_feeds(include_read: false, page: nil)
+    FeedsPagination.subscribed_feeds self, include_read: include_read, page: page
   end
 
   ##
