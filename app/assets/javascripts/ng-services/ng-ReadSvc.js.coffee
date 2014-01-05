@@ -49,6 +49,7 @@ angular.module('feedbunch').service 'readSvc',
     .error (data,status)->
       entriesPaginationSvc.set_busy false
       if status == 404
+        # there are no more entries to retrieve
         entriesPaginationSvc.set_more_entries_available false
         if entriesPaginationSvc.is_first_page()
           entriesPaginationSvc.set_error_no_entries true

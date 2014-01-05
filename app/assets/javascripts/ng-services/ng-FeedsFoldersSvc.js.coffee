@@ -4,45 +4,28 @@
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
 ['$rootScope', '$http', '$timeout', '$window', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
-'cleanupSvc',
+'feedsPaginationSvc', 'cleanupSvc',
 ($rootScope, $http, $timeout, $window, timerFlagSvc, findSvc, entriesPaginationSvc,
-cleanupSvc)->
+ feedsPaginationSvc, cleanupSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds. Reads the boolean flag "show_read" to know if
   # we want to load all feeds (true) or only feeds with unread entries (false).
   #--------------------------------------------
-  load_feeds = ->
+  load_feeds = (page=0)->
+    page += 1
     now = new Date()
-    $http.get("/feeds.json?include_read=#{$rootScope.show_read}&time=#{now.getTime()}")
+    $http.get("/feeds.json?include_read=#{$rootScope.show_read}&page=#{page}&time=#{now.getTime()}")
     .success (data)->
-      if !$rootScope.feeds || $rootScope.feeds?.length==0
-        # If there are no feeds in scope, just store the feeds returned.
-        $rootScope.feeds = data
-      else
-        # If there are feeds already loaded in scope, replace their unread counts with the ones returned (feeds
-        # not present in the returned JSON will have their unread_entries set to zero). Insert any new feeds returned.
-        feeds_copy = angular.copy $rootScope.feeds
-
-        # Set all unread counts to zero
-        for feed_old in feeds_copy
-          feed_old.unread_entries = 0
-
-        # Update unread counts with those returned, and insert any new feeds (not yet in the rootScope list).
-        for feed_new in data
-          feed_old = findSvc.find_feed feed_new.id, feeds_copy
-          if feed_old
-            feed_old.unread_entries = feed_new.unread_entries
-          else
-            feeds_copy.push feed_new
-
-        # Transform the working copy into the actual feeds list
-        $rootScope.feeds = feeds_copy
-
-      $rootScope.feeds_loaded = true
-
+      feedsPaginationSvc.load_feeds_page page, data
+      # Load the next page of feeds, until a 404 (no more feeds) is received
+      load_feeds page
     .error (data, status)->
-      if status == 401
+      if status == 404
+        # there are no more feeds to retrieve
+        $rootScope.feeds_loaded = true
+        feedsPaginationSvc.pagination_finished()
+      else if status == 401
         $window.location.href = '/login'
       else if status!=0
         timerFlagSvc.start 'error_loading_feeds'
