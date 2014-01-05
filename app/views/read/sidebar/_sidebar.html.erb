@@ -7,9 +7,6 @@
 
   <hr>
 
-  <%# Animated spinner while folders are loading %>
-  <i class="fa fa-spinner fa-spin" ng-show="!folders_loaded"></i>
-
   <div id="folders-list" class="panel-group" ng-cloak>
 
     <%= render 'read/sidebar/sidebar_folder_none' %>
@@ -17,4 +14,10 @@
     <%= render 'read/sidebar/sidebar_folder' %>
 
   </div>
+
+  <%# Animated spinner while folders are loading %>
+  <div class="sidebar-spinner" ng-show="!folders_loaded">
+    <i class="fa fa-spinner fa-spin"></i>
+  </div>
+
 </div>
