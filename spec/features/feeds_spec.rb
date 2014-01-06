@@ -58,7 +58,7 @@ describe 'feeds' do
     end
 
     it 'shows an alert if it cannot load feeds', js: true do
-      User.any_instance.stub(:feeds).and_raise StandardError.new
+      User.any_instance.stub(:subscribed_feeds).and_raise StandardError.new
       visit read_path
       should_show_alert 'problem-loading-feeds'
     end
