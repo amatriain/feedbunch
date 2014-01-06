@@ -10,7 +10,7 @@
         <%= t 'start.welcome' %>
         <p>
           <small ng-show="feeds_loaded">
-            <%= t 'start.stats', feeds: '{{feeds.length}}', entries: '{{total_unread_entries()}}' %>
+            <%= t 'start.stats', feeds: '{{subscribed_feeds_count}}', entries: '{{total_unread_entries()}}' %>
           </small>
         </p>
       </h1>

@@ -92,7 +92,7 @@ en:
       feed_tooltip: "Read entries from this feed"
   start:
     welcome: "Welcome to Feedbunch"
-    stats: "Displaying %{feeds} feeds with %{entries} unread entries."
+    stats: "Subscribed to %{feeds} feeds with %{entries} unread entries."
     read: "To read a feed, click on its title in the sidebar."
     import:
       introduction: "If you want to import your feed subscriptions from another service:"

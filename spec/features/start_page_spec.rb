@@ -46,7 +46,7 @@ describe 'start page' do
     before :each do
       # click on a feed, then click on the Start link
       read_feed @feed1, @user
-      find('#start-page').click
+      go_to_start_page
     end
 
     it 'shows start page', js: true do
@@ -68,21 +68,62 @@ describe 'start page' do
   context 'stats' do
 
     before :each do
+      # @user is subscribed to @feed1, @feed2 and @feed3
+      # @feed1 has one unread entry, @feed2 has two unread entries, and @feed3 has one read entry
       @feed2 = FactoryGirl.create :feed
+      @feed3 = FactoryGirl.create :feed
       @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
       @entry3 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @entry4 = FactoryGirl.build :entry, feed_id: @feed3.id
       @feed2.entries << @entry2 << @entry3
+      @feed3.entries << @entry4
       @user.subscribe @feed2.fetch_url
+      @user.subscribe @feed3.fetch_url
+      @user.change_entries_state @entry4, 'read'
 
       visit read_path
     end
 
     it 'shows number of subscribed feeds', js: true do
-      page.should have_content '2 feeds'
+      page.should have_content 'Subscribed to 3 feeds'
+    end
+
+    it 'updates number of subscribed feeds when subscribing to a feed', js: true do
+      feed4 = FactoryGirl.create :feed
+      subscribe_feed feed4.fetch_url
+      go_to_start_page
+      page.should have_content 'Subscribed to 4 feeds'
+    end
+
+    it 'updates number of subscribed feeds when unsubscribing from a feed', js: true do
+      feed4 = FactoryGirl.create :feed
+      unsubscribe_feed @feed1, @user
+      go_to_start_page
+      page.should have_content 'Subscribed to 2 feeds'
     end
 
     it 'shows number of unread entries', js: true do
-      page.should have_content '3 unread entries'
+      page.should have_content 'with 3 unread entries'
+    end
+
+    it 'updates number of unread entries when marking entries as read', js: true do
+      read_feed @feed1, @user
+      read_entry @entry1
+      go_to_start_page
+      page.should have_content 'with 2 unread entries'
+    end
+
+    it 'updates number of unread entries when marking entries as unread', js: true do
+      show_read
+      read_feed @feed3, @user
+      read_entry @entry4
+      within "#feed-entries #entry-#{@entry4.id} .entry-toolbar", visible: true do
+        page.should have_text "Unread", visible: true
+        find('a').click
+      end
+      page.should have_css "#feed-entries #entry-#{@entry4.id} a.entry-unread"
+      go_to_start_page
+      page.should have_content 'with 4 unread entries'
     end
   end
 

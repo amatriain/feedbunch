@@ -20,6 +20,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
 
       $http.post('/feeds.json', feed:{url: url})
       .success (data)->
+        $rootScope.subscribed_feeds_count += 1
         entriesPaginationSvc.set_busy false
         feedsFoldersSvc.add_feed data
         currentFeedSvc.set data
@@ -48,6 +49,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
 
       $http.delete(path)
       .success ->
+        $rootScope.subscribed_feeds_count -= 1
         # In case the folder has been deleted after unsubscribing from a feed (because there are no more feeds in the folder),
         # reload folders from the server.
         feedsFoldersSvc.load_folders()

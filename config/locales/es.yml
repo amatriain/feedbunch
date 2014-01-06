@@ -71,7 +71,7 @@ es:
       feed_tooltip: "Leer entradas de este feed"
   start:
     welcome: "Bienvenido a Feedbunch"
-    stats: "Mostrando %{feeds} feeds con %{entries} entradas sin leer."
+    stats: "Suscrito a %{feeds} feeds con %{entries} entradas sin leer."
     read: "Para leer un feed, haz click en su título en la barra lateral."
     import:
       introduction: "Si quieres importar tus suscripciones a feeds desde otro servicio:"

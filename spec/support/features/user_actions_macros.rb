@@ -319,3 +319,10 @@ def check_open_all_entries(user)
   click_on 'Update account'
   current_path.should eq read_path
 end
+
+##
+# Click on the "Start" link in the sidebar to go to the start page
+
+def go_to_start_page
+  find('#sidebar #start-page').click
+end
