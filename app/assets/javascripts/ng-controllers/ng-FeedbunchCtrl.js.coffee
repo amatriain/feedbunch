@@ -5,10 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
-'findSvc', 'userDataSvc', 'openEntrySvc',
+'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc',
 ($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
-findSvc, userDataSvc, openEntrySvc)->
+findSvc, userDataSvc, openEntrySvc, unreadCountSvc)->
 
   # Show Add Subscription button in this view
   $rootScope.show_feed_buttons = true
@@ -174,13 +174,13 @@ findSvc, userDataSvc, openEntrySvc)->
   # Count the number of unread entries in a folder
   #--------------------------------------------
   $scope.folder_unread_entries = (folder)->
-    feedsFoldersSvc.folder_unread_entries folder
+    unreadCountSvc.folder_unread_entries folder
 
   #--------------------------------------------
   # Count the total number of unread entries in feeds
   #--------------------------------------------
   $scope.total_unread_entries = ->
-    feedsFoldersSvc.total_unread_entries()
+    unreadCountSvc.total_unread_entries()
 
   #--------------------------------------------
   # Function to filter feeds in a given folder
@@ -204,7 +204,7 @@ findSvc, userDataSvc, openEntrySvc)->
         if current_feed?.folder_id == folder.id || current_folder?.id == folder.id
           return true
         else
-          return feedsFoldersSvc.folder_unread_entries(folder) > 0
+          return unreadCountSvc.folder_unread_entries(folder) > 0
 
   #--------------------------------------------
   # Return a boolean indicating whether the "all subscriptions" link in a folder

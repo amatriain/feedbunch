@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
 ['$rootScope', '$http', '$timeout', '$window', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
-'feedsPaginationSvc', 'cleanupSvc',
+'feedsPaginationSvc', 'cleanupSvc', 'favicoSvc',
 ($rootScope, $http, $timeout, $window, timerFlagSvc, findSvc, entriesPaginationSvc,
- feedsPaginationSvc, cleanupSvc)->
+ feedsPaginationSvc, cleanupSvc, favicoSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds. Reads the boolean flag "show_read" to know if
@@ -25,6 +25,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         # there are no more feeds to retrieve
         $rootScope.feeds_loaded = true
         feedsPaginationSvc.pagination_finished()
+        favicoSvc.update_unread_badge()
       else if status == 401
         $window.location.href = '/login'
       else if status!=0
@@ -145,27 +146,6 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         $rootScope.folders = [folder]
       else
         $rootScope.folders.push folder
-
-    #--------------------------------------------
-    # Count the number of unread entries in a folder
-    #--------------------------------------------
-    folder_unread_entries: (folder)->
-      sum = 0
-      feeds = findSvc.find_folder_feeds folder
-      if feeds && feeds?.length > 0
-        for feed in feeds
-          sum += feed.unread_entries
-      return sum
-
-    #--------------------------------------------
-    # Count the total number of unread entries in feeds
-    #--------------------------------------------
-    total_unread_entries: ->
-      sum = 0
-      if $rootScope.feeds && $rootScope.feeds?.length > 0
-        for feed in $rootScope.feeds
-          sum += feed.unread_entries
-      return sum
 
   return service
 ]

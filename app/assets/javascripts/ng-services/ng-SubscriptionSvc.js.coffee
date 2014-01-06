@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'subscriptionSvc',
 ['$rootScope', '$http', '$window', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'folderSvc', 'timerFlagSvc',
-'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc', 'cleanupSvc',
+'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc', 'cleanupSvc', 'favicoSvc',
 ($rootScope, $http, $window, currentFeedSvc, currentFolderSvc, readSvc, folderSvc, timerFlagSvc,
-entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
+entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
@@ -23,6 +23,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
         $rootScope.subscribed_feeds_count += 1
         entriesPaginationSvc.set_busy false
         feedsFoldersSvc.add_feed data
+        favicoSvc.update_unread_badge()
         currentFeedSvc.set data
         readSvc.read_entries_page()
       .error (data, status)->
@@ -43,6 +44,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc)->
 
       # Remove feed from feeds list
       cleanupSvc.remove_feed current_feed.id
+      favicoSvc.update_unread_badge()
 
       # Tell the model that no feed is currently selected.
       currentFeedSvc.unset()

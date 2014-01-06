@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'entrySvc',
-['$rootScope', '$http', '$window', 'openEntrySvc', 'timerFlagSvc', 'unreadCountSvc',
+['$rootScope', '$http', '$window', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
 'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc', 'feedsFoldersSvc',
-($rootScope, $http, $window, openEntrySvc, timerFlagSvc, unreadCountSvc,
+($rootScope, $http, $window, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
 currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
 
   #--------------------------------------------
@@ -23,10 +23,10 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
 
     if read
       state = "read"
-      unreadCountSvc.update_unread_count entry, false
+      changeUnreadCountSvc.update_unread_count entry, false
     else
       state = "unread"
-      unreadCountSvc.update_unread_count entry, true
+      changeUnreadCountSvc.update_unread_count entry, true
 
     $http.put("/entries/update.json", entry: {id: entry.id, state: state})
     .success ->
@@ -73,17 +73,17 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
         whole_feed = "true"
         whole_folder = "false"
         all_entries = "false"
-        unreadCountSvc.zero_feed_count current_feed.id
+        changeUnreadCountSvc.zero_feed_count current_feed.id
       else if current_folder && current_folder?.id != "all"
         whole_feed = "false"
         whole_folder = "true"
         all_entries = "false"
-        unreadCountSvc.zero_folder_count current_folder
+        changeUnreadCountSvc.zero_folder_count current_folder
       else if current_folder && current_folder?.id == "all"
         whole_feed = "false"
         whole_folder = "false"
         all_entries = "true"
-        unreadCountSvc.zero_folder_count 'all'
+        changeUnreadCountSvc.zero_folder_count 'all'
       else
         return
 

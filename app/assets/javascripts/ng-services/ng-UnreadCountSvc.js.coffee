@@ -3,35 +3,27 @@
 ########################################################
 
 angular.module('feedbunch').service 'unreadCountSvc',
-['currentFeedSvc', 'findSvc',
-(currentFeedSvc, findSvc)->
+['$rootScope', 'findSvc',
+($rootScope, findSvc)->
 
   #--------------------------------------------
-  # Increment or decrement by 1 the count of unread entries in the feed corresponding to the passed entry.
-  # Receives as argument an entry and a boolean indicating whether to
-  # increment (true) or decrement (false) the count.
+  # Count the number of unread entries in a folder
   #--------------------------------------------
-  update_unread_count: (entry, increment)->
-    feed = findSvc.find_feed entry.feed_id
-    if feed
-      if increment
-        feed.unread_entries += 1
-      else
-        feed.unread_entries -= 1
-
-  #--------------------------------------------
-  # Set the unread entries count of a feed to zero
-  #--------------------------------------------
-  zero_feed_count: (feed_id)->
-    feed = findSvc.find_feed feed_id
-    feed.unread_entries = 0
-
-  #--------------------------------------------
-  # Set the unread entries count of a folder and its feeds to zero
-  #--------------------------------------------
-  zero_folder_count: (folder)->
+  folder_unread_entries: (folder)->
+    sum = 0
     feeds = findSvc.find_folder_feeds folder
     if feeds && feeds?.length > 0
       for feed in feeds
-        feed.unread_entries = 0
+        sum += feed.unread_entries
+    return sum
+
+  #--------------------------------------------
+  # Count the total number of unread entries in feeds
+  #--------------------------------------------
+  total_unread_entries: ->
+    sum = 0
+    if $rootScope.feeds && $rootScope.feeds?.length > 0
+      for feed in $rootScope.feeds
+        sum += feed.unread_entries
+    return sum
 ]
