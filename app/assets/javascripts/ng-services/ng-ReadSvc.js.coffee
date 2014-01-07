@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'readSvc',
-['$rootScope', '$http', '$window', '$q', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
+['$rootScope', '$http', '$q', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
  'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc',
-($rootScope, $http, $window, $q, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
+($rootScope, $http, $q, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
  entriesPaginationSvc, openEntrySvc, feedsFoldersSvc)->
 
   #--------------------------------------------
@@ -87,11 +87,8 @@ angular.module('feedbunch').service 'readSvc',
         entriesPaginationSvc.set_busy false
         load_entries()
       .error (data, status)->
-        if status == 401
-          $window.location.href = '/login'
-        else
-          entriesPaginationSvc.set_busy false
-          timerFlagSvc.start 'error_refreshing_feed' if status!=0
+        entriesPaginationSvc.set_busy false
+        timerFlagSvc.start 'error_refreshing_feed' if status!=0
 
     #--------------------------------------------
     # Toggle open folder in the root scope.

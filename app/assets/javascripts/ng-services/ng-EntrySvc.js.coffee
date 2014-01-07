@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'entrySvc',
-['$rootScope', '$http', '$window', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
+['$rootScope', '$http', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
 'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc', 'feedsFoldersSvc',
-($rootScope, $http, $window, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
+($rootScope, $http, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
 currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
 
   #--------------------------------------------
@@ -39,10 +39,7 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
       else
         feedsFoldersSvc.reset_refresh_timer()
     .error (data, status)->
-      if status == 401
-        $window.location.href = '/login'
-      else if status!=0
-        timerFlagSvc.start 'error_changing_entry_state'
+      timerFlagSvc.start 'error_changing_entry_state' if status!=0
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Set the feed with the passed ID as the currently selected one, and
@@ -94,10 +91,7 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
         for entry in $rootScope.entries
           entry.changing_state = false
       .error (data, status)->
-        if status == 401
-          $window.location.href = '/login'
-        else if status!=0
-          timerFlagSvc.start 'error_changing_entry_state'
+        timerFlagSvc.start 'error_changing_entry_state' if status!=0
 
   service =
 

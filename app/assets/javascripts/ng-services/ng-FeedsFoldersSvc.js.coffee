@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$rootScope', '$http', '$timeout', '$window', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
+['$rootScope', '$http', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
 'feedsPaginationSvc', 'cleanupSvc', 'favicoSvc',
-($rootScope, $http, $timeout, $window, timerFlagSvc, findSvc, entriesPaginationSvc,
+($rootScope, $http, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
  feedsPaginationSvc, cleanupSvc, favicoSvc)->
 
   #--------------------------------------------
@@ -26,8 +26,6 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         $rootScope.feeds_loaded = true
         feedsPaginationSvc.pagination_finished()
         favicoSvc.update_unread_badge()
-      else if status == 401
-        $window.location.href = '/login'
       else if status!=0
         timerFlagSvc.start 'error_loading_feeds'
 
@@ -59,10 +57,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       $rootScope.folders = data
       $rootScope.folders_loaded = true
     .error (data, status)->
-      if status == 401
-        $window.location.href = '/login'
-      else if status!=0
-        timerFlagSvc.start 'error_loading_folders'
+      timerFlagSvc.start 'error_loading_folders' if status!=0
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds and folders.

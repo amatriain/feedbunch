@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'userDataSvc',
-['$rootScope', '$http', '$window', 'timerFlagSvc', 'quickReadingSvc',
-($rootScope, $http, $window, timerFlagSvc, quickReadingSvc)->
+['$rootScope', '$http', 'timerFlagSvc', 'quickReadingSvc',
+($rootScope, $http, timerFlagSvc, quickReadingSvc)->
 
   #---------------------------------------------
   # Load user configuration data via AJAX into the root scope
@@ -19,8 +19,5 @@ angular.module('feedbunch').service 'userDataSvc',
       # Start running Quick Reading mode, if the user has selected it.
       quickReadingSvc.start() if $rootScope.quick_reading
     .error (data, status)->
-      if status == 401
-        $window.location.href = '/login'
-      else if status!=0
-        timerFlagSvc.start 'error_loading_user_data'
+      timerFlagSvc.start 'error_loading_user_data' if status!=0
 ]
