@@ -63,8 +63,6 @@ angular.module('feedbunch').service 'readSvc',
           if entriesPaginationSvc.is_first_page()
             entriesPaginationSvc.set_error_no_entries true
             currentFeedSvc.get()?.unread_entries = 0
-        else if status == 401
-          $window.location.href = '/login'
         else
           currentFeedSvc.unset()
           timerFlagSvc.start 'error_loading_entries'
