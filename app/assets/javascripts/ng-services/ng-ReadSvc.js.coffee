@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'readSvc',
-['$rootScope', '$http', '$window', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
+['$rootScope', '$http', '$window', '$q', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
  'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc',
-($rootScope, $http, $window, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
+($rootScope, $http, $window, $q, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
  entriesPaginationSvc, openEntrySvc, feedsFoldersSvc)->
 
   #--------------------------------------------
@@ -18,6 +18,9 @@ angular.module('feedbunch').service 'readSvc',
     return if !currentFeedSvc.get() && !currentFolderSvc.get()
     # If a 404 has been received in a previous page (no more entries available), do nothing
     return if !entriesPaginationSvc.more_entries_available()
+
+    # Cancel any running http request for entries
+    $rootScope.entries_http_canceler.resolve() if $rootScope.entries_http_canceler?
 
     # Reset the timer that updates feeds every minute
     feedsFoldersSvc.reset_refresh_timer()
@@ -33,8 +36,11 @@ angular.module('feedbunch').service 'readSvc',
       url = "/folders/#{currentFolderSvc.get().id}.json"
 
     now = new Date()
-    $http.get("#{url}?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}&time=#{now.getTime()}")
+    $rootScope.entries_http_canceler = $q.defer()
+    $http.get("#{url}?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}&time=#{now.getTime()}",
+      {timeout: $rootScope.entries_http_canceler.promise})
     .success (data)->
+      $rootScope.entries_http_canceler = null
       entriesPaginationSvc.set_busy false
       if !$rootScope.entries || $rootScope.entries?.length == 0
         $rootScope.entries = data["entries"]
@@ -47,6 +53,7 @@ angular.module('feedbunch').service 'readSvc',
       if current_feed && entriesPaginationSvc.is_first_page()
         current_feed.unread_entries = data["unread_entries"]
     .error (data,status)->
+      $rootScope.entries_http_canceler = null
       entriesPaginationSvc.set_busy false
       if status == 404
         # there are no more entries to retrieve
