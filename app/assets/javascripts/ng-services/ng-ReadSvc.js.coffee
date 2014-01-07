@@ -52,20 +52,22 @@ angular.module('feedbunch').service 'readSvc',
       current_feed = currentFeedSvc.get()
       if current_feed && entriesPaginationSvc.is_first_page()
         current_feed.unread_entries = data["unread_entries"]
-    .error (data,status)->
-      $rootScope.entries_http_canceler = null
-      entriesPaginationSvc.set_busy false
-      if status == 404
-        # there are no more entries to retrieve
-        entriesPaginationSvc.set_more_entries_available false
-        if entriesPaginationSvc.is_first_page()
-          entriesPaginationSvc.set_error_no_entries true
-          currentFeedSvc.get()?.unread_entries = 0
-      else if status == 401
-        $window.location.href = '/login'
-      else if status!=0
-        currentFeedSvc.unset()
-        timerFlagSvc.start 'error_loading_entries'
+    .error (data, status)->
+      # if HTTP call has been prematurely cancelled, do nothing
+      if status!=0
+        $rootScope.entries_http_canceler = null
+        entriesPaginationSvc.set_busy false
+        if status == 404
+          # there are no more entries to retrieve
+          entriesPaginationSvc.set_more_entries_available false
+          if entriesPaginationSvc.is_first_page()
+            entriesPaginationSvc.set_error_no_entries true
+            currentFeedSvc.get()?.unread_entries = 0
+        else if status == 401
+          $window.location.href = '/login'
+        else
+          currentFeedSvc.unset()
+          timerFlagSvc.start 'error_loading_entries'
 
   service =
 
