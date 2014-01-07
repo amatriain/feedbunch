@@ -3,7 +3,7 @@
 ########################################################
 
 angular.module('feedbunch').service 'favicoSvc',
-['$rootScope', 'unreadCountSvc', ($rootScope, unreadCountSvc)->
+['$rootScope', '$window', 'unreadCountSvc', ($rootScope, $window, unreadCountSvc)->
 
   #---------------------------------------------
   # Set the current total unread entries count in the favicon badge.
@@ -14,5 +14,6 @@ angular.module('feedbunch').service 'favicoSvc',
       $rootScope.favico = new Favico animation: 'slide', bgColor: '#428BCA'
     unread_count = unreadCountSvc.total_unread_entries()
     $rootScope.favico.badge unread_count
+    $window.document.title = "(#{unread_count}) Feedbunch"
 
 ]
