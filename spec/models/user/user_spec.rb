@@ -6,6 +6,11 @@ describe User do
   end
 
   context 'validations' do
+    it 'does now allow empty emails' do
+      user = FactoryGirl.build :user, email: nil
+      user.should_not be_valid
+    end
+
     it 'does not allow duplicate emails' do
       user_dupe = FactoryGirl.build :user, email: @user.email
       user_dupe.valid?.should be_false
@@ -14,6 +19,13 @@ describe User do
     it 'does not allow duplicate names' do
       user_dupe = FactoryGirl.build :user, name: @user.name
       user_dupe.valid?.should be_false
+    end
+
+    it 'uses the email if no name is provided' do
+      user = FactoryGirl.build :user, name: nil
+      user.save!
+      user.name.should be_present
+      user.name.should eq user.email
     end
   end
 

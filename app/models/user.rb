@@ -33,7 +33,7 @@ require 'subscriptions_manager'
 #
 # - admin: Boolean that indicates whether the user is an administrator. This attribute is used to restrict access to certain
 # functionality, like Resque administration.
-# - name: text with the username, to be displayed in the app. Usernames are unique.
+# - name: text with the username, to be displayed in the app. Usernames are unique. Defaults to the value of the "email" attribute.
 # - locale: locale (en, es etc) in which the user wants to see the application. By default "en".
 # - timezone: name of the timezone (Europe/Madrid, UTC etc) to which the user wants to see times localized. By default "UTC".
 # - quick_reading: boolean indicating whether the user has enabled Quick Reading mode (in which entries are marked as read
@@ -70,7 +70,7 @@ class User < ActiveRecord::Base
   has_many :entry_states, -> {uniq}, dependent: :destroy
   has_one :data_import, dependent: :destroy
 
-  validates :name, uniqueness: {case_sensitive: true}
+  validates :name, presence: true, uniqueness: {case_sensitive: true}
   validates :locale, presence: true
   validates :timezone, presence: true
   validates :quick_reading, inclusion: {in: [true, false]}
@@ -165,6 +165,7 @@ class User < ActiveRecord::Base
   # - locale: 'en'
   # - timezone: 'UTC'
   # - quick_reading: false
+  # - name: defaults to the value of the "email" attribute
 
   def default_values
     # Convert the symbols for the available locales to strings, to be able to compare with the user locale
@@ -191,6 +192,10 @@ class User < ActiveRecord::Base
     if self.open_all_entries == nil
       self.open_all_entries = false
       Rails.logger.info "User #{self.email} has unsupported open_all_entries #{self.open_all_entries}. Defaulting to open_all_entries 'false' instead"
+    end
+
+    if self.name.blank?
+      self.name = self.email
     end
   end
 
