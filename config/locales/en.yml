@@ -37,7 +37,7 @@ en:
       my_account: "My account"
       read_feeds: "Read feeds"
       import: "Import subscriptions"
-      github: "Visit us on Github"
+      github: "Source code available at Github"
   feeds:
     index:
       start: "Start"

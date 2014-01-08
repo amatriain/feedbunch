@@ -16,7 +16,7 @@ es:
       my_account: "Mi cuenta"
       read_feeds: "Leer feeds"
       import: "Importar suscripciones"
-      github: "Visítanos en Github"
+      github: "Código fuente disponible en Github"
   feeds:
     index:
       start: "Inicio"
