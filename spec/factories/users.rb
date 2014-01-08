@@ -2,10 +2,12 @@
 
 FactoryGirl.define do
   sequence(:user_email_sequence) {|n| "some_email_#{n}@example.com"}
+  sequence(:user_name_sequence) {|n| "some_name_#{n}"}
   sequence(:user_password_sequence) {|n| "some_password_#{n}"}
 
   factory :user do
     email {generate :user_email_sequence}
+    name {generate :user_name_sequence}
     password {generate :user_password_sequence}
     remember_me true
     confirmed_at Time.now
