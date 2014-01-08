@@ -28,6 +28,7 @@ en:
         file: "OPML file"
     hints:
       user:
+        name: "Your user name may be visible to other users"
         password: "Password length must be between 8 and 128 characters"
         current_password: "(we need your current password to confirm your changes)"
         blank_password: "(leave blank if you don't want to change it)"
@@ -38,6 +39,7 @@ en:
     placeholders:
       user:
         email: "Your email address"
+        username: "Your username"
         password: "Your password"
         password_confirmation: "Confirm your password"
         current_password: "Your current password"

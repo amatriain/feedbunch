@@ -8,6 +8,7 @@
       <%= simple_form_for resource, :as => resource_name,
                           :url => user_registration_path(locale: I18n.locale) do |f| %>
         <%= f.input :email, as: :email_icon, autofocus: true %>
+        <%= f.input :name, as: :user_icon %>
         <%= f.input :password, as: :password_icon %>
         <%= f.input :password_confirmation, as: :password_icon,
                     placeholder: t('simple_form.placeholders.user.password_confirmation')%>
