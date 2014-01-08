@@ -20,7 +20,7 @@
                         html: {:method => :put, autocomplete: 'off'} do |f| %>
 
       <%= f.input :email, as: :email_icon, input_html: {autocomplete: 'off'} %>
-      <%= f.input :name, as: :user_icon %>
+      <%= f.input :name, as: :user_icon, required: false %>
 
       <hr>
 
