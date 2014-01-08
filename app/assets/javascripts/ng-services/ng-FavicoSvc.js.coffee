@@ -11,7 +11,7 @@ angular.module('feedbunch').service 'favicoSvc',
   update_unread_badge: ->
     # Only one Favico object must exist
     if !$rootScope.favico?
-      $rootScope.favico = new Favico animation: 'slide', bgColor: '#428BCA'
+      $rootScope.favico = new Favico animation: 'none', bgColor: '#428BCA'
     unread_count = unreadCountSvc.total_unread_entries()
     $rootScope.favico.badge unread_count
     $window.document.title = "(#{unread_count}) Feedbunch"
