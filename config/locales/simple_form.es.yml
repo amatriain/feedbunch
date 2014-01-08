@@ -13,6 +13,7 @@ es:
     labels:
       user:
         email: "Email"
+        name: "Nombre"
         password: "Contraseña"
         password_confirmation: "Confirmar contraseña"
         current_password: "Contraseña actual"
