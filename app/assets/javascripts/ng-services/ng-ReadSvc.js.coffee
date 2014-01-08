@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'readSvc',
 ['$rootScope', '$http', '$q', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
- 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc',
+ 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc',
 ($rootScope, $http, $q, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
- entriesPaginationSvc, openEntrySvc, feedsFoldersSvc)->
+ entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load entries via AJAX in the root scope.
@@ -52,6 +52,7 @@ angular.module('feedbunch').service 'readSvc',
       current_feed = currentFeedSvc.get()
       if current_feed && entriesPaginationSvc.is_first_page()
         current_feed.unread_entries = data["unread_entries"]
+        favicoSvc.update_unread_badge()
     .error (data, status)->
       # if HTTP call has been prematurely cancelled, do nothing
       if status!=0
