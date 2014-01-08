@@ -1,4 +1,4 @@
-<h1><%= t 'devise.mailer.confirmation_instructions.header', name: @email %></h1>
+<h1><%= t 'devise.mailer.confirmation_instructions.header', name: @resource.name %></h1>
 
 <p><%= t 'devise.mailer.confirmation_instructions.confirmation' %></p>
 
@@ -6,6 +6,6 @@
 
 <% link_feedbunch = link_to 'Feedbunch', root_url(locale: I18n.locale) %>
 
-<p><small><%= t 'devise.mailer.confirmation_instructions.note_1_html', link: link_feedbunch, name: @email %></small></p>
+<p><small><%= t 'devise.mailer.confirmation_instructions.note_1_html', link: link_feedbunch, name: @resource.email %></small></p>
 
 <p><small><%= t 'devise.mailer.confirmation_instructions.note_2_html', link: link_feedbunch %></small></p>
