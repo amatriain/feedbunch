@@ -6,8 +6,13 @@ describe User do
   end
 
   context 'validations' do
-    it 'does not allow duplicate usernames' do
+    it 'does not allow duplicate emails' do
       user_dupe = FactoryGirl.build :user, email: @user.email
+      user_dupe.valid?.should be_false
+    end
+
+    it 'does not allow duplicate names' do
+      user_dupe = FactoryGirl.build :user, name: @user.name
       user_dupe.valid?.should be_false
     end
   end

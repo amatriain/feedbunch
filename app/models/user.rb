@@ -33,6 +33,7 @@ require 'subscriptions_manager'
 #
 # - admin: Boolean that indicates whether the user is an administrator. This attribute is used to restrict access to certain
 # functionality, like Resque administration.
+# - name: text with the username, to be displayed in the app. Usernames are unique.
 # - locale: locale (en, es etc) in which the user wants to see the application. By default "en".
 # - timezone: name of the timezone (Europe/Madrid, UTC etc) to which the user wants to see times localized. By default "UTC".
 # - quick_reading: boolean indicating whether the user has enabled Quick Reading mode (in which entries are marked as read
@@ -69,6 +70,7 @@ class User < ActiveRecord::Base
   has_many :entry_states, -> {uniq}, dependent: :destroy
   has_one :data_import, dependent: :destroy
 
+  validates :name, uniqueness: {case_sensitive: true}
   validates :locale, presence: true
   validates :timezone, presence: true
   validates :quick_reading, inclusion: {in: [true, false]}
