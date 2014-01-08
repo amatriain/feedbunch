@@ -1,11 +1,11 @@
 <div id="start-info">
 
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-2 col-md-offset-1">
       <%= image_tag asset_path('feed128x128.png'), alt: 'feedbunch' %>
     </div>
 
-    <div class="col-md-10">
+    <div class="col-md-9">
       <h1>
         <%= t 'start.welcome' %>
         <p>
@@ -20,7 +20,7 @@
   <hr>
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-10 col-md-offset-2">
       <p class="lead">
         <i class="fa fa-arrow-left fa-lg"></i>
         <%= t 'start.read' %>
@@ -32,7 +32,9 @@
 
   <div id="import-process-status" class="row">
 
-    <%= render 'read/data_import' %>
+    <div class="col-md-10 col-md-offset-2">
+        <%= render 'read/data_import' %>
+    </div>
 
   </div>
 
