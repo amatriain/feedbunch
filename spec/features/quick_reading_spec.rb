@@ -2,25 +2,25 @@ require 'spec_helper'
 
 describe 'quick reading mode' do
 
-  before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
-
-    @entries = []
-    (0..9).each do |i|
-      entry = FactoryGirl.build :entry, feed_id: @feed.id, summary: "entry summary #{i}"
-      @feed.entries << entry
-      @entries << entry
-    end
-
-    @user.subscribe @feed.fetch_url
-
-    login_user_for_feature @user
-
-    page.driver.resize_window(800, 600)
-  end
-
   context 'mark entries open when scrolling' do
+
+    before :each do
+      @user = FactoryGirl.create :user
+      @feed = FactoryGirl.create :feed
+
+      @entries = []
+      (0..49).each do |i|
+        entry = FactoryGirl.build :entry, feed_id: @feed.id, summary: "entry summary #{i}"
+        @feed.entries << entry
+        @entries << entry
+      end
+
+      @user.subscribe @feed.fetch_url
+
+      login_user_for_feature @user
+
+      page.driver.resize_window(800, 600)
+    end
 
     it 'does not enable quick reading mode by default', js: true do
       # Quick Reading checkbox should not be checked in edit registration page
@@ -31,7 +31,7 @@ describe 'quick reading mode' do
       read_feed @feed, @user
 
       # first entry of the list (the one created most recently) is unread
-      entry_should_be_marked_unread @entries[9]
+      entry_should_be_marked_unread @entries[49]
 
       # scroll to bottom of page
       page.execute_script 'window.scrollBy(0,10000)'
@@ -41,10 +41,10 @@ describe 'quick reading mode' do
       page.execute_script 'window.scrollBy(0,-10000)'
 
       # first entry should still be unread
-      entry_should_be_marked_unread @entries[9]
+      entry_should_be_marked_unread @entries[49]
       # after refresh first entry should still be visible
       read_feed @feed, @user
-      page.should have_text @entries[9].title
+      page.should have_text @entries[49].title
     end
 
     it 'enables quick reading mode', js: true do
@@ -58,19 +58,19 @@ describe 'quick reading mode' do
       read_feed @feed, @user
 
       # first entry of the list (the one created most recently) is unread
-      entry_should_be_marked_unread @entries[9]
+      entry_should_be_marked_unread @entries[49]
 
       # scroll down enough to hide the top entry
-      page.execute_script "document.getElementById('entry-#{@entries[9].id}').scrollIntoView(true);"
+      page.execute_script "document.getElementById('entry-#{@entries[49].id}').scrollIntoView(true);"
       page.execute_script 'window.scrollBy(0,50)'
       # wait 0.5 seconds for entries to be marked as read, if quick reading were enabled
       sleep 0.5
       # scroll to top of page again
-      page.execute_script "document.getElementById('entry-#{@entries[9].id}').scrollIntoView(true);"
+      page.execute_script "document.getElementById('entry-#{@entries[49].id}').scrollIntoView(true);"
 
       # first entry should be read
-      entry_read = page.has_css? "a[data-entry-id='#{@entries[9].id}'].entry-read"
-      entry_becoming_read = page.has_css? "a[data-entry-id='#{@entries[9].id}'].entry-becoming-read"
+      entry_read = page.has_css? "a[data-entry-id='#{@entries[49].id}'].entry-read"
+      entry_becoming_read = page.has_css? "a[data-entry-id='#{@entries[49].id}'].entry-becoming-read"
       (entry_read || entry_becoming_read).should be_true
       # after refresh first entry should not be visible
       read_feed @feed, @user
@@ -79,6 +79,22 @@ describe 'quick reading mode' do
   end
 
   context 'open all entries by default' do
+
+    before :each do
+      @user = FactoryGirl.create :user
+      @feed = FactoryGirl.create :feed
+
+      @entries = []
+      (0..9).each do |i|
+        entry = FactoryGirl.build :entry, feed_id: @feed.id, summary: "entry summary #{i}"
+        @feed.entries << entry
+        @entries << entry
+      end
+
+      @user.subscribe @feed.fetch_url
+
+      login_user_for_feature @user
+    end
 
     it 'does not open all entries by default', js: true do
       # Open All Entries checkbox should not be checked in edit registration page
