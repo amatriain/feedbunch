@@ -13,11 +13,11 @@
 
 <div class="row">
 
-  <div id="sidebar-column" class="col-md-3 pull-left">
+  <div id="sidebar-column" class="col-sm-3 pull-left visible-sm visible-md visible-lg">
     <%= render 'read/sidebar/sidebar' %>
   </div>
 
-  <div class="col-md-9 pull-right" ng-cloak>
+  <div class="col-xs-12 col-sm-9 pull-right" ng-cloak>
 
     <div ng-show="current_feed==null && current_folder==null && !loading_entries_busy">
       <%= render 'start' %>
