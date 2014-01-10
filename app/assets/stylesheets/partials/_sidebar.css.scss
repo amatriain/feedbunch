@@ -15,18 +15,20 @@
   margin-bottom: 1em;
 }
 
-#sidebar a[data-sidebar-feed] .col-icon {
+#sidebar a[data-sidebar-feed] .col-icon,
+#sidebar a[data-sidebar-folder] .col-icon{
   padding-left: 10px;
   padding-right: 0;
 }
 
 #sidebar a[data-sidebar-feed] .col-feed-title,
-#sidebar a[data-sidebar-feed] .col-folder-title {
+#sidebar a[data-sidebar-folder] .col-folder-title {
   padding-left: 10px;
   padding-right: 5px;
 }
 
-#sidebar a[data-sidebar-feed] .col-badge {
+#sidebar a[data-sidebar-feed] .col-badge,
+#sidebar a[data-sidebar-folder] .col-badge{
   padding-left: 0;
   padding-right: 0;
   margin-right: 10px;
@@ -40,7 +42,7 @@
 
 .folder-unread-badge {
   margin-top: 4px;
-  margin-right: 10px;
+  margin-right: 0;
 }
 
 .folder {
@@ -51,6 +53,8 @@ a.sidebar-folder{
   background-color: #F5F5F5;
   padding-top: 5px;
   padding-bottom: 5px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 a.sidebar-folder:hover{
@@ -62,13 +66,14 @@ a.sidebar-folder:hover{
   margin-bottom: -1px;
 }
 
+.sidebar-feed-title,
 .sidebar-folder-title{
   display:inline-block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 55%;
-  margin-top: 2px;
+  width: 100%;
+  padding-left: 2px;
 }
 
 #sidebar hr {
