@@ -5,8 +5,20 @@
      data-folder-id="{{feed.folder_id}}"
      ng-click="set_current_feed(feed)">
 
-    <i class="fa fa-rss pull-left"></i>
-    <span class="sidebar-feed-title">{{feed.title}}</span>
-    <span class="badge pull-right">{{feed.unread_entries | numberBadgeFltr}}</span>
+    <div class="row">
+
+      <div class="col-xs-1 col-icon">
+        <i class="fa fa-rss"></i>
+      </div>
+
+      <div class="col-xs-8 col-feed-title">
+        <span class="sidebar-feed-title">{{feed.title}}</span>
+      </div>
+
+      <div class="col-xs-2 pull-right col-badge">
+        <span class="badge">{{feed.unread_entries | numberBadgeFltr}}</span>
+      </div>
+    </div>
+
   </a>
 </li>
