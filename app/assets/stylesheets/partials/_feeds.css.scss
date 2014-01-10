@@ -18,8 +18,26 @@ a {
   border: none;
 }
 
-[data-sidebar-feed] i {
-  margin-top: 4px;
+#sidebar a[data-sidebar-feed] .col-icon {
+  padding-left: 10px;
+  padding-right: 0;
+}
+
+#sidebar a[data-sidebar-feed] .col-feed-title {
+  padding-left: 10px;
+  padding-right: 5px;
+}
+
+#sidebar a[data-sidebar-feed] .col-badge {
+  padding-left: 0;
+  padding-right: 0;
+  margin-right: 10px;
+  text-align: right;
+}
+
+.nav-pills > .active > a .badge {
+  background-color: #FFFFFF;
+  color: #428BCA;
 }
 
 .sidebar-feed-title{
@@ -27,7 +45,7 @@ a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 55%;
+  width: 100%;
 }
 
 #sidebar [data-folder-id] .panel-body {
@@ -37,10 +55,8 @@ a {
 #sidebar a[data-sidebar-feed] {
   padding-top: 10px;
   padding-bottom: 5px;
-}
-
-#sidebar a[data-sidebar-feed] .badge {
-  margin-top: 2px;
+  padding-left: 0;
+  padding-right:0;
 }
 
 #sidebar #folder-none {

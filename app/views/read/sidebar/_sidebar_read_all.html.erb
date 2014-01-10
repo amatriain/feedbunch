@@ -3,10 +3,25 @@
   <a data-sidebar-feed
      data-feed-id="all"
      ng-click="set_current_folder('all')">
-    <em><strong>
-      <i class="fa fa-rss pull-left"></i>
-      <span class="sidebar-feed-title"><%= t 'feeds.index.all_entries' %></span>
-    </strong></em>
-    <span class="badge pull-right">{{folder_unread_entries('all') | numberBadgeFltr}}</span>
+
+    <div class="row">
+
+      <div class="col-xs-1 col-icon">
+        <em><strong>
+          <i class="fa fa-rss"></i>
+        </strong></em>
+      </div>
+
+      <div class="col-xs-8 col-feed-title">
+        <em><strong>
+          <span class="sidebar-feed-title"><%= t 'feeds.index.all_entries' %></span>
+        </strong></em>
+      </div>
+
+      <div class="col-xs-2 pull-right col-badge">
+        <span class="badge">{{folder_unread_entries('all') | numberBadgeFltr}}</span>
+      </div>
+    </div>
+
   </a>
 </li>
