@@ -15,12 +15,12 @@
         <i class="folder" ng-class="{'fa fa-folder-open-o':current_open_folder.id==folder.id, 'fa fa-folder-o': current_open_folder.id!=folder.id}"></i>
       </div>
 
-      <div class="col-xs-6 col-sm-7 col-folder-title">
+      <div class="col-xs-7 col-md-6 col-folder-title">
         <span class="sidebar-folder-title">{{folder.title}}</span>
       </div>
 
-      <div class="col-xs-3 pull-right col-badge">
-        <i class="folder-arrow pull-right" ng-class="{'fa fa-chevron-down':current_open_folder.id==folder.id, 'fa fa-chevron-right': current_open_folder.id!=folder.id}"></i>
+      <div class="col-xs-3 col-md-4 pull-right col-badge">
+        <i class="hidden-sm folder-arrow pull-right" ng-class="{'fa fa-chevron-down':current_open_folder.id==folder.id, 'fa fa-chevron-right': current_open_folder.id!=folder.id}"></i>
         <span class="folder-unread-badge badge pull-right">{{folder_unread_entries(folder) | numberBadgeFltr}}</span>
       </div>
 
