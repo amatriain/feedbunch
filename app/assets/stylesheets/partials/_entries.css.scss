@@ -11,8 +11,12 @@
   margin-bottom: -1px;
 }
 
-#feed-entries .entry > a {
+#feed-entries .entry a.open-entry-link {
+  padding-top: 5px;
   padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  vertical-align: middle;
 }
 
 .entry a.entry-unread{
@@ -51,20 +55,15 @@
   padding: 20px;
 }
 
-.entry-title  {
+.entry-feed-title,
+.entry-title,
+.entry-published{
   display:inline-block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 55%;
-}
-
-.entry-feed-title  {
-  display:inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 20%;
+  max-width: 100%;
+  vertical-align: middle;
 }
 
 .entry-toolbar {

@@ -8,6 +8,7 @@
      infinite-scroll="read_entries_page()"
      infinite-scroll-disabled="loading_entries_busy"
      infinite-scroll-distance="1">
+
   <div ng-repeat="entry in entries"
        id="entry-{{entry.id}}"
        class="panel panel-default entry">
@@ -15,13 +16,24 @@
     <a id="entry-{{entry.id}}-anchor" class="entry-anchor"></a>
 
     <a data-entry-id="{{entry.id}}"
-       class="list-group-item"
+       class="list-group-item open-entry-link"
        ng-class="{'entry-read':entry.read && !entry.changing_state, 'entry-unread': !entry.read && !entry.changing_state, 'entry-becoming-read':entry.read && entry.changing_state, 'entry-becoming-unread':!entry.read && entry.changing_state}"
        ng-click="toggle_open_entry(entry)">
-      <em><span class="entry-feed-title" ng-bind-html="entry_feed_title(entry)"></span></em>
-      &nbsp;
-      <span class="entry-title" ng-bind-html="entry.title"></span>
-      <span class="pull-right">{{entry.published}}</span>
+
+      <div class="row">
+
+        <div class="col-xs-2">
+          <em><span class="entry-feed-title" ng-bind-html="entry_feed_title(entry)"></span></em>
+        </div>
+
+        <div class="col-xs-7">
+          <span class="entry-title" ng-bind-html="entry.title"></span>
+        </div>
+
+        <div class="col-xs-3">
+          <span class="entry-published pull-right">{{entry.published}}</span>
+        </div>
+      </div>
     </a>
 
     <%# Entry summary, initially collapsed %>
