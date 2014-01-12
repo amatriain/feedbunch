@@ -36,20 +36,20 @@
 }
 
 .folder-arrow {
-  margin-top: 6px;
+  margin-top: 4px;
   width: 13px;
 }
 
 .folder-unread-badge {
-  margin-top: 4px;
+  margin-top: 2px;
   margin-right: 0;
 }
 
-.folder {
-  margin-top: 5px;
+.folder-icon {
+  margin-top: 4px;
 }
 
-a.sidebar-folder{
+.sidebar-folder{
   background-color: #F5F5F5;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -74,6 +74,7 @@ a.sidebar-folder:hover{
   text-overflow: ellipsis;
   width: 100%;
   padding-left: 2px;
+  vertical-align: middle;
 }
 
 #sidebar hr {
