@@ -3,13 +3,25 @@
   <div class="navbar navbar-default navbar-fixed-top">
 
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+
+      <button type="button"
+              class="navbar-toggle"
+              data-toggle="collapse"
+              data-target=".navbar-collapse">
         <i class="fa fa-bars"></i>
       </button>
+
+      <button type="button"
+              class="navbar-toggle pull-left navbar-toggle-left"
+              ng-click="toggle_sidebar_visible()">
+        <i class="fa fa-rss"></i>
+      </button>
+
       <%= link_to read_path, class: 'navbar-brand' do %>
         <%= image_tag asset_path('feed18x18.png'), alt: 'feedbunch' %>
         Feedbunch (BETA)
       <% end %>
+
     </div>
 
     <div class="collapse navbar-collapse navbar-collapse">

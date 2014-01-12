@@ -5,10 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
-'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc',
+'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc',
 ($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
-findSvc, userDataSvc, openEntrySvc, unreadCountSvc)->
+findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc)->
 
   # Show Add Subscription button in this view
   $rootScope.show_feed_buttons = true
@@ -181,6 +181,13 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc)->
   #--------------------------------------------
   $scope.total_unread_entries = ->
     unreadCountSvc.total_unread_entries()
+
+  #--------------------------------------------
+  # Toggle a boolean in the root scope that indicates if the sidebar with feeds/folders is
+  # visible (true) or the entries list is visible (false).
+  #--------------------------------------------
+  $scope.toggle_sidebar_visible = ->
+    sidebarVisibleSvc.toggle()
 
   #--------------------------------------------
   # Function to filter feeds in a given folder
