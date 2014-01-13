@@ -278,6 +278,9 @@ def unsubscribe_feed(feed, user)
   find('#unsubscribe-feed').click
   find('#unsubscribe-submit').click
 
+  # Ensure popup has closed
+  page.should_not have_css '#unsubscribe-feed-popup'
+
   # Ensure user is shown the start page
   page.should have_css '#sidebar li.active a#start-page'
 end
