@@ -72,9 +72,6 @@ describe 'quick reading mode' do
       entry_read = page.has_css? "a[data-entry-id='#{@entries[49].id}'].entry-read"
       entry_becoming_read = page.has_css? "a[data-entry-id='#{@entries[49].id}'].entry-becoming-read"
       (entry_read || entry_becoming_read).should be_true
-      # after refresh first entry should not be visible
-      read_feed @feed, @user
-      page.should_not have_text @entries[9].title
     end
   end
 
