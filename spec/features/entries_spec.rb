@@ -326,17 +326,17 @@ describe 'feed entries' do
 
     before :each do
       @entries = []
-      # Ensure there are exactly 26 unread entries and 4 read entries in @feed1
+      # Ensure there are exactly 51 unread entries and 4 read entries in @feed1
       Entry.all.each {|e| e.destroy}
-      (0..29).each do |i|
-        e = FactoryGirl.build :entry, feed_id: @feed1.id, published: Date.new(2001, 01, 30-i)
+      (0..54).each do |i|
+        e = FactoryGirl.build :entry, feed_id: @feed1.id, published: (Date.new(2001, 01, 30) - i.days)
         @feed1.entries << e
         @entries << e
       end
 
       @user.subscribe @feed1.fetch_url
 
-      (26..29).each do |i|
+      (51..54).each do |i|
         @user.change_entries_state @entries[i], 'read'
       end
 
@@ -352,87 +352,87 @@ describe 'feed entries' do
       read_feed @feed1, @user
     end
 
-    it 'loads the first page of unread feed entries', js: true do
-      (0..24).each do |i|
+    it 'loads the first two pages of unread feed entries', js: true do
+      (0..49).each do |i|
         page.should have_content @entries[i].title
       end
-      (25..29).each do |i|
+      (50..54).each do |i|
         page.should_not have_content @entries[i].title
       end
     end
 
-    it 'loads the second page of unread feed entries when scrolling down', js: true do
+    it 'loads the third page of unread feed entries when scrolling down', js: true do
       page.execute_script 'window.scrollTo(0,100000)'
       sleep 1
-      (0..25).each do |i|
+      (0..50).each do |i|
         page.should have_content @entries[i].title
       end
-      (26..29).each do |i|
+      (51..54).each do |i|
         page.should_not have_content @entries[i].title
       end
     end
 
-    it 'loads the first page of all entries in a feed', js: true do
+    it 'loads the first two pages of all entries in a feed', js: true do
       show_read
-      (0..24).each do |i|
+      (0..49).each do |i|
         page.should have_content @entries[i].title
       end
-      (25..29).each do |i|
+      (50..54).each do |i|
         page.should_not have_content @entries[i].title
       end
     end
 
-    it 'loads the second page of all entries in a feed when scrolling down', js: true do
+    it 'loads the third page of all entries in a feed when scrolling down', js: true do
       show_read
       page.execute_script 'window.scrollTo(0,100000)'
       sleep 1
-      (0..29).each do |i|
+      (0..54).each do |i|
         page.should have_content @entries[i].title
       end
     end
 
-    it 'loads the first page of unread folder entries', js: true do
+    it 'loads the first two pages of unread folder entries', js: true do
       read_folder @folder
-      (0..24).each do |i|
+      (0..49).each do |i|
         page.should have_content @entries[i].title
       end
-      (25..29).each do |i|
+      (54..54).each do |i|
         page.should_not have_content @entries[i].title
       end
       page.should_not have_content @entry2.title
     end
 
-    it 'loads the second page of unread folder entries when scrolling down', js: true do
+    it 'loads the third page of unread folder entries when scrolling down', js: true do
       read_folder @folder
       page.execute_script 'window.scrollTo(0,100000)'
       sleep 1
-      (0..25).each do |i|
+      (0..50).each do |i|
         page.should have_content @entries[i].title
       end
-      (26..29).each do |i|
+      (51..54).each do |i|
         page.should_not have_content @entries[i].title
       end
       page.should have_content @entry2.title
     end
 
-    it 'loads the first page of all entries in a folder', js: true do
+    it 'loads the first two pages of all entries in a folder', js: true do
       read_folder @folder
       show_read
-      (0..24).each do |i|
+      (0..49).each do |i|
         page.should have_content @entries[i].title
       end
-      (25..29).each do |i|
+      (50..54).each do |i|
         page.should_not have_content @entries[i].title
       end
       page.should_not have_content @entry2.title
     end
 
-    it 'loads the second page of all entries in a folder when scrolling down', js: true do
+    it 'loads the third page of all entries in a folder when scrolling down', js: true do
       read_folder @folder
       show_read
       page.execute_script 'window.scrollTo(0,100000)'
       sleep 1
-      (0..29).each do |i|
+      (0..54).each do |i|
         page.should have_content @entries[i].title
       end
       page.should have_content @entry2.title

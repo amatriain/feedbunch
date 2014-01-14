@@ -7,7 +7,8 @@
      ng-hide="error_no_entries"
      infinite-scroll="read_entries_page()"
      infinite-scroll-disabled="loading_entries_busy"
-     infinite-scroll-distance="1">
+     infinite-scroll-distance="1"
+     infinite-scroll-immediate-check="true">
 
   <div ng-repeat="entry in entries"
        id="entry-{{entry.id}}"

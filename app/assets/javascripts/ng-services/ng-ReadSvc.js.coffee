@@ -42,17 +42,24 @@ angular.module('feedbunch').service 'readSvc',
     .success (data)->
       $rootScope.entries_http_canceler = null
       entriesPaginationSvc.set_busy false
+
       if !$rootScope.entries || $rootScope.entries?.length == 0
         $rootScope.entries = data["entries"]
       else
         $rootScope.entries = $rootScope.entries.concat data["entries"]
+
       # Set correct state (open or closed) for new entries, based on user configuration
       openEntrySvc.add_entries data["entries"]
-      # On first page load, update unread entries count in the feed
-      current_feed = currentFeedSvc.get()
-      if current_feed && entriesPaginationSvc.is_first_page()
-        current_feed.unread_entries = data["unread_entries"]
-        favicoSvc.update_unread_badge()
+
+      if entriesPaginationSvc.is_first_page()
+        current_feed = currentFeedSvc.get()
+        # On first page load, update unread entries count in the feed
+        if current_feed
+          current_feed.unread_entries = data["unread_entries"]
+          favicoSvc.update_unread_badge()
+        # After loading the first page of entries, load a second one to ensure the list is fully populated
+        load_entries()
+
     .error (data, status)->
       # if HTTP call has been prematurely cancelled, do nothing
       if status!=0
