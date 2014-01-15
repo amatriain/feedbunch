@@ -14,7 +14,14 @@
       <button type="button"
               class="navbar-toggle pull-left navbar-toggle-left"
               ng-click="toggle_sidebar_visible()">
-        <i class="fa fa-rss"></i>
+        <div ng-show="sidebar_visible">
+          <i class="fa fa-rss fa-lg"></i>
+          <small><i class="fa fa-chevron-right"></i></small>
+        </div>
+        <div ng-hide="sidebar_visible">
+          <small><i class="fa fa-chevron-left"></i></small>
+          <i class="fa fa-folder-open fa-lg"></i>
+        </div>
       </button>
 
       <%= link_to read_path, class: 'navbar-brand' do %>
