@@ -32,6 +32,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc)->
     currentFeedSvc.unset()
     currentFolderSvc.unset()
     entriesPaginationSvc.set_busy false
+    sidebarVisibleSvc.toggle()
 
   #--------------------------------------------
   # Unsubscribe from a feed
