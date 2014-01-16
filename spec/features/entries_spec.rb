@@ -290,9 +290,9 @@ describe 'feed entries' do
 
     context 'link to read feed' do
 
-      it 'displays feed title in entry content', js: true do
+      it 'displays feed title above entry content', js: true do
         read_entry @entry1
-        within "#entry-#{@entry1.id}-summary .entry-content .entry-feed-link" do
+        within "#entry-#{@entry1.id}-summary .entry-content .entry-additional-info" do
           page.should have_text @feed1.title
         end
       end
@@ -306,7 +306,7 @@ describe 'feed entries' do
 
         read_entry @entry1
         entry_should_be_marked_read @entry1
-        find("#entry-#{@entry1.id}-summary .entry-content .entry-feed-link a").click
+        find("#entry-#{@entry1.id}-summary .entry-content .entry-additional-info a").click
 
         # @feed1 should be selected for reading
         feed_should_be_selected @feed1
