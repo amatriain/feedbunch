@@ -320,6 +320,16 @@ describe 'feed entries' do
         entry_should_be_marked_unread @entry1
       end
     end
+
+    context 'publish date' do
+
+      it 'displays publish date above entry content', js: true do
+        read_entry @entry1
+        within "#entry-#{@entry1.id}-summary .entry-content .entry-additional-info" do
+          page.should have_text I18n.l(@entry1.published, format: :short)
+        end
+      end
+    end
   end
 
   context 'infinite scroll' do
