@@ -14,11 +14,11 @@
       <button type="button"
               class="navbar-toggle pull-left navbar-toggle-left"
               ng-click="toggle_sidebar_visible()">
-        <div ng-show="sidebar_visible">
+        <div ng-show="sidebar_visible" ng-cloak>
           <i class="fa fa-rss fa-lg"></i>
           <small><i class="fa fa-chevron-right"></i></small>
         </div>
-        <div ng-hide="sidebar_visible">
+        <div ng-hide="sidebar_visible" ng-cloak>
           <small><i class="fa fa-chevron-left"></i></small>
           <i class="fa fa-folder-open fa-lg"></i>
         </div>
