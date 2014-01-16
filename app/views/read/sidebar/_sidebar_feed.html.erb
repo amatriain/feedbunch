@@ -7,7 +7,7 @@
 
     <div class="row">
 
-      <div class="col-xs-1 col-icon">
+      <div class="col-xs-1 hidden-sm col-icon">
         <i class="feed-icon fa fa-rss"></i>
       </div>
 
@@ -15,7 +15,7 @@
         <span class="sidebar-feed-title" ng-bind-html="feed.title"></span>
       </div>
 
-      <div class="col-xs-2 pull-right col-badge">
+      <div class="col-xs-2 col-sm-3 col-md-2 pull-right col-badge">
         <span class="badge">{{feed.unread_entries | numberBadgeFltr}}</span>
       </div>
     </div>
