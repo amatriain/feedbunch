@@ -69,6 +69,7 @@ es:
       mark_read_tooltip: "Marcar esta entrada como leída"
       title_tooltip: "Abrir página web en una pestaña nueva"
       feed_tooltip: "Leer entradas de este feed"
+      published: "Publicado"
   start:
     welcome: "Bienvenido a Feedbunch"
     stats: "Suscrito a %{feeds} feeds con %{entries} entradas sin leer."

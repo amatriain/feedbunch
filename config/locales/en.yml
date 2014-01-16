@@ -90,6 +90,7 @@ en:
       mark_read_tooltip: "Mark this entry as read"
       title_tooltip: "Open web page in a new tab"
       feed_tooltip: "Read entries from this feed"
+      published: "Published"
   start:
     welcome: "Welcome to Feedbunch"
     stats: "Subscribed to %{feeds} feeds with %{entries} unread entries."

@@ -65,13 +65,14 @@
                ng-bind-html="entry.title">
             </a>
           </div>
-          <div class="entry-feed-link">
+          <div class="entry-additional-info">
             <a href="#"
                ng-click="set_current_entry_feed(entry)"
                class="hint--bottom hint--rounded"
                data-hint="<%= t 'entries.index.feed_tooltip' %>"
                ng-bind-html="entry_feed_title(entry)">
             </a>
+            - <%= t 'entries.index.published' %> {{entry.published}}
           </div>
         </p>
 
