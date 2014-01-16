@@ -8,9 +8,20 @@
 angular.module('feedbunch').service 'sidebarVisibleSvc',
 ['$rootScope', ($rootScope)->
 
+  #--------------------------------------------
+  # Toggle visibility of the sidebar.
+  #--------------------------------------------
   toggle: ->
     if $rootScope.sidebar_visible?
       $rootScope.sidebar_visible = !$rootScope.sidebar_visible
     else
       $rootScope.sidebar_visible = true
+
+  #--------------------------------------------
+  # Set the visibility of the sidebar.
+  # Receives as argument a boolean indicating if the sidebar is to become visible
+  # (if true) or hidden (if false).
+  #--------------------------------------------
+  set: (visible)->
+    $rootScope.sidebar_visible = visible if $.type(visible)=='boolean'
 ]

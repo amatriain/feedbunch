@@ -10,6 +10,13 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc)->
 
+  #--------------------------------------------
+  # APPLICATION INITIALIZATION
+  #--------------------------------------------
+
+  # By default sidebar is visible in smartphones and other small screens
+  sidebarVisibleSvc.set true
+
   # Show Add Subscription button in this view
   $rootScope.show_feed_buttons = true
 
