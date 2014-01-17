@@ -1,23 +1,25 @@
+/* For screens wider than 992px, Bootstrap v3 "md" (medium) breakpoint. */
+/* I.e. for md- and lg- screens, not for xs- and sm- screens */
 @media (max-width: 992px) {
   #entries-column {
     padding-left: 5px;
     padding-right:5px;
   }
-}
 
-.entry-feed-column {
-  padding-left: 0;
-  padding-right: 5px;
-}
+  .entry-feed-column {
+    padding-left: 0;
+    padding-right: 5px;
+  }
 
-.entry-title-column {
-  padding-left: 5px;
-  padding-right: 5px;
-}
+  .entry-title-column {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 
-.entry-published-column {
-  padding-left: 5px;
-  padding-right: 0;
+  .entry-published-column {
+    padding-left: 5px;
+    padding-right: 0;
+  }
 }
 
 #feed-entries {
