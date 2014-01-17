@@ -65,27 +65,25 @@
           </a>
         </div>
 
-        <p>
-          <div class="lead entry-lead hint--top hint--rounded" data-hint="<%= t 'entries.index.title_tooltip' %>">
-            <a href="{{entry.url}}"
-               target="_blank"
-               ng-bind-html="entry.title">
+        <div class="lead entry-lead hint--top hint--rounded" data-hint="<%= t 'entries.index.title_tooltip' %>">
+          <a href="{{entry.url}}"
+             target="_blank"
+             ng-bind-html="entry.title">
+          </a>
+        </div>
+        <div class="entry-additional-info">
+          <p>
+            <a href="#"
+               ng-click="set_current_entry_feed(entry)"
+               class="hint--bottom hint--rounded"
+               data-hint="<%= t 'entries.index.feed_tooltip' %>"
+               ng-bind-html="entry_feed_title(entry)">
             </a>
-          </div>
-          <div class="entry-additional-info">
-            <p>
-              <a href="#"
-                 ng-click="set_current_entry_feed(entry)"
-                 class="hint--bottom hint--rounded"
-                 data-hint="<%= t 'entries.index.feed_tooltip' %>"
-                 ng-bind-html="entry_feed_title(entry)">
-              </a>
-            </p>
-            <p>
-              <%= t 'entries.index.published' %> {{entry.published}}
-            </p>
-          </div>
-        </p>
+          </p>
+          <p>
+            <%= t 'entries.index.published' %> {{entry.published}}
+          </p>
+        </div>
 
         <hr>
 
