@@ -5,23 +5,30 @@
     <div class="navbar-header">
 
       <button type="button"
-              class="navbar-toggle"
+              class="navbar-toggle navbar-toggle-right"
               data-toggle="collapse"
               data-target=".navbar-collapse">
-        <i class="fa fa-bars"></i>
+        <i class="fa fa-bars fa-lg"></i>
       </button>
 
       <button type="button"
+              id="toggle-sidebar-visible"
               class="navbar-toggle pull-left navbar-toggle-left"
-              ng-click="toggle_sidebar_visible()">
-        <div ng-show="sidebar_visible" ng-cloak>
-          <i class="fa fa-rss fa-lg"></i>
-          <small><i class="fa fa-chevron-right"></i></small>
-        </div>
-        <div ng-hide="sidebar_visible" ng-cloak>
-          <small><i class="fa fa-chevron-left"></i></small>
-          <i class="fa fa-folder-open fa-lg"></i>
-        </div>
+              ng-click="toggle_sidebar_visible()"
+              ng-show="sidebar_visible"
+              ng-cloak>
+        <i class="fa fa-rss fa-lg"></i>
+        <small><i class="fa fa-chevron-right"></i></small>
+      </button>
+
+      <button type="button"
+              id="toggle-sidebar-hidden"
+              class="navbar-toggle pull-left navbar-toggle-left"
+              ng-click="toggle_sidebar_visible()"
+              ng-hide="sidebar_visible"
+              ng-cloak>
+        <small><i class="fa fa-chevron-left"></i></small>
+        <i class="fa fa-folder-open fa-lg"></i>
       </button>
 
       <%= link_to read_path, class: 'navbar-brand' do %>
