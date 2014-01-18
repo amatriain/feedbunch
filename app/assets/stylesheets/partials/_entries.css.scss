@@ -22,6 +22,14 @@
   }
 }
 
+/* For screens wider than 992px, Bootstrap v3 "md" (medium) breakpoint. */
+/* I.e. for md- and lg- screens, not for xs- and sm- screens */
+@media (min-width: 992px) {
+  .entry-content{
+    padding: 20px;
+  }
+}
+
 #feed-entries {
   margin-bottom: 1em;
 }
@@ -73,10 +81,6 @@
 
 .entry a.entry-becoming-unread:hover{
   background-color: #E8E8E8;
-}
-
-.entry-content{
-  padding: 20px;
 }
 
 .entry-feed-title,
