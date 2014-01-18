@@ -1,3 +1,5 @@
+@import "responsive";
+
 #sidebar-column {
   overflow-y: auto;
   padding-bottom: 10px;
@@ -7,7 +9,7 @@
   background-color: #FFFFFF;
 }
 
-@media (max-width: 992px) {
+@media (max-width: $screen-md-min) {
   #sidebar-column {
     padding-left: 5px;
     padding-right:5px;
