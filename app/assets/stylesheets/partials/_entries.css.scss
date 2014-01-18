@@ -1,5 +1,5 @@
-/* For screens wider than 992px, Bootstrap v3 "md" (medium) breakpoint. */
-/* I.e. for md- and lg- screens, not for xs- and sm- screens */
+/* For screens smaller than 992px, Bootstrap v3 "md" (medium) breakpoint. */
+/* I.e. for xs- and sm- screens, not for md- and lg- screens */
 @media (max-width: 992px) {
   #entries-column {
     padding-left: 5px;
