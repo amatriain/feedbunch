@@ -42,8 +42,8 @@
           <span ng-show="current_folder && current_folder.id!='all'">{{current_folder.title}}</span>
           <span ng-show="current_folder && current_folder.id=='all'"><%= t 'feeds.index.all_entries' %></span>
         </strong>
-        <hr>
       </div>
+      <hr id="feed-title-hr">
 
       <%= render 'entries' %>
 
