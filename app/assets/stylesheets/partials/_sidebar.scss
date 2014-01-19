@@ -9,91 +9,134 @@
 
 @media (max-width: $screen-md-min) {
   #sidebar-column {
-    padding-left: 5px;
-    padding-right:5px;
+    padding: {
+      left: 5px;
+      right:5px;
+    }
   }
 }
 
-#sidebar #start-page {
-  margin-top: 20px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
+#sidebar {
 
-#folders-list {
-  margin-bottom: 1em;
-}
+  .sidebar-spinner {
+    margin-left: 45%;
+  }
 
-#sidebar a[data-sidebar-feed] .col-icon,
-#sidebar a[data-sidebar-folder] .col-icon{
-  padding-left: 10px;
-  padding-right: 0;
-}
+  #start-page {
+    margin-top: 20px;
+    padding: {
+      top: 5px;
+      bottom: 5px;
+      left: 15px;
+      right: 15px;
+    }
+  }
 
-#sidebar a[data-sidebar-feed] .col-feed-title,
-#sidebar a[data-sidebar-folder] .col-folder-title {
-  padding-left: 10px;
-  padding-right: 5px;
-}
+  hr {
+    margin: {
+      top: 8px;
+      bottom: 8px;
+    }
+  }
 
-#sidebar a[data-sidebar-feed] .col-badge,
-#sidebar a[data-sidebar-folder] .col-badge{
-  padding-left: 0;
-  padding-right: 0;
-  margin-right: 10px;
-  text-align: right;
-}
+  #folders-list {
+    margin-bottom: 1em;
 
-.folder-arrow {
-  margin-top: 4px;
-  width: 13px;
-}
+    #folder-none {
+      padding: {
+        left: 8px;
+        right:8px;
+        bottom:8px;
+      }
+    }
 
-.folder-unread-badge {
-  margin-top: 2px;
-  margin-right: 0;
-}
+    [data-folder-id] .panel-body {
+      padding: 8px;
+    }
 
-.folder-icon,
-.feed-icon {
-  margin-top: 4px;
-}
+    a[data-sidebar-feed] {
+      padding: {
+        top: 5px;
+        bottom: 5px;
+        left: 0;
+        right:0;
+      }
+    }
 
-.sidebar-folder{
-  background-color: #F5F5F5;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 0;
-  padding-right: 0;
-}
+    a[data-sidebar-feed],
+    a[data-sidebar-folder] {
 
-a.sidebar-folder:hover{
-  background-color: #E8E8E8;
-}
+      .col-icon {
+        padding: {
+          left: 10px;
+          right: 0;
+        }
+      }
 
-#folders-list .folder-panel{
-  margin-top: -1px;
-  margin-bottom: -1px;
-}
+      .col-title {
+        padding: {
+          left: 10px;
+          right: 5px;
+        }
+      }
 
-.sidebar-feed-title,
-.sidebar-folder-title{
-  display:inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-  padding-left: 5px;
-  vertical-align: middle;
-}
+      .col-badge {
+        padding: {
+          left: 0;
+          right: 0;
+        }
+        margin-right: 10px;
+        text-align: right;
+      }
+    }
 
-#sidebar hr {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
+    .folder-arrow {
+      margin-top: 4px;
+      width: 13px;
+    }
 
-#sidebar .sidebar-spinner {
-  margin-left: 45%;
+    .folder-unread-badge {
+      margin: {
+        top: 2px;
+        right: 0;
+      }
+    }
+
+    .folder-icon,
+    .feed-icon {
+      margin-top: 4px;
+    }
+
+    .sidebar-folder{
+      background-color: #F5F5F5;
+      padding: {
+        top: 5px;
+        bottom: 5px;
+        left: 0;
+        right: 0;
+      }
+    }
+
+    a.sidebar-folder:hover{
+      background-color: #E8E8E8;
+    }
+
+    .folder-panel{
+      margin: {
+        top: -1px;
+        bottom: -1px;
+      }
+    }
+
+    .sidebar-feed-title,
+    .sidebar-folder-title{
+      display:inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      padding-left: 5px;
+      vertical-align: middle;
+    }
+  }
 }

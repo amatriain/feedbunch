@@ -1,11 +1,3 @@
-// Place all the styles related to the Feeds controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
-a {
-  cursor: hand; cursor: pointer;
-}
-
 #loading,
 #no-entries{
   margin-top: 0.5em;
@@ -15,41 +7,17 @@ a {
   text-align: center;
 }
 
-.accordion-group{
-  border: none;
-}
-
-.nav-pills > .active > a .badge {
-  background-color: #FFFFFF;
-  color: #428BCA;
-}
-
-#sidebar [data-folder-id] .panel-body {
-  padding: 8px;
-}
-
-#sidebar a[data-sidebar-feed] {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 0;
-  padding-right:0;
-}
-
-#sidebar #folder-none {
-  padding-left: 8px;
-  padding-right:8px;
-  padding-bottom:8px;
-}
-
 #feed-title {
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 20px;
-  padding-bottom: 10px;
-}
+  padding: {
+    left: 20px;
+    right: 20px;
+    top: 20px;
+    bottom: 10px;
+  }
 
-#feed-title .lead {
-  margin: 0;
+  .lead {
+    margin: 0;
+  }
 }
 
 #feed-title-hr {

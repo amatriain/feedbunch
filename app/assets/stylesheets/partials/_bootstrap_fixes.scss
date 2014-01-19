@@ -2,8 +2,10 @@
 that fix them are released, the fixes here will be removed */
 
 .row {
-  margin-left: 0px;
-  margin-right: 0px;
+  margin: {
+    left: 0;
+    right: 0;
+  }
 }
 
 .navbar-nav.navbar-right:last-child {
@@ -15,14 +17,18 @@ that fix them are released, the fixes here will be removed */
 }
 
 select option {
-  padding-top: 0.7em;
-  padding-bottom: 0.7em;
-  padding-left: 0.7em;
+  padding: {
+    top: 0.7em;
+    bottom: 0.7em;
+    left: 0.7em;
+  }
 }
 
 .checkbox input.form-control {
   width: 15px;
   height: 15px;
-  margin-top: 2px;
-  margin-right: 3px;
+  margin: {
+    top: 2px;
+    right: 3px;
+  }
 }

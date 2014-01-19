@@ -2,25 +2,33 @@ body.navbar-visible{
   padding-top: 50px;
 }
 
-.navbar-header img {
-  margin-top: -5px;
-}
+.navbar {
+  .navbar-header img {
+    margin-top: -5px;
+  }
 
-.navbar button {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
+  .navbar button {
+    margin: {
+      top: 5px;
+      bottom: 5px;
+    }
+  }
 
-.navbar button#toggle-sidebar-hidden {
-  padding-left: 7px;
-  padding-right: 8px;
-}
+  button#toggle-sidebar-hidden {
+    padding: {
+      left: 7px;
+      right: 8px;
+    }
+  }
 
-.navbar .navbar-toggle-left {
-  margin-left: 15px;
-}
+  .navbar-toggle-left {
+    margin-left: 15px;
+  }
 
-.navbar .navbar-toggle-right {
-  padding-left: 14px;
-  padding-right: 14px;
+  .navbar-toggle-right {
+    padding: {
+      left: 14px;
+      right: 14px;
+    }
+  }
 }
