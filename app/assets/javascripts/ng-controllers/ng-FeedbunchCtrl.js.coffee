@@ -43,6 +43,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     currentFolderSvc.unset()
     entriesPaginationSvc.set_busy false
     sidebarVisibleSvc.toggle()
+    menuCollapseSvc.close()
 
   #--------------------------------------------
   # Unsubscribe from a feed
