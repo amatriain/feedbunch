@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'currentFeedSvc',
-['$rootScope', 'entriesPaginationSvc', 'cleanupSvc', 'findSvc', 'sidebarVisibleSvc',
-($rootScope, entriesPaginationSvc, cleanupSvc, findSvc, sidebarVisibleSvc)->
+['$rootScope', 'entriesPaginationSvc', 'cleanupSvc', 'findSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
+($rootScope, entriesPaginationSvc, cleanupSvc, findSvc, sidebarVisibleSvc, menuCollapseSvc)->
 
   set: (feed)->
     entriesPaginationSvc.reset_entries()
@@ -12,6 +12,7 @@ angular.module('feedbunch').service 'currentFeedSvc',
     $rootScope.current_feed = feed
     cleanupSvc.hide_read_feeds()
     sidebarVisibleSvc.toggle()
+    menuCollapseSvc.close()
 
   unset: ->
     entriesPaginationSvc.reset_entries()
