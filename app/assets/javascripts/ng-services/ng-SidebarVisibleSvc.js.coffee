@@ -6,7 +6,7 @@
 ########################################################
 
 angular.module('feedbunch').service 'sidebarVisibleSvc',
-['$rootScope', ($rootScope)->
+['$rootScope', 'menuCollapseSvc', ($rootScope, menuCollapseSvc)->
 
   #--------------------------------------------
   # Toggle visibility of the sidebar.
@@ -16,6 +16,7 @@ angular.module('feedbunch').service 'sidebarVisibleSvc',
       $rootScope.sidebar_visible = !$rootScope.sidebar_visible
     else
       $rootScope.sidebar_visible = true
+    menuCollapseSvc.close()
 
   #--------------------------------------------
   # Set the visibility of the sidebar.

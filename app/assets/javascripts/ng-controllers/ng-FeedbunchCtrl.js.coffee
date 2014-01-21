@@ -5,10 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
-'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc',
+'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 ($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
-findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc)->
+findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -31,6 +31,9 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc)->
 
   # If there is a rails alert, show it and close it after 5 seconds
   timerFlagSvc.start 'error_rails'
+
+  # Initialize collapsing menu in smartphones
+  menuCollapseSvc.start()
 
   #--------------------------------------------
   # Show the start page
