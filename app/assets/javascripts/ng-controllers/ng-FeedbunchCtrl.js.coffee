@@ -116,7 +116,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     menuCollapseSvc.close()
     $timeout ->
       sidebarVisibleSvc.toggle()
-    , 200
+    , 300
 
   #--------------------------------------------
   # Set the currently selected folder
@@ -127,7 +127,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     menuCollapseSvc.close()
     $timeout ->
       sidebarVisibleSvc.toggle()
-    , 200
+    , 300
 
   #--------------------------------------------
   # Load a page of entries for the currently selected feed or folder
