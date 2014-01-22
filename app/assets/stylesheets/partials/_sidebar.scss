@@ -9,9 +9,20 @@
 
 /* Large, easily clickable feeds and folders in smartphones */
 @media (max-width: $screen-sm-min) {
-  #sidebar #folders-list {
-    a[data-sidebar-feed],
-    a[data-sidebar-folder] {
+
+  #sidebar {
+
+    #folders-list {
+      a[data-sidebar-feed],
+      a[data-sidebar-folder] {
+        padding: {
+          top: 16px;
+          bottom: 16px;
+        }
+      }
+    }
+
+    #start-page {
       padding: {
         top: 16px;
         bottom: 16px;
@@ -22,8 +33,19 @@
 
 /* Smaller feed in larger screens */
 @media (min-width: $screen-sm-min) {
-  #sidebar #folders-list {
-    a[data-sidebar-feed] {
+
+  #sidebar {
+
+    #folders-list {
+      a[data-sidebar-feed] {
+        padding: {
+          top: 5px;
+          bottom: 5px;
+        }
+      }
+    }
+
+    #start-page {
       padding: {
         top: 5px;
         bottom: 5px;
@@ -50,8 +72,6 @@
   #start-page {
     margin-top: 20px;
     padding: {
-      top: 5px;
-      bottom: 5px;
       left: 15px;
       right: 15px;
     }

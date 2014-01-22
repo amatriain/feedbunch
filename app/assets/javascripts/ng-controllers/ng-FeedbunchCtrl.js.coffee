@@ -42,8 +42,10 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     currentFeedSvc.unset()
     currentFolderSvc.unset()
     entriesPaginationSvc.set_busy false
-    sidebarVisibleSvc.toggle()
     menuCollapseSvc.close()
+    $timeout ->
+      sidebarVisibleSvc.toggle()
+    , 300
 
   #--------------------------------------------
   # Unsubscribe from a feed
