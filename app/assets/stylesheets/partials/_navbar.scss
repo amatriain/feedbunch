@@ -7,7 +7,7 @@ body.navbar-visible{
     margin-top: -5px;
   }
 
-  .navbar button {
+  button {
     margin: {
       top: 5px;
       bottom: 5px;
@@ -29,6 +29,14 @@ body.navbar-visible{
     padding: {
       left: 14px;
       right: 14px;
+    }
+  }
+
+  @media (max-width: $screen-sm-min) {
+    .navbar-collapse {
+      background-color: #ffffff;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+      background-image: linear-gradient(to bottom, #FFFFFF 0px, #F8F8F8 100%);
     }
   }
 }
