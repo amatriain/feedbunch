@@ -3,10 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
-['$rootScope', '$scope', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
+['$rootScope', '$scope', '$timeout', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
-($rootScope, $scope, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
+($rootScope, $scope, $timeout, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc)->
 
@@ -113,8 +113,10 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.set_current_feed = (feed)->
     currentFeedSvc.set feed
     readSvc.read_entries_page()
-    sidebarVisibleSvc.toggle()
     menuCollapseSvc.close()
+    $timeout ->
+      sidebarVisibleSvc.toggle()
+    , 200
 
   #--------------------------------------------
   # Set the currently selected folder
@@ -122,8 +124,10 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.set_current_folder = (folder)->
     currentFolderSvc.set folder
     readSvc.read_entries_page()
-    sidebarVisibleSvc.toggle()
     menuCollapseSvc.close()
+    $timeout ->
+      sidebarVisibleSvc.toggle()
+    , 200
 
   #--------------------------------------------
   # Load a page of entries for the currently selected feed or folder
