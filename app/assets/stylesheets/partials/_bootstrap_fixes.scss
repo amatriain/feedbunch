@@ -8,8 +8,10 @@ that fix them are released, the fixes here will be removed */
   }
 }
 
-.navbar-nav.navbar-right:last-child {
-  margin-right: 0;
+@media(min-width: $screen-sm-min) {
+  .navbar-nav.navbar-right:last-child {
+    margin-right: 0;
+  }
 }
 
 .well hr {
