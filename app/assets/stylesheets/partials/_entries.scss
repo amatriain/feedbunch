@@ -10,13 +10,13 @@
     .entry-feed-column {
       padding: {
         left: 0;
-        right: 5px;
+        right: 10px;
       }
     }
 
     .entry-title-column {
       padding: {
-        left: 5px;
+        left: 0;
         right: 5px;
       }
     }
@@ -111,6 +111,7 @@
 
     .entry-published {
       text-align: right;
+      padding-right: 2px;
     }
 
     .entry-toolbar {

@@ -7,6 +7,31 @@
   background-color: #FFFFFF;
 }
 
+/* Large, easily clickable feeds and folders in smartphones */
+@media (max-width: $screen-sm-min) {
+  #sidebar #folders-list {
+    a[data-sidebar-feed],
+    a[data-sidebar-folder] {
+      padding: {
+        top: 16px;
+        bottom: 16px;
+      }
+    }
+  }
+}
+
+/* Smaller feed in larger screens */
+@media (min-width: $screen-sm-min) {
+  #sidebar #folders-list {
+    a[data-sidebar-feed] {
+      padding: {
+        top: 5px;
+        bottom: 5px;
+      }
+    }
+  }
+}
+
 @media (max-width: $screen-md-min) {
   #sidebar-column {
     padding: {
@@ -56,8 +81,6 @@
 
     a[data-sidebar-feed] {
       padding: {
-        top: 5px;
-        bottom: 5px;
         left: 0;
         right:0;
       }
