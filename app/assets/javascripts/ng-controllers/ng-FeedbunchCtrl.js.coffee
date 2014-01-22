@@ -113,6 +113,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.set_current_feed = (feed)->
     currentFeedSvc.set feed
     readSvc.read_entries_page()
+    sidebarVisibleSvc.toggle()
     menuCollapseSvc.close()
 
   #--------------------------------------------
@@ -121,6 +122,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.set_current_folder = (folder)->
     currentFolderSvc.set folder
     readSvc.read_entries_page()
+    sidebarVisibleSvc.toggle()
     menuCollapseSvc.close()
 
   #--------------------------------------------
