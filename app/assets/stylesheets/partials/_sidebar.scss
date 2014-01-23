@@ -8,7 +8,7 @@
 }
 
 /* Large, easily clickable feeds and folders in smartphones */
-@media (max-width: $screen-sm-min) {
+@media (max-width: $screen-md-min) {
 
   #sidebar {
 
@@ -32,7 +32,7 @@
 }
 
 /* Smaller feed in larger screens */
-@media (min-width: $screen-sm-min) {
+@media (min-width: $screen-md-min) {
 
   #sidebar {
 
