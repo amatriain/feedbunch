@@ -1,6 +1,6 @@
 <div class="page-header edit-registration-header">
   <div class="row">
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-xs-12 col-md-10 col-md-offset-1">
       <h1>
         <%= t 'devise.views.edit_account' %>
       </h1>
@@ -9,14 +9,14 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-11 col-md-offset-1 pull-left">
+  <div class="col-xs-12 col-md-11 col-md-offset-1">
     <i class="fa fa-angle-double-left"></i>
     <%= link_to t('devise.views.return'), read_path, id: 'return' %>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-md-10 col-md-offset-1 well">
+  <div class="col-xs-12 col-md-10 col-md-offset-1 well">
     <%= simple_form_for resource, :as => resource_name,
                         :url => profile_path(locale: I18n.locale),
                         html: {:method => :put, autocomplete: 'off'} do |f| %>
@@ -53,10 +53,12 @@
                   input_html: {autocomplete: 'off'}, required: true %>
 
       <div class="form-group">
-        <div class="col-lg-offset-3 col-lg-7">
-          <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
-            <i class="fa fa-save"></i> <%= t 'devise.views.update_account' %>
-          <% end %>
+        <div class="row">
+          <div class="col-xs-12 col-lg-9 col-lg-offset-3">
+            <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
+              <i class="fa fa-save"></i> <%= t 'devise.views.update_account' %>
+            <% end %>
+          </div>
         </div>
       </div>
 
@@ -66,19 +68,21 @@
 </div>
 
 <div class="row">
-  <div class="col-md-10 col-md-offset-1">
+  <div class="col-xs-12 col-md-10 col-md-offset-1">
     <div class="panel panel-danger">
       <div class="panel-heading">
         <span class="lead"><%= t 'devise.views.cancel_account' %></span>
       </div>
-      <div class="panel-body col-lg-offset-1">
-        <p><%= t 'devise.views.cancel_account_text' %></p>
-        <%= link_to profile_cancel_path(locale: I18n.locale),
-                      :data => { :confirm => t('devise.views.cancel_account_confirm') }, :method => :delete,
-                      class: 'btn btn-danger' do %>
-          <i class="fa fa-trash-o"></i>
-          <%= t('devise.views.cancel_account') %>
-        <% end %>
+      <div class="row">
+        <div class="panel-body col-xs-12 col-lg-10 col-lg-offset-1">
+          <p><%= t 'devise.views.cancel_account_text' %></p>
+          <%= link_to profile_cancel_path(locale: I18n.locale),
+                        :data => { :confirm => t('devise.views.cancel_account_confirm') }, :method => :delete,
+                        class: 'btn btn-danger' do %>
+            <i class="fa fa-trash-o"></i>
+            <%= t('devise.views.cancel_account') %>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
