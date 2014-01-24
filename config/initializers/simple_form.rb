@@ -9,7 +9,7 @@ SimpleForm.setup do |config|
     b.use :html5
     b.use :placeholder
     b.use :label
-    b.wrapper tag: 'div', class: 'col-lg-7' do |input|
+    b.wrapper tag: 'div', class: 'col-xs-12 col-sm-7' do |input|
       input.wrapper tag: 'div', class: 'input-group' do |prepend|
         prepend.use :input
       end
@@ -20,7 +20,7 @@ SimpleForm.setup do |config|
 
   config.wrappers :checkbox, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
     b.use :html5
-    b.wrapper tag: 'div', class: 'col-lg-7 col-lg-offset-3' do |input|
+    b.wrapper tag: 'div', class: 'col-xs-12 col-sm-7 col-sm-offset-3' do |input|
       input.use :input
       input.use :error, wrap_with: { tag: 'strong', class: 'help-block' }
       input.use :hint,  wrap_with: { tag: 'em', class: 'help-block' }
@@ -77,7 +77,7 @@ SimpleForm.setup do |config|
   # config.label_text = lambda { |label, required| "#{required} #{label}" }
 
   # You can define the class to use on all labels. Default is nil.
-  config.label_class = 'col-lg-3 control-label'
+  config.label_class = 'col-xs-12 col-sm-3 control-label'
 
   # You can define the class to use on all forms. Default is simple_form.
   config.form_class = 'form-horizontal'
