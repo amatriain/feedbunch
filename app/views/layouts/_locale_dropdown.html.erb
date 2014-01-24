@@ -1,6 +1,6 @@
 <% if !user_signed_in? %>
 
-<div class="dropdown">
+<div class="dropdown locale-dropdown">
   <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
     <% if I18n.locale == :en %>
       <%= image_tag asset_path('flags/us.png'), class: 'locale-flag' %>
