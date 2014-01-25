@@ -2,13 +2,13 @@ es:
   devise:
     views:
       sign_in: "Acceder"
-      sign_in_link: "¿Quieres acceder con tu cuenta?"
-      sign_up_link: "¿Aún no tienes una cuenta?"
+      sign_in_link: "Acceder"
+      sign_up_link: "Crear nueva cuenta"
       sign_up: "Crear cuenta"
       forgot_password_link: "¿Olvidaste tu contraseña?"
       forgot_password: "Cambiar contraseña"
-      new_confirmation: "¿No recibiste un email de confirmación?"
-      unlock: "¿Necesitas desbloquear tu cuenta?"
+      new_confirmation: "Volver a enviar email de confirmación"
+      unlock: "Desbloquear cuenta"
       sign_in_with: "Acceder con %{provider}"
       remember_me: "Recuérdame"
       resend_confirmation: "Confirmar dirección de email"

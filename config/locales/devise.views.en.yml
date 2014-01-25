@@ -2,13 +2,13 @@ en:
   devise:
     views:
       sign_in: "Sign in"
-      sign_in_link: "Do you want to sign in with your account?"
-      sign_up_link: "You don't have an account yet?"
+      sign_in_link: "Sign in"
+      sign_up_link: "Create new account"
       sign_up: "Sign up"
       forgot_password_link: "Forgot your password?"
       forgot_password: "Reset password"
-      new_confirmation: "You didn't receive a confirmation email?"
-      unlock: "You need to unlock your account?"
+      new_confirmation: "Resend confirmation email"
+      unlock: "Unlock account"
       sign_in_with: "Sign in with %{provider}"
       remember_me: "Remember me"
       resend_confirmation: "Confirm email address"
