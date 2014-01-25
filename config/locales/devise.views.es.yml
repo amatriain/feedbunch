@@ -2,7 +2,7 @@ es:
   devise:
     views:
       sign_in: "Acceder"
-      sign_in_link: "Acceder"
+      sign_in_link: "Entrar"
       sign_up_link: "Crear nueva cuenta"
       sign_up: "Crear cuenta"
       forgot_password_link: "¿Olvidaste tu contraseña?"
