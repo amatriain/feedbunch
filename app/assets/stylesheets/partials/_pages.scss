@@ -1,3 +1,32 @@
 .index-jumbotron {
   margin-top: 1em;
 }
+
+@media (max-width: $screen-sm-min) {
+  #landing-page {
+    #registration-links {
+      text-align: center;
+
+      #sign_up_button {
+        display: block;
+      }
+
+      #sign_in {
+        display: block;
+      }
+    }
+  }
+}
+
+#landing-page {
+  .page-header {
+    img {
+      margin-right: 10px;
+      max-width: 20%;
+    }
+
+    #registration-links {
+      padding-top: 20px;
+    }
+  }
+}

@@ -1,28 +1,27 @@
-<div class="container">
+<div id="landing-page" class="container">
 
   <%= render 'layouts/locale_dropdown' %>
 
   <div class="jumbotron index-jumbotron">
-    <div class="row">
-      <div class="col-md-10">
-        <div class="page-header">
-          <h1>
-            <%=
-                link_to root_url(locale: I18n.locale) do
-                  image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
-                end
-            %>
-            &nbsp;Feedbunch
-          </h1>
-        </div>
-      </div>
+    <div class="page-header">
+      <h1>
+        <%=
+            link_to root_url(locale: I18n.locale) do
+              image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
+            end
+        %>
+        Feedbunch
+      </h1>
     </div>
 
     <div class="row">
-      <div class="col-md-9 col-md-offset-1">
+      <div class="col-xs-12 col-md-11 col-md-offset-1">
         <p class="lead"><%= t '.tagline' %></p>
-        <p>
-          <%= link_to t('.sign_up'), new_user_registration_path(locale: I18n.locale), class: 'btn btn-primary btn-lg', id: 'sign_up' %>
+        <p id="registration-links">
+          <span id="sign_up_button">
+            <%= link_to t('.sign_up'), new_user_registration_path(locale: I18n.locale),
+                        class: 'btn btn-primary btn-lg', id: 'sign_up' %>
+          </span>
           <%= t '.or' %> <%= link_to t('.sign_in'), read_path, id: 'sign_in' %>
         </p>
       </div>
