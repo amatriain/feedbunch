@@ -3,33 +3,37 @@
 <% end %>
 
 <div class="row">
-  <div class="col-md-10 col-md-offset-1 well">
-    <div class="col-md-8">
-      <%= simple_form_for resource, :as => resource_name,
-                          :url => password_edit_path,
-                          html: {:method => :put, autocomplete: 'off'} do |f| %>
-        <%= f.hidden_field :reset_password_token %>
+  <div class="col-xs-12 col-md-10 col-md-offset-1 well">
 
-        <%= f.input :password, as: :password_icon, autofocus: true,
-                    label: t('devise.views.new_password'),
-                    placeholder: t('simple_form.placeholders.user.new_password'),
-                    input_html: {autocomplete: 'off'} %>
-        <%= f.input :password_confirmation, as: :password_icon,
-                    placeholder: t('simple_form.placeholders.user.password_confirmation'),
-                    input_html: {autocomplete: 'off'} %>
+    <div class="row">
 
-        <div class="form-group">
-          <div class="col-lg-offset-3 col-lg-7">
-            <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
-              <i class="fa fa-key"></i> <%= t 'devise.views.change_password' %>
-            <% end %>
+      <div class="col-xs-12 col-md-8">
+        <%= simple_form_for resource, :as => resource_name,
+                            :url => password_edit_path,
+                            html: {:method => :put, autocomplete: 'off'} do |f| %>
+          <%= f.hidden_field :reset_password_token %>
+
+          <%= f.input :password, as: :password_icon, autofocus: true,
+                      label: t('devise.views.new_password'),
+                      placeholder: t('simple_form.placeholders.user.new_password'),
+                      input_html: {autocomplete: 'off'} %>
+          <%= f.input :password_confirmation, as: :password_icon,
+                      placeholder: t('simple_form.placeholders.user.password_confirmation'),
+                      input_html: {autocomplete: 'off'} %>
+
+          <div class="form-group">
+            <div class="col-xs-12 col-sm-9 col-sm-offset-3">
+              <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
+                <i class="fa fa-key"></i> <%= t 'devise.views.change_password' %>
+              <% end %>
+            </div>
           </div>
-        </div>
-      <% end %>
-    </div>
+        <% end %>
+      </div>
 
-    <div class="col-md-4">
-      <%= render "devise/shared/links" %>
+      <div class="col-xs-12 col-md-4 col-sm-offset-3 col-md-offset-0">
+        <%= render "devise/shared/links" %>
+      </div>
     </div>
   </div>
 </div>
