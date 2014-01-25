@@ -20,36 +20,27 @@
   </div>
 </div>
 
-<div class="page-header container">
-  <div class="row">
-
-    <div class="col-md-10">
-
-      <h1>
-
-        <%=
-            link_to root_url(locale: I18n.locale) do
-              image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
-            end
-        %>
-
-        <%= yield :heading %>
-      </h1>
-
-    </div>
-
-    <div class="col-md-2">
-
-      <%= render 'layouts/locale_dropdown' %>
-
-    </div>
-
+<div id="devise-view">
+  <div id="devise-locale-dropdown">
+    <%= render 'layouts/locale_dropdown' %>
   </div>
+
+  <div class="page-header container">
+    <h1>
+
+      <%=
+          link_to root_url(locale: I18n.locale) do
+            image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
+          end
+      %>
+
+      <span class="branding">Feedbunch - </span><%= yield :heading %>
+    </h1>
+  </div>
+
+  <%= yield %>
+
 </div>
-
-<br>
-
-<%= yield %>
 
 <%= render 'layouts/footer' %>
 <%= render 'layouts/footer_js' %>
