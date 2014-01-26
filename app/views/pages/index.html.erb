@@ -19,10 +19,14 @@
         <p class="lead"><%= t '.tagline' %></p>
         <p id="registration-links">
           <span id="sign_up_button">
-            <%= link_to t('.sign_up'), new_user_registration_path(locale: I18n.locale),
-                        class: 'btn btn-primary btn-lg', id: 'sign_up' %>
+            <%= link_to new_user_registration_path(locale: I18n.locale),
+                        class: 'btn btn-primary btn-lg', id: 'sign_up' do %>
+              <%= t('.sign_up') %> <i class="fa fa-plus-circle"></i>
+            <% end %>
           </span>
-          <%= t '.or' %> <%= link_to t('.sign_in'), read_path, id: 'sign_in' %>
+          <%= t '.or' %> <%= link_to read_path, id: 'sign_in' do %>
+            <%= t('.sign_in') %> <i class="fa fa-sign-in"></i>
+          <% end %>
         </p>
       </div>
     </div>
