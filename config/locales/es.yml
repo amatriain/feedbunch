@@ -5,9 +5,9 @@ es:
   pages:
     index:
       tagline: "Un lector de feeds de código abierto"
-      sign_up: "Date de alta"
+      sign_up: "Crea una cuenta"
       or: "o"
-      sign_in: "Accede con tu cuenta"
+      sign_in: "Entra en tu cuenta"
   layouts:
     noscript: "Tu navegador no soporta JavaScript. Feedbunch necesita JavaScript para funcionar correctamente."
     application:

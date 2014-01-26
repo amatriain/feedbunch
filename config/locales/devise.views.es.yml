@@ -1,7 +1,7 @@
 es:
   devise:
     views:
-      sign_in: "Acceder"
+      sign_in: "Entrar"
       sign_in_link: "Entrar"
       sign_up_link: "Crear nueva cuenta"
       sign_up: "Crear cuenta"
