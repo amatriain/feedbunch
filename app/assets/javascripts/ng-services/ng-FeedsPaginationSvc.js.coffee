@@ -24,6 +24,18 @@ angular.module('feedbunch').service 'feedsPaginationSvc',
   service =
 
     #---------------------------------------------
+    # Get the AJAX call state: if busy, return true; otherwise return false
+    #---------------------------------------------
+    is_busy: ->
+      return $rootScope.loading_feeds_busy
+
+    #---------------------------------------------
+    # Set the AJAX call state: true if busy, false otherwise
+    #---------------------------------------------
+    set_busy: (busy) ->
+      $rootScope.loading_feeds_busy = busy
+
+    #---------------------------------------------
     # Load a page of feeds retrieved from the server into the root scope.
     # Receives as arguments the page number and the array of feeds.
     #---------------------------------------------
@@ -47,8 +59,7 @@ angular.module('feedbunch').service 'feedsPaginationSvc',
             feed_new.refreshed = true
 
     #---------------------------------------------
-    # Load a page of feeds retrieved from the server into the root scope.
-    # Receives as arguments the page number and the array of feeds.
+    # Set to zero the unread count of feeds not received from the server.
     #---------------------------------------------
     pagination_finished: ->
       # Set to zero the unread count of feeds that have not been refreshed during the refresh cycle

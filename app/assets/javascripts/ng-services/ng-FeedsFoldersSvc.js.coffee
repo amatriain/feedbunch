@@ -13,14 +13,22 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   # we want to load all feeds (true) or only feeds with unread entries (false).
   #--------------------------------------------
   load_feeds = (page=0)->
+    # If busy, do nothing
+    return if feedsPaginationSvc.is_busy()
+
+    # Indicate that AJAX request/response cycle is busy so no more calls are done until finished
+    feedsPaginationSvc.set_busy true
+
     page += 1
     now = new Date()
     $http.get("/feeds.json?include_read=#{$rootScope.show_read}&page=#{page}&time=#{now.getTime()}")
     .success (data)->
       feedsPaginationSvc.load_feeds_page page, data
+      feedsPaginationSvc.set_busy false
       # Load the next page of feeds, until a 404 (no more feeds) is received
       load_feeds page
     .error (data, status)->
+      feedsPaginationSvc.set_busy false
       if status == 404
         # there are no more feeds to retrieve
         $rootScope.feeds_loaded = true
@@ -76,6 +84,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       $rootScope.show_read = true
       entriesPaginationSvc.reset_entries()
       $rootScope.feeds_loaded = false
+      feedsPaginationSvc.set_busy false
       load_feeds()
 
     #---------------------------------------------
@@ -87,6 +96,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       entriesPaginationSvc.reset_entries()
       $rootScope.feeds_loaded = false
       cleanupSvc.hide_read_feeds()
+      feedsPaginationSvc.set_busy false
       load_feeds()
 
     #---------------------------------------------
@@ -97,6 +107,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       $rootScope.feeds_loaded = false
       $rootScope.folders_loaded = false
       $rootScope.show_read = false
+      feedsPaginationSvc.set_busy false
       load_data()
       refresh_feeds()
 

@@ -16,7 +16,7 @@ angular.module('feedbunch').service 'entriesPaginationSvc',
     $rootScope.error_no_entries = false
     $rootScope.loading_entries_busy = false
 
-    #---------------------------------------------
+  #---------------------------------------------
   # Get the AJAX call state: if busy, return true; otherwise return false
   #---------------------------------------------
   is_busy: ->
