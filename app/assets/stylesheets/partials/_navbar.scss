@@ -80,6 +80,37 @@ body.navbar-visible{
     }
   }
 
+  /* Truncate very long folder names in the dropdown */
+
+  #folder-management-dropdown {
+
+    @media (max-width: $screen-sm-min) {
+      #folder-dropdown-content {
+        max-width: 100%;
+      }
+    }
+
+    @media (min-width: $screen-sm-min) {
+      #folder-dropdown-content {
+        max-width: 180px;
+      }
+    }
+
+    #folder-dropdown-content {
+
+      .dropdown-folder-title {
+        max-width: 100%;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  /* Better colors etc for the app menu in smartphone screens */
+
   @media (max-width: $screen-sm-min) {
     .navbar-collapse {
       background-color: #ffffff;

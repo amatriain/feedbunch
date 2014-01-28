@@ -120,13 +120,13 @@
             <b class="caret"></b>
           </a>
 
-          <ul class="dropdown-menu text-left">
+          <ul id="folder-dropdown-content" class="dropdown-menu text-left">
 
             <li ng-repeat="folder in folders | orderBy:'title'">
               <a data-folder-id="{{folder.id}}"
                  ng-click="move_to_folder(folder)">
                 <i class="fa fa-check" ng-show="get_current_feed().folder_id==folder.id"></i>&nbsp;
-                {{folder.title}}
+                <span class="dropdown-folder-title">{{folder.title}}</span>
               </a>
             </li>
 
