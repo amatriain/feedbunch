@@ -13,17 +13,17 @@ class EntriesPagination
   # (if true) or just unread entries (if false). By default this argument is false.
   # - page (optional): results page to return.
   #
-  # Entries are ordered by published (first) and created_at (second). If the page argument is nil, all entries
-  # are returned. If it has a value, entries are paginated and the requested page is returned. Results
-  # pagination is achieved with the Kaminari gem, which uses a default page size of 25 results.
+  # Entries are ordered by published (first), created_at (second) and id (third). If the page argument
+  # is nil, all entries are returned. If it has a value, entries are paginated and the requested page is
+  # returned. Results pagination is achieved with the Kaminari gem, which uses a default page size of 25 results.
   #
   # If successful, returns an ActiveRecord::Relation with the entries.
 
   def self.feed_entries(feed, user, include_read: false, page: nil)
     if include_read && !page.present?
-      entries =  feed.entries.order 'published desc, created_at desc'
+      entries =  feed.entries.order 'published desc, created_at desc, id desc'
     elsif include_read && page.present?
-      entries =  feed.entries.order('published desc, created_at desc').page page
+      entries =  feed.entries.order('published desc, created_at desc, id desc').page page
     else
       entries = unread_feed_entries feed, user, page: page
     end
@@ -43,26 +43,26 @@ class EntriesPagination
   # (if true) or just unread entries (if false). By default this argument is false.
   # - page (optional): results page to return.
   #
-  # Entries are ordered by published (first) and created_at (second). If the page argument is nil, all entries
-  # are returned. If it has a value, entries are paginated and the requested page is returned. Results
-  # pagination is achieved with the Kaminari gem, which uses a default page size of 25 results.
+  # Entries are ordered by published (first), created_at (second) and id (third). If the page argument
+  # is nil, all entries are returned. If it has a value, entries are paginated and the requested page is
+  # returned. Results pagination is achieved with the Kaminari gem, which uses a default page size of 25 results.
   #
   # If successful, returns an ActiveRecord::Relation with the entries.
 
   def self.folder_entries(folder, user, include_read: false, page: nil)
     if folder == Folder::ALL_FOLDERS
       if include_read && !page.present?
-        entries = user.entries.order 'published desc, created_at desc'
+        entries = user.entries.order 'published desc, created_at desc, id desc'
       elsif include_read && page.present?
-        entries = user.entries.order('published desc, created_at desc').page page
+        entries = user.entries.order('published desc, created_at desc, id desc').page page
       else
         entries = all_unread_entries user, page: page
       end
     else
       if include_read && !page.present?
-        entries = folder.entries.order 'published desc, created_at desc'
+        entries = folder.entries.order 'published desc, created_at desc, id desc'
       elsif include_read && page.present?
-        entries = folder.entries.order('published desc, created_at desc').page page
+        entries = folder.entries.order('published desc, created_at desc, id desc').page page
       else
         entries = unread_folder_entries folder, user, page: page
       end
@@ -88,11 +88,14 @@ class EntriesPagination
   def self.unread_feed_entries(feed, user, page: nil)
     Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from feed #{feed.id} - #{feed.fetch_url}"
     if page.present?
-      entries = Entry.joins(:entry_states, :feed).where(entry_states: {read: false, user_id: user.id},
-                                                        feeds: {id: feed.id}).order('published desc, created_at desc').page page
+      entries = Entry.joins(:entry_states, :feed)
+                      .where(entry_states: {read: false, user_id: user.id}, feeds: {id: feed.id})
+                      .order('published desc, created_at desc, id desc')
+                      .page page
     else
-      entries = Entry.joins(:entry_states, :feed).where(entry_states: {read: false, user_id: user.id},
-                                                        feeds: {id: feed.id}).order 'published desc, created_at desc'
+      entries = Entry.joins(:entry_states, :feed)
+                      .where(entry_states: {read: false, user_id: user.id}, feeds: {id: feed.id})
+                      .order 'published desc, created_at desc, id desc'
     end
     return entries
   end
@@ -110,11 +113,14 @@ class EntriesPagination
   def self.unread_folder_entries(folder, user, page: nil)
     Rails.logger.info "User #{user.id} - #{user.email} is retrieving unread entries from folder #{folder.id} - #{folder.title}"
     if page.present?
-      entries = Entry.joins(:entry_states, feed: :folders).where(entry_states: {read: false, user_id: user.id},
-                                                                 folders: {id: folder.id}).order('published desc, created_at desc').page page
+      entries = Entry.joins(:entry_states, feed: :folders)
+                      .where(entry_states: {read: false, user_id: user.id}, folders: {id: folder.id})
+                      .order('published desc, created_at desc, id desc')
+                      .page page
     else
-      entries = Entry.joins(:entry_states, feed: :folders).where(entry_states: {read: false, user_id: user.id},
-                                                                 folders: {id: folder.id}).order('published desc, created_at desc')
+      entries = Entry.joins(:entry_states, feed: :folders)
+                      .where(entry_states: {read: false, user_id: user.id}, folders: {id: folder.id})
+                      .order 'published desc, created_at desc, id desc'
     end
     return entries
   end
@@ -131,9 +137,14 @@ class EntriesPagination
   def self.all_unread_entries(user, page: nil)
     Rails.logger.info "User #{user.id} - #{user.email} is retrieving entries from all subscribed feeds"
     if page.present?
-      entries = Entry.joins(:entry_states).where(entry_states: {read: false, user_id: user.id}).order('published desc, created_at desc').page page
+      entries = Entry.joins(:entry_states)
+                    .where(entry_states: {read: false, user_id: user.id})
+                    .order('published desc, created_at desc, id desc')
+                    .page page
     else
-      entries = Entry.joins(:entry_states).where(entry_states: {read: false, user_id: user.id}).order('published desc, created_at desc')
+      entries = Entry.joins(:entry_states)
+                    .where(entry_states: {read: false, user_id: user.id})
+                    .order 'published desc, created_at desc, id desc'
     end
     return entries
   end
