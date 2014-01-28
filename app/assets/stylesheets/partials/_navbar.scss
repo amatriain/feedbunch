@@ -39,6 +39,7 @@ body.navbar-visible{
       max-width: 100%;
 
       #user-name {
+        display: inline-block;
         max-width: 90%;
       }
     }
@@ -48,12 +49,8 @@ body.navbar-visible{
     #user-dropdown {
       max-width: 130px;
 
-      .dropdown-toggle {
-        padding-left: 5px;
-      }
-
       #user-name {
-        max-width: 80px;
+        display: none;
       }
     }
   }
@@ -63,6 +60,7 @@ body.navbar-visible{
       max-width: 300px;
 
       #user-name {
+        display: inline-block;
         max-width: 200px;
       }
     }
@@ -71,10 +69,14 @@ body.navbar-visible{
   #user-dropdown {
 
     #user-name {
-      display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
       vertical-align: middle;
+      white-space: nowrap;
+      padding: {
+        left: 5px;
+        right: 5px;
+      }
     }
   }
 
