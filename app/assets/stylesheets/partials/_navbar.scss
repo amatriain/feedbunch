@@ -32,11 +32,45 @@ body.navbar-visible{
     }
   }
 
+  /* Limit user name width in the navbar at different resolutions */
+
+  @media (max-width: $screen-sm-min) {
+    #user-dropdown {
+      max-width: 100%;
+
+      #user-name {
+        max-width: 90%;
+      }
+    }
+  }
+
+  @media (min-width: $screen-sm-min) and (max-width: $screen-md-min) {
+    #user-dropdown {
+      max-width: 130px;
+
+      .dropdown-toggle {
+        padding-left: 5px;
+      }
+
+      #user-name {
+        max-width: 80px;
+      }
+    }
+  }
+
+  @media (min-width: $screen-md-min) {
+    #user-dropdown {
+      max-width: 300px;
+
+      #user-name {
+        max-width: 200px;
+      }
+    }
+  }
+
   #user-dropdown {
-    max-width: 200px;
 
     #user-name {
-      max-width: 130px;
       display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
