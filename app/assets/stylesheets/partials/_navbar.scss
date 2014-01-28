@@ -32,6 +32,18 @@ body.navbar-visible{
     }
   }
 
+  #user-dropdown {
+    max-width: 200px;
+
+    #user-name {
+      max-width: 130px;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+    }
+  }
+
   @media (max-width: $screen-sm-min) {
     .navbar-collapse {
       background-color: #ffffff;
