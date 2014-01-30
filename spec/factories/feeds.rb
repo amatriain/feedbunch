@@ -9,5 +9,9 @@ FactoryGirl.define do
     title {generate :feed_title_sequence}
     url {generate :feed_url_sequence}
     fetch_url {generate :feed_fetch_url_sequence}
+    last_fetched nil
+    fetch_interval_secs 3600
+    etag nil
+    last_modified nil
   end
 end

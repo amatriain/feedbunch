@@ -21,6 +21,8 @@ require 'schedule_manager'
 # Attributes of the model:
 # - title
 # - fetch_url (URL to fetch the feed XML)
+# - last_fetched (timestamp of the last time the feed was fetched, nil if it's never been fetched)
+# - fetch_interval_secs (current interval between fetches, in seconds)
 # - url (URL to which the user will be linked; usually the website that originated this feed)
 # - etag (etag http header received last time the feed was fetched, used for caching)
 # - last_modified (last-modified http header received last time the feed was fetched, user for caching)
@@ -159,9 +161,18 @@ class Feed < ActiveRecord::Base
   # - sanitize values, removing script tags from entry bodies etc.
 
   def fix_attributes
+    default_values
     fix_encoding
     sanitize_attributes
     fix_urls
+  end
+
+  ##
+  # Give default values to attributes:
+  # - fetch_interval_secs defaults to 3600 seconds (1 hour)
+
+  def default_values
+    self.fetch_interval_secs = 3600 if self.fetch_interval_secs.blank?
   end
 
   ##

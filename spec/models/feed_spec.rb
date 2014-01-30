@@ -64,6 +64,21 @@ describe Feed do
 
   end
 
+  context 'default values' do
+
+    it 'takes a default fetch interval value of 3600 seconds' do
+      feed = FactoryGirl.build :feed, fetch_interval_secs: nil
+      feed.save!
+      feed.fetch_interval_secs.should eq 3600
+    end
+
+    it 'does not change the fetch interval if a value is passed' do
+      feed = FactoryGirl.build :feed, fetch_interval_secs: 1800
+      feed.save!
+      feed.fetch_interval_secs.should eq 1800
+    end
+  end
+
   context 'sanitization' do
 
     it 'sanitizes title' do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140108210438) do
+ActiveRecord::Schema.define(version: 20140130092028) do
 
   create_table "data_imports", force: true do |t|
     t.integer  "user_id",                     null: false
@@ -52,13 +52,15 @@ ActiveRecord::Schema.define(version: 20140108210438) do
   end
 
   create_table "feeds", force: true do |t|
-    t.text     "title",         null: false
+    t.text     "title",               null: false
     t.text     "url"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.text     "fetch_url",     null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.text     "fetch_url",           null: false
     t.text     "etag"
     t.text     "last_modified"
+    t.datetime "last_fetched"
+    t.integer  "fetch_interval_secs"
   end
 
   create_table "feeds_folders", force: true do |t|
