@@ -47,4 +47,17 @@ describe UpdateFeedJob do
     UpdateFeedJob.perform @feed.id
   end
 
+  context 'adaptative schedule' do
+
+    it 'updates the last_fetched timestamp of the feed when successful' do
+      date = DateTime.new 2000, 1, 1
+      DateTime.stub(:now).and_return date
+
+      @feed.last_fetched.should be_nil
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.last_fetched.should eq date
+    end
+
+  end
+
 end

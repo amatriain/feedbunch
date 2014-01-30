@@ -29,6 +29,9 @@ class UpdateFeedJob
     end
     feed = Feed.find feed_id
 
+    # Update timestamp of the last time the feed was fetched
+    feed.update last_fetched: DateTime.now
+
     # Fetch feed
     FeedClient.fetch feed, false if Feed.exists? feed_id
 
@@ -36,5 +39,6 @@ class UpdateFeedJob
     feed.users.each do |user|
       SubscriptionsManager.recalculate_unread_count feed, user
     end
+
   end
 end
