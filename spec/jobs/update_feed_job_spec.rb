@@ -58,6 +58,18 @@ describe UpdateFeedJob do
       @feed.reload.last_fetched.should eq date
     end
 
+    it 'decrements a 10% the fetch interval if new entries are fetched' do
+      pending
+      FeedClient.stub(:fetch) do
+        entry = FactoryGirl.build :entry, feed_id: @feed.id
+        @feed.entries << entry
+      end
+
+      @feed.reload.fetch_interval_secs.should eq 3600
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.fetch_interval_secs.should eq 3240
+    end
+
   end
 
 end

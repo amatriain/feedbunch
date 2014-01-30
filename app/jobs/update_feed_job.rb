@@ -32,8 +32,14 @@ class UpdateFeedJob
     # Update timestamp of the last time the feed was fetched
     feed.update last_fetched: DateTime.now
 
+    entries_before = feed.entries.count
+
     # Fetch feed
     FeedClient.fetch feed, false if Feed.exists? feed_id
+
+    entries_after = feed.entries.count
+
+    # If
 
     # Update unread entries count for all subscribed users.
     feed.users.each do |user|
