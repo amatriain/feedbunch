@@ -73,4 +73,25 @@ class ScheduleManager
     Rails.logger.info "Unscheduling updates of feed #{feed_id}"
     Resque.remove_schedule "update_feed_#{feed_id}"
   end
+
+  ##
+  # Decrement the interval between updates of the passed feed.
+  # The current interval is increased by 10% up to the maximum set in
+  # the application configuration.
+
+  def self.decrement_update_interval(feed)
+    new_interval = (feed.fetch_interval_secs * 0.9).round
+    min = Feedbunch::Application.config.min_update_interval
+    new_interval = min if new_interval < min
+
+    # Decrement the update interval saved in the database
+    feed.update fetch_interval_secs: new_interval
+
+    # Actually decrement the update interval in Resque
+    # TODO
+  end
+
+  def self.increment_update_interval(feed)
+    Feedbunch::Application.config.max_update_interval
+  end
 end

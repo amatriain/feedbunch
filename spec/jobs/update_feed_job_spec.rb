@@ -65,6 +65,13 @@ describe UpdateFeedJob do
         @feed.entries << entry
       end
 
+      Resque.should_receive :set_schedule do |name, config|
+        name.should eq "update_feed_#{@feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:args].should eq @feed.id
+        config[:every].should eq '3240s'
+      end
+
       @feed.reload.fetch_interval_secs.should eq 3600
       UpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3240

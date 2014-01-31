@@ -39,7 +39,14 @@ class UpdateFeedJob
 
     entries_after = feed.entries.count
 
-    # If
+    if entries_after > entries_before
+      # If new entries have been fetched, decrement the fetch interval
+      ScheduleManager.decrement_update_interval feed
+    else
+      # If no new entries have been fetched, increment the fetch interval
+      ScheduleManager.increment_update_interval feed
+    end
+
 
     # Update unread entries count for all subscribed users.
     feed.users.each do |user|
