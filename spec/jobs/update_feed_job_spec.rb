@@ -78,6 +78,27 @@ describe UpdateFeedJob do
       @feed.reload.fetch_interval_secs.should eq 3240
     end
 
+    it 'increments a 10% the fetch interval if no new entries are fetched' do
+      FeedClient.stub(:fetch)
+
+      Resque.should_receive :set_schedule do |name, config|
+        name.should eq "update_feed_#{@feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:persist].should be_true
+        config[:args].should eq @feed.id
+        config[:every][0].should eq '3960s'
+        config[:every][1].should eq ({first_in: '3960s'})
+      end
+
+      @feed.reload.fetch_interval_secs.should eq 3600
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.fetch_interval_secs.should eq 3960
+    end
+
+    it 'does not set a fetch interval greater than the configured maximum'
+
+    it 'does not set a fetch interval smaller than the configured minimum'
+
   end
 
 end
