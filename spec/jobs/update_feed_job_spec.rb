@@ -59,7 +59,6 @@ describe UpdateFeedJob do
     end
 
     it 'decrements a 10% the fetch interval if new entries are fetched' do
-      pending
       FeedClient.stub(:fetch) do
         entry = FactoryGirl.build :entry, feed_id: @feed.id
         @feed.entries << entry
@@ -68,8 +67,10 @@ describe UpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'UpdateFeedJob'
+        config[:persist].should be_true
         config[:args].should eq @feed.id
-        config[:every].should eq '3240s'
+        config[:every][0].should eq '3240s'
+        config[:every][1].should eq ({first_in: '3240s'})
       end
 
       @feed.reload.fetch_interval_secs.should eq 3600

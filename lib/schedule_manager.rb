@@ -54,12 +54,7 @@ class ScheduleManager
   def self.schedule_feed_updates(feed_id)
     delay = Random.rand 61
     Rails.logger.info "Scheduling updates of feed #{feed_id} every hour, starting #{delay} minutes from now at #{Time.now + delay.minutes}"
-    name = "update_feed_#{feed_id}"
-    config = {}
-    config[:class] = 'UpdateFeedJob'
-    config[:args] = feed_id
-    config[:every] = ['1h', {first_in: delay.minutes}]
-    Resque.set_schedule name, config
+    set_or_update_schedule feed_id, 1.hour, delay.minutes
   end
 
   ##
@@ -76,7 +71,7 @@ class ScheduleManager
 
   ##
   # Decrement the interval between updates of the passed feed.
-  # The current interval is increased by 10% up to the maximum set in
+  # The current interval is decremented by 10% up to the minimum set in
   # the application configuration.
 
   def self.decrement_update_interval(feed)
@@ -88,10 +83,43 @@ class ScheduleManager
     feed.update fetch_interval_secs: new_interval
 
     # Actually decrement the update interval in Resque
-    # TODO
+    set_or_update_schedule feed.id, feed.fetch_interval_secs, feed.fetch_interval_secs
   end
+
+  ##
+  # Increment the interval between updates of the passed feed.
+  # The current interval is incremented by 10% up to the maximum set in
+  # the application configuration.
 
   def self.increment_update_interval(feed)
     Feedbunch::Application.config.max_update_interval
+  end
+
+  private
+
+  ##
+  # Set scheduled updates for a feed or, if the schedule already exists, update its
+  # configuration.
+  # Receives as arguments:
+  # - ID of the feed for which updates are scheduled
+  # - every_seconds: interval, in seconds, between updates
+  # - first_in_seconds (optional): how many seconds from now will the first update run.
+
+  def self.set_or_update_schedule(feed_id, every_seconds, first_in_seconds = nil)
+    name = "update_feed_#{feed_id}"
+    config = {}
+    config[:persist] = true
+    config[:class] = 'UpdateFeedJob'
+    config[:args] = feed_id
+
+    interval = "#{every_seconds}s"
+    if first_in_seconds.present?
+      every = [interval, {first_in: "#{first_in_seconds}s"}]
+    else
+      every = interval
+    end
+    config[:every] = every
+
+    Resque.set_schedule name, config
   end
 end
