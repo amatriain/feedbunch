@@ -70,7 +70,7 @@ describe UpdateFeedJob do
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3240s'
-        config[:every][1].should eq ({first_in: '3240s'})
+        config[:every][1].should eq ({first_in: 3240})
       end
 
       @feed.reload.fetch_interval_secs.should eq 3600
@@ -87,7 +87,7 @@ describe UpdateFeedJob do
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
-        config[:every][1].should eq ({first_in: '3960s'})
+        config[:every][1].should eq ({first_in: 3960})
       end
 
       @feed.reload.fetch_interval_secs.should eq 3600
@@ -95,9 +95,42 @@ describe UpdateFeedJob do
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
-    it 'does not set a fetch interval greater than the configured maximum'
+    it 'does not set a fetch interval smaller than the configured minimum' do
+      FeedClient.stub(:fetch) do
+        entry = FactoryGirl.build :entry, feed_id: @feed.id
+        @feed.entries << entry
+      end
 
-    it 'does not set a fetch interval smaller than the configured minimum'
+      Resque.should_receive :set_schedule do |name, config|
+        name.should eq "update_feed_#{@feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:persist].should be_true
+        config[:args].should eq @feed.id
+        config[:every][0].should eq '900s'
+        config[:every][1].should eq ({first_in: 900.seconds})
+      end
+
+      @feed.update fetch_interval_secs: 15.minutes
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.fetch_interval_secs.should eq 15.minutes
+    end
+
+    it 'does not set a fetch interval greater than the configured maximum' do
+      FeedClient.stub(:fetch)
+
+      Resque.should_receive :set_schedule do |name, config|
+        name.should eq "update_feed_#{@feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:persist].should be_true
+        config[:args].should eq @feed.id
+        config[:every][0].should eq '86400s'
+        config[:every][1].should eq ({first_in: 24.hours})
+      end
+
+      @feed.update fetch_interval_secs: 24.hours
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.fetch_interval_secs.should eq 24.hours
+    end
 
   end
 
