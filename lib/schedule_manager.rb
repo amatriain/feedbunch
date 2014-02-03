@@ -31,8 +31,7 @@ class ScheduleManager
     if feeds_unscheduled.length > 0
       Rails.logger.warn "A total of #{feeds_unscheduled.length} feeds are missing their update schedules. Adding missing schedules."
       feeds_unscheduled.each do |feed|
-        Rails.logger.warn "Adding missing update schedule for feed #{feed.id} - #{feed.title}"
-        set_or_update_schedule feed.id, feed.fetch_interval_secs, feed.fetch_interval_secs
+        add_missing_schedule feed
       end
     end
   end
@@ -129,5 +128,24 @@ class ScheduleManager
     config[:every] = every
 
     Resque.set_schedule name, config
+  end
+
+  ##
+  # Add a missing update schedule for a feed. Receives the feed as argument.
+  # The next update will be scheduled to run as fetch_interval_secs seconds after last_fetched, as if the schedule
+  # had not disappeared, unless that time has already passed, in which case it will be scheduled immediately.
+
+  def self.add_missing_schedule(feed)
+    Rails.logger.warn "Adding missing update schedule for feed #{feed.id} - #{feed.title}"
+
+    last_update = feed.last_fetched || DateTime.now
+
+    # Calculate how much time is left until the moment when the next update should have been scheduled
+    first_in = (last_update + feed.fetch_interval_secs.seconds - DateTime.now).seconds.round
+
+    # If the moment the next update should have been scheduled is in the past, schedule an update immediately (well, almost)
+    first_in = 1.second if first_in < 0
+
+    set_or_update_schedule feed.id, feed.fetch_interval_secs, first_in
   end
 end
