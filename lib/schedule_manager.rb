@@ -21,11 +21,15 @@ class ScheduleManager
       # get update schedule for the feed
       schedule = Resque.get_schedule "update_feed_#{feed.id}"
       Rails.logger.debug "Update schedule for feed #{feed.id}  #{feed.title}: #{schedule}"
-      # if a feed has no update schedule, add it to the array
+
+      # if a feed has no update schedule, add it to the array of feeds to be fixed
       if schedule == nil
         Rails.logger.warn "Missing schedule for feed #{feed.id} - #{feed.title}"
         feeds_unscheduled << feed
       end
+
+      # Set a default value of 1 hour to the fetch interval if none is set
+      feed.update fetch_interval_secs: 1.hour if feed.fetch_interval_secs.blank?
     end
 
     if feeds_unscheduled.length > 0
@@ -138,13 +142,17 @@ class ScheduleManager
   def self.add_missing_schedule(feed)
     Rails.logger.warn "Adding missing update schedule for feed #{feed.id} - #{feed.title}"
 
-    last_update = feed.last_fetched || DateTime.now
+    if feed.last_fetched.blank?
+      # If feed has never been fetched, schedule its first update sometime in the next hour
+      delay = Random.rand 61
+      first_in = delay.minutes
+    else
+      # Calculate how much time is left until the moment when the next update should have been scheduled
+      first_in = (feed.last_fetched + feed.fetch_interval_secs.seconds - DateTime.now).seconds.round
 
-    # Calculate how much time is left until the moment when the next update should have been scheduled
-    first_in = (last_update + feed.fetch_interval_secs.seconds - DateTime.now).seconds.round
-
-    # If the moment the next update should have been scheduled is in the past, schedule an update immediately (well, almost)
-    first_in = 1.second if first_in < 0
+      # If the moment the next update should have been scheduled is in the past, schedule an update immediately (well, almost)
+      first_in = 1.second if first_in < 0
+    end
 
     set_or_update_schedule feed.id, feed.fetch_interval_secs, first_in
   end

@@ -70,6 +70,39 @@ describe FixSchedulesJob do
     FixSchedulesJob.perform
   end
 
+  it 'schedules next update in the following hour if feed has never been updated' do
+    Resque.stub :get_schedule
+
+    # A job to schedule updates for @feed should be scheduled sometime during the next hour
+    Resque.should_receive(:set_schedule).once do |name, config|
+      name.should eq "update_feed_#{@feed.id}"
+      config[:class].should eq 'UpdateFeedJob'
+      config[:args].should eq @feed.id
+      config[:every][0].should eq "#{1.hour}s"
+      config[:every][1][:first_in].should be_between 1.minute, 60.minutes
+    end
+
+    @feed.last_fetched.should be_nil
+    FixSchedulesJob.perform
+  end
+
+  it 'sets a default update interval of 1 hour if none is set' do
+    @feed.update_column :fetch_interval_secs, nil
+    Resque.stub :get_schedule
+
+    # A job to schedule updates for @feed should be scheduled sometime during the next hour
+    Resque.should_receive(:set_schedule).once do |name, config|
+      name.should eq "update_feed_#{@feed.id}"
+      config[:class].should eq 'UpdateFeedJob'
+      config[:args].should eq @feed.id
+      config[:every][0].should eq "#{1.hour}s"
+    end
+
+    @feed.fetch_interval_secs.should be_nil
+    FixSchedulesJob.perform
+    @feed.reload.fetch_interval_secs.should eq 1.hour
+  end
+
   it 'does nothing for existing feed updates' do
     feed_scheduled = FactoryGirl.create :feed
     # @feed and feed_scheduled have scheduled updates
