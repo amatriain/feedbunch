@@ -122,7 +122,7 @@ class ScheduleManager
 
     interval = "#{every_seconds}s"
     if first_in_seconds.present?
-      every = [interval, {first_in: "#{first_in_seconds}s"}]
+      every = [interval, {first_in: first_in_seconds}]
     else
       every = interval
     end
