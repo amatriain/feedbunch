@@ -32,7 +32,7 @@ class ScheduleManager
       Rails.logger.warn "A total of #{feeds_unscheduled.length} feeds are missing their update schedules. Adding missing schedules."
       feeds_unscheduled.each do |feed|
         Rails.logger.warn "Adding missing update schedule for feed #{feed.id} - #{feed.title}"
-        schedule_feed_updates feed.id
+        set_or_update_schedule feed.id, feed.fetch_interval_secs, feed.fetch_interval_secs
       end
     end
   end
