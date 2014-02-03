@@ -22,7 +22,7 @@ describe FixSchedulesJob do
       name.should eq "update_feed_#{feed_unscheduled.id}"
       config[:class].should eq 'UpdateFeedJob'
       config[:args].should eq feed_unscheduled.id
-      config[:every][0].should eq '1h'
+      config[:every][0].should eq '3600s'
       config[:every][1][:first_in].should be_between 0.minutes, 60.minutes
     end
 
