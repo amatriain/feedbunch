@@ -29,29 +29,36 @@ class UpdateFeedJob
     end
     feed = Feed.find feed_id
 
-    # Update timestamp of the last time the feed was fetched
-    feed.update last_fetched: DateTime.now
-
+    # Initialize the number of entries in the feed before and after fetching, so the variables can be
+    # used in the ensure clause even if an error is raised while fetching (e.g. the server responds
+    # with a HTTP error code)
     entries_before = feed.entries.count
+    entries_after = 0
 
     # Fetch feed
     FeedClient.fetch feed, false if Feed.exists? feed_id
 
     entries_after = feed.entries.count
 
-    if entries_after > entries_before
-      # If new entries have been fetched, decrement the fetch interval
-      ScheduleManager.decrement_update_interval feed
-    else
-      # If no new entries have been fetched, increment the fetch interval
-      ScheduleManager.increment_update_interval feed
+  rescue RestClient::Exception => e
+      Rails.logger.error "Error fetching feed #{feed.id} - #{feed.fetch_url} - #{e.response}"
+  ensure
+    if feed.present?
+      # Update timestamp of the last time the feed was fetched
+      feed.update last_fetched: DateTime.now
+
+      if entries_after > entries_before
+        # If new entries have been fetched, decrement the fetch interval
+        ScheduleManager.decrement_update_interval feed
+      else
+        # If no new entries have been fetched, increment the fetch interval
+        ScheduleManager.increment_update_interval feed
+      end
+
+      # Update unread entries count for all subscribed users.
+      feed.users.each do |user|
+        SubscriptionsManager.recalculate_unread_count feed, user
+      end
     end
-
-
-    # Update unread entries count for all subscribed users.
-    feed.users.each do |user|
-      SubscriptionsManager.recalculate_unread_count feed, user
-    end
-
   end
 end
