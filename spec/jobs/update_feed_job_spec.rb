@@ -136,8 +136,110 @@ describe UpdateFeedJob do
 
   context 'error handling' do
 
-    it 'increments the fetch interval if an error is raised while fetching the feed' do
+    it 'increments the fetch interval if the feed server returns an HTTP error status' do
       FeedClient.stub(:fetch).and_raise RestClient::Exception.new
+
+      Resque.should_receive :set_schedule do |name, config|
+        name.should eq "update_feed_#{@feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:persist].should be_true
+        config[:args].should eq @feed.id
+        config[:every][0].should eq '3960s'
+        config[:every][1].should eq ({first_in: 3960})
+      end
+
+      @feed.fetch_interval_secs.should eq 3600
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.fetch_interval_secs.should eq 3960
+    end
+
+    it 'increments the fetch interval if the feed server FQDN cannot be resolved' do
+      FeedClient.stub(:fetch).and_raise SocketError.new('getaddrinfo: Name or service not known')
+
+      Resque.should_receive :set_schedule do |name, config|
+        name.should eq "update_feed_#{@feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:persist].should be_true
+        config[:args].should eq @feed.id
+        config[:every][0].should eq '3960s'
+        config[:every][1].should eq ({first_in: 3960})
+      end
+
+      @feed.fetch_interval_secs.should eq 3600
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.fetch_interval_secs.should eq 3960
+    end
+
+    it 'increments the fetch interval if the feed server connection times out' do
+      FeedClient.stub(:fetch).and_raise Errno::ETIMEDOUT.new('Connection timed out')
+
+      Resque.should_receive :set_schedule do |name, config|
+        name.should eq "update_feed_#{@feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:persist].should be_true
+        config[:args].should eq @feed.id
+        config[:every][0].should eq '3960s'
+        config[:every][1].should eq ({first_in: 3960})
+      end
+
+      @feed.fetch_interval_secs.should eq 3600
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.fetch_interval_secs.should eq 3960
+    end
+
+    it 'increments the fetch interval if the feed server response is empty' do
+      FeedClient.stub(:fetch).and_raise EmptyResponseError.new
+
+      Resque.should_receive :set_schedule do |name, config|
+        name.should eq "update_feed_#{@feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:persist].should be_true
+        config[:args].should eq @feed.id
+        config[:every][0].should eq '3960s'
+        config[:every][1].should eq ({first_in: 3960})
+      end
+
+      @feed.fetch_interval_secs.should eq 3600
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.fetch_interval_secs.should eq 3960
+    end
+
+    it 'increments the fetch interval if there is a problem trying to do a feed autodiscovery' do
+      FeedClient.stub(:fetch).and_raise FeedAutodiscoveryError.new
+
+      Resque.should_receive :set_schedule do |name, config|
+        name.should eq "update_feed_#{@feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:persist].should be_true
+        config[:args].should eq @feed.id
+        config[:every][0].should eq '3960s'
+        config[:every][1].should eq ({first_in: 3960})
+      end
+
+      @feed.fetch_interval_secs.should eq 3600
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.fetch_interval_secs.should eq 3960
+    end
+
+    it 'increments the fetch interval if there is a problem trying to fetch a valid feed xml' do
+      FeedClient.stub(:fetch).and_raise FeedFetchError.new
+
+      Resque.should_receive :set_schedule do |name, config|
+        name.should eq "update_feed_#{@feed.id}"
+        config[:class].should eq 'UpdateFeedJob'
+        config[:persist].should be_true
+        config[:args].should eq @feed.id
+        config[:every][0].should eq '3960s'
+        config[:every][1].should eq ({first_in: 3960})
+      end
+
+      @feed.fetch_interval_secs.should eq 3600
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.fetch_interval_secs.should eq 3960
+    end
+
+    it 'increments the fetch interval if there is a problem trying to parse the xml response' do
+      FeedClient.stub(:fetch).and_raise FeedParseError.new
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"

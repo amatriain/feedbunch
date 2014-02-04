@@ -40,8 +40,11 @@ class UpdateFeedJob
 
     entries_after = feed.entries.count
 
-  rescue RestClient::Exception => e
-      Rails.logger.error "Error fetching feed #{feed.id} - #{feed.fetch_url} - #{e.response}"
+  rescue RestClient::Exception, SocketError, Errno::ETIMEDOUT, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError, FeedParseError => e
+    # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
+    Rails.logger.error "Error fetching feed #{feed.id} - #{feed.fetch_url}"
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
   ensure
     if feed.present?
       # Update timestamp of the last time the feed was fetched
