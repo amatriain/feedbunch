@@ -23,6 +23,7 @@ require 'schedule_manager'
 # - fetch_url (URL to fetch the feed XML)
 # - last_fetched (timestamp of the last time the feed was fetched, nil if it's never been fetched)
 # - fetch_interval_secs (current interval between fetches, in seconds)
+# - failing_since (if not null, feed updates have been failing since the datetime  value of this field)
 # - url (URL to which the user will be linked; usually the website that originated this feed)
 # - etag (etag http header received last time the feed was fetched, used for caching)
 # - last_modified (last-modified http header received last time the feed was fetched, user for caching)
