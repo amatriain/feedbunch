@@ -40,8 +40,15 @@ class UpdateFeedJob
 
     entries_after = feed.entries.count
 
+    # If the update didn't fail, mark the feed as "not currently failing"
+    feed.update failing_since: nil if !feed.failing_since.nil?
+
   rescue RestClient::Exception, SocketError, Errno::ETIMEDOUT, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError, FeedParseError => e
     # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
+    if feed.present?
+      # If this is the first update that fails, save the date&time the feed started failing
+      feed.update failing_since: DateTime.now if feed.failing_since.nil?
+    end
     Rails.logger.error "Error fetching feed #{feed.id} - #{feed.fetch_url}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace

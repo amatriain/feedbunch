@@ -256,4 +256,39 @@ describe UpdateFeedJob do
     end
   end
 
+  context 'failing feed' do
+
+    it 'sets failing_since to the current date&time the first time an update fails' do
+      FeedClient.stub(:fetch).and_raise RestClient::Exception.new
+      date = DateTime.new 2000, 1, 1
+      DateTime.stub(:now).and_return date
+
+      @feed.failing_since.should be_nil
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.failing_since.should eq date
+    end
+
+    it 'sets failing_since to nil when an update runs successfully' do
+      FeedClient.stub(:fetch)
+      date = DateTime.new 2000, 1, 1
+      @feed.update failing_since: date
+
+      @feed.failing_since.should eq date
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.failing_since.should be_nil
+    end
+
+    it 'does not change failing_since the second and sucesive times an update fails successively' do
+      FeedClient.stub(:fetch).and_raise RestClient::Exception.new
+      date1 = DateTime.new 2000, 1, 1
+      DateTime.stub(:now).and_return date1
+      date2 = DateTime.new 1990, 1, 1
+      @feed.update failing_since: date2
+
+      @feed.failing_since.should eq date2
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.failing_since.should eq date2
+    end
+  end
+
 end
