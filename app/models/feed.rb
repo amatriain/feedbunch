@@ -43,6 +43,7 @@ class Feed < ActiveRecord::Base
   validates :fetch_url, format: {with: URI::regexp(%w{http https})}, presence: true, uniqueness: {case_sensitive: false}
   validates :url, format: {with: URI::regexp(%w{http https})}, allow_blank: true
   validates :title, presence: true
+  validates :fetch_interval_secs, presence: true
   validates :available, inclusion: {in: [true, false]}
 
   before_validation :fix_attributes

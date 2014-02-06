@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140206093130) do
+ActiveRecord::Schema.define(version: 20140206114732) do
 
   create_table "data_imports", force: true do |t|
     t.integer  "user_id",                     null: false
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 20140206093130) do
     t.text     "etag"
     t.text     "last_modified"
     t.datetime "last_fetched"
-    t.integer  "fetch_interval_secs"
+    t.integer  "fetch_interval_secs", default: 3600, null: false
     t.datetime "failing_since"
     t.boolean  "available",           default: true, null: false
   end
