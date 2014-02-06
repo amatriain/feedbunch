@@ -120,5 +120,12 @@ describe FixSchedulesJob do
     FixSchedulesJob.perform
   end
 
-  it 'does not add a schedule for an unavailable feed'
+  it 'does not add a schedule for an unavailable feed' do
+    @feed.update available: false
+    Resque.stub :get_schedule
+
+    Resque.should_not_receive :set_schedule
+
+    FixSchedulesJob.perform
+  end
 end
