@@ -27,9 +27,6 @@ class ScheduleManager
         Rails.logger.warn "Missing schedule for feed #{feed.id} - #{feed.title}"
         feeds_unscheduled << feed
       end
-
-      # Set a default value of 1 hour to the fetch interval if none is set
-      feed.update fetch_interval_secs: 1.hour if feed.fetch_interval_secs.blank?
     end
 
     if feeds_unscheduled.length > 0
