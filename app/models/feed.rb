@@ -24,6 +24,7 @@ require 'schedule_manager'
 # - last_fetched (timestamp of the last time the feed was fetched, nil if it's never been fetched)
 # - fetch_interval_secs (current interval between fetches, in seconds)
 # - failing_since (if not null, feed updates have been failing since the datetime  value of this field)
+# - available (if false, the feed is permanently unavailable and updates are not scheduled for it)
 # - url (URL to which the user will be linked; usually the website that originated this feed)
 # - etag (etag http header received last time the feed was fetched, used for caching)
 # - last_modified (last-modified http header received last time the feed was fetched, user for caching)
@@ -42,6 +43,7 @@ class Feed < ActiveRecord::Base
   validates :fetch_url, format: {with: URI::regexp(%w{http https})}, presence: true, uniqueness: {case_sensitive: false}
   validates :url, format: {with: URI::regexp(%w{http https})}, allow_blank: true
   validates :title, presence: true
+  validates :available, inclusion: {in: [true, false]}
 
   before_validation :fix_attributes
 
@@ -171,9 +173,11 @@ class Feed < ActiveRecord::Base
   ##
   # Give default values to attributes:
   # - fetch_interval_secs defaults to 3600 seconds (1 hour)
+  # - available defaults to true
 
   def default_values
     self.fetch_interval_secs = 3600 if self.fetch_interval_secs.blank?
+    self.available = true if self.available.blank?
   end
 
   ##

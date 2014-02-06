@@ -61,6 +61,10 @@ describe Feed do
       @feed.valid?.should be_false
     end
 
+    it 'does not accept an empty available attribute' do
+      @feed.available = nil
+      @feed.valid?.should be_false
+    end
 
   end
 
@@ -76,6 +80,12 @@ describe Feed do
       feed = FactoryGirl.build :feed, fetch_interval_secs: 1800
       feed.save!
       feed.fetch_interval_secs.should eq 1800
+    end
+
+    it 'marks feed as available by default' do
+      feed = FactoryGirl.build :feed, available: nil
+      feed.save!
+      feed.available.should be_true
     end
   end
 

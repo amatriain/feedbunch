@@ -61,5 +61,9 @@ module Feedbunch
     # Maximum and minimum interval between updates for each feed, regardless of how often new entries appear.
     config.max_update_interval = 24.hours
     config.min_update_interval = 15.minutes
+
+    # If a feed's update fail for more than this time, the feed is marked as permanently unavailable (no more
+    # updates will be attempted)
+    config.unavailable_after = 1.week
   end
 end
