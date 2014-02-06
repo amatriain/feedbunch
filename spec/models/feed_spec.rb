@@ -61,11 +61,6 @@ describe Feed do
       @feed.valid?.should be_false
     end
 
-    it 'does not accept an empty available attribute' do
-      @feed.available = nil
-      @feed.valid?.should be_false
-    end
-
   end
 
   context 'default values' do
