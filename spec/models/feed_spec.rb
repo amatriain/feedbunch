@@ -289,5 +289,21 @@ describe Feed do
       Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
       @feed.destroy
     end
+
+    it 'unschedules updates for a feed when it is marked as unavailable' do
+      Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
+      @feed.update available: false
+    end
+
+    it 'does not unschedule updates for a feed when it is marked as available' do
+      @feed.update_column :available, false
+      Resque.should_not_receive :remove_schedule
+      @feed.update available: true
+    end
+
+    it 'does not unschedule updates for a feed when the available attribute is not changed' do
+      Resque.should_not_receive :remove_schedule
+      @feed.update title: 'some other title'
+    end
   end
 end

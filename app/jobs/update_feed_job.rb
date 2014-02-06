@@ -48,8 +48,14 @@ class UpdateFeedJob
     if feed.present?
       # If this is the first update that fails, save the date&time the feed started failing
       feed.update failing_since: DateTime.now if feed.failing_since.nil?
+
+      # If the feed has been failing for too long, mark it as unavailable
+      if Time.zone.now - feed.failing_since > Feedbunch::Application.config.unavailable_after
+        feed.update available: false
+      end
     end
-    Rails.logger.error "Error fetching feed #{feed.id} - #{feed.fetch_url}"
+
+    Rails.logger.error "Error fetching feed #{feed_id} - #{feed.try :fetch_url}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
   ensure

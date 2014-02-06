@@ -50,6 +50,7 @@ class Feed < ActiveRecord::Base
 
   after_create :schedule_updates
   after_destroy :unschedule_updates
+  before_save :unschedule_unavailable
 
   ##
   # Find the folder to which a feed belongs, for a given user.
@@ -147,6 +148,15 @@ class Feed < ActiveRecord::Base
 
   def unschedule_updates
     ScheduleManager.unschedule_feed_updates self.id
+  end
+
+  ##
+  # If the available attribute is set to false, unschedule the job that updates this feed
+
+  def unschedule_unavailable
+    if !self.available && self.available_changed?
+      ScheduleManager.unschedule_feed_updates self.id
+    end
   end
 
   ##

@@ -119,4 +119,6 @@ describe FixSchedulesJob do
 
     FixSchedulesJob.perform
   end
+
+  it 'does not add a schedule for an unavailable feed'
 end

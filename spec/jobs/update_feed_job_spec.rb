@@ -289,6 +289,48 @@ describe UpdateFeedJob do
       UpdateFeedJob.perform @feed.id
       @feed.reload.failing_since.should eq date2
     end
+
+    it 'marks feed as unavailable when it has been failing longer than a week' do
+      FeedClient.stub(:fetch).and_raise RestClient::Exception.new
+      date = DateTime.new 2000, 1, 1
+      DateTime.stub(:now).and_return date
+      @feed.update failing_since: date - (1.week + 1.day)
+
+      @feed.available.should be_true
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.available.should be_false
+    end
+
+    it 'unschedules updates for a feed when it has been failing longer than a week' do
+      FeedClient.stub(:fetch).and_raise RestClient::Exception.new
+      date = DateTime.new 2000, 1, 1
+      DateTime.stub(:now).and_return date
+      @feed.update failing_since: date - (1.week + 1.day)
+
+      Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
+
+      UpdateFeedJob.perform @feed.id
+    end
+
+    it 'does not mark feed as unavailable when it has been failing a week but the next update is successful' do
+      FeedClient.stub :fetch
+      date = DateTime.new 2000, 1, 1
+      DateTime.stub(:now).and_return date
+      @feed.update failing_since: date - (1.week + 1.day)
+
+      @feed.available.should be_true
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.available.should be_true
+    end
+
+    it 'does not mark feed as unavailable when it updates successfully' do
+      FeedClient.stub :fetch
+      @feed.update failing_since: nil
+
+      @feed.available.should be_true
+      UpdateFeedJob.perform @feed.id
+      @feed.reload.available.should be_true
+    end
   end
 
 end

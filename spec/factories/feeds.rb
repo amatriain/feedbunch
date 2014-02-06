@@ -11,7 +11,7 @@ FactoryGirl.define do
     fetch_url {generate :feed_fetch_url_sequence}
     last_fetched nil
     failing_since nil
-    available false
+    available true
     fetch_interval_secs 3600
     etag nil
     last_modified nil
