@@ -36,7 +36,7 @@ class UpdateFeedJob
     entries_after = 0
 
     # Fetch feed
-    FeedClient.fetch feed, false if Feed.exists? feed_id
+    FeedClient.fetch feed
 
     entries_after = feed.entries.count
 
