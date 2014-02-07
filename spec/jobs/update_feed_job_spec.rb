@@ -8,7 +8,7 @@ describe UpdateFeedJob do
   end
 
   it 'updates feed when the job runs' do
-    FeedClient.should_receive(:fetch).with @feed, anything
+    FeedClient.should_receive(:fetch).with @feed
 
     UpdateFeedJob.perform @feed.id
   end
