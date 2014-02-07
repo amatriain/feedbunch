@@ -63,6 +63,9 @@ gem 'rubyzip'
 # Use the Accept-language HTTP header for i18n
 gem 'http_accept_language'
 
+# Administration interface
+gem 'activeadmin', github: 'gregbell/active_admin'
+
 group :development do
   # Automate deployments
   gem 'capistrano-rails', require: false
