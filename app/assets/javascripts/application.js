@@ -12,7 +12,11 @@
 //
 //= require jquery_ujs
 //= require ng-modules/ng-app
-//= require_tree .
+//= require_tree ./ng-modules
+//= require_tree ./ng-controllers
+//= require_tree ./ng-filters
+//= require_tree ./ng-services
+//= require_tree ./misc
 //= require ../../../vendor/assets/javascripts/ng-infinite-scroll.min
 //= require ../../../vendor/assets/javascripts/withinViewport
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport

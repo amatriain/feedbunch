@@ -170,6 +170,13 @@ ActiveAdmin.setup do |config|
   # To load a javascript file:
   #   config.register_javascript 'my_javascript.js'
 
+  # This app puts active_admin JS and CSS files under "admin" subfolders, to separate from application
+  # assets. Inspired by http://mrdanadams.com/2011/exclude-active-admin-js-css-rails/
+  config.clear_stylesheets!
+  config.register_stylesheet 'admin/active_admin.css'
+
+  config.clear_javascripts!
+  config.register_javascript 'admin/active_admin.js'
 
   # == CSV options
   #
