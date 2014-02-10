@@ -115,11 +115,15 @@ Feedbunch::Application.routes.draw do
   # Resourceful routes for user data
   resource :user_data, only: [:show]
 
-  ActiveAdmin.routes self
-
-  # Resque queue monitoring app will live in the /resque subpath
   # Resque-web is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/
   constraints CanAccessResque do
+    # Resque web interface will be accessible in the /resque path
     mount Resque::Server.new, at: 'resque'
+  end
+
+  # ActiveAdmin is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/
+  constraints CanAccessActiveAdmin do
+    # ActiveAdmin will be accessible in the /admin path
+    ActiveAdmin.routes self
   end
 end

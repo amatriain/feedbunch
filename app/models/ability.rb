@@ -32,6 +32,7 @@ class Ability
     user ||= User.new
     if user.admin
       can :manage, Resque
+      can :manage, ActiveAdmin
     end
   end
 end
