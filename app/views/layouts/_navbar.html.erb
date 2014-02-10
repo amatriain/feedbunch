@@ -169,8 +169,7 @@
 
               <% if can? :manage, Resque %>
                 <li>
-                  <%#= link_to resque_path, target: '_blank' do %>
-                  <%= link_to '/admin/resque', target: '_blank' do %>
+                  <%= link_to '/resque', target: '_blank' do %>
                     <i class="fa fa-code-fork"></i>
                     <%= t 'layouts.application.background_jobs' %>
                   <% end %>

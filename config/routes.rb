@@ -119,9 +119,7 @@ Feedbunch::Application.routes.draw do
 
   # Resque queue monitoring app will live in the /resque subpath
   # Resque-web is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/
-  namespace :admin do
-    constraints CanAccessResque do
-      mount Resque::Server.new, at: 'resque'
-    end
+  constraints CanAccessResque do
+    mount Resque::Server.new, at: 'resque'
   end
 end

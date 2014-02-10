@@ -11,18 +11,18 @@ describe 'authorization' do
     login_user_for_feature @admin_user
     visit read_path
 
-    page.should have_css 'a[href="/admin/resque"]'
+    page.should have_css 'a[href="/resque"]'
   end
 
   it 'does not show Resque link to non-admin users' do
     login_user_for_feature @normal_user
     visit read_path
 
-    page.should_not have_css 'a[href="/admin/resque"]'
+    page.should_not have_css 'a[href="/resque"]'
   end
 
   it 'does not allow access to Resque to non-admin users' do
     login_user_for_feature @normal_user
-    expect {visit '/admin/resque'}.to raise_error ActionController::RoutingError
+    expect {visit '/resque'}.to raise_error ActionController::RoutingError
   end
 end
