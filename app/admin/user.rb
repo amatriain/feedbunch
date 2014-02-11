@@ -27,4 +27,10 @@ ActiveAdmin.register User do
     f.actions
   end
 
+  sidebar 'User Details', only: [:show, :edit] do
+    ul do
+      li link_to 'Folders', admin_user_folders_path(user)
+    end
+  end
+
 end
