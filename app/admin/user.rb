@@ -2,6 +2,7 @@ ActiveAdmin.register User do
   permit_params :email, :name, :admin
 
   index do
+    selectable_column
     column :email
     column :name
     column :current_sign_in_at

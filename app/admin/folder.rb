@@ -3,6 +3,7 @@ ActiveAdmin.register Folder do
   permit_params :title
 
   index do
+    selectable_column
     column :title
     column :user
     default_actions

@@ -2,6 +2,7 @@ ActiveAdmin.register Feed do
   permit_params :title, :url, :fetch_url, :available, :fetch_interval_secs
 
   index do
+    selectable_column
     column :title
     column :url
     column :fetch_url
