@@ -23,11 +23,6 @@ describe 'authorization' do
       page.should_not have_css 'a[href="/resque"]'
     end
 
-    it 'allows access to Resque to admin users' do
-      login_user_for_feature @admin_user
-      expect {visit '/resque'}.not_to raise_error
-    end
-
     it 'does not allow access to Resque to non-admin users' do
       login_user_for_feature @normal_user
       expect {visit '/resque'}.to raise_error ActionController::RoutingError
