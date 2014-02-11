@@ -33,6 +33,7 @@ en:
     noscript: "Your browser does not support JavaScript. Feedbunch needs JavaScript to work correctly."
     application:
       logout: "Logout"
+      admin: "Administration"
       background_jobs: "Background jobs"
       my_account: "My account"
       read_feeds: "Read feeds"

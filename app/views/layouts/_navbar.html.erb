@@ -167,6 +167,15 @@
             </a>
             <ul class="dropdown-menu">
 
+              <% if can? :manage, ActiveAdmin %>
+                <li>
+                  <%= link_to '/admin', target: '_blank' do %>
+                    <i class="fa fa-wrench"></i>
+                    <%= t 'layouts.application.admin' %>
+                  <% end %>
+                </li>
+              <% end %>
+
               <% if can? :manage, Resque %>
                 <li>
                   <%= link_to '/resque', target: '_blank' do %>

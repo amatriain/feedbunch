@@ -12,6 +12,7 @@ es:
     noscript: "Tu navegador no soporta JavaScript. Feedbunch necesita JavaScript para funcionar correctamente."
     application:
       logout: "Salir"
+      admin: "Administración"
       background_jobs: "Tareas en background"
       my_account: "Mi cuenta"
       read_feeds: "Leer feeds"
