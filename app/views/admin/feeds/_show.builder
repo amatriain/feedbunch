@@ -9,11 +9,14 @@ context.instance_eval  do
     row :last_fetched
     row :fetch_interval_secs
     row :failing_since
+    row 'Entries' do |feed|
+      feed.entries.count
+    end
   end
 
   br
 
-  #render 'admin/feed_subscriptions/index', feeds: user.feeds, context: self
+  render 'admin/subscribed_users/index', users: feed.users, context: self
 
   br
   
