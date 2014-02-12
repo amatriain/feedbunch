@@ -29,5 +29,7 @@ context.instance_eval  do
 
   render 'admin/feed_subscriptions/index', feeds: user.feeds, context: self
 
+  br
+  
   active_admin_comments
 end
