@@ -8,4 +8,8 @@ ActiveAdmin.register Folder do
     end
     f.actions
   end
+
+  show do
+    render 'show', context: self
+  end
 end
