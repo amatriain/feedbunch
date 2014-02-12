@@ -1,6 +1,8 @@
 ActiveAdmin.register User do
   permit_params :email, :name, :admin
 
+  menu priority: 1
+
   index do
     render 'index', context: self
   end

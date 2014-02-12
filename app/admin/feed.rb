@@ -1,6 +1,8 @@
 ActiveAdmin.register Feed do
   permit_params :title, :url, :fetch_url, :available, :fetch_interval_secs
 
+  menu priority: 2
+
   index do
     render 'index', context: self
   end
