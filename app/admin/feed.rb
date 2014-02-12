@@ -2,20 +2,7 @@ ActiveAdmin.register Feed do
   permit_params :title, :url, :fetch_url, :available, :fetch_interval_secs
 
   index do
-    selectable_column
-    column :title
-    column :url
-    column :fetch_url
-    column :available
-    column :last_fetched
-    column :fetch_interval_secs
-    column :failing_since
-    column :etag
-    column :last_modified
-    column 'Entries' do |feed|
-      feed.entries.count
-    end
-    default_actions
+    render 'index', context: self
   end
 
   filter :title
