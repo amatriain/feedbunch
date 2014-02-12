@@ -12,6 +12,9 @@ ActiveAdmin.register Feed do
     column :failing_since
     column :etag
     column :last_modified
+    column 'Entries' do |feed|
+      feed.entries.count
+    end
     default_actions
   end
 
