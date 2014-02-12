@@ -10,7 +10,7 @@ context.instance_eval  do
     column :available
     column 'Folder' do |feed|
       if feed.user_folder(user).present?
-        link_to feed.user_folder(user).try(:title), "/admin/users/#{user.id}/folders/#{feed.user_folder(user).try(:id)}"
+        link_to feed.user_folder(user).title, "/admin/users/#{user.id}/folders/#{feed.user_folder(user).id}"
       end
     end
     column :last_fetched
