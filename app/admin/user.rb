@@ -2,18 +2,7 @@ ActiveAdmin.register User do
   permit_params :email, :name, :admin
 
   index do
-    selectable_column
-    column :email
-    column :name
-    column :current_sign_in_at
-    column :last_sign_in_at
-    column :sign_in_count
-    column :admin
-    column :locale
-    column :timezone
-    column :quick_reading
-    column :open_all_entries
-    default_actions
+    render 'index', context: self
   end
 
   filter :email
@@ -29,7 +18,7 @@ ActiveAdmin.register User do
   end
 
   show do
-    render "show", context: self
+    render 'show', context: self
   end
 
 end
