@@ -1,6 +1,7 @@
 context.instance_eval  do
   table_for(users, :sortable => true, :class => 'index_table') do |folder|
     selectable_column
+    column :id
     column :email
     column :name
     column :current_sign_in_at

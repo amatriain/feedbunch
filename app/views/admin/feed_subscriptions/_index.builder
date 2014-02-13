@@ -4,6 +4,7 @@ context.instance_eval  do
     column do |feed|
       link_to 'View', admin_feed_path(feed)
     end
+    column :id
     column :title
     column :url
     column :fetch_url

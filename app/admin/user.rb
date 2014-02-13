@@ -7,6 +7,7 @@ ActiveAdmin.register User do
     render 'index', context: self
   end
 
+  filter :id
   filter :email
   filter :name
 

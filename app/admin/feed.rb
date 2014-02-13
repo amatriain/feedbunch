@@ -7,6 +7,7 @@ ActiveAdmin.register Feed do
     render 'index', context: self
   end
 
+  filter :id
   filter :title
   filter :url
   filter :fetch_url

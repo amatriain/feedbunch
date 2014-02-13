@@ -4,6 +4,7 @@ context.instance_eval  do
     column do |user|
       link_to 'View', admin_user_path(user)
     end
+    column :id
     column :email
     column :name
     column :current_sign_in_at

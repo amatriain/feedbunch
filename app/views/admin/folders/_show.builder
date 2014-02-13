@@ -1,5 +1,6 @@
 context.instance_eval  do
   attributes_table do
+    row :id
     row :user
     row :title
   end

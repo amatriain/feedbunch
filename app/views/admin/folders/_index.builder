@@ -1,6 +1,7 @@
 context.instance_eval  do
   h2 'Folders'
   table_for(folders, :sortable => true, :class => 'index_table') do |folder|
+    column :id
     column :title
     column 'Feeds' do |folder|
       folder.feeds.count
