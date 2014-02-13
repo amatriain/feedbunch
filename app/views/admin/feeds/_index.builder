@@ -1,6 +1,7 @@
 context.instance_eval  do
   table_for(feeds, :sortable => true, :class => 'index_table') do |folder|
     selectable_column
+    default_actions
     column :id
     column :title
     column :url
