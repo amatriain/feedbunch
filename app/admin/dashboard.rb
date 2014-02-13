@@ -30,7 +30,7 @@ ActiveAdmin.register_page "Dashboard" do
         panel 'Recently failing feeds' do
           ul do
             Feed.where(available: true).where.not(failing_since: nil).order('failing_since DESC').limit(10).map do |feed|
-              li link_to("#{feed.title} (#{feed.fetch_url})", admin_feed_path(feed))
+              li link_to("#{feed.title} (since  #{feed.failing_since})", admin_feed_path(feed))
             end
           end
         end
@@ -39,7 +39,7 @@ ActiveAdmin.register_page "Dashboard" do
         panel 'Recent permanently unavailable feeds' do
           ul do
             Feed.where(available: false).order('updated_at DESC').limit(10).map do |feed|
-              li link_to("#{feed.title} (#{feed.fetch_url})", admin_feed_path(feed))
+              li link_to("#{feed.title} (since #{feed.updated_at})", admin_feed_path(feed))
             end
           end
         end
