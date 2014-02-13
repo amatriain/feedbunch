@@ -168,18 +168,26 @@ class Entry < ActiveRecord::Base
 
 
   ##
-  # Remove any height, width and style attributes and set a CSS class to horzintally center
+  # Remove any height, width and style attributes and set a CSS class to horizontally center
   # any images in the passed fragment.
   # Any class attribute in images will be overwritten.
+  #
+  # Also prepare images to be lazy-loaded with the jquery-unveil library.
   #
   # Receives as argument a parsed HTML fragment.
 
   def image_manipulations(html_doc)
     html_doc.css('img').each do |img|
+      # replace image styling
       img.remove_attribute 'height'
       img.remove_attribute 'width'
       img.remove_attribute 'style'
       img['class'] = 'center-block'
+
+      # prepare image for lazy loading
+      src = img['src']
+      img['src'] = '/assets/feed128x128.png'
+      img['data-src'] = '/assets/feed18x18.png'
     end
     return html_doc
   end
