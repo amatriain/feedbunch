@@ -29,7 +29,7 @@ ActiveAdmin.register_page "Dashboard" do
       column do
         panel 'Recently failing feeds' do
           ul do
-            Feed.where(available: true).where.not(failing_since: nil).order('created_at DESC').limit(10).map do |feed|
+            Feed.where(available: true).where.not(failing_since: nil).order('failing_since DESC').limit(10).map do |feed|
               li link_to("#{feed.title} (#{feed.fetch_url})", admin_feed_path(feed))
             end
           end
