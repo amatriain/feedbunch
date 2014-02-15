@@ -18,3 +18,7 @@ module.config ["$httpProvider", ($httpProvider)->
         return $q.reject rejection
   ]
 ]
+
+module.config ["$compileProvider", ($compileProvider)->
+  #alert $compileProvider.imgSrcSanitizationWhitelist()
+]
