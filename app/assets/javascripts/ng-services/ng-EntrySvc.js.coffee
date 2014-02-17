@@ -107,7 +107,7 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
         #$("#entry-#{entry.id} img").trigger 'unveil'
         $("#entry-#{entry.id} img").each ->
           data_src = $(this).attr 'data-src'
-          $(this).attr 'src',  data_src
+          $(this).attr('src',  data_src) if data_src?
 
         openEntrySvc.open entry
         if !entry.read
