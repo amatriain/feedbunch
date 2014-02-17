@@ -330,6 +330,13 @@ describe 'feed entries' do
         end
       end
     end
+
+    context 'lazy load images' do
+
+      it 'shows a spinner instead of images before opening an entry'
+
+      it 'loads images when opening an entry'
+    end
   end
 
   context 'infinite scroll' do

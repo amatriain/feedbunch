@@ -125,4 +125,11 @@ describe 'quick reading mode' do
     end
   end
 
+  context 'lazy load images' do
+
+    it 'does not load images in entries outside the viewport'
+
+    it 'loads images in entries when they are scrolled into the viewport'
+  end
+
 end
