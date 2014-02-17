@@ -3,10 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
-['$rootScope', '$scope', '$timeout', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
+['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
-($rootScope, $scope, $timeout, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
+($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc)->
 
@@ -198,6 +198,19 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.set_current_entry_feed = (entry)->
     entrySvc.load_entry_feed entry
     menuCollapseSvc.close()
+
+  #--------------------------------------------
+  # Return the HTML content or summary of an entry, explicitly marked as trusted HTML for binding.
+  #--------------------------------------------
+  $scope.trustedEntryContent = (entry)->
+    html = ''
+    # Return the content if present; otherwise try to return the summary.
+    if entry.content.length > 0
+      html = entry.content
+    else if entry.summary.length > 0
+      html = entry.summary
+    return $sce.trustAsHtml html
+
 
   #--------------------------------------------
   # Set a boolean flag in the root scope as false. The flag name must be passed as a string.

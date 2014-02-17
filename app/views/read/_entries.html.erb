@@ -93,8 +93,7 @@
 
         <p class="hidden">{{entry.guid}}</p>
         <div class="entry-content">
-          <p ng-show="entry.content.length > 0" ng-bind-html="entry.content"></p>
-          <p ng-hide="entry.content.length > 0" ng-bind-html="entry.summary"></p>
+          <p ng-bind-html="trustedEntryContent(entry)"></p>
         </div>
       </div>
     </div>
