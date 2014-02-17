@@ -205,9 +205,9 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.trustedEntryContent = (entry)->
     html = ''
     # Return the content if present; otherwise try to return the summary.
-    if entry.content.length > 0
+    if entry.content?.length > 0
       html = entry.content
-    else if entry.summary.length > 0
+    else if entry.summary?.length > 0
       html = entry.summary
     return $sce.trustAsHtml html
 
