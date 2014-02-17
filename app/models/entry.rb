@@ -187,7 +187,7 @@ class Entry < ActiveRecord::Base
       # prepare image for lazy loading
       src = img['src']
       img['src'] = '/assets/feed128x128.png'
-      img['data-src'] = '/assets/feed18x18.png'
+      img['data-src'] = src
     end
     return html_doc
   end

@@ -103,6 +103,12 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
         # User is closing the open entry
         openEntrySvc.close entry
       else
+        # TEST CODE for lazy-loading. IT MUST BE MOVED TO ITS OWN SERVICE WHEN READY!
+        #$("#entry-#{entry.id} img").trigger 'unveil'
+        $("#entry-#{entry.id} img").each ->
+          data_src = $(this).attr 'data-src'
+          $(this).attr 'src',  data_src
+
         openEntrySvc.open entry
         if !entry.read
           # User is opening an unread entry, mark it as read
