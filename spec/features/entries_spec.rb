@@ -346,6 +346,17 @@ describe 'feed entries' do
         read_entry @entry1
         page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: true
       end
+
+      it 'displays images not prepared for lazy loading', js: true do
+        # image in @entry1 is not prepared for lazy loading (no data-src attribute)
+        @entry1.update_column :content, "<img id=\"entry-image\" src=\"#{@img_url}\" alt=\"some-image\">"
+        visit read_path
+        read_feed @feed1, @user
+
+        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: false
+        read_entry @entry1
+        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: true
+      end
     end
   end
 
