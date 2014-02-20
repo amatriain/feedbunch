@@ -15,7 +15,8 @@ describe 'feed entries' do
   context 'without pagination' do
 
     before :each do
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @img_url = 'http://feed.com/some.image.jpg'
+      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, content: "<img id=\"entry-image\" src=\"#{@img_url}\" alt=\"some-image\">"
       @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1 << @entry2
       @user.subscribe @feed1.fetch_url
@@ -333,9 +334,18 @@ describe 'feed entries' do
 
     context 'lazy load images' do
 
-      it 'shows a spinner instead of images before opening an entry'
+      before :each do
+        @spinner_url = '/assets/Ajax-loader.gif'
+      end
 
-      it 'loads images when opening an entry'
+      it 'shows a spinner instead of images before opening an entry', js: true do
+        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url}']", visible: false
+      end
+
+      it 'loads images when opening an entry', js: true do
+        read_entry @entry1
+        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: true
+      end
     end
   end
 
