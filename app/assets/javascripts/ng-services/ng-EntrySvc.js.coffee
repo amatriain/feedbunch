@@ -5,8 +5,10 @@
 angular.module('feedbunch').service 'entrySvc',
 ['$rootScope', '$http', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
 'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc', 'feedsFoldersSvc',
+'lazyLoadingSvc',
 ($rootScope, $http, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
-currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
+currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc,
+lazyLoadingSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark a single entry as read or unread.
@@ -103,12 +105,8 @@ currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc)->
         # User is closing the open entry
         openEntrySvc.close entry
       else
-        # TEST CODE for lazy-loading. IT MUST BE MOVED TO ITS OWN SERVICE WHEN READY!
-        #$("#entry-#{entry.id} img").trigger 'unveil'
-        $("#entry-#{entry.id} img").each ->
-          data_src = $(this).attr 'data-src'
-          $(this).attr('src',  data_src) if data_src?
-
+        # lazy load images
+        lazyLoadingSvc.load_images entry
         openEntrySvc.open entry
         if !entry.read
           # User is opening an unread entry, mark it as read

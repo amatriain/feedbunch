@@ -33,7 +33,8 @@
 /* For screens wider than 992px, Bootstrap v3 "md" (medium) breakpoint. */
 /* I.e. for md- and lg- screens, not for xs- and sm- screens */
 @media (min-width: $screen-md-min) {
-  .entry-content{
+  .entry-content,
+  .entry-panel{
     padding: 20px;
   }
 }
