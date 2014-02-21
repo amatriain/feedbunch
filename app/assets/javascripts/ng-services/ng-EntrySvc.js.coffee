@@ -105,12 +105,12 @@ lazyLoadingSvc)->
         # User is closing the open entry
         openEntrySvc.close entry
       else
-        # lazy load images
-        lazyLoadingSvc.load_images entry
         openEntrySvc.open entry
         if !entry.read
           # User is opening an unread entry, mark it as read
           change_entry_state entry, true
+        # lazy load images
+        lazyLoadingSvc.load_images entry
 
     #--------------------------------------------
     # Mark a single entry as unread
