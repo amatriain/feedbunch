@@ -55,23 +55,27 @@
       <div class="panel-body entry-panel">
 
         <div class="entry-toolbar btn-toolbar">
-          <a class="btn btn-default btn-sm hint--bottom hint--rounded"
+          <a class="btn btn-default btn-sm"
+             data-toggle="tooltip" data-placement="top"
              ng-click="unread_entry(entry)"
              ng-show="entry.read"
-             data-hint="<%= t 'entries.index.mark_unread_tooltip' %>">
+             title="<%= t 'entries.index.mark_unread_tooltip' %>">
             <i class="fa fa-square"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
           </a>
-          <a class="btn btn-default btn-sm hint--bottom hint--rounded"
+          <a class="btn btn-default btn-sm"
+             data-toggle="tooltip" data-placement="top"
              ng-click="read_entry(entry)"
              ng-show="!entry.read"
-             data-hint="<%= t 'entries.index.mark_read_tooltip' %>">
+             title="<%= t 'entries.index.mark_read_tooltip' %>">
             <i class="fa fa-check-square"></i>&nbsp;<%= t 'entries.index.mark_read' %>
           </a>
         </div>
 
-        <div class="lead entry-lead hint--top hint--rounded" data-hint="<%= t 'entries.index.title_tooltip' %>">
+        <div class="lead entry-lead">
           <a href="{{entry.url}}"
              target="_blank"
+             data-toggle="tooltip" data-placement="top"
+             title="<%= t 'entries.index.title_tooltip' %>"
              ng-bind-html="entry.title">
           </a>
         </div>
@@ -79,8 +83,8 @@
           <p>
             <a href="#"
                ng-click="set_current_entry_feed(entry)"
-               class="hint--bottom hint--rounded"
-               data-hint="<%= t 'entries.index.feed_tooltip' %>"
+               data-toggle="tooltip" data-placement="bottom"
+               title="<%= t 'entries.index.feed_tooltip' %>"
                ng-bind-html="entry_feed_title(entry)">
             </a>
           </p>

@@ -31,10 +31,10 @@
     <div ng-show="current_feed || current_folder">
       <div id="feed-title">
         <strong class="lead">
-          <div class="hint--bottom hint--rounded"
-               ng-show="current_feed"
-               data-hint="<%= t 'feeds.index.feed_tooltip' %>">
-            <a ng-bind-html="current_feed.title"
+          <div ng-show="current_feed">
+            <a data-toggle="tooltip" data-placement="top"
+               title="<%= t 'feeds.index.feed_tooltip' %>"
+               ng-bind-html="current_feed.title"
                href="{{current_feed.url}}"
                target="_blank">
             </a>

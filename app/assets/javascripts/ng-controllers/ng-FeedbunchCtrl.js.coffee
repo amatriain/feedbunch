@@ -5,10 +5,10 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
-'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
+'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc', 'tooltipSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
-findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc)->
+findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc, tooltipSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -19,6 +19,9 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
 
   # Show Add Subscription button in this view
   $rootScope.show_feed_buttons = true
+
+  # Initialize navbar tooltips
+  tooltipSvc.navbar_tooltips()
 
   # Load configuration data for the current user
   userDataSvc.load_data()
@@ -114,6 +117,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   #--------------------------------------------
   $scope.set_current_feed = (feed)->
     currentFeedSvc.set feed
+    tooltipSvc.feed_title_tooltip()
     readSvc.read_entries_page()
     menuCollapseSvc.close()
     $timeout ->

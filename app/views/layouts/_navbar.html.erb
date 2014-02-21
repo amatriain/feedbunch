@@ -43,8 +43,8 @@
       <ul class="nav navbar-nav" ng-cloak>
 
         <li ng-show="show_feed_buttons && !show_read"
-            class="hint--right hint--rounded"
-            data-hint="<%= t 'feeds.index.show_read_button_tooltip' %>">
+            data-toggle="tooltip" data-placement="right"
+            title="<%= t 'feeds.index.show_read_button_tooltip' %>">
           <a id="show-read"
               ng-click="show_read_feeds_entries()">
             <i class="fa fa-eye"></i> <%= t 'feeds.index.show_read_button' %>
@@ -52,8 +52,8 @@
         </li>
 
         <li ng-show="show_feed_buttons && show_read"
-            class="hint--right hint--rounded"
-            data-hint="<%= t 'feeds.index.hide_read_button_tooltip' %>">
+            data-toggle="tooltip" data-placement="right"
+            title="<%= t 'feeds.index.hide_read_button_tooltip' %>">
           <a id="hide-read"
              ng-click="hide_read_feeds_entries()">
             <i class="fa fa-eye-slash"></i> <%= t 'feeds.index.hide_read_button' %>
@@ -61,9 +61,9 @@
         </li>
 
         <li id="feed-dropdown"
-            class="dropdown hint--right hint--rounded"
             ng-show="show_feed_buttons"
-            data-hint="<%= t 'feeds.index.feed_menu_button_tooltip' %>">
+            data-toggle="tooltip" data-placement="right"
+            title="<%= t 'feeds.index.feed_menu_button_tooltip' %>">
 
           <a id="feeds-management"
              class="dropdown-toggle"
@@ -101,17 +101,17 @@
         </li>
 
         <li ng-show="show_feed_buttons && (current_feed || current_folder)"
-            class="hint--right hint--rounded"
-            data-hint="<%= t 'feeds.index.read_all_button_tooltip' %>">
+            data-toggle="tooltip" data-placement="right"
+            title="<%= t 'feeds.index.read_all_button_tooltip' %>">
           <a id="read-all-button" ng-click="mark_all_read()">
             <i class="fa fa-check-square-o"></i> <%= t 'feeds.index.read_all_button' %>
           </a>
         </li>
 
         <li id="folder-management-dropdown"
-            class="dropdown hint--right hint--rounded"
             ng-show="current_feed"
-            data-hint="<%= t 'feeds.index.folder_button_tooltip' %>">
+            data-toggle="tooltip" data-placement="right"
+            title="<%= t 'feeds.index.folder_button_tooltip' %>">
 
           <a id="folder-management"
                   class="dropdown-toggle"
