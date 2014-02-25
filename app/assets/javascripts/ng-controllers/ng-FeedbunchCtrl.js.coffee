@@ -163,6 +163,12 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     menuCollapseSvc.close()
 
   #--------------------------------------------
+  # Enable tooltips for an entry.
+  #--------------------------------------------
+  $scope.tooltips_entry = (entry)->
+    tooltipSvc.entry_tooltips entry
+
+  #--------------------------------------------
   # Function to decide if an entry should be displayed as open (return true) or closed (return false).
   #--------------------------------------------
   $scope.is_open = (entry)->

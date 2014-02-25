@@ -51,7 +51,8 @@
     <%# Entry summary, initially collapsed %>
     <div class="panel-collapse collapse"
          ng-class="{'in':is_open(entry)}"
-         id="entry-{{entry.id}}-summary">
+         id="entry-{{entry.id}}-summary"
+         ng-mouseenter="tooltips_entry(entry)">
       <div class="panel-body entry-panel">
 
         <div class="entry-toolbar btn-toolbar">

@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'openEntrySvc',
-['$rootScope', '$location', '$anchorScroll', 'tooltipSvc',
-($rootScope, $location, $anchorScroll, tooltipSvc)->
+['$rootScope', '$location', '$anchorScroll',
+($rootScope, $location, $anchorScroll)->
 
   #---------------------------------------------
   # Set an entry as open
@@ -20,8 +20,6 @@ angular.module('feedbunch').service 'openEntrySvc',
     # the entry body
     $location.hash "entry-#{entry.id}-anchor"
     $anchorScroll()
-    # Enable tooltips in the open entry
-    tooltipSvc.entry_tooltips entry
 
   #---------------------------------------------
   # Set an entry as closed
