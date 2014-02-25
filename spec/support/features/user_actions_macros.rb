@@ -125,6 +125,21 @@ def read_entry(entry)
 end
 
 ##
+# Click on an entry to close it. Receives as argument the entry to be closed.
+#
+# If the entry is not currently in the entries list, the test will immediately fail.
+
+def close_entry(entry)
+  page.should have_css "#feed-entries #entry-#{entry.id}"
+
+  # Close entry only if it is open
+  if page.has_css? "#feed-entries #entry-#{entry.id}-summary.in"
+    find("#feed-entries [data-entry-id='#{entry.id}']").click
+    page.should_not have_css "#feed-entries #entry-#{entry.id}-summary.in"
+  end
+end
+
+##
 # Click on the "refresh feed" button to fetch new entries for the feed
 
 def refresh_feed

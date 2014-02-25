@@ -44,12 +44,12 @@ angular.module('feedbunch').service 'readSvc',
       entriesPaginationSvc.set_busy false
 
       if !$rootScope.entries || $rootScope.entries?.length == 0
-        $rootScope.entries = data["entries"]
+        $rootScope.entries = data["entries"].slice()
       else
-        $rootScope.entries = $rootScope.entries.concat data["entries"]
+        $rootScope.entries = $rootScope.entries.concat data["entries"].slice()
 
       # Set correct state (open or closed) for new entries, based on user configuration
-      openEntrySvc.add_entries data["entries"]
+      openEntrySvc.add_entries data["entries"].slice()
 
       if entriesPaginationSvc.is_first_page()
         current_feed = currentFeedSvc.get()

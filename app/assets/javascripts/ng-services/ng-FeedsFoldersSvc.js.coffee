@@ -23,7 +23,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     now = new Date()
     $http.get("/feeds.json?include_read=#{$rootScope.show_read}&page=#{page}&time=#{now.getTime()}")
     .success (data)->
-      feedsPaginationSvc.load_feeds_page page, data
+      feedsPaginationSvc.load_feeds_page page, data.slice()
       feedsPaginationSvc.set_busy false
       # Load the next page of feeds, until a 404 (no more feeds) is received
       load_feeds page
@@ -62,7 +62,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     $http.get("/folders.json?time=#{now.getTime()}")
     .success (data)->
       reset_timer()
-      $rootScope.folders = data
+      $rootScope.folders = data.slice()
       $rootScope.folders_loaded = true
     .error (data, status)->
       timerFlagSvc.start 'error_loading_folders' if status!=0

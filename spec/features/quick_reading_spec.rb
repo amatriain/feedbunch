@@ -123,6 +123,18 @@ describe 'quick reading mode' do
         page.should have_text "entry summary #{i}"
       end
     end
+
+    # regression test
+    it 'closes an open entry', js: true do
+      check_open_all_entries @user
+      read_feed @feed, @user
+      close_entry @entries[0]
+
+      # entry should still be in the list
+      within "#feed-entries #entry-#{@entries[0].id}" do
+        page.should have_text @entries[0].title
+      end
+    end
   end
 
   context 'lazy load images' do
