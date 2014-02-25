@@ -110,7 +110,7 @@ lazyLoadingSvc)->
           # User is opening an unread entry, mark it as read
           change_entry_state entry, true
         # lazy load images
-        lazyLoadingSvc.load_images entry
+        lazyLoadingSvc.load_entry_images entry
 
     #--------------------------------------------
     # Mark a single entry as unread
