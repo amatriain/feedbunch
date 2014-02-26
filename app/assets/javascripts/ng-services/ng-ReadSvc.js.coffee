@@ -3,10 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').service 'readSvc',
-['$rootScope', '$http', '$q', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
- 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc',
-($rootScope, $http, $q, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
- entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc)->
+['$rootScope', '$http', '$q', '$timeout', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
+ 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc', 'lazyLoadingSvc',
+($rootScope, $http, $q, $timeout, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
+ entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load entries via AJAX in the root scope.
@@ -50,6 +50,12 @@ angular.module('feedbunch').service 'readSvc',
 
       # Set correct state (open or closed) for new entries, based on user configuration
       openEntrySvc.add_entries data["entries"].slice()
+
+      # If the user has selected the "open all entries by default" option, lazy load images
+      if $rootScope.open_all_entries
+        $timeout ->
+          lazyLoadingSvc.load_viewport_images()
+        , 250
 
       if entriesPaginationSvc.is_first_page()
         current_feed = currentFeedSvc.get()

@@ -1,13 +1,13 @@
 ########################################################
-# AngularJS service to mark entries as read as soon as they are scrolled above the viewport
+# AngularJS service to lazy load images in entries, when user has configured the app to open all entries by default.
 ########################################################
 
-angular.module('feedbunch').service 'quickReadingSvc',
-['$rootScope', '$timeout', 'findSvc', 'entrySvc',
-($rootScope, $timeout, findSvc, entrySvc)->
+angular.module('feedbunch').service 'openAllEntriesSvc',
+['$rootScope', '$timeout', 'lazyLoadingSvc',
+($rootScope, $timeout, lazyLoadingSvc)->
 
   #---------------------------------------------
-  # Start marking entries as read as soon as they are scrolled above the viewport.
+  # Lazy load images as soon as they are scrolled into the viewport.
   #---------------------------------------------
   start: ->
     $(window).scroll ->
@@ -18,11 +18,6 @@ angular.module('feedbunch').service 'quickReadingSvc',
 
       $rootScope.scrolling_timer = $timeout ->
         delete $rootScope.scrolling_timer
-
-        # Select entries above the viewport.
-        $('a[data-entry-id].entry-unread').not($('a[data-entry-id].entry-unread').withinViewportTop({top: 15})).each ->
-          id = $(this).attr 'data-entry-id'
-          entry = findSvc.find_entry id
-          entrySvc.read_entry entry
+        lazyLoadingSvc.load_viewport_images()
       , 250
 ]

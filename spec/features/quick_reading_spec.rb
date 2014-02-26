@@ -83,7 +83,7 @@ describe 'quick reading mode' do
 
       @entries = []
       (0..9).each do |i|
-        entry = FactoryGirl.build :entry, feed_id: @feed.id, summary: "entry summary #{i}"
+        entry = FactoryGirl.build :entry, feed_id: @feed.id, summary: "entry summary #{i}<img id=\"entry-image\" src=\"http://feed.com/some_image_#{i}.jpg\" alt=\"some-image\">"
         @feed.entries << entry
         @entries << entry
       end
@@ -135,13 +135,32 @@ describe 'quick reading mode' do
         page.should have_text @entries[0].title
       end
     end
-  end
 
-  context 'lazy load images' do
+    context 'lazy load images' do
 
-    it 'does not load images in entries outside the viewport'
+      before :each do
+        @spinner_url = '/assets/Ajax-loader.gif'
+        check_open_all_entries @user
+        read_feed @feed, @user
+      end
 
-    it 'loads images in entries when they are scrolled into the viewport'
+      it 'loads images in entries initially inside the viewport', js: true do
+        # @entries[9] is the most recent entry, so it will be first on the list (in the viewport at the start)
+        page.should have_css "#entry-#{@entries[9].id}-summary .entry-content img[src='http://feed.com/some_image_9.jpg']", visible: true
+      end
+
+      it 'does not load images in entries outside the viewport', js: true do
+        # @entries[0] is the oldest entry, so it will be last on the list (outside the viewport at the start)
+        page.should have_css "#entry-#{@entries[0].id}-summary .entry-content img[src='#{@spinner_url}'][data-src='http://feed.com/some_image_0.jpg']", visible: false
+      end
+
+      it 'loads images in entries when they are scrolled into the viewport', js: true do
+        # scroll to bottom of page
+        page.execute_script 'window.scrollBy(0,10000)'
+        # @entries[0] is the oldest entry, so it will be last on the list (outside the viewport until the user scrolls down)
+        page.should have_css "#entry-#{@entries[0].id}-summary .entry-content img[src='http://feed.com/some_image_0.jpg']", visible: true
+      end
+    end
   end
 
 end
