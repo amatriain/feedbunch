@@ -14,7 +14,7 @@ if Rails.env=='ci'
                                     'spec/features/refresh_feed_spec.rb',
                                     'spec/features/start_page_spec.rb',
                                     'spec/features/unread_entries_count_spec.rb']
-      acceptance_tests_2 = FileList['spec/features/**/*_spec.rb'].exclude acceptance_tests_1
+      acceptance_tests_2 = FileList['spec/features/**/*_spec.rb'].exclude acceptance_tests_1.to_a
 
       if ENV['TEST_SUITE'] == 'unit'
         # Include only unit tests
