@@ -16,7 +16,7 @@ describe 'feed entries' do
 
     before :each do
       @img_url = 'http://feed.com/some.image.jpg'
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, content: "<img id=\"entry-image\" src=\"#{@img_url}\" alt=\"some-image\">"
+      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, summary: "<p>some_entry_summary_1</p><img id=\"entry-image\" src=\"#{@img_url}\" alt=\"some-image\">"
       @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1 << @entry2
       @user.subscribe @feed1.fetch_url
@@ -55,14 +55,13 @@ describe 'feed entries' do
       page.should_not have_content @entry1.summary
 
       read_entry @entry1
-
       page.should have_content Nokogiri::HTML(@entry1.summary).text
     end
 
     it 'opens title link in a new tab', js: true do
       read_entry @entry1
 
-      within "#entry-#{@entry1.id}-summary .entry-content .lead" do
+      within "#entry-#{@entry1.id}-summary .entry-panel .lead" do
         page.should have_css "a[target='_blank'][href='#{@entry1.url}']"
       end
     end
@@ -293,7 +292,7 @@ describe 'feed entries' do
 
       it 'displays feed title above entry content', js: true do
         read_entry @entry1
-        within "#entry-#{@entry1.id}-summary .entry-content .entry-additional-info" do
+        within "#entry-#{@entry1.id}-summary .entry-panel .entry-additional-info" do
           page.should have_text @feed1.title
         end
       end
@@ -307,7 +306,7 @@ describe 'feed entries' do
 
         read_entry @entry1
         entry_should_be_marked_read @entry1
-        find("#entry-#{@entry1.id}-summary .entry-content .entry-additional-info a").click
+        find("#entry-#{@entry1.id}-summary .entry-panel .entry-additional-info a").click
 
         # @feed1 should be selected for reading
         feed_should_be_selected @feed1
@@ -326,7 +325,7 @@ describe 'feed entries' do
 
       it 'displays publish date above entry content', js: true do
         read_entry @entry1
-        within "#entry-#{@entry1.id}-summary .entry-content .entry-additional-info" do
+        within "#entry-#{@entry1.id}-summary .entry-panel .entry-additional-info" do
           page.should have_text I18n.l(@entry1.published, format: :short)
         end
       end
