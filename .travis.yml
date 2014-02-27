@@ -10,7 +10,8 @@ env:
     - RAILS_ENV=ci
   matrix:
     - TEST_SUITE=unit
-    - TEST_SUITE=acceptance
+    - TEST_SUITE=acceptance_1
+    - TEST_SUITE=acceptance_2
 before_install:
   - "export DISPLAY=:99.0"
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 800x600x16"
