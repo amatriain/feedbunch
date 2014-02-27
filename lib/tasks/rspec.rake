@@ -7,14 +7,8 @@ if Rails.env=='ci'
     RSpec::Core::RakeTask.new(:travisci) do |task|
       all_tests = FileList['spec/**/*_spec.rb']
       unit_tests = FileList['spec/**/*_spec.rb'].exclude 'spec/features/**/*_spec.rb'
-      acceptance_tests_1 = FileList['spec/features/feed_subscription_spec.rb',
-                                    'spec/features/folders_spec.rb',
-                                    'spec/features/import_subscriptions_spec.rb',
-                                    'spec/features/quick_reading_spec.rb',
-                                    'spec/features/refresh_feed_spec.rb',
-                                    'spec/features/start_page_spec.rb',
-                                    'spec/features/unread_entries_count_spec.rb']
-      acceptance_tests_2 = FileList['spec/features/**/*_spec.rb'].exclude acceptance_tests_1.to_a
+      acceptance_tests_1 = FileList['spec/features/suite_1/**/*_spec.rb']
+      acceptance_tests_2 = FileList['spec/features/suite_2/**/*_spec.rb']
 
       if ENV['TEST_SUITE'] == 'unit'
         # Include only unit tests
