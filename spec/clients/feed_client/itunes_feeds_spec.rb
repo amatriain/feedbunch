@@ -10,14 +10,14 @@ describe FeedClient do
     @entry1 = FactoryGirl.build :entry
     @entry1.title = 'Los correos secretos de Caja Madrid: así celebró Blesa el \'éxito\' de las preferentes'
     @entry1.url = 'http://meneame.feedsportal.com/c/34737/f/639540/s/34adc456/sc/36/l/0L0Smeneame0Bnet0Cstory0Ccorreos0Esecretos0Ecaja0Emadrid0Easi0Ecelebro0Eblesa0Eexito0Epreferentes/story01.htm'
-    @entry1.summary = %{&lt;img src=\"http://mnmstatic.net/cache/1f/a6/thumb-2074219.jpg\" alt=\"\" class=\"center-block\"&gt;&lt;p&gt;Como una fiesta financiera, como un pelotazo empresarial, como un nuevo récord. Así vivió Miguel Blesa, entonces presidente de Caja Madrid, la millonaria emisión de preferentes en 2009, un producto financiero que atrapó a miles de clientes de la entidad y volatilizó sus ahorros. Varios correos del mejor amigo de Aznar en la banca, a los que ha tenido acceso eldiario.es, describen el ambiente de euforia sin vértigo en aquellos días de emisiones millonarias.&lt;/p&gt;}
+    @entry1.summary = %{&lt;p&gt;Como una fiesta financiera, como un pelotazo empresarial, como un nuevo récord. Así vivió Miguel Blesa, entonces presidente de Caja Madrid, la millonaria emisión de preferentes en 2009, un producto financiero que atrapó a miles de clientes de la entidad y volatilizó sus ahorros. Varios correos del mejor amigo de Aznar en la banca, a los que ha tenido acceso eldiario.es, describen el ambiente de euforia sin vértigo en aquellos días de emisiones millonarias.&lt;/p&gt;}
     @entry1.published = 'Wed, 11 Dec 2013 07:20:04 GMT'
     @entry1.guid = 'http://www.meneame.net/story/correos-secretos-caja-madrid-asi-celebro-blesa-exito-preferentes'
 
     @entry2 = FactoryGirl.build :entry
     @entry2.title = '“La mafia despilfarradora y corrupta no está dispuesta a tocar nada que afecte a su chiringuito”'
     @entry2.url = 'http://meneame.feedsportal.com/c/34737/f/639540/s/34ab2350/sc/36/l/0L0Smeneame0Bnet0Cstory0Cmafia0Edespilfarradora0Ecorrupta0Eno0Eesta0Edispuesta0Etocar0Enada/story01.htm'
-    @entry2.summary = %{&lt;img src=\"http://mnmstatic.net/cache/1f/a4/thumb-2073682.jpg\" alt=\"\" class=\"center-block\"&gt;&lt;p&gt;En EE.UU baja el paro, Gran Bretaña crece ya al 5% y el resto del mundo trabaja sin desmayo para salir de la crisis, pero España sigue empantanada en el fango de la corrupción, el despilfarro público y su consecuencia directa: paro, exilio laboral, miseria y hasta hambre física. Eurostat desmiente las cifras oficiales: sigue habiendo más de 6 millones de parados a causa del creciente gasto de políticos y autonomías.&lt;/p&gt;}
+    @entry2.summary = %{&lt;p&gt;En EE.UU baja el paro, Gran Bretaña crece ya al 5% y el resto del mundo trabaja sin desmayo para salir de la crisis, pero España sigue empantanada en el fango de la corrupción, el despilfarro público y su consecuencia directa: paro, exilio laboral, miseria y hasta hambre física. Eurostat desmiente las cifras oficiales: sigue habiendo más de 6 millones de parados a causa del creciente gasto de políticos y autonomías.&lt;/p&gt;}
     @entry2.published = 'Wed, 11 Dec 2013 00:30:04 GMT'
     @entry2.guid = 'http://www.meneame.net/story/mafia-despilfarradora-corrupta-no-esta-dispuesta-tocar-nada'
   end

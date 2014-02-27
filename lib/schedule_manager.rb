@@ -133,7 +133,7 @@ class ScheduleManager
 
   ##
   # Add a missing update schedule for a feed. Receives the feed as argument.
-  # The next update will be scheduled to run as fetch_interval_secs seconds after last_fetched, as if the schedule
+  # The next update will be scheduled to run at fetch_interval_secs seconds after last_fetched, as if the schedule
   # had not disappeared, unless that time has already passed, in which case it will be scheduled immediately.
 
   def self.add_missing_schedule(feed)
