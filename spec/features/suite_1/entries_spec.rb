@@ -334,7 +334,7 @@ describe 'feed entries' do
     context 'lazy load images' do
 
       before :each do
-        @spinner_url = '/assets/Ajax-loader.gif'
+        @spinner_url = '/images/Ajax-loader.gif'
       end
 
       it 'shows a spinner instead of images before opening an entry', js: true do

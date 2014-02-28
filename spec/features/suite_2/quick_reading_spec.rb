@@ -139,7 +139,7 @@ describe 'quick reading mode' do
     context 'lazy load images' do
 
       before :each do
-        @spinner_url = '/assets/Ajax-loader.gif'
+        @spinner_url = '/images/Ajax-loader.gif'
         check_open_all_entries @user
         read_feed @feed, @user
       end
