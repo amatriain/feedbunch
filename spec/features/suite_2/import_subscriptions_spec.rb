@@ -54,7 +54,7 @@ describe 'import subscriptions' do
   context 'user uploads file' do
 
     before :each do
-      @data_file = File.join __dir__, '..', 'attachments', 'feedbunch@gmail.com-takeout.zip'
+      @data_file = File.join __dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip'
       find('a#start-data-import').click
       page.should have_css '#data_import_file'
       attach_file 'data_import_file', @data_file
