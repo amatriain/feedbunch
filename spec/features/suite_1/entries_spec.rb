@@ -16,7 +16,7 @@ describe 'feed entries' do
 
     before :each do
       @img_url = 'http://feed.com/some.image.jpg'
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, summary: "<p>some_entry_summary_1</p><img id=\"entry-image\" src=\"#{@img_url}\" alt=\"some-image\">"
+      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, summary: "<p>summary for @entry1</p><img id=\"entry-image\" src=\"#{@img_url}\" alt=\"some-image\">"
       @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1 << @entry2
       @user.subscribe @feed1.fetch_url
