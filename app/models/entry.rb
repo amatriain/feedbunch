@@ -186,7 +186,7 @@ class Entry < ActiveRecord::Base
 
       # prepare image for lazy loading
       src = img['src']
-      img['src'] = '/assets/Ajax-loader.gif'
+      img['src'] = '/images/Ajax-loader.gif'
       img['data-src'] = src
     end
     return html_doc
