@@ -9,9 +9,12 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
   # PRIVATE FUNCTION: Lazy load a single image. Receives as argument the jQuery object wrapping the img.
   #--------------------------------------------
   load_image = (img)->
+    img.on 'error', ->
+      img.addClass 'hidden load-failed'
+    .on 'load', ->
+      img.addClass('loaded').removeClass('hidden') if !img.hasClass 'load-failed'
     data_src = img.attr 'data-src'
-    img.removeAttr 'data-src'
-    img.attr 'src',  data_src
+    img.removeAttr('data-src').attr('src',  data_src)
 
   service =
 

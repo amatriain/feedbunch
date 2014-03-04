@@ -182,7 +182,7 @@ class Entry < ActiveRecord::Base
       img.remove_attribute 'height'
       img.remove_attribute 'width'
       img.remove_attribute 'style'
-      img['class'] = 'center-block'
+      img['class'] = 'center-block hidden'
 
       # prepare image for lazy loading
       src = img['src']

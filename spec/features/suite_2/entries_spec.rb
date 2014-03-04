@@ -15,8 +15,9 @@ describe 'feed entries' do
   context 'without pagination' do
 
     before :each do
-      @img_url = 'http://feed.com/some.image.jpg'
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, summary: "<p>summary for @entry1</p><img id=\"entry-image\" src=\"#{@img_url}\" alt=\"some-image\">"
+      @img_url_load = '/images/Ajax-loader.gif'
+      @img_url_fail = 'http://not_valid_image.gif'
+      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, summary: "<p>summary for @entry1</p><img id=\"entry-image-1\" src=\"#{@img_url_load}\" alt=\"some-image\"><img id=\"entry-image-2\" src=\"#{@img_url_fail}\" alt=\"some-image\">"
       @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1 << @entry2
       @user.subscribe @feed1.fetch_url
@@ -338,12 +339,14 @@ describe 'feed entries' do
       end
 
       it 'shows a spinner instead of images before opening an entry', js: true do
-        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url}']", visible: false
+        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url_load}']", visible: false
+        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url_fail}']", visible: false
       end
 
       it 'loads images when opening an entry', js: true do
         read_entry @entry1
-        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: true
+        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_load}']", visible: false
+        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_fail}']", visible: false
       end
 
       it 'displays images not prepared for lazy loading', js: true do
