@@ -146,7 +146,7 @@ describe 'quick reading mode' do
 
       it 'loads images in entries initially inside the viewport', js: true do
         # @entries[9] is the most recent entry, so it will be first on the list (in the viewport at the start)
-        page.should have_css "#entry-#{@entries[9].id}-summary .entry-content img[src='http://feed.com/some_image_9.jpg']", visible: true
+        page.should have_css "#entry-#{@entries[9].id}-summary .entry-content img[src='http://feed.com/some_image_9.jpg']", visible: false
       end
 
       it 'does not load images in entries outside the viewport', js: true do
@@ -158,7 +158,7 @@ describe 'quick reading mode' do
         # scroll to bottom of page
         page.execute_script 'window.scrollBy(0,10000)'
         # @entries[0] is the oldest entry, so it will be last on the list (outside the viewport until the user scrolls down)
-        page.should have_css "#entry-#{@entries[0].id}-summary .entry-content img[src='http://feed.com/some_image_0.jpg']", visible: true
+        page.should have_css "#entry-#{@entries[0].id}-summary .entry-content img[src='http://feed.com/some_image_0.jpg']", visible: false
       end
     end
   end
