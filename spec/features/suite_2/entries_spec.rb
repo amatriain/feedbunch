@@ -115,6 +115,7 @@ describe 'feed entries' do
       @user.change_entries_state @entry1, 'read'
 
       visit read_path
+      page.driver.resize_window(800, 600)
       read_folder 'all'
 
       page.should_not have_content @entry1.title
