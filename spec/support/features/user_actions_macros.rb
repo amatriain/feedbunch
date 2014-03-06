@@ -324,7 +324,7 @@ end
 # enter the current password and save the changes.
 # Receives as argument the user performing the action.
 
-def check_open_all_entries(user)
+def enable_open_all_entries(user)
   visit edit_user_registration_path
 
   # capybara check method currently not working because of a capybara-webkit bug: see https://github.com/thoughtbot/capybara-webkit/issues/494

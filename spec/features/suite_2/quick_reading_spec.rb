@@ -108,7 +108,7 @@ describe 'quick reading mode' do
     end
 
     it 'opens all entries by default if user selects this option', js: true do
-      check_open_all_entries @user
+      enable_open_all_entries @user
 
       # Open All Entries checkbox should be checked in edit registration page
       visit edit_user_registration_path
@@ -126,7 +126,7 @@ describe 'quick reading mode' do
 
     # regression test
     it 'closes an open entry', js: true do
-      check_open_all_entries @user
+      enable_open_all_entries @user
       read_feed @feed, @user
       close_entry @entries[0]
 
@@ -140,7 +140,7 @@ describe 'quick reading mode' do
 
       before :each do
         @spinner_url = '/images/Ajax-loader.gif'
-        check_open_all_entries @user
+        enable_open_all_entries @user
         read_feed @feed, @user
       end
 
