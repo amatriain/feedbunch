@@ -112,16 +112,41 @@ end
 ##
 # Click on an entry to open and read it. Receives as argument the entry to be read.
 #
-# If the entry is not currently in the entries list, the test will immediately fail.
+# If the entry is not in the entries list, the test will immediately fail.
+# If the entry is not unread, the test will immediately fail.
 
 def read_entry(entry)
   page.should have_css "#feed-entries #entry-#{entry.id}"
+  entry_should_be_marked_unread entry
 
   # Open entry only if it is closed
   if !page.has_css? "#feed-entries #entry-#{entry.id}-summary.in"
     find("#feed-entries [data-entry-id='#{entry.id}']").click
     page.should have_css "#feed-entries #entry-#{entry.id}-summary.in"
   end
+
+  entry_should_be_marked_read entry
+end
+
+##
+# Mark an entry as unread. Receives as argument the entry to be read.
+#
+# If the entry is not in the entries list, the test will immediately fail.
+# If the entry is not read, the test will immediately fail
+# If the entry is not open, it is opened before marking it as unread.
+
+def unread_entry(entry)
+  page.should have_css "#feed-entries #entry-#{entry.id}"
+  entry_should_be_marked_read entry
+
+  # Open entry only if it is closed
+  if !page.has_css? "#feed-entries #entry-#{entry.id}-summary.in"
+    find("#feed-entries [data-entry-id='#{entry.id}']").click
+    page.should have_css "#feed-entries #entry-#{entry.id}-summary.in"
+  end
+
+  find("div[id='entry-#{entry.id}'] a[ng-click='unread_entry(entry)']").click
+  entry_should_be_marked_unread entry
 end
 
 ##
