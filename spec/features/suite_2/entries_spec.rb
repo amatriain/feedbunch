@@ -162,7 +162,6 @@ describe 'feed entries' do
       mark_all_as_read
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
-      unread_feed_entries_should_eq @feed1, 0, @user
     end
 
     it 'marks all folder entries as read', js: true do
@@ -170,7 +169,6 @@ describe 'feed entries' do
       mark_all_as_read
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
-      unread_folder_entries_should_eq @folder, 0
     end
 
     it 'marks all entries as read', js: true do
@@ -178,7 +176,6 @@ describe 'feed entries' do
       mark_all_as_read
 
       page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
-      unread_folder_entries_should_eq 'all', 0
     end
 
     it 'hides Read button for read entries', js: true do
