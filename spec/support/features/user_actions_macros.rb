@@ -118,13 +118,7 @@ end
 def read_entry(entry)
   page.should have_css "#feed-entries #entry-#{entry.id}"
   entry_should_be_marked_unread entry
-
-  # Open entry only if it is closed
-  if !page.has_css? "#feed-entries #entry-#{entry.id}-summary.in"
-    find("#feed-entries [data-entry-id='#{entry.id}']").click
-    page.should have_css "#feed-entries #entry-#{entry.id}-summary.in"
-  end
-
+  open_entry entry
   entry_should_be_marked_read entry
 end
 
@@ -138,15 +132,24 @@ end
 def unread_entry(entry)
   page.should have_css "#feed-entries #entry-#{entry.id}"
   entry_should_be_marked_read entry
+  open_entry entry
+  find("div[id='entry-#{entry.id}'] a[ng-click='unread_entry(entry)']").click
+  entry_should_be_marked_unread entry
+end
+
+##
+# Open a single entry, if it is not already open.
+#
+# If the entry is not in the entries list, the test will immediately fail.
+
+def open_entry(entry)
+  page.should have_css "#feed-entries #entry-#{entry.id}"
 
   # Open entry only if it is closed
   if !page.has_css? "#feed-entries #entry-#{entry.id}-summary.in"
     find("#feed-entries [data-entry-id='#{entry.id}']").click
     page.should have_css "#feed-entries #entry-#{entry.id}-summary.in"
   end
-
-  find("div[id='entry-#{entry.id}'] a[ng-click='unread_entry(entry)']").click
-  entry_should_be_marked_unread entry
 end
 
 ##

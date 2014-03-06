@@ -153,7 +153,7 @@ describe 'feed entries' do
 
     it 'shows an alert if it cannot mark entry as read', js: true do
       User.any_instance.stub(:change_entries_state).and_raise StandardError.new
-      read_entry @entry1
+      open_entry @entry1
 
       should_show_alert 'problem-entry-state-change'
     end

@@ -116,12 +116,7 @@ describe 'start page' do
     it 'updates number of unread entries when marking entries as unread', js: true do
       show_read
       read_feed @feed3, @user
-      read_entry @entry4
-      within "#feed-entries #entry-#{@entry4.id} .entry-toolbar", visible: true do
-        page.should have_text "Unread", visible: true
-        find('a').click
-      end
-      page.should have_css "#feed-entries #entry-#{@entry4.id} a.entry-unread"
+      unread_entry @entry4
       go_to_start_page
       page.should have_content 'with 4 unread entries'
     end
