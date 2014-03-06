@@ -16,7 +16,7 @@ angular.module('feedbunch').service 'changeUnreadCountSvc',
       if increment
         feed.unread_entries += 1
       else
-        feed.unread_entries -= 1
+        feed.unread_entries -= 1 if feed.unread_entries > 0
       favicoSvc.update_unread_badge()
 
   #--------------------------------------------

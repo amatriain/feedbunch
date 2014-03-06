@@ -157,11 +157,28 @@ describe 'unread entries count' do
       unread_feed_entries_should_eq @feed1, 0, @user
     end
 
-    it 'does not show a negative unread count for all entries'
+    it 'does not show a negative unread count', js: true do
+      # @feed2 has an erroneous unread_entries value of 0, but it actually has one unread entry
+      @user.unsubscribe @feed1
+      FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first.update unread_entries: 0
+      visit read_path
+      show_read
 
-    it 'does not show a negative unread count for a folder'
+      # All unread counts should be 0
+      unread_folder_entries_should_eq 'all', 0
+      unread_folder_entries_should_eq @folder1, 0
+      unread_feed_entries_should_eq @feed2, 0, @user
 
-    it 'does not show a negative unread count for a feed'
+      # Open entry, marking it as read
+      read_feed @feed2, @user
+      read_entry @entry2_1
+
+      # All unread counts should still be 0
+      unread_folder_entries_should_eq 'all', 0
+      unread_folder_entries_should_eq @folder1, 0
+      unread_feed_entries_should_eq @feed2, 0, @user
+    end
+
   end
 
 end
