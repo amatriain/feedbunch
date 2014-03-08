@@ -17,8 +17,8 @@ set :stage, :production
 # extended properties on the server.
 #server 'example.com', user: 'deploy', roles: %w{web app}, my_property: :my_value
 
-server 'production.feedbunch.com', user: 'feedbunch', roles: %w{app web db}, primary: true
-server 'background.production.feedbunch.com', user: 'feedbunch', roles: %w{app background}
+server 'web.feedbunch.com', user: 'feedbunch', roles: %w{app web db}, primary: true
+server 'background.feedbunch.com', user: 'feedbunch', roles: %w{app background}
 
 # you can set custom ssh options
 # it's possible to pass any option but you need to keep in mind that net/ssh understand limited list of options
@@ -43,7 +43,7 @@ server 'background.production.feedbunch.com', user: 'feedbunch', roles: %w{app b
 # setting per server overrides global ssh_options
 
 set :ssh_options, {
-  keys: %w(/home/amatriain/Feedbunch/Production/AWS/Openreaderproduction.pem)
+  keys: %w(/home/amatriain/Feedbunch/Production/DigitalOcean/id_ecdsa)
 }
 
 fetch(:default_env).merge!(rails_env: :production)
