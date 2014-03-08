@@ -43,7 +43,7 @@ server 'background.staging.feedbunch.com', user: 'feedbunch', roles: %w{app back
 # setting per server overrides global ssh_options
 
 set :ssh_options, {
-  keys: %w(/home/amatriain/Feedbunch/Staging/Openreaderstaging.pem)
+  keys: %w(/home/amatriain/Feedbunch/Staging/AWS/Openreaderstaging.pem)
 }
 
 fetch(:default_env).merge!(rails_env: :staging)

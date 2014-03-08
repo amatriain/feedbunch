@@ -43,7 +43,7 @@ server 'background.production.feedbunch.com', user: 'feedbunch', roles: %w{app b
 # setting per server overrides global ssh_options
 
 set :ssh_options, {
-  keys: %w(/home/amatriain/Feedbunch/Production/Openreaderproduction.pem)
+  keys: %w(/home/amatriain/Feedbunch/Production/AWS/Openreaderproduction.pem)
 }
 
 fetch(:default_env).merge!(rails_env: :production)
