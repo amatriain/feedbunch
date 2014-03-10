@@ -96,10 +96,10 @@ class ScheduleManager
     max = Feedbunch::Application.config.max_update_interval
     new_interval = max if new_interval > max
 
-    # Decrement the update interval saved in the database
+    # Increment the update interval saved in the database
     feed.update fetch_interval_secs: new_interval
 
-    # Actually decrement the update interval in Resque
+    # Actually increment the update interval in Resque
     set_or_update_schedule feed.id, feed.fetch_interval_secs, feed.fetch_interval_secs
   end
 
