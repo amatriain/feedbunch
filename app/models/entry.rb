@@ -182,7 +182,7 @@ class Entry < ActiveRecord::Base
       img.remove_attribute 'height'
       img.remove_attribute 'width'
       img.remove_attribute 'style'
-      img['class'] = 'hidden'
+      img.remove_attribute 'class'
 
       # prepare image for lazy loading
       src = img['src']
