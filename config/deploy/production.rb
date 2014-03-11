@@ -43,7 +43,7 @@ server 'background.feedbunch.com', user: 'feedbunch', roles: %w{app background}
 # setting per server overrides global ssh_options
 
 set :ssh_options, {
-  keys: %w(/home/amatriain/Feedbunch/Production/DigitalOcean/id_ecdsa)
+  keys: %w(/home/amatriain/Feedbunch/Production/id_ecdsa)
 }
 
 fetch(:default_env).merge!(rails_env: :production)
