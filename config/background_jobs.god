@@ -98,7 +98,9 @@ God.watch do |w|
   w.env = {'RAILS_ENV' => rails_env,
            'RESQUE_ENV' => resque_env,
            'TERM_CHILD' => '1',
-           'RESQUE_TERM_TIMEOUT' => ' 300'}
+           'RESQUE_TERM_TIMEOUT' => ' 300',
+           'DYNAMIC_SCHEDULE' => true
+          }
   w.start = "rake -f #{File.join(app_root, 'Rakefile')} resque:scheduler"
   w.stop_timeout = 5.minutes
 
