@@ -147,8 +147,12 @@ class ScheduleManager
       # Calculate how much time is left until the moment when the next update should have been scheduled
       first_in = (feed.last_fetched + feed.fetch_interval_secs.seconds - DateTime.now).seconds.round
 
-      # If the moment the next update should have been scheduled is in the past, schedule an update immediately (well, almost)
-      first_in = 1.second if first_in < 0
+      # If the moment the next update should have been scheduled is in the past, schedule an update
+      # sometime in the next 15 minutes.
+      if first_in < 0
+        delay = Random.rand 901
+        first_in = delay.seconds
+      end
     end
 
     set_or_update_schedule feed.id, feed.fetch_interval_secs, first_in

@@ -64,7 +64,7 @@ describe FixSchedulesJob do
       config[:class].should eq 'UpdateFeedJob'
       config[:args].should eq @feed.id
       config[:every][0].should eq "#{12.hours}s"
-      config[:every][1][:first_in].should eq 1.second
+      config[:every][1][:first_in].should be_between 0.minutes, 15.minutes
     end
 
     FixSchedulesJob.perform
