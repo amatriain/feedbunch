@@ -102,8 +102,8 @@ group :test do
 end
 
 group :staging, :production do
-  # Mysql database for staging and production
-  gem 'mysql2'
+  # PostgreSQL database for staging and production
+  gem 'pg'
 
   # Access Amazon AWS programattically
   gem 'aws-sdk'
