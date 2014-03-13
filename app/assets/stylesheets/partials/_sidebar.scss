@@ -130,28 +130,24 @@
         }
         margin-right: 10px;
         text-align: right;
-
-        .badge {
-          padding-bottom: 4px;
-        }
       }
     }
 
     .folder-arrow {
-      margin-top: 6px;
+      margin-top: 4px;
       width: 13px;
     }
 
     .folder-unread-badge {
       margin: {
-        top: 3px;
+        top: 2px;
         right: 0;
       }
     }
 
     .folder-icon,
     .feed-icon {
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .sidebar-folder{
@@ -184,14 +180,6 @@
       width: 100%;
       padding-left: 5px;
       vertical-align: middle;
-    }
-
-    .sidebar-feed-title {
-      height: 23px;
-    }
-
-    .sidebar-folder-title {
-      height: 24px;
     }
   }
 }
