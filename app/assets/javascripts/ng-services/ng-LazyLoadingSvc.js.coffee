@@ -9,16 +9,20 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
   # PRIVATE FUNCTION: Lazy load a single image. Receives as argument the jQuery object wrapping the img.
   #--------------------------------------------
   load_image = (img)->
-    img.on 'error', ->
-      img.addClass 'hidden load-failed'
-    .on 'load', ->
-      if !img.hasClass 'load-failed'
-        img.addClass('loaded').removeClass('hidden')
-        # center and add display-block to images if wider than 40% of the entries div
-        img_width = 100 * img.width() / $('#feed-entries').width()
-        img.addClass 'center-block' if img_width > 40
+    # Create a clone of the image, hide it and load the actual image there. If it loads successfully,
+    # hide the placeholder image and show the loaded image, otherwise hide both images.
     data_src = img.attr 'data-src'
-    img.removeAttr('data-src').attr('src',  data_src)
+    img.removeAttr('data-src')
+    loaded_img = img.clone().addClass('hidden').removeAttr('src').insertAfter(img)
+    loaded_img.on 'error', ->
+      img.addClass 'hidden'
+    .on 'load', ->
+      img.addClass 'hidden'
+      loaded_img.addClass('loaded').removeClass('hidden')
+      # center and add display-block to images if wider than 40% of the entries div
+      img_width = 100 * loaded_img.width() / $('#feed-entries').width()
+      loaded_img.addClass 'center-block' if img_width > 40
+    loaded_img.attr('src', data_src)
 
   service =
 
