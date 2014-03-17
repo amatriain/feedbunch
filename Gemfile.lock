@@ -104,6 +104,7 @@ GEM
       simplecov (>= 0.7)
       term-ansicolor
       thor
+    curb (0.8.5)
     database_cleaner (1.2.0)
     devise (3.2.4)
       bcrypt (~> 3.0)
@@ -121,7 +122,10 @@ GEM
       factory_girl (~> 4.4.0)
       railties (>= 3.0.0)
     fastercsv (1.5.5)
-    feedzirra (0.8.0)
+    feedjira (1.0.0)
+      curb (~> 0.8.1)
+      loofah (~> 1.2.1)
+      sax-machine (~> 0.2.1)
     formtastic (2.3.0.rc2)
       actionpack (>= 3.0)
     god (0.13.4)
@@ -149,6 +153,8 @@ GEM
       activesupport (>= 3.0.0)
     launchy (2.4.2)
       addressable (~> 2.3)
+    loofah (1.2.1)
+      nokogiri (>= 1.4.4)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -306,7 +312,7 @@ DEPENDENCIES
   database_cleaner
   devise
   factory_girl_rails
-  feedzirra
+  feedjira
   god
   high_voltage
   http_accept_language

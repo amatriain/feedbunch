@@ -38,7 +38,7 @@ gem 'simple_form'
 gem 'kaminari'
 
 # RSS/Atom parser
-gem 'feedzirra'
+gem 'feedjira'
 gem 'sax-machine'
 
 # HTTP client
