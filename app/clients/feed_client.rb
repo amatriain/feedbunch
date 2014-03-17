@@ -1,4 +1,4 @@
-require 'feedzirra'
+require 'feedjira'
 require 'rest_client'
 require 'nokogiri'
 require 'uri'
