@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-  - "ruby-2.1.0"
+  - "ruby-2.1.1"
 script:
   - "bundle exec brakeman -z  --skip-files config/initializers/secret_token.rb"
   - "bundle exec rake db:migrate"
