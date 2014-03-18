@@ -11,16 +11,16 @@ describe 'unread entries count' do
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
 
+    @user.subscribe @feed1.fetch_url
+    @user.subscribe @feed2.fetch_url
+    @folder1.feeds << @feed1 << @feed2
+
     @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
     @entry1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
     @entry1_3 = FactoryGirl.build :entry, feed_id: @feed1.id
     @entry2_1 = FactoryGirl.build :entry, feed_id: @feed2.id
     @feed1.entries << @entry1_1 << @entry1_2 << @entry1_3
     @feed2.entries << @entry2_1
-
-    @user.subscribe @feed1.fetch_url
-    @user.subscribe @feed2.fetch_url
-    @folder1.feeds << @feed1 << @feed2
 
     login_user_for_feature @user
     visit read_path
@@ -137,7 +137,12 @@ describe 'unread entries count' do
     end
 
     it 'sets total number of unread entries to zero when marking all as read', js: true do
+      sleep 0.25
       read_folder 'all'
+      page.should have_text @entry1_1.title
+      page.should have_text @entry1_2.title
+      page.should have_text @entry1_3.title
+      page.should have_text @entry2_1.title
       mark_all_as_read
 
       unread_folder_entries_should_eq 'all', 0

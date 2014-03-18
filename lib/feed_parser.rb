@@ -6,7 +6,7 @@ require 'entry_manager'
 class FeedParser
 
   ##
-  # Try to parse an HTTP response as a feed (RSS, Atom or other formats supported by Feedzirra).
+  # Try to parse an HTTP response as a feed (RSS, Atom or other formats supported by Feedjira).
   #
   # If successful:
   # - saves in the database the title and URL for the feed.
@@ -23,7 +23,7 @@ class FeedParser
   # Returns the updated feed object.
 
   def self.parse(feed, feed_response)
-    feed_parsed = Feedzirra::Feed.parse feed_response
+    feed_parsed = Feedjira::Feed.parse feed_response
     Rails.logger.info "Correctly parsed feed from url #{feed.fetch_url}"
 
     # Save the feed title and url.

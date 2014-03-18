@@ -186,6 +186,7 @@ end
 def mark_all_as_read
   find('#read-all-button').click
   page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+  page.should_not have_css 'feed-entries a[data-entry-id].entry-becoming-read'
 end
 
 ##

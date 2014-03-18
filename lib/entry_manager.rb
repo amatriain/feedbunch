@@ -46,13 +46,13 @@ class EntryManager
   private
 
   ##
-  # Convert an entry created by Feedzirra to a hash, with just the keys needed to create an Entry instance.
+  # Convert an entry created by Feedjira to a hash, with just the keys needed to create an Entry instance.
   #
   # The whitelisted keys are: title, url, author, content, summary, published.
-  # Also the "guid" key is inserted. This may not come directly from the object created by Feedzirra, see above.
+  # Also the "guid" key is inserted. This may not come directly from the object created by Feedjira, see above.
   #
   # Receives as arguments:
-  # - the entry created by Feedzirra
+  # - the entry created by Feedjira
   # - the guid for the entry
   #
   # Returns a hash with the key/values necessary to create an instance of the Entry model.

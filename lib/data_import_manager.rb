@@ -73,7 +73,7 @@ class DataImportManager
         Rails.logger.warn 'Could not find OPML file in uploaded data file'
         raise ImportDataError.new
       end
-    rescue Zip::ZipError => e
+    rescue Zip::Error => e
       # file is not a zip, read it normally
       Rails.logger.info 'Uploaded file is not a zip archive, it is probably an uncompressed OPML file'
       file_contents = File.read file
