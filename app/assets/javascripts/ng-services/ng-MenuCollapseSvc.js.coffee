@@ -16,5 +16,5 @@ angular.module('feedbunch').service 'menuCollapseSvc',
   #---------------------------------------------
   close: ->
     $('.navbar-collapse').collapse 'hide'
-    $('#toggle-menu-collapse').focus()
+    $('.navbar a').blur()
 ]
