@@ -80,6 +80,7 @@ class ScheduleManager
     new_interval = min if new_interval < min
 
     # Decrement the update interval saved in the database
+    Rails.logger.debug "Decrementing update interval of feed #{feed.id} - #{feed.title} to #{new_interval} seconds"
     feed.update fetch_interval_secs: new_interval
 
     # Actually decrement the update interval in Resque
@@ -97,6 +98,7 @@ class ScheduleManager
     new_interval = max if new_interval > max
 
     # Increment the update interval saved in the database
+    Rails.logger.debug "Incrementing update interval of feed #{feed.id} - #{feed.title} to #{new_interval} seconds"
     feed.update fetch_interval_secs: new_interval
 
     # Actually increment the update interval in Resque
@@ -128,6 +130,7 @@ class ScheduleManager
     end
     config[:every] = every
 
+    Rails.logger.debug "Setting new resque schedule for updates of feed #{feed_id} every #{every_seconds} seconds, beginning in #{first_in_seconds} seconds"
     Resque.set_schedule name, config
   end
 

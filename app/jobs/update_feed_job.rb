@@ -61,6 +61,7 @@ class UpdateFeedJob
   ensure
     if feed.present?
       # Update timestamp of the last time the feed was fetched
+      Rails.logger.debug "Updating time of last update for feed #{feed.id} - #{feed.title}"
       feed.update last_fetched: DateTime.now
 
       if entries_after > entries_before
