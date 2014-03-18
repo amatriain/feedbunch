@@ -29,6 +29,8 @@ class UpdateFeedJob
     end
     feed = Feed.find feed_id
 
+    Rails.logger.debug "Updating feed #{feed.id} - #{feed.title}"
+
     # Initialize the number of entries in the feed before and after fetching, so the variables can be
     # used in the ensure clause even if an error is raised while fetching (e.g. the server responds
     # with a HTTP error code)
