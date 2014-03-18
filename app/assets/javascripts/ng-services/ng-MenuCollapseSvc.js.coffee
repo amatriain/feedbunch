@@ -16,4 +16,5 @@ angular.module('feedbunch').service 'menuCollapseSvc',
   #---------------------------------------------
   close: ->
     $('.navbar-collapse').collapse 'hide'
+    $('#feedbunch-brand').focus()
 ]

@@ -4,7 +4,8 @@
 
     <div class="navbar-header">
 
-      <button type="button"
+      <button id="toggle-menu-collapse"
+              type="button"
               class="navbar-toggle navbar-toggle-right"
               data-toggle="collapse"
               data-target=".navbar-collapse">
@@ -31,7 +32,7 @@
         <i class="fa fa-folder-open fa-lg"></i>
       </button>
 
-      <%= link_to read_path, class: 'navbar-brand' do %>
+      <%= link_to read_path, class: 'navbar-brand', id: 'feedbunch-brand' do %>
         <%= image_tag asset_path('feed18x18.png'), alt: 'feedbunch' %>
         Feedbunch (BETA)
       <% end %>
