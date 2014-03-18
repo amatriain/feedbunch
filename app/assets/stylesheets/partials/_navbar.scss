@@ -35,9 +35,14 @@ body.navbar-visible{
     }
   }
 
-  /* Limit user name width in the navbar at different resolutions */
+
 
   @media (max-width: $screen-sm-min) {
+    a:active {
+      background-color: #E7E7E7 !important;
+    }
+
+    /* Limit user name width in the navbar at different resolutions */
     #user-dropdown {
       max-width: 100%;
 
@@ -49,6 +54,7 @@ body.navbar-visible{
   }
 
   @media (min-width: $screen-sm-min) and (max-width: $screen-md-min) {
+    /* Limit user name width in the navbar at different resolutions */
     #user-dropdown {
       max-width: 130px;
 
