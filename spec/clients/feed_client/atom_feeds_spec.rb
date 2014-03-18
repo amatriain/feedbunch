@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe FeedClient do
   before :each do
-    @feed = FactoryGirl.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
+    @original_feed_title = 'Some feed title'
+    @original_feed_url = 'http://some.feed.com'
+    @feed = FactoryGirl.create :feed, title: @original_feed_title, url: @original_feed_url
 
     @feed_title = 'xkcd.com'
     @feed_url = 'http://xkcd.com/'
@@ -25,7 +27,7 @@ describe FeedClient do
   context 'Atom feed fetching' do
 
     before :each do
-      feed_xml = <<FEED_XML
+      @feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <title>#{@feed_title}</title>
@@ -49,8 +51,8 @@ describe FeedClient do
 </feed>
 FEED_XML
 
-      feed_xml.stub(:headers).and_return {}
-      RestClient.stub get: feed_xml
+      @feed_xml.stub(:headers).and_return {}
+      RestClient.stub get: @feed_xml
     end
 
     it 'returns feed if successful' do
@@ -143,10 +145,73 @@ FEED_XML
       @feed.title.should eq @feed_title
     end
 
+    it 'does not update the feed title if it is not present in the feed' do
+      @feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <link href="#{@feed_url}" rel="alternate" />
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+  <entry>
+    <title>#{@entry2.title}</title>
+    <link href="#{@entry2.url}" rel="alternate" />
+    <updated>#{@entry2.published}</updated>
+    <id>#{@entry2.guid}</id>
+    <summary type="html">#{@entry2.summary}</summary>
+  </entry>
+  <entry>
+    <title>#{@entry1.title}</title>
+    <link href="#{@entry1.url}" rel="alternate" />
+    <updated>#{@entry1.published}</updated>
+    <id>#{@entry1.guid}</id>
+    <summary type="html">#{@entry1.summary}</summary>
+  </entry>
+</feed>
+FEED_XML
+      @feed_xml.stub(:headers).and_return {}
+      RestClient.stub get: @feed_xml
+
+      FeedClient.fetch @feed
+      @feed.reload
+      @feed.title.should eq @original_feed_title
+    end
+
     it 'retrieves the feed URL and saves it in the database' do
       FeedClient.fetch @feed
       @feed.reload
       @feed.url.should eq @feed_url
+    end
+
+    it 'does not update the feed URL if it is not present in the feed' do
+      @feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>#{@feed_title}</title>
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+  <entry>
+    <title>#{@entry2.title}</title>
+    <link href="#{@entry2.url}" rel="alternate" />
+    <updated>#{@entry2.published}</updated>
+    <id>#{@entry2.guid}</id>
+    <summary type="html">#{@entry2.summary}</summary>
+  </entry>
+  <entry>
+    <title>#{@entry1.title}</title>
+    <link href="#{@entry1.url}" rel="alternate" />
+    <updated>#{@entry1.published}</updated>
+    <id>#{@entry1.guid}</id>
+    <summary type="html">#{@entry1.summary}</summary>
+  </entry>
+</feed>
+FEED_XML
+
+      @feed_xml.stub(:headers).and_return {}
+      RestClient.stub get: @feed_xml
+
+      FeedClient.fetch @feed
+      @feed.reload
+      @feed.url.should eq @original_feed_url
     end
   end
 

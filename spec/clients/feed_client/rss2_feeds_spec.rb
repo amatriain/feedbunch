@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe FeedClient do
   before :each do
-    @feed = FactoryGirl.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
+    @original_feed_title = 'Some feed title'
+    @original_feed_url = 'http://some.feed.com'
+    @feed = FactoryGirl.create :feed, title: @original_feed_title, url: @original_feed_url
 
     @feed_title = 'xkcd.com'
     @feed_url = 'http://xkcd.com/'
@@ -145,10 +147,76 @@ FEED_XML
       @feed.title.should eq @feed_title
     end
 
+    it 'does not update the feed title if it is not present in the feed' do
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <link>#{@feed_url}</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{@entry2.title}</title>
+      <link>#{@entry2.url}</link>
+      <description>#{@entry2.summary}</description>
+      <pubDate>#{@entry2.published}</pubDate>
+      <guid>#{@entry2.guid}</guid>
+    </item>
+    <item>
+      <title>#{@entry1.title}</title>
+      <link>#{@entry1.url}</link>
+      <description>#{@entry1.summary}</description>
+      <pubDate>#{@entry1.published}</pubDate>
+      <guid>#{@entry1.guid}</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub(:headers).and_return {}
+      RestClient.stub get: feed_xml
+
+      FeedClient.fetch @feed
+      @feed.reload
+      @feed.title.should eq @original_feed_title
+    end
+
     it 'retrieves the feed URL and saves it in the database' do
       FeedClient.fetch @feed
       @feed.reload
       @feed.url.should eq @feed_url
+    end
+
+    it 'does not update the feed URL if it is not present in the feed' do
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{@feed_title}</title>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{@entry2.title}</title>
+      <link>#{@entry2.url}</link>
+      <description>#{@entry2.summary}</description>
+      <pubDate>#{@entry2.published}</pubDate>
+      <guid>#{@entry2.guid}</guid>
+    </item>
+    <item>
+      <title>#{@entry1.title}</title>
+      <link>#{@entry1.url}</link>
+      <description>#{@entry1.summary}</description>
+      <pubDate>#{@entry1.published}</pubDate>
+      <guid>#{@entry1.guid}</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub(:headers).and_return {}
+      RestClient.stub get: feed_xml
+
+      FeedClient.fetch @feed
+      @feed.reload
+      @feed.url.should eq @original_feed_url
     end
   end
 
