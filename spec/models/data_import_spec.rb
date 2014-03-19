@@ -4,8 +4,6 @@ describe DataImport do
 
   before :each do
     @user = FactoryGirl.create :user
-    @data_import = FactoryGirl.build :data_import, user_id: @user.id
-    @user.data_import = @data_import
   end
 
   context 'validations' do
@@ -32,6 +30,12 @@ describe DataImport do
     it 'defaults to zero processed_feeds' do
       data_import = FactoryGirl.create :data_import, processed_feeds: nil
       data_import.processed_feeds.should eq 0
+    end
+
+    it 'defaults show_alert to true' do
+      data_import = FactoryGirl.build :data_import, show_alert: nil
+      data_import.save!
+      data_import.show_alert.should be_true
     end
 
   end

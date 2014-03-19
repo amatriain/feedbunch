@@ -11,6 +11,8 @@
 # - total_feeds: number of feeds in the data file
 # - processed_feeds: number of feeds in the data file already processed (the user is subscribed to the feed and
 # entries have been fetched from it).
+# - show_alert: if true (the default), show an alert in the Start page informing of the data import status. If false,
+# the user has closed the alert related to OPML imports and doesn't want it to be displayed again.
 
 class DataImport < ActiveRecord::Base
   # Class constants for the possible statuses
@@ -24,6 +26,7 @@ class DataImport < ActiveRecord::Base
   validates :status, presence: true, inclusion: {in: [RUNNING, ERROR, SUCCESS]}
   validates :total_feeds, presence: true
   validates :processed_feeds, presence: true
+  validates :show_alert, inclusion: {in: [true, false]}
 
   before_validation :default_values
 
@@ -36,5 +39,6 @@ class DataImport < ActiveRecord::Base
     self.status = RUNNING if self.status.blank?
     self.total_feeds = 0 if self.total_feeds.blank?
     self.processed_feeds = 0 if self.processed_feeds.blank?
+    self.show_alert = true if self.show_alert.nil?
   end
 end

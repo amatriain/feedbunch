@@ -5,6 +5,7 @@ FactoryGirl.define do
     status 'RUNNING'
     total_feeds 256
     processed_feeds 128
+    show_alert true
     user
 
     factory :data_import_running do
