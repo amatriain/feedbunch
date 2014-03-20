@@ -2,28 +2,10 @@
 
 FactoryGirl.define do
   factory :data_import do
-    status 'RUNNING'
+    status 'NONE'
     total_feeds 256
     processed_feeds 128
     show_alert true
     user
-
-    factory :data_import_running do
-      status 'RUNNING'
-      total_feeds 256
-      processed_feeds 128
-    end
-
-    factory :data_import_error do
-      status 'ERROR'
-      total_feeds 256
-      processed_feeds 200
-    end
-
-    factory :data_import_success do
-      status 'SUCCESS'
-      total_feeds 256
-      processed_feeds 256
-    end
   end
 end

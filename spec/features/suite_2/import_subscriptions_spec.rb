@@ -51,6 +51,23 @@ describe 'import subscriptions' do
 
   end
 
+  context 'error management' do
+
+    it 'redirects to start page if there is an error submitting the form', js: true do
+      User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
+      visit read_path
+      open_user_menu
+
+      save_and_open_page
+      find('a#start-data-import').click
+      page.should have_css '#data_import_file'
+      attach_file 'data_import_file', @data_file
+      find('#data-import-submit').click
+
+      current_path.should eq read_path
+    end
+  end
+
   context 'user uploads file' do
 
     before :each do
@@ -70,20 +87,6 @@ describe 'import subscriptions' do
     it 'redirects to start page', js: true do
       current_path.should eq read_path
       page.should have_css '#start-info'
-    end
-
-    it 'redirects to start page if there is an error submitting the form', js: true do
-      User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
-      @user.data_import.destroy
-      visit read_path
-      open_user_menu
-
-      find('a#start-data-import').click
-      page.should have_css '#data_import_file'
-      attach_file 'data_import_file', @data_file
-      find('#data-import-submit').click
-
-      current_path.should eq read_path
     end
 
     it 'shows error message', js: true do
