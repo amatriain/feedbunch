@@ -1,14 +1,6 @@
-<%
-  if user.data_import.present?
-    status = user.data_import.status
-  else
-    status = 'NONE'
-  end
-%>
-
 {
-  "status": "<%= status %>"
-<% if status == DataImport::RUNNING %>
+  "status": "<%= user.data_import.status %>"
+<% if user.data_import.status == DataImport::RUNNING %>
 ,
   "import": {
     "processed": <%= user.data_import.processed_feeds %>,

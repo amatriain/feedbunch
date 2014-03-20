@@ -28,6 +28,8 @@ require 'subscriptions_manager'
 # - Folder: Each user can have many folders and each folder belongs to a single user (one-to-many relationship).
 # - Entry, through the Feed model: This enables us to retrieve all entries for all feeds a user is subscribed to.
 # - EntryState: This enables us to retrieve the state (read or unread) of all entries for all feeds a user is subscribed to.
+# - DataImport: This indicates whether the user has ever started an OPML import, and in this case it gives information about the import
+# process (whether it's still running or not, number of feeds processed, etc).
 #
 # Also, the User model has the following attributes:
 #
@@ -76,7 +78,7 @@ class User < ActiveRecord::Base
   validates :quick_reading, inclusion: {in: [true, false]}
   validates :open_all_entries, inclusion: {in: [true, false]}
 
-  before_save :encode_password
+  before_save :before_save_user
   before_validation :default_values
 
   ##
@@ -154,10 +156,18 @@ class User < ActiveRecord::Base
   private
 
   ##
-  # Before saving a user instance, ensure the encrypted_password is encoded as utf-8
+  # Operations necessary before saving a User in the database:
+  # - ensure that the encrypted_password is encoded as utf-8
+  # - create a new DataImport instance for the user with state "NONE" if it doesn't already exist (to indicate that
+  # the user has never ran an OPML import).
 
-  def encode_password
+  def before_save_user
     self.encrypted_password.encode! 'utf-8'
+
+    if self.data_import.blank?
+      self.create_data_import status: DataImport::NONE
+      Rails.logger.debug "User #{self.email} has no DataImport, creating one with status NONE"
+    end
   end
 
   ##

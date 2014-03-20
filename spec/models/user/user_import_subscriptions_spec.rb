@@ -18,10 +18,13 @@ describe User do
 
   context 'import subscriptions' do
 
-    it 'creates a new data_import with status RUNNING for the user' do
-      @user.data_import.should be_blank
-      @user.import_subscriptions @data_file
+    it 'has a data_import with status NONE as soon as the user is created' do
+      @user.data_import.should be_present
+      @user.data_import.status.should eq DataImport::NONE
+    end
 
+    it 'creates a new data_import with status RUNNING for the user' do
+      @user.import_subscriptions @data_file
       @user.data_import.should be_present
       @user.data_import.status.should eq DataImport::RUNNING
     end
