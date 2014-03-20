@@ -55,10 +55,7 @@ describe 'import subscriptions' do
 
     it 'redirects to start page if there is an error submitting the form', js: true do
       User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
-      visit read_path
-      open_user_menu
 
-      save_and_open_page
       find('a#start-data-import').click
       page.should have_css '#data_import_file'
       attach_file 'data_import_file', @data_file
