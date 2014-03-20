@@ -16,10 +16,10 @@ describe DataImport do
 
   context 'default values' do
 
-    it 'defaults to status RUNNING when created' do
+    it 'defaults to status NONE when created' do
       @user.create_data_import
 
-      @user.data_import.status.should eq DataImport::RUNNING
+      @user.data_import.status.should eq DataImport::NONE
     end
 
     it 'defaults to zero total_feeds' do

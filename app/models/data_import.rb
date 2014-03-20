@@ -7,7 +7,7 @@
 #
 # The DataImport model has the following fields:
 # - status: mandatory text that indicates the current status of the import process. Supported values are
-# "RUNNING", "SUCCESS" and "ERROR".
+# "NONE" (the default), "RUNNING", "SUCCESS" and "ERROR".
 # - total_feeds: number of feeds in the data file
 # - processed_feeds: number of feeds in the data file already processed (the user is subscribed to the feed and
 # entries have been fetched from it).
@@ -16,6 +16,7 @@
 
 class DataImport < ActiveRecord::Base
   # Class constants for the possible statuses
+  NONE = 'NONE'
   RUNNING = 'RUNNING'
   ERROR = 'ERROR'
   SUCCESS = 'SUCCESS'
@@ -23,7 +24,7 @@ class DataImport < ActiveRecord::Base
   belongs_to :user
   validates :user_id, presence: true
 
-  validates :status, presence: true, inclusion: {in: [RUNNING, ERROR, SUCCESS]}
+  validates :status, presence: true, inclusion: {in: [NONE, RUNNING, ERROR, SUCCESS]}
   validates :total_feeds, presence: true
   validates :processed_feeds, presence: true
   validates :show_alert, inclusion: {in: [true, false]}
@@ -36,7 +37,7 @@ class DataImport < ActiveRecord::Base
   # By default, a DataImport is in the "RUNNING" status unless specified otherwise.
 
   def default_values
-    self.status = RUNNING if self.status.blank?
+    self.status = NONE if self.status.blank?
     self.total_feeds = 0 if self.total_feeds.blank?
     self.processed_feeds = 0 if self.processed_feeds.blank?
     self.show_alert = true if self.show_alert.nil?

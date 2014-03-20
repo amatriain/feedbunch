@@ -20,7 +20,7 @@ class DataImportManager
 
   def self.import(file, user)
     Rails.logger.info "User #{user.id} - #{user.email} requested import of a data file"
-    data_import = user.create_data_import
+    data_import = user.create_data_import status: DataImport::RUNNING
 
     subscription_data = self.read_data_file file
 
