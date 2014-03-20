@@ -39,8 +39,7 @@ describe DataImportsController do
     it 'creates a DataImport instance with ERROR status if an error happens' do
       User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
       post :create, data_import: {file: 'mock_file'}
-      @user.data_import.should_not be_blank
-      @user.data_import.status.should eq DataImport::ERROR
+      @user.reload.data_import.status.should eq DataImport::ERROR
     end
   end
 
