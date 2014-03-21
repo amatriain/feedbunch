@@ -37,10 +37,22 @@ class DataImportsController < ApplicationController
     redirect_to read_path
   end
 
+  ##
+  # Update the DataImport for the current user. Currently the only supported change is showing or hiding the alert
+  # displaying the status of the process.
+
+  def update
+    @data_import = current_user.data_import
+    current_user.set_data_import_visible data_import_params[:show_alert]
+    head :ok
+  rescue => e
+    handle_error e
+  end
+
   private
 
   def data_import_params
-    params.require(:data_import).permit(:file)
+    params.require(:data_import).permit(:file, :show_alert)
   end
 
 end

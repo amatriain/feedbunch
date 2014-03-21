@@ -110,7 +110,7 @@ Feedbunch::Application.routes.draw do
   resources :folders, only: [:index, :show, :update, :create]
 
   # Resourceful routes for subscriptions import process status
-  resource :data_imports, only: [:create, :show]
+  resource :data_imports, only: [:show, :create, :update]
 
   # Resourceful routes for user data
   resource :user_data, only: [:show]

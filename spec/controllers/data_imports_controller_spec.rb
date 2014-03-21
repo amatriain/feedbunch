@@ -4,7 +4,6 @@ describe DataImportsController do
 
   before :each do
     @user = FactoryGirl.create :user
-    @data_import = FactoryGirl.create :data_import
 
     login_user_for_unit @user
   end
@@ -40,6 +39,25 @@ describe DataImportsController do
       User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
       post :create, data_import: {file: 'mock_file'}
       @user.reload.data_import.status.should eq DataImport::ERROR
+    end
+  end
+
+  context 'PUT update' do
+
+    it 'asigns the correct DataImport' do
+      put :update, data_import: {id: @user.data_import.id, show_alert: 'false'}, format: :json
+      assigns(:data_import).should eq @user.data_import
+    end
+
+    it 'returns success' do
+      put :update, data_import: {id: @user.data_import.id, show_alert: 'false'}, format: :json
+      response.should be_success
+    end
+
+    it 'returns 500 if there is a problem changing the alert visibility' do
+      User.any_instance.stub(:set_data_import_visible).and_raise StandardError.new
+      put :update, data_import: {id: @user.data_import.id, show_alert: 'false'}, format: :json
+      response.status.should eq 500
     end
   end
 
