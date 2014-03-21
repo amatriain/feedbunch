@@ -1,10 +1,10 @@
 {
-  "status": "<%= user.data_import.status %>"
-<% if user.data_import.status == DataImport::RUNNING %>
+  "status": "<%= data_import.status %>"
+<% if data_import.status == DataImport::RUNNING %>
 ,
   "import": {
-    "processed": <%= user.data_import.processed_feeds %>,
-    "total": <%= user.data_import.total_feeds %>
+    "processed": <%= data_import.processed_feeds %>,
+    "total": <%= data_import.total_feeds %>
   }
 <% end %>
 }

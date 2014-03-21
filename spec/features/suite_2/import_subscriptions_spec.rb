@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe 'import subscriptions' do
   before :each do
+    @data_file = File.join __dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip'
+
     @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
     @entry = FactoryGirl.build :entry, feed_id: @feed.id
@@ -12,6 +14,13 @@ describe 'import subscriptions' do
     visit read_path
     find('#start-page').click
     open_user_menu
+  end
+
+  after :each do
+    # Close the browser as soon as test is finished. Otherwise the javascript running in the client sometimes
+    # tries to retrieve JSON (e.g. data_imports) while test cleanup is happening, which sometimes gives weird
+    # errors (because a model instance has been deleted right in the middle of a controller action processing).
+    page.execute_script "window.close();"
   end
 
   it 'shows file upload popup', js: true do
@@ -68,7 +77,6 @@ describe 'import subscriptions' do
   context 'user uploads file' do
 
     before :each do
-      @data_file = File.join __dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip'
       find('a#start-data-import').click
       page.should have_css '#data_import_file'
       attach_file 'data_import_file', @data_file
@@ -87,43 +95,37 @@ describe 'import subscriptions' do
     end
 
     it 'shows error message', js: true do
-      data_import = @user.data_import
-      data_import.status = DataImport::ERROR
-      data_import.save!
+      @user.reload.data_import.update! status: DataImport::ERROR
 
-      visit read_path
-
+      visit current_path
       page.should have_content 'There\'s been an error trying to import your feed subscriptions'
     end
 
     it 'shows success message', js: true do
-      data_import = @user.data_import
-      data_import.status = DataImport::SUCCESS
-      data_import.save!
+      @user.reload.data_import.update! status: DataImport::SUCCESS
 
       visit read_path
-
       page.should have_content 'Your feed subscriptions have been successfully imported'
     end
 
     it 'shows import process progress', js: true do
       page.should have_content 'Your feed subscriptions are being imported'
-      @user.data_import.total_feeds = 412
-      @user.data_import.processed_feeds = 77
-      @user.data_import.save
+      data_import = @user.reload.data_import
+      data_import.update total_feeds: 412
+      data_import.update processed_feeds: 77
       page.should have_content 'Subscriptions imported: 77 of 412'
     end
 
     it 'changes message when import finishes successfully', js: true do
-      @user.data_import.status = DataImport::SUCCESS
-      @user.data_import.save
+      data_import = @user.reload.data_import
+      data_import.update status: DataImport::SUCCESS
       page.should have_content 'Your feed subscriptions have been successfully imported'
     end
 
     it 'shows alert when import finishes successfully', js: true do
       read_feed @feed, @user
-      @user.data_import.status = DataImport::SUCCESS
-      @user.data_import.save
+      data_import = @user.reload.data_import
+      data_import.update status: DataImport::SUCCESS
       should_show_alert 'import-process-success'
     end
 
@@ -136,8 +138,8 @@ describe 'import subscriptions' do
       feed.entries << entry
       @user.subscribe feed.fetch_url
       folder.feeds << feed
-      @user.data_import.status = DataImport::SUCCESS
-      @user.data_import.save
+      data_import = @user.reload.data_import
+      data_import.update status: DataImport::SUCCESS
       within '#sidebar #folders-list' do
         page.should have_css "#folder-#{folder.id}"
       end
@@ -147,14 +149,14 @@ describe 'import subscriptions' do
     end
 
     it 'changes message when import finishes with an error', js: true do
-      @user.data_import.status = DataImport::ERROR
-      @user.data_import.save
+      data_import = @user.reload.data_import
+      data_import.update status: DataImport::ERROR
       page.should have_content 'There\'s been an error trying to import your feed subscriptions'
     end
 
     it 'shows alert when import finishes with an error', js: true do
-      @user.data_import.status = DataImport::ERROR
-      @user.data_import.save
+      data_import = @user.reload.data_import
+      data_import.update status: DataImport::ERROR
       should_show_alert 'import-process-error'
     end
   end

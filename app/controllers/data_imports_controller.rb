@@ -12,7 +12,15 @@ class DataImportsController < ApplicationController
   # Return JSON indicating the status of the "import subscriptions" process for the current user
 
   def show
-    render 'show', locals: {user: current_user}
+    if DataImport.exists? user_id: current_user.id
+      data_import = DataImport.where(user_id: current_user.id).first
+    else
+      Rails.logger.warn "User #{current_user.id} - #{current_user.email} has no DataImport, creating one with status NONE"
+      data_import = current_user.create_data_import status: DataImport::NONE
+    end
+
+    Rails.logger.debug "DataImport for user #{current_user.id} - #{current_user.email}: id #{data_import.try :id}, status #{data_import.try :status}"
+    render 'show', locals: {data_import: data_import}
   end
 
   ##
