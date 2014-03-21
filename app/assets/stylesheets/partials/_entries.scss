@@ -132,12 +132,25 @@
       margin: 0;
     }
 
-    .entry-content img.loaded {
-      vertical-align: baseline;
-      max-width: 100%;
-      margin: {
-        top: 1em;
-        bottom: 1em;
+    .entry-content {
+
+      img.loaded {
+        vertical-align: baseline;
+        max-width: 100%;
+      }
+
+      img.large-img{
+        margin: {
+          top: 1em;
+          bottom: 1em;
+        }
+      }
+
+      img.small-img{
+        margin: {
+          left: 3px;
+          right: 3px;
+        }
       }
     }
   }

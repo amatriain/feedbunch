@@ -21,7 +21,10 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
       loaded_img.addClass('loaded').removeClass('hidden')
       # center and add display-block to images if wider than 40% of the entries div
       img_width = 100 * loaded_img.width() / $('#feed-entries').width()
-      loaded_img.addClass 'center-block' if img_width > 40
+      if img_width > 40
+        loaded_img.addClass('center-block').addClass('large-img')
+      else
+        loaded_img.addClass('small-img')
     loaded_img.attr('src', data_src)
 
   service =
