@@ -4,7 +4,7 @@ describe DataImportsController do
 
   before :each do
     @user = FactoryGirl.create :user
-    @data_import = FactoryGirl.create :data_import_running
+    @data_import = FactoryGirl.create :data_import
 
     login_user_for_unit @user
   end
