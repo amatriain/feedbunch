@@ -43,7 +43,15 @@ class DataImportsController < ApplicationController
 
   def update
     @data_import = current_user.data_import
-    current_user.set_data_import_visible data_import_params[:show_alert]
+    # Only if the string "false" is sent, set visibility to false. If anything else
+    # is sent in the :show_alert request parameter, set visibility to true. This is the
+    # safest default.
+    if data_import_params[:show_alert]=='false'
+      show_alert = false
+    else
+      show_alert = true
+    end
+    current_user.set_data_import_visible show_alert
     head :ok
   rescue => e
     handle_error e

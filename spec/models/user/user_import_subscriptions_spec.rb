@@ -3,20 +3,22 @@ require 'spec_helper'
 describe User do
   before :each do
     @user = FactoryGirl.create :user
-
-    @opml_data = File.read File.join(__dir__, '..', '..', 'attachments', 'subscriptions.xml')
-    @data_file = File.open File.join(__dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
-
-    Feedbunch::Application.config.uploads_manager.stub read: @opml_data
-    Feedbunch::Application.config.uploads_manager.stub :save
-    Feedbunch::Application.config.uploads_manager.stub :delete
-
-    timestamp = 1371146348
-    Time.stub(:now).and_return Time.at(timestamp)
-    @filename = "#{timestamp}.opml"
   end
 
   context 'import subscriptions' do
+
+    before :each do
+      @opml_data = File.read File.join(__dir__, '..', '..', 'attachments', 'subscriptions.xml')
+      @data_file = File.open File.join(__dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
+
+      Feedbunch::Application.config.uploads_manager.stub read: @opml_data
+      Feedbunch::Application.config.uploads_manager.stub :save
+      Feedbunch::Application.config.uploads_manager.stub :delete
+
+      timestamp = 1371146348
+      Time.stub(:now).and_return Time.at(timestamp)
+      @filename = "#{timestamp}.opml"
+    end
 
     it 'has a data_import with status NONE as soon as the user is created' do
       @user.data_import.should be_present
@@ -104,6 +106,21 @@ describe User do
         Resque.should_receive(:enqueue).once.with ImportSubscriptionsJob, @filename, @user.id
         @user.import_subscriptions @data_file
       end
+    end
+  end
+
+  context 'change alert visibility' do
+
+    it 'hides alert' do
+      @user.data_import.show_alert.should be_true
+      @user.set_data_import_visible false
+      @user.reload.data_import.show_alert.should be_false
+    end
+
+    it 'shows alert' do
+      @user.data_import.update show_alert: false
+      @user.set_data_import_visible true
+      @user.reload.data_import.show_alert.should be_true
     end
   end
 

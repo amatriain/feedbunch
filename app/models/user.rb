@@ -153,6 +153,14 @@ class User < ActiveRecord::Base
     DataImportManager.import file, self
   end
 
+  ##
+  # Change the visibility of the alert related to the OPML import status.
+  # Receives a boolean argument and sets the alert to visible (if true) or hidden (if false).
+
+  def set_data_import_visible(visible)
+    self.data_import.update show_alert: visible
+  end
+
   private
 
   ##
