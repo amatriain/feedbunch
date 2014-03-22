@@ -250,6 +250,12 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     menuCollapseSvc.close()
 
   #--------------------------------------------
+  # Hide permanently the OPML import alert displayed in the start page
+  #--------------------------------------------
+  $scope.hide_import_alert = ->
+    importStatusSvc.hide_alert()
+
+  #--------------------------------------------
   # Function to filter feeds in a given folder
   #--------------------------------------------
   $scope.feed_in_folder = (folder_id)->

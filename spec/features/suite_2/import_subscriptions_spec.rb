@@ -13,7 +13,6 @@ describe 'import subscriptions' do
     login_user_for_feature @user
     visit read_path
     find('#start-page').click
-    open_user_menu
   end
 
   after :each do
@@ -29,6 +28,10 @@ describe 'import subscriptions' do
   end
 
   context 'upload link in dropdown' do
+
+    before :each do
+      open_user_menu
+    end
 
     it 'show link if the user has never run an import', js: true do
       page.should have_css '.navbar a#nav-data-import', visible: true
@@ -158,6 +161,21 @@ describe 'import subscriptions' do
       data_import = @user.reload.data_import
       data_import.update status: DataImport::ERROR
       should_show_alert 'import-process-error'
+    end
+  end
+
+  context 'hide alert' do
+
+    it 'hides import data alert when the user has never ran an OPML import', js: true do
+      page.should have_content 'If you want to import your feed subscriptions from another service'
+      close_import_alert
+
+      # alert immediately disappears
+      page.should_not have_content 'If you want to import your feed subscriptions from another service'
+      # alert is not displayed on page reload
+      visit read_path
+      pending
+      page.should_not have_content 'If you want to import your feed subscriptions from another service'
     end
   end
 end

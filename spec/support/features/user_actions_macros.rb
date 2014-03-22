@@ -373,3 +373,10 @@ end
 def go_to_start_page
   find('#sidebar #start-page').click
 end
+
+##
+# Click on the "close" button of the currently displayed data-import alert
+
+def close_import_alert
+  find('#start-info #import-process-status button.close', visible: true).click
+end

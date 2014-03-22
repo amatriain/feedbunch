@@ -24,6 +24,8 @@ angular.module('feedbunch').service 'importStatusSvc',
     now = new Date()
     $http.get("/data_imports.json?time=#{now.getTime()}")
     .success (data)->
+      # TODO: retrieve show_import_alert from the returned JSON
+      $rootScope.show_import_alert = true
       $rootScope.import_status = data["status"]
       if data["status"] == "RUNNING"
         # Update status from the server periodically while import is running
@@ -39,11 +41,19 @@ angular.module('feedbunch').service 'importStatusSvc',
         feedsFoldersSvc.load_data()
         timerFlagSvc.start 'success_importing'
 
-  #---------------------------------------------
-  # Load import process status via AJAX into the root scope
-  #---------------------------------------------
   service =
+
+    #---------------------------------------------
+    # Load import process status via AJAX into the root scope
+    #---------------------------------------------
     load_data: load_import_status
+
+    #---------------------------------------------
+    # Hide the import status alert and notify the server via AJAX that it should not be displayed again.
+    #---------------------------------------------
+    hide_alert: ->
+      $rootScope.show_import_alert = false
+      $http.put("/data_imports.json", data_import: {show_alert: 'false'})
 
   return service
 ]
