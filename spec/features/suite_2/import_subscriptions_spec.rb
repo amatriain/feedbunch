@@ -177,5 +177,33 @@ describe 'import subscriptions' do
       page.should have_css '#start-info #import-process-status.ng-hide', visible: false
       page.should_not have_content 'If you want to import your feed subscriptions from another service'
     end
+
+    it 'hides import data alert when the import finished with an error', js: true do
+      @user.reload.data_import.update status: DataImport::ERROR
+      visit read_path
+      page.should have_content 'There\'s been an error trying to import your feed subscriptions'
+      close_import_alert
+
+      # alert immediately disappears
+      page.should_not have_content 'There\'s been an error trying to import your feed subscriptions'
+      # alert is not displayed on page reload
+      visit read_path
+      page.should have_css '#start-info #import-process-status.ng-hide', visible: false
+      page.should_not have_content 'There\'s been an error trying to import your feed subscriptions'
+    end
+
+    it 'hides import data alert when the import finished successfully', js: true do
+      @user.reload.data_import.update status: DataImport::SUCCESS
+      visit read_path
+      page.should have_content 'Your feed subscriptions have been successfully imported'
+      close_import_alert
+
+      # alert immediately disappears
+      page.should_not have_content 'Your feed subscriptions have been successfully imported'
+      # alert is not displayed on page reload
+      visit read_path
+      page.should have_css '#start-info #import-process-status.ng-hide', visible: false
+      page.should_not have_content 'Your feed subscriptions have been successfully imported'
+    end
   end
 end

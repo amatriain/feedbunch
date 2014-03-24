@@ -2,7 +2,7 @@
   <div class="col-xs-12 col-md-9 alert alert-danger alert-block" ng-show="import_status=='ERROR'">
 
     <div class="row">
-      <button type="button" class="close">&times;</button>
+      <button type="button" class="close" ng-click="hide_import_alert()">&times;</button>
     </div>
 
     <div class="row">
@@ -57,7 +57,7 @@
   <div class="col-xs-12 col-md-9 alert alert-success alert-block" ng-show="import_status=='SUCCESS'">
 
     <div class="row">
-      <button type="button" class="close">&times;</button>
+      <button type="button" class="close" ng-click="hide_import_alert()">&times;</button>
     </div>
 
     <div class="row">
