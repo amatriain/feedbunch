@@ -123,13 +123,13 @@ describe UpdateFeedJob do
         config[:class].should eq 'UpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
-        config[:every][0].should eq '86400s'
-        config[:every][1].should eq ({first_in: 24.hours})
+        config[:every][0].should eq '43200s'
+        config[:every][1].should eq ({first_in: 12.hours})
       end
 
-      @feed.update fetch_interval_secs: 24.hours
+      @feed.update fetch_interval_secs: 12.hours
       UpdateFeedJob.perform @feed.id
-      @feed.reload.fetch_interval_secs.should eq 24.hours
+      @feed.reload.fetch_interval_secs.should eq 12.hours
     end
 
   end
