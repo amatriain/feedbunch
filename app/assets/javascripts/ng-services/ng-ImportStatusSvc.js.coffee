@@ -24,8 +24,7 @@ angular.module('feedbunch').service 'importStatusSvc',
     now = new Date()
     $http.get("/data_imports.json?time=#{now.getTime()}")
     .success (data)->
-      # TODO: retrieve show_import_alert from the returned JSON
-      $rootScope.show_import_alert = true
+      $rootScope.show_import_alert = data["show_alert"]
       $rootScope.import_status = data["status"]
       if data["status"] == "RUNNING"
         # Update status from the server periodically while import is running

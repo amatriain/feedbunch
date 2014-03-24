@@ -174,7 +174,7 @@ describe 'import subscriptions' do
       page.should_not have_content 'If you want to import your feed subscriptions from another service'
       # alert is not displayed on page reload
       visit read_path
-      pending
+      page.should have_css '#start-info #import-process-status.ng-hide', visible: false
       page.should_not have_content 'If you want to import your feed subscriptions from another service'
     end
   end

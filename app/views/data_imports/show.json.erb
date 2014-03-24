@@ -1,5 +1,6 @@
 {
-  "status": "<%= data_import.status %>"
+  "status": "<%= data_import.status %>",
+  "show_alert": <%= data_import.show_alert %>
 <% if data_import.status == DataImport::RUNNING %>
 ,
   "import": {
