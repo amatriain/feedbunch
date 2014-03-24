@@ -23,6 +23,9 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   # Initialize navbar tooltips
   tooltipSvc.navbar_tooltips()
 
+  # Initialize import alert tooltips
+  tooltipSvc.import_status_tooltips()
+
   # Load configuration data for the current user
   userDataSvc.load_data()
 

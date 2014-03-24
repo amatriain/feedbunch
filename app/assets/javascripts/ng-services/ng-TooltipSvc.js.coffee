@@ -25,6 +25,14 @@ angular.module('feedbunch').service 'tooltipSvc',
       $(".navbar .nav.navbar-nav li[data-toggle='tooltip']").tooltip()
 
   #---------------------------------------------
+  # Enable tooltips on import status alert "close" button
+  #---------------------------------------------
+  import_status_tooltips: ->
+    # Do not enable tooltips in smartphone and tablet-sized screens
+    enquire.register md_min_media_query, ->
+      $("#start-info #import-process-status button.close[data-toggle='tooltip']").tooltip()
+
+  #---------------------------------------------
   # Enable tooltips on the feed title link
   #---------------------------------------------
   feed_title_tooltip: ->

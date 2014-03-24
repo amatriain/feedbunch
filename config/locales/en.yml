@@ -97,6 +97,7 @@ en:
     stats: "Subscribed to %{feeds} feeds with %{entries} unread entries."
     read: "To read a feed, click on its title in the sidebar."
     import:
+      dismiss: "Dismiss"
       introduction: "If you want to import your feed subscriptions from another service:"
       download_data_html: "Export your subscriptions in OPML format from that service."
       import_data_1: "Click here"

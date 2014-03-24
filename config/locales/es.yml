@@ -76,6 +76,7 @@ es:
     stats: "Suscrito a %{feeds} feeds con %{entries} entradas sin leer."
     read: "Para leer un feed, haz click en su título en la barra lateral."
     import:
+      dismiss: "Cerrar"
       introduction: "Si quieres importar tus suscripciones a feeds desde otro servicio:"
       download_data_html: "Exporta tus suscripciones en formato OPML en el otro servicio."
       import_data_1: "Haz click aquí"
