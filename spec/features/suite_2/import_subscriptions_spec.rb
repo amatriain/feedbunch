@@ -205,5 +205,12 @@ describe 'import subscriptions' do
       page.should have_css '#start-info #import-process-status.ng-hide', visible: false
       page.should_not have_content 'Your feed subscriptions have been successfully imported'
     end
+
+    it 'cannot hide import data alert while the import is running', js: true do
+      @user.reload.data_import.update status: DataImport::RUNNING
+      visit read_path
+      page.should have_content 'Your feed subscriptions are being imported'
+      page.should_not have_css '#start-info #import-process-status button.close', visible: true
+    end
   end
 end
