@@ -30,7 +30,7 @@ lazyLoadingSvc)->
       state = "unread"
       changeUnreadCountSvc.update_unread_count entry, true
 
-    $http.put("/entries/update.json", entry: {id: entry.id, state: state})
+    $http.put("/api/entries/update.json", entry: {id: entry.id, state: state})
     .success ->
       entry.changing_state = false
       # Reset here the timer that updates feeds every minute only if feed_id argument has not been passed
@@ -86,7 +86,7 @@ lazyLoadingSvc)->
       else
         return
 
-      $http.put("/entries/update.json", entry: {id: first_entry.id, state: 'read', whole_feed: whole_feed, whole_folder: whole_folder, all_entries: all_entries})
+      $http.put("/api/entries/update.json", entry: {id: first_entry.id, state: 'read', whole_feed: whole_feed, whole_folder: whole_folder, all_entries: all_entries})
       .success ->
         # after marking multiple entries as read, reset the timer that updates feeds every minute
         feedsFoldersSvc.reset_refresh_timer()

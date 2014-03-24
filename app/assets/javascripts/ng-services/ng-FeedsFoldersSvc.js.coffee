@@ -21,7 +21,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
 
     page += 1
     now = new Date()
-    $http.get("/feeds.json?include_read=#{$rootScope.show_read}&page=#{page}&time=#{now.getTime()}")
+    $http.get("/api/feeds.json?include_read=#{$rootScope.show_read}&page=#{page}&time=#{now.getTime()}")
     .success (data)->
       feedsPaginationSvc.load_feeds_page page, data.slice()
       feedsPaginationSvc.set_busy false
@@ -59,7 +59,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   #--------------------------------------------
   load_folders = ->
     now = new Date()
-    $http.get("/folders.json?time=#{now.getTime()}")
+    $http.get("/api/folders.json?time=#{now.getTime()}")
     .success (data)->
       reset_timer()
       $rootScope.folders = data.slice()

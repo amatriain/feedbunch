@@ -1,7 +1,7 @@
 ##
 # Controller to import and export subscriptions data
 
-class DataImportsController < ApplicationController
+class API::DataImportsController < ApplicationController
 
   before_filter :authenticate_user!
 

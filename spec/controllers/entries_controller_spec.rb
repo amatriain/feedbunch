@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe EntriesController do
+describe API::EntriesController do
 
   before :each do
     @feed = FactoryGirl.create :feed

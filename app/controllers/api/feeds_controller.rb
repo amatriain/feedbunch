@@ -1,7 +1,7 @@
 ##
 # Controller to access the Feed model.
 
-class FeedsController < ApplicationController
+class API::FeedsController < ApplicationController
 
   before_filter :authenticate_user!
 

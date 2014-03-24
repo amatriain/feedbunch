@@ -100,20 +100,24 @@ Feedbunch::Application.routes.draw do
   # Main app page
   get '/read' => 'read#index', as: :read
 
-  # Change entries state
-  match '/entries/update' => 'entries#update', via: [:patch, :put], as: 'entries_update'
+  namespace :api do
 
-  # Resourceful routes for feeds
-  resources :feeds, only: [:index, :show, :create, :update, :destroy]
+    # Change entries state
+    match '/entries/update' => 'entries#update', via: [:patch, :put], as: 'entries_update'
 
-  # Resourceful routes for folders
-  resources :folders, only: [:index, :show, :update, :create]
+    # Resourceful routes for feeds
+    resources :feeds, only: [:index, :show, :create, :update, :destroy]
 
-  # Resourceful routes for subscriptions import process status
-  resource :data_imports, only: [:show, :create, :update]
+    # Resourceful routes for folders
+    resources :folders, only: [:index, :show, :update, :create]
 
-  # Resourceful routes for user data
-  resource :user_data, only: [:show]
+    # Resourceful routes for subscriptions import process status
+    resource :data_imports, only: [:show, :create, :update]
+
+    # Resourceful routes for user data
+    resource :user_data, only: [:show]
+
+  end
 
   # Resque-web is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/
   constraints CanAccessResque do

@@ -31,9 +31,9 @@ angular.module('feedbunch').service 'readSvc',
 
     # Load entries from a feed or from a folder?
     if currentFeedSvc.get()
-      url = "/feeds/#{currentFeedSvc.get().id}.json"
+      url = "/api/feeds/#{currentFeedSvc.get().id}.json"
     else if currentFolderSvc.get()
-      url = "/folders/#{currentFolderSvc.get().id}.json"
+      url = "/api/folders/#{currentFolderSvc.get().id}.json"
 
     now = new Date()
     $rootScope.entries_http_canceler = $q.defer()
@@ -96,7 +96,7 @@ angular.module('feedbunch').service 'readSvc',
       entriesPaginationSvc.reset_entries()
       entriesPaginationSvc.set_busy true
 
-      $http.put("/feeds/#{currentFeedSvc.get().id}.json")
+      $http.put("/api/feeds/#{currentFeedSvc.get().id}.json")
       .success (data)->
         entriesPaginationSvc.set_busy false
         load_entries()

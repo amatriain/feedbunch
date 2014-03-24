@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FoldersController do
+describe API::FoldersController do
 
   before :each do
     @user = FactoryGirl.create :user

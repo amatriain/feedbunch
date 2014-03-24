@@ -1,7 +1,7 @@
 ##
 # Controller to access the Folder model.
 
-class FoldersController < ApplicationController
+class API::FoldersController < ApplicationController
 
   before_filter :authenticate_user!
 

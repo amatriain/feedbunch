@@ -14,7 +14,7 @@ angular.module('feedbunch').service 'folderSvc',
     if current_feed
       current_feed.folder_id = 'none'
 
-      $http.put('/folders/none.json', folder: {feed_id: current_feed.id})
+      $http.put('/api/folders/none.json', folder: {feed_id: current_feed.id})
       .success (data)->
         feedsFoldersSvc.load_folders()
       .error (data, status)->
@@ -30,7 +30,7 @@ angular.module('feedbunch').service 'folderSvc',
       # open the new folder
       openFolderSvc.set folder
 
-      $http.put("/folders/#{folder.id}.json", folder: {feed_id: current_feed.id})
+      $http.put("/api/folders/#{folder.id}.json", folder: {feed_id: current_feed.id})
       .success (data)->
         feedsFoldersSvc.load_folders()
       .error (data, status)->
@@ -43,7 +43,7 @@ angular.module('feedbunch').service 'folderSvc',
   move_to_new_folder: (title)->
     current_feed = currentFeedSvc.get()
     if title && current_feed
-      $http.post("/folders.json", folder: {feed_id: current_feed.id, title: title})
+      $http.post("/api/folders.json", folder: {feed_id: current_feed.id, title: title})
       .success (data)->
         feedsFoldersSvc.add_folder data
         current_feed.folder_id = data.id

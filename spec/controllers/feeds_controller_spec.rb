@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FeedsController do
+describe API::FeedsController do
 
   before :each do
     @user = FactoryGirl.create :user

@@ -18,7 +18,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc)->
       currentFolderSvc.unset()
       entriesPaginationSvc.set_busy true
 
-      $http.post('/feeds.json', feed:{url: url})
+      $http.post('/api/feeds.json', feed:{url: url})
       .success (data)->
         $rootScope.subscribed_feeds_count += 1
         entriesPaginationSvc.set_busy false
@@ -38,7 +38,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc)->
     current_feed = currentFeedSvc.get()
     if current_feed
       # Before deleting from the global scope, save some data we'll need later
-      path = "/feeds/#{current_feed.id}.json"
+      path = "/api/feeds/#{current_feed.id}.json"
 
       # Remove feed from feeds list
       cleanupSvc.remove_feed current_feed.id
