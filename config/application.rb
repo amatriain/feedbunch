@@ -65,5 +65,8 @@ module Feedbunch
     # If a feed's update fail for more than this time, the feed is marked as permanently unavailable (no more
     # updates will be attempted)
     config.unavailable_after = 1.week
+
+    # List of currently available locales
+    I18n.available_locales = [:en, :es]
   end
 end
