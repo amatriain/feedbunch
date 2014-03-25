@@ -301,6 +301,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin!
+  addressable
   aws-sdk
   brakeman
   cancan

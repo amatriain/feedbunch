@@ -1,4 +1,5 @@
 require 'uri'
+require 'addressable/uri'
 require 'encoding_manager'
 require 'schedule_manager'
 
@@ -223,8 +224,8 @@ class Feed < ActiveRecord::Base
   # Fix problems with URLs, by URL-encoding any illegal characters.
 
   def fix_urls
-      self.url = URI.encode self.url.to_str if self.url.present?
-      self.fetch_url = URI.encode self.fetch_url.to_str if self.fetch_url.present?
+    self.url = Addressable::URI.parse(self.url.to_str).display_uri.to_s if self.url.present?
+    self.fetch_url = Addressable::URI.parse(self.fetch_url.to_str).display_uri.to_s if self.fetch_url.present?
   end
 
   ##

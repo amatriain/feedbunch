@@ -44,6 +44,9 @@ gem 'sax-machine'
 # HTTP client
 gem 'rest-client'
 
+# URI implementation with better support for RFC 3986, RFC 3987, and RFC 6570 (level 4)
+gem 'addressable'
+
 # To parse html
 gem 'nokogiri'
 

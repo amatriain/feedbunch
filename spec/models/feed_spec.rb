@@ -95,14 +95,14 @@ describe Feed do
 
     it 'sanitizes url' do
       unsanitized_url = "http://xkcd.com<script>alert('pwned!');</script>"
-      sanitized_url = 'http://xkcd.com'
+      sanitized_url = 'http://xkcd.com/'
       feed = FactoryGirl.create :feed, url: unsanitized_url
       feed.url.should eq sanitized_url
     end
 
     it 'sanitizes fetch url' do
       unsanitized_url = "http://xkcd.com<script>alert('pwned!');</script>"
-      sanitized_url = 'http://xkcd.com'
+      sanitized_url = 'http://xkcd.com/'
       feed = FactoryGirl.create :feed, fetch_url: unsanitized_url
       feed.fetch_url.should eq sanitized_url
     end
@@ -120,14 +120,14 @@ describe Feed do
 
     it 'trims url' do
       untrimmed_url = "\n    http://xkcd.com"
-      trimmed_url = 'http://xkcd.com'
+      trimmed_url = 'http://xkcd.com/'
       feed = FactoryGirl.create :feed, url: untrimmed_url
       feed.url.should eq trimmed_url
     end
 
     it 'trims fetch url' do
       untrimmed_url = "\n    http://xkcd.com"
-      trimmed_url = 'http://xkcd.com'
+      trimmed_url = 'http://xkcd.com/'
       feed = FactoryGirl.create :feed, fetch_url: untrimmed_url
       feed.fetch_url.should eq trimmed_url
     end
@@ -156,6 +156,35 @@ describe Feed do
       utf8_url = 'http://xkcd.com/%C3%A8'
       feed = FactoryGirl.create :feed, fetch_url: not_utf8_url
       feed.fetch_url.should eq utf8_url
+    end
+  end
+
+  context 'url percent-encoding' do
+
+    it 'encodes invalid characters in url' do
+      not_encoded_url = 'https://www.google.es/search?q=año'
+      encoded_url = 'https://www.google.es/search?q=a%C3%B1o'
+      feed = FactoryGirl.create :feed, url: not_encoded_url
+      feed.url.should eq encoded_url
+    end
+
+    it 'does not change already encoded url' do
+      encoded_url = 'https://www.google.es/search?q=a%C3%B1o'
+      feed = FactoryGirl.create :feed, url: encoded_url
+      feed.url.should eq encoded_url
+    end
+
+    it 'encodes invalid characters in fetch_url' do
+      not_encoded_url = 'https://www.google.es/search?q=año'
+      encoded_url = 'https://www.google.es/search?q=a%C3%B1o'
+      feed = FactoryGirl.create :feed, fetch_url: not_encoded_url
+      feed.fetch_url.should eq encoded_url
+    end
+
+    it 'does not change already encoded fetch_url' do
+      encoded_url = 'https://www.google.es/search?q=a%C3%B1o'
+      feed = FactoryGirl.create :feed, fetch_url: encoded_url
+      feed.fetch_url.should eq encoded_url
     end
   end
 
