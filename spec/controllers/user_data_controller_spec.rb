@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe API::UserDataController do
+describe Api::UserDataController do
 
   before :each do
     @user = FactoryGirl.create :user

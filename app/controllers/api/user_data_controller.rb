@@ -1,7 +1,7 @@
 ##
 # Controller to retrieve data for the current user
 
-class API::UserDataController < ApplicationController
+class Api::UserDataController < ApplicationController
 
   before_filter :authenticate_user!
 
