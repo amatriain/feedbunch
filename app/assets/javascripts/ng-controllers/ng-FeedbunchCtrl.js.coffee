@@ -52,6 +52,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     $timeout ->
       sidebarVisibleSvc.toggle()
     , 300
+    return
 
   #--------------------------------------------
   # Unsubscribe from a feed
@@ -59,6 +60,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.unsubscribe = ->
     subscriptionSvc.unsubscribe()
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Subscribe to a feed
@@ -68,6 +70,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     subscriptionSvc.subscribe $scope.subscription_url
     $scope.subscription_url = null
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Show all feeds (regardless of whether they have unread entries or not)
@@ -77,14 +80,16 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     feedsFoldersSvc.show_read()
     readSvc.read_entries_page()
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
-  # Show only feeds with unread entries and unread entries.
+  # Show only unread entries and feeds with unread entries.
   #--------------------------------------------
   $scope.hide_read_feeds_entries = ->
     feedsFoldersSvc.hide_read()
     readSvc.read_entries_page()
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Remove a feed from a folder
@@ -92,6 +97,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.remove_from_folder = ->
     folderSvc.remove_from_folder()
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Move a feed to an already existing folder
@@ -99,6 +105,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.move_to_folder = (folder)->
     folderSvc.move_to_folder folder
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Move a feed to a new folder
@@ -108,6 +115,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     folderSvc.move_to_new_folder $scope.new_folder_title
     $scope.new_folder_title = null
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Get the currently selected feed
@@ -126,6 +134,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     $timeout ->
       sidebarVisibleSvc.toggle()
     , 300
+    return
 
   #--------------------------------------------
   # Set the currently selected folder
@@ -137,12 +146,14 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
     $timeout ->
       sidebarVisibleSvc.toggle()
     , 300
+    return
 
   #--------------------------------------------
   # Load a page of entries for the currently selected feed or folder
   #--------------------------------------------
   $scope.read_entries_page = ->
     readSvc.read_entries_page()
+    return
 
   #--------------------------------------------
   # Refresh a feed and load its unread entries
@@ -150,6 +161,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.refresh_feed = ->
     readSvc.refresh_feed()
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Mark a single folder as open in the scope
@@ -157,6 +169,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.toggle_open_folder = (folder)->
     readSvc.toggle_open_folder folder
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Toggle open/close for an entry. Mark it as read if opening.
@@ -164,12 +177,14 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.toggle_open_entry = (entry)->
     entrySvc.toggle_open_entry entry
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Enable tooltips for an entry.
   #--------------------------------------------
   $scope.tooltips_entry = (entry)->
     tooltipSvc.entry_tooltips entry
+    return
 
   #--------------------------------------------
   # Function to decide if an entry should be displayed as open (return true) or closed (return false).
@@ -183,6 +198,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.mark_all_read = ->
     entrySvc.mark_all_read()
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Mark a single entry as unread
@@ -190,6 +206,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.unread_entry = (entry)->
     entrySvc.unread_entry entry
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Mark a single entry as read
@@ -197,6 +214,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.read_entry = (entry)->
     entrySvc.read_entry entry
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Return the title of the feed to which an entry belongs
@@ -211,6 +229,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.set_current_entry_feed = (entry)->
     entrySvc.load_entry_feed entry
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Return the HTML content or summary of an entry, explicitly marked as trusted HTML for binding.
@@ -231,6 +250,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   #--------------------------------------------
   $scope.reset_flag = (flag)->
     timerFlagSvc.reset flag
+    return
 
   #--------------------------------------------
   # Count the number of unread entries in a folder
@@ -251,12 +271,14 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   $scope.toggle_sidebar_visible = ->
     sidebarVisibleSvc.toggle()
     menuCollapseSvc.close()
+    return
 
   #--------------------------------------------
   # Hide permanently the OPML import alert displayed in the start page
   #--------------------------------------------
   $scope.hide_import_alert = ->
     importStatusSvc.hide_alert()
+    return
 
   #--------------------------------------------
   # Function to filter feeds in a given folder

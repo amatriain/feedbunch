@@ -25,4 +25,5 @@ angular.module('feedbunch').controller 'DeviseCtrl',
   #--------------------------------------------
   $scope.toggle_sidebar_visible = ->
     $window.location.href = '/read'
+    return
 ]
