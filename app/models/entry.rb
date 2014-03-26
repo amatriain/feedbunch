@@ -219,7 +219,7 @@ class Entry < ActiveRecord::Base
     end
 
     # published defaults to the current datetime
-    self.published = DateTime.now if self.published.blank?
+    self.published = Time.zone.now if self.published.blank?
   end
 
   ##

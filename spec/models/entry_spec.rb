@@ -89,14 +89,14 @@ describe Entry do
     end
 
     it 'defaults published date to current date' do
-      published = DateTime.new 2000, 01, 01
-      DateTime.stub(:now).and_return published
+      published = Time.zone.parse '2000-01-01'
+      ActiveSupport::TimeZone.any_instance.stub(:now).and_return published
       entry = FactoryGirl.create :entry, published: nil
       entry.published.should eq published
     end
 
     it 'does not use default value if published date has value' do
-      published = DateTime.new 2000, 01, 01
+      published = Time.zone.parse '2000-01-01'
       entry = FactoryGirl.create :entry, published: published
       entry.published.should eq published
     end

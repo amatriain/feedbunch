@@ -49,7 +49,7 @@ class UpdateFeedJob
     # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
     if feed.present?
       # If this is the first update that fails, save the date&time the feed started failing
-      feed.update failing_since: DateTime.now if feed.failing_since.nil?
+      feed.update failing_since: Time.zone.now if feed.failing_since.nil?
 
       # If the feed has been failing for too long, mark it as unavailable
       if Time.zone.now - feed.failing_since > Feedbunch::Application.config.unavailable_after
@@ -64,7 +64,7 @@ class UpdateFeedJob
     if feed.present?
       # Update timestamp of the last time the feed was fetched
       Rails.logger.debug "Updating time of last update for feed #{feed.id} - #{feed.title}"
-      feed.update! last_fetched: DateTime.now
+      feed.update! last_fetched: Time.zone.now
 
       if entries_after > entries_before
         # If new entries have been fetched, decrement the fetch interval

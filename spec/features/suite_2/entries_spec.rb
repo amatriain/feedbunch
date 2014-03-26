@@ -265,7 +265,7 @@ describe 'feed entries' do
     it 'shows day, month and time for entries published in the current year', js: true do
       today = Date.new 2000, 01, 01
       Date.stub today: today
-      @entry1.update published: DateTime.new(2000, 07, 07)
+      @entry1.update published: Time.zone.parse('2000-07-07')
       read_feed @feed1, @user
       within "#entry-#{@entry1.id}" do
         page.should have_text '07 Jul 00:00'
@@ -275,7 +275,7 @@ describe 'feed entries' do
     it 'shows day, month and year for entries published in a previous year', js: true do
       today = Date.new 2000, 01, 01
       Date.stub today: today
-      @entry1.update published: DateTime.new(1999, 07, 07)
+      @entry1.update published: Time.zone.parse('1999-07-07')
       read_feed @feed1, @user
       within "#entry-#{@entry1.id}" do
         page.should have_text '07 Jul 1999'

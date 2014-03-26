@@ -50,8 +50,8 @@ describe UpdateFeedJob do
   context 'adaptative schedule' do
 
     it 'updates the last_fetched timestamp of the feed when successful' do
-      date = DateTime.new 2000, 1, 1
-      DateTime.stub(:now).and_return date
+      date = Time.zone.parse '2000-01-01'
+      ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
 
       @feed.last_fetched.should be_nil
       UpdateFeedJob.perform @feed.id
@@ -278,8 +278,8 @@ describe UpdateFeedJob do
 
     it 'sets failing_since to the current date&time the first time an update fails' do
       FeedClient.stub(:fetch).and_raise RestClient::Exception.new
-      date = DateTime.new 2000, 1, 1
-      DateTime.stub(:now).and_return date
+      date = Time.zone.parse '2000-01-01'
+      ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
 
       @feed.failing_since.should be_nil
       UpdateFeedJob.perform @feed.id
@@ -288,7 +288,7 @@ describe UpdateFeedJob do
 
     it 'sets failing_since to nil when an update runs successfully' do
       FeedClient.stub(:fetch)
-      date = DateTime.new 2000, 1, 1
+      date = Time.zone.parse '2000-01-01'
       @feed.update failing_since: date
 
       @feed.failing_since.should eq date
@@ -298,9 +298,9 @@ describe UpdateFeedJob do
 
     it 'does not change failing_since the second and sucesive times an update fails successively' do
       FeedClient.stub(:fetch).and_raise RestClient::Exception.new
-      date1 = DateTime.new 2000, 1, 1
-      DateTime.stub(:now).and_return date1
-      date2 = DateTime.new 1990, 1, 1
+      date = Time.zone.parse '2000-01-01'
+      ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
+      date2 = Time.zone.parse '1990-01-01'
       @feed.update failing_since: date2
 
       @feed.failing_since.should eq date2
@@ -310,8 +310,8 @@ describe UpdateFeedJob do
 
     it 'marks feed as unavailable when it has been failing longer than a week' do
       FeedClient.stub(:fetch).and_raise RestClient::Exception.new
-      date = DateTime.new 2000, 1, 1
-      DateTime.stub(:now).and_return date
+      date = Time.zone.parse '2000-01-01'
+      ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
       @feed.update failing_since: date - (1.week + 1.day)
 
       @feed.available.should be_true
@@ -321,8 +321,8 @@ describe UpdateFeedJob do
 
     it 'unschedules updates for a feed when it has been failing longer than a week' do
       FeedClient.stub(:fetch).and_raise RestClient::Exception.new
-      date = DateTime.new 2000, 1, 1
-      DateTime.stub(:now).and_return date
+      date = Time.zone.parse '2000-01-01'
+      ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
       @feed.update failing_since: date - (1.week + 1.day)
 
       Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
@@ -332,8 +332,8 @@ describe UpdateFeedJob do
 
     it 'does not mark feed as unavailable when it has been failing a week but the next update is successful' do
       FeedClient.stub :fetch
-      date = DateTime.new 2000, 1, 1
-      DateTime.stub(:now).and_return date
+      date = Time.zone.parse '2000-01-01'
+      ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
       @feed.update failing_since: date - (1.week + 1.day)
 
       @feed.available.should be_true

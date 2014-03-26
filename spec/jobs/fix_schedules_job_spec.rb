@@ -33,10 +33,11 @@ describe FixSchedulesJob do
   end
 
   it 'schedules next update when it should have been scheduled' do
-    @feed.update last_fetched: DateTime.new(2000, 1, 1, 1)
+    @feed.update last_fetched: Time.zone.parse('2000-01-01 01:00:00')
     @feed.update fetch_interval_secs: 12.hours
 
-    DateTime.stub(:now).and_return DateTime.new(2000, 1, 1, 10)
+    time_now = Time.zone.parse('2000-01-01 10:00:00')
+    ActiveSupport::TimeZone.any_instance.stub(:now).and_return time_now
     Resque.stub :get_schedule
 
     # A job to schedule updates for @feed should be enqueued to be run at 2000-01-01 13:00:00
@@ -52,10 +53,11 @@ describe FixSchedulesJob do
   end
 
   it 'immediately schedules next update if the next update should have been scheduled in the past' do
-    @feed.update last_fetched: DateTime.new(2000, 1, 1, 1)
+    @feed.update last_fetched: Time.zone.parse('2000-01-01 01:00:00')
     @feed.update fetch_interval_secs: 12.hours
 
-    DateTime.stub(:now).and_return DateTime.new(2000, 1, 2, 1)
+    time_now = Time.zone.parse('2000-01-02 01:00:00')
+    ActiveSupport::TimeZone.any_instance.stub(:now).and_return time_now
     Resque.stub :get_schedule
 
     # A job to schedule updates for @feed should be enqueued to be run immediately

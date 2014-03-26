@@ -274,7 +274,7 @@ FEED_XML
     end
 
     it 'sets last-modified to nil in the database if the header is not present' do
-      @feed = FactoryGirl.create :feed, last_modified: DateTime.now
+      @feed = FactoryGirl.create :feed, last_modified: Time.zone.now
       @feed.last_modified.should_not be_nil
       @headers = {etag: @etag}
       @feed_xml.stub(:headers).and_return @headers

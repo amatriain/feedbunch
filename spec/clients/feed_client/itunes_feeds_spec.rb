@@ -132,7 +132,7 @@ FEED_XML
       entry_before = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
                                         url: 'http://original.url.com', author: 'Original author',
                                         content: 'Original content', summary: 'Original summary',
-                                        published: DateTime.iso8601('2013-01-01T00:00:00'), guid: @entry1.guid
+                                        published: Time.zone.parse('2013-01-01T00:00:00'), guid: @entry1.guid
 
       # XML that will be fetched contains an entry with the same guid. It will be ignored
       FeedClient.fetch @feed
@@ -155,7 +155,7 @@ FEED_XML
       entry = FactoryGirl.create :entry, feed_id: feed2.id, title: 'Original title',
                                  url: 'http://origina.url.com', author: 'Original author',
                                  content: 'Original content', summary: '<p>Original summary</p>',
-                                 published: DateTime.iso8601('2013-01-01T00:00:00'),
+                                 published: Time.zone.parse('2013-01-01T00:00:00'),
                                  guid: @entry1.guid
 
       # XML that will be fetched contains an entry with the same guid but different feed. Both entries
@@ -169,7 +169,7 @@ FEED_XML
       entry.url.should eq 'http://origina.url.com'
       entry.author.should eq 'Original author'
       entry.summary.should eq '<p>Original summary</p>'
-      entry.published.should eq DateTime.iso8601('2013-01-01T00:00:00')
+      entry.published.should eq Time.zone.parse('2013-01-01T00:00:00')
       entry.guid.should eq @entry1.guid
 
       # the fetched entry should be saved in the database as well

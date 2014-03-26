@@ -61,7 +61,7 @@ WEBPAGE_HTML
       <title>#{entry_title}</title>
       <link>http://xkcd.com/1203/</link>
       <description>entry summary</description>
-      <pubDate>#{DateTime.new}</pubDate>
+      <pubDate>#{Time.zone.now}</pubDate>
       <guid>http://xkcd.com/1203/</guid>
     </item>
   </channel>
@@ -135,7 +135,7 @@ WEBPAGE_HTML
       <title>#{entry_title}</title>
       <link>http://xkcd.com/1203/</link>
       <description>entry summary</description>
-      <pubDate>#{DateTime.new}</pubDate>
+      <pubDate>#{Time.zone.now}</pubDate>
       <guid>http://xkcd.com/1203/</guid>
     </item>
   </channel>
@@ -258,7 +258,7 @@ FEED_XML
       <title>#{entry_title}</title>
       <link>http://xkcd.com/1203/</link>
       <description>entry summary</description>
-      <pubDate>#{DateTime.new}</pubDate>
+      <pubDate>#{Time.zone.now}</pubDate>
       <guid>http://xkcd.com/1203/</guid>
     </item>
   </channel>
@@ -312,7 +312,7 @@ WEBPAGE_HTML
       <title>#{entry_title}</title>
       <link>http://xkcd.com/1203/</link>
       <description>entry summary</description>
-      <pubDate>#{DateTime.new}</pubDate>
+      <pubDate>#{Time.zone.now}</pubDate>
       <guid>http://xkcd.com/1203/</guid>
     </item>
   </channel>
@@ -375,7 +375,7 @@ WEBPAGE_HTML
       <title>#{entry_title}</title>
       <link>http://xkcd.com/1203/</link>
       <description>entry summary</description>
-      <pubDate>#{DateTime.new}</pubDate>
+      <pubDate>#{Time.zone.now}</pubDate>
       <guid>http://xkcd.com/1203/</guid>
     </item>
   </channel>

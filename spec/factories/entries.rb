@@ -12,7 +12,7 @@ FactoryGirl.define do
     author nil
     content nil
     summary {generate :entry_summary_sequence}
-    published {DateTime.now}
+    published {Time.zone.now}
     guid {generate :entry_guid_sequence}
     feed
   end

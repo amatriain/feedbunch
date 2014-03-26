@@ -148,7 +148,7 @@ class ScheduleManager
       first_in = delay.minutes
     else
       # Calculate how much time is left until the moment when the next update should have been scheduled
-      first_in = (feed.last_fetched + feed.fetch_interval_secs.seconds - DateTime.now).seconds.round
+      first_in = (feed.last_fetched + feed.fetch_interval_secs.seconds - Time.zone.now).seconds.round
 
       # If the moment the next update should have been scheduled is in the past, schedule an update
       # sometime in the next 15 minutes.
