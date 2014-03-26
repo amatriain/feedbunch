@@ -28,8 +28,8 @@ describe 'subscription to feeds' do
 
   it 'subscribes to a feed already in the database, given a website URL that through autodiscovery leads to its fetch_url', js: true do
     # Fetching a feed returns an HTML document with feed autodiscovery
-    webpage_url = 'http://www.some.webpage.url'
-    alternate_webpage_url = 'http://some.webpage.url'
+    webpage_url = 'http://www.some.webpage.url/'
+    alternate_webpage_url = 'http://some.webpage.url/'
     fetch_url = 'http://some.webpage.url/feed.php'
 
     existing_feed = FactoryGirl.create :feed, url: webpage_url, fetch_url: fetch_url
@@ -100,8 +100,8 @@ FEED_XML
 
   it 'shows alert if user tries to subscribe to a website URL that through autodiscovery leads to a subscribed feed', js: true do
     # Fetching a feed returns an HTML document with feed autodiscovery
-    webpage_url = 'http://www.some.webpage.url'
-    alternate_webpage_url = 'http://some.webpage.url'
+    webpage_url = 'http://www.some.webpage.url/'
+    alternate_webpage_url = 'http://some.webpage.url/'
     fetch_url = 'http://some.webpage.url/feed.php'
 
     existing_feed = FactoryGirl.create :feed, url: webpage_url, fetch_url: fetch_url
@@ -128,7 +128,7 @@ WEBPAGE_HTML
 <rss version="2.0">
   <channel>
     <title>#{feed_title}</title>
-    <link>http://xkcd.com</link>
+    <link>#{webpage_url}</link>
     <description>xkcd.com: A webcomic of romance and math humor.</description>
     <language>en</language>
     <item>
@@ -282,7 +282,7 @@ FEED_XML
 
   it 'subscribes to a feed not in the database, given the website URL', js: true do
     # Fetching a feed returns an HTML document with feed autodiscovery
-    webpage_url = 'http://some.webpage.url'
+    webpage_url = 'http://some.webpage.url/'
     fetch_url = 'http://some.webpage.url/feed.php'
 
     webpage_html = <<WEBPAGE_HTML
@@ -344,8 +344,8 @@ FEED_XML
 
   it 'subscribes to a feed not in the database, given the website URL without scheme', js: true do
     # Fetching a feed returns an HTML document with feed autodiscovery
-    webpage_url = 'http://some.webpage.url'
-    url_no_schema = 'some.webpage.url'
+    webpage_url = 'http://some.webpage.url/'
+    url_no_schema = 'some.webpage.url/'
     fetch_url = 'http://some.webpage.url/feed.php'
 
     webpage_html = <<WEBPAGE_HTML
@@ -454,7 +454,7 @@ FEED_XML
     feed_xml.stub(:headers).and_return {}
 
     RestClient.stub :get do |url|
-      if url == webpage_url
+      if url == webpage_url || url == url_slash
         webpage_html
       elsif url == fetch_url
         feed_xml

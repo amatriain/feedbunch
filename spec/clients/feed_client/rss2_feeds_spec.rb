@@ -3,7 +3,7 @@ require 'spec_helper'
 describe FeedClient do
   before :each do
     @original_feed_title = 'Some feed title'
-    @original_feed_url = 'http://some.feed.com'
+    @original_feed_url = 'http://some.feed.com/'
     @feed = FactoryGirl.create :feed, title: @original_feed_title, url: @original_feed_url
 
     @feed_title = 'xkcd.com'

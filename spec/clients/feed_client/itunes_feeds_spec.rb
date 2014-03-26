@@ -5,7 +5,7 @@ describe FeedClient do
     @feed = FactoryGirl.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
 
     @feed_title = 'Menéame: publicadas'
-    @feed_url = 'http://www.meneame.net'
+    @feed_url = 'http://www.meneame.net/'
 
     @entry1 = FactoryGirl.build :entry
     @entry1.title = 'Los correos secretos de Caja Madrid: así celebró Blesa el \'éxito\' de las preferentes'
