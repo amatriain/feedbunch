@@ -34,7 +34,7 @@ class DataImport < ActiveRecord::Base
   private
 
   ##
-  # By default, a DataImport is in the "RUNNING" status unless specified otherwise.
+  # By default, a DataImport is in the "NONE" status unless specified otherwise.
 
   def default_values
     self.status = NONE if self.status.blank?
