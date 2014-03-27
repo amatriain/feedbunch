@@ -1,41 +1,43 @@
 es:
   devise:
     confirmations:
+      confirmed: 'Tu cuenta fue confirmada.'
       send_instructions: 'Recibirás instrucciones para confirmar tu cuenta en tu email en unos minutos.'
       send_paranoid_instructions: 'Si tu email existe en el sistema, recibirás instrucciones para confirmar tu cuenta en tu email en unos minutos.'
-      confirmed: 'Tu cuenta fue confirmada.'
     failure:
       already_authenticated: 'Ya iniciaste sesión.'
-      unauthenticated: ''
-      unconfirmed: 'Tienes que confirmar tu cuenta antes de continuar.'
-      locked: 'Tu cuente está bloqueada.'
+      inactive: 'Tu cuenta aun no ha sido activada.'
       invalid: 'Email o contraseña inválidos.'
       invalid_token: 'Token de autentificación inválido.'
+      locked: 'Tu cuente está bloqueada.'
+      not_found_in_database: "Email o contraseña inválidos."
       timeout: 'Tu sesión ha expirado. Inicia sesión nuevamente.'
-      inactive: 'Tu cuenta aun no ha sido activada.'
+      unauthenticated: ''
+      unconfirmed: 'Tienes que confirmar tu cuenta antes de continuar.'
     omniauth_callbacks:
-      success: 'Te autentificaste correctamente con tu cuenta de %{kind}.'
       failure: 'No pudimos autentificar tu cuenta de %{kind} por la siguiente razón: %{reason}.'
+      success: 'Te autentificaste correctamente con tu cuenta de %{kind}.'
     passwords:
+      no_token: "No puedes acceder a esta página si no es desde un email de cambio de contraseña. Si has recibido un email de cambio de contraseña, por favor asegúrate de usar la URL completa que aparece en él."
       send_instructions: 'Recibirás un email con instrucciones para reiniciar tu contraseña en unos minutos.'
+      send_paranoid_instructions: "Si tu email existe en el sistema, se enviarán instrucciones para recuperar tu contraseña"
       updated: 'Tu contraseña fue cambiada correctamente. Has iniciado sesión.'
       updated_not_active: 'Tu contraseña fue cambiada correctamente.'
-      send_paranoid_instructions: "Si tu email existe en el sistema, se enviarán instrucciones para recuperar tu contraseña"
     registrations:
+      destroyed: 'Adiós, tu cuenta ha sido eliminada. Esperamos verte de vuelta pronto!'
       signed_up: 'Bienvenido! Te has registrado correctamente.'
-      signed_up_but_unconfirmed: 'Te hemos enviado un email con instrucciones para que confirmes tu cuenta.'
       signed_up_but_inactive: 'Te has registrado correctamente, pero tu cuenta aun no ha sido activada.'
       signed_up_but_locked: 'Te has registrado correctamente, pero tu cuenta está bloqueada.'
-      updated: 'Actualizaste tu cuenta correctamente.'
+      signed_up_but_unconfirmed: 'Te hemos enviado un email con instrucciones para que confirmes tu cuenta.'
       update_needs_confirmation: "Actualizaste tu cuenta correctamente, pero tenemos que revalidar tu email. Revisa tu correo para confirmar la dirección."
-      destroyed: 'Adiós, tu cuenta ha sido eliminada. Esperamos verte de vuelta pronto!'
+      updated: 'Actualizaste tu cuenta correctamente.'
     sessions:
       signed_in: 'Iniciaste sesión correctamente.'
       signed_out: 'Cerraste sesión correctamente.'
     unlocks:
       send_instructions: 'Recibirás un email con instrucciones para desbloquear tu cuenta en unos minutos'
-      unlocked: 'Tu cuenta ha sido desbloqueada. Inicia sesión para continuar.'
       send_paranoid_instructions: 'Si tu cuenta existe, recibirás instrucciones para desbloquear tu cuenta en unos minutos'
+      unlocked: 'Tu cuenta ha sido desbloqueada. Inicia sesión para continuar.'
     mailer:
       confirmation_instructions:
         subject: 'Confirmación de alta en Feedbunch'
@@ -63,9 +65,10 @@ es:
         note_2_html: "No podrás utilizar tu cuenta en %{link} hasta que sea desbloqueada siguiendo estas instrucciones."
   errors:
     messages:
+      already_confirmed: "ya fue confirmada. Intenta ingresar."
+      confirmation_period_expired: "debe ser confirmada dentro de %{period}, por favor solicite una nueva"
       expired: "ha expirado, por favor pide una nueva"
       not_found: "no encontrado"
-      already_confirmed: "ya fue confirmada. Intenta ingresar."
       not_locked: "no ha sido bloqueada"
       not_saved:
         one: "Ha habido 1 error:"
