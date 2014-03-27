@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      user: "Usuario"
+      feed: "Feed"
+      entry: "Entrada"
+      folder: "Carpeta"
+    attributes:
+      user:
+        email: "Email"
+        name: "Nombre"
+        password: "Contraseña"
+        password_confirmation: "Confirmar contraseña"
