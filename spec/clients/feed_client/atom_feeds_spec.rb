@@ -215,6 +215,90 @@ FEED_XML
     end
   end
 
+  context 'xhtml content' do
+
+    before :each do
+      @feed_title = 'ongoing by Tim Bray'
+      @feed_url = 'https://www.tbray.org/ongoing/'
+      @feed_fetch_url = 'https://www.tbray.org/ongoing/ongoing.atom'
+      @feed = FactoryGirl.create :feed, title: @feed_title, url: @feed_url, fetch_url: @feed_fetch_url
+
+      @entry = FactoryGirl.build :entry
+      @entry.title = 'Stross&#x2019; (unfinished) Merchant Princes'
+      @entry.url = 'https://www.tbray.org/ongoing/When/201x/2014/03/25/Merchant-Princes'
+      @entry.summary = "<p>I just finished reading the three volumes of The Merchant Princes Omnibus by Charlie Stross:</p>"
+      @entry.content = %{<p>I just finished reading the three volumes of <a href="http://www.amazon.com/s/?_encoding=UTF8&amp;camp=1789&amp;creative=390957&amp;field-keywords=merchant%20princes%20omnibus&amp;linkCode=ur2&amp;rh=i%3Aaps%2Ck%3Amerchant%20princes%20omnibus&amp;sprefix=merchant%20princes%20omni%2Caps%2C206&amp;tag=ongoing-20&amp;url=search-alias%3Daps" target="_blank">The Merchant Princes Omnibus</a> by <a href="http://www.antipope.org/charlie/" target="_blank">Charlie Stross</a>:</p>}
+      @entry.published = '2014-03-25T12:00:00-07:00'
+      @entry.guid = 'https://www.tbray.org/ongoing/When/201x/2014/03/25/Merchant-Princes'
+
+      @feed_xml = <<FEED_XML
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom'
+    xmlns:thr='http://purl.org/syndication/thread/1.0'
+    xml:lang='en-us'>
+  <title>#{@feed_title}</title>
+  <link rel='hub' href='http://pubsubhubbub.appspot.com/' />
+  <id>https://www.tbray.org/ongoing/</id>
+  <link href='"#{@feed_url}' />
+  <link rel='self' href='#{@feed_fetch_url}' />
+  <link rel='replies'       thr:count='101'       href='https://www.tbray.org/ongoing/comments.atom' />
+  <logo>rsslogo.jpg</logo>
+  <icon>/favicon.ico</icon>
+  <updated>2014-03-26T10:33:02-07:00</updated>
+  <author><name>Tim Bray</name></author>
+  <subtitle>ongoing fragmented essay by Tim Bray</subtitle>
+  <rights>All content written by Tim Bray and photos by Tim Bray Copyright Tim Bray, some rights reserved, see /ongoing/misc/Copyright</rights>
+  <generator uri='/misc/Colophon'>Generated from XML source code using Perl, Expat, Emacs, Mysql, Ruby, Java, and ImageMagick.  Industrial-strength technology, baby.</generator>
+
+  <entry>
+    <title>#{@entry.title}</title>
+    <link href='#{@entry.url}' />
+    <link rel='replies'        thr:count='5'        type='application/xhtml+xml'        href='/ongoing/When/201x/2014/03/25/Merchant-Princes#comments' />
+    <id>#{@entry.guid}</id>
+    <published>#{@entry.published}</published>
+    <updated>2014-03-26T08:17:43-07:00</updated>
+    <category scheme='https://www.tbray.org/ongoing/What/' term='Arts/Books' />
+    <category scheme='https://www.tbray.org/ongoing/What/' term='Arts' />
+    <category scheme='https://www.tbray.org/ongoing/What/' term='Books' />
+    <summary type='xhtml'>
+      <div xmlns='http://www.w3.org/1999/xhtml'>
+        #{@entry.summary}
+      </div>
+    </summary>
+    <content type='xhtml'>
+      <div xmlns='http://www.w3.org/1999/xhtml'>#{@entry.content}</div>
+    </content>
+  </entry>
+</feed>
+FEED_XML
+
+      @feed_xml.stub(:headers).and_return {}
+      RestClient.stub get: @feed_xml
+    end
+
+    it 'fetches and saves entries' do
+      FeedClient.fetch @feed
+      @feed.reload
+      @feed.entries.count.should eq 1
+
+      entry = @feed.entries[0]
+      entry.title.should eq CGI.unescapeHTML(@entry.title)
+      entry.url.should eq @entry.url
+      entry.author.should eq @entry.author
+      entry.summary.should eq @entry.summary
+      entry.published.should eq @entry.published
+      entry.guid.should eq @entry.guid
+    end
+
+    it 'preserves markup in xhtml content' do
+      FeedClient.fetch @feed
+      @feed.reload
+
+      entry = @feed.entries[0]
+      entry.content.should eq "<div>#{@entry.content}</div>"
+    end
+  end
+
   context 'Atom feed autodiscovery' do
 
     it 'updates fetch_url of the feed with autodiscovery full URL' do

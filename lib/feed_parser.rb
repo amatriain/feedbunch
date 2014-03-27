@@ -23,6 +23,8 @@ class FeedParser
   # Returns the updated feed object.
 
   def self.parse(feed, feed_response)
+    # Preserve xhtml markup in entries
+    Feedjira::Parser::Atom.preprocess_xml = true
     feed_parsed = Feedjira::Feed.parse feed_response
     Rails.logger.info "Correctly parsed feed from url #{feed.fetch_url}"
 
@@ -52,3 +54,5 @@ class FeedParser
     return feed
   end
 end
+
+
