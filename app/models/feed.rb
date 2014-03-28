@@ -16,7 +16,7 @@ require 'schedule_manager'
 #
 # Each feed can have many entries.
 #
-# Each feed can be associated with many refresh_feed_jobs. Each such association represents an ocurrence of a user
+# Each feed can be associated with many refresh_feed_job_statuses. Each such association represents an ocurrence of a user
 # manually requesting a refresh of this feed.
 #
 # Each feed, identified by its fetch_url, can be present at most once in the database. Different feeds can have the same
@@ -43,7 +43,7 @@ class Feed < ActiveRecord::Base
   has_many :users, through: :feed_subscriptions
   has_and_belongs_to_many :folders, -> {uniq}, before_add: :single_user_folder
   has_many :entries, -> {uniq}, dependent: :destroy
-  has_many :refresh_feed_jobs, dependent: :destroy
+  has_many :refresh_feed_job_statuses, dependent: :destroy
 
   validates :fetch_url, format: {with: URI::regexp(%w{http https})}, presence: true, uniqueness: {case_sensitive: false}
   validates :url, format: {with: URI::regexp(%w{http https})}, allow_blank: true

@@ -155,30 +155,30 @@ describe User do
     end
   end
 
-  context 'relationship with refresh_feed_jobs' do
+  context 'relationship with refresh_feed_job_statuses' do
 
     before :each do
       @feed = FactoryGirl.create :feed
       @user.subscribe @feed.fetch_url
-      @refresh_feed_job = FactoryGirl.build :refresh_feed_job, feed_id: @feed.id, user_id: @user.id
-      @feed.refresh_feed_jobs << @refresh_feed_job
-      @user.refresh_feed_jobs << @refresh_feed_job
+      @refresh_feed_job_status = FactoryGirl.build :refresh_feed_job_status, feed_id: @feed.id, user_id: @user.id
+      @feed.refresh_feed_job_statuses << @refresh_feed_job_status
+      @user.refresh_feed_job_statuses << @refresh_feed_job_status
     end
 
-    it 'deletes refresh_feed_jobs when deleting a user' do
-      RefreshFeedJob.count.should eq 1
+    it 'deletes refresh_feed_job_statuses when deleting a user' do
+      RefreshFeedJobStatus.count.should eq 1
       @user.destroy
-      RefreshFeedJob.count.should eq 0
+      RefreshFeedJobStatus.count.should eq 0
     end
 
-    it 'deletes refresh_feed_jobs when unsubscribing from a feed' do
+    it 'deletes refresh_feed_job_statuses when unsubscribing from a feed' do
       # a second user is subscribed to the same feed, so that it is not destroyed when @user unsubscribes
       user2 = FactoryGirl.create :user
       user2.subscribe @feed.fetch_url
 
-      RefreshFeedJob.count.should eq 1
+      RefreshFeedJobStatus.count.should eq 1
       @user.unsubscribe @feed
-      RefreshFeedJob.count.should eq 0
+      RefreshFeedJobStatus.count.should eq 0
     end
   end
 

@@ -15,7 +15,7 @@ describe User do
 
   it 'enqueues a job to update the feed'
 
-  it 'creates a refresh_feed_job with state RUNNING'
+  it 'creates a refresh_feed_job_status with state RUNNING'
 
   it 'raises an error if the user is not subscribed to the feed' do
     feed2 = FactoryGirl.create :feed

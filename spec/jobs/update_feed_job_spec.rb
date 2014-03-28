@@ -53,11 +53,11 @@ describe UpdateFeedJob do
 
     it 'does not update feed if the user is not subscribed'
 
-    it 'creates refresh_feed_job with status RUNNING if the user has none'
+    it 'creates refresh_feed_job_status with status RUNNING if the user has none'
 
-    it 'updates refresh_feed_job status to SUCCESS if successful'
+    it 'updates refresh_feed_job_status to SUCCESS if successful'
 
-    it 'updates refresh_feed_job status to ERROR if an error is raised'
+    it 'updates refresh_feed_job_status to ERROR if an error is raised'
   end
 
   context 'adaptative schedule' do
