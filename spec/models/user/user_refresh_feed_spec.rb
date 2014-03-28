@@ -13,6 +13,10 @@ describe User do
     @user.refresh_feed @feed
   end
 
+  it 'enqueues a job to update the feed'
+
+  it 'creates a refresh_feed_job with state RUNNING'
+
   it 'raises an error if the user is not subscribed to the feed' do
     feed2 = FactoryGirl.create :feed
     expect {@user.refresh_feed feed2}.to raise_error NotSubscribedError

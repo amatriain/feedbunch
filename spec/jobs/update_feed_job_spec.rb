@@ -47,6 +47,19 @@ describe UpdateFeedJob do
     UpdateFeedJob.perform @feed.id
   end
 
+  context 'update requested by a user' do
+
+    it 'does not update feed if the user does not exist'
+
+    it 'does not update feed if the user is not subscribed'
+
+    it 'creates refresh_feed_job with status RUNNING if the user has none'
+
+    it 'updates refresh_feed_job status to SUCCESS if successful'
+
+    it 'updates refresh_feed_job status to ERROR if an error is raised'
+  end
+
   context 'adaptative schedule' do
 
     it 'updates the last_fetched timestamp of the feed when successful' do
