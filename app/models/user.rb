@@ -30,6 +30,9 @@ require 'subscriptions_manager'
 # - EntryState: This enables us to retrieve the state (read or unread) of all entries for all feeds a user is subscribed to.
 # - DataImport: This indicates whether the user has ever started an OPML import, and in this case it gives information about the import
 # process (whether it's still running or not, number of feeds processed, etc).
+# - RefreshFeedJob: Each instance of this class associated with a user represents an ocurrence of the user requesting
+# a refresh of a feed. The status attribute of the instance indicates if the refresh is running, successfully finished,
+# or finished with an error.
 #
 # Also, the User model has the following attributes:
 #
@@ -71,6 +74,7 @@ class User < ActiveRecord::Base
   has_many :entries, through: :feeds
   has_many :entry_states, -> {uniq}, dependent: :destroy
   has_one :data_import, dependent: :destroy
+  has_many :refresh_feed_jobs, dependent: :destroy
 
   validates :name, presence: true, uniqueness: {case_sensitive: true}
   validates :locale, presence: true
@@ -233,6 +237,7 @@ class User < ActiveRecord::Base
   # Before removing a feed subscription:
   # - remove the feed from its current folder, if any. If this means the folder is now empty, a deletion of the folder is triggered.
   # - delete all state information (read/unread) for this user and for all entries of the feed.
+  # - delete all instances of RefreshFeedJob associated with this feed and user.
 
   def before_remove_feed_subscription(feed_subscription)
     feed = feed_subscription.feed
@@ -241,6 +246,7 @@ class User < ActiveRecord::Base
     folder.feeds.delete feed if folder.present?
 
     remove_entry_states feed
+    remove_refresh_feed_jobs feed
   end
 
   ##
@@ -263,6 +269,13 @@ class User < ActiveRecord::Base
       entry_state = EntryState.where(user_id: self.id, entry_id: entry.id).first
       self.entry_states.delete entry_state
     end
+  end
+
+  ##
+  # Remove al RefreshFeedJob instances associated with this user and the feed passed as argument
+
+  def remove_refresh_feed_jobs(feed)
+    RefreshFeedJob.where(user_id: self.id, feed_id: feed.id).destroy_all
   end
 
 end

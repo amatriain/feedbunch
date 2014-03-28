@@ -294,6 +294,34 @@ describe Feed do
     end
   end
 
+  context 'association with refresh_feed_jobs' do
+
+    before :each do
+      @refresh_feed_job_1 = FactoryGirl.build :refresh_feed_job, feed_id: @feed.id
+      @refresh_feed_job_2 = FactoryGirl.build :refresh_feed_job, feed_id: @feed.id
+      @refresh_feed_job_3 = FactoryGirl.create :refresh_feed_job
+      @feed.refresh_feed_jobs << @refresh_feed_job_1 << @refresh_feed_job_2
+    end
+
+    it 'returns refresh_feed_jobs associated with this feed' do
+      @feed.refresh_feed_jobs.should include @refresh_feed_job_1
+      @feed.refresh_feed_jobs.should include @refresh_feed_job_2
+    end
+
+    it 'does not return refresh_feed_jobs not associated with this feed' do
+      @feed.refresh_feed_jobs.should_not include @refresh_feed_job_3
+    end
+
+    it 'deletes refresh_feed_jobs when deleting a feed' do
+      RefreshFeedJob.count.should eq 3
+      @feed.destroy
+      RefreshFeedJob.count.should eq 1
+      RefreshFeedJob.all.should_not include @refresh_feed_job_1
+      RefreshFeedJob.all.should_not include @refresh_feed_job_2
+      RefreshFeedJob.all.should include @refresh_feed_job_3
+    end
+  end
+
   context 'scheduled updates' do
 
     it 'schedules updates for a feed when it is created' do
