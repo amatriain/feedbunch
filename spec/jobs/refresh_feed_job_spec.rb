@@ -1,16 +1,18 @@
 require 'spec_helper'
 
-describe ScheduledUpdateFeedJob do
+describe RefreshFeedJob do
 
   before :each do
+    @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
+    @user.subscribe @feed.fetch_url
     FeedClient.stub :fetch
   end
 
   it 'updates feed when the job runs' do
     FeedClient.should_receive(:fetch).with @feed
 
-    ScheduledUpdateFeedJob.perform @feed.id
+    RefreshFeedJob.perform @user.id, @feed.id
   end
 
   it 'recalculates unread entries count in feed' do
@@ -26,7 +28,7 @@ describe ScheduledUpdateFeedJob do
     feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: @feed.id).first
     feed_subscription.update unread_entries: 10
 
-    ScheduledUpdateFeedJob.perform @feed.id
+    RefreshFeedJob.perform @user.id, @feed.id
 
     # Unread count should be corrected
     user.feed_unread_count(@feed).should eq 1
@@ -37,14 +39,53 @@ describe ScheduledUpdateFeedJob do
     Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
     FeedClient.should_not_receive :fetch
 
-    ScheduledUpdateFeedJob.perform @feed.id
+    RefreshFeedJob.perform @user.id, @feed.id
   end
 
   it 'does not update feed if it has been deleted' do
     FeedClient.should_not_receive :fetch
     @feed.destroy
 
-    ScheduledUpdateFeedJob.perform @feed.id
+    RefreshFeedJob.perform @user.id, @feed.id
+  end
+
+  context 'update refresh_feed_job_status' do
+
+    it 'does not update feed if the user does not exist' do
+      # subscribe a second user to the feed so that it is not destroyed when @user unsubscribes
+      user2 = FactoryGirl.create :user
+      user2.subscribe @feed.fetch_url
+      @user.destroy
+      FeedClient.should_not_receive :fetch
+
+      RefreshFeedJob.perform @user.id, @feed.id
+    end
+
+    it 'does not update feed if the user is not subscribed' do
+      user2 = FactoryGirl.create :user
+      FeedClient.should_not_receive :fetch
+
+      RefreshFeedJob.perform user2.id, @feed.id
+    end
+
+    it 'creates refresh_feed_job_status with status RUNNING if the user has none' do
+      #PENDING
+      @user.refresh_feed_job_statuses.destroy_all
+      @user.refresh_feed_job_statuses.should be_blank
+
+      RefreshFeedJob.perform @user.id, @feed.id
+      @user.refresh_feed_job_statuses.should_not be_blank
+      job_status = @user.refresh_feed_job_statuses.first
+      job_status.user_id.should eq @user.id
+      job_status.feed_id.should eq @feed.id
+      job_status.status.should eq RefreshFeedJobStatus::RUNNING
+    end
+
+    it 'does not update feed if refresh_feed_job_status is not RUNNING'
+
+    it 'updates refresh_feed_job_status to SUCCESS if successful'
+
+    it 'updates refresh_feed_job_status to ERROR if an error is raised'
   end
 
   context 'adaptative schedule' do
@@ -54,7 +95,7 @@ describe ScheduledUpdateFeedJob do
       ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
 
       @feed.last_fetched.should be_nil
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.last_fetched.should eq date
     end
 
@@ -74,7 +115,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.reload.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 3240
     end
 
@@ -91,7 +132,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.reload.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -111,7 +152,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.update fetch_interval_secs: 15.minutes
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 15.minutes
     end
 
@@ -128,7 +169,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.update fetch_interval_secs: 12.hours
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 12.hours
     end
 
@@ -149,7 +190,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -166,7 +207,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -183,7 +224,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -200,7 +241,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -217,7 +258,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -234,7 +275,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -251,7 +292,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -268,7 +309,7 @@ describe ScheduledUpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -282,7 +323,7 @@ describe ScheduledUpdateFeedJob do
       ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
 
       @feed.failing_since.should be_nil
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.failing_since.should eq date
     end
 
@@ -292,7 +333,7 @@ describe ScheduledUpdateFeedJob do
       @feed.update failing_since: date
 
       @feed.failing_since.should eq date
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.failing_since.should be_nil
     end
 
@@ -304,7 +345,7 @@ describe ScheduledUpdateFeedJob do
       @feed.update failing_since: date2
 
       @feed.failing_since.should eq date2
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.failing_since.should eq date2
     end
 
@@ -315,7 +356,7 @@ describe ScheduledUpdateFeedJob do
       @feed.update failing_since: date - (1.week + 1.day)
 
       @feed.available.should be_true
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.available.should be_false
     end
 
@@ -327,7 +368,7 @@ describe ScheduledUpdateFeedJob do
 
       Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
 
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
     end
 
     it 'does not mark feed as unavailable when it has been failing a week but the next update is successful' do
@@ -337,7 +378,7 @@ describe ScheduledUpdateFeedJob do
       @feed.update failing_since: date - (1.week + 1.day)
 
       @feed.available.should be_true
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.available.should be_true
     end
 
@@ -346,7 +387,7 @@ describe ScheduledUpdateFeedJob do
       @feed.update failing_since: nil
 
       @feed.available.should be_true
-      ScheduledUpdateFeedJob.perform @feed.id
+      RefreshFeedJob.perform @user.id, @feed.id
       @feed.reload.available.should be_true
     end
   end
