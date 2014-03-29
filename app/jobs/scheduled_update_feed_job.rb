@@ -3,11 +3,11 @@ require 'schedule_manager'
 require 'feed_updater'
 
 ##
-# Background job to fetch and update a feed's entries.
+# Background job for scheduled updates to a feed.
 #
 # Its perform method will be invoked from a Resque worker.
 
-class UpdateFeedJob
+class ScheduledUpdateFeedJob
   @queue = :update_feeds
 
   ##

@@ -6,7 +6,7 @@ describe FixSchedulesJob do
     @feed = FactoryGirl.create :feed
 
     Resque.stub :get_schedule do
-      {"class"=>"UpdateFeedJob", "args"=>@feed.id, "every"=>"3600s"}
+      {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"3600s"}
     end
   end
 
@@ -15,7 +15,7 @@ describe FixSchedulesJob do
     # @feed has scheduled updates, feed_unscheduled does not
     Resque.stub :get_schedule do |name|
       if name == "update_feed_#{@feed.id}"
-        {"class"=>"UpdateFeedJob", "args"=>@feed.id, "every"=>"3600s"}
+        {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"3600s"}
       else
         nil
       end
@@ -24,7 +24,7 @@ describe FixSchedulesJob do
     # A job to schedule updates for feed_unscheduled should be enqueued to be run in the next hour
     Resque.should_receive(:set_schedule).once do |name, config|
       name.should eq "update_feed_#{feed_unscheduled.id}"
-      config[:class].should eq 'UpdateFeedJob'
+      config[:class].should eq 'ScheduledUpdateFeedJob'
       config[:args].should eq feed_unscheduled.id
       config[:every][0].should eq '3600s'
     end
@@ -43,7 +43,7 @@ describe FixSchedulesJob do
     # A job to schedule updates for @feed should be enqueued to be run at 2000-01-01 13:00:00
     Resque.should_receive(:set_schedule).once do |name, config|
       name.should eq "update_feed_#{@feed.id}"
-      config[:class].should eq 'UpdateFeedJob'
+      config[:class].should eq 'ScheduledUpdateFeedJob'
       config[:args].should eq @feed.id
       config[:every][0].should eq "#{12.hours}s"
       config[:every][1][:first_in].should eq 3.hours
@@ -63,7 +63,7 @@ describe FixSchedulesJob do
     # A job to schedule updates for @feed should be enqueued to be run immediately
     Resque.should_receive(:set_schedule).once do |name, config|
       name.should eq "update_feed_#{@feed.id}"
-      config[:class].should eq 'UpdateFeedJob'
+      config[:class].should eq 'ScheduledUpdateFeedJob'
       config[:args].should eq @feed.id
       config[:every][0].should eq "#{12.hours}s"
       config[:every][1][:first_in].should be_between 0.minutes, 15.minutes
@@ -78,7 +78,7 @@ describe FixSchedulesJob do
     # A job to schedule updates for @feed should be scheduled sometime during the next hour
     Resque.should_receive(:set_schedule).once do |name, config|
       name.should eq "update_feed_#{@feed.id}"
-      config[:class].should eq 'UpdateFeedJob'
+      config[:class].should eq 'ScheduledUpdateFeedJob'
       config[:args].should eq @feed.id
       config[:every][0].should eq "#{1.hour}s"
       config[:every][1][:first_in].should be_between 0.minutes, 60.minutes
@@ -93,9 +93,9 @@ describe FixSchedulesJob do
     # @feed and feed_scheduled have scheduled updates
     Resque.stub :get_schedule do |name|
       if name == "update_feed_#{@feed.id}"
-        {"class"=>"UpdateFeedJob", "args"=>@feed.id, "every"=>"1h"}
+        {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"1h"}
       elsif name == "update_feed_#{feed_scheduled.id}"
-        {"class"=>"UpdateFeedJob", "args"=>feed_scheduled.id, "every"=>"1h"}
+        {"class"=>"ScheduledUpdateFeedJob", "args"=>feed_scheduled.id, "every"=>"1h"}
       end
     end
 

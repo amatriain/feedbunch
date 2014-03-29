@@ -119,7 +119,7 @@ class ScheduleManager
     name = "update_feed_#{feed_id}"
     config = {}
     config[:persist] = true
-    config[:class] = 'UpdateFeedJob'
+    config[:class] = 'ScheduledUpdateFeedJob'
     config[:args] = feed_id
 
     interval = "#{every_seconds}s"

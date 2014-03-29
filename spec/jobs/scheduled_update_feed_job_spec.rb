@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UpdateFeedJob do
+describe ScheduledUpdateFeedJob do
 
   before :each do
     @feed = FactoryGirl.create :feed
@@ -10,7 +10,7 @@ describe UpdateFeedJob do
   it 'updates feed when the job runs' do
     FeedClient.should_receive(:fetch).with @feed
 
-    UpdateFeedJob.perform @feed.id
+    ScheduledUpdateFeedJob.perform @feed.id
   end
 
   it 'recalculates unread entries count in feed' do
@@ -26,7 +26,7 @@ describe UpdateFeedJob do
     feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: @feed.id).first
     feed_subscription.update unread_entries: 10
 
-    UpdateFeedJob.perform @feed.id
+    ScheduledUpdateFeedJob.perform @feed.id
 
     # Unread count should be corrected
     user.feed_unread_count(@feed).should eq 1
@@ -37,14 +37,14 @@ describe UpdateFeedJob do
     Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
     FeedClient.should_not_receive :fetch
 
-    UpdateFeedJob.perform @feed.id
+    ScheduledUpdateFeedJob.perform @feed.id
   end
 
   it 'does not update feed if it has been deleted' do
     FeedClient.should_not_receive :fetch
     @feed.destroy
 
-    UpdateFeedJob.perform @feed.id
+    ScheduledUpdateFeedJob.perform @feed.id
   end
 
   context 'update requested by a user' do
@@ -67,7 +67,7 @@ describe UpdateFeedJob do
       ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
 
       @feed.last_fetched.should be_nil
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.last_fetched.should eq date
     end
 
@@ -79,7 +79,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3240s'
@@ -87,7 +87,7 @@ describe UpdateFeedJob do
       end
 
       @feed.reload.fetch_interval_secs.should eq 3600
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3240
     end
 
@@ -96,7 +96,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
@@ -104,7 +104,7 @@ describe UpdateFeedJob do
       end
 
       @feed.reload.fetch_interval_secs.should eq 3600
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -116,7 +116,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '900s'
@@ -124,7 +124,7 @@ describe UpdateFeedJob do
       end
 
       @feed.update fetch_interval_secs: 15.minutes
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 15.minutes
     end
 
@@ -133,7 +133,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '43200s'
@@ -141,7 +141,7 @@ describe UpdateFeedJob do
       end
 
       @feed.update fetch_interval_secs: 12.hours
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 12.hours
     end
 
@@ -154,7 +154,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
@@ -162,7 +162,7 @@ describe UpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -171,7 +171,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
@@ -179,7 +179,7 @@ describe UpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -188,7 +188,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
@@ -196,7 +196,7 @@ describe UpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -205,7 +205,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
@@ -213,7 +213,7 @@ describe UpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -222,7 +222,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
@@ -230,7 +230,7 @@ describe UpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -239,7 +239,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
@@ -247,7 +247,7 @@ describe UpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -256,7 +256,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
@@ -264,7 +264,7 @@ describe UpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -273,7 +273,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'UpdateFeedJob'
+        config[:class].should eq 'ScheduledUpdateFeedJob'
         config[:persist].should be_true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
@@ -281,7 +281,7 @@ describe UpdateFeedJob do
       end
 
       @feed.fetch_interval_secs.should eq 3600
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
@@ -295,7 +295,7 @@ describe UpdateFeedJob do
       ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
 
       @feed.failing_since.should be_nil
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.failing_since.should eq date
     end
 
@@ -305,7 +305,7 @@ describe UpdateFeedJob do
       @feed.update failing_since: date
 
       @feed.failing_since.should eq date
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.failing_since.should be_nil
     end
 
@@ -317,7 +317,7 @@ describe UpdateFeedJob do
       @feed.update failing_since: date2
 
       @feed.failing_since.should eq date2
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.failing_since.should eq date2
     end
 
@@ -328,7 +328,7 @@ describe UpdateFeedJob do
       @feed.update failing_since: date - (1.week + 1.day)
 
       @feed.available.should be_true
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.available.should be_false
     end
 
@@ -340,7 +340,7 @@ describe UpdateFeedJob do
 
       Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
 
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
     end
 
     it 'does not mark feed as unavailable when it has been failing a week but the next update is successful' do
@@ -350,7 +350,7 @@ describe UpdateFeedJob do
       @feed.update failing_since: date - (1.week + 1.day)
 
       @feed.available.should be_true
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.available.should be_true
     end
 
@@ -359,7 +359,7 @@ describe UpdateFeedJob do
       @feed.update failing_since: nil
 
       @feed.available.should be_true
-      UpdateFeedJob.perform @feed.id
+      ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.available.should be_true
     end
   end
