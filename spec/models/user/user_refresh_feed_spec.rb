@@ -8,18 +8,29 @@ describe User do
     @user.subscribe @feed.fetch_url
   end
 
-  it 'fetches a feed' do
-    FeedClient.should_receive(:fetch).with @feed, anything
+  it 'enqueues a job to update the feed' do
+    Resque.should_receive(:enqueue) do |job_class, job_status_id|
+      job_class.should eq RefreshFeedJob
+      job_status = RefreshFeedJobStatus.find job_status_id
+      job_status.user_id.should eq @user.id
+      job_status.feed_id.should eq @feed.id
+      job_status.status.should eq RefreshFeedJobStatus::RUNNING
+    end
+
     @user.refresh_feed @feed
   end
 
-  it 'enqueues a job to update the feed'
+  it 'creates a refresh_feed_job_status with state RUNNING' do
+    FeedClient.stub :fetch
+    RefreshFeedJobStatus.count.should eq 0
 
-  it 'creates a refresh_feed_job_status with state RUNNING'
+    @user.refresh_feed @feed
 
-  it 'raises an error if the user is not subscribed to the feed' do
-    feed2 = FactoryGirl.create :feed
-    expect {@user.refresh_feed feed2}.to raise_error NotSubscribedError
+    RefreshFeedJobStatus.count.should eq 1
+    job_status = RefreshFeedJobStatus.first
+    job_status.user_id.should eq @user.id
+    job_status.feed_id.should eq @feed.id
+    job_status.status.should eq RefreshFeedJobStatus::RUNNING
   end
 
 end
