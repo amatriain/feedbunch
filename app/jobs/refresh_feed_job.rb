@@ -1,5 +1,3 @@
-require 'subscriptions_manager'
-require 'schedule_manager'
 require 'feed_updater'
 
 ##
