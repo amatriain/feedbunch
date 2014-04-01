@@ -164,8 +164,11 @@ describe Api::FeedsController do
       response.status.should eq 404
     end
 
-    it 'fetches new entries in the feed before returning' do
-      FeedClient.should_receive(:fetch).with @feed1, anything
+    it 'refreshes feed' do
+      FeedRefreshManager.should_receive :refresh do |feed, user|
+        feed.id.should eq @feed1.id
+        user.id.should eq @user.id
+      end
       patch :update, id: @feed1.id
     end
   end
