@@ -117,6 +117,9 @@ Feedbunch::Application.routes.draw do
     # Resourceful routes for user data
     resource :user_data, only: [:show]
 
+    # Resourceful routes for refresh_feed_job_statuses
+    resource :refresh_feed_job_statuses, only: [:show]
+
   end
 
   # Resque-web is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/
