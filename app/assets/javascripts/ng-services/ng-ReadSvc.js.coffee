@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'readSvc',
 ['$rootScope', '$http', '$q', '$timeout', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
- 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc', 'lazyLoadingSvc',
+ 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc', 'lazyLoadingSvc', 'startPageSvc',
 ($rootScope, $http, $q, $timeout, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
- entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc)->
+ entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc, startPageSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load entries via AJAX in the root scope.
@@ -98,8 +98,7 @@ angular.module('feedbunch').service 'readSvc',
 
       $http.put("/api/feeds/#{currentFeedSvc.get().id}.json")
       .success (data)->
-        entriesPaginationSvc.set_busy false
-        load_entries()
+        startPageSvc.show_start_page()
       .error (data, status)->
         entriesPaginationSvc.set_busy false
         timerFlagSvc.start 'error_refreshing_feed' if status!=0
