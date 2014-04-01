@@ -5,12 +5,12 @@ class Api::RefreshFeedJobStatusesController < ApplicationController
 
   before_filter :authenticate_user!
 
-  respond_to :json, only: [:show]
+  respond_to :json, only: [:index]
 
   ##
   # Return JSON indicating the status of the "refresh feed" processes initiated by the current user
 
-  def show
+  def index
     if RefreshFeedJobStatus.exists? user_id: current_user.id
       job_statuses = RefreshFeedJobStatus.where user_id: current_user.id
     else
@@ -18,7 +18,7 @@ class Api::RefreshFeedJobStatusesController < ApplicationController
     end
 
     Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{job_statuses.count} RefreshFeedJobStatus instances"
-    render 'show', locals: {job_statuses: job_statuses, user: current_user}
+    render 'index', locals: {job_statuses: job_statuses, user: current_user}
   end
 
 end

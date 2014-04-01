@@ -24,7 +24,7 @@ angular.module('feedbunch').service 'jobStatusSvc',
     now = new Date()
     $http.get("/api/refresh_feed_job_statuses.json?time=#{now.getTime()}")
     .success (data)->
-      $rootScope.refresh_feed_job_statuses = data["job_statuses"]
+      $rootScope.refresh_feed_job_statuses = data.slice()
       job_running = false
       for job_status in job_statuses
         job_running = true if job_status.status == "RUNNING"

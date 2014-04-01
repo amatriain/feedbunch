@@ -10,10 +10,10 @@ describe Api::RefreshFeedJobStatusesController do
     login_user_for_unit @user
   end
 
-  context 'GET show' do
+  context 'GET index' do
 
     it 'returns refresh job status successfully' do
-      get :show, format: :json
+      get :index, format: :json
       response.status.should eq 200
     end
 
