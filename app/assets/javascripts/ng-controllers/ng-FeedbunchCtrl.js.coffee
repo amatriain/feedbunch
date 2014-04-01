@@ -6,9 +6,11 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc', 'tooltipSvc',
+'startPageSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
-findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc, tooltipSvc)->
+findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc, tooltipSvc,
+startPageSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -45,13 +47,7 @@ findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuColla
   # Show the start page
   #--------------------------------------------
   $scope.show_start_page = ->
-    currentFeedSvc.unset()
-    currentFolderSvc.unset()
-    entriesPaginationSvc.set_busy false
-    menuCollapseSvc.close()
-    $timeout ->
-      sidebarVisibleSvc.toggle()
-    , 300
+    startPageSvc.show_start_page()
     return
 
   #--------------------------------------------
