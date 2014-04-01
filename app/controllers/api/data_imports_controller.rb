@@ -21,6 +21,8 @@ class Api::DataImportsController < ApplicationController
 
     Rails.logger.debug "DataImport for user #{current_user.id} - #{current_user.email}: id #{data_import.try :id}, status #{data_import.try :status}"
     render 'show', locals: {data_import: data_import}
+  rescue => e
+    handle_error e
   end
 
   ##
