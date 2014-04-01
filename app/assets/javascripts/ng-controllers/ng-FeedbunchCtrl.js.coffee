@@ -16,6 +16,9 @@ startPageSvc)->
   # APPLICATION INITIALIZATION
   #--------------------------------------------
 
+  # Show start page by default
+  startPageSvc.show_start_page()
+
   # By default sidebar is visible in smartphones and other small screens
   sidebarVisibleSvc.set true
 
