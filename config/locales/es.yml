@@ -50,7 +50,7 @@ es:
       new_folder_close: "Cancelar"
       new_folder_submit: "Crear carpeta"
       no_entries: "No hay entradas"
-      problem_refreshing: "Ha habido un problema refrescando el feed. Por favor inténtelo de nuevo más tarde."
+      problem_refreshing: "Ha habido un problema actualizando el feed. Por favor inténtelo de nuevo más tarde."
       problem_loading_entries: "Ha habido un problema cargando entradas. Por favor inténtelo de nuevo más tarde."
       problem_loading_feeds: "Ha habido un problema cargando feeds. Por favor inténtelo de nuevo más tarde."
       problem_loading_folders: "Ha habido un problema cargando carpetas. Por favor inténtelo de nuevo más tarde."
@@ -61,7 +61,8 @@ es:
       problem_folder_management: "Ha habido un problema gestionando las carpetas. Por favor inténtelo de nuevo más arde."
       problem_new_folder: "Ha habido un problema creando la nueva carpeta. Por favor inténtelo de nuevo más tarde."
       folder_already_exists: "Ya existe una carpeta con ese título. Por favor escoje otro título."
-      problem_entry_state: "Ha habido un problema con el servidor"
+      problem_entry_state: "Ha habido un problema con el servidor."
+      problem_loading_job_statuses: "Ha habido un problema con el servidor."
   entries:
     index:
       mark_unread: "No leído"
@@ -97,3 +98,8 @@ es:
       success: "Tus suscripciones a feeds han sido importadas con éxito."
       finish_success: "Tus suscripciones a feeds han sido importadas con éxito."
       finish_error: "Ha habido un error intentando importar tus suscripciones a feeds."
+    job_status:
+      refresh:
+        success: "Feed actualizado con éxito:"
+        error: "Ha habido un error intentando actualizar feed:"
+        running: "Actualizando feed en estos momentos:"

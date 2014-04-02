@@ -83,6 +83,7 @@ en:
       problem_new_folder: "There has been a problem creating the new folder. Please try again later."
       folder_already_exists: "There is already a folder with that title. Please choose another title."
       problem_entry_state: "There has been a problem with the server."
+      problem_loading_job_statuses: "There has been a problem with the server."
   entries:
     index:
       mark_unread: "Unread"
@@ -118,3 +119,8 @@ en:
       success: "Your feed subscriptions have been successfully imported."
       finish_success: "Your feed subscriptions have been successfully imported."
       finish_error: "There has been an error trying to import your feed subscriptions."
+    job_status:
+      refresh:
+        success: "Feed refreshed successfully:"
+        error: "There's been an error trying to refresh feed:"
+        running: "Currently refreshing feed:"

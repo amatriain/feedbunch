@@ -69,3 +69,9 @@
   <button type="button" class="close" ng-click="reset_flag('error_changing_entry_state')">&times;</button>
   <p><%= t 'feeds.index.problem_entry_state' %></p>
 </div>
+
+<%# Alert displayed when there is a problem loading the status of background jobs %>
+<div id="problem-loading-job-statuses" class="alert alert-danger" ng-show="error_loading_job_statuses">
+  <button type="button" class="close" ng-click="reset_flag('loading_job_statuses')">&times;</button>
+  <p><%= t 'feeds.index.problem_loading_job_statuses' %></p>
+</div>

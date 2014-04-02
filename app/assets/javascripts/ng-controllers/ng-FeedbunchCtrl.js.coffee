@@ -6,11 +6,11 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc', 'tooltipSvc',
-'startPageSvc',
+'startPageSvc', 'jobStatusSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc, tooltipSvc,
-startPageSvc)->
+startPageSvc, jobStatusSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -125,14 +125,16 @@ startPageSvc)->
   #--------------------------------------------
   # Set the currently selected feed
   #--------------------------------------------
-  $scope.set_current_feed = (feed)->
-    currentFeedSvc.set feed
-    tooltipSvc.feed_title_tooltip()
-    readSvc.read_entries_page()
-    menuCollapseSvc.close()
-    $timeout ->
-      sidebarVisibleSvc.toggle()
-    , 300
+  $scope.set_current_feed = (feed_id)->
+    feed = findSvc.find_feed feed_id
+    if feed?
+      currentFeedSvc.set feed
+      tooltipSvc.feed_title_tooltip()
+      readSvc.read_entries_page()
+      menuCollapseSvc.close()
+      $timeout ->
+        sidebarVisibleSvc.toggle()
+      , 300
     return
 
   #--------------------------------------------
@@ -278,6 +280,31 @@ startPageSvc)->
   $scope.hide_import_alert = ->
     importStatusSvc.hide_alert()
     return
+
+  #--------------------------------------------
+  # Return true if there are job statuses for which an alert should be displayed in the start page; false otherwise.
+  #--------------------------------------------
+  $scope.show_job_status_alerts = ->
+    if $rootScope.refresh_feed_job_statuses? && $rootScope.refresh_feed_job_statuses?.length > 0
+      return true
+    else
+      return false
+
+  #--------------------------------------------
+  # Permanently dismiss a refresh feed job alert from the start page
+  #--------------------------------------------
+  $scope.hide_refresh_job_alert = (job_status)->
+    jobStatusSvc.hide_alert(job_status)
+
+  #--------------------------------------------
+  # Return a feed title, given its id.
+  #--------------------------------------------
+  $scope.feed_title = (feed_id)->
+    feed = findSvc.find_feed feed_id
+    if feed?
+      return feed.title
+    else
+      return null
 
   #--------------------------------------------
   # Function to filter feeds in a given folder

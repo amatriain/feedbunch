@@ -3,43 +3,44 @@
 ########################################################
 
 angular.module('feedbunch').service 'jobStatusSvc',
-['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'timerFlagSvc',
-($rootScope, $http, $timeout, feedsFoldersSvc, timerFlagSvc)->
+['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'timerFlagSvc', 'findSvc',
+($rootScope, $http, $timeout, feedsFoldersSvc, timerFlagSvc, findSvc)->
 
   #---------------------------------------------
-  # PRIVATE FUNCTION: load job statuses via AJAX
-  #
-  # Note.- The first time this is invoked when opening the start page, passing
-  # a false to the "show_alerts" argument. This means that if a job is not running
-  # when the start page is opened, no alert will be shown for the job.
-  #
-  # However if a job is found to be running, the function will be called every 5 seconds, with
-  # a true to the "show_alerts" argument.
-  #
-  # Basically this means that if when the start page is opened a job is running, and it finishes
-  # afterwards, then and only then will an alert be displayed. Depending on the job, this may mean
-  # that feeds are automatically added or removed from the root scope.
+  # PRIVATE FUNCTION: load list of job statuses via AJAX
   #---------------------------------------------
-  load_refresh_feed_job_statuses = (show_alerts)->
+  load_refresh_feed_job_statuses = ->
     now = new Date()
     $http.get("/api/refresh_feed_job_statuses.json?time=#{now.getTime()}")
     .success (data)->
       $rootScope.refresh_feed_job_statuses = data.slice()
-      job_running = false
-      for job_status in job_statuses
-        job_running = true if job_status.status == "RUNNING"
-        # TODO implement refresh error and success alerts for every job?
-      if job_running
-        # Update status from the server periodically while any job is running
-        $timeout ->
-          load_refresh_feed_job_statuses true
-        , 2000
-      #else if data["status"] == "ERROR" && show_alerts
-        #timerFlagSvc.start 'error_importing'
-      #else if data["status"] == "SUCCESS" && show_alerts
-        # Automatically load new feeds and folders without needing a refresh
-        #feedsFoldersSvc.load_data()
-        #timerFlagSvc.start 'success_importing'
+      for job_status in data
+        # Periodically update the status of any running jobs
+        load_refresh_feed_job_status job_status.id if job_status.status=="RUNNING"
+    .error (data, status)->
+      # if HTTP call has been prematurely cancelled, do nothing
+      timerFlagSvc.start 'error_loading_job_statuses' if status!=0
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: load status of a single job via AJAX.
+  #
+  # Receives as argument the id of the job.
+  #---------------------------------------------
+  load_refresh_feed_job_status = (job_id)->
+    $timeout ->
+      now = new Date()
+      $http.get("/api/refresh_feed_job_statuses/#{job_id}.json?time=#{now.getTime()}")
+      .success (data)->
+        # Update the current status of the job in the root scope
+        job = findSvc.find_refresh_feed_job job_id
+        job.status = data.status if job?
+        # If job is running, keep periodically updating its status
+        load_refresh_feed_job_status job_id if data.status=="RUNNING"
+        # TODO display temporary alert if status if ERROR or SUCCESS
+      .error (data, status)->
+        # if HTTP call has been prematurely cancelled, do nothing
+        timerFlagSvc.start 'error_loading_job_statuses' if status!=0
+    , 5000
 
   service =
 
@@ -52,8 +53,9 @@ angular.module('feedbunch').service 'jobStatusSvc',
     # Hide a job status alert and notify the server via AJAX that it should be deleted from the database
     # (it will not appear again).
     #---------------------------------------------
+    hide_alert: (job_status)->
+      alert "not yet implemented"
     # TODO: NOT YET IMPLEMENTED
-    #hide_alert: ->
     #  $rootScope.show_import_alert = false
     #  $http.put("/api/data_imports.json", data_import: {show_alert: 'false'})
 

@@ -1,0 +1,76 @@
+<div class="row"
+     ng-repeat="job_status in refresh_feed_job_statuses">
+
+  <div class="col-xs-12 col-md-9 alert alert-danger alert-block" ng-show="job_status.status=='ERROR'">
+
+    <button type="button"
+            class="close"
+            ng-click="hide_refresh_job_alert(job_status)"
+            title="<%= t 'start.import.dismiss' %>"
+            data-toggle="tooltip"
+            data-placement="top">
+      &times;
+    </button>
+
+    <div class="row">
+      <div class="col-xs-3 col-sm-2">
+        <i class="fa fa-refresh fa-4x"></i>
+      </div>
+
+      <div class="col-xs-9 col-sm-10">
+        <p><%= t 'start.job_status.refresh.error' %></p>
+        <p><a ng-click="set_current_feed(job_status.feed_id)">{{feed_title(job_status.feed_id)}}</a></p>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="data-import-running" class="col-xs-12 col-md-9 alert alert-info alert-block" ng-show="job_status.status=='RUNNING'">
+
+    <button type="button"
+            class="close"
+            ng-click="hide_refresh_job_alert(job_status)"
+            title="<%= t 'start.import.dismiss' %>"
+            data-toggle="tooltip"
+            data-placement="top">
+      &times;
+    </button>
+
+    <div class="row">
+      <div class="col-xs-3 col-sm-2">
+        <i class="fa fa-refresh fa-spin fa-4x"></i>
+      </div>
+
+      <div class="col-xs-9 col-sm-10">
+        <p><%= t 'start.job_status.refresh.running' %></p>
+        <p><a ng-click="set_current_feed(job_status.feed_id)">{{feed_title(job_status.feed_id)}}</a></p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-xs-12 col-md-9 alert alert-success alert-block" ng-show="job_status.status=='SUCCESS'">
+
+    <button type="button"
+            class="close"
+            ng-click="hide_refresh_job_alert(job_status)"
+            title="<%= t 'start.import.dismiss' %>"
+            data-toggle="tooltip"
+            data-placement="top">
+      &times;
+    </button>
+
+    <div class="row">
+      <div class="col-xs-3 col-sm-2">
+        <i class="fa fa-refresh fa-4x"></i>
+      </div>
+
+      <div class="col-xs-9 col-sm-10">
+        <p><%= t 'start.job_status.refresh.success' %></p>
+        <p><a ng-click="set_current_feed(job_status.feed_id)">{{feed_title(job_status.feed_id)}}</a></p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
