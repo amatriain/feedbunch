@@ -34,9 +34,13 @@ angular.module('feedbunch').service 'jobStatusSvc',
         # Update the current status of the job in the root scope
         job = findSvc.find_refresh_feed_job job_id
         job.status = data.status if job?
+        if data.status=="RUNNING"
         # If job is running, keep periodically updating its status
-        load_refresh_feed_job_status job_id if data.status=="RUNNING"
-        # TODO display temporary alert if status if ERROR or SUCCESS
+          load_refresh_feed_job_status job_id
+        else if data.status=="ERROR"
+          timerFlagSvc.start 'error_refreshing_feed'
+        else if data.status=="SUCCESS"
+          timerFlagSvc.start 'success_refresh_feed'
       .error (data, status)->
         # if HTTP call has been prematurely cancelled, do nothing
         timerFlagSvc.start 'error_loading_job_statuses' if status!=0

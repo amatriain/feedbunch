@@ -1,9 +1,3 @@
-<%# Alert displayed when there is a problem refreshing feeds %>
-<div id="problem-refreshing" class="alert alert-danger" ng-show="error_refreshing_feed">
-  <button type="button" class="close" ng-click="reset_flag('error_refreshing_feed')">&times;</button>
-  <p><%= t 'feeds.index.problem_refreshing' %></p>
-</div>
-
 <%# Alert displayed when there is a problem loading folders %>
 <div id="problem-loading-folders" class="alert alert-danger" ng-show="error_loading_folders">
   <button type="button" class="close" ng-click="reset_flag('error_loading_folders')">&times;</button>
@@ -72,6 +66,18 @@
 
 <%# Alert displayed when there is a problem loading the status of background jobs %>
 <div id="problem-loading-job-statuses" class="alert alert-danger" ng-show="error_loading_job_statuses">
-  <button type="button" class="close" ng-click="reset_flag('loading_job_statuses')">&times;</button>
+  <button type="button" class="close" ng-click="reset_flag('error_loading_job_statuses')">&times;</button>
   <p><%= t 'feeds.index.problem_loading_job_statuses' %></p>
+</div>
+
+<%# Alert displayed when there is a problem loading the status of background jobs %>
+<div id="success-refresh-feed" class="alert alert-success" ng-show="success_refresh_feed">
+  <button type="button" class="close" ng-click="reset_flag('success_refresh_feed')">&times;</button>
+  <p><%= t 'feeds.index.success_refresh_feed' %></p>
+</div>
+
+<%# Alert displayed when there is a problem refreshing feeds %>
+<div id="problem-refreshing" class="alert alert-danger" ng-show="error_refreshing_feed">
+  <button type="button" class="close" ng-click="reset_flag('error_refreshing_feed')">&times;</button>
+  <p><%= t 'feeds.index.problem_refreshing' %></p>
 </div>

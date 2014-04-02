@@ -71,7 +71,7 @@ en:
       new_folder_close: "Cancel"
       new_folder_submit: "Create folder"
       no_entries: "No entries"
-      problem_refreshing: "There has been a problem refreshing the feed. Please try again later."
+      problem_refreshing: "There has been an error refreshing a feed."
       problem_loading_entries: "There has been a problem loading entries. Please try again later."
       problem_loading_feeds: "There has been a problem loading feeds. Please try again later."
       problem_loading_folders: "There has been a problem loading folders. Please try again later."
@@ -84,6 +84,7 @@ en:
       folder_already_exists: "There is already a folder with that title. Please choose another title."
       problem_entry_state: "There has been a problem with the server."
       problem_loading_job_statuses: "There has been a problem with the server."
+      success_refresh_feed: "Feed successfully refreshed."
   entries:
     index:
       mark_unread: "Unread"
