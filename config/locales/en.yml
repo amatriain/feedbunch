@@ -121,6 +121,7 @@ en:
       finish_success: "Your feed subscriptions have been successfully imported."
       finish_error: "There has been an error trying to import your feed subscriptions."
     job_status:
+      dismiss: "Dismiss"
       refresh:
         success: "Feed refreshed successfully:"
         error: "There's been an error trying to refresh feed:"

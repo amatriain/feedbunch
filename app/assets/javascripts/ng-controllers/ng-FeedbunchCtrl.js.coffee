@@ -188,6 +188,13 @@ startPageSvc, jobStatusSvc)->
     return
 
   #--------------------------------------------
+  # Enable tooltips for a refresh feed job's status alert.
+  #--------------------------------------------
+  $scope.tooltips_refresh_job_status = (job_status)->
+    tooltipSvc.refresh_job_status_tooltips job_status
+    return
+
+  #--------------------------------------------
   # Function to decide if an entry should be displayed as open (return true) or closed (return false).
   #--------------------------------------------
   $scope.is_open = (entry)->
