@@ -84,7 +84,7 @@ en:
       folder_already_exists: "There is already a folder with that title. Please choose another title."
       problem_entry_state: "There has been a problem with the server."
       problem_loading_job_statuses: "There has been a problem with the server."
-      success_refresh_feed: "Feed successfully refreshed."
+      success_refresh_feed: "Feed refreshed successfully."
   entries:
     index:
       mark_unread: "Unread"
