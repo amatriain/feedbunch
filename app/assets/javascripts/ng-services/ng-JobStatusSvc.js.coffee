@@ -68,6 +68,11 @@ angular.module('feedbunch').service 'jobStatusSvc',
     # from the database (it will not appear again).
     #---------------------------------------------
     hide_refresh_job_alert: (job_status)->
+      # If there is a timer updating this job status, stop it.
+      timer = $rootScope.refresh_job_status_timers[job_status.id]
+      if timer?
+        $timeout.cancel timer
+        delete $rootScope.refresh_job_status_timers[job_status.id]
       $("#refresh-status-alerts #refresh-status-#{job_status.id} .alert").alert 'close'
       $http.delete "/api/refresh_feed_job_statuses/#{job_status.id}.json"
 
