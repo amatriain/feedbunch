@@ -58,12 +58,6 @@ angular.module('feedbunch').service 'readSvc',
         , 250
 
       if entriesPaginationSvc.is_first_page()
-        current_feed = currentFeedSvc.get()
-        # On first page load, update unread entries count in the feed
-        #if current_feed
-          #TODO retrieve a single feed's JSON when clicking on entry
-          #current_feed.unread_entries = data["unread_entries"]
-          #favicoSvc.update_unread_badge()
         # After loading the first page of entries, load a second one to ensure the list is fully populated
         load_entries()
 

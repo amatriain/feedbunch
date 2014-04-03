@@ -131,6 +131,7 @@ startPageSvc, jobStatusSvc)->
       currentFeedSvc.set feed
       tooltipSvc.feed_title_tooltip()
       readSvc.read_entries_page()
+      feedsFoldersSvc.load_feed feed_id
       menuCollapseSvc.close()
       $timeout ->
         sidebarVisibleSvc.toggle()

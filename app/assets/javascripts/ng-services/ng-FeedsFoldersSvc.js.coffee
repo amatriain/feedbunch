@@ -38,6 +38,17 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         timerFlagSvc.start 'error_loading_feeds'
 
   #--------------------------------------------
+  # PRIVATE FUNCTION: Load a single feed. Receives its id as argument.
+  #--------------------------------------------
+  load_feed = (id)->
+    now = new Date()
+    $http.get("/api/feeds/#{id}.json?time=#{now.getTime()}")
+    .success (data)->
+      add_feed data
+    .error (data, status)->
+      timerFlagSvc.start 'error_loading_feeds' if status!=0
+
+  #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds every minute.
   #--------------------------------------------
   refresh_feeds = ->
@@ -73,6 +84,16 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   load_data = ->
     load_folders()
     load_feeds()
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Push a feed in the feeds array. If the feeds array is empty, create it anew,
+  # ensuring angularjs ng-repeat is triggered.
+  #---------------------------------------------
+  add_feed = (feed)->
+    if !$rootScope.feeds || $rootScope.feeds?.length == 0
+      $rootScope.feeds = [feed]
+    else
+      $rootScope.feeds.push feed
 
   service =
 
@@ -128,6 +149,11 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     #---------------------------------------------
     load_feeds: load_feeds
 
+    #---------------------------------------------
+    # Load a single feed via AJAX into the root scope.
+    #---------------------------------------------
+    load_feed: load_feed
+
     #--------------------------------------------
     # Load folders via AJAX into the root scope.
     #--------------------------------------------
@@ -137,11 +163,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     # Push a feed in the feeds array. If the feeds array is empty, create it anew,
     # ensuring angularjs ng-repeat is triggered.
     #---------------------------------------------
-    add_feed: (feed)->
-      if !$rootScope.feeds || $rootScope.feeds?.length == 0
-        $rootScope.feeds = [feed]
-      else
-        $rootScope.feeds.push feed
+    add_feed: add_feed
 
     #---------------------------------------------
     # Push a folder in the folders array. If the folders array is empty, create it anew,
