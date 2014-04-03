@@ -5,7 +5,7 @@ class Api::RefreshFeedJobStatusesController < ApplicationController
 
   before_filter :authenticate_user!
 
-  respond_to :json, only: [:index, :show]
+  respond_to :json
 
   ##
   # Return JSON indicating the status of the "refresh feed" processes initiated by the current user
@@ -29,6 +29,18 @@ class Api::RefreshFeedJobStatusesController < ApplicationController
   def show
     @job_status = current_user.refresh_feed_job_statuses.find params[:id]
     render 'show', locals: {job_status: @job_status}
+  rescue => e
+    handle_error e
+  end
+
+  ##
+  # Remove job status from the database. This will make its alert disappear from the start page as well.
+
+  def destroy
+    @job_status = current_user.refresh_feed_job_statuses.find params[:id]
+    Rails.logger.debug "Destroying refresh_feed_job_status #{@job_status.id} for user #{current_user.id} - #{current_user.email}"
+    @job_status.destroy!
+    head status: 200
   rescue => e
     handle_error e
   end

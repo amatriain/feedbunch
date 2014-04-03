@@ -46,4 +46,34 @@ describe Api::RefreshFeedJobStatusesController do
     end
   end
 
+  context 'DELETE remove' do
+
+    it 'returns 200' do
+      delete :destroy, id: @job_status_1.id, format: :json
+      response.should be_success
+    end
+
+    it 'deletes the job status' do
+      delete :destroy, id: @job_status_1.id, format: :json
+      RefreshFeedJobStatus.exists?(@job_status_1.id).should be_false
+    end
+
+    it 'returns 404 if the job status does not exist' do
+      delete :destroy, id: 1234567890, format: :json
+      response.status.should eq 404
+    end
+
+    it 'returns 404 if the job status does not belong to the current user' do
+      job_status_3 = FactoryGirl.create :refresh_feed_job_status
+      delete :destroy, id: job_status_3.id, format: :json
+      response.status.should eq 404
+    end
+
+    it 'returns 500 if there is a problem unsubscribing' do
+      RefreshFeedJobStatus.any_instance.stub(:destroy).and_raise StandardError.new
+      delete :destroy, id: @job_status_1.id, format: :json
+      response.status.should eq 500
+    end
+  end
+
 end
