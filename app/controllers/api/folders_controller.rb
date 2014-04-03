@@ -19,32 +19,18 @@ class Api::FoldersController < ApplicationController
   end
 
   ##
-  # Return HTML with all entries for a given folder, containing all feeds subscribed to by the user inside the folder.
+  # Return a JSON document describing a folder, which must be owned by the current user.
   #
-  # If the param :id is "all", all entries for all feeds subscribed by the current user will be returned.
-  # If the "include_read" parameter has the "true" value, return all entries; otherwise return only read ones.
-  #
-  # If the requests asks for a folder that does not belong to the current user, the response is a 404 error code (Not Found).
+  # If the requests asks for a folder that does not belong to the current user, the response is a 404
+  # error code (Not Found).
 
   def show
-    if params[:id] == Folder::ALL_FOLDERS
-      @folder = Folder::ALL_FOLDERS
-    else
-      @folder = current_user.folders.find params[:id]
-    end
+    @folder = current_user.folders.find params[:id]
 
-    if params[:include_read]=='true'
-      include_read = true
+    if @folder.present?
+      render 'show', locals: {folder: @folder}
     else
-      include_read = false
-    end
-
-    @entries = current_user.folder_entries @folder, include_read: include_read, page: params[:page]
-
-    if @entries.present?
-      render 'show', locals: {entries: @entries, user: current_user}
-    else
-      Rails.logger.info "Folder #{params[:id]} has no entries, returning a 404"
+      Rails.logger.info "Folder #{params[:id]} not found, returning a 404"
       head status: 404
     end
   rescue => e
