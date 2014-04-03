@@ -69,9 +69,6 @@ angular.module('feedbunch').service 'jobStatusSvc',
     # from the database (it will not appear again).
     #---------------------------------------------
     hide_refresh_job_alert: (job_status)->
-      # Close alert
-      $("#refresh-status-alerts #refresh-status-#{job_status.id} .alert").alert 'close'
-
       # Remove job status from scope
       job_status = findSvc.find_refresh_feed_job job_status.id
       if job_status?
