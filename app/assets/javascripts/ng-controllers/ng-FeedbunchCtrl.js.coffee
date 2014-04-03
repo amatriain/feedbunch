@@ -301,7 +301,8 @@ startPageSvc, jobStatusSvc)->
   # Permanently dismiss a refresh feed job alert from the start page
   #--------------------------------------------
   $scope.hide_refresh_job_alert = (job_status)->
-    jobStatusSvc.hide_alert(job_status)
+    jobStatusSvc.hide_refresh_job_alert(job_status)
+    return
 
   #--------------------------------------------
   # Return a feed title, given its id.

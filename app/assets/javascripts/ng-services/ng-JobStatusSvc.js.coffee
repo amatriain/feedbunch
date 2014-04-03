@@ -18,8 +18,8 @@ angular.module('feedbunch').service 'jobStatusSvc',
         # Periodically update the status of any running jobs
         load_refresh_feed_job_status job_status.id if job_status.status=="RUNNING"
     .error (data, status)->
-      # if HTTP call has been prematurely cancelled, do nothing
-      timerFlagSvc.start 'error_loading_job_statuses' if status!=0
+      # if HTTP call has been prematurely cancelled or there's simply no job statuses, do nothing
+      timerFlagSvc.start 'error_loading_job_statuses' if status!=0 && status!=404
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load status of a single job via AJAX.
@@ -43,7 +43,7 @@ angular.module('feedbunch').service 'jobStatusSvc',
           timerFlagSvc.start 'success_refresh_feed'
       .error (data, status)->
         # if HTTP call has been prematurely cancelled, do nothing
-        timerFlagSvc.start 'error_loading_job_statuses' if status!=0
+        timerFlagSvc.start 'error_loading_job_statuses' if status!=0 && status!=404
     , 5000
 
   service =
@@ -54,14 +54,12 @@ angular.module('feedbunch').service 'jobStatusSvc',
     load_data: load_refresh_feed_job_statuses
 
     #---------------------------------------------
-    # Hide a job status alert and notify the server via AJAX that it should be deleted from the database
-    # (it will not appear again).
+    # Hide a refresh feed job status alert and notify the server via AJAX that it should be deleted
+    # from the database (it will not appear again).
     #---------------------------------------------
-    hide_alert: (job_status)->
-      alert "not yet implemented"
-    # TODO: NOT YET IMPLEMENTED
-    #  $rootScope.show_import_alert = false
-    #  $http.put("/api/data_imports.json", data_import: {show_alert: 'false'})
+    hide_refresh_job_alert: (job_status)->
+      $("#refresh-status-alerts #refresh-status-#{job_status.id} .alert").alert 'close'
+      $http.delete "/api/refresh_feed_job_statuses/#{job_status.id}.json"
 
   return service
 ]

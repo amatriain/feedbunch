@@ -38,7 +38,7 @@ angular.module('feedbunch').service 'tooltipSvc',
   refresh_job_status_tooltips: (job_status)->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#start-info #job-statuses #refresh-status-#{job_status.id} button.close[data-toggle='tooltip']").tooltip()
+      $("#job-statuses #refresh-status-alerts #refresh-status-#{job_status.id} button.close[data-toggle='tooltip']").tooltip()
 
   #---------------------------------------------
   # Enable tooltips on the feed title link

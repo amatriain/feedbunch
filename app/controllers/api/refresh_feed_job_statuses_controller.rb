@@ -13,12 +13,11 @@ class Api::RefreshFeedJobStatusesController < ApplicationController
   def index
     if RefreshFeedJobStatus.exists? user_id: current_user.id
       @job_statuses = RefreshFeedJobStatus.where user_id: current_user.id
+      Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_statuses.count} RefreshFeedJobStatus instances"
+      render 'index', locals: {job_statuses: @job_statuses}
     else
       head status: 404
     end
-
-    Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_statuses.count} RefreshFeedJobStatus instances"
-    render 'index', locals: {job_statuses: @job_statuses}
   rescue => e
     handle_error e
   end
