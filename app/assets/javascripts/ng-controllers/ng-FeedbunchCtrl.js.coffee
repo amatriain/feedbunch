@@ -313,6 +313,8 @@ startPageSvc, jobStatusSvc)->
     if feed?
       return feed.title
     else
+      # If the requested feed is not in the scope, try to load it from the server
+      feedsFoldersSvc.load_feed feed_id
       return null
 
   #--------------------------------------------

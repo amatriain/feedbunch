@@ -41,11 +41,22 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   # PRIVATE FUNCTION: Load a single feed. Receives its id as argument.
   #--------------------------------------------
   load_feed = (id)->
+    # If feed pagination is busy, do nothing
+    # This keeps from trying to load a single feed while the list of feeds is loading.
+    return if feedsPaginationSvc.is_busy()
+
+    # If this feed is already being loaded, do nothing
+    $rootScope.loading_single_feed ||= {}
+    return if $rootScope.loading_single_feed[id]
+
+    $rootScope.loading_single_feed[id] = true
     now = new Date()
     $http.get("/api/feeds/#{id}.json?time=#{now.getTime()}")
     .success (data)->
+      delete $rootScope.loading_single_feed[id]
       add_feed data
     .error (data, status)->
+      delete $rootScope.loading_single_feed[id]
       timerFlagSvc.start 'error_loading_feeds' if status!=0
 
   #--------------------------------------------
