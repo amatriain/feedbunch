@@ -10,10 +10,10 @@ angular.module('feedbunch').service 'timerFlagSvc',
   # PRIVATE FUNCTION: Stop a running timer.
   #--------------------------------------------
   stop_timer = (flag)->
-    timer = $rootScope.timers[flag]
+    timer = $rootScope.alert_timers[flag]
     if timer
       $timeout.cancel timer
-      delete $rootScope.timers[flag]
+      delete $rootScope.alert_timers[flag]
 
   service =
 
@@ -23,14 +23,14 @@ angular.module('feedbunch').service 'timerFlagSvc',
     #---------------------------------------------
     start: (flag)->
       # Store running timers in a hash in the root scope
-      $rootScope.timers ||= {}
+      $rootScope.alert_timers ||= {}
       stop_timer flag
       eval "$rootScope.#{flag} = true"
       timer = $timeout ->
         eval "$rootScope.#{flag} = false"
-        delete $rootScope.timers[flag]
+        delete $rootScope.alert_timers[flag]
       , 5000
-      $rootScope.timers[flag] = timer
+      $rootScope.alert_timers[flag] = timer
 
     #---------------------------------------------
     # Set a boolean flag in the root scope as false.
