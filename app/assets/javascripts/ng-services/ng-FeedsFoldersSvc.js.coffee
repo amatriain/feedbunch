@@ -86,14 +86,21 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     load_feeds()
 
   #---------------------------------------------
-  # PRIVATE FUNCTION: Push a feed in the feeds array. If the feeds array is empty, create it anew,
-  # ensuring angularjs ng-repeat is triggered.
+  # PRIVATE FUNCTION: Push a feed in the feeds array if it isn't already present there.
+  #
+  # If the feeds array is empty, create it anew, ensuring angularjs ng-repeat is triggered.
+  #
+  # If the feed is already in the feeds array, its unread_entries attribute is updated instead of pushing it in the array again.
   #---------------------------------------------
   add_feed = (feed)->
     if !$rootScope.feeds || $rootScope.feeds?.length == 0
       $rootScope.feeds = [feed]
     else
-      $rootScope.feeds.push feed
+      feed_old = findSvc.find_feed feed.id
+      if feed_old?
+        feed_old.unread_entries = feed.unread_entries
+      else
+        $rootScope.feeds.push feed
 
   service =
 
