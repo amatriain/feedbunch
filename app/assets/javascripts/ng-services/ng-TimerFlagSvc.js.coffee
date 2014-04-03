@@ -11,7 +11,7 @@ angular.module('feedbunch').service 'timerFlagSvc',
   #--------------------------------------------
   stop_timer = (flag)->
     timer = $rootScope.alert_timers[flag]
-    if timer
+    if timer?
       $timeout.cancel timer
       delete $rootScope.alert_timers[flag]
 

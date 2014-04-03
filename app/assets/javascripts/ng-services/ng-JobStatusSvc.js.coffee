@@ -27,24 +27,34 @@ angular.module('feedbunch').service 'jobStatusSvc',
   # Receives as argument the id of the job.
   #---------------------------------------------
   load_refresh_feed_job_status = (job_id)->
-    $timeout ->
-      now = new Date()
-      $http.get("/api/refresh_feed_job_statuses/#{job_id}.json?time=#{now.getTime()}")
-      .success (data)->
-        # Update the current status of the job in the root scope
-        job = findSvc.find_refresh_feed_job job_id
-        job.status = data.status if job?
-        if data.status=="RUNNING"
-        # If job is running, keep periodically updating its status
-          load_refresh_feed_job_status job_id
-        else if data.status=="ERROR"
-          timerFlagSvc.start 'error_refreshing_feed'
-        else if data.status=="SUCCESS"
-          timerFlagSvc.start 'success_refresh_feed'
-      .error (data, status)->
-        # if HTTP call has been prematurely cancelled, do nothing
-        timerFlagSvc.start 'error_loading_job_statuses' if status!=0 && status!=404
-    , 5000
+    # Store running timers in a hash in the root scope
+    $rootScope.refresh_job_status_timers ||= {}
+
+    # Only start a timer to refresh the job status if there isn't a timer already refreshing that job status
+    timer = $rootScope.refresh_job_status_timers[job_id]
+    if !timer?
+      timer = $timeout ->
+        # Remove this timer from the list so that another update can be scheduled for 5 seconds in the future
+        delete $rootScope.refresh_job_status_timers[job_id]
+        now = new Date()
+        $http.get("/api/refresh_feed_job_statuses/#{job_id}.json?time=#{now.getTime()}")
+        .success (data)->
+          # Update the current status of the job in the root scope
+          job = findSvc.find_refresh_feed_job job_id
+          job.status = data.status if job?
+          if data.status=="RUNNING"
+          # If job is running, keep periodically updating its status
+            load_refresh_feed_job_status job_id
+          else if data.status=="ERROR"
+            timerFlagSvc.start 'error_refreshing_feed'
+          else if data.status=="SUCCESS"
+            timerFlagSvc.start 'success_refresh_feed'
+        .error (data, status)->
+          # if HTTP call has been prematurely cancelled, do nothing
+          timerFlagSvc.start 'error_loading_job_statuses' if status!=0 && status!=404
+      , 5000
+      # Store timer so that a second timer for the same job status is not started in the future
+      $rootScope.refresh_job_status_timers[job_id] = timer
 
   service =
 
