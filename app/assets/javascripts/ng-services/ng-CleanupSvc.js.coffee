@@ -20,13 +20,28 @@ angular.module('feedbunch').service 'cleanupSvc',
   #--------------------------------------------
   # Remove feeds without unread entries from the root scope, unless the user has
   # selected to display all feeds including read ones.
+  #
+  # Feeds that have a job status alert in the start page are not removed.
+  #
   # If the user clicks on the same feed or on its folder, do nothing.
   #--------------------------------------------
   hide_read_feeds: ->
     if $rootScope.feeds && !$rootScope.show_read
       read_feeds = $filter('filter') $rootScope.feeds, (feed)->
-        return feed.unread_entries <= 0
-      if read_feeds && read_feeds?.length > 0
+        if feed.unread_entries > 0
+          # Feeds with unread entries are not removed
+          return false
+        else
+          job_statuses = $filter('filter') $rootScope.refresh_feed_job_statuses, (job_status)->
+            # Find refresh_feed_job_statuses for this feed
+            return job_status.feed_id == feed.id
+          if job_statuses? && job_statuses?.length > 0
+            # Feeds with a job status are not removed
+            return false
+          else
+            # The rest of feeds are removed
+            return true
+      if read_feeds? && read_feeds?.length > 0
         for feed in read_feeds
           if $rootScope.current_feed?.id != feed.id && $rootScope.current_folder?.id != feed.folder_id
             # Delete feed from the scope
