@@ -1,0 +1,8 @@
+[
+<% entries.each do |entry| %>
+<%= render partial: 'api/entries/entry', locals: {entry: entry, user: user} %>
+  <% if entry != entries.last %>
+,
+  <% end %>
+<% end %>
+]

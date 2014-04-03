@@ -106,10 +106,14 @@ Feedbunch::Application.routes.draw do
     match '/entries/update' => 'entries#update', via: [:patch, :put], as: 'entries_update'
 
     # Resourceful routes for feeds
-    resources :feeds, only: [:index, :show, :create, :update, :destroy]
+    resources :feeds, only: [:index, :show, :create, :update, :destroy] do
+      resources :entries, only: [:index]
+    end
 
     # Resourceful routes for folders
-    resources :folders, only: [:index, :show, :update, :create]
+    resources :folders, only: [:index, :show, :update, :create] do
+      resources :entries, only: [:index]
+    end
 
     # Resourceful routes for subscriptions import process status
     resource :data_imports, only: [:show, :create, :update]
