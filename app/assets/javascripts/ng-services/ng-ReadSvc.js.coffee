@@ -31,9 +31,9 @@ angular.module('feedbunch').service 'readSvc',
 
     # Load entries from a feed or from a folder?
     if currentFeedSvc.get()
-      url = "/api/feeds/#{currentFeedSvc.get().id}.json"
+      url = "/api/feeds/#{currentFeedSvc.get().id}/entries.json"
     else if currentFolderSvc.get()
-      url = "/api/folders/#{currentFolderSvc.get().id}.json"
+      url = "/api/folders/#{currentFolderSvc.get().id}/entries.json"
 
     now = new Date()
     $rootScope.entries_http_canceler = $q.defer()
@@ -44,12 +44,12 @@ angular.module('feedbunch').service 'readSvc',
       entriesPaginationSvc.set_busy false
 
       if !$rootScope.entries || $rootScope.entries?.length == 0
-        $rootScope.entries = data["entries"].slice()
+        $rootScope.entries = data.slice()
       else
-        $rootScope.entries = $rootScope.entries.concat data["entries"].slice()
+        $rootScope.entries = $rootScope.entries.concat data.slice()
 
       # Set correct state (open or closed) for new entries, based on user configuration
-      openEntrySvc.add_entries data["entries"].slice()
+      openEntrySvc.add_entries data.slice()
 
       # If the user has selected the "open all entries by default" option, lazy load images
       if $rootScope.open_all_entries
@@ -60,9 +60,10 @@ angular.module('feedbunch').service 'readSvc',
       if entriesPaginationSvc.is_first_page()
         current_feed = currentFeedSvc.get()
         # On first page load, update unread entries count in the feed
-        if current_feed
-          current_feed.unread_entries = data["unread_entries"]
-          favicoSvc.update_unread_badge()
+        #if current_feed
+          #TODO retrieve a single feed's JSON when clicking on entry
+          #current_feed.unread_entries = data["unread_entries"]
+          #favicoSvc.update_unread_badge()
         # After loading the first page of entries, load a second one to ensure the list is fully populated
         load_entries()
 
