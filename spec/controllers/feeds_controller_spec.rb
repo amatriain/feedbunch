@@ -55,13 +55,6 @@ describe Api::FeedsController do
       assigns(:feed).should eq @feed1
     end
 
-    it 'assigns to @entries the entries for a single feed' do
-      get :show, id: @feed1.id, format: :json
-      assigns(:entries).count.should eq 2
-      assigns(:entries).should include @entry_1_1
-      assigns(:entries).should include @entry_1_2
-    end
-
     it 'returns a 404 for a feed the user is not suscribed to' do
       get :show, id: @feed2.id, format: :json
       response.status.should eq 404
@@ -70,84 +63,6 @@ describe Api::FeedsController do
     it 'returns a 404 for a non-existing feed' do
       get :show, id: 1234567890, format: :json
       response.status.should eq 404
-    end
-
-    it 'does not fetch new entries in the feed' do
-      FeedClient.should_not_receive(:fetch).with @feed1
-      get :show, id: @feed1.id, format: :json
-    end
-
-    it 'assigns to @entries only unread entries by default' do
-      @user.change_entries_state @entry_1_1, 'read'
-
-      get :show, id: @feed1.id, format: :json
-      assigns(:entries).count.should eq 1
-      assigns(:entries).should include @entry_1_2
-    end
-
-    it 'assigns to @entries all entries' do
-      @user.change_entries_state @entry_1_1, 'read'
-
-      get :show, id: @feed1.id, include_read: 'true', format: :json
-      assigns(:entries).count.should eq 2
-      assigns(:entries).should include @entry_1_1
-      assigns(:entries).should include @entry_1_2
-    end
-
-    context 'pagination' do
-
-      before :each do
-        @entries = []
-        # Ensure there are exactly 26 unread entries and 4 read entries
-        Entry.all.each {|e| e.destroy}
-        (0..29).each do |i|
-          e = FactoryGirl.build :entry, feed_id: @feed1.id, published: Date.new(2001, 01, 30-i)
-          @feed1.entries << e
-          @entries << e
-        end
-        (26..29).each do |i|
-          @user.change_entries_state @entries[i], 'read'
-        end
-      end
-
-      context 'unread entries' do
-
-        it 'returns the first page of entries' do
-          get :show, id: @feed1.id, page: 1, format: :json
-          assigns(:entries).count.should eq 25
-          assigns(:entries).each_with_index do |entry, index|
-            entry.should eq @entries[index]
-          end
-        end
-
-        it 'returns the last page of entries' do
-          get :show, id: @feed1.id, page: 2, format: :json
-          assigns(:entries).count.should eq 1
-          assigns(:entries)[0].should eq @entries[25]
-        end
-
-      end
-
-      context 'all entries' do
-
-        it 'returns the first page of entries' do
-          get :show, id: @feed1.id, include_read: 'true', page: 1, format: :json
-          assigns(:entries).count.should eq 25
-          assigns(:entries).each_with_index do |entry, index|
-            entry.should eq @entries[index]
-          end
-        end
-
-        it 'returns the last page of entries' do
-          get :show, id: @feed1.id, include_read: 'true', page: 2, format: :json
-          assigns(:entries).count.should eq 5
-          assigns(:entries).each_with_index do |entry, index|
-            entry.should eq @entries[25 + index]
-          end
-        end
-
-      end
-
     end
 
   end

@@ -1,11 +1,1 @@
-{
-"unread_entries": <%= user.feed_unread_count feed %>,
-"entries": [
-<% entries.each do |entry| %>
-<%= render partial: 'api/entries/entry', locals: {entry: entry, user: user} %>
-  <% if entry != entries.last %>
-,
-  <% end %>
-<% end %>
-]
-}
+<%= render partial: 'api/feeds/feed', locals: {feed: feed, user: user} %>

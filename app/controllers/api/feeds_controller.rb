@@ -29,25 +29,17 @@ class Api::FeedsController < ApplicationController
   end
 
   ##
-  # Return all entries for a given feed, as long as the currently authenticated user is suscribed to it.
-  #
-  # If the "include_read" parameter has the "true" value, return all entries; otherwise return only read ones.
+  # Return a JSON document describing a given feed, as long as the currently authenticated user is suscribed to it.
   #
   # If the requests asks for a feed the current user is not suscribed to, the response is a 404 error code (Not Found).
 
   def show
-    if params[:include_read]=='true'
-      include_read = true
-    else
-      include_read = false
-    end
     @feed = current_user.feeds.find params[:id]
-    @entries = current_user.feed_entries @feed, include_read: include_read, page: params[:page]
 
-    if @entries.present?
-      render 'show', locals: {feed: @feed, entries: @entries, user: current_user}
+    if @feed.present?
+      render 'show', locals: {feed: @feed, user: current_user}
     else
-      Rails.logger.info "Feed #{params[:id]} has no entries, returning a 404"
+      Rails.logger.info "Feed #{params[:id]} not found, returning a 404"
       head status: 404
     end
   rescue => e
