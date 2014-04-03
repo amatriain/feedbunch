@@ -49,6 +49,7 @@ angular.module('feedbunch').service 'jobStatusSvc',
             timerFlagSvc.start 'error_refreshing_feed'
           else if data.status=="SUCCESS"
             timerFlagSvc.start 'success_refresh_feed'
+            feedsFoldersSvc.load_feed job.feed_id
         .error (data, status)->
           # if HTTP call has been prematurely cancelled, do nothing
           timerFlagSvc.start 'error_loading_job_statuses' if status!=0 && status!=404
