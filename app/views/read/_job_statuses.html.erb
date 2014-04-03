@@ -1,6 +1,6 @@
 <div id="refresh-status-alerts"
      class="row"
-     ng-repeat="job_status in refresh_feed_job_statuses">
+     ng-repeat="job_status in refresh_feed_job_statuses | orderBy:'-started_at'">
 
   <div id="refresh-status-{{job_status.id}}"
        ng-mouseenter="tooltips_refresh_job_status(job_status)">
