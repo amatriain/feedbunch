@@ -26,7 +26,7 @@ class Api::RefreshFeedJobStatusesController < ApplicationController
   # Return JSON indicating the status of a single "refresh feed" process initiated by the current user
 
   def show
-    @job_status = current_user.refresh_feed_job_statuses.find params[:id]
+    @job_status = current_user.find_refresh_feed_job_status params[:id]
     render 'show', locals: {job_status: @job_status}
   rescue => e
     handle_error e

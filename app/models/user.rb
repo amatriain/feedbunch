@@ -129,6 +129,13 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Find a refresh_feed_job_status belonging to the user
+
+  def find_refresh_feed_job_status(job_id)
+    return self.refresh_feed_job_statuses.find job_id
+  end
+
+  ##
   # Subscribe to a feed. See URLSubscriber#subscribe
 
   def subscribe(url)

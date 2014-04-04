@@ -100,13 +100,21 @@ describe 'unread entries count' do
 
     it 'updates number of unread entries when refreshing a feed', js: true do
       read_feed @feed1, @user
-      FeedClient.stub :fetch do
-        entry = FactoryGirl.build :entry, feed_id: @feed1.id
-        @feed1.entries << entry
+      User.any_instance.stub :refresh_feed do
+        job_status = FactoryGirl.build :refresh_feed_job_status, user_id: @user.id, feed_id: @feed1.id
+        @user.refresh_feed_job_statuses << job_status
+      end
+
+      User.any_instance.stub :find_refresh_feed_job_status do
+        FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first.update unread_entries: 4
+        job_status = RefreshFeedJobStatus.where(user_id: @user.id, feed_id: @feed1.id).first
+        job_status.update status: RefreshFeedJobStatus::SUCCESS
+        job_status
       end
 
       refresh_feed
 
+      page.should have_text 'Feed refreshed successfully'
       unread_folder_entries_should_eq 'all', 5
       unread_folder_entries_should_eq @folder1, 5
       unread_feed_entries_should_eq @feed1, 4, @user
