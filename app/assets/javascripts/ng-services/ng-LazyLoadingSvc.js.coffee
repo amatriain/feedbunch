@@ -12,20 +12,26 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
     # Create a clone of the image, hide it and load the actual image there. If it loads successfully,
     # hide the placeholder image and show the loaded image, otherwise hide both images.
     data_src = img.attr 'data-src'
-    img.removeAttr('data-src')
-    loaded_img = img.clone().addClass('hidden').removeAttr('src').insertAfter(img)
-    loaded_img.on 'error', ->
+
+    if !data_src || data_src?.trim()?.length == 0
+      # If data-src is blank, just hide the spinner
       img.addClass 'hidden'
-    .on 'load', ->
-      img.addClass 'hidden'
-      loaded_img.addClass('loaded').removeClass('hidden')
-      # center and add display-block to images if wider than 40% of the entries div
-      img_width = 100 * loaded_img.width() / $('#feed-entries').width()
-      if img_width > 40
-        loaded_img.addClass('center-block').addClass('large-img')
-      else
-        loaded_img.addClass('small-img')
-    loaded_img.attr('src', data_src)
+    else
+      # If data-src is not blank, lazy-load the image
+      img.removeAttr('data-src')
+      loaded_img = img.clone().addClass('hidden').removeAttr('src').insertAfter(img)
+      loaded_img.on 'error', ->
+        img.addClass 'hidden'
+      .on 'load', ->
+        img.addClass 'hidden'
+        loaded_img.addClass('loaded').removeClass('hidden')
+        # center and add display-block to images if wider than 40% of the entries div
+        img_width = 100 * loaded_img.width() / $('#feed-entries').width()
+        if img_width > 40
+          loaded_img.addClass('center-block').addClass('large-img')
+        else
+          loaded_img.addClass('small-img')
+      loaded_img.attr('src', data_src)
 
   service =
 
