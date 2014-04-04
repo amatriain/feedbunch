@@ -139,8 +139,8 @@ lazyLoadingSvc)->
         return feed.title
       else
         # If an entry is retrieved without a corresponding feed in the scope,
-        # immediately load feeds from the server to retrieve it
-        feedsFoldersSvc.load_feeds()
+        # immediately load it from the server
+        feedsFoldersSvc.load_feed entry.feed_id
         return ''
 
     #--------------------------------------------
