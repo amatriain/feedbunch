@@ -17,7 +17,7 @@ class FeedRefreshManager
     job_status = user.refresh_feed_job_statuses.create feed_id: feed.id
 
     Rails.logger.info "Enqueuing refresh_feed_job_status #{job_status.id} for user #{user.id} - #{user.email}"
-    Resque.enqueue RefreshFeedJob, job_status.id
+    Resque.enqueue RefreshFeedJob, job_status.id, feed.id, user.id
     return nil
   end
 end

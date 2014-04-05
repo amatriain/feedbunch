@@ -12,49 +12,49 @@ class RefreshFeedJob
   #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 
-  def self.perform(refresh_feed_job_status_id)
-    # Check that refresh_feed_job_status actually exists
-    if !RefreshFeedJobStatus.exists? refresh_feed_job_status_id
-      Rails.logger.warn "Processing RefreshFeedJob for refresh_feed_job_status #{refresh_feed_job_status_id} but that status does not exist in the database. Aborting"
-      return
-    end
-    job_status = RefreshFeedJobStatus.find refresh_feed_job_status_id
-
-    # Check that the refresh_job_status is in state "RUNNING"
-    if job_status.status != RefreshFeedJobStatus::RUNNING
-      Rails.logger.warn "Processing RefreshFeedJob for refresh_feed_job_status #{job_status.id}, it should be in state RUNNING but it is in status #{job_status.status}. Aborting."
-      return
+  def self.perform(refresh_feed_job_status_id, feed_id, user_id)
+    # Check if refresh_feed_job_status actually exists
+    job_status = nil
+    if RefreshFeedJobStatus.exists? refresh_feed_job_status_id
+      job_status = RefreshFeedJobStatus.find refresh_feed_job_status_id
+      # Check that the refresh_job_status is in state "RUNNING"
+      if job_status.status != RefreshFeedJobStatus::RUNNING
+        Rails.logger.warn "Processing RefreshFeedJob for refresh_feed_job_status #{job_status.id}, it should be in state RUNNING but it is in status #{job_status.status}. Aborting."
+        return
+      end
+    else
+      Rails.logger.warn "Processing RefreshFeedJob for refresh_feed_job_status #{refresh_feed_job_status_id} but that status does not exist in the database. Updating feed but job status will not be updated."
     end
 
     # Check that user actually exists
-    if !User.exists? job_status.user_id
-      Rails.logger.warn "User #{job_status.user_id} requested refresh of feed #{job_status.feed_id}, but the user does not exist in the database. Aborting"
-      job_status.destroy
+    if !User.exists? user_id
+      Rails.logger.warn "User #{user_id} requested refresh of feed #{feed_id}, but the user does not exist in the database. Aborting"
+      job_status.destroy if job_status.present?
       return
     end
-    user = User.find job_status.user_id
+    user = User.find user_id
 
     # Check that user is subscribed to the feed
-    if !user.feeds.exists? job_status.feed_id
-      Rails.logger.warn "User #{user.id} requested refresh of feed #{job_status.feed_id}, but the user is not subscribed to the feed. Aborting."
-      job_status.destroy
+    if !user.feeds.exists? feed_id
+      Rails.logger.warn "User #{user.id} requested refresh of feed #{feed_id}, but the user is not subscribed to the feed. Aborting."
+      job_status.destroy if job_status.present?
       return
     end
 
     # Check that feed actually exists
-    if !Feed.exists? job_status.feed_id
-      Rails.logger.warn "Feed #{job_status.feed_id} scheduled to be updated, but it does not exist in the database. Aborting."
-      job_status.destroy
+    if !Feed.exists? feed_id
+      Rails.logger.warn "Feed #{feed_id} scheduled to be updated, but it does not exist in the database. Aborting."
+      job_status.destroy if job_status.present?
       return
     end
-    feed = Feed.find job_status.feed_id
+    feed = Feed.find feed_id
 
     # Fetch feed
     Rails.logger.debug "Refreshing feed #{feed.id} - #{feed.title}"
     FeedClient.fetch feed
 
     Rails.logger.debug "Successfully finished refresh_feed_job_status #{refresh_feed_job_status_id} for feed #{feed.try :id}, user #{user.try :id}"
-    job_status.update status: RefreshFeedJobStatus::SUCCESS
+    job_status.update status: RefreshFeedJobStatus::SUCCESS if job_status.present?
 
     # If the update didn't fail, mark the feed as "not currently failing" and "available"
     feed.update failing_since: nil if !feed.failing_since.nil?
@@ -65,9 +65,7 @@ class RefreshFeedJob
     Rails.logger.error "Error running refresh_feed_job_status #{refresh_feed_job_status_id} for feed #{feed.try :id}, user #{user.try :id}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    if job_status.present?
-      job_status.update status: RefreshFeedJobStatus::ERROR
-    end
+    job_status.update status: RefreshFeedJobStatus::ERROR if job_status.present?
   ensure
     if feed.present?
       # Update timestamp of the last time the feed was fetched

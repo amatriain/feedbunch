@@ -13,7 +13,7 @@ describe RefreshFeedJob do
   it 'updates feed when the job runs' do
     FeedClient.should_receive(:fetch).with @feed
 
-    RefreshFeedJob.perform @refresh_feed_job_status.id
+    RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
   end
 
   it 'recalculates unread entries count in feed' do
@@ -29,7 +29,7 @@ describe RefreshFeedJob do
     feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: @feed.id).first
     feed_subscription.update unread_entries: 10
 
-    RefreshFeedJob.perform @refresh_feed_job_status.id
+    RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
 
     # Unread count should be corrected
     user.feed_unread_count(@feed).should eq 1
@@ -37,11 +37,11 @@ describe RefreshFeedJob do
 
   context 'validations' do
 
-    it 'does not update feed if the refresh_feed_job_status does not exist' do
+    it 'updates feed even if the refresh_feed_job_status does not exist' do
       @refresh_feed_job_status.destroy
-      FeedClient.should_not_receive :fetch
+      FeedClient.should_receive(:fetch).with @feed
 
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
     end
 
     it 'does not update feed if the user does not exist' do
@@ -51,7 +51,7 @@ describe RefreshFeedJob do
       @user.destroy
       FeedClient.should_not_receive :fetch
 
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
     end
 
     it 'destroys refresh_feed_job_status if the user does not exist' do
@@ -59,7 +59,7 @@ describe RefreshFeedJob do
       FeedClient.should_not_receive :fetch
 
       RefreshFeedJobStatus.count.should eq 1
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
       RefreshFeedJobStatus.count.should eq 0
     end
 
@@ -67,7 +67,7 @@ describe RefreshFeedJob do
       FeedClient.should_not_receive :fetch
       @feed.destroy
 
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
     end
 
     it 'destroys refresh_feed_job_status if the feed does not exist' do
@@ -75,7 +75,7 @@ describe RefreshFeedJob do
       FeedClient.should_not_receive :fetch
 
       RefreshFeedJobStatus.count.should eq 1
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
       RefreshFeedJobStatus.count.should eq 0
     end
 
@@ -84,7 +84,7 @@ describe RefreshFeedJob do
       FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first.delete
       FeedClient.should_not_receive :fetch
 
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
     end
 
     it 'destroys refresh_feed_job_status if the user is not subscribed' do
@@ -92,7 +92,7 @@ describe RefreshFeedJob do
       FeedClient.should_not_receive :fetch
 
       RefreshFeedJobStatus.count.should eq 1
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
       RefreshFeedJobStatus.count.should eq 0
     end
   end
@@ -103,11 +103,11 @@ describe RefreshFeedJob do
       @refresh_feed_job_status.update status: RefreshFeedJobStatus::SUCCESS
       FeedClient.should_not_receive :fetch
 
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
     end
 
     it 'updates refresh_feed_job_status to SUCCESS if successful' do
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
       @refresh_feed_job_status.reload.status.should eq RefreshFeedJobStatus::SUCCESS
     end
 
@@ -115,7 +115,7 @@ describe RefreshFeedJob do
       FeedClient.stub(:fetch).and_raise RestClient::Exception.new
 
       @refresh_feed_job_status.reload.status.should eq RefreshFeedJobStatus::RUNNING
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
       @refresh_feed_job_status.reload.status.should eq RefreshFeedJobStatus::ERROR
     end
   end
@@ -128,7 +128,7 @@ describe RefreshFeedJob do
       @feed.update failing_since: date
 
       @feed.failing_since.should eq date
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
       @feed.reload.failing_since.should be_nil
     end
 
@@ -136,7 +136,7 @@ describe RefreshFeedJob do
       @feed.update available: false
 
       @feed.reload.available.should be_false
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
       @feed.reload.available.should be_true
     end
 
@@ -148,7 +148,7 @@ describe RefreshFeedJob do
       @feed.update failing_since: date2
 
       @feed.failing_since.should eq date2
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
       @feed.reload.failing_since.should eq date2
     end
 
@@ -157,7 +157,7 @@ describe RefreshFeedJob do
       @feed.update available:false
 
       @feed.available.should be_false
-      RefreshFeedJob.perform @refresh_feed_job_status.id
+      RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
       @feed.reload.available.should be_false
     end
   end
