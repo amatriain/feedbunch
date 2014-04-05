@@ -68,6 +68,20 @@ describe 'refresh feeds' do
       visit current_path
       page.should_not have_text 'Currently refreshing feed'
     end
+
+    it 'loads feed even if it has no unread entries', js: true do
+      refresh_feed
+      Entry.destroy_all
+      subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
+      subscription.update unread_entries: 0
+
+      visit current_path
+      unread_feed_entries_should_eq @feed, 0, @user
+      within '#refresh-status-alerts' do
+        page.should have_text 'Currently refreshing feed'
+        page.should have_content @feed.title
+      end
+    end
   end
 
   context 'refresh finishes successfully' do
@@ -124,6 +138,26 @@ describe 'refresh feeds' do
       visit current_path
       page.should_not have_text 'Feed refreshed successfully'
     end
+
+    it 'loads feed even if it has no unread entries', js: true do
+      refresh_feed
+      Entry.destroy_all
+      subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
+      subscription.update unread_entries: 0
+
+      visit current_path
+      unread_feed_entries_should_eq @feed, 0, @user
+      within '#refresh-status-alerts' do
+        page.should have_text 'Feed refreshed successfully'
+        page.should have_content @feed.title
+      end
+    end
+
+    it 'updates unread entries count', js: true do
+      unread_feed_entries_should_eq @feed, 1, @user
+      refresh_feed
+      unread_feed_entries_should_eq @feed, 2, @user
+    end
   end
 
   context 'refresh finishes with an error' do
@@ -179,65 +213,20 @@ describe 'refresh feeds' do
       visit current_path
       page.should_not have_text 'There\'s been an error trying to refresh feed'
     end
-  end
 
+    it 'loads feed even if it has no unread entries', js: true do
+      refresh_feed
+      Entry.destroy_all
+      subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
+      subscription.update unread_entries: 0
 
-# TODO: remove the following tests, they come from an old version of the refresh process.
-
-  it 'refreshes a single feed', js: true do
-    # Page should have current entries for the feed
-    page.should have_content @entry.title
-
-    # Refresh feed
-    entry2 = FactoryGirl.build :entry, feed_id: @feed.id
-    FeedClient.should_receive(:fetch).with @feed, anything
-    @feed.entries << entry2
-    refresh_feed
-
-    # Page should have the new entries for the feed
-    page.should have_content @entry.title
-    page.should have_content entry2.title
-  end
-
-  it 'only shows unread entries when refreshing a single feed', js: true do
-    entry2 = FactoryGirl.build :entry, feed_id: @feed.id
-    @feed.entries << entry2
-    # @entry is read, entry2 is unread
-    entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry.id).first
-    entry_state1.read = true
-    entry_state1.save!
-    # When refreshing the feed, fetch the new unread entry3
-    entry3 = FactoryGirl.build :entry, feed_id: @feed.id
-    FeedClient.stub :fetch do
-      @feed.entries << entry3
+      visit current_path
+      unread_feed_entries_should_eq @feed, 0, @user
+      within '#refresh-status-alerts' do
+        page.should have_text 'There\'s been an error trying to refresh feed'
+        page.should have_content @feed.title
+      end
     end
-
-    read_feed @feed, @user
-    refresh_feed
-
-    # entry2 and entry3 should appear, @entry should not appear because it's already read
-    page.should_not have_content @entry.title
-    page.should have_content entry2.title
-    page.should have_content entry3.title
-  end
-
-  it 'shows an alert if there is a problem refreshing a feed', js: true do
-    FeedClient.stub(:fetch).and_raise StandardError.new
-    refresh_feed
-
-    should_show_alert 'problem-refreshing'
-  end
-
-  # Regression test for bug #169
-  it 'does not show an alert refreshing a feed without unread entries', js: true do
-    FeedClient.stub :fetch
-    entry_state = EntryState.where(entry_id: @entry.id, user_id: @user.id).first
-    entry_state.read=true
-    entry_state.save
-
-    refresh_feed
-
-    should_hide_alert 'problem-refreshing'
   end
 
 end
