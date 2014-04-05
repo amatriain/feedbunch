@@ -380,3 +380,12 @@ end
 def close_import_alert
   find('#start-info #import-process-status button.close', visible: true).click
 end
+
+##
+# Click on the "close" button of a currently visible refresh feed job status alert.
+#
+# Receives the id of the job as argument.
+
+def close_refresh_feed_job_alert(job_id)
+  find("#start-info #job-statuses #refresh-status-#{job_id} button.close", visible: true).click
+end
