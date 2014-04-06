@@ -134,7 +134,7 @@ startPageSvc, jobStatusSvc)->
       feedsFoldersSvc.load_feed feed_id
       menuCollapseSvc.close()
       $timeout ->
-        sidebarVisibleSvc.toggle()
+        sidebarVisibleSvc.set false
       , 300
     return
 
@@ -146,7 +146,7 @@ startPageSvc, jobStatusSvc)->
     readSvc.read_entries_page()
     menuCollapseSvc.close()
     $timeout ->
-      sidebarVisibleSvc.toggle()
+      sidebarVisibleSvc.set false
     , 300
     return
 
