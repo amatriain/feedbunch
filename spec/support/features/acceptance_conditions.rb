@@ -160,10 +160,25 @@ def entry_should_be_closed(entry)
   page.should_not have_text entry.summary
 end
 
-
 ##
 # Test that the passed feed is currently selected for reading
 
 def feed_should_be_selected(feed)
   page.should have_css "#sidebar .active > [data-sidebar-feed][data-feed-id='#{feed.id}']"
+end
+
+##
+# Test that the passed folder is open in the sidebar
+
+def folder_should_be_open(folder)
+  page.should have_css "#sidebar #folders-list #folder-#{folder.id}"
+  page.should have_css "#sidebar #folders-list #feeds-#{folder.id}.in"
+end
+
+##
+# Test that the passed folder is closed in the sidebar
+
+def folder_should_be_closed(folder)
+  page.should have_css "#sidebar #folders-list #folder-#{folder.id}"
+  page.should_not have_css "#sidebar #folders-list #feeds-#{folder.id}.in"
 end

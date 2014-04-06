@@ -59,6 +59,18 @@ describe 'refresh feeds' do
       page.should have_text @entry.title
     end
 
+    it 'opens folder in the sidebar when clicking on feed title', js: true do
+      folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder
+      folder.feeds << @feed
+      refresh_feed
+      visit current_path
+
+      folder_should_be_closed folder
+      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      folder_should_be_open folder
+    end
+
     it 'permanently dismisses alert when clicking on feed title', js: true do
       refresh_feed
       find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
@@ -82,6 +94,7 @@ describe 'refresh feeds' do
         page.should have_content @feed.title
       end
     end
+
   end
 
   context 'refresh finishes successfully' do
@@ -127,6 +140,18 @@ describe 'refresh feeds' do
       refresh_feed
       find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
       page.should have_text @entry.title
+    end
+
+    it 'opens folder in the sidebar when clicking on feed title', js: true do
+      folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder
+      folder.feeds << @feed
+      refresh_feed
+      visit current_path
+
+      folder_should_be_closed folder
+      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      folder_should_be_open folder
     end
 
     it 'permanently dismisses alert when clicking on feed title', js: true do
@@ -202,6 +227,18 @@ describe 'refresh feeds' do
       refresh_feed
       find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
       page.should have_text @entry.title
+    end
+
+    it 'opens folder in the sidebar when clicking on feed title', js: true do
+      folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder
+      folder.feeds << @feed
+      refresh_feed
+      visit current_path
+
+      folder_should_be_closed folder
+      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      folder_should_be_open folder
     end
 
     it 'permanently dismisses alert when clicking on feed title', js: true do
