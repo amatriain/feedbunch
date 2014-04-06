@@ -146,7 +146,8 @@
         }
       }
 
-      img.small-img{
+      img.small-img,
+      img[src='/images/Ajax-loader.gif']{
         margin: {
           left: 3px;
           right: 3px;
