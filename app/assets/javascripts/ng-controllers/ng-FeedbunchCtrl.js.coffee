@@ -16,9 +16,6 @@ startPageSvc, jobStatusSvc)->
   # APPLICATION INITIALIZATION
   #--------------------------------------------
 
-  # Show start page by default
-  startPageSvc.show_start_page()
-
   # By default sidebar is visible in smartphones and other small screens
   sidebarVisibleSvc.set true
 
@@ -39,6 +36,9 @@ startPageSvc, jobStatusSvc)->
 
   # Load status of data import process for the current user
   importStatusSvc.load_data false
+
+  # Load job statuses via AJAX on startup
+  jobStatusSvc.load_data()
 
   # If there is a rails alert, show it and close it after 5 seconds
   timerFlagSvc.start 'error_rails'

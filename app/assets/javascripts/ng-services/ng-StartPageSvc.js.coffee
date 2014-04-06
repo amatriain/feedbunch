@@ -18,7 +18,7 @@ sidebarVisibleSvc, jobStatusSvc)->
     menuCollapseSvc.close()
     jobStatusSvc.load_data()
     $timeout ->
-      sidebarVisibleSvc.toggle()
+      sidebarVisibleSvc.set false
     , 300
 
 ]
