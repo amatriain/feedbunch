@@ -62,7 +62,7 @@ es:
       problem_new_folder: "Ha habido un problema creando la nueva carpeta. Por favor inténtelo de nuevo más tarde."
       folder_already_exists: "Ya existe una carpeta con ese título. Por favor escoje otro título."
       problem_entry_state: "Ha habido un problema con el servidor."
-      problem_loading_job_statuses: "Ha habido un problema con el servidor."
+      problem_loading_job_states: "Ha habido un problema con el servidor."
       success_refresh_feed: "Feed actualizado con éxito."
   entries:
     index:
@@ -99,7 +99,7 @@ es:
       success: "Tus suscripciones a feeds han sido importadas con éxito."
       finish_success: "Tus suscripciones a feeds han sido importadas con éxito."
       finish_error: "Ha habido un error intentando importar tus suscripciones a feeds."
-    job_status:
+    job_state:
       dismiss: "Cerrar"
       refresh:
         success: "Feed actualizado con éxito:"

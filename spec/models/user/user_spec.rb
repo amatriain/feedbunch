@@ -160,9 +160,9 @@ describe User do
     before :each do
       @feed = FactoryGirl.create :feed
       @user.subscribe @feed.fetch_url
-      @refresh_feed_job_status = FactoryGirl.build :refresh_feed_job_status, feed_id: @feed.id, user_id: @user.id
-      @feed.refresh_feed_job_statuses << @refresh_feed_job_status
-      @user.refresh_feed_job_statuses << @refresh_feed_job_status
+      @refresh_feed_job_state = FactoryGirl.build :refresh_feed_job_state, feed_id: @feed.id, user_id: @user.id
+      @feed.refresh_feed_job_states << @refresh_feed_job_state
+      @user.refresh_feed_job_states << @refresh_feed_job_state
     end
 
     it 'deletes refresh_feed_job_states when deleting a user' do

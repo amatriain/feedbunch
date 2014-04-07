@@ -297,28 +297,28 @@ describe Feed do
   context 'association with refresh_feed_job_states' do
 
     before :each do
-      @refresh_feed_job_status_1 = FactoryGirl.build :refresh_feed_job_status, feed_id: @feed.id
-      @refresh_feed_job_status_2 = FactoryGirl.build :refresh_feed_job_status, feed_id: @feed.id
-      @refresh_feed_job_status_3 = FactoryGirl.create :refresh_feed_job_status
-      @feed.refresh_feed_job_statuses << @refresh_feed_job_status_1 << @refresh_feed_job_status_2
+      @refresh_feed_job_state_1 = FactoryGirl.build :refresh_feed_job_state, feed_id: @feed.id
+      @refresh_feed_job_state_2 = FactoryGirl.build :refresh_feed_job_state, feed_id: @feed.id
+      @refresh_feed_job_state_3 = FactoryGirl.create :refresh_feed_job_state
+      @feed.refresh_feed_job_states << @refresh_feed_job_state_1 << @refresh_feed_job_state_2
     end
 
     it 'returns refresh_feed_job_states associated with this feed' do
-      @feed.refresh_feed_job_statuses.should include @refresh_feed_job_status_1
-      @feed.refresh_feed_job_statuses.should include @refresh_feed_job_status_2
+      @feed.refresh_feed_job_states.should include @refresh_feed_job_state_1
+      @feed.refresh_feed_job_states.should include @refresh_feed_job_state_2
     end
 
     it 'does not return refresh_feed_job_states not associated with this feed' do
-      @feed.refresh_feed_job_statuses.should_not include @refresh_feed_job_status_3
+      @feed.refresh_feed_job_states.should_not include @refresh_feed_job_state_3
     end
 
     it 'deletes refresh_feed_job_states when deleting a feed' do
       RefreshFeedJobState.count.should eq 3
       @feed.destroy
       RefreshFeedJobState.count.should eq 1
-      RefreshFeedJobState.all.should_not include @refresh_feed_job_status_1
-      RefreshFeedJobState.all.should_not include @refresh_feed_job_status_2
-      RefreshFeedJobState.all.should include @refresh_feed_job_status_3
+      RefreshFeedJobState.all.should_not include @refresh_feed_job_state_1
+      RefreshFeedJobState.all.should_not include @refresh_feed_job_state_2
+      RefreshFeedJobState.all.should include @refresh_feed_job_state_3
     end
   end
 
