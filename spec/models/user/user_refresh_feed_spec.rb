@@ -35,4 +35,23 @@ describe User do
     job_status.status.should eq RefreshFeedJobStatus::RUNNING
   end
 
+  it 'does not enqueue job if less time than the minimum update interval has passed since the last feed update' do
+    date_last_update = Time.zone.parse '2000-01-01 00:00:00'
+    min_interval = Feedbunch::Application.config.min_update_interval
+    date_refresh = date_last_update + min_interval - 5.minutes
+    @feed.update last_fetched: date_last_update
+    ActiveSupport::TimeZone.any_instance.stub(:now).and_return date_refresh
+
+    RefreshFeedJobStatus.count.should eq 0
+    Resque.should_not_receive :enqueue
+
+    @user.refresh_feed @feed
+
+    RefreshFeedJobStatus.count.should eq 1
+    job_status = RefreshFeedJobStatus.first
+    job_status.user_id.should eq @user.id
+    job_status.feed_id.should eq @feed.id
+    job_status.status.should eq RefreshFeedJobStatus::SUCCESS
+  end
+
 end
