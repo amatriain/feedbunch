@@ -11,7 +11,7 @@ angular.module('feedbunch').service 'jobStatusSvc',
   #---------------------------------------------
   load_refresh_feed_job_statuses = ->
     now = new Date()
-    $http.get("/api/refresh_feed_job_statuses.json?time=#{now.getTime()}")
+    $http.get("/api/refresh_feed_job_states.json?time=#{now.getTime()}")
     .success (data)->
       $rootScope.refresh_feed_job_statuses = data.slice()
       for job_status in data
@@ -37,7 +37,7 @@ angular.module('feedbunch').service 'jobStatusSvc',
         # Remove this timer from the list so that another update can be scheduled for 5 seconds in the future
         delete $rootScope.refresh_job_status_timers[job_id]
         now = new Date()
-        $http.get("/api/refresh_feed_job_statuses/#{job_id}.json?time=#{now.getTime()}")
+        $http.get("/api/refresh_feed_job_states/#{job_id}.json?time=#{now.getTime()}")
         .success (data)->
           # Update the current status of the job in the root scope
           job = findSvc.find_refresh_feed_job job_id
@@ -82,7 +82,7 @@ angular.module('feedbunch').service 'jobStatusSvc',
           $timeout.cancel timer
           delete $rootScope.refresh_job_status_timers[job_status.id]
 
-      $http.delete "/api/refresh_feed_job_statuses/#{job_status.id}.json"
+      $http.delete "/api/refresh_feed_job_states/#{job_status.id}.json"
 
   return service
 ]

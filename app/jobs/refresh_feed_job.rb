@@ -15,10 +15,10 @@ class RefreshFeedJob
   def self.perform(refresh_feed_job_status_id, feed_id, user_id)
     # Check if refresh_feed_job_status actually exists
     job_status = nil
-    if RefreshFeedJobStatus.exists? refresh_feed_job_status_id
-      job_status = RefreshFeedJobStatus.find refresh_feed_job_status_id
+    if RefreshFeedJobState.exists? refresh_feed_job_status_id
+      job_status = RefreshFeedJobState.find refresh_feed_job_status_id
       # Check that the refresh_job_status is in state "RUNNING"
-      if job_status.status != RefreshFeedJobStatus::RUNNING
+      if job_status.status != RefreshFeedJobState::RUNNING
         Rails.logger.warn "Processing RefreshFeedJob for refresh_feed_job_status #{job_status.id}, it should be in state RUNNING but it is in status #{job_status.status}. Aborting."
         return
       end
@@ -54,7 +54,7 @@ class RefreshFeedJob
     FeedClient.fetch feed
 
     Rails.logger.debug "Successfully finished refresh_feed_job_status #{refresh_feed_job_status_id} for feed #{feed.try :id}, user #{user.try :id}"
-    job_status.update status: RefreshFeedJobStatus::SUCCESS if job_status.present?
+    job_status.update status: RefreshFeedJobState::SUCCESS if job_status.present?
 
     # If the update didn't fail, mark the feed as "not currently failing" and "available"
     feed.update failing_since: nil if !feed.failing_since.nil?
@@ -65,7 +65,7 @@ class RefreshFeedJob
     Rails.logger.error "Error running refresh_feed_job_status #{refresh_feed_job_status_id} for feed #{feed.try :id}, user #{user.try :id}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    job_status.update status: RefreshFeedJobStatus::ERROR if job_status.present?
+    job_status.update status: RefreshFeedJobState::ERROR if job_status.present?
   ensure
     if feed.present?
       # Update timestamp of the last time the feed was fetched

@@ -58,9 +58,9 @@ describe RefreshFeedJob do
       @user.delete
       FeedClient.should_not_receive :fetch
 
-      RefreshFeedJobStatus.count.should eq 1
+      RefreshFeedJobState.count.should eq 1
       RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
-      RefreshFeedJobStatus.count.should eq 0
+      RefreshFeedJobState.count.should eq 0
     end
 
     it 'does not update feed if it does not exist' do
@@ -74,9 +74,9 @@ describe RefreshFeedJob do
       @feed.delete
       FeedClient.should_not_receive :fetch
 
-      RefreshFeedJobStatus.count.should eq 1
+      RefreshFeedJobState.count.should eq 1
       RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
-      RefreshFeedJobStatus.count.should eq 0
+      RefreshFeedJobState.count.should eq 0
     end
 
 
@@ -91,16 +91,16 @@ describe RefreshFeedJob do
       FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first.delete
       FeedClient.should_not_receive :fetch
 
-      RefreshFeedJobStatus.count.should eq 1
+      RefreshFeedJobState.count.should eq 1
       RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
-      RefreshFeedJobStatus.count.should eq 0
+      RefreshFeedJobState.count.should eq 0
     end
   end
 
   context 'update refresh_feed_job_status' do
 
     it 'does not update feed if refresh_feed_job_status is not RUNNING' do
-      @refresh_feed_job_status.update status: RefreshFeedJobStatus::SUCCESS
+      @refresh_feed_job_status.update status: RefreshFeedJobState::SUCCESS
       FeedClient.should_not_receive :fetch
 
       RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
@@ -108,15 +108,15 @@ describe RefreshFeedJob do
 
     it 'updates refresh_feed_job_status to SUCCESS if successful' do
       RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
-      @refresh_feed_job_status.reload.status.should eq RefreshFeedJobStatus::SUCCESS
+      @refresh_feed_job_status.reload.status.should eq RefreshFeedJobState::SUCCESS
     end
 
     it 'updates refresh_feed_job_status to ERROR if an error is raised when fetching feed' do
       FeedClient.stub(:fetch).and_raise RestClient::Exception.new
 
-      @refresh_feed_job_status.reload.status.should eq RefreshFeedJobStatus::RUNNING
+      @refresh_feed_job_status.reload.status.should eq RefreshFeedJobState::RUNNING
       RefreshFeedJob.perform @refresh_feed_job_status.id, @feed.id, @user.id
-      @refresh_feed_job_status.reload.status.should eq RefreshFeedJobStatus::ERROR
+      @refresh_feed_job_status.reload.status.should eq RefreshFeedJobState::ERROR
     end
   end
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Api::RefreshFeedJobStatusesController do
+describe Api::RefreshFeedJobStatesController do
 
   before :each do
     @user = FactoryGirl.create :user
@@ -55,7 +55,7 @@ describe Api::RefreshFeedJobStatusesController do
 
     it 'deletes the job status' do
       delete :destroy, id: @job_status_1.id, format: :json
-      RefreshFeedJobStatus.exists?(@job_status_1.id).should be_false
+      RefreshFeedJobState.exists?(@job_status_1.id).should be_false
     end
 
     it 'returns 404 if the job status does not exist' do
@@ -70,7 +70,7 @@ describe Api::RefreshFeedJobStatusesController do
     end
 
     it 'returns 500 if there is a problem unsubscribing' do
-      RefreshFeedJobStatus.any_instance.stub(:destroy).and_raise StandardError.new
+      RefreshFeedJobState.any_instance.stub(:destroy).and_raise StandardError.new
       delete :destroy, id: @job_status_1.id, format: :json
       response.status.should eq 500
     end

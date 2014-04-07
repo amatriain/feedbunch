@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RefreshFeedJobStatus do
+describe RefreshFeedJobState do
 
   context 'validations' do
 
@@ -19,7 +19,7 @@ describe RefreshFeedJobStatus do
 
     it 'defaults to status RUNNING when created' do
       refresh_feed_job_status = FactoryGirl.create :refresh_feed_job_status
-      refresh_feed_job_status.status.should eq RefreshFeedJobStatus::RUNNING
+      refresh_feed_job_status.status.should eq RefreshFeedJobState::RUNNING
     end
 
   end

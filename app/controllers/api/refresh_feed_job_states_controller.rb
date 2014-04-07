@@ -1,7 +1,7 @@
 ##
 # Controller to query the status of RefreshFeedJob instances enqued for the user.
 
-class Api::RefreshFeedJobStatusesController < ApplicationController
+class Api::RefreshFeedJobStatesController < ApplicationController
 
   before_filter :authenticate_user!
 
@@ -11,9 +11,9 @@ class Api::RefreshFeedJobStatusesController < ApplicationController
   # Return JSON indicating the status of the "refresh feed" processes initiated by the current user
 
   def index
-    if RefreshFeedJobStatus.exists? user_id: current_user.id
-      @job_statuses = RefreshFeedJobStatus.where user_id: current_user.id
-      Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_statuses.count} RefreshFeedJobStatus instances"
+    if RefreshFeedJobState.exists? user_id: current_user.id
+      @job_statuses = RefreshFeedJobState.where user_id: current_user.id
+      Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_statuses.count} RefreshFeedJobState instances"
       render 'index', locals: {job_statuses: @job_statuses}
     else
       head status: 404

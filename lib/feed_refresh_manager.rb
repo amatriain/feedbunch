@@ -38,7 +38,7 @@ class FeedRefreshManager
       Resque.enqueue RefreshFeedJob, job_status.id, feed.id, user.id
     else
       Rails.logger.info "User #{user.id} - #{user.email} is requesting to refresh feed #{feed.id} - #{feed.fetch_url} before minimum update interval has passed, ignoring request"
-      job_status = user.refresh_feed_job_statuses.create feed_id: feed.id, status: RefreshFeedJobStatus::SUCCESS
+      job_status = user.refresh_feed_job_statuses.create feed_id: feed.id, status: RefreshFeedJobState::SUCCESS
     end
 
     return nil

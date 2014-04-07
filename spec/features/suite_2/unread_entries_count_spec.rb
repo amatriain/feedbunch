@@ -107,8 +107,8 @@ describe 'unread entries count' do
 
       User.any_instance.stub :find_refresh_feed_job_status do
         FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first.update unread_entries: 4
-        job_status = RefreshFeedJobStatus.where(user_id: @user.id, feed_id: @feed1.id).first
-        job_status.update status: RefreshFeedJobStatus::SUCCESS
+        job_status = RefreshFeedJobState.where(user_id: @user.id, feed_id: @feed1.id).first
+        job_status.update status: RefreshFeedJobState::SUCCESS
         job_status
       end
 

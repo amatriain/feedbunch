@@ -121,8 +121,8 @@ Feedbunch::Application.routes.draw do
     # Resourceful routes for user data
     resource :user_data, only: [:show]
 
-    # Resourceful routes for refresh_feed_job_statuses
-    resources :refresh_feed_job_statuses, only: [:index, :show, :destroy]
+    # Resourceful routes for refresh_feed_job_states
+    resources :refresh_feed_job_states, only: [:index, :show, :destroy]
 
   end
 

@@ -294,7 +294,7 @@ describe Feed do
     end
   end
 
-  context 'association with refresh_feed_job_statuses' do
+  context 'association with refresh_feed_job_states' do
 
     before :each do
       @refresh_feed_job_status_1 = FactoryGirl.build :refresh_feed_job_status, feed_id: @feed.id
@@ -303,22 +303,22 @@ describe Feed do
       @feed.refresh_feed_job_statuses << @refresh_feed_job_status_1 << @refresh_feed_job_status_2
     end
 
-    it 'returns refresh_feed_job_statuses associated with this feed' do
+    it 'returns refresh_feed_job_states associated with this feed' do
       @feed.refresh_feed_job_statuses.should include @refresh_feed_job_status_1
       @feed.refresh_feed_job_statuses.should include @refresh_feed_job_status_2
     end
 
-    it 'does not return refresh_feed_job_statuses not associated with this feed' do
+    it 'does not return refresh_feed_job_states not associated with this feed' do
       @feed.refresh_feed_job_statuses.should_not include @refresh_feed_job_status_3
     end
 
-    it 'deletes refresh_feed_job_statuses when deleting a feed' do
-      RefreshFeedJobStatus.count.should eq 3
+    it 'deletes refresh_feed_job_states when deleting a feed' do
+      RefreshFeedJobState.count.should eq 3
       @feed.destroy
-      RefreshFeedJobStatus.count.should eq 1
-      RefreshFeedJobStatus.all.should_not include @refresh_feed_job_status_1
-      RefreshFeedJobStatus.all.should_not include @refresh_feed_job_status_2
-      RefreshFeedJobStatus.all.should include @refresh_feed_job_status_3
+      RefreshFeedJobState.count.should eq 1
+      RefreshFeedJobState.all.should_not include @refresh_feed_job_status_1
+      RefreshFeedJobState.all.should_not include @refresh_feed_job_status_2
+      RefreshFeedJobState.all.should include @refresh_feed_job_status_3
     end
   end
 

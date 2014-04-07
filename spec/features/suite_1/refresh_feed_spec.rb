@@ -103,8 +103,8 @@ describe 'refresh feeds' do
       User.any_instance.stub :find_refresh_feed_job_status do
         feed_subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
         feed_subscription.update unread_entries: feed_subscription.unread_entries + 1
-        job_status = RefreshFeedJobStatus.where(user_id: @user.id, feed_id: @feed.id).first
-        job_status.update status: RefreshFeedJobStatus::SUCCESS
+        job_status = RefreshFeedJobState.where(user_id: @user.id, feed_id: @feed.id).first
+        job_status.update status: RefreshFeedJobState::SUCCESS
         job_status
       end
     end
@@ -190,8 +190,8 @@ describe 'refresh feeds' do
     before :each do
       User.any_instance.stub :find_refresh_feed_job_status do
         feed_subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
-        job_status = RefreshFeedJobStatus.where(user_id: @user.id, feed_id: @feed.id).first
-        job_status.update status: RefreshFeedJobStatus::ERROR
+        job_status = RefreshFeedJobState.where(user_id: @user.id, feed_id: @feed.id).first
+        job_status.update status: RefreshFeedJobState::ERROR
         job_status
       end
     end

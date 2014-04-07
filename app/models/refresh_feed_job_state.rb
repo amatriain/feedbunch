@@ -1,15 +1,15 @@
 ##
-# RefreshFeedJobStatus model. Each instance of this class represents an ocurrence of a user manually requesting
+# RefreshFeedJobState model. Each instance of this class represents an ocurrence of a user manually requesting
 # a refresh of a feed
 #
-# Each RefreshFeedJobStatus belongs to a single user, and each user can have many RefreshJobs (one-to-many relationship).
-# Each RefreshFeedJobStatus belongs to a single feed, and each feed can have many RefreshJobs (one-to-many relationship).
+# Each RefreshFeedJobState belongs to a single user, and each user can have many RefreshJobs (one-to-many relationship).
+# Each RefreshFeedJobState belongs to a single feed, and each feed can have many RefreshJobs (one-to-many relationship).
 #
-# The RefreshFeedJobStatus model has the following fields:
+# The RefreshFeedJobState model has the following fields:
 # - status: mandatory text that indicates the current status of the import process. Supported values are
 # "RUNNING" (the default), "SUCCESS" and "ERROR".
 
-class RefreshFeedJobStatus < ActiveRecord::Base
+class RefreshFeedJobState < ActiveRecord::Base
   # Class constants for the possible statuses
   RUNNING = 'RUNNING'
   ERROR = 'ERROR'
@@ -28,7 +28,7 @@ class RefreshFeedJobStatus < ActiveRecord::Base
   private
 
   ##
-  # By default, a RefreshFeedJobStatus is in the "RUNNING" status unless specified otherwise.
+  # By default, a RefreshFeedJobState is in the "RUNNING" status unless specified otherwise.
 
   def default_values
     self.status = RUNNING if self.status.blank?
