@@ -1,5 +1,5 @@
 ##
-# Controller to query the status of RefreshFeedJob instances enqued for the user.
+# Controller to query the state of RefreshFeedJob instances enqued for the user.
 
 class Api::RefreshFeedJobStatesController < ApplicationController
 
@@ -8,13 +8,13 @@ class Api::RefreshFeedJobStatesController < ApplicationController
   respond_to :json
 
   ##
-  # Return JSON indicating the status of the "refresh feed" processes initiated by the current user
+  # Return JSON indicating the state of the "refresh feed" processes initiated by the current user
 
   def index
     if RefreshFeedJobState.exists? user_id: current_user.id
-      @job_statuses = RefreshFeedJobState.where user_id: current_user.id
-      Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_statuses.count} RefreshFeedJobState instances"
-      render 'index', locals: {job_statuses: @job_statuses}
+      @job_states = RefreshFeedJobState.where user_id: current_user.id
+      Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_states.count} RefreshFeedJobState instances"
+      render 'index', locals: {job_states: @job_states}
     else
       head status: 404
     end
@@ -23,22 +23,22 @@ class Api::RefreshFeedJobStatesController < ApplicationController
   end
 
   ##
-  # Return JSON indicating the status of a single "refresh feed" process initiated by the current user
+  # Return JSON indicating the state of a single "refresh feed" process initiated by the current user
 
   def show
-    @job_status = current_user.find_refresh_feed_job_status params[:id]
-    render 'show', locals: {job_status: @job_status}
+    @job_state = current_user.find_refresh_feed_job_state params[:id]
+    render 'show', locals: {job_state: @job_state}
   rescue => e
     handle_error e
   end
 
   ##
-  # Remove job status from the database. This will make its alert disappear from the start page as well.
+  # Remove job state from the database. This will make its alert disappear from the start page as well.
 
   def destroy
-    @job_status = current_user.refresh_feed_job_statuses.find params[:id]
-    Rails.logger.debug "Destroying refresh_feed_job_status #{@job_status.id} for user #{current_user.id} - #{current_user.email}"
-    @job_status.destroy!
+    @job_state = current_user.refresh_feed_job_states.find params[:id]
+    Rails.logger.debug "Destroying refresh_feed_job_state #{@job_state.id} for user #{current_user.id} - #{current_user.email}"
+    @job_state.destroy!
     head status: 200
   rescue => e
     handle_error e

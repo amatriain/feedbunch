@@ -9,9 +9,9 @@ describe 'refresh feeds' do
     @feed.entries << @entry
     @user.subscribe @feed.fetch_url
 
-    @job_status = FactoryGirl.build :refresh_feed_job_status, user_id: @user.id, feed_id: @feed.id
+    @job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed.id
     User.any_instance.stub :refresh_feed do
-      @user.refresh_feed_job_statuses << @job_status
+      @user.refresh_feed_job_states << @job_state
     end
 
     login_user_for_feature @user
@@ -29,7 +29,7 @@ describe 'refresh feeds' do
 
     it 'shows message', js: true do
       refresh_feed
-      within '#refresh-status-alerts' do
+      within '#refresh-state-alerts' do
         page.should have_text 'Currently refreshing feed'
         page.should have_content @feed.title
       end
@@ -38,7 +38,7 @@ describe 'refresh feeds' do
     it 'shows messge after refreshing', js: true do
       refresh_feed
       visit current_path
-      within '#refresh-status-alerts' do
+      within '#refresh-state-alerts' do
         page.should have_text 'Currently refreshing feed'
         page.should have_content @feed.title
       end
@@ -46,7 +46,7 @@ describe 'refresh feeds' do
 
     it 'dismisses alert permanently', js: true do
       refresh_feed
-      close_refresh_feed_job_alert @job_status.reload.id
+      close_refresh_feed_job_alert @job_state.reload.id
       page.should_not have_text 'Currently refreshing feed'
       # alert should not be present after refreshing
       visit current_path
@@ -55,7 +55,7 @@ describe 'refresh feeds' do
 
     it 'opens feed entries when clicking on feed title', js: true do
       refresh_feed
-      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       page.should have_text @entry.title
     end
 
@@ -67,13 +67,13 @@ describe 'refresh feeds' do
       visit current_path
 
       folder_should_be_closed folder
-      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       folder_should_be_open folder
     end
 
     it 'permanently dismisses alert when clicking on feed title', js: true do
       refresh_feed
-      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       go_to_start_page
       page.should_not have_text 'Currently refreshing feed'
       # alert should not be present after reloading page
@@ -89,7 +89,7 @@ describe 'refresh feeds' do
 
       visit current_path
       unread_feed_entries_should_eq @feed, 0, @user
-      within '#refresh-status-alerts' do
+      within '#refresh-state-alerts' do
         page.should have_text 'Currently refreshing feed'
         page.should have_content @feed.title
       end
@@ -100,19 +100,19 @@ describe 'refresh feeds' do
   context 'refresh finishes successfully' do
 
     before :each do
-      User.any_instance.stub :find_refresh_feed_job_status do
+      User.any_instance.stub :find_refresh_feed_job_state do
         feed_subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
         feed_subscription.update unread_entries: feed_subscription.unread_entries + 1
-        job_status = RefreshFeedJobState.where(user_id: @user.id, feed_id: @feed.id).first
-        job_status.update status: RefreshFeedJobState::SUCCESS
-        job_status
+        job_state = RefreshFeedJobState.where(user_id: @user.id, feed_id: @feed.id).first
+        job_state.update state: RefreshFeedJobState::SUCCESS
+        job_state
       end
     end
 
     it 'shows success alert', js: true do
       refresh_feed
       should_show_alert 'success-refresh-feed'
-      within '#refresh-status-alerts' do
+      within '#refresh-state-alerts' do
         page.should have_text 'Feed refreshed successfully'
         page.should have_content @feed.title
       end
@@ -121,7 +121,7 @@ describe 'refresh feeds' do
     it 'shows success message after refreshing', js: true do
       refresh_feed
       visit current_path
-      within '#refresh-status-alerts' do
+      within '#refresh-state-alerts' do
         page.should have_text 'Feed refreshed successfully'
         page.should have_content @feed.title
       end
@@ -129,7 +129,7 @@ describe 'refresh feeds' do
 
     it 'dismisses alert permanently', js: true do
       refresh_feed
-      close_refresh_feed_job_alert @job_status.reload.id
+      close_refresh_feed_job_alert @job_state.reload.id
       page.should_not have_text 'Feed refreshed successfully'
       # alert should not be present after refreshing
       visit current_path
@@ -138,7 +138,7 @@ describe 'refresh feeds' do
 
     it 'opens feed entries when clicking on feed title', js: true do
       refresh_feed
-      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       page.should have_text @entry.title
     end
 
@@ -150,13 +150,13 @@ describe 'refresh feeds' do
       visit current_path
 
       folder_should_be_closed folder
-      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       folder_should_be_open folder
     end
 
     it 'permanently dismisses alert when clicking on feed title', js: true do
       refresh_feed
-      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       go_to_start_page
       page.should_not have_text 'Feed refreshed successfully'
       # alert should not be present after reloading page
@@ -172,7 +172,7 @@ describe 'refresh feeds' do
 
       visit current_path
       unread_feed_entries_should_eq @feed, 0, @user
-      within '#refresh-status-alerts' do
+      within '#refresh-state-alerts' do
         page.should have_text 'Feed refreshed successfully'
         page.should have_content @feed.title
       end
@@ -188,18 +188,18 @@ describe 'refresh feeds' do
   context 'refresh finishes with an error' do
 
     before :each do
-      User.any_instance.stub :find_refresh_feed_job_status do
+      User.any_instance.stub :find_refresh_feed_job_state do
         feed_subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
-        job_status = RefreshFeedJobState.where(user_id: @user.id, feed_id: @feed.id).first
-        job_status.update status: RefreshFeedJobState::ERROR
-        job_status
+        job_state = RefreshFeedJobState.where(user_id: @user.id, feed_id: @feed.id).first
+        job_state.update state: RefreshFeedJobState::ERROR
+        job_state
       end
     end
 
     it 'shows error alert', js: true do
       refresh_feed
       should_show_alert 'problem-refreshing'
-      within '#refresh-status-alerts' do
+      within '#refresh-state-alerts' do
         page.should have_text 'There\'s been an error trying to refresh feed'
         page.should have_content @feed.title
       end
@@ -208,7 +208,7 @@ describe 'refresh feeds' do
     it 'shows error message after refreshing', js: true do
       refresh_feed
       visit current_path
-      within '#refresh-status-alerts' do
+      within '#refresh-state-alerts' do
         page.should have_text 'There\'s been an error trying to refresh feed'
         page.should have_content @feed.title
       end
@@ -216,7 +216,7 @@ describe 'refresh feeds' do
 
     it 'dismisses alert permanently', js: true do
       refresh_feed
-      close_refresh_feed_job_alert @job_status.reload.id
+      close_refresh_feed_job_alert @job_state.reload.id
       page.should_not have_text 'There\'s been an error trying to refresh feed'
       # alert should not be present after refreshing
       visit current_path
@@ -225,7 +225,7 @@ describe 'refresh feeds' do
 
     it 'opens feed entries when clicking on feed title', js: true do
       refresh_feed
-      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       page.should have_text @entry.title
     end
 
@@ -237,13 +237,13 @@ describe 'refresh feeds' do
       visit current_path
 
       folder_should_be_closed folder
-      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       folder_should_be_open folder
     end
 
     it 'permanently dismisses alert when clicking on feed title', js: true do
       refresh_feed
-      find("#refresh-status-#{@job_status.reload.id} a.job-feed-title").click
+      find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       go_to_start_page
       page.should_not have_text 'There\'s been an error trying to refresh feed'
       # alert should not be present after reloading page
@@ -259,7 +259,7 @@ describe 'refresh feeds' do
 
       visit current_path
       unread_feed_entries_should_eq @feed, 0, @user
-      within '#refresh-status-alerts' do
+      within '#refresh-state-alerts' do
         page.should have_text 'There\'s been an error trying to refresh feed'
         page.should have_content @feed.title
       end

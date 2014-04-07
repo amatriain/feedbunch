@@ -1,7 +1,7 @@
 [
-  <% job_statuses.each do |job_status| %>
-  <%= render partial: 'api/refresh_feed_job_statuses/job_status', locals: {job_status: job_status} %>
-  <% if job_status != job_statuses.last %>
+  <% job_states.each do |job_state| %>
+  <%= render partial: 'api/refresh_feed_job_states/job_state', locals: {job_state: job_state} %>
+  <% if job_state != job_states.last %>
   ,
   <% end %>
   <% end %>

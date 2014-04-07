@@ -33,12 +33,12 @@ angular.module('feedbunch').service 'tooltipSvc',
       $("#start-info #import-process-status button.close[data-toggle='tooltip']").tooltip()
 
   #---------------------------------------------
-  # Enable tooltips on refresh feed job's status alert "close" button
+  # Enable tooltips on refresh feed job's state alert "close" button
   #---------------------------------------------
-  refresh_job_status_tooltips: (job_status)->
+  refresh_job_state_tooltips: (job_state)->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#job-statuses #refresh-status-alerts #refresh-status-#{job_status.id} button.close[data-toggle='tooltip']").tooltip()
+      $("#job-states #refresh-state-alerts #refresh-state-#{job_state.id} button.close[data-toggle='tooltip']").tooltip()
 
   #---------------------------------------------
   # Enable tooltips on the feed title link

@@ -70,14 +70,14 @@ angular.module('feedbunch').service 'findSvc',
       return null
 
   #---------------------------------------------
-  # Find a feed refresh job status object given its id
+  # Find a feed refresh job state object given its id
   #---------------------------------------------
   find_refresh_feed_job: (id)->
-    if $rootScope.refresh_feed_job_statuses
-      job_statuses = $filter('filter') $rootScope.refresh_feed_job_statuses, (job_status)->
-        return job_status.id == id
-      if job_statuses?.length > 0
-        return job_statuses[0]
+    if $rootScope.refresh_feed_job_states
+      job_states = $filter('filter') $rootScope.refresh_feed_job_states, (job_state)->
+        return job_state.id == id
+      if job_states?.length > 0
+        return job_states[0]
       else
         return null
     else

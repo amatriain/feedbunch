@@ -6,11 +6,11 @@
 # Each RefreshFeedJobState belongs to a single feed, and each feed can have many RefreshJobs (one-to-many relationship).
 #
 # The RefreshFeedJobState model has the following fields:
-# - status: mandatory text that indicates the current status of the import process. Supported values are
+# - state: mandatory text that indicates the current state of the import process. Supported values are
 # "RUNNING" (the default), "SUCCESS" and "ERROR".
 
 class RefreshFeedJobState < ActiveRecord::Base
-  # Class constants for the possible statuses
+  # Class constants for the possible states
   RUNNING = 'RUNNING'
   ERROR = 'ERROR'
   SUCCESS = 'SUCCESS'
@@ -21,16 +21,16 @@ class RefreshFeedJobState < ActiveRecord::Base
   belongs_to :feed
   validates :feed_id, presence: true
 
-  validates :status, presence: true, inclusion: {in: [RUNNING, ERROR, SUCCESS]}
+  validates :state, presence: true, inclusion: {in: [RUNNING, ERROR, SUCCESS]}
 
   before_validation :default_values
 
   private
 
   ##
-  # By default, a RefreshFeedJobState is in the "RUNNING" status unless specified otherwise.
+  # By default, a RefreshFeedJobState is in the "RUNNING" state unless specified otherwise.
 
   def default_values
-    self.status = RUNNING if self.status.blank?
+    self.state = RUNNING if self.state.blank?
   end
 end

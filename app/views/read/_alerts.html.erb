@@ -64,13 +64,13 @@
   <p><%= t 'feeds.index.problem_entry_state' %></p>
 </div>
 
-<%# Alert displayed when there is a problem loading the status of background jobs %>
-<div id="problem-loading-job-statuses" class="alert alert-danger" ng-show="error_loading_job_statuses">
-  <button type="button" class="close" ng-click="reset_flag('error_loading_job_statuses')">&times;</button>
-  <p><%= t 'feeds.index.problem_loading_job_statuses' %></p>
+<%# Alert displayed when there is a problem loading the state of background jobs %>
+<div id="problem-loading-job-states" class="alert alert-danger" ng-show="error_loading_job_states">
+  <button type="button" class="close" ng-click="reset_flag('error_loading_job_states')">&times;</button>
+  <p><%= t 'feeds.index.problem_loading_job_states' %></p>
 </div>
 
-<%# Alert displayed when there is a problem loading the status of background jobs %>
+<%# Alert displayed when there is a problem loading the state of background jobs %>
 <div id="success-refresh-feed" class="alert alert-success" ng-show="success_refresh_feed">
   <button type="button" class="close" ng-click="reset_flag('success_refresh_feed')">&times;</button>
   <p><%= t 'feeds.index.success_refresh_feed' %></p>

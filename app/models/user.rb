@@ -129,10 +129,10 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Find a refresh_feed_job_status belonging to the user
+  # Find a refresh_feed_job_state belonging to the user
 
-  def find_refresh_feed_job_status(job_id)
-    return self.refresh_feed_job_statuses.find job_id
+  def find_refresh_feed_job_state(job_id)
+    return self.refresh_feed_job_states.find job_id
   end
 
   ##
@@ -253,7 +253,7 @@ class User < ActiveRecord::Base
     folder.feeds.delete feed if folder.present?
 
     remove_entry_states feed
-    remove_refresh_feed_job_statuses feed
+    remove_refresh_feed_job_states feed
   end
 
   ##
@@ -281,7 +281,7 @@ class User < ActiveRecord::Base
   ##
   # Remove al RefreshFeedJobState instances associated with this user and the feed passed as argument
 
-  def remove_refresh_feed_job_statuses(feed)
+  def remove_refresh_feed_job_states(feed)
     RefreshFeedJobState.where(user_id: self.id, feed_id: feed.id).destroy_all
   end
 

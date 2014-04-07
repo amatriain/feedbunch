@@ -6,11 +6,11 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc', 'tooltipSvc',
-'startPageSvc', 'jobStatusSvc',
+'startPageSvc', 'jobStateSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc, tooltipSvc,
-startPageSvc, jobStatusSvc)->
+startPageSvc, jobStateSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -37,8 +37,8 @@ startPageSvc, jobStatusSvc)->
   # Load status of data import process for the current user
   importStatusSvc.load_data false
 
-  # Load job statuses via AJAX on startup
-  jobStatusSvc.load_data()
+  # Load job states via AJAX on startup
+  jobStateSvc.load_data()
 
   # If there is a rails alert, show it and close it after 5 seconds
   timerFlagSvc.start 'error_rails'
@@ -189,10 +189,10 @@ startPageSvc, jobStatusSvc)->
     return
 
   #--------------------------------------------
-  # Enable tooltips for a refresh feed job's status alert.
+  # Enable tooltips for a refresh feed job's state alert.
   #--------------------------------------------
-  $scope.tooltips_refresh_job_status = (job_status)->
-    tooltipSvc.refresh_job_status_tooltips job_status
+  $scope.tooltips_refresh_job_state = (job_state)->
+    tooltipSvc.refresh_job_state_tooltips job_state
     return
 
   #--------------------------------------------
@@ -290,10 +290,10 @@ startPageSvc, jobStatusSvc)->
     return
 
   #--------------------------------------------
-  # Return true if there are job statuses for which an alert should be displayed in the start page; false otherwise.
+  # Return true if there are job states for which an alert should be displayed in the start page; false otherwise.
   #--------------------------------------------
-  $scope.show_job_status_alerts = ->
-    if $rootScope.refresh_feed_job_statuses? && $rootScope.refresh_feed_job_statuses?.length > 0
+  $scope.show_job_state_alerts = ->
+    if $rootScope.refresh_feed_job_states? && $rootScope.refresh_feed_job_states?.length > 0
       return true
     else
       return false
@@ -301,8 +301,8 @@ startPageSvc, jobStatusSvc)->
   #--------------------------------------------
   # Permanently dismiss a refresh feed job alert from the start page
   #--------------------------------------------
-  $scope.hide_refresh_job_alert = (job_status)->
-    jobStatusSvc.hide_refresh_job_alert(job_status)
+  $scope.hide_refresh_job_alert = (job_state)->
+    jobStateSvc.hide_refresh_job_alert(job_state)
     return
 
   #--------------------------------------------
