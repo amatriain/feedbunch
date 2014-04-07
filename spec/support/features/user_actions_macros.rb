@@ -387,5 +387,5 @@ end
 # Receives the id of the job as argument.
 
 def close_refresh_feed_job_alert(job_id)
-  find("#start-info #job-statuses #refresh-status-#{job_id} button.close", visible: true).click
+  find("#start-info #job-states #refresh-state-#{job_id} button.close", visible: true).click
 end
