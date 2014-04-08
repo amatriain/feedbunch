@@ -12,7 +12,7 @@ describe Api::DataImportsController do
 
     it 'returns import process state successfully' do
       get :show, format: :json
-      response.state.should eq 200
+      response.status.should eq 200
     end
 
   end
@@ -57,7 +57,7 @@ describe Api::DataImportsController do
     it 'returns 500 if there is a problem changing the alert visibility' do
       User.any_instance.stub(:set_data_import_visible).and_raise StandardError.new
       put :update, data_import: {id: @user.data_import.id, show_alert: 'false'}, format: :json
-      response.state.should eq 500
+      response.status.should eq 500
     end
   end
 
