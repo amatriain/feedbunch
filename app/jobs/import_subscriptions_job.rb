@@ -132,7 +132,7 @@ class ImportSubscriptionsJob
 
   def self.import_feed(fetch_url, user, folder=nil)
     Rails.logger.info "As part of OPML import, enqueing job to subscribe user #{user.id} - #{user.email} to feed #{fetch_url}"
-    Resque.enqueue SubscribeUserJob, user.id, fetch_url, folder.try(:id), true
+    Resque.enqueue SubscribeUserJob, user.id, fetch_url, folder.try(:id), true, nil
   end
 
   ##

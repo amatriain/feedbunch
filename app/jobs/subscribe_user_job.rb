@@ -14,15 +14,32 @@ class SubscribeUserJob
   # - url of the feed
   # - id of the folder. It must be owned by the user. If a nil is passed, ignore it
   # - boolean indicating whether the subscription is part of an OPML import process
+  # - id of the SubscribeJobState instance that reflects the state of the job. If a nil is passed, ignore it.
   #
   # If requested, the data_import of the user is updated so that the user can see the import progress.
   #
+  # If a job_state_id is passed, the state field of the SubscribeJobState instance will be updated when
+  # the job finishes, to reflect whether it finished successfully or with an error.
+  #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 
-  def self.perform(user_id, feed_url, folder_id, running_data_import)
+  def self.perform(user_id, feed_url, folder_id, running_data_import, job_state_id)
+    # Find the SubscribeJobState instance for this job, if it exists
+    if job_state_id.present?
+      if SubscribeJobState.exists? job_state_id
+        job_state = SubscribeJobState.find job_state_id
+        # Check that the subscribe_job_state is in state "RUNNING"
+        if job_state.state != SubscribeJobState::RUNNING
+          Rails.logger.warn "Processing SubscribeUserJob for subscribe_job_state_id #{job_state_id}, it should be in state RUNNING but it is in state #{job_state.state}. Aborting."
+          return
+        end
+      end
+    end
+
     # Check if the user actually exists
     if !User.exists? user_id
       Rails.logger.error "Trying to add subscription to non-existing user @#{user_id}, aborting job"
+      job_state.destroy if job_state.present?
       return
     end
     user = User.find user_id
@@ -31,11 +48,13 @@ class SubscribeUserJob
     if folder_id.present?
       if !Folder.exists? folder_id
         Rails.logger.error "Trying to add subscription in non-existing folder @#{folder_id}, aborting job"
+        job_state.destroy if job_state.present?
         return
       end
       folder = Folder.find folder_id
       if !user.folders.include? folder
         Rails.logger.error "Trying to add subscription in folder #{folder.id} - #{folder.title} which is not owned by user #{user.id} - #{user.email}, aborting job"
+        job_state.destroy if job_state.present?
         return
       end
     end
@@ -44,18 +63,24 @@ class SubscribeUserJob
     if running_data_import
       if user.data_import.try(:state) != DataImport::RUNNING
         Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with state RUNNING, aborting job"
+        job_state.destroy if job_state.present?
         return
       end
     end
 
     self.subscribe_feed feed_url, user, folder
+
+    # Set job state to "SUCCESS"
+    job_state.update state: SubscribeJobState::SUCCESS if job_state.present?
   rescue RestClient::Exception, SocketError, Errno::ETIMEDOUT, AlreadySubscribedError, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError, FeedParseError, ImportDataError => e
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
+    job_state.update state: SubscribeJobState::ERROR if job_state.present?
   rescue => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
+    job_state.update state: SubscribeJobState::ERROR if job_state.present?
     # The job has failed. Re-raise the exception so that Resque takes care of it
     raise e
   ensure

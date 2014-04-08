@@ -78,10 +78,10 @@ describe ImportSubscriptionsJob do
     folder_webcomics = FactoryGirl.build :folder, user_id: @user.id, title: 'Webcomics'
     @user.folders << folder_linux << folder_webcomics
 
-    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'http://brakemanscanner.org/atom.xml', nil, true
-    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'http://www.galactanet.com/feed.xml', nil, true
-    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'https://www.archlinux.org/feeds/news/', folder_linux.id, true
-    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'http://xkcd.com/rss.xml', folder_webcomics.id, true
+    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'http://brakemanscanner.org/atom.xml', nil, true, nil
+    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'http://www.galactanet.com/feed.xml', nil, true, nil
+    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'https://www.archlinux.org/feeds/news/', folder_linux.id, true, nil
+    Resque.should_receive(:enqueue).with SubscribeUserJob, @user.id, 'http://xkcd.com/rss.xml', folder_webcomics.id, true, nil
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
@@ -90,7 +90,7 @@ describe ImportSubscriptionsJob do
     file_contents = File.read filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
 
-    Resque.should_receive(:enqueue).exactly(3).times.with SubscribeUserJob, @user.id, anything, anything, true
+    Resque.should_receive(:enqueue).exactly(3).times.with SubscribeUserJob, @user.id, anything, anything, true, nil
     ImportSubscriptionsJob.perform filename, @user.id
   end
 
