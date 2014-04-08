@@ -31,7 +31,7 @@ require 'subscriptions_manager'
 # - DataImport: This indicates whether the user has ever started an OPML import, and in this case it gives information about the import
 # process (whether it's still running or not, number of feeds processed, etc).
 # - RefreshFeedJobState: Each instance of this class associated with a user represents an ocurrence of the user requesting
-# a refresh of a feed. The status attribute of the instance indicates if the refresh is running, successfully finished,
+# a refresh of a feed. The state attribute of the instance indicates if the refresh is running, successfully finished,
 # or finished with an error.
 #
 # Also, the User model has the following attributes:
@@ -165,7 +165,7 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Change the visibility of the alert related to the OPML import status.
+  # Change the visibility of the alert related to the OPML import state.
   # Receives a boolean argument and sets the alert to visible (if true) or hidden (if false).
 
   def set_data_import_visible(visible)
@@ -184,8 +184,8 @@ class User < ActiveRecord::Base
     self.encrypted_password.encode! 'utf-8'
 
     if self.data_import.blank?
-      self.create_data_import status: DataImport::NONE
-      Rails.logger.debug "User #{self.email} has no DataImport, creating one with status NONE"
+      self.create_data_import state: DataImport::NONE
+      Rails.logger.debug "User #{self.email} has no DataImport, creating one with state NONE"
     end
   end
 

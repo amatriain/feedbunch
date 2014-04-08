@@ -115,7 +115,7 @@ Feedbunch::Application.routes.draw do
       resources :entries, only: [:index]
     end
 
-    # Resourceful routes for subscriptions import process status
+    # Resourceful routes for subscriptions import process state
     resource :data_imports, only: [:show, :create, :update]
 
     # Resourceful routes for user data

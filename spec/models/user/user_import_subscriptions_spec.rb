@@ -20,22 +20,22 @@ describe User do
       @filename = "#{timestamp}.opml"
     end
 
-    it 'has a data_import with status NONE as soon as the user is created' do
+    it 'has a data_import with state NONE as soon as the user is created' do
       @user.data_import.should be_present
-      @user.data_import.status.should eq DataImport::NONE
+      @user.data_import.state.should eq DataImport::NONE
     end
 
-    it 'creates a new data_import with status RUNNING for the user' do
+    it 'creates a new data_import with state RUNNING for the user' do
       @user.import_subscriptions @data_file
       @user.data_import.should be_present
-      @user.data_import.status.should eq DataImport::RUNNING
+      @user.data_import.state.should eq DataImport::RUNNING
     end
 
-    it 'sets data_import status as ERROR if an error is raised' do
+    it 'sets data_import state as ERROR if an error is raised' do
       Zip::File.stub(:open).and_raise StandardError.new
       expect{@user.import_subscriptions @data_file}.to raise_error StandardError
 
-      @user.data_import.status.should eq DataImport::ERROR
+      @user.data_import.state.should eq DataImport::ERROR
     end
 
     context 'unzipped opml file' do

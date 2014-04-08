@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140407171003) do
+ActiveRecord::Schema.define(version: 20140408080007) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20140407171003) do
 
   create_table "data_imports", force: true do |t|
     t.integer  "user_id",                        null: false
-    t.text     "status",                         null: false
+    t.text     "state",                          null: false
     t.integer  "total_feeds",     default: 0,    null: false
     t.integer  "processed_feeds", default: 0,    null: false
     t.datetime "created_at",                     null: false

@@ -38,7 +38,7 @@ describe 'import subscriptions' do
     end
 
     it 'shows link if user has an errored import', js: true do
-      data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::ERROR
+      data_import = FactoryGirl.build :data_import, user_id: @user.id, state: DataImport::ERROR
       @user.data_import = data_import
       visit read_path
       open_user_menu
@@ -46,7 +46,7 @@ describe 'import subscriptions' do
     end
 
     it 'does not show link if user has a running import', js: true do
-      data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::RUNNING
+      data_import = FactoryGirl.build :data_import, user_id: @user.id, state: DataImport::RUNNING
       @user.data_import = data_import
       visit read_path
       open_user_menu
@@ -54,7 +54,7 @@ describe 'import subscriptions' do
     end
 
     it 'shows link if user has a successful import', js: true do
-      data_import = FactoryGirl.build :data_import, user_id: @user.id, status: DataImport::SUCCESS
+      data_import = FactoryGirl.build :data_import, user_id: @user.id, state: DataImport::SUCCESS
       @user.data_import = data_import
       visit read_path
       open_user_menu
@@ -98,14 +98,14 @@ describe 'import subscriptions' do
     end
 
     it 'shows error message', js: true do
-      @user.reload.data_import.update! status: DataImport::ERROR
+      @user.reload.data_import.update! state: DataImport::ERROR
 
       visit current_path
       page.should have_content 'There\'s been an error trying to import your feed subscriptions'
     end
 
     it 'shows success message', js: true do
-      @user.reload.data_import.update! status: DataImport::SUCCESS
+      @user.reload.data_import.update! state: DataImport::SUCCESS
 
       visit read_path
       page.should have_content 'Your feed subscriptions have been successfully imported'
@@ -121,14 +121,14 @@ describe 'import subscriptions' do
 
     it 'changes message when import finishes successfully', js: true do
       data_import = @user.reload.data_import
-      data_import.update status: DataImport::SUCCESS
+      data_import.update state: DataImport::SUCCESS
       page.should have_content 'Your feed subscriptions have been successfully imported'
     end
 
     it 'shows alert when import finishes successfully', js: true do
       read_feed @feed, @user
       data_import = @user.reload.data_import
-      data_import.update status: DataImport::SUCCESS
+      data_import.update state: DataImport::SUCCESS
       should_show_alert 'import-process-success'
     end
 
@@ -142,7 +142,7 @@ describe 'import subscriptions' do
       @user.subscribe feed.fetch_url
       folder.feeds << feed
       data_import = @user.reload.data_import
-      data_import.update status: DataImport::SUCCESS
+      data_import.update state: DataImport::SUCCESS
       within '#sidebar #folders-list' do
         page.should have_css "#folder-#{folder.id}"
       end
@@ -153,13 +153,13 @@ describe 'import subscriptions' do
 
     it 'changes message when import finishes with an error', js: true do
       data_import = @user.reload.data_import
-      data_import.update status: DataImport::ERROR
+      data_import.update state: DataImport::ERROR
       page.should have_content 'There\'s been an error trying to import your feed subscriptions'
     end
 
     it 'shows alert when import finishes with an error', js: true do
       data_import = @user.reload.data_import
-      data_import.update status: DataImport::ERROR
+      data_import.update state: DataImport::ERROR
       should_show_alert 'import-process-error'
     end
   end
@@ -174,12 +174,12 @@ describe 'import subscriptions' do
       page.should_not have_content 'If you want to import your feed subscriptions from another service'
       # alert is not displayed on page reload
       visit read_path
-      page.should have_css '#start-info #import-process-status.ng-hide', visible: false
+      page.should have_css '#start-info #import-process-state.ng-hide', visible: false
       page.should_not have_content 'If you want to import your feed subscriptions from another service'
     end
 
     it 'hides import data alert when the import finished with an error', js: true do
-      @user.reload.data_import.update status: DataImport::ERROR
+      @user.reload.data_import.update state: DataImport::ERROR
       visit read_path
       page.should have_content 'There\'s been an error trying to import your feed subscriptions'
       close_import_alert
@@ -188,12 +188,12 @@ describe 'import subscriptions' do
       page.should_not have_content 'There\'s been an error trying to import your feed subscriptions'
       # alert is not displayed on page reload
       visit read_path
-      page.should have_css '#start-info #import-process-status.ng-hide', visible: false
+      page.should have_css '#start-info #import-process-state.ng-hide', visible: false
       page.should_not have_content 'There\'s been an error trying to import your feed subscriptions'
     end
 
     it 'hides import data alert when the import finished successfully', js: true do
-      @user.reload.data_import.update status: DataImport::SUCCESS
+      @user.reload.data_import.update state: DataImport::SUCCESS
       visit read_path
       page.should have_content 'Your feed subscriptions have been successfully imported'
       close_import_alert
@@ -202,15 +202,15 @@ describe 'import subscriptions' do
       page.should_not have_content 'Your feed subscriptions have been successfully imported'
       # alert is not displayed on page reload
       visit read_path
-      page.should have_css '#start-info #import-process-status.ng-hide', visible: false
+      page.should have_css '#start-info #import-process-state.ng-hide', visible: false
       page.should_not have_content 'Your feed subscriptions have been successfully imported'
     end
 
     it 'cannot hide import data alert while the import is running', js: true do
-      @user.reload.data_import.update status: DataImport::RUNNING
+      @user.reload.data_import.update state: DataImport::RUNNING
       visit read_path
       page.should have_content 'Your feed subscriptions are being imported'
-      page.should_not have_css '#start-info #import-process-status button.close', visible: true
+      page.should_not have_css '#start-info #import-process-state button.close', visible: true
     end
   end
 end

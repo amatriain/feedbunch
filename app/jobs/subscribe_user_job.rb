@@ -40,10 +40,10 @@ class SubscribeUserJob
       end
     end
 
-    # Check that user has a data_import with status RUNNING if requested to update it
+    # Check that user has a data_import with state RUNNING if requested to update it
     if running_data_import
-      if user.data_import.try(:status) != DataImport::RUNNING
-        Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with status RUNNING, aborting job"
+      if user.data_import.try(:state) != DataImport::RUNNING
+        Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with state RUNNING, aborting job"
         return
       end
     end
@@ -59,23 +59,23 @@ class SubscribeUserJob
     # The job has failed. Re-raise the exception so that Resque takes care of it
     raise e
   ensure
-    # Once finished, mark import status as SUCCESS if requested.
-    self.update_import_status user, feed_url, folder_id if running_data_import && user.try(:data_import).present?
+    # Once finished, mark import state as SUCCESS if requested.
+    self.update_import_state user, feed_url, folder_id if running_data_import && user.try(:data_import).present?
   end
 
   private
 
   ##
-  # Sets the data_import status for the user as SUCCESS.
+  # Sets the data_import state for the user as SUCCESS.
   #
   # Receives as argument the user whose import process has finished successfully, the
   # URL of the feed just subscribed, and the ID of the folder into which the feed as been moved.
 
-  def self.update_import_status(user, feed_url, folder_id)
+  def self.update_import_state(user, feed_url, folder_id)
     user.data_import.processed_feeds += 1
     user.data_import.save
     if self.import_finished? user, feed_url, folder_id
-      user.data_import.status = DataImport::SUCCESS
+      user.data_import.state = DataImport::SUCCESS
       user.data_import.save
       Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
       DataImportMailer.import_finished_success_email(user).deliver

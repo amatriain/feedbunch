@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :data_import do
-    status 'NONE'
+    state 'NONE'
     total_feeds 256
     processed_feeds 128
     show_alert true

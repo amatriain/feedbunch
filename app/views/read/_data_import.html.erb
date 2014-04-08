@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-xs-12 col-md-9 alert alert-danger alert-block" ng-show="import_status=='ERROR'">
+  <div class="col-xs-12 col-md-9 alert alert-danger alert-block" ng-show="import_state=='ERROR'">
 
     <button type="button"
             class="close"
@@ -27,7 +27,7 @@
 </div>
 
 <div class="row">
-  <div id="data-import-running" class="col-xs-12 col-md-9 alert alert-info alert-block" ng-show="import_status=='RUNNING'">
+  <div id="data-import-running" class="col-xs-12 col-md-9 alert alert-info alert-block" ng-show="import_state=='RUNNING'">
 
     <div class="row">
       <div class="col-xs-3 col-sm-2">
@@ -55,7 +55,7 @@
 
 
 <div class="row">
-  <div class="col-xs-12 col-md-9 alert alert-success alert-block" ng-show="import_status=='SUCCESS'">
+  <div class="col-xs-12 col-md-9 alert alert-success alert-block" ng-show="import_state=='SUCCESS'">
 
     <button type="button"
             class="close"
@@ -84,7 +84,7 @@
 
 
 <div class="row">
-  <div class="col-xs-12 col-md-9 alert alert-warning alert-block" ng-show="import_status=='NONE'">
+  <div class="col-xs-12 col-md-9 alert alert-warning alert-block" ng-show="import_state=='NONE'">
 
     <div class="row">
       <button type="button"

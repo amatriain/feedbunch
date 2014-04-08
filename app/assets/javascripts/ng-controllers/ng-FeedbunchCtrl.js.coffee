@@ -3,11 +3,11 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
-['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStatusSvc', 'timerFlagSvc',
+['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc', 'tooltipSvc',
 'startPageSvc', 'jobStateSvc',
-($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStatusSvc, timerFlagSvc,
+($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc, tooltipSvc,
 startPageSvc, jobStateSvc)->
@@ -26,7 +26,7 @@ startPageSvc, jobStateSvc)->
   tooltipSvc.navbar_tooltips()
 
   # Initialize import alert tooltips
-  tooltipSvc.import_status_tooltips()
+  tooltipSvc.import_state_tooltips()
 
   # Load configuration data for the current user
   userDataSvc.load_data()
@@ -34,8 +34,8 @@ startPageSvc, jobStateSvc)->
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.start_refresh_timer()
 
-  # Load status of data import process for the current user
-  importStatusSvc.load_data false
+  # Load state of data import process for the current user
+  importStateSvc.load_data false
 
   # Load job states via AJAX on startup
   jobStateSvc.load_data()
@@ -286,7 +286,7 @@ startPageSvc, jobStateSvc)->
   # Hide permanently the OPML import alert displayed in the start page
   #--------------------------------------------
   $scope.hide_import_alert = ->
-    importStatusSvc.hide_alert()
+    importStateSvc.hide_alert()
     return
 
   #--------------------------------------------

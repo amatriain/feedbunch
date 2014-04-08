@@ -20,7 +20,7 @@ class ImportSubscriptionsJob
   #
   # After finishing the job the file will be deleted no matter what.
   #
-  # The data_import of the user is updated (with the process status, total number of feeds and
+  # The data_import of the user is updated (with the process state, total number of feeds and
   # current number of processed feeds) so that the user can see the import progress.
   #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
@@ -33,9 +33,9 @@ class ImportSubscriptionsJob
     end
     user = User.find user_id
 
-    # Check that user has a data_import with status RUNNING
-    if user.data_import.try(:status) != DataImport::RUNNING
-      Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with status RUNNING, aborting OPML import"
+    # Check that user has a data_import with state RUNNING
+    if user.data_import.try(:state) != DataImport::RUNNING
+      Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with state RUNNING, aborting OPML import"
       return
     end
 
@@ -43,7 +43,7 @@ class ImportSubscriptionsJob
     xml_contents = Feedbunch::Application.config.uploads_manager.read filename
     if xml_contents == nil
       Rails.logger.error "Trying to import for user #{user_id} from non-existing OPML file: #{filename}"
-      self.import_status_error user
+      self.import_state_error user
       return
     end
 
@@ -52,7 +52,7 @@ class ImportSubscriptionsJob
       docXml = Nokogiri::XML(xml_contents) {|config| config.strict}
     rescue Nokogiri::XML::SyntaxError => e
       Rails.logger.error "Trying to parse malformed XML file #{filename}"
-      self.import_status_error user
+      self.import_state_error user
       return
     end
 
@@ -60,7 +60,7 @@ class ImportSubscriptionsJob
     total_feeds = self.count_total_feeds docXml
     # Check that the file was actually an OPML file with feeds
     if total_feeds == 0
-      self.import_status_error user
+      self.import_state_error user
       return
     end
     # Update total number of feeds, so user can see progress.
@@ -83,10 +83,10 @@ class ImportSubscriptionsJob
       end
     end
   rescue => e
-    # If an exception is raised, set the import process status to ERROR
+    # If an exception is raised, set the import process state to ERROR
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    self.import_status_error user
+    self.import_state_error user
     # Re-raise the exception so that Resque takes care of it
     raise e
   ensure
@@ -109,14 +109,14 @@ class ImportSubscriptionsJob
   end
 
   ##
-  # Sets the data_import status for the user as ERROR.
+  # Sets the data_import state for the user as ERROR.
   # Creates a new data_import if the user doesn't already have one.
   #
   # Receives as argument the user whose import process has failed.
 
-  def self.import_status_error(user)
+  def self.import_state_error(user)
     user.create_data_import if user.data_import.blank?
-    user.data_import.status = DataImport::ERROR
+    user.data_import.state = DataImport::ERROR
     user.data_import.save
     Rails.logger.info "Sending data import error email to user #{user.id} - #{user.email}"
     DataImportMailer.import_finished_error_email(user).deliver
