@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140408080007) do
+ActiveRecord::Schema.define(version: 20140408094114) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -97,6 +97,14 @@ ActiveRecord::Schema.define(version: 20140408080007) do
     t.integer  "user_id",    null: false
     t.integer  "feed_id",    null: false
     t.text     "state",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "subscribe_job_states", force: true do |t|
+    t.integer  "user_id",    null: false
+    t.text     "state",      null: false
+    t.text     "fetch_url",  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

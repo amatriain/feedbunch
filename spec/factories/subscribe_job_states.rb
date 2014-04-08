@@ -1,0 +1,11 @@
+# Read about factories at https://github.com/thoughtbot/factory_girl
+
+FactoryGirl.define do
+  sequence(:fetch_url_sequence) {|n| "http://some.feed.com/feed/#{n}"}
+
+  factory :subscribe_job_state do
+    state 'RUNNING'
+    user
+    fetch_url {generate :fetch_url_sequence}
+  end
+end

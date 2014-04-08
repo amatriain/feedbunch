@@ -182,6 +182,32 @@ describe User do
     end
   end
 
+  context 'relationship with subscribe_job_states' do
+
+    before :each do
+      @feed = FactoryGirl.create :feed
+      @user.subscribe @feed.fetch_url
+      @subscribe_job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed.fetch_url
+      @user.subscribe_job_states << @subscribe_job_state
+    end
+
+    it 'deletes subscribe_job_states when deleting a user' do
+      SubscribeJobState.count.should eq 1
+      @user.destroy
+      SubscribeJobState.count.should eq 0
+    end
+
+    it 'deletes subscribe_job_states when unsubscribing from a feed' do
+      # a second user is subscribed to the same feed, so that it is not destroyed when @user unsubscribes
+      user2 = FactoryGirl.create :user
+      user2.subscribe @feed.fetch_url
+
+      SubscribeJobState.count.should eq 1
+      @user.unsubscribe @feed
+      SubscribeJobState.count.should eq 0
+    end
+  end
+
   context 'locale' do
 
     it 'gives a default english locale' do

@@ -33,6 +33,9 @@ require 'subscriptions_manager'
 # - RefreshFeedJobState: Each instance of this class associated with a user represents an ocurrence of the user requesting
 # a refresh of a feed. The state attribute of the instance indicates if the refresh is running, successfully finished,
 # or finished with an error.
+# - SubscribeJobState: Each instance of this class associated with a user represents an ocurrence of the user trying
+# to subscribe to a feed. The state attribute of the instance indicates if the subscription is running, successfully
+# finished or finished with an error.
 #
 # Also, the User model has the following attributes:
 #
@@ -75,6 +78,7 @@ class User < ActiveRecord::Base
   has_many :entry_states, -> {uniq}, dependent: :destroy
   has_one :data_import, dependent: :destroy
   has_many :refresh_feed_job_states, dependent: :destroy
+  has_many :subscribe_job_states, dependent: :destroy
 
   validates :name, presence: true, uniqueness: {case_sensitive: true}
   validates :locale, presence: true
@@ -245,6 +249,7 @@ class User < ActiveRecord::Base
   # - remove the feed from its current folder, if any. If this means the folder is now empty, a deletion of the folder is triggered.
   # - delete all state information (read/unread) for this user and for all entries of the feed.
   # - delete all instances of RefreshFeedJobState associated with this feed and user.
+  # - delete all instances of SubscribeJobState associated with this feed and user.
 
   def before_remove_feed_subscription(feed_subscription)
     feed = feed_subscription.feed
@@ -254,6 +259,7 @@ class User < ActiveRecord::Base
 
     remove_entry_states feed
     remove_refresh_feed_job_states feed
+    remove_subscribe_job_states feed
   end
 
   ##
@@ -283,6 +289,13 @@ class User < ActiveRecord::Base
 
   def remove_refresh_feed_job_states(feed)
     RefreshFeedJobState.where(user_id: self.id, feed_id: feed.id).destroy_all
+  end
+
+  ##
+  # Remove al SubscribeJobState instances associated with this user and the feed passed as argument
+
+  def remove_subscribe_job_states(feed)
+    SubscribeJobState.where(user_id: self.id, fetch_url: feed.fetch_url).destroy_all
   end
 
 end

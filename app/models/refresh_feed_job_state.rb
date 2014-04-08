@@ -2,8 +2,8 @@
 # RefreshFeedJobState model. Each instance of this class represents an ocurrence of a user manually requesting
 # a refresh of a feed
 #
-# Each RefreshFeedJobState belongs to a single user, and each user can have many RefreshJobs (one-to-many relationship).
-# Each RefreshFeedJobState belongs to a single feed, and each feed can have many RefreshJobs (one-to-many relationship).
+# Each RefreshFeedJobState belongs to a single user, and each user can have many RefreshFeedJobStates (one-to-many relationship).
+# Each RefreshFeedJobState belongs to a single feed, and each feed can have many RefreshFeedJobStates (one-to-many relationship).
 #
 # The RefreshFeedJobState model has the following fields:
 # - state: mandatory text that indicates the current state of the import process. Supported values are
