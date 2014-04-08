@@ -15,22 +15,6 @@ describe SubscribeUserJob do
     end
   end
 
-  it 'does nothing if the user does not exist' do
-    @user.should_not_receive :subscribe
-    SubscribeUserJob.perform 1234567890, @feed.fetch_url, @folder.id, false
-  end
-
-  it 'does nothing if the folder does not exist' do
-    @user.should_not_receive :subscribe
-    SubscribeUserJob.perform @user.id, @feed.fetch_url, 1234567890, false
-  end
-
-  it 'does nothing if the folder is not owned by the user' do
-    folder = FactoryGirl.create :folder
-    @user.should_not_receive :subscribe
-    SubscribeUserJob.perform @user.id, @feed.fetch_url, folder.id, false
-  end
-
   it 'subscribes user to already existing feeds' do
     @user.feeds.should_not include @feed
     SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, false
@@ -52,6 +36,26 @@ describe SubscribeUserJob do
       feed
     end
     SubscribeUserJob.perform @user.id, @url, @folder.id, false
+  end
+
+  context 'validations' do
+
+    it 'does nothing if the user does not exist' do
+      @user.should_not_receive :subscribe
+      SubscribeUserJob.perform 1234567890, @feed.fetch_url, @folder.id, false
+    end
+
+    it 'does nothing if the folder does not exist' do
+      @user.should_not_receive :subscribe
+      SubscribeUserJob.perform @user.id, @feed.fetch_url, 1234567890, false
+    end
+
+    it 'does nothing if the folder is not owned by the user' do
+      folder = FactoryGirl.create :folder
+      @user.should_not_receive :subscribe
+      SubscribeUserJob.perform @user.id, @feed.fetch_url, folder.id, false
+    end
+
   end
 
   context 'running an OPML import' do

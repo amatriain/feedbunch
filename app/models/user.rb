@@ -147,6 +147,13 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Enqueue a job to subscribe to a feed. See URLSubscriber#enqueue_subscribe_job
+
+  def enqueue_subscribe_job(url)
+    URLSubscriber.enqueue_subscribe_job url, self
+  end
+
+  ##
   # Unsubscribe from a feed. See FeedUnsubscriber#unsubscribe
 
   def unsubscribe(feed)

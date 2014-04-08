@@ -89,18 +89,14 @@ describe Api::FeedsController do
   end
 
   context 'POST create' do
-    it 'returns 304 if the user is already subscribed to the feed' do
-      post :create, feed: {url: @feed1.fetch_url}, format: :json
-      response.status.should eq 304
 
-      post :create, feed: {url: @feed1.url}, format: :json
-      response.status.should eq 304
-    end
-
-    it 'assigns to @feed the new subscribed feed' do
+    it 'assigns to @job_state the new subscribe_job_state' do
       post :create, feed: {url: @feed2.fetch_url}, format: :json
       response.should  be_success
-      assigns(:feed).should eq @feed2
+      job_state = assigns(:job_state)
+      job_state.user_id.should eq @user.id
+      job_state.fetch_url.should eq @feed2.fetch_url
+      job_state.state.should eq SubscribeJobState::RUNNING
     end
   end
 

@@ -23,7 +23,6 @@ describe User do
   end
 
   it 'creates a refresh_feed_job_state with state RUNNING' do
-    FeedClient.stub :fetch
     RefreshFeedJobState.count.should eq 0
 
     @user.refresh_feed @feed

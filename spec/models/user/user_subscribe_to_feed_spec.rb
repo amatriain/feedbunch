@@ -6,7 +6,53 @@ describe User do
     @feed = FactoryGirl.create :feed
   end
 
-  context 'subscribe to feed' do
+  context 'enqueue a job to subscribe to a feed' do
+
+    it 'enqueues a job to subscribe to the feed' do
+      Resque.should_receive(:enqueue) do |job_class, user_id, fetch_url, folder_id, running_data_import|
+        job_class.should eq SubscribeUserJob
+        user_id.should eq @user.id
+        fetch_url.should eq @feed.fetch_url
+        folder_id.should be_nil
+        running_data_import.should be_false
+      end
+
+      @user.enqueue_subscribe_job @feed.fetch_url
+    end
+
+    it 'creates a subscribe_job_state with state RUNNING' do
+      SubscribeJobState.count.should eq 0
+
+      @user.enqueue_subscribe_job @feed.fetch_url
+
+      SubscribeJobState.count.should eq 1
+      job_state = SubscribeJobState.first
+      job_state.user_id.should eq @user.id
+      job_state.fetch_url.should eq @feed.fetch_url
+      job_state.state.should eq RefreshFeedJobState::RUNNING
+    end
+
+    it 'does not enqueue job if the user is already subscribed to the feed' do
+      @user.subscribe @feed.fetch_url
+      Resque.should_not_receive :enqueue
+      @user.enqueue_subscribe_job @feed.fetch_url
+    end
+
+    it 'sets subscribe_job_state to state SUCCESS if the user is already subscribed to the feed' do
+      @user.subscribe @feed.fetch_url
+
+      @user.enqueue_subscribe_job @feed.fetch_url
+
+      job_state = SubscribeJobState.first
+      job_state.user_id.should eq @user.id
+      job_state.fetch_url.should eq @feed.fetch_url
+      job_state.state.should eq RefreshFeedJobState::SUCCESS
+    end
+
+  end
+
+  context 'subscribe to feed immediately' do
+
     it 'does not allow subscribing to the same feed more than once' do
       @user.subscribe @feed.fetch_url
       expect {@user.subscribe @feed.fetch_url}.to raise_error

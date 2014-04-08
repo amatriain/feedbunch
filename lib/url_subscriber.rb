@@ -7,7 +7,33 @@ class URLSubscriber
   extend UriHelpers
 
   ##
-  # Subscribe the user to a feed. Receives as arguments the URL of the feed and the user that will be subscribed.
+  # Enqueue a job to subscribe a user to a feed.
+  # Receives as arguments the URL of the feed and the user that will be subscribed.
+  #
+  # Returns the SubscribeJobState instance representing the current state of the job.
+
+  def self.enqueue_subscribe_job(url, user)
+    Rails.logger.info "User #{user.id} - #{user.email} has requested to be subscribed to feed with fetch_url #{url}"
+
+    # Check if the user is already subscribed to the feed
+    existing_feed = Feed.url_variants_feed url
+    if existing_feed.present?
+      # Check if the user is already subscribed to the feed
+      if user.feeds.include? existing_feed
+        Rails.logger.info "User #{user.id} (#{user.email}) is already subscribed to feed #{existing_feed.id} - #{existing_feed.fetch_url}. No action necessary."
+        job_state = user.subscribe_job_states.create fetch_url: url, state: SubscribeJobState::SUCCESS
+        return job_state
+      end
+    end
+
+    job_state = user.subscribe_job_states.create fetch_url: url
+    Rails.logger.info "Enqueuing subscribe_user_job_state #{job_state.id} for user #{user.id} - #{user.email}"
+    Resque.enqueue SubscribeUserJob, user.id, url, nil, false
+    return job_state
+  end
+
+  ##
+  # Subscribe a user to a feed. Receives as arguments the URL of the feed and the user that will be subscribed.
   #
   # First it checks if the feed is already in the database. In this case:
   #

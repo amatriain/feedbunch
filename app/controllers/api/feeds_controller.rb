@@ -65,10 +65,10 @@ class Api::FeedsController < ApplicationController
   # If successful, return JSON containing HTML with the entries of the feed.
 
   def create
-    url = feed_params[:url]
-    @feed = current_user.subscribe url
+    feed_url = feed_params[:url]
+    @job_state = current_user.enqueue_subscribe_job feed_url
 
-    if @feed.present?
+    if @job_state.present?
       render 'create', locals: {user: current_user, feed: @feed}
     else
       Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
