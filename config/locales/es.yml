@@ -56,6 +56,7 @@ es:
       problem_loading_folders: "Ha habido un problema cargando carpetas. Por favor inténtelo de nuevo más tarde."
       problem_loading_user_data: "Ha habido un problema cargando datos del usuario. Por favor inténtelo de nuevo más tarde."
       problem_subscribing: "No se ha podido añadir la suscripción."
+      success_subscribe: "Feed suscrito con éxito."
       already_subscribed: "Ya estás suscrito a este feed."
       problem_unsubscribing: "Ha habido un problema anulando la suscripción. Por favor inténtelo de nuevo más tarde."
       problem_folder_management: "Ha habido un problema gestionando las carpetas. Por favor inténtelo de nuevo más arde."
@@ -105,3 +106,7 @@ es:
         success: "Feed actualizado con éxito:"
         error: "Ha habido un error intentando actualizar feed:"
         running: "Actualizando feed en estos momentos:"
+      subscribe:
+        success: "Feed suscrito con éxito:"
+        error: "No se ha podido suscribir el feed:"
+        running: "Se está suscribiendo el feed:"

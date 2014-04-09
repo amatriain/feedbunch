@@ -196,6 +196,13 @@ startPageSvc, jobStateSvc)->
     return
 
   #--------------------------------------------
+  # Enable tooltips for a subscribe job's state alert.
+  #--------------------------------------------
+  $scope.tooltips_subscribe_job_state = (job_state)->
+    tooltipSvc.subscribe_job_state_tooltips job_state
+    return
+
+  #--------------------------------------------
   # Function to decide if an entry should be displayed as open (return true) or closed (return false).
   #--------------------------------------------
   $scope.is_open = (entry)->
@@ -303,6 +310,13 @@ startPageSvc, jobStateSvc)->
   #--------------------------------------------
   $scope.hide_refresh_job_alert = (job_state)->
     jobStateSvc.hide_refresh_job_alert(job_state)
+    return
+
+  #--------------------------------------------
+  # Permanently dismiss a subscribe job alert from the start page
+  #--------------------------------------------
+  $scope.hide_subscribe_job_alert = (job_state)->
+    jobStateSvc.hide_subscribe_job_alert(job_state)
     return
 
   #--------------------------------------------

@@ -41,6 +41,14 @@ angular.module('feedbunch').service 'tooltipSvc',
       $("#job-states #refresh-state-alerts #refresh-state-#{job_state.id} button.close[data-toggle='tooltip']").tooltip()
 
   #---------------------------------------------
+  # Enable tooltips on subscribe job's state alert "close" button
+  #---------------------------------------------
+  subscribe_job_state_tooltips: (job_state)->
+    # Do not enable tooltips in smartphone and tablet-sized screens
+    enquire.register md_min_media_query, ->
+      $("#job-states #subscribe-state-alerts #subscribe-state-#{job_state.id} button.close[data-toggle='tooltip']").tooltip()
+
+  #---------------------------------------------
   # Enable tooltips on the feed title link
   #---------------------------------------------
   feed_title_tooltip: ->

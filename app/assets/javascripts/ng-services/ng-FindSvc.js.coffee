@@ -82,4 +82,18 @@ angular.module('feedbunch').service 'findSvc',
         return null
     else
       return null
+
+  #---------------------------------------------
+  # Find a subscribe job state object given its id
+  #---------------------------------------------
+  find_subscribe_job: (id)->
+    if $rootScope.subscribe_job_states
+      job_states = $filter('filter') $rootScope.subscribe_job_states, (job_state)->
+        return job_state.id == id
+      if job_states?.length > 0
+        return job_states[0]
+      else
+        return null
+    else
+      return null
 ]

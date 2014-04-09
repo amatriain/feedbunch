@@ -22,6 +22,12 @@
   <p><%= t 'feeds.index.problem_loading_entries' %></p>
 </div>
 
+<%# Alert displayed when a subscription is added successfully %>
+<div id="success-subscribe-feed" class="alert alert-success" ng-show="success_subscribe">
+  <button type="button" class="close" ng-click="reset_flag('success_subscribe')">&times;</button>
+  <p><%= t 'feeds.index.success_subscribe' %></p>
+</div>
+
 <%# Alert displayed when there is a problem adding a subscription %>
 <div id="problem-subscribing" class="alert alert-danger" ng-show="error_subscribing">
   <button type="button" class="close" ng-click="reset_flag('error_subscribing')">&times;</button>
@@ -70,7 +76,7 @@
   <p><%= t 'feeds.index.problem_loading_job_states' %></p>
 </div>
 
-<%# Alert displayed when there is a problem loading the state of background jobs %>
+<%# Alert displayed when a feed finishes refreshing successfully %>
 <div id="success-refresh-feed" class="alert alert-success" ng-show="success_refresh_feed">
   <button type="button" class="close" ng-click="reset_flag('success_refresh_feed')">&times;</button>
   <p><%= t 'feeds.index.success_refresh_feed' %></p>

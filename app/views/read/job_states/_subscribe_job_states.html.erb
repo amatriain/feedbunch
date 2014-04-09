@@ -1,15 +1,15 @@
-<div id="refresh-state-alerts"
+<div id="subscribe-state-alerts"
      class="row"
-     ng-repeat="job_state in refresh_feed_job_states | orderBy:'-started_at'">
+     ng-repeat="job_state in subscribe_job_states | orderBy:'-started_at'">
 
-  <div id="refresh-state-{{job_state.id}}"
-       ng-mouseenter="tooltips_refresh_job_state(job_state)">
+  <div id="subscribe-state-{{job_state.id}}"
+       ng-mouseenter="tooltips_subscribe_job_state(job_state)">
 
     <div class="col-xs-12 col-md-9 alert alert-danger alert-block" ng-show="job_state.state=='ERROR'">
 
       <button type="button"
               class="close"
-              ng-click="hide_refresh_job_alert(job_state)"
+              ng-click="hide_subscribe_job_alert(job_state)"
               title="<%= t 'start.job_state.dismiss' %>"
               data-toggle="tooltip"
               data-placement="top">
@@ -18,22 +18,22 @@
 
       <div class="row">
         <div class="col-xs-3 col-sm-2">
-          <i class="fa fa-refresh fa-4x"></i>
+          <i class="fa fa-plus fa-4x"></i>
         </div>
 
         <div class="col-xs-9 col-sm-10">
-          <p><%= t 'start.job_state.refresh.error' %></p>
-          <p><a class="job-feed-title" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
+          <p><%= t 'start.job_state.subscribe.error' %></p>
+          <p>{{job_state.fetch_url}}</p>
         </div>
       </div>
 
     </div>
 
-    <div id="data-import-running" class="col-xs-12 col-md-9 alert alert-info alert-block" ng-show="job_state.state=='RUNNING'">
+    <div class="col-xs-12 col-md-9 alert alert-info alert-block" ng-show="job_state.state=='RUNNING'">
 
       <button type="button"
               class="close"
-              ng-click="hide_refresh_job_alert(job_state)"
+              ng-click="hide_subscribe_job_alert(job_state)"
               title="<%= t 'start.job_state.dismiss' %>"
               data-toggle="tooltip"
               data-placement="top">
@@ -42,12 +42,12 @@
 
       <div class="row">
         <div class="col-xs-3 col-sm-2">
-          <i class="fa fa-refresh fa-spin fa-4x"></i>
+          <i class="fa fa-plus fa-spin fa-4x"></i>
         </div>
 
         <div class="col-xs-9 col-sm-10">
-          <p><%= t 'start.job_state.refresh.running' %></p>
-          <p><a class="job-feed-title" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
+          <p><%= t 'start.job_state.subscribe.running' %></p>
+          <p>{{job_state.fetch_url}}</p>
         </div>
       </div>
 
@@ -57,7 +57,7 @@
 
       <button type="button"
               class="close"
-              ng-click="hide_refresh_job_alert(job_state)"
+              ng-click="hide_subscribe_job_alert(job_state)"
               title="<%= t 'start.job_state.dismiss' %>"
               data-toggle="tooltip"
               data-placement="top">
@@ -66,12 +66,12 @@
 
       <div class="row">
         <div class="col-xs-3 col-sm-2">
-          <i class="fa fa-refresh fa-4x"></i>
+          <i class="fa fa-plus fa-4x"></i>
         </div>
 
         <div class="col-xs-9 col-sm-10">
-          <p><%= t 'start.job_state.refresh.success' %></p>
-          <p><a class="job-feed-title" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
+          <p><%= t 'start.job_state.subscribe.success' %></p>
+          <p>{{job_state.fetch_url}}</p>
         </div>
       </div>
 
