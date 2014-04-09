@@ -68,7 +68,6 @@ startPageSvc, jobStateSvc)->
     $("#subscribe-feed-popup").modal 'hide'
     subscriptionSvc.subscribe $scope.subscription_url
     $scope.subscription_url = null
-    menuCollapseSvc.close()
     return
 
   #--------------------------------------------

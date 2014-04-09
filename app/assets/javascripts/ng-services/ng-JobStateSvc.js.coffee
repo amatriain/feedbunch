@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'jobStateSvc',
-['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'timerFlagSvc', 'findSvc',
-($rootScope, $http, $timeout, feedsFoldersSvc, timerFlagSvc, findSvc)->
+['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'timerFlagSvc', 'findSvc', 'favicoSvc', 'userDataSvc',
+($rootScope, $http, $timeout, feedsFoldersSvc, timerFlagSvc, findSvc, favicoSvc, userDataSvc)->
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load list of refresh feed job states via AJAX
@@ -100,7 +100,10 @@ angular.module('feedbunch').service 'jobStateSvc',
             timerFlagSvc.start 'error_subscribing'
           else if data.state=="SUCCESS"
             timerFlagSvc.start 'success_subscribe'
-            #feedsFoldersSvc.load_feed job.feed_id
+            # Update the total subscribed feeds count
+            #userDataSvc.load_data()
+            favicoSvc.update_unread_badge()
+            # TODO add new feed to the scope
         .error (data, state)->
           # if HTTP call has been prematurely cancelled, do nothing
           timerFlagSvc.start 'error_subscribing' if state!=0 && state!=404

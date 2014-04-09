@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'subscriptionSvc',
 ['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'folderSvc', 'timerFlagSvc',
-'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc', 'cleanupSvc', 'favicoSvc',
+'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc', 'cleanupSvc', 'favicoSvc', 'startPageSvc',
 ($rootScope, $http, currentFeedSvc, currentFolderSvc, readSvc, folderSvc, timerFlagSvc,
-entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc)->
+entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, startPageSvc)->
 
   #---------------------------------------------
   # Add a subscription to a feed
@@ -14,25 +14,16 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc)->
   subscribe: (url)->
     # Feed URL
     if url
-      currentFeedSvc.unset()
-      currentFolderSvc.unset()
+      entriesPaginationSvc.reset_entries()
       entriesPaginationSvc.set_busy true
 
       $http.post('/api/feeds.json', feed:{url: url})
       .success (data)->
-        $rootScope.subscribed_feeds_count += 1
-        entriesPaginationSvc.set_busy false
-        feedsFoldersSvc.add_feed data
-        favicoSvc.update_unread_badge()
-        currentFeedSvc.set data
-        readSvc.read_entries_page()
+        startPageSvc.show_start_page()
       .error (data, status)->
         entriesPaginationSvc.set_busy false
         # Show alert
-        if status == 304
-          timerFlagSvc.start 'error_already_subscribed'
-        else if status!=0
-          timerFlagSvc.start 'error_subscribing'
+        timerFlagSvc.start 'error_subscribing'
 
   unsubscribe: ->
     current_feed = currentFeedSvc.get()
