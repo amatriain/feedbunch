@@ -141,21 +141,21 @@ angular.module('feedbunch').service 'jobStateSvc',
     # Hide a subscribe job state alert and notify the server via AJAX that it should be deleted
     # from the database (it will not appear again).
     #---------------------------------------------
-      hide_subscribe_job_alert: (job_state)->
-        # Remove job state from scope
-        job_state = findSvc.find_subscribe_feed_job job_state.id
-        if job_state?
-          index = $rootScope.subscribe_job_states.indexOf job_state
-          $rootScope.subscribe_job_states.splice index, 1 if index != -1
+    hide_subscribe_job_alert: (job_state)->
+      # Remove job state from scope
+      job_state = findSvc.find_subscribe_job job_state.id
+      if job_state?
+        index = $rootScope.subscribe_job_states.indexOf job_state
+        $rootScope.subscribe_job_states.splice index, 1 if index != -1
 
-        # If there is a timer updating this job state, stop it.
-        if $rootScope.subscribe_job_state_timers?
-          timer = $rootScope.subscribe_job_state_timers[job_state.id]
-          if timer?
-            $timeout.cancel timer
-            delete $rootScope.subscribe_job_state_timers[job_state.id]
+      # If there is a timer updating this job state, stop it.
+      if $rootScope.subscribe_job_state_timers?
+        timer = $rootScope.subscribe_job_state_timers[job_state.id]
+        if timer?
+          $timeout.cancel timer
+          delete $rootScope.subscribe_job_state_timers[job_state.id]
 
-        $http.delete "/api/subscribe_job_states/#{job_state.id}.json"
+      $http.delete "/api/subscribe_job_states/#{job_state.id}.json"
 
   return service
 ]
