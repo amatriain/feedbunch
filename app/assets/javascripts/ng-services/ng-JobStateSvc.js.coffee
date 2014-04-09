@@ -101,7 +101,7 @@ angular.module('feedbunch').service 'jobStateSvc',
           else if data.state=="SUCCESS"
             timerFlagSvc.start 'success_subscribe'
             # Update the total subscribed feeds count
-            #userDataSvc.load_data()
+            userDataSvc.load_data()
             favicoSvc.update_unread_badge()
             # TODO add new feed to the scope
         .error (data, state)->

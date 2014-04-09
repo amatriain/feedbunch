@@ -6,11 +6,11 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc', 'tooltipSvc',
-'startPageSvc', 'jobStateSvc',
+'startPageSvc', 'jobStateSvc', 'quickReadingSvc', 'openAllEntriesSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc, tooltipSvc,
-startPageSvc, jobStateSvc)->
+startPageSvc, jobStateSvc, quickReadingSvc, openAllEntriesSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -28,8 +28,15 @@ startPageSvc, jobStateSvc)->
   # Initialize import alert tooltips
   tooltipSvc.import_state_tooltips()
 
-  # Load configuration data for the current user
+  # Load configuration data for the current user.
+  # Important: user_data MUST be loaded BEFORE checking the value of quick_reading and open_all_entries, below
   userDataSvc.load_data()
+
+  # Start running Quick Reading mode, if the user has selected it.
+  quickReadingSvc.start() if $rootScope.quick_reading
+
+  # Start lazy-loading images, if all entries are open by default
+  openAllEntriesSvc.start() if $rootScope.open_all_entries
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.start_refresh_timer()
