@@ -36,7 +36,7 @@ class Api::RefreshFeedJobStatesController < ApplicationController
   # Remove job state from the database. This will make its alert disappear from the start page as well.
 
   def destroy
-    @job_state = current_user.refresh_feed_job_states.find params[:id]
+    @job_state = current_user.find_refresh_feed_job_state params[:id]
     Rails.logger.debug "Destroying refresh_feed_job_state #{@job_state.id} for user #{current_user.id} - #{current_user.email}"
     @job_state.destroy!
     head status: 200

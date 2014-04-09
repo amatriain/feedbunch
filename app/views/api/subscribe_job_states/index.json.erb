@@ -1,0 +1,8 @@
+[
+  <% job_states.each do |job_state| %>
+  <%= render partial: 'api/subscribe_job_states/job_state', locals: {job_state: job_state} %>
+  <% if job_state != job_states.last %>
+  ,
+  <% end %>
+  <% end %>
+]

@@ -147,6 +147,13 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Find a subscribe_job_state belonging to the user
+
+  def find_subscribe_job_state(job_id)
+    return self.subscribe_job_states.find job_id
+  end
+
+  ##
   # Enqueue a job to subscribe to a feed. See URLSubscriber#enqueue_subscribe_job
 
   def enqueue_subscribe_job(url)
