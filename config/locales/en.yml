@@ -128,6 +128,6 @@ en:
         error: "There's been an error trying to refresh feed:"
         running: "Currently refreshing feed:"
       subscribe:
-        success: "Feed successfully subscribed:"
-        error: "Unable to subscribe feed:"
-        running: "Currently subscribing feed:"
+        success: "Successfully added subscription to feed:"
+        error: "Unable to add subscription to feed:"
+        running: "Currently adding subscription to feed:"

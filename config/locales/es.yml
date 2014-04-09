@@ -107,6 +107,6 @@ es:
         error: "Ha habido un error intentando actualizar feed:"
         running: "Actualizando feed en estos momentos:"
       subscribe:
-        success: "Feed suscrito con éxito:"
-        error: "No se ha podido suscribir el feed:"
-        running: "Se está suscribiendo el feed:"
+        success: "Añadida con éxito suscripción al feed:"
+        error: "No se ha podido añadir suscripción al feed:"
+        running: "Se está añadiendo suscripción al feed:"
