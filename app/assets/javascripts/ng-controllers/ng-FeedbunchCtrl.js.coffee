@@ -300,10 +300,13 @@ startPageSvc, jobStateSvc)->
   # Return true if there are job states for which an alert should be displayed in the start page; false otherwise.
   #--------------------------------------------
   $scope.show_job_state_alerts = ->
-    if $rootScope.refresh_feed_job_states? && $rootScope.refresh_feed_job_states?.length > 0
-      return true
-    else
-      return false
+    show_alerts = false
+    if ($rootScope.refresh_feed_job_states? && $rootScope.refresh_feed_job_states?.length > 0)
+      show_alerts = true
+    else if ($rootScope.subscribe_job_states? && $rootScope.subscribe_job_states?.length > 0)
+      show_alerts = true
+
+    return show_alerts
 
   #--------------------------------------------
   # Permanently dismiss a refresh feed job alert from the start page
