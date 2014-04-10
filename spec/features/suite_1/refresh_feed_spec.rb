@@ -35,7 +35,7 @@ describe 'refresh feeds' do
       end
     end
 
-    it 'shows messge after refreshing', js: true do
+    it 'shows message after reloading', js: true do
       refresh_feed
       visit current_path
       within '#refresh-state-alerts' do
@@ -48,7 +48,7 @@ describe 'refresh feeds' do
       refresh_feed
       close_refresh_feed_job_alert @job_state.reload.id
       page.should_not have_text 'Currently refreshing feed'
-      # alert should not be present after refreshing
+      # alert should not be present after reloading
       visit current_path
       page.should_not have_text 'Currently refreshing feed'
     end
@@ -103,9 +103,8 @@ describe 'refresh feeds' do
       User.any_instance.stub :find_refresh_feed_job_state do
         feed_subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
         feed_subscription.update unread_entries: feed_subscription.unread_entries + 1
-        job_state = RefreshFeedJobState.where(user_id: @user.id, feed_id: @feed.id).first
-        job_state.update state: RefreshFeedJobState::SUCCESS
-        job_state
+        @job_state.update state: RefreshFeedJobState::SUCCESS
+        @job_state
       end
     end
 
@@ -118,7 +117,7 @@ describe 'refresh feeds' do
       end
     end
 
-    it 'shows success message after refreshing', js: true do
+    it 'shows success message after reloading', js: true do
       refresh_feed
       visit current_path
       within '#refresh-state-alerts' do
@@ -131,7 +130,7 @@ describe 'refresh feeds' do
       refresh_feed
       close_refresh_feed_job_alert @job_state.reload.id
       page.should_not have_text 'Feed refreshed successfully'
-      # alert should not be present after refreshing
+      # alert should not be present after reloading
       visit current_path
       page.should_not have_text 'Feed refreshed successfully'
     end
@@ -189,10 +188,8 @@ describe 'refresh feeds' do
 
     before :each do
       User.any_instance.stub :find_refresh_feed_job_state do
-        feed_subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
-        job_state = RefreshFeedJobState.where(user_id: @user.id, feed_id: @feed.id).first
-        job_state.update state: RefreshFeedJobState::ERROR
-        job_state
+        @job_state.update state: RefreshFeedJobState::ERROR
+        @job_state
       end
     end
 
@@ -205,7 +202,7 @@ describe 'refresh feeds' do
       end
     end
 
-    it 'shows error message after refreshing', js: true do
+    it 'shows error message after reloading', js: true do
       refresh_feed
       visit current_path
       within '#refresh-state-alerts' do
@@ -218,7 +215,7 @@ describe 'refresh feeds' do
       refresh_feed
       close_refresh_feed_job_alert @job_state.reload.id
       page.should_not have_text 'There\'s been an error trying to refresh feed'
-      # alert should not be present after refreshing
+      # alert should not be present after reloading
       visit current_path
       page.should_not have_text 'There\'s been an error trying to refresh feed'
     end

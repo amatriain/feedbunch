@@ -389,3 +389,12 @@ end
 def close_refresh_feed_job_alert(job_id)
   find("#start-info #job-states #refresh-state-#{job_id} button.close", visible: true).click
 end
+
+##
+# Click on the "close" button of a currently visible subscribe job state alert.
+#
+# Receives the id of the job as argument.
+
+def close_subscribe_job_alert(job_id)
+  find("#start-info #job-states #subscribe-state-#{job_id} button.close", visible: true).click
+end
