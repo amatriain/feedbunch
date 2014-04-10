@@ -11,7 +11,7 @@ angular.module('feedbunch').service 'userDataSvc',
   #---------------------------------------------
   load_data: ->
     now = new Date()
-    $http.get("/api/user_data.json?time=#{now.getTime()}")
+    $http.get("/api/user_config.json?time=#{now.getTime()}")
     .success (data)->
       $rootScope.open_all_entries = data["open_all_entries"]
       $rootScope.quick_reading = data["quick_reading"]
