@@ -259,6 +259,62 @@ describe User do
       @user.feeds.where(fetch_url: feed.fetch_url).first.should eq feed
     end
 
+    it 'subscribes to a feed already in the database, given a website URL that through autodiscovery leads to its fetch_url', js: true do
+      # Fetching a feed returns an HTML document with feed autodiscovery
+      webpage_url = 'http://www.some.webpage.url/'
+      alternate_webpage_url = 'http://some.webpage.url/'
+      fetch_url = 'http://some.webpage.url/feed.php'
+
+      existing_feed = FactoryGirl.create :feed, url: webpage_url, fetch_url: fetch_url
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      feed_title = 'new feed title'
+      entry_title = 'some entry title'
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>http://xkcd.com</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{entry_title}</title>
+      <link>http://xkcd.com/1203/</link>
+      <description>entry summary</description>
+      <pubDate>#{Time.zone.now}</pubDate>
+      <guid>http://xkcd.com/1203/</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub(:headers).and_return {}
+
+      RestClient.stub :get do |url|
+        if url == alternate_webpage_url
+          webpage_html
+        elsif url == fetch_url
+          feed_xml
+        end
+      end
+
+      @user.subscribe alternate_webpage_url
+
+      @user.feeds.should include existing_feed
+    end
+
     it 'raises an error if user tries to subscribe twice to a feed, given its url' do
       # User is already subscribed to the feed
       @user.subscribe @feed.fetch_url
@@ -318,6 +374,63 @@ describe User do
       FeedClient.should_not_receive :fetch
 
       expect{@user.subscribe url_no_scheme}.to raise_error AlreadySubscribedError
+    end
+
+    it 'raises an error if user tries to subscribe to a website URL that through autodiscovery leads to a subscribed feed', js: true do
+      # Fetching a feed returns an HTML document with feed autodiscovery
+      webpage_url = 'http://www.some.webpage.url/'
+      alternate_webpage_url = 'http://some.webpage.url/'
+      fetch_url = 'http://some.webpage.url/feed.php'
+
+      existing_feed = FactoryGirl.create :feed, url: webpage_url, fetch_url: fetch_url
+      @user.subscribe existing_feed.fetch_url
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      feed_title = 'new feed title'
+      entry_title = 'some entry title'
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>#{webpage_url}</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{entry_title}</title>
+      <link>http://xkcd.com/1203/</link>
+      <description>entry summary</description>
+      <pubDate>#{Time.zone.now}</pubDate>
+      <guid>http://xkcd.com/1203/</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub(:headers).and_return {}
+
+      RestClient.stub :get do |url|
+        if url == webpage_url || url == alternate_webpage_url
+          webpage_html
+        elsif url == fetch_url
+          feed_xml
+        end
+      end
+
+      expect{@user.subscribe alternate_webpage_url}.to raise_error AlreadySubscribedError
+
+      @user.feeds.should include existing_feed
     end
 
     it 'subscribes user to feed already in the database, given its url' do
@@ -411,6 +524,115 @@ describe User do
       @user.feeds.where(fetch_url: feed_url).first.entries.where(title: entry_title2).should be_present
     end
 
+    it 'subscribes to a feed not in the database, given the website URL', js: true do
+      # Fetching a feed returns an HTML document with feed autodiscovery
+      webpage_url = 'http://some.webpage.url/'
+      fetch_url = 'http://some.webpage.url/feed.php'
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      feed_title = 'new feed title'
+      entry_title = 'some entry title'
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>#{webpage_url}</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{entry_title}</title>
+      <link>http://xkcd.com/1203/</link>
+      <description>entry summary</description>
+      <pubDate>#{Time.zone.now}</pubDate>
+      <guid>http://xkcd.com/1203/</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub(:headers).and_return {}
+
+      RestClient.stub :get do |url|
+        if url == webpage_url
+          webpage_html
+        elsif url == fetch_url
+          feed_xml
+        end
+
+      end
+
+      @user.subscribe webpage_url
+
+      @user.feeds.where(url: webpage_url, fetch_url: fetch_url).should be_present
+    end
+
+    it 'subscribes to a feed not in the database, given the website URL without scheme', js: true do
+      # Fetching a feed returns an HTML document with feed autodiscovery
+      webpage_url = 'http://some.webpage.url/'
+      url_no_schema = 'some.webpage.url/'
+      fetch_url = 'http://some.webpage.url/feed.php'
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      webpage_html.stub headers: {}
+
+      feed_title = 'new feed title'
+      entry_title = 'some entry title'
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>#{webpage_url}</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{entry_title}</title>
+      <link>http://xkcd.com/1203/</link>
+      <description>entry summary</description>
+      <pubDate>#{Time.zone.now}</pubDate>
+      <guid>http://xkcd.com/1203/</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+      feed_xml.stub(:headers).and_return {}
+
+      RestClient.stub :get do |url|
+        if url == webpage_url
+          webpage_html
+        elsif url == fetch_url
+          feed_xml
+        end
+
+      end
+
+      @user.subscribe url_no_schema
+
+      @user.feeds.where(url: webpage_url, fetch_url: fetch_url).should be_present
+    end
+
     it 'does not save in the database if there is a problem fetching the feed' do
       feed_url = 'http://a.new.feed.url.com'
       FeedClient.stub fetch: nil
@@ -445,6 +667,7 @@ describe User do
       success = @user.subscribe feed_url
       success.should be_false
     end
+
   end
 
 end
