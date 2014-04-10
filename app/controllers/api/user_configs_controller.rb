@@ -1,5 +1,5 @@
 ##
-# Controller to retrieve data for the current user
+# Controller to retrieve configuration for the current user
 
 class Api::UserConfigsController < ApplicationController
 
