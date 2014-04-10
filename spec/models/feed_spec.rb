@@ -322,6 +322,33 @@ describe Feed do
     end
   end
 
+  context 'association with subscribe_feed_states' do
+
+    before :each do
+      @subscribe_job_state_1 = FactoryGirl.build :subscribe_job_state, feed_id: @feed.id, state: SubscribeJobState::SUCCESS
+      @subscribe_job_state_2 = FactoryGirl.build :subscribe_job_state, feed_id: @feed.id, state: SubscribeJobState::SUCCESS
+      @subscribe_job_state_3 = FactoryGirl.create :subscribe_job_state, state: SubscribeJobState::SUCCESS
+      @feed.subscribe_job_states << @subscribe_job_state_1 << @subscribe_job_state_2
+    end
+
+    it 'returns subscribe job states associated with this feed' do
+      @feed.subscribe_job_states.should include @subscribe_job_state_1
+      @feed.subscribe_job_states.should include @subscribe_job_state_2
+    end
+
+    it 'does not return subscribe job states not associated with this feed' do
+      @feed.subscribe_job_states.should_not include @subscribe_job_state_3
+    end
+
+    it 'deletes subscribe_job_states when deleting a feed' do
+      SubscribeJobState.count.should eq 3
+      @feed.destroy
+      SubscribeJobState.count.should eq 1
+      SubscribeJobState.all.should include @subscribe_job_state_3
+    end
+
+  end
+
   context 'scheduled updates' do
 
     it 'schedules updates for a feed when it is created' do

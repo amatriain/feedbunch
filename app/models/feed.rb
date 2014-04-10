@@ -19,6 +19,11 @@ require 'schedule_manager'
 # Each feed can be associated with many refresh_feed_job_states. Each such association represents an ocurrence of a user
 # manually requesting a refresh of this feed.
 #
+# Each feed can be associated with many subscribe_job_states. Each such association represents an occurrence of a user
+# successfully subscribing to the feed. They are transient and can be destroyed if the user dismisses the alert that informs
+# him of the success subscribing to the feed; but if there is still a FeedSusbscription instance joining user and feed, the user
+# is still subscribed to the feed.
+#
 # Each feed, identified by its fetch_url, can be present at most once in the database. Different feeds can have the same
 # title, as long as they have different fetch_url.
 #
@@ -45,6 +50,7 @@ class Feed < ActiveRecord::Base
   has_and_belongs_to_many :folders, -> {uniq}, before_add: :single_user_folder
   has_many :entries, -> {uniq}, dependent: :destroy
   has_many :refresh_feed_job_states, dependent: :destroy
+  has_many :subscribe_job_states, dependent: :destroy
 
   validates :fetch_url, format: {with: URI::regexp(%w{http https})}, presence: true, uniqueness: {case_sensitive: false}
   validates :url, format: {with: URI::regexp(%w{http https})}, allow_blank: true

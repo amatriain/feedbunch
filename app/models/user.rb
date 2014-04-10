@@ -309,7 +309,7 @@ class User < ActiveRecord::Base
   # Remove al SubscribeJobState instances associated with this user and the feed passed as argument
 
   def remove_subscribe_job_states(feed)
-    SubscribeJobState.where(user_id: self.id, fetch_url: feed.fetch_url).destroy_all
+    self.subscribe_job_states.where(feed_id: feed.id).destroy_all
   end
 
 end

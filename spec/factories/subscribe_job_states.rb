@@ -7,5 +7,6 @@ FactoryGirl.define do
     state 'RUNNING'
     user
     fetch_url {generate :fetch_url_sequence}
+    feed {(state=='SUCCESS')?FactoryGirl.create(:feed):nil}
   end
 end

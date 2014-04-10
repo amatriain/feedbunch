@@ -187,8 +187,10 @@ describe User do
     before :each do
       @feed = FactoryGirl.create :feed
       @user.subscribe @feed.fetch_url
-      @subscribe_job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed.fetch_url
+      @subscribe_job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed.fetch_url, feed_id: @feed.id,
+                                               state: SubscribeJobState::SUCCESS
       @user.subscribe_job_states << @subscribe_job_state
+      @feed.subscribe_job_states << @subscribe_job_state
     end
 
     it 'deletes subscribe_job_states when deleting a user' do

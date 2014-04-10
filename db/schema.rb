@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140408094114) do
+ActiveRecord::Schema.define(version: 20140410193229) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -29,13 +29,14 @@ ActiveRecord::Schema.define(version: 20140408094114) do
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
 
   create_table "data_imports", force: true do |t|
-    t.integer  "user_id",                        null: false
-    t.text     "state",                          null: false
-    t.integer  "total_feeds",     default: 0,    null: false
-    t.integer  "processed_feeds", default: 0,    null: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.boolean  "show_alert",      default: true, null: false
+    t.integer  "user_id",                         null: false
+    t.text     "state",                           null: false
+    t.integer  "total_feeds",     default: 0,     null: false
+    t.integer  "processed_feeds", default: 0,     null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "hidden",          default: false, null: false
+    t.boolean  "show_alert",      default: true,  null: false
   end
 
   create_table "entries", force: true do |t|
@@ -107,6 +108,7 @@ ActiveRecord::Schema.define(version: 20140408094114) do
     t.text     "fetch_url",  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "feed_id"
   end
 
   create_table "users", force: true do |t|
