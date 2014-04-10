@@ -31,20 +31,10 @@ class Api::FeedsController < ApplicationController
   ##
   # Return a JSON document describing a given feed, as long as the currently authenticated user is suscribed to it.
   #
-  # If an :id param is passed, it returns the feed with that id.
-  # If a :subscribe_job_state_id is passed, instead it returns the feed associated with that
-  # SubscribeJobState instance (this is, the feed subscribed by that job).
-  #
   # If the requests asks for a feed the current user is not suscribed to, the response is a 404 error code (Not Found).
 
   def show
-    if params[:id].present?
-      @feed = current_user.feeds.find params[:id]
-    elsif params[:subscribe_job_state_id].present?
-      job_state = SubscribeJobState.find params[:subscribe_job_state_id]
-      @feed = current_user.subscribe_job_feed job_state
-    end
-
+    @feed = current_user.feeds.find params[:id]
 
     if @feed.present?
       render 'show', locals: {feed: @feed, user: current_user}
