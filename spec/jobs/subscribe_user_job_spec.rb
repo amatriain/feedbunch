@@ -179,6 +179,12 @@ describe SubscribeUserJob do
       @job_state.reload.state.should eq SubscribeJobState::SUCCESS
     end
 
+    it 'saves feed id if job finishes successfully' do
+      @job_state.feed.should be_blank
+      SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, false, @job_state.id
+      @job_state.reload.feed.should eq @feed
+    end
+
     it 'sets state to ERROR if job finishes with an error' do
       User.any_instance.stub(:subscribe).and_raise SocketError.new
       @job_state.state.should eq SubscribeJobState::RUNNING

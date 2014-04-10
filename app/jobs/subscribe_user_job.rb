@@ -68,10 +68,10 @@ class SubscribeUserJob
       end
     end
 
-    self.subscribe_feed feed_url, user, folder
+    feed = self.subscribe_feed feed_url, user, folder
 
-    # Set job state to "SUCCESS"
-    job_state.update state: SubscribeJobState::SUCCESS if job_state.present?
+    # Set job state to "SUCCESS" and save the id of the actually subscribed feed
+    job_state.update state: SubscribeJobState::SUCCESS, feed_id: feed.id if job_state.present?
   rescue RestClient::Exception, SocketError, Errno::ETIMEDOUT, AlreadySubscribedError, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError, FeedParseError, ImportDataError => e
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
     Rails.logger.error e.message
@@ -116,6 +116,8 @@ class SubscribeUserJob
   # - optionally, the folder in which the feed will be (defaults to none)
   #
   # If the feed already exists in the database, the user is subscribed to it.
+  #
+  # Returns the subscribed feed
 
   def self.subscribe_feed(url, user, folder)
     Rails.logger.info "Subscribing user #{user.id} - #{user.email} to feed #{url}"
@@ -124,6 +126,7 @@ class SubscribeUserJob
       Rails.logger.info "As part of OPML import, moving feed #{feed.id} - #{feed.title} to folder #{folder.title} owned by user #{user.id} - #{user.email}"
       folder.feeds << feed
     end
+    return feed
   end
 
   ##

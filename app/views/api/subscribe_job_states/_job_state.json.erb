@@ -3,4 +3,8 @@
   "fetch_url": "<%= job_state.fetch_url %>",
   "state": "<%= job_state.state %>",
   "started_at": "<%= job_state.created_at %>"
+<% if job_state.feed.present? %>
+  ,
+  "feed_id": "<%= job_state.feed_id %>"
+<% end %>
 }
