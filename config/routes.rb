@@ -128,7 +128,10 @@ Feedbunch::Application.routes.draw do
     resources :refresh_feed_job_states, only: [:index, :show, :destroy]
 
     # Resourceful routes for subscribe_job_states
-    resources :subscribe_job_states, only: [:index, :show, :destroy]
+    resources :subscribe_job_states, only: [:index, :show, :destroy] do
+      # Resourceful route for the feed associated with a subscribe job.
+      resource :feed, only: [:show]
+    end
 
   end
 

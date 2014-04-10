@@ -53,6 +53,53 @@ describe User do
       job_state.state.should eq RefreshFeedJobState::SUCCESS
     end
 
+    it 'returns the feed associated with subscribe job in state SUCCESS' do
+      feed = FactoryGirl.create :feed
+      Resque.stub :enqueue do
+        @user.subscribe feed.fetch_url
+        @user.subscribe_job_states.first.update state: SubscribeJobState::SUCCESS
+      end
+      @user.enqueue_subscribe_job feed.fetch_url
+
+      job_state = @user.subscribe_job_states.first
+      @user.subscribe_job_feed(job_state).should eq feed
+    end
+
+    it 'returns nil when asked for the feed associated with subscribe job in state ERROR' do
+      feed = FactoryGirl.create :feed
+      Resque.stub :enqueue do
+        @user.subscribe feed.fetch_url
+        @user.subscribe_job_states.first.update state: SubscribeJobState::ERROR
+      end
+      @user.enqueue_subscribe_job feed.fetch_url
+
+      job_state = @user.subscribe_job_states.first
+      @user.subscribe_job_feed(job_state).should be_nil
+    end
+
+    it 'returns nil when asked for the feed associated with subscribe job in state RUNNING' do
+      feed = FactoryGirl.create :feed
+      Resque.stub :enqueue do
+        @user.subscribe feed.fetch_url
+        @user.subscribe_job_states.first.update state: SubscribeJobState::RUNNING
+      end
+      @user.enqueue_subscribe_job feed.fetch_url
+
+      job_state = @user.subscribe_job_states.first
+      @user.subscribe_job_feed(job_state).should be_nil
+    end
+
+    it 'returns nil when asked for the feed associated with a job in state SUCCESS but the feed is not subscribed' do
+      feed = FactoryGirl.create :feed
+      Resque.stub :enqueue do
+        @user.subscribe_job_states.first.update state: SubscribeJobState::SUCCESS
+      end
+      @user.enqueue_subscribe_job feed.fetch_url
+
+      job_state = @user.subscribe_job_states.first
+      @user.subscribe_job_feed(job_state).should be_nil
+    end
+
   end
 
   context 'subscribe to feed immediately' do

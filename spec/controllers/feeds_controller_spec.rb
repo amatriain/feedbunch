@@ -50,19 +50,26 @@ describe Api::FeedsController do
 
   context 'GET show' do
 
-    it 'assigns to @feed the correct feed' do
-      get :show, id: @feed1.id, format: :json
-      assigns(:feed).should eq @feed1
+    context 'show a single feed given its id' do
+
+      it 'assigns to @feed the correct feed' do
+        get :show, id: @feed1.id, format: :json
+        assigns(:feed).should eq @feed1
+      end
+
+      it 'returns a 404 for a feed the user is not suscribed to' do
+        get :show, id: @feed2.id, format: :json
+        response.status.should eq 404
+      end
+
+      it 'returns a 404 for a non-existing feed' do
+        get :show, id: 1234567890, format: :json
+        response.status.should eq 404
+      end
     end
 
-    it 'returns a 404 for a feed the user is not suscribed to' do
-      get :show, id: @feed2.id, format: :json
-      response.status.should eq 404
-    end
+    context 'show the feed corresponding to a subscribe job' do
 
-    it 'returns a 404 for a non-existing feed' do
-      get :show, id: 1234567890, format: :json
-      response.status.should eq 404
     end
 
   end

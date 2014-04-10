@@ -147,6 +147,13 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Enqueue a job to subscribe to a feed. See URLSubscriber#enqueue_subscribe_job
+
+  def enqueue_subscribe_job(url)
+    URLSubscriber.enqueue_subscribe_job url, self
+  end
+
+  ##
   # Find a subscribe_job_state belonging to the user
 
   def find_subscribe_job_state(job_id)
@@ -154,10 +161,22 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Enqueue a job to subscribe to a feed. See URLSubscriber#enqueue_subscribe_job
+  # Find the feed associated with a successfully finished subscribe job
 
-  def enqueue_subscribe_job(url)
-    URLSubscriber.enqueue_subscribe_job url, self
+  def subscribe_job_feed(job_state)
+    # Only return feed if job has successfully finished.
+    if job_state.state != SubscribeJobState::SUCCESS
+      return nil
+    end
+    # Search the feed through the Feed.url_variants_feed method, so that we find it
+    # even if the url has been changed somehow (trailing slash etc).
+    feed = Feed.url_variants_feed job_state.fetch_url
+    # Only return feed if user is subscribed.
+    if self.feeds.include? feed
+      return feed
+    else
+      return nil
+    end
   end
 
   ##
