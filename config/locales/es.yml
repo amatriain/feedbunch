@@ -54,6 +54,7 @@ es:
       problem_loading_entries: "Ha habido un problema cargando entradas. Por favor inténtelo de nuevo más tarde."
       problem_loading_feeds: "Ha habido un problema cargando feeds. Por favor inténtelo de nuevo más tarde."
       problem_loading_folders: "Ha habido un problema cargando carpetas. Por favor inténtelo de nuevo más tarde."
+      problem_loading_user_config: "Ha habido un problema cargando la configuración del usuario. Por favor inténtelo de nuevo más tarde."
       problem_loading_user_data: "Ha habido un problema cargando datos del usuario. Por favor inténtelo de nuevo más tarde."
       problem_subscribing: "No se ha podido añadir la suscripción."
       success_subscribe: "Feed suscrito con éxito."

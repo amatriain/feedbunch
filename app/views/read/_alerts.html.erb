@@ -10,6 +10,12 @@
   <p><%= t 'feeds.index.problem_loading_feeds' %></p>
 </div>
 
+<%# Alert displayed when there is a problem loading user config %>
+<div id="problem-loading-user-config" class="alert alert-danger" ng-show="error_loading_user_config">
+  <button type="button" class="close" ng-click="reset_flag('error_loading_user_config')">&times;</button>
+  <p><%= t 'feeds.index.problem_loading_user_config' %></p>
+</div>
+
 <%# Alert displayed when there is a problem loading user data %>
 <div id="problem-loading-user-data" class="alert alert-danger" ng-show="error_loading_user_data">
   <button type="button" class="close" ng-click="reset_flag('error_loading_user_data')">&times;</button>

@@ -5,12 +5,12 @@
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
-'findSvc', 'userDataSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc', 'tooltipSvc',
-'startPageSvc', 'jobStateSvc'
+'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
+'tooltipSvc', 'startPageSvc', 'jobStateSvc'
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
-findSvc, userDataSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc, tooltipSvc,
-startPageSvc, jobStateSvc)->
+findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
+tooltipSvc, startPageSvc, jobStateSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -28,7 +28,10 @@ startPageSvc, jobStateSvc)->
   # Initialize import alert tooltips
   tooltipSvc.import_state_tooltips()
 
-  # Load configuration data for the current user.
+  # Load configuration for the current user.
+  userConfigSvc.load_config()
+
+  # Load data for the current user.
   userDataSvc.load_data()
 
   # Load folders and feeds via AJAX on startup
