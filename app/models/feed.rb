@@ -38,6 +38,7 @@ require 'schedule_manager'
 
 class Feed < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
+  extend UriHelpers
 
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy
   has_many :users, through: :feed_subscriptions
@@ -121,7 +122,9 @@ class Feed < ActiveRecord::Base
   #
   # If a matching feed is found, it is returned. Otherwise returns nil.
 
-  def self.url_variants_feed(url)
+  def self.url_variants_feed(feed_url)
+    # Ensure that the passed url has an http:/// or https:// uri-scheme
+    url = ensure_scheme feed_url
     # Remove leading and trailing whitespace, to avoid confusion when detecting trailing slashes
     stripped_url = url.strip
     Rails.logger.info "Searching for matching feeds for url #{stripped_url}"
