@@ -302,7 +302,7 @@ class User < ActiveRecord::Base
   # Remove al RefreshFeedJobState instances associated with this user and the feed passed as argument
 
   def remove_refresh_feed_job_states(feed)
-    RefreshFeedJobState.where(user_id: self.id, feed_id: feed.id).destroy_all
+    self.refresh_feed_job_states.where(feed_id: feed.id).destroy_all
   end
 
   ##
