@@ -21,7 +21,8 @@ class URLSubscriber
       # Check if the user is already subscribed to the feed
       if user.feeds.include? existing_feed
         Rails.logger.info "User #{user.id} (#{user.email}) is already subscribed to feed #{existing_feed.id} - #{existing_feed.fetch_url}. No action necessary."
-        job_state = user.subscribe_job_states.create fetch_url: url, state: SubscribeJobState::SUCCESS
+        job_state = user.subscribe_job_states.create fetch_url: url, state: SubscribeJobState::SUCCESS,
+                                                     feed_id: existing_feed.id
         return job_state
       end
     end
