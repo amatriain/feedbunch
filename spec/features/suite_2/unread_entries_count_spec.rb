@@ -87,6 +87,18 @@ describe 'unread entries count' do
       entry1 = FactoryGirl.build :entry, feed_id: feed.id
       entry2 = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry1 << entry2
+      job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: feed.fetch_url
+
+      User.any_instance.stub :enqueue_subscribe_job do
+        @user.subscribe_job_states << job_state
+      end
+
+      User.any_instance.stub :find_subscribe_job_state do
+        @user.subscribe feed.fetch_url
+        job_state.update state: SubscribeJobState::SUCCESS, feed_id: feed.id
+        job_state
+      end
+
       subscribe_feed feed.url
       unread_folder_entries_should_eq 'all', 6
       unread_feed_entries_should_eq feed, 2, @user
