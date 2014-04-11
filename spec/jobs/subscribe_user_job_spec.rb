@@ -41,7 +41,7 @@ describe SubscribeUserJob do
   context 'validations' do
 
     it 'does nothing if the user does not exist' do
-      @user.should_not_receive :subscribe
+      User.any_instance.should_not_receive :subscribe
       SubscribeUserJob.perform 1234567890, @feed.fetch_url, @folder.id, false, nil
     end
 
