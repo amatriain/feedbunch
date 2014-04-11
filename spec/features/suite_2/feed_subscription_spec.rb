@@ -78,7 +78,7 @@ describe 'subscription to feeds' do
       before :each do
         User.any_instance.stub :find_subscribe_job_state do
           @user.subscribe @feed2.fetch_url
-          @job_state.update state: SubscribeJobState::SUCCESS
+          @job_state.update state: SubscribeJobState::SUCCESS, feed_id: @feed2.id
           @job_state
         end
       end
