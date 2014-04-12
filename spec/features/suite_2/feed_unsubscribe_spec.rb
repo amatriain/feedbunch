@@ -82,7 +82,7 @@ describe 'unsubscribe from feed' do
   end
 
   it 'shows an alert if there is a problem unsubscribing from a feed', js: true do
-    SubscriptionsManager.stub(:remove_subscription).and_raise StandardError.new
+    User.any_instance.stub(:enqueue_unsubscribe_job).and_raise StandardError.new
 
     unsubscribe_feed @feed1, @user
 

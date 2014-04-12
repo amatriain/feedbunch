@@ -35,6 +35,10 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, sta
       cleanupSvc.remove_feed current_feed.id
       favicoSvc.update_unread_badge()
 
+      # Reset the timer that updates feeds every minute, to give the server time to
+      # actually delete the feed subscription before the next update
+      feedsFoldersSvc.reset_refresh_timer()
+
       # Tell the model that no feed is currently selected.
       currentFeedSvc.unset()
 
@@ -43,7 +47,8 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, sta
         $rootScope.subscribed_feeds_count -= 1
         # In case the folder has been deleted after unsubscribing from a feed (because there are no more feeds in the folder),
         # reload folders from the server.
-        feedsFoldersSvc.load_folders()
+        # TODO this needs rewriting now that unsubscribing happens in a background job instead of immediately
+        # feedsFoldersSvc.load_folders()
       .error (data, status)->
         timerFlagSvc.start 'error_unsubscribing' if status!=0
 
