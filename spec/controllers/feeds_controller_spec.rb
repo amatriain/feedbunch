@@ -107,11 +107,12 @@ describe Api::FeedsController do
       response.should be_success
     end
 
-    it 'deletes the folder if the feed was in a folder without any other feeds' do
-      @folder1.feeds << @feed1
-
+    it 'enqueues job to unsubscribe from feed' do
+      User.any_instance.should_receive :enqueue_unsubscribe_job do |feed|
+        feed.id.should eq @feed1.id
+        id.should eq @user.id
+      end
       delete :destroy, id: @feed1.id, format: :json
-      Folder.exists?(@folder1.id).should be_false
     end
 
     it 'returns 404 if the feed does not exist' do
@@ -125,7 +126,7 @@ describe Api::FeedsController do
     end
 
     it 'returns 500 if there is a problem unsubscribing' do
-      User.any_instance.stub(:unsubscribe).and_raise StandardError.new
+      User.any_instance.stub(:enqueue_unsubscribe_job).and_raise StandardError.new
       delete :destroy, id: @feed1.id, format: :json
       response.status.should eq 500
     end

@@ -7,7 +7,25 @@ describe User do
     @user.subscribe @feed.fetch_url
   end
 
-  context 'unsubscribe from feed' do
+  context 'enqueue a job to unsubscribe from a feed' do
+
+    it 'enqueues a job to unsubscribe from a feed' do
+      Resque.should_receive(:enqueue) do |job_class, user_id, feed_id|
+        job_class.should eq UnsubscribeUserJob
+        user_id.should eq @user.id
+        feed_id.should eq @feed.id
+      end
+      @user.enqueue_unsubscribe_job @feed
+    end
+
+    it 'does not enqueue job if the user is not subscribed to the feed' do
+      feed = FactoryGirl.create :feed
+      Resque.should_not_receive :enqueue
+      expect {@user.enqueue_unsubscribe_job feed}.to raise_error NotSubscribedError
+    end
+  end
+
+  context 'unsubscribe from feed immediately' do
     it 'unsubscribes a user from a feed' do
       @user.feeds.exists?(@feed.id).should be_true
       @user.unsubscribe @feed

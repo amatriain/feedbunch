@@ -84,7 +84,7 @@ class Api::FeedsController < ApplicationController
 
   def destroy
     @feed = Feed.find params[:id]
-    current_user.unsubscribe @feed
+    current_user.enqueue_unsubscribe_job @feed
     head :ok
   rescue => e
     handle_error e

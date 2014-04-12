@@ -168,6 +168,13 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Enqueue a job to unsubscribe from a feed. See URLSubscriber#enqueue_unsubscribe_job
+
+  def enqueue_unsubscribe_job(feed)
+    SubscriptionsManager.enqueue_unsubscribe_job feed, self
+  end
+
+  ##
   # Change the read/unread state of entries for this user. See EntryStateManager#change_entries_state
 
   def change_entries_state(entry, state, whole_feed: false, whole_folder: false, all_entries: false)

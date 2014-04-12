@@ -40,6 +40,20 @@ class SubscriptionsManager
   end
 
   ##
+  # Enqueue a job to unsubscribes a user from a feed.
+  #
+  # Receives as argument the feed to unsubscribe, and the user who is unsubscribing.
+
+  def self.enqueue_unsubscribe_job(feed, user)
+    check_user_subscribed feed, user
+
+    Rails.logger.info "Enqueuing unsubscribe job for user #{user.id} - #{user.email}, feed #{feed.id} - #{feed.fetch_url}"
+    Resque.enqueue UnsubscribeUserJob, user.id, feed.id
+
+    return nil
+  end
+
+  ##
   # Retrieve the count of unread entries in a feed for a given user. This count is not
   # calculated when this method is invoked, but rather it is retrieved from a pre-calculated
   # field in the database.
