@@ -97,6 +97,13 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Retrieves feeds subscribed by the user. See FolderManager#folder_feeds.
+
+  def folder_feeds(folder, include_read: false)
+    FolderManager.folder_feeds folder, self, include_read: include_read
+  end
+
+  ##
   # Retrieve entries from a feed. See EntriesPagination#feed_entries
 
   def feed_entries(feed, include_read: false, page: nil)

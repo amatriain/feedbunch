@@ -4,6 +4,18 @@
 class FolderManager
 
   ##
+  # Returns feeds in the passed folder.
+  # The passed folder must be owned by the passed user, otherwise an error is raised
+  # If the include_read argument is true, all feeds in the folder will be returned. If it's false,
+  # only feeds with unread entries will be returned.
+  # The returned feeds are guaranteed to be subscribed by the passed user.
+
+  def folder_feeds(folder, user, include_read: false)
+    #TODO implement
+
+  end
+
+  ##
   # Move a feed into a folder, for a given user.
   #
   # Receives as arguments:

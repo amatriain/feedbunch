@@ -8,7 +8,12 @@ class Api::FeedsController < ApplicationController
   respond_to :json
 
   ##
-  # Return JSON with the list of feeds subscribed by the current user
+  # Return JSON with:
+  # - the list of feeds subscribed by the current user, if no :folder_id param is received.
+  # - the list of feeds in a folder owned by the current user, if a :folder_id param is received.
+  #
+  # In both cases the :include_read param controls whether all feeds are returned (if true), or only
+  # feeds with unread entries (if false).
 
   def index
     if params[:include_read]=='true'
@@ -16,7 +21,13 @@ class Api::FeedsController < ApplicationController
     else
       include_read = false
     end
-    @feeds = current_user.subscribed_feeds include_read: include_read, page: params[:page]
+
+    if params[:folder_id].present?
+      @folder = current_user.folders.find params[:folder_id]
+      @feeds = current_user.folder_feeds @folder, include_read
+    else
+      @feeds = current_user.subscribed_feeds include_read: include_read, page: params[:page]
+    end
 
     if @feeds.present?
       render 'index', locals: {user: current_user, feeds: @feeds}

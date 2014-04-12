@@ -113,6 +113,7 @@ Feedbunch::Application.routes.draw do
     # Resourceful routes for folders
     resources :folders, only: [:index, :show, :update, :create] do
       resources :entries, only: [:index]
+      resources :feeds, only: [:index]
     end
 
     # Resourceful routes for subscriptions import process state
