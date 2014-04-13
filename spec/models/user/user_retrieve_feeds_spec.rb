@@ -97,4 +97,48 @@ describe User do
     end
 
   end
+
+  context 'feeds in a folder' do
+
+    before :each do
+      @folder = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << @folder
+      @feed1 = FactoryGirl.create :feed
+      @feed2 = FactoryGirl.create :feed
+      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @feed1.entries << @entry1
+      @user.subscribe @feed1.fetch_url
+      @user.subscribe @feed2.fetch_url
+      @folder.feeds << @feed1
+      @folder.feeds << @feed2
+    end
+
+    it 'returns feeds in a folder with unread entries' do
+      feeds = @user.folder_feeds @folder
+      feeds.count.should eq 1
+      feeds.should include @feed1
+      feeds.should_not include @feed2
+    end
+
+    it 'returns all feeds in a folder' do
+      feeds = @user.folder_feeds @folder, include_read: true
+      feeds.count.should eq 2
+      feeds.should include @feed1
+      feeds.should include @feed2
+    end
+
+    it 'does not return feed not in the folder' do
+      feed = FactoryGirl.create :feed
+      @user.subscribe feed.fetch_url
+      feeds = @user.folder_feeds @folder, include_read: true
+      feeds.count.should eq 2
+      feeds.should_not include feed
+    end
+
+    it 'raises an error if user does not own the folder' do
+      folder = FactoryGirl.create :folder
+      expect {@user.folder_feeds folder}.to raise_error FolderNotOwnedByUserError
+    end
+
+  end
 end

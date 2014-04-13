@@ -10,9 +10,22 @@ class FolderManager
   # only feeds with unread entries will be returned.
   # The returned feeds are guaranteed to be subscribed by the passed user.
 
-  def folder_feeds(folder, user, include_read: false)
-    #TODO implement
+  def self.folder_feeds(folder, user, include_read: false)
+    # Validate that folder belongs to user
+    if !user.folders.include? folder
+      Rails.logger.error "User #{user.id} - #{user.email} tried to list feeds in folder #{folder.id} - #{folder.title} which he does not own"
+      raise FolderNotOwnedByUserError.new
+    end
 
+    if include_read
+      feeds = folder.feeds
+    else
+      feeds = Feed.joins(:feed_subscriptions)
+                  .where(feed_subscriptions: {user_id: user.id})
+                  .where('feed_subscriptions.unread_entries > 0')
+    end
+
+    return feeds
   end
 
   ##
@@ -36,6 +49,7 @@ class FolderManager
 
   def self.move_feed_to_folder(feed, user, folder: nil, folder_title: nil)
     if !user.feeds.exists? feed
+      Rails.logger.error "User #{user.id} - #{user.email} tried to change folder for feed #{feed.id} #{feed.fetch_url} to which he is not subscribed"
       raise NotSubscribedError.new
     end
 
