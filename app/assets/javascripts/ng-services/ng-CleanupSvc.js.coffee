@@ -17,6 +17,17 @@ angular.module('feedbunch').service 'cleanupSvc',
       if index != -1
         $rootScope.feeds.splice index, 1
 
+  #---------------------------------------------
+  # Remove a folder from the folders array.
+  #---------------------------------------------
+  remove_folder: (folder_id)->
+    if $rootScope.folders
+      folder = findSvc.find_folder folder_id
+      # Delete folder model from the scope
+      index = $rootScope.folders.indexOf folder
+      if index != -1
+        $rootScope.folders.splice index, 1
+
   #--------------------------------------------
   # Remove feeds without unread entries from the root scope, unless the user has
   # selected to display all feeds including read ones.

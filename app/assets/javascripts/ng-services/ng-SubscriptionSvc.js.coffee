@@ -29,7 +29,13 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, sta
     current_feed = currentFeedSvc.get()
     if current_feed
       # Before deleting from the global scope, save some data we'll need later
+      folder_id = current_feed.folder_id
       path = "/api/feeds/#{current_feed.id}.json"
+
+      $rootScope.subscribed_feeds_count -= 1
+
+      # Tell the model that no feed is currently selected.
+      currentFeedSvc.unset()
 
       # Remove feed from feeds list
       cleanupSvc.remove_feed current_feed.id
@@ -39,16 +45,23 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, sta
       # actually delete the feed subscription before the next update
       feedsFoldersSvc.reset_refresh_timer()
 
-      # Tell the model that no feed is currently selected.
-      currentFeedSvc.unset()
-
       $http.delete(path)
       .success ->
-        $rootScope.subscribed_feeds_count -= 1
-        # In case the folder has been deleted after unsubscribing from a feed (because there are no more feeds in the folder),
-        # reload folders from the server.
-        # TODO this needs rewriting now that unsubscribing happens in a background job instead of immediately
-        # feedsFoldersSvc.load_folders()
+        # If there are no other feeds in the folder, remove it from the scope
+        if folder_id != 'none'
+          $http.get("/api/folders/#{folder_id}/feeds.json")
+          .success (data)->
+            # Check if there are other feeds in the folder
+            remove_folder = true
+            for feed in data
+              remove_folder = false if feed.id != current_feed.id
+            cleanupSvc.remove_folder folder_id if remove_folder
+          .error (data, status)->
+            if status == 404
+              # This probably means job has already been performed and folder deleted from the db
+              cleanupSvc.remove_folder folder_id
+            else if status != 0
+              timerFlagSvc.start 'error_loading_feeds'
       .error (data, status)->
         timerFlagSvc.start 'error_unsubscribing' if status!=0
 
