@@ -49,7 +49,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, sta
       .success ->
         # If there are no other feeds in the folder, remove it from the scope
         if folder_id != 'none'
-          $http.get("/api/folders/#{folder_id}/feeds.json")
+          $http.get("/api/folders/#{folder_id}/feeds.json?include_read=true")
           .success (data)->
             # Check if there are other feeds in the folder
             remove_folder = true

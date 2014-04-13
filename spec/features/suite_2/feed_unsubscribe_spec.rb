@@ -139,6 +139,30 @@ describe 'unsubscribe from feed' do
     end
   end
 
+  it 'does not remove folders with other feeds without unread entries', js: true do
+    feed3 = FactoryGirl.create :feed
+    @user.subscribe feed3.fetch_url
+    @folder.feeds << feed3
+    visit read_path
+
+    unsubscribe_feed @feed1, @user
+
+    # Folder should be removed from the sidebar (it has no unread entries)
+    within '#sidebar #folders-list' do
+      page.should_not have_content @folder.title
+    end
+    page.should_not have_css "#folders-list li[data-folder-id='#{@folder.id}']"
+
+    read_feed @feed2, @user
+    # Folder should not be removed from the dropdown (all folders appear in the dropdown, regardless
+    # of whether they have unread entries or not)
+    find('#folder-management').click
+    within '#folder-management-dropdown ul.dropdown-menu' do
+      page.should have_content @folder.title
+      page.should have_css "a[data-folder-id='#{@folder.id}']"
+    end
+  end
+
   it 'does not remove folders with feeds', js: true do
     # @user has folder, and @feed1, @feed2 are in it.
     @folder.feeds << @feed2
