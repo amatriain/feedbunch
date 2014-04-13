@@ -21,6 +21,7 @@ describe Api::FeedsController do
     @folder1 = FactoryGirl.build :folder, user_id: @user.id
     @folder2 = FactoryGirl.create :folder
     @user.folders << @folder1
+    @folder1.feeds << @feed1 << @feed3
 
     login_user_for_unit @user
   end
@@ -75,7 +76,10 @@ describe Api::FeedsController do
         feeds.should include @feed3
       end
 
-      it 'returns 404 if user does not own folder'
+      it 'returns 404 if user does not own folder' do
+        get :index, folder_id: @folder2.id, format: :json
+        response.status.should eq 404
+      end
     end
   end
 
