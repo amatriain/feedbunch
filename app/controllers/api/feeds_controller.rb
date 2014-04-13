@@ -24,7 +24,7 @@ class Api::FeedsController < ApplicationController
 
     if params[:folder_id].present?
       @folder = current_user.folders.find params[:folder_id]
-      @feeds = current_user.folder_feeds @folder, include_read
+      @feeds = current_user.folder_feeds @folder, include_read: include_read
     else
       @feeds = current_user.subscribed_feeds include_read: include_read, page: params[:page]
     end

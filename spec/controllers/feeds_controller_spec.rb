@@ -27,24 +27,55 @@ describe Api::FeedsController do
 
   context 'GET index' do
 
-    it 'returns success' do
-      get :index, format: :json
-      response.should be_success
+    context 'all feeds' do
+
+      it 'returns success' do
+        get :index, format: :json
+        response.should be_success
+      end
+
+      it 'assigns to @feeds only feeds owned by the user' do
+        get :index, format: :json
+        assigns(:feeds).should eq [@feed1]
+      end
+
+      it 'assigns to @feeds only feeds with unread entries' do
+        get :index, format: :json
+        assigns(:feeds).should eq [@feed1]
+      end
+
+      it 'assigns to @feeds all feeds if requested' do
+        get :index, include_read: 'true', format: :json
+        assigns(:feeds).should eq [@feed1, @feed3]
+      end
     end
 
-    it 'assigns to @feeds only feeds owned by the user' do
-      get :index, format: :json
-      assigns(:feeds).should eq [@feed1]
-    end
+    context 'feeds in a folder' do
 
-    it 'assigns to @feeds only feeds with unread entries' do
-      get :index, format: :json
-      assigns(:feeds).should eq [@feed1]
-    end
+      it 'returns success' do
+        get :index, folder_id: @folder1.id, format: :json
+        response.should be_success
+      end
 
-    it 'assigns to @feeds all feeds if requested' do
-      get :index, include_read: 'true', format: :json
-      assigns(:feeds).should eq [@feed1, @feed3]
+      it 'assigns to @folder the correct folder' do
+        get :index, folder_id: @folder1.id, format: :json
+        assigns(:folder).should eq @folder1
+      end
+
+      it 'assigns to @feeds only feeds with unread entries' do
+        get :index, folder_id: @folder1.id, format: :json
+        assigns(:feeds).should eq [@feed1]
+      end
+
+      it 'assigns to @feeds all feeds if requested' do
+        get :index, folder_id: @folder1.id, include_read: 'true', format: :json
+        feeds = assigns(:feeds)
+        feeds.count.should eq 2
+        feeds.should include @feed1
+        feeds.should include @feed3
+      end
+
+      it 'returns 404 if user does not own folder'
     end
   end
 
