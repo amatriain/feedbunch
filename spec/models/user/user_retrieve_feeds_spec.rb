@@ -127,7 +127,17 @@ describe User do
       feeds.should include @feed2
     end
 
-    it 'does not return feed not in the folder' do
+    it 'does not return feed not in the folder when asked for feeds with unread entries' do
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      @user.subscribe feed.fetch_url
+      feeds = @user.folder_feeds @folder, include_read: false
+      feeds.count.should eq 1
+      feeds.should_not include feed
+    end
+
+    it 'does not return feed not in the folder when asked for all feeds' do
       feed = FactoryGirl.create :feed
       @user.subscribe feed.fetch_url
       feeds = @user.folder_feeds @folder, include_read: true

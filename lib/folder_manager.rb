@@ -20,9 +20,9 @@ class FolderManager
     if include_read
       feeds = folder.feeds
     else
-      feeds = Feed.joins(:feed_subscriptions)
-                  .where(feed_subscriptions: {user_id: user.id})
-                  .where('feed_subscriptions.unread_entries > 0')
+      feeds = folder.feeds.joins(:feed_subscriptions)
+                        .where(feed_subscriptions: {user_id: user.id})
+                        .where('feed_subscriptions.unread_entries > 0')
     end
 
     return feeds
