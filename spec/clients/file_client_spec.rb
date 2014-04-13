@@ -31,7 +31,7 @@ describe FileClient do
     contents.should eq @file_content
   end
 
-  it 're-raises any exceptions' do
+  it 're-raises any errors' do
     error = StandardError.new
     File.stub(:open).and_raise error
     File.stub(:delete).and_raise error

@@ -34,7 +34,7 @@ describe S3Client do
     content.should eq @file_content
   end
 
-  it 're-raises any exceptions' do
+  it 're-raises any errors' do
     error_message = 'AWS error'
     error = AWS::Errors::Base.new(error_message)
     AWS::S3.any_instance.stub(:buckets).and_raise error
