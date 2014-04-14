@@ -28,5 +28,16 @@ describe DestroyOldJobStatesJob do
     @refresh_feed_job_state_2.update created_at: date_not_old
   end
 
+  it 'destroys old states' do
+    DestroyOldJobStatesJob.perform
+    SubscribeJobState.exists?(@subscribe_job_state_1.id).should be_false
+    RefreshFeedJobState.exists?(@refresh_feed_job_state_1.id).should be_false
+  end
+
+  it 'does not destroy newer states' do
+    DestroyOldJobStatesJob.perform
+    SubscribeJobState.exists?(@subscribe_job_state_2.id).should be_true
+    RefreshFeedJobState.exists?(@refresh_feed_job_state_2.id).should be_true
+  end
 
 end
