@@ -135,8 +135,10 @@ describe 'subscription to feeds' do
         find("#subscribe-state-#{@job_state.reload.id} a.job-feed-title").click
         go_to_start_page
         page.should_not have_text 'Successfully added subscription to feed'
-        # alert should not be present after reloading page
-        visit current_path
+        # alert should not be present after logout and login
+        logout_user
+        login_user_for_feature @user
+        go_to_start_page
         page.should_not have_text 'Successfully added subscription to feed'
       end
 
