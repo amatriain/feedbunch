@@ -77,8 +77,10 @@ describe 'subscription to feeds' do
 
       before :each do
         User.any_instance.stub :find_subscribe_job_state do
-          @user.subscribe @feed2.fetch_url
-          @job_state.update state: SubscribeJobState::SUCCESS, feed_id: @feed2.id
+          if @job_state.reload.state != SubscribeJobState::SUCCESS
+            @user.subscribe @feed2.fetch_url
+            @job_state.update state: SubscribeJobState::SUCCESS, feed_id: @feed2.id
+          end
           @job_state
         end
       end
