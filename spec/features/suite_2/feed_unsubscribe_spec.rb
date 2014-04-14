@@ -187,4 +187,37 @@ describe 'unsubscribe from feed' do
     end
   end
 
+  it 'removes refresh job state alert for the unsubscribed feed', js: true do
+    job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed1.id
+    @user.refresh_feed_job_states << job_state
+    go_to_start_page
+    within '#refresh-state-alerts' do
+      page.should have_text 'Currently refreshing feed'
+      page.should have_content @feed1.title
+    end
+
+    unsubscribe_feed @feed1, @user
+
+    page.should have_text 'To read a feed, click on its title in the sidebar.'
+    page.should_not have_text 'Currently refreshing feed'
+    page.should_not have_content @feed1.title
+  end
+
+  it 'removes subscribe job state alert for the unsubscribed feed', js: true do
+    job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, feed_id: @feed1.id,
+                                  fetch_url: @feed1.fetch_url, state: SubscribeJobState::SUCCESS
+    @user.subscribe_job_states << job_state
+    go_to_start_page
+    within '#subscribe-state-alerts' do
+      page.should have_text 'Successfully added subscription to feed'
+      page.should have_content @feed1.title
+    end
+
+    unsubscribe_feed @feed1, @user
+
+    page.should have_text 'To read a feed, click on its title in the sidebar.'
+    page.should_not have_text 'Successfully added subscription to feed'
+    page.should_not have_content @feed1.title
+  end
+
 end
