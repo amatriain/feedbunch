@@ -18,8 +18,12 @@ angular.module('feedbunch').service 'jobStateSvc',
         # Periodically update the state of any running jobs
         load_refresh_feed_job_state job_state.id if job_state.state=="RUNNING"
     .error (data, state)->
-      # if HTTP call has been prematurely cancelled or there's simply no job states, do nothing
-      timerFlagSvc.start 'error_loading_job_states' if state!=0 && state!=404
+      if state == 404
+        # If no job states are received, clear the array
+        $rootScope.refresh_feed_job_states=[]
+      else if state != 0
+        # if HTTP call has been prematurely cancelled or there's simply no job states, do nothing
+        timerFlagSvc.start 'error_loading_job_states'
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load state of a single refresh feed job via AJAX.
@@ -69,8 +73,12 @@ angular.module('feedbunch').service 'jobStateSvc',
         # Periodically update the state of any running jobs
         load_subscribe_job_state job_state.id if job_state.state=="RUNNING"
     .error (data, state)->
-      # if HTTP call has been prematurely cancelled or there's simply no job states, do nothing
-      timerFlagSvc.start 'error_loading_job_states' if state!=0 && state!=404
+      if state == 404
+        # If no job states are received, clear the array
+        $rootScope.subscribe_job_states = []
+      else if state != 0
+        # if HTTP call has been prematurely cancelled or there's simply no job states, do nothing
+        timerFlagSvc.start 'error_loading_job_states'
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load state of a single subscribe job via AJAX.
