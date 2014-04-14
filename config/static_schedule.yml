@@ -4,3 +4,9 @@ FixSchedulesJob:
   every:
     - "1h"
     - :first_in: "10s"
+DestroyOldJobStatesJob:
+  description: "Remove old job states from the db"
+  queue: update_feeds
+  every:
+    - "1h"
+    - :first_in: "10s"
