@@ -250,7 +250,8 @@ FEED_XML
 
       @etag = "\"3648649162\""
       @last_modified = "Wed, 12 Jun 2013 04:00:06 GMT"
-      @headers = {etag: @etag, last_modified: @last_modified}
+      @user_agent = Feedbunch::Application.config.user_agent
+      @headers = {etag: @etag, last_modified: @last_modified, user_agent: @user_agent}
       @feed_xml.stub(:headers).and_return @headers
       RestClient.stub(:get).and_return @feed_xml
     end
@@ -292,7 +293,8 @@ FEED_XML
 
       # Next time the feed is fetched, the etag from the last time will be sent in the if-none-match header
       @feed.reload
-      RestClient.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag}
+      RestClient.should_receive(:get).with @feed.fetch_url,
+                                           {if_none_match: @feed.etag, user_agent: @user_agent}
       FeedClient.fetch @feed
     end
 
@@ -304,7 +306,8 @@ FEED_XML
 
       # Next time the feed is fetched, the last-modified from the last time will be sent in the if-modified-since header
       @feed.reload
-      RestClient.should_receive(:get).with @feed.fetch_url, {if_modified_since: @feed.last_modified}
+      RestClient.should_receive(:get).with @feed.fetch_url,
+                                           {if_modified_since: @feed.last_modified, user_agent: @user_agent}
       FeedClient.fetch @feed
     end
 
@@ -314,7 +317,10 @@ FEED_XML
 
       # Next time the feed is fetched, the last-modified from the last time will be sent in the if-modified-since header
       @feed.reload
-      RestClient.should_receive(:get).with @feed.fetch_url, {if_none_match: @feed.etag, if_modified_since: @feed.last_modified}
+      RestClient.should_receive(:get).with @feed.fetch_url,
+                                           {if_none_match: @feed.etag,
+                                            if_modified_since: @feed.last_modified,
+                                            user_agent: @user_agent}
       FeedClient.fetch @feed
     end
 
