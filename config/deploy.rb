@@ -30,8 +30,6 @@ set :linked_files, %w{
                       config/database.yml
                       config/notifications.god
                       config/resque.yml
-                      config/environments/staging.rb
-                      config/environments/production.rb
                       config/secrets.yml
                       redis/redis.conf
                   }
