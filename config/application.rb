@@ -63,12 +63,15 @@ module Feedbunch
     config.max_update_interval = 12.hours
     config.min_update_interval = 15.minutes
 
-    # Job state alerts (subscribe_job and refresh_feed_job) when they are older than this
-    config.destroy_job_states_after = 24.hours
-
     # If a feed's update fail for more than this time, the feed is marked as permanently unavailable (no more
     # updates will be attempted)
     config.unavailable_after = 1.week
+
+    # Job state alerts (subscribe_job and refresh_feed_job) when they are older than this
+    config.destroy_job_states_after = 24.hours
+
+    # User-agent that feedbunch will use when fetching feeds
+    config.user_agent = 'Feedbunch/1.0 (+http://www.feedbunch.com)'
 
     # List of currently available locales
     I18n.available_locales = [:en, :es]

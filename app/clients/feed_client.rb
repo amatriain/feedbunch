@@ -64,6 +64,9 @@ class FeedClient
     # Calculate HTTP headers to be used for fetching
     headers = HTTPCaching.headers feed
 
+    # User-agent used by feedbunch when fetching feeds
+    headers[:user_agent] = Feedbunch::Application.config.user_agent
+
     # GET the feed
     Rails.logger.info "Fetching from URL #{feed.fetch_url}"
     feed_response = RestClient.get feed.fetch_url, headers
