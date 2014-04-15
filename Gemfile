@@ -73,6 +73,8 @@ group :development do
   # Automate deployments
   gem 'capistrano-rails', require: false
   gem 'capistrano-rvm', require: false
+  # App preloader to speed up tests, new in Rails 4.1.0
+  gem 'spring'
 end
 
 group :test, :development do
