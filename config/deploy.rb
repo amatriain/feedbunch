@@ -34,7 +34,7 @@ set :linked_files, %w{
                       config/environments/production.rb
                       config/initializers/aws_key.rb
                       config/initializers/devise.rb
-                      config/initializers/secret_token.rb
+                      config/secrets.yml
                       redis/redis.conf
                   }
 set :linked_dirs, %w{
