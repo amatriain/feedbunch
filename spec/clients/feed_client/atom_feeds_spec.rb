@@ -295,7 +295,7 @@ FEED_XML
       @feed.reload
 
       entry = @feed.entries[0]
-      entry.content.should eq "<div>#{@entry.content}</div>"
+      entry.content.should eq "#{@entry.content}"
     end
   end
 
