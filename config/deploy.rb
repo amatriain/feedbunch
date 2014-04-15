@@ -32,7 +32,6 @@ set :linked_files, %w{
                       config/resque.yml
                       config/environments/staging.rb
                       config/environments/production.rb
-                      config/initializers/aws_key.rb
                       config/secrets.yml
                       redis/redis.conf
                   }

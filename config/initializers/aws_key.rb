@@ -5,8 +5,8 @@ require 'aws-sdk'
 AWS.config logger: Rails.logger
 
 AWS.config(
-  access_key_id: 'YOUR-ACCESS-KEY-HERE',
-  secret_access_key: 'YOUR-SECRET-ACCESS-KEY-HERE'
+  access_key_id: Rails.application.secrets.aws_access_key_id,
+  secret_access_key: Rails.application.secrets.aws_secret_access_key
 )
 
 # Name of the S3 bucket for storing objects. Different for each environment.
