@@ -16,7 +16,7 @@ namespace :resque do
 
     # In background servers we must require each job class individually, because we're not
     # running the full Rails app
-    require "#{rails_root}/app/jobs/destroy_old_job_states"
+    require "#{rails_root}/app/jobs/destroy_old_job_states_job"
     require "#{rails_root}/app/jobs/fix_schedules_job"
     require "#{rails_root}/app/jobs/import_subscriptions_job"
     require "#{rails_root}/app/jobs/refresh_feed_job"
