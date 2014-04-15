@@ -18,4 +18,3 @@ before_install:
   - "gem install bundler"
 before_script:
   - "cp config/database.yml.ci config/database.yml"
-  - "cp config/initializers/devise.rb.ci config/initializers/devise.rb"

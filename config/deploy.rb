@@ -33,7 +33,6 @@ set :linked_files, %w{
                       config/environments/staging.rb
                       config/environments/production.rb
                       config/initializers/aws_key.rb
-                      config/initializers/devise.rb
                       config/secrets.yml
                       redis/redis.conf
                   }
