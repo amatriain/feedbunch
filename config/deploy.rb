@@ -29,7 +29,6 @@ set :keep_releases, 5
 set :linked_files, %w{
                       config/database.yml
                       config/notifications.god
-                      config/resque.yml
                       config/secrets.yml
                       redis/redis.conf
                   }

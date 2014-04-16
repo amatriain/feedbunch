@@ -6,18 +6,15 @@ require 'resque_scheduler'
 require 'resque_scheduler/server'
 
 # For each Rails environment (production and staging) there are two different server roles; background servers
-# connect to Redis on localhost, while app servers connect to the Redis instance in the background server.
+# normally connect to Redis on localhost, while app servers connect to the Redis instance in the background server.
 rails_root = ENV['RAILS_ROOT'] || __dir__ + '/../..'
-rails_env = ENV['RAILS_ENV'] || 'development'
 resque_env = ENV['RESQUE_ENV'] || 'app'
 
 if resque_env=='background'
-  resque_conf_key = "#{rails_env}_background"
+  Resque.redis = Rails.application.secrets.redis_background
 else
-  resque_conf_key = rails_env
+  Resque.redis = Rails.application.secrets.redis_web
 end
-resque_config = YAML.load_file(rails_root.to_s + '/config/resque.yml')
-Resque.redis = resque_config[resque_conf_key]
 
 # In background servers we must require each job class individually, because we're not
 # running the full Rails app

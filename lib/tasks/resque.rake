@@ -11,8 +11,7 @@ namespace :resque do
     # connect to Redis on localhost, while app servers connect to the Redis instance in the background server.
     # This tasks only runs background servers, use the correct configuration key.
     rails_root = ENV['RAILS_ROOT'] || __dir__ + '/../..'
-    rails_env = ENV['RAILS_ENV'] || 'development'
-    resque_conf_key = "#{rails_env}_background"
+    Resque.redis = Rails.application.secrets.redis_background
 
     # In background servers we must require each job class individually, because we're not
     # running the full Rails app
@@ -24,9 +23,6 @@ namespace :resque do
     require "#{rails_root}/app/jobs/subscribe_user_job"
     require "#{rails_root}/app/jobs/unsubscribe_user_job"
     require "#{rails_root}/app/jobs/update_feed_unread_count_job"
-
-    resque_config = YAML.load_file(rails_root.to_s + '/config/resque.yml')
-    Resque.redis = resque_config[resque_conf_key]
 
     # If you want to be able to dynamically change the schedule,
     # uncomment this line.  A dynamic schedule can be updated via the
