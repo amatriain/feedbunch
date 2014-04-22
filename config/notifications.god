@@ -3,6 +3,14 @@
 # Rails environment defaults to development
 rails_env = ENV['RAILS_ENV'] || 'development'
 
+# Paths in staging, production environments are in the capistrano deployment folder.
+# In other environments they are relative to the directory god is run from.
+if %w{staging production}.include? rails_env
+  app_root = File.join %w{/ var rails feedbunch current}
+else
+  app_root = Dir.pwd
+end
+
 # Load secrets for the current Rails environment.
 # The Rails.application.secrets API cannot be used because God itself does not load a full Rails environment.
 secrets_file = YAML.load_file File.join(app_root, 'config', 'secrets.yml')
