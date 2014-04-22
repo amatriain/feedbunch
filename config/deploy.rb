@@ -28,7 +28,6 @@ set :deploy_to, '/var/rails/feedbunch'
 set :keep_releases, 5
 set :linked_files, %w{
                       config/database.yml
-                      config/notifications.god
                       config/secrets.yml
                       redis/redis.conf
                   }
