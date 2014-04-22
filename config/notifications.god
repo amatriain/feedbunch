@@ -3,6 +3,11 @@
 # Rails environment defaults to development
 rails_env = ENV['RAILS_ENV'] || 'development'
 
+# Load secrets for the current Rails environment.
+# The Rails.application.secrets API cannot be used because God itself does not load a full Rails environment.
+secrets_file = YAML.load_file File.join(app_root, 'config', 'secrets.yml')
+secrets = secrets_file[rails_env]
+
 # A bit of monkeypatching for SMTP notifications to work with STARTTLS.
 Net::SMTP.class_eval do
   def initialize_with_starttls(*args)
@@ -23,11 +28,11 @@ God::Contacts::Email.defaults do |d|
 
   if %w{production staging}.include? rails_env
     d.delivery_method = :smtp
-    d.server_host = Rails.application.secrets.smtp_address
-    d.server_domain = Rails.application.secrets.smtp_address
+    d.server_host = secrets['smtp_address']
+    d.server_domain = secrets['smtp_address']
     d.server_auth = :login
-    d.server_user = Rails.application.secrets.smtp_user_name
-    d.server_password = Rails.application.secrets.smtp_password
+    d.server_user = secrets['smtp_user_name']
+    d.server_password = secrets['smtp_password']
   else
     d.delivery_method = :sendmail
   end
@@ -35,7 +40,7 @@ God::Contacts::Email.defaults do |d|
 end
 
 God.contact(:email) do |c|
-  c.name = Rails.application.secrets.god_contact_name
+  c.name = secrets['god_contact_name']
   c.group = 'admins'
-  c.to_email = Rails.application.secrets.god_contact_email
+  c.to_email = secrets['god_contact_email']
 end
