@@ -20,7 +20,7 @@ require 'schedule_manager'
 # The perform method of this class will be invoked from a Resque worker.
 
 class FixSchedulesJob
-  @queue = :update_feeds
+  @queue = :maintenance
 
   ##
   # Fix feed update schedules. Any feed which does not have scheduled updates

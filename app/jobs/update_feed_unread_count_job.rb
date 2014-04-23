@@ -6,7 +6,7 @@ require 'subscriptions_manager'
 # Its perform method will be invoked from a Resque worker
 
 class UpdateFeedUnreadCountJob
-  @queue = :update_feeds
+  @queue = :maintenance
 
   ##
   # Update the unread entries count for a feed, for all subscribed users.

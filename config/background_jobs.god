@@ -115,11 +115,78 @@ end
 God.watch do |w|
   resque_env = ENV['RESQUE_ENV'] || 'app'
 
-  w.name = 'resque-work'
+  w.name = 'resque-work-update_feeds'
   w.group = 'resque-group'
   w.env = {'RAILS_ENV' => rails_env,
            'RESQUE_ENV' => resque_env,
            'QUEUE' => 'update_feeds',
+           'TERM_CHILD' => '1',
+           'RESQUE_TERM_TIMEOUT' => '300'}
+  w.start = "rake -f #{File.join(app_root, 'Rakefile')} resque:work"
+  w.stop_timeout = 5.minutes
+
+  # Uncomment one of the following two lines, depending on whether resource usage limit is desired
+  #w.keepalive memory_max: 256.megabytes, cpu_max: 50.percent
+  w.keepalive
+
+  w.dir = app_root
+  w.log = File.join log_path, 'resque.log'
+
+  w.lifecycle do |on|
+    on.condition(:flapping) do |c|
+      c.times = 5
+      c.within = 5.minute
+      c.to_state = [:start, :restart]
+      c.retry_in = 10.minutes
+      c.retry_times = 5
+      c.retry_within = 2.hours
+      c.notify = 'admins'
+    end
+  end
+end
+
+
+God.watch do |w|
+  resque_env = ENV['RESQUE_ENV'] || 'app'
+
+  w.name = 'resque-work-maintenance'
+  w.group = 'resque-group'
+  w.env = {'RAILS_ENV' => rails_env,
+           'RESQUE_ENV' => resque_env,
+           'QUEUE' => 'maintenance',
+           'TERM_CHILD' => '1',
+           'RESQUE_TERM_TIMEOUT' => '300'}
+  w.start = "rake -f #{File.join(app_root, 'Rakefile')} resque:work"
+  w.stop_timeout = 5.minutes
+
+  # Uncomment one of the following two lines, depending on whether resource usage limit is desired
+  #w.keepalive memory_max: 256.megabytes, cpu_max: 50.percent
+  w.keepalive
+
+  w.dir = app_root
+  w.log = File.join log_path, 'resque.log'
+
+  w.lifecycle do |on|
+    on.condition(:flapping) do |c|
+      c.times = 5
+      c.within = 5.minute
+      c.to_state = [:start, :restart]
+      c.retry_in = 10.minutes
+      c.retry_times = 5
+      c.retry_within = 2.hours
+      c.notify = 'admins'
+    end
+  end
+end
+
+God.watch do |w|
+  resque_env = ENV['RESQUE_ENV'] || 'app'
+
+  w.name = 'resque-work-subscriptions'
+  w.group = 'resque-group'
+  w.env = {'RAILS_ENV' => rails_env,
+           'RESQUE_ENV' => resque_env,
+           'QUEUE' => 'subscriptions',
            'TERM_CHILD' => '1',
            'RESQUE_TERM_TIMEOUT' => '300'}
   w.start = "rake -f #{File.join(app_root, 'Rakefile')} resque:work"

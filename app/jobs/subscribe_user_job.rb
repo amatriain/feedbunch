@@ -4,7 +4,7 @@
 # Its perform method will be invoked from a Resque worker.
 
 class SubscribeUserJob
-  @queue = :update_feeds
+  @queue = :subscriptions
 
   ##
   # Subscribe a user to a feed and optionally put the feed in a folder

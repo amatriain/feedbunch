@@ -7,7 +7,7 @@ require 'nokogiri'
 # Its perform method will be invoked from a Resque worker.
 
 class ImportSubscriptionsJob
-  @queue = :update_feeds
+  @queue = :subscriptions
 
   ##
   # Import an OPML file with subscriptions for a user, and then deletes it.

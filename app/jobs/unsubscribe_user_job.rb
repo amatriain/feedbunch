@@ -4,7 +4,7 @@
 # Its perform method will be invoked from a Resque worker.
 
 class UnsubscribeUserJob
-  @queue = :update_feeds
+  @queue = :subscriptions
 
   ##
   # Unsubscribe a user from a feed
