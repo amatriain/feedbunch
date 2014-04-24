@@ -255,23 +255,6 @@ describe ScheduledUpdateFeedJob do
       @feed.reload.fetch_interval_secs.should eq 3960
     end
 
-    it 'increments the fetch interval if there is a problem trying to parse the xml response' do
-      FeedClient.stub(:fetch).and_raise FeedParseError.new
-
-      Resque.should_receive :set_schedule do |name, config|
-        name.should eq "update_feed_#{@feed.id}"
-        config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
-        config[:args].should eq @feed.id
-        config[:every][0].should eq '3960s'
-        config[:every][1].should eq ({first_in: 3960})
-      end
-
-      @feed.fetch_interval_secs.should eq 3600
-      ScheduledUpdateFeedJob.perform @feed.id
-      @feed.reload.fetch_interval_secs.should eq 3960
-    end
-
   end
 
   context 'failing feed' do
