@@ -40,12 +40,6 @@
   <p><%= t 'feeds.index.problem_subscribing' %></p>
 </div>
 
-<%# Alert displayed when the user tries to subscribe to a feed he's already subscribed to %>
-<div id="already-subscribed" class="alert alert-warning" ng-show="error_already_subscribed">
-  <button type="button" class="close" ng-click="reset_flag('error_already_subscribed')">&times;</button>
-  <p><%= t 'feeds.index.already_subscribed' %></p>
-</div>
-
 <%# Alert displayed when there is a problem unsubscribing from a feed %>
 <div id="problem-unsubscribing" class="alert alert-danger" ng-show="error_unsubscribing">
   <button type="button" class="close" ng-click="reset_flag('error_unsubscribing')">&times;</button>

@@ -79,7 +79,6 @@ en:
       problem_loading_user_data: "There has been a problem loading user data. Please try again later."
       problem_subscribing: "Could not add subscription."
       success_subscribe: "Feed subscribed successfully."
-      already_subscribed: "You are already subscribed to this feed."
       problem_unsubscribing: "There has been a problem unsubscribing from the feed. Please try again later."
       problem_folder_management: "There has been a problem managing folders. Please try again later."
       problem_new_folder: "There has been a problem creating the new folder. Please try again later."
