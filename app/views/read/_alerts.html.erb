@@ -1,89 +1,89 @@
 <%# Alert displayed when there is a problem loading folders %>
 <div id="problem-loading-folders" class="alert alert-danger" ng-show="error_loading_folders">
   <button type="button" class="close" ng-click="reset_flag('error_loading_folders')">&times;</button>
-  <p><%= t 'feeds.index.problem_loading_folders' %></p>
+  <p><%= t 'read.alerts.problem_loading_folders' %></p>
 </div>
 
 <%# Alert displayed when there is a problem loading feeds %>
 <div id="problem-loading-feeds" class="alert alert-danger" ng-show="error_loading_feeds">
   <button type="button" class="close" ng-click="reset_flag('error_loading_feeds')">&times;</button>
-  <p><%= t 'feeds.index.problem_loading_feeds' %></p>
+  <p><%= t 'read.alerts.problem_loading_feeds' %></p>
 </div>
 
 <%# Alert displayed when there is a problem loading user config %>
 <div id="problem-loading-user-config" class="alert alert-danger" ng-show="error_loading_user_config">
   <button type="button" class="close" ng-click="reset_flag('error_loading_user_config')">&times;</button>
-  <p><%= t 'feeds.index.problem_loading_user_config' %></p>
+  <p><%= t 'read.alerts.problem_loading_user_config' %></p>
 </div>
 
 <%# Alert displayed when there is a problem loading user data %>
 <div id="problem-loading-user-data" class="alert alert-danger" ng-show="error_loading_user_data">
   <button type="button" class="close" ng-click="reset_flag('error_loading_user_data')">&times;</button>
-  <p><%= t 'feeds.index.problem_loading_user_data' %></p>
+  <p><%= t 'read.alerts.problem_loading_user_data' %></p>
 </div>
 
 <%# Alert displayed when there is a problem loading entries %>
 <div id="problem-loading-entries" class="alert alert-danger" ng-show="error_loading_entries">
   <button type="button" class="close" ng-click="reset_flag('error_loading_entries')">&times;</button>
-  <p><%= t 'feeds.index.problem_loading_entries' %></p>
+  <p><%= t 'read.alerts.problem_loading_entries' %></p>
 </div>
 
 <%# Alert displayed when a subscription is added successfully %>
 <div id="success-subscribe-feed" class="alert alert-success" ng-show="success_subscribe">
   <button type="button" class="close" ng-click="reset_flag('success_subscribe')">&times;</button>
-  <p><%= t 'feeds.index.success_subscribe' %></p>
+  <p><%= t 'read.alerts.success_subscribing' %></p>
 </div>
 
 <%# Alert displayed when there is a problem adding a subscription %>
 <div id="problem-subscribing" class="alert alert-danger" ng-show="error_subscribing">
   <button type="button" class="close" ng-click="reset_flag('error_subscribing')">&times;</button>
-  <p><%= t 'feeds.index.problem_subscribing' %></p>
+  <p><%= t 'read.alerts.problem_subscribing' %></p>
 </div>
 
 <%# Alert displayed when there is a problem unsubscribing from a feed %>
 <div id="problem-unsubscribing" class="alert alert-danger" ng-show="error_unsubscribing">
   <button type="button" class="close" ng-click="reset_flag('error_unsubscribing')">&times;</button>
-  <p><%= t 'feeds.index.problem_unsubscribing' %></p>
+  <p><%= t 'read.alerts.problem_unsubscribing' %></p>
 </div>
 
 <%# Alert displayed when there is a problem adding or removing a feed from a folder %>
 <div id="problem-folder-management" class="alert alert-danger" ng-show="error_managing_folders">
   <button type="button" class="close" ng-click="reset_flag('error_managing_folders')">&times;</button>
-  <p><%= t 'feeds.index.problem_folder_management' %></p>
+  <p><%= t 'read.alerts.problem_folder_management' %></p>
 </div>
 
 <%# Alert displayed when there is a problem adding a feed to a new folder %>
 <div id="problem-new-folder" class="alert alert-danger" ng-show="error_creating_folder">
   <button type="button" class="close" ng-click="reset_flag('error_creating_folder')">&times;</button>
-  <p><%= t 'feeds.index.problem_new_folder' %></p>
+  <p><%= t 'read.alerts.problem_new_folder' %></p>
 </div>
 
 <%# Alert displayed when the user tries to create a folder with the same title of another of his folders %>
 <div id="folder-already-exists" class="alert alert-warning" ng-show="error_already_existing_folder">
   <button type="button" class="close" ng-click="reset_flag('error_already_existing_folder')">&times;</button>
-  <p><%= t 'feeds.index.folder_already_exists' %></p>
+  <p><%= t 'read.alerts.folder_already_exists' %></p>
 </div>
 
 <%# Alert displayed when there is a problem changing an entry's read/unread state %>
 <div id="problem-entry-state-change" class="alert alert-danger" ng-show="error_changing_entry_state">
   <button type="button" class="close" ng-click="reset_flag('error_changing_entry_state')">&times;</button>
-  <p><%= t 'feeds.index.problem_entry_state' %></p>
+  <p><%= t 'read.alerts.problem_entry_state' %></p>
 </div>
 
 <%# Alert displayed when there is a problem loading the state of background jobs %>
 <div id="problem-loading-job-states" class="alert alert-danger" ng-show="error_loading_job_states">
   <button type="button" class="close" ng-click="reset_flag('error_loading_job_states')">&times;</button>
-  <p><%= t 'feeds.index.problem_loading_job_states' %></p>
+  <p><%= t 'read.alerts.problem_loading_job_states' %></p>
 </div>
 
 <%# Alert displayed when a feed finishes refreshing successfully %>
 <div id="success-refresh-feed" class="alert alert-success" ng-show="success_refresh_feed">
   <button type="button" class="close" ng-click="reset_flag('success_refresh_feed')">&times;</button>
-  <p><%= t 'feeds.index.success_refresh_feed' %></p>
+  <p><%= t 'read.alerts.success_refresh_feed' %></p>
 </div>
 
 <%# Alert displayed when there is a problem refreshing feeds %>
 <div id="problem-refreshing" class="alert alert-danger" ng-show="error_refreshing_feed">
   <button type="button" class="close" ng-click="reset_flag('error_refreshing_feed')">&times;</button>
-  <p><%= t 'feeds.index.problem_refreshing' %></p>
+  <p><%= t 'read.alerts.problem_refreshing' %></p>
 </div>

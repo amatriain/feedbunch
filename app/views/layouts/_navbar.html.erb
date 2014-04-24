@@ -45,31 +45,31 @@
 
         <li ng-show="show_feed_buttons && !show_read"
             data-toggle="tooltip" data-placement="right"
-            title="<%= t 'feeds.index.show_read_button_tooltip' %>">
+            title="<%= t 'layouts.navbar.show_read_button_tooltip' %>">
           <a id="show-read"
               ng-click="show_read_feeds_entries()">
-            <i class="fa fa-eye"></i> <%= t 'feeds.index.show_read_button' %>
+            <i class="fa fa-eye"></i> <%= t 'layouts.navbar.show_read_button' %>
           </a>
         </li>
 
         <li ng-show="show_feed_buttons && show_read"
             data-toggle="tooltip" data-placement="right"
-            title="<%= t 'feeds.index.hide_read_button_tooltip' %>">
+            title="<%= t 'layouts.navbar.hide_read_button_tooltip' %>">
           <a id="hide-read"
              ng-click="hide_read_feeds_entries()">
-            <i class="fa fa-eye-slash"></i> <%= t 'feeds.index.hide_read_button' %>
+            <i class="fa fa-eye-slash"></i> <%= t 'layouts.navbar.hide_read_button' %>
           </a>
         </li>
 
         <li id="feed-dropdown"
             ng-show="show_feed_buttons"
             data-toggle="tooltip" data-placement="right"
-            title="<%= t 'feeds.index.feed_menu_button_tooltip' %>">
+            title="<%= t 'layouts.navbar.feed_menu_button_tooltip' %>">
 
           <a id="feeds-management"
              class="dropdown-toggle"
              data-toggle="dropdown">
-            <i class="fa fa-rss"></i> <%= t 'feeds.index.feed_menu_button' %>
+            <i class="fa fa-rss"></i> <%= t 'layouts.navbar.feed_menu_button' %>
             <b class="caret"></b>
           </a>
 
@@ -79,14 +79,14 @@
               <a id="add-subscription"
                  data-target="#subscribe-feed-popup"
                  data-toggle="modal">
-                <i class="fa fa-plus"></i> <%= t 'feeds.index.subscribe_button' %>
+                <i class="fa fa-plus"></i> <%= t 'layouts.navbar.subscribe_button' %>
               </a>
             </li>
 
             <li ng-show="current_feed">
               <a id="refresh-feed"
                  ng-click="refresh_feed()">
-                <i class="fa fa-repeat"></i> <%= t 'feeds.index.refresh' %>
+                <i class="fa fa-repeat"></i> <%= t 'layouts.navbar.refresh_button' %>
               </a>
             </li>
 
@@ -94,7 +94,7 @@
               <a id="unsubscribe-feed"
                  data-toggle="modal"
                  data-target="#unsubscribe-feed-popup">
-                <i class="fa fa-times"></i> <%= t 'feeds.index.unsubscribe' %>
+                <i class="fa fa-times"></i> <%= t 'layouts.navbar.unsubscribe_button' %>
               </a>
             </li>
 
@@ -103,21 +103,21 @@
 
         <li ng-show="show_feed_buttons && (current_feed || current_folder)"
             data-toggle="tooltip" data-placement="right"
-            title="<%= t 'feeds.index.read_all_button_tooltip' %>">
+            title="<%= t 'layouts.navbar.read_all_button_tooltip' %>">
           <a id="read-all-button" ng-click="mark_all_read()">
-            <i class="fa fa-check-square-o"></i> <%= t 'feeds.index.read_all_button' %>
+            <i class="fa fa-check-square-o"></i> <%= t 'layouts.navbar.read_all_button' %>
           </a>
         </li>
 
         <li id="folder-management-dropdown"
             ng-show="current_feed"
             data-toggle="tooltip" data-placement="right"
-            title="<%= t 'feeds.index.folder_button_tooltip' %>">
+            title="<%= t 'layouts.navbar.folder_button_tooltip' %>">
 
           <a id="folder-management"
                   class="dropdown-toggle"
                   data-toggle="dropdown">
-            <i class="fa fa-folder-open"></i> <%= t 'feeds.index.folder_button' %>
+            <i class="fa fa-folder-open"></i> <%= t 'layouts.navbar.folder_button' %>
             <b class="caret"></b>
           </a>
 
@@ -138,7 +138,7 @@
                  data-toggle="modal"
                  data-target="#new-folder-popup">
                 <i class="fa fa-plus text-muted"></i>&nbsp;
-                <%= t 'feeds.index.folder_new' %>
+                <%= t 'layouts.navbar.folder_new' %>
               </a>
             </li>
 
@@ -147,7 +147,7 @@
                  ng-click="remove_from_folder()">
                 <i class="fa fa-ban text-muted" ng-hide="get_current_feed().folder_id=='none'"></i>
                 <i class="fa fa-check" ng-show="get_current_feed().folder_id=='none'"></i>&nbsp;
-                <%= t 'feeds.index.folder_none' %>
+                <%= t 'layouts.navbar.folder_none' %>
               </a>
             </li>
 
@@ -172,7 +172,7 @@
                 <li>
                   <%= link_to '/admin', target: '_blank' do %>
                     <i class="fa fa-wrench"></i>
-                    <%= t 'layouts.application.admin' %>
+                    <%= t 'layouts.navbar.admin' %>
                   <% end %>
                 </li>
               <% end %>
@@ -181,7 +181,7 @@
                 <li>
                   <%= link_to '/resque', target: '_blank' do %>
                     <i class="fa fa-code-fork"></i>
-                    <%= t 'layouts.application.background_jobs' %>
+                    <%= t 'layouts.navbar.background_jobs' %>
                   <% end %>
                 </li>
               <% end %>
@@ -189,7 +189,7 @@
               <li>
                 <%=  link_to read_path, id: 'read_feeds' do %>
                   <i class="fa fa-rss"></i>
-                  <%= t 'layouts.application.read_feeds' %>
+                  <%= t 'layouts.navbar.read_feeds' %>
                 <% end %>
               </li>
 
@@ -202,21 +202,21 @@
 
                   <i class="fa fa-magic"></i>
 
-                  <%= t 'layouts.application.import' %>
+                  <%= t 'layouts.navbar.import' %>
                 </a>
               </li>
 
               <li>
                 <%=  link_to edit_user_registration_path, id: 'my_account' do %>
                   <i class="fa fa-gear"></i>
-                  <%= t 'layouts.application.my_account' %>
+                  <%= t 'layouts.navbar.my_account' %>
                 <% end %>
               </li>
 
               <li>
                 <%= link_to destroy_user_session_path, :method => :delete, id: 'sign_out' do %>
                   <i class="fa fa-sign-out"></i>
-                  <%= t 'layouts.application.logout' %>
+                  <%= t 'layouts.navbar.logout' %>
                 <% end %>
               </li>
             </ul>

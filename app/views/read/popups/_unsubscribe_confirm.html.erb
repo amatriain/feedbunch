@@ -3,20 +3,20 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><%= t 'feeds.index.unsubscribe_title' %></h3>
+        <h3><%= t 'read.popups.unsubscribe.title' %></h3>
       </div>
       <div class="modal-body">
-        <%= t 'feeds.index.unsubscribe_confirm' %>
+        <%= t 'read.popups.unsubscribe.confirm' %>
       </div>
       <div class="modal-footer">
         <button id="unsubscribe-cancel"
                 class="btn btn-default"
-                data-dismiss="modal"><%= t 'feeds.index.unsubscribe_cancel' %>
+                data-dismiss="modal"><%= t 'read.popups.unsubscribe.cancel' %>
         </button>
         <button id="unsubscribe-submit"
                 class="btn btn-danger"
                 data-dismiss="modal"
-                ng-click="unsubscribe()"><%= t 'feeds.index.unsubscribe_submit' %>
+                ng-click="unsubscribe()"><%= t 'read.popups.unsubscribe.submit' %>
         </button>
       </div>
     </div>

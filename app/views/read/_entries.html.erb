@@ -1,7 +1,7 @@
 <div class="row">
   <div id="no-entries" class="col-xs-12" ng-show="error_no_entries">
     <div>
-      <%= t 'feeds.index.no_entries' %>
+      <%= t 'read.entries.no_entries' %>
     </div>
     <div>
       <i class="fa fa-times"></i>
@@ -60,15 +60,15 @@
              data-toggle="tooltip" data-placement="top"
              ng-click="unread_entry(entry)"
              ng-show="entry.read"
-             title="<%= t 'entries.index.mark_unread_tooltip' %>">
-            <i class="fa fa-square"></i>&nbsp;<%= t 'entries.index.mark_unread' %>
+             title="<%= t 'read.entries.mark_unread_tooltip' %>">
+            <i class="fa fa-square"></i>&nbsp;<%= t 'read.entries.mark_unread' %>
           </a>
           <a class="btn btn-default btn-sm"
              data-toggle="tooltip" data-placement="top"
              ng-click="read_entry(entry)"
              ng-show="!entry.read"
-             title="<%= t 'entries.index.mark_read_tooltip' %>">
-            <i class="fa fa-check-square"></i>&nbsp;<%= t 'entries.index.mark_read' %>
+             title="<%= t 'read.entries.mark_read_tooltip' %>">
+            <i class="fa fa-check-square"></i>&nbsp;<%= t 'read.entries.mark_read' %>
           </a>
         </div>
 
@@ -76,7 +76,7 @@
           <a href="{{entry.url}}"
              target="_blank"
              data-toggle="tooltip" data-placement="top"
-             title="<%= t 'entries.index.title_tooltip' %>"
+             title="<%= t 'read.entries.title_tooltip' %>"
              ng-bind-html="entry.title">
           </a>
         </div>
@@ -85,12 +85,12 @@
             <a href="#"
                ng-click="set_current_entry_feed(entry)"
                data-toggle="tooltip" data-placement="bottom"
-               title="<%= t 'entries.index.feed_tooltip' %>"
+               title="<%= t 'read.entries.feed_tooltip' %>"
                ng-bind-html="entry_feed_title(entry)">
             </a>
           </p>
           <p>
-            <%= t 'entries.index.published' %> {{entry.published}}
+            <%= t 'read.entries.published' %> {{entry.published}}
           </p>
         </div>
 

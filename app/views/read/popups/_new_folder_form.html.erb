@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><%= t 'feeds.index.new_folder_title' %></h3>
+        <h3><%= t 'read.popups.new_folder.title' %></h3>
       </div>
       <div class="modal-body">
         <%= simple_form_for :new_folder, url: '',
@@ -15,12 +15,12 @@
       <div class="modal-footer">
         <button class="btn btn-default"
                 data-dismiss="modal" >
-          <%= t 'feeds.index.new_folder_close' %>
+          <%= t 'read.popups.new_folder.close' %>
         </button>
         <button id="new-folder-submit"
                 ng-click="move_to_new_folder()"
                 class="btn btn-primary">
-          <%= t 'feeds.index.new_folder_submit' %>
+          <%= t 'read.popups.new_folder.submit' %>
         </button>
       </div>
     </div>

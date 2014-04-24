@@ -10,7 +10,7 @@
       <button type="button"
               class="close"
               ng-click="hide_subscribe_job_alert(job_state)"
-              title="<%= t 'start.job_state.dismiss' %>"
+              title="<%= t 'read.job_states.dismiss' %>"
               data-toggle="tooltip"
               data-placement="top">
         &times;
@@ -22,7 +22,7 @@
         </div>
 
         <div class="col-xs-9 col-sm-10">
-          <p><%= t 'start.job_state.subscribe.error' %></p>
+          <p><%= t 'read.job_states.subscribe.error' %></p>
           <p>{{job_state.fetch_url}}</p>
         </div>
       </div>
@@ -34,7 +34,7 @@
       <button type="button"
               class="close"
               ng-click="hide_subscribe_job_alert(job_state)"
-              title="<%= t 'start.job_state.dismiss' %>"
+              title="<%= t 'read.job_states.dismiss' %>"
               data-toggle="tooltip"
               data-placement="top">
         &times;
@@ -46,7 +46,7 @@
         </div>
 
         <div class="col-xs-9 col-sm-10">
-          <p><%= t 'start.job_state.subscribe.running' %></p>
+          <p><%= t 'read.job_states.subscribe.running' %></p>
           <p>{{job_state.fetch_url}}</p>
         </div>
       </div>
@@ -58,7 +58,7 @@
       <button type="button"
               class="close"
               ng-click="hide_subscribe_job_alert(job_state)"
-              title="<%= t 'start.job_state.dismiss' %>"
+              title="<%= t 'read.job_states.dismiss' %>"
               data-toggle="tooltip"
               data-placement="top">
         &times;
@@ -70,7 +70,7 @@
         </div>
 
         <div class="col-xs-9 col-sm-10">
-          <p><%= t 'start.job_state.subscribe.success' %></p>
+          <p><%= t 'read.job_states.subscribe.success' %></p>
           <p><a class="job-feed-title" ng-click="hide_subscribe_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
         </div>
       </div>

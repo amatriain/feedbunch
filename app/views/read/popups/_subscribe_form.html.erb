@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><%= t 'feeds.index.subscribe_title' %></h3>
+        <h3><%= t 'read.popups.subscribe.title' %></h3>
       </div>
       <div class="modal-body">
         <%= simple_form_for :subscription, url: '',
@@ -15,12 +15,12 @@
       <div class="modal-footer">
         <button class="btn btn-default"
                 data-dismiss="modal" >
-          <%= t 'feeds.index.subscribe_close' %>
+          <%= t 'read.popups.subscribe.close' %>
         </button>
         <button id="subscribe-submit"
                 ng-click="subscribe()"
                 class="btn btn-primary">
-          <%= t 'feeds.index.subscribe_submit' %>
+          <%= t 'read.popups.subscribe.submit' %>
         </button>
       </div>
     </div>

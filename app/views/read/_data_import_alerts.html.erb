@@ -1,11 +1,11 @@
 <%# Notice displayed when the import process finishes successfully %>
 <div id="import-process-success" class="alert alert-success" ng-show="success_importing">
   <button type="button" class="close" ng-click="reset_flag('success_importing')">&times;</button>
-  <p><%= t 'start.import.finish_success' %></p>
+  <p><%= t 'read.alerts.data_import.finish_success' %></p>
 </div>
 
 <%# Notice displayed when the import process finishes with an error %>
 <div id="import-process-error" class="alert alert-danger" ng-show="error_importing">
   <button type="button" class="close" ng-click="reset_flag('error_importing')">&times;</button>
-  <p><%= t 'start.import.finish_error' %></p>
+  <p><%= t 'read.alerts.data_import.finish_error' %></p>
 </div>
