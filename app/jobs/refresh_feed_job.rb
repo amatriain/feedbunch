@@ -60,7 +60,7 @@ class RefreshFeedJob
     feed.update failing_since: nil if !feed.failing_since.nil?
     feed.update available: true if !feed.available
 
-  rescue RestClient::Exception, SocketError, Errno::ETIMEDOUT, Errno::ECONNREFUSED, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError, FeedParseError => e
+  rescue RestClient::Exception, SocketError, Errno::ETIMEDOUT, Errno::ECONNREFUSED, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError => e
     # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
     Rails.logger.error "Error running refresh_feed_job_state #{refresh_feed_job_state_id} for feed #{feed.try :id}, user #{user.try :id}"
     Rails.logger.error e.message
