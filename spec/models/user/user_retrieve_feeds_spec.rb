@@ -101,23 +101,32 @@ describe User do
   context 'feeds in a folder' do
 
     before :each do
+      # @user is subscribed to @feed1, @feed2, @feed3, @feed4
+      # @feed1 and @feed2 are in @folder.
+      # @feed3 and @feed4 are not in any folder
+      # @feed1 has @entry1, @feed3 has @entry3 (both entries are unread by @user)
+      # @feed2 and @feed4 have no unread entries
       @folder = FactoryGirl.build :folder, user_id: @user.id
       @user.folders << @folder
       @feed1 = FactoryGirl.create :feed
       @feed2 = FactoryGirl.create :feed
+      @feed3 = FactoryGirl.create :feed
+      @feed4 = FactoryGirl.create :feed
       @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @entry3 = FactoryGirl.build :entry, feed_id: @feed3.id
       @feed1.entries << @entry1
+      @feed3.entries << @entry3
       @user.subscribe @feed1.fetch_url
       @user.subscribe @feed2.fetch_url
-      @folder.feeds << @feed1
-      @folder.feeds << @feed2
+      @user.subscribe @feed3.fetch_url
+      @user.subscribe @feed4.fetch_url
+      @folder.feeds << @feed1 << @feed2
     end
 
     it 'returns feeds in a folder with unread entries' do
       feeds = @user.folder_feeds @folder
       feeds.count.should eq 1
       feeds.should include @feed1
-      feeds.should_not include @feed2
     end
 
     it 'returns all feeds in a folder' do
@@ -127,22 +136,17 @@ describe User do
       feeds.should include @feed2
     end
 
-    it 'does not return feed not in the folder when asked for feeds with unread entries' do
-      feed = FactoryGirl.create :feed
-      entry = FactoryGirl.build :entry, feed_id: feed.id
-      feed.entries << entry
-      @user.subscribe feed.fetch_url
-      feeds = @user.folder_feeds @folder, include_read: false
+    it 'returns feeds with unread entries which are not in any folder' do
+      feeds = @user.folder_feeds Folder::NO_FOLDER
       feeds.count.should eq 1
-      feeds.should_not include feed
+      feeds.should include @feed3
     end
 
-    it 'does not return feed not in the folder when asked for all feeds' do
-      feed = FactoryGirl.create :feed
-      @user.subscribe feed.fetch_url
-      feeds = @user.folder_feeds @folder, include_read: true
+    it 'returns all feeds which are not in any folder' do
+      feeds = @user.folder_feeds Folder::NO_FOLDER, include_read: true
       feeds.count.should eq 2
-      feeds.should_not include feed
+      feeds.should include @feed3
+      feeds.should include @feed4
     end
 
     it 'raises an error if user does not own the folder' do

@@ -5,27 +5,62 @@ class FolderManager
 
   ##
   # Returns feeds in the passed folder.
-  # The passed folder must be owned by the passed user, otherwise an error is raised
-  # If the include_read argument is true, all feeds in the folder will be returned. If it's false,
-  # only feeds with unread entries will be returned.
+  #
+  # Accepts as arguments:
+  # - The folder from which feeds must be retrieved. This argument can be:
+  #   - a Folder instance. Feeds in this folder will be returned. In this case folder must be owned by the passed user,
+  # otherwise an error is raised
+  #   - the special Folder::NO_FOLDER value. In this case feeds subscribed by the passed user which are not in any folder
+  # will be returned
+  # - The user for whom feeds will be retrieved.
+  # - include_read (optional). A boolean argument that defaults to false. If this argument is true, all feeds in the
+  # folder will be returned. If it's false, only feeds with unread entries will be returned.
+  #
   # The returned feeds are guaranteed to be subscribed by the passed user.
 
   def self.folder_feeds(folder, user, include_read: false)
-    # Validate that folder belongs to user
-    if !user.folders.include? folder
-      Rails.logger.error "User #{user.id} - #{user.email} tried to list feeds in folder #{folder.id} - #{folder.title} which he does not own"
-      raise FolderNotOwnedByUserError.new
-    end
+    if folder == Folder::NO_FOLDER
+      feeds = Feed.arel_table
+      folders = Folder.arel_table
+      feed_subscriptions = Arel::Table.new :feed_subscriptions
+      feeds_folders = Arel::Table.new :feeds_folders
 
-    if include_read
-      feeds = folder.feeds
+      feeds_in_folders_condition = feeds_folders.join(folders).on(folders[:id].eq(feeds_folders[:folder_id])).
+                                where(folders[:user_id].eq(user.id)).
+                                where(feeds_folders[:feed_id].eq(feeds[:id])).
+                              project(feeds_folders[Arel.star])
+
+      if include_read
+        subscribed_feeds_sql = feeds.join(feed_subscriptions).on(feeds[:id].eq(feed_subscriptions[:feed_id])).
+                                  where(feed_subscriptions[:user_id].eq(user.id)).
+                                project(feeds[Arel.star])
+      else
+        subscribed_feeds_sql = feeds.join(feed_subscriptions).on(feeds[:id].eq(feed_subscriptions[:feed_id])).
+                                  where(feed_subscriptions[:user_id].eq(user.id)).
+                                  where(feed_subscriptions[:unread_entries].gt(0)).
+                                project(feeds[Arel.star])
+      end
+
+      feeds_not_in_folders_sql = subscribed_feeds_sql.where(feeds_in_folders_condition.exists.not)
+
+      feeds_list = Feed.find_by_sql feeds_not_in_folders_sql.to_sql
     else
-      feeds = folder.feeds.joins(:feed_subscriptions)
-                        .where(feed_subscriptions: {user_id: user.id})
-                        .where('feed_subscriptions.unread_entries > 0')
+      # Validate that folder belongs to user
+      if !user.folders.include? folder
+        Rails.logger.error "User #{user.id} - #{user.email} tried to list feeds in folder #{folder.id} - #{folder.title} which he does not own"
+        raise FolderNotOwnedByUserError.new
+      end
+
+      if include_read
+        feeds_list = folder.feeds
+      else
+        feeds_list = folder.feeds.joins(:feed_subscriptions)
+        .where(feed_subscriptions: {user_id: user.id})
+        .where('feed_subscriptions.unread_entries > 0')
+      end
     end
 
-    return feeds
+    return feeds_list
   end
 
   ##
