@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<h1><%= t 'data_export_mailer.export_finished_error_email.header' %></h1>
+<p>
+  <%= t 'data_export_mailer.export_finished_error_email.body_1', name: @user.name %>
+</p>
+<p>
+  <%= t 'data_export_mailer.export_finished_error_email.body_2_html',
+        link: link_to(t('data_export_mailer.export_finished_error_email.try_again_link'), @url) %>
+</p>
+<p>
+  <%= t 'data_export_mailer.export_finished_error_email.body_3', webmaster_email: 'webmaster@feedbunch.com' %>
+</p>
+</body>
+</html>
