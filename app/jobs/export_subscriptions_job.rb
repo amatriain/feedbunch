@@ -31,10 +31,11 @@ class ExportSubscriptionsJob
     #end
 
     # Export and save the OPML file (actually XML)
-    OPMLExporter.export user
+    opml = OPMLExporter.export user
 
     # Send success notification email
-    DataExportMailer.export_finished_success_email(user).deliver
+    filename = OPMLExporter.user_filename user
+    DataExportMailer.export_finished_success_email(user, filename, opml).deliver
 
     # Update job state
     # TODO

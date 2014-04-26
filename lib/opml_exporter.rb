@@ -12,6 +12,8 @@ class OPMLExporter
   # - user doing the export.
   #
   # If successful, saves a file with the OPML export in the currently configured upload manager (Amazon S3 in production).
+  #
+  # Returns a string with the OPML.
 
   def self.export(user)
     # Compose the OPML file (actually XML)
@@ -47,6 +49,8 @@ class OPMLExporter
     self.delete_user_export user
     # Save the OPML file in permanent storage for later retrieval.
     Feedbunch::Application.config.uploads_manager.save filename, opml
+
+    return opml
   end
 
   ##
@@ -57,8 +61,6 @@ class OPMLExporter
     exists = Feedbunch::Application.config.uploads_manager.exists? filename
     Feedbunch::Application.config.uploads_manager.delete filename if exists
   end
-
-  private
 
   ##
   # Return the filename that will be used for the OPML export created by a user.

@@ -21,9 +21,9 @@ es:
       subject: "Tus suscripciones han sido exportadas por Feedbunch"
       header: "Tus suscripciones han sido exportadas por Feedbunch"
       body_1: "Hola, %{name}. Como pediste, tus suscripciones a feeds han sido exportadas en formato OPML por Feedbunch."
-      body_2: "El fichero de exportación contiene %{count_feeds} feeds y %{count_folders} carpetas."
-      body_3_html: "Ahora puedes descargar el fichero de exportación. %{link} (requiere autenticación)."
-      app_link: "Haz click aquí para ir a Feedbunch"
+      body_2: "%{count_feeds} feeds y %{count_folders} carpetas han sido exportados."
+      body_3_html: "El fichero de exportación está adjunto a este email. También puedes %{link} (requiere autenticación)."
+      app_link: "descargarlo desde Feedbunch"
       body_4: "Gracias por usar Feedbunch y que tengas un buen día!"
     export_finished_error_email:
       subject: "Ha habido un error exportando tus suscripciones en Feedbunch"
