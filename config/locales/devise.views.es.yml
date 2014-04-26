@@ -17,6 +17,8 @@ es:
       edit_account: "Mi cuenta"
       unconfirmed_email: "pendiente de confirmación para el email: %{email}"
       update_account: "Actualizar cuenta"
+      export_subscriptions: "Exportar suscripciones"
+      export_subscriptions_text: "Tus suscripciones a feeds pueden ser exportadas en formato OPML y más tarde importadas en otro agregador de feeds."
       cancel_account: "Cancelar cuenta"
       cancel_account_text: "¿Estás seguro de que quieres cancelar tu cuenta? ¡Esto borrará TODOS tus datos!"
       cancel_account_confirm: "¿Estás seguro?"

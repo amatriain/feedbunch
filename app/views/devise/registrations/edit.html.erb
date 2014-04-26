@@ -69,6 +69,27 @@
 
 <div class="row">
   <div class="col-xs-12 col-md-10 col-md-offset-1">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <span class="lead"><%= t 'devise.views.export_subscriptions' %></span>
+      </div>
+      <div class="row">
+        <div class="panel-body col-xs-12 col-sm-10 col-sm-offset-1">
+          <p><%= t 'devise.views.export_subscriptions_text' %></p>
+          <%= link_to profile_cancel_path(locale: I18n.locale),
+                      :data => { :confirm => t('devise.views.cancel_account_confirm') }, :method => :delete,
+                      class: 'btn btn-primary' do %>
+            <i class="fa fa-share-square-o"></i>
+            <%= t('devise.views.export_subscriptions') %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12 col-md-10 col-md-offset-1">
     <div class="panel panel-danger">
       <div class="panel-heading">
         <span class="lead"><%= t 'devise.views.cancel_account' %></span>

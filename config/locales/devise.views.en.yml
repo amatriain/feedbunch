@@ -17,6 +17,8 @@ en:
       edit_account: "My account"
       unconfirmed_email: "currently waiting confirmation for: %{email}"
       update_account: "Update account"
+      export_subscriptions: "Export subscriptions"
+      export_subscriptions_text: "Your feed subscriptions can be exported in OPML format and later imported into another feed aggregator."
       cancel_account: "Cancel account"
       cancel_account_text: "Are you sure you want to cancel your account? This will delete ALL your data!"
       cancel_account_confirm: "Are you sure?"
