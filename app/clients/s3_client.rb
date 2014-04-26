@@ -46,6 +46,23 @@ class S3Client
     return object_contents
   end
 
+  ##
+  # Returns a boolean: true if a file with the passed filename exists, false otherwise.
+  # The file is searched in the "uploads" folder under the Rails root.
+
+  def self.exists?(filename)
+    key = self.key filename
+    Rails.logger.info "checking if S3 object with key #{key} exists"
+    object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects[key]
+    exists = object.exists?
+    if exists
+      Rails.logger.info "S3 object with key #{key} exists"
+    else
+      Rails.logger.info "S3 object with key #{key} does not exist"
+    end
+    return exists
+  end
+
   private
 
   ##

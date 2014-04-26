@@ -56,6 +56,8 @@ require 'subscriptions_manager'
 # EntryState instances for its entries and for this user are deleted; the app does not store read/unread state for
 # entries that belong to feeds to which the user is not subscribed.
 #
+# Before destroying a user, any OPML files saved for him in permanent storage (Amazon S3) are deleted
+#
 # It is not mandatory that a user be suscribed to any feeds (in fact when a user first signs up he won't
 # have any suscriptions).
 
@@ -88,6 +90,7 @@ class User < ActiveRecord::Base
 
   before_save :before_save_user
   before_validation :default_values
+  before_destroy :before_destroy_user
 
   ##
   # Retrieves feeds subscribed by the user. See FeedsPagination#subscribed_feeds.
@@ -258,6 +261,13 @@ class User < ActiveRecord::Base
     if self.name.blank?
       self.name = self.email
     end
+  end
+
+  ##
+  # Before destroying a user, delete any OPML export files saved for him.
+
+  def before_destroy_user
+    OPMLExporter.delete_user_export self
   end
 
   ##

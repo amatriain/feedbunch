@@ -28,7 +28,7 @@ class ImportSubscriptionsJob
   def self.perform(filename, user_id)
     # Check if the user actually exists
     if !User.exists? user_id
-      Rails.logger.error "Trying to import OPML file #{filename} for non-existing user @#{user_id}"
+      Rails.logger.error "Trying to import OPML file #{filename} for non-existing user #{user_id}"
       return
     end
     user = User.find user_id

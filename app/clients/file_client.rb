@@ -10,8 +10,8 @@ class FileClient
   # File is saved in the "uploads" folder under the Rails root.
 
   def self.save(filename, content)
-    Rails.logger.info "Saving file #{filename} in uploads folder"
     filepath = self.filepath filename
+    Rails.logger.info "Saving file #{filepath}"
     File.open(filepath, 'w'){|file| file.write content}
   end
 
@@ -21,8 +21,8 @@ class FileClient
   # File is expected to be saved in the "uploads" folder under the Rails root.
 
   def self.delete(filename)
-    Rails.logger.info "deleting file #{filename} from uploads folder"
     filepath = self.filepath filename
+    Rails.logger.info "deleting file #{filepath}"
     File.delete filepath
   end
 
@@ -33,10 +33,26 @@ class FileClient
   # Returns the file contents if it exists, nil otherwise.
 
   def self.read(filename)
-    Rails.logger.info "reading file #{filename} from uploads folder"
     filepath = self.filepath filename
+    Rails.logger.info "reading file #{filepath}"
     contents = File.read filepath if FileTest.exists? filepath
     return contents
+  end
+
+  ##
+  # Returns a boolean: true if a file with the passed filename exists, false otherwise.
+  # The file is searched in the "uploads" folder under the Rails root.
+
+  def self.exists?(filename)
+    filepath = self.filepath filename
+    Rails.logger.info "searching for file #{filepath}"
+    exists = FileTest.exists? filepath
+    if exists
+      Rails.logger.info "#{filepath} exists"
+    else
+      Rails.logger.info "#{filepath} does not exist"
+    end
+    return exists
   end
 
   private

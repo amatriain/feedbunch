@@ -40,4 +40,13 @@ describe FileClient do
     expect {FileClient.delete @filename}.to raise_error(StandardError)
   end
 
+  it 'returns true if file exists' do
+    FileClient.save @filename, @file_content
+    FileClient.exists?(@filename).should be_true
+  end
+
+  it 'returns false if file does not exist' do
+    FileClient.exists?(@filename).should be_false
+  end
+
 end

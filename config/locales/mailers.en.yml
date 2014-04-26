@@ -17,3 +17,19 @@ en:
       body_3_html: "You are currently subscribed to %{count} feeds; to read them, just %{link}."
       app_link: "click here"
       body_4: "Thanks for using Feedbunch and have a great day!"
+  data_export_mailer:
+    export_finished_success_email:
+      subject: "Your feed subscriptions have been exported by Feedbunch"
+      header: "Your feed subscriptions have been exported by Feedbunch"
+      body_1: "Hello, %{name}. As you requested, your feed subscriptions have been exported in OPML format by Feedbunch."
+      body_2: "The export file contains %{count_feeds} feeds and %{count_folders} folders."
+      body_3_html: "You can now download the export file from Feedbunch. %{link} (requires authentication)."
+      app_link: "Click here to go to Feedbunch"
+      body_4: "Thanks for using Feedbunch and have a great day!"
+    export_finished_error_email:
+      subject: "There has been an error exporting your feed subscriptions from Feedbunch"
+      header: "There has been an error exporting your feed subscriptions from Feedbunch"
+      body_1: "We're sorry %{name}, but unfortunately we haven't been able to export your subscriptions from Feedbunch."
+      body_2_html: "It may be a temporary error. Please wait a few minutes and %{link} to try again."
+      try_again_link: "go to Feedbunch"
+      body_3: "If the error persists, please contact us. You can write us at %{webmaster_email}, please do not respond this email."

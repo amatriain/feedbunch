@@ -43,4 +43,15 @@ describe S3Client do
     expect {S3Client.delete @filename}.to raise_error(AWS::Errors::Base, error_message)
   end
 
+  it 'returns true if file exists' do
+    exists = S3Client.exists? @filename
+    exists.should be_true
+  end
+
+  it 'returns false if file does not exist' do
+    @s3_object_mock.stub(:exists?).and_return false
+    exists = S3Client.exists? @filename
+    exists.should be_false
+  end
+
 end
