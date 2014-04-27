@@ -6,6 +6,16 @@ require 'nokogiri'
 class OPMLExporter
 
   ##
+  # Enqueue a background job to export a user's subscriptions in OPML format.
+  # Receives as argument the user who is doing the export.
+
+  def self.enqueue_export_job(user)
+    Rails.logger.info "Enqueuing export subscriptions job for user #{user.email} - #{user.name}"
+    Resque.enqueue ExportSubscriptionsJob, user.id
+    return nil
+  end
+
+  ##
   # Export a user's subscriptions in OPML format
   #
   # Receives as arguments:

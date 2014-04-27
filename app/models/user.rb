@@ -200,6 +200,14 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Export an OPML file with the user's subscriptions.
+  # See OPMLExporter#enqueue_export_job
+
+  def export_subscriptions
+    OPMLExporter.enqueue_export_job self
+  end
+
+  ##
   # Change the visibility of the alert related to the OPML import state.
   # Receives a boolean argument and sets the alert to visible (if true) or hidden (if false).
 

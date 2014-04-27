@@ -12,5 +12,7 @@ class Api::UserDataController < ApplicationController
 
   def show
     render 'show', locals: {user: current_user}
+  rescue => e
+    handle_error e
   end
 end

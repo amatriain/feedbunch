@@ -34,6 +34,8 @@ class Api::DataImportsController < ApplicationController
     current_user.import_subscriptions file.tempfile
   rescue => e
     Rails.logger.error "Error importing OPML for user #{current_user.id} - #{current_user.email}"
+    Rails.logger.error error.message
+    Rails.logger.error error.backtrace
     data_import = current_user.create_data_import state: DataImport::ERROR
   ensure
     redirect_to read_path
