@@ -72,7 +72,7 @@ class SubscribeUserJob
 
     # Set job state to "SUCCESS" and save the id of the actually subscribed feed
     job_state.update state: SubscribeJobState::SUCCESS, feed_id: feed.id if job_state.present?
-  rescue RestClient::Exception, SocketError, Errno::ETIMEDOUT, AlreadySubscribedError, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError, ImportDataError => e
+  rescue RestClient::Exception, SocketError, Errno::ETIMEDOUT, AlreadySubscribedError, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError, OpmlImportError => e
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
     Rails.logger.error e.message
     Rails.logger.error e.backtrace

@@ -16,7 +16,7 @@ class OPMLImporter
   #
   # Optionally the file can be a zip archive; this is the format one gets when exporting from Google.
   #
-  # If any error is raised during importing, this method raises an ImportDataError, to ensure that the user is
+  # If any error is raised during importing, this method raises an OpmlImportError, to ensure that the user is
   # always redirected to the start page, instead of being left at a blank HTTP 500 page.
 
   def self.enqueue_import_job(file, user)
@@ -36,7 +36,7 @@ class OPMLImporter
     Rails.logger.error e.backtrace
     opml_import_job_state.state = OpmlImportJobState::ERROR
     opml_import_job_state.save
-    raise ImportDataError.new
+    raise OpmlImportError.new
   end
 
   ##
@@ -53,7 +53,7 @@ class OPMLImporter
     xml_contents = Feedbunch::Application.config.uploads_manager.read filename
     if xml_contents == nil
       Rails.logger.error "Trying to import for user #{user.id} from non-existing OPML file: #{filename}"
-      raise ImportDataError.new
+      raise OpmlImportError.new
     end
 
     # Parse OPML file (it's actually XML)
@@ -69,7 +69,7 @@ class OPMLImporter
     # Check that the file was actually an OPML file with feeds
     if total_feeds == 0
       Rails.logger.error "Trying to import for user #{user.id} from OPML file: #{filename} but file contains no feeds"
-      raise ImportDataError.new
+      raise OpmlImportError.new
     end
     # Update total number of feeds, so user can see progress.
     user.opml_import_job_state.update total_feeds: total_feeds
@@ -111,7 +111,7 @@ class OPMLImporter
   # The first matching file found will be read and returned. Files will be found even
   # if they are inside a folder (or several levels of folders).
   #
-  # If no matching file is found inside the zip, an ImportDataError will be raised.
+  # If no matching file is found inside the zip, an OpmlImportError will be raised.
 
   def self.read_data_file(file)
     begin
@@ -125,7 +125,7 @@ class OPMLImporter
 
       if file_contents.blank?
         Rails.logger.warn 'Could not find OPML file in uploaded data file'
-        raise ImportDataError.new
+        raise OpmlImportError.new
       end
     rescue Zip::Error => e
       # file is not a zip, read it normally

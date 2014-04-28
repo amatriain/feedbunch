@@ -19,7 +19,7 @@
         </div>
         <hr>
 
-        <%= simple_form_for :opml_import_job_state, url: api_data_imports_path, multipart: true,
+        <%= simple_form_for :opml_import, url: api_data_imports_path, multipart: true,
                             html: {:method => :post, id: 'form-opml-import'} do |f| %>
           <%= f.input :file, as: :file, required: false %>
           <div class="modal-footer">

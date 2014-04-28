@@ -2,5 +2,5 @@
 #
 # It inherits from StandardError, implements no new methods or attributes.
 
-class ImportDataError < StandardError
+class OpmlImportError < StandardError
 end

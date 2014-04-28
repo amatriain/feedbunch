@@ -62,7 +62,7 @@ class ApplicationController < ActionController::Base
     elsif error.is_a? FolderNotOwnedByUserError
       # If user tries an operation on a folder he doesn't own, return 404
       head status: 404
-    elsif error.is_a? ImportDataError
+    elsif error.is_a? OpmlImportError
       # If an error happens when importing subscription data, redirect to main application page
       redirect_to read_path
     else

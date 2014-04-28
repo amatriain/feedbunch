@@ -30,7 +30,7 @@ class Api::OpmlImportsController < ApplicationController
   # to the feeds there.
 
   def create
-    file = opml_import_job_state_params[:file]
+    file = opml_import_params[:file]
     current_user.import_subscriptions file.tempfile
   rescue => e
     Rails.logger.error "Error importing OPML for user #{current_user.id} - #{current_user.email}"
@@ -50,7 +50,7 @@ class Api::OpmlImportsController < ApplicationController
     # Only if the string "false" is sent, set visibility to false. If anything else
     # is sent in the :show_alert request parameter, set visibility to true. This is the
     # safest default.
-    if opml_import_job_state_params[:show_alert]=='false'
+    if opml_import_params[:show_alert]=='false'
       show_alert = false
     else
       show_alert = true
@@ -63,8 +63,8 @@ class Api::OpmlImportsController < ApplicationController
 
   private
 
-  def opml_import_job_state_params
-    params.require(:opml_import_job_state).permit(:file, :show_alert)
+  def opml_import_params
+    params.require(:opml_import).permit(:file, :show_alert)
   end
 
 end

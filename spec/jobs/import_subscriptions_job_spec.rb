@@ -33,7 +33,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'sets data import state to ERROR if the file does not exist' do
-    expect {ImportSubscriptionsJob.perform 'not.a.real.file', @user.id}.to raise_error ImportDataError
+    expect {ImportSubscriptionsJob.perform 'not.a.real.file', @user.id}.to raise_error OpmlImportError
     @user.reload
     @user.opml_import_job_state.state.should eq OpmlImportJobState::ERROR
   end
@@ -51,7 +51,7 @@ describe ImportSubscriptionsJob do
     not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
     file_contents = File.read not_valid_opml_filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
-    expect {ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id}.to raise_error ImportDataError
+    expect {ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id}.to raise_error OpmlImportError
     @user.reload
     @user.opml_import_job_state.state.should eq OpmlImportJobState::ERROR
   end
@@ -186,7 +186,7 @@ describe ImportSubscriptionsJob do
       not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
       file_contents = File.read not_valid_opml_filename
       Feedbunch::Application.config.uploads_manager.stub read: file_contents
-      expect {ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id}.to raise_error ImportDataError
+      expect {ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id}.to raise_error OpmlImportError
       mail_should_be_sent to: @user.email, text: 'There has been an error importing your feed subscriptions into Feedbunch'
     end
   end
