@@ -69,8 +69,8 @@ describe 'import subscriptions' do
       User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
 
       find('a#start-opml-import').click
-      page.should have_css '#opml_import_job_state_file'
-      attach_file 'opml_import_job_state_file', @data_file
+      page.should have_css '#opml_import_file'
+      attach_file 'opml_import_file', @data_file
       find('#opml-import-submit').click
 
       current_path.should eq read_path
@@ -81,8 +81,8 @@ describe 'import subscriptions' do
 
     before :each do
       find('a#start-opml-import').click
-      page.should have_css '#opml_import_job_state_file'
-      attach_file 'opml_import_job_state_file', @data_file
+      page.should have_css '#opml_import_file'
+      attach_file 'opml_import_file', @data_file
       find('#opml-import-submit').click
       page.should have_text 'Your feed subscriptions are being imported'
     end
