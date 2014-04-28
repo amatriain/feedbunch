@@ -35,7 +35,7 @@ class ExportSubscriptionsJob
 
     # Send success notification email
     filename = OPMLExporter.user_filename user
-    DataExportMailer.export_finished_success_email(user, filename, opml).deliver
+    OpmlExportMailer.export_finished_success_email(user, filename, opml).deliver
 
     # Update job state
     # TODO
@@ -45,7 +45,7 @@ class ExportSubscriptionsJob
     Rails.logger.error e.backtrace
 
     # Send error notification email
-    DataExportMailer.export_finished_error_email(user).deliver
+    OpmlExportMailer.export_finished_error_email(user).deliver
 
     # Update job state
     #self.import_state_error user

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<h1><%= t 'opml_export_mailer.export_finished_success_email.header' %></h1>
+<p>
+  <%= t 'opml_export_mailer.export_finished_success_email.body_1', name: @user.name %>
+</p>
+<p>
+  <%= t 'opml_export_mailer.export_finished_success_email.body_2',
+        count_feeds: @user.feeds.count, count_folders: @user.folders.count %>
+</p>
+<p>
+  <%= t 'opml_export_mailer.export_finished_success_email.body_3_html',
+        link: link_to(t('opml_export_mailer.export_finished_success_email.app_link'), @url) %>
+</p>
+<p><%= t 'opml_export_mailer.export_finished_success_email.body_4' %></p>
+</body>
+</html>

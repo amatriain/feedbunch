@@ -16,7 +16,7 @@ es:
       body_3_html: "Actualmente estás suscrito a %{count} feeds; para leerlos, simplemente %{link}."
       app_link: "haz click aquí"
       body_4: "Gracias por usar Feedbunch y que tengas un buen día!"
-  data_export_mailer:
+  opml_export_mailer:
     export_finished_success_email:
       subject: "Tus suscripciones han sido exportadas por Feedbunch"
       header: "Tus suscripciones han sido exportadas por Feedbunch"

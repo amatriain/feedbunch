@@ -1,4 +1,4 @@
-class DataExportMailer < ActionMailer::Base
+class OpmlExportMailer < ActionMailer::Base
   default from: 'info@feedbunch.com'
 
   ##

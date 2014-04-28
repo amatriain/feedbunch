@@ -76,7 +76,7 @@
       <div class="row">
         <div class="panel-body col-xs-12 col-sm-10 col-sm-offset-1">
           <p><%= t 'devise.views.export_subscriptions_text' %></p>
-          <%= link_to api_data_exports_path(locale: I18n.locale),
+          <%= link_to api_opml_exports_path(locale: I18n.locale),
                       :method => :post,
                       class: 'btn btn-primary' do %>
             <i class="fa fa-share-square-o"></i>

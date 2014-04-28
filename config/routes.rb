@@ -120,7 +120,7 @@ Feedbunch::Application.routes.draw do
     resource :opml_imports, only: [:show, :create, :update]
 
     # Resourceful routes for subscriptions export process state
-    resource :data_exports, only: [:create]
+    resource :opml_exports, only: [:create]
 
     # Resourceful routes for user config
     resource :user_config, only: [:show]

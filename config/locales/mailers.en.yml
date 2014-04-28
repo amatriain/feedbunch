@@ -17,7 +17,7 @@ en:
       body_3_html: "You are currently subscribed to %{count} feeds; to read them, just %{link}."
       app_link: "click here"
       body_4: "Thanks for using Feedbunch and have a great day!"
-  data_export_mailer:
+  opml_export_mailer:
     export_finished_success_email:
       subject: "Your feed subscriptions have been exported by Feedbunch"
       header: "Your feed subscriptions have been exported by Feedbunch"
