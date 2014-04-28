@@ -1,4 +1,4 @@
-class DataImportMailer < ActionMailer::Base
+class OpmlImportMailer < ActionMailer::Base
   default from: 'info@feedbunch.com'
 
   ##

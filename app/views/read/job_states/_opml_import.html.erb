@@ -17,8 +17,8 @@
 
       <div class="col-xs-9 col-sm-10">
 
-        <p><%= t 'read.job_states.data_import.error' %></p>
-        <p><a class="alert-link" data-toggle="modal" data-target="#opml-import-popup"><%= t 'read.job_states.data_import.retry_error_1' %></a> <%= t 'read.job_states.data_import.retry_error_2' %></p>
+        <p><%= t 'read.job_states.opml_import.error' %></p>
+        <p><a class="alert-link" data-toggle="modal" data-target="#opml-import-popup"><%= t 'read.job_states.opml_import.retry_error_1' %></a> <%= t 'read.job_states.opml_import.retry_error_2' %></p>
 
       </div>
     </div>
@@ -36,16 +36,16 @@
 
       <div class="col-xs-9 col-sm-10">
 
-        <p><%= t 'read.job_states.data_import.import_running' %></p>
+        <p><%= t 'read.job_states.opml_import.import_running' %></p>
         <p>
-          <%= t 'read.job_states.data_import.progress' %>
+          <%= t 'read.job_states.opml_import.progress' %>
         </p>
         <div class="progress progress-striped active">
           <div class="progress-bar" style="width: {{100 * import_processed / import_total}}%;">
             <span class="sr-only">{{100 * import_processed / import_total}}%</span>
           </div>
         </div>
-        <p><%= t 'read.job_states.data_import.import_background' %></p>
+        <p><%= t 'read.job_states.opml_import.import_background' %></p>
 
       </div>
     </div>
@@ -73,8 +73,8 @@
 
       <div class="col-xs-9 col-sm-10">
 
-        <p><%= t 'read.job_states.data_import.success' %></p>
-        <p><a class="alert-link" data-toggle="modal" data-target="#opml-import-popup"><%= t 'read.job_states.data_import.retry_success_1' %></a> <%= t 'read.job_states.data_import.retry_success_2' %></p>
+        <p><%= t 'read.job_states.opml_import.success' %></p>
+        <p><a class="alert-link" data-toggle="modal" data-target="#opml-import-popup"><%= t 'read.job_states.opml_import.retry_success_1' %></a> <%= t 'read.job_states.opml_import.retry_success_2' %></p>
 
       </div>
     </div>
@@ -104,18 +104,18 @@
 
       <div class="col-xs-9 col-sm-10">
 
-        <p><%= t 'read.job_states.data_import.introduction' %></p>
+        <p><%= t 'read.job_states.opml_import.introduction' %></p>
         <ol class="start-list icons-ul">
           <li>
             <i class="fa fa-angle-right"></i>
-            <%= t 'read.job_states.data_import.download_data_html' %>
+            <%= t 'read.job_states.opml_import.download_data_html' %>
           </li>
           <li>
             <i class="fa fa-angle-right"></i>
             <a id="start-opml-import"
                class="alert-link"
                data-toggle="modal"
-               data-target="#opml-import-popup"><%= t 'read.job_states.data_import.import_data_1' %></a><%= t 'read.job_states.data_import.import_data_2' %>
+               data-target="#opml-import-popup"><%= t 'read.job_states.opml_import.import_data_1' %></a><%= t 'read.job_states.opml_import.import_data_2' %>
           </li>
         </ol>
 

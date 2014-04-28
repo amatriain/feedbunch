@@ -1,6 +1,6 @@
 # I18n strings for mailers
 en:
-  data_import_mailer:
+  opml_import_mailer:
     import_finished_success_email:
       subject: "Your feed subscriptions have been imported into Feedbunch"
       header: "Your feed subscriptions have been imported into Feedbunch"

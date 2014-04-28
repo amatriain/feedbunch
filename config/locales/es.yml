@@ -75,7 +75,7 @@ es:
       problem_loading_job_states: "Ha habido un problema con el servidor."
       success_refresh_feed: "Feed actualizado con éxito."
       problem_refreshing: "Ha habido un error actualizando un feed."
-      data_import:
+      opml_import:
         finish_success: "Tus suscripciones a feeds han sido importadas con éxito."
         finish_error: "Ha habido un error intentando importar tus suscripciones a feeds."
     sidebar:
@@ -96,7 +96,7 @@ es:
         submit: "Sí, anular suscripción"
     job_states:
       dismiss: "Cerrar"
-      data_import:
+      opml_import:
         error: "Ha habido un error intentando importar tus suscripciones a feeds."
         retry_error_1: "Haz click aquí"
         retry_error_2: " para volverlo a intentar."

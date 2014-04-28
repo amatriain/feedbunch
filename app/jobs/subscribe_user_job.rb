@@ -103,7 +103,7 @@ class SubscribeUserJob
       user.opml_import_job_state.state = OpmlImportJobState::SUCCESS
       user.opml_import_job_state.save
       Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
-      DataImportMailer.import_finished_success_email(user).deliver
+      OpmlImportMailer.import_finished_success_email(user).deliver
     end
   end
 

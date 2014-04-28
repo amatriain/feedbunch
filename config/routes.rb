@@ -117,7 +117,7 @@ Feedbunch::Application.routes.draw do
     end
 
     # Resourceful routes for subscriptions import process state
-    resource :data_imports, only: [:show, :create, :update]
+    resource :opml_imports, only: [:show, :create, :update]
 
     # Resourceful routes for subscriptions export process state
     resource :data_exports, only: [:create]

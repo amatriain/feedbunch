@@ -22,7 +22,7 @@ angular.module('feedbunch').service 'importStateSvc',
   #---------------------------------------------
   load_import_state = (show_alerts)->
     now = new Date()
-    $http.get("/api/data_imports.json?time=#{now.getTime()}")
+    $http.get("/api/opml_imports.json?time=#{now.getTime()}")
     .success (data)->
       $rootScope.show_import_alert = data["show_alert"]
       $rootScope.import_state = data["state"]
@@ -52,7 +52,7 @@ angular.module('feedbunch').service 'importStateSvc',
     #---------------------------------------------
     hide_alert: ->
       $rootScope.show_import_alert = false
-      $http.put("/api/data_imports.json", opml_import_job_state: {show_alert: 'false'})
+      $http.put("/api/opml_imports.json", opml_import_job_state: {show_alert: 'false'})
 
   return service
 ]

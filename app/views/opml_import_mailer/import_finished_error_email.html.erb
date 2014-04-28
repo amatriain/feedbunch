@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<h1><%= t 'opml_import_mailer.import_finished_error_email.header' %></h1>
+<p>
+  <%= t 'opml_import_mailer.import_finished_error_email.body_1', name: @user.name %>
+</p>
+<p>
+  <%= t 'opml_import_mailer.import_finished_error_email.body_2_html',
+        link: link_to(t('opml_import_mailer.import_finished_error_email.try_again_link'), @url) %>
+</p>
+<p>
+  <%= t 'opml_import_mailer.import_finished_error_email.body_3_html',
+        count: @user.feeds.count,
+        link: link_to(t('opml_import_mailer.import_finished_error_email.app_link'), @url) %>
+</p>
+<p><%= t 'opml_import_mailer.import_finished_error_email.body_4' %></p>
+</body>
+</html>

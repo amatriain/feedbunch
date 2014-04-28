@@ -1,5 +1,5 @@
 es:
-  data_import_mailer:
+  opml_import_mailer:
     import_finished_success_email:
       subject: "Tus suscripciones han sido importadas en Feedbunch"
       header: "Tus suscripciones han sido importadas en Feedbunch"

@@ -61,7 +61,7 @@ class ImportSubscriptionsJob
     user.opml_import_job_state.state = OpmlImportJobState::ERROR
     user.opml_import_job_state.save
     Rails.logger.info "Sending data import error email to user #{user.id} - #{user.email}"
-    DataImportMailer.import_finished_error_email(user).deliver
+    OpmlImportMailer.import_finished_error_email(user).deliver
   end
 
 end
