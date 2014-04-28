@@ -375,7 +375,7 @@ def go_to_start_page
 end
 
 ##
-# Click on the "close" button of the currently displayed data-import alert
+# Click on the "close" button of the currently displayed opml-import alert
 
 def close_import_alert
   find('#start-info #import-process-state button.close', visible: true).click
