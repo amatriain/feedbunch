@@ -22,5 +22,5 @@ $(document).ready ->
   # Give focus to the cancel button field when showing the "Import subscriptions" modal.
   #-------------------------------------------------------
 
-  $("body").on "shown.bs.modal", "#data-import-popup",  ->
-    $("#data-import-cancel", this).focus()
+  $("body").on "shown.bs.modal", "#opml-import-popup",  ->
+    $("#opml-import-cancel", this).focus()

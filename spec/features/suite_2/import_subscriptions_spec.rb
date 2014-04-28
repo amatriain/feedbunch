@@ -23,8 +23,8 @@ describe 'import subscriptions' do
   end
 
   it 'shows file upload popup', js: true do
-    find('a#start-data-import').click
-    page.should have_css '#data-import-popup', visible: true
+    find('a#start-opml-import').click
+    page.should have_css '#opml-import-popup', visible: true
   end
 
   context 'upload link in dropdown' do
@@ -34,7 +34,7 @@ describe 'import subscriptions' do
     end
 
     it 'show link if the user has never run an import', js: true do
-      page.should have_css '.navbar a#nav-data-import', visible: true
+      page.should have_css '.navbar a#nav-opml-import', visible: true
     end
 
     it 'shows link if user has an errored import', js: true do
@@ -42,7 +42,7 @@ describe 'import subscriptions' do
       @user.opml_import_job_state = opml_import_job_state
       visit read_path
       open_user_menu
-      page.should have_css '.navbar a#nav-data-import', visible: true
+      page.should have_css '.navbar a#nav-opml-import', visible: true
     end
 
     it 'does not show link if user has a running import', js: true do
@@ -50,7 +50,7 @@ describe 'import subscriptions' do
       @user.opml_import_job_state = opml_import_job_state
       visit read_path
       open_user_menu
-      page.should_not have_css '.navbar a#nav-data-import', visible: true
+      page.should_not have_css '.navbar a#nav-opml-import', visible: true
     end
 
     it 'shows link if user has a successful import', js: true do
@@ -58,7 +58,7 @@ describe 'import subscriptions' do
       @user.opml_import_job_state = opml_import_job_state
       visit read_path
       open_user_menu
-      page.should have_css '.navbar a#nav-data-import', visible: true
+      page.should have_css '.navbar a#nav-opml-import', visible: true
     end
 
   end
@@ -68,10 +68,10 @@ describe 'import subscriptions' do
     it 'redirects to start page if there is an error submitting the form', js: true do
       User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
 
-      find('a#start-data-import').click
+      find('a#start-opml-import').click
       page.should have_css '#opml_import_job_state_file'
       attach_file 'opml_import_job_state_file', @data_file
-      find('#data-import-submit').click
+      find('#opml-import-submit').click
 
       current_path.should eq read_path
     end
@@ -80,10 +80,10 @@ describe 'import subscriptions' do
   context 'user uploads file' do
 
     before :each do
-      find('a#start-data-import').click
+      find('a#start-opml-import').click
       page.should have_css '#opml_import_job_state_file'
       attach_file 'opml_import_job_state_file', @data_file
-      find('#data-import-submit').click
+      find('#opml-import-submit').click
       page.should have_text 'Your feed subscriptions are being imported'
     end
 

@@ -1,4 +1,4 @@
-<div id="data-import-popup" class="modal fade">
+<div id="opml-import-popup" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -23,8 +23,8 @@
                             html: {:method => :post, id: 'form-opml-import'} do |f| %>
           <%= f.input :file, as: :file, required: false %>
           <div class="modal-footer">
-            <button id="data-import-cancel" class="btn btn-default" data-dismiss="modal" ><%= t 'layouts.popups.import_subscriptions.close' %></button>
-            <button id="data-import-submit" class="btn btn-primary"><%= t 'layouts.popups.import_subscriptions.submit' %></button>
+            <button id="opml-import-cancel" class="btn btn-default" data-dismiss="modal" ><%= t 'layouts.popups.import_subscriptions.close' %></button>
+            <button id="opml-import-submit" class="btn btn-primary"><%= t 'layouts.popups.import_subscriptions.submit' %></button>
           </div>
         <% end %>
 
