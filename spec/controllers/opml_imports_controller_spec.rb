@@ -50,7 +50,7 @@ describe Api::OpmlImportsController do
     end
 
     it 'returns success' do
-      put :update, opml_import_job_state: {id: @user.opml_import_job_state.id, show_alert: 'false'}, format: :json
+      put :update, opml_import: {id: @user.opml_import_job_state.id, show_alert: 'false'}, format: :json
       response.should be_success
     end
 
