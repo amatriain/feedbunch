@@ -133,25 +133,25 @@ describe User do
 
   end
 
-  context 'relationship with data_imports' do
+  context 'relationship with opml_import_job_states' do
 
     before :each do
-      @data_import = FactoryGirl.build :opml_import_job_state, user_id: @user.id
-      @user.data_import = @data_import
+      @opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id
+      @user.opml_import_job_state = @opml_import_job_state
     end
 
-    it 'deletes data_imports when deleting a user' do
+    it 'deletes opml_import_job_states when deleting a user' do
       OpmlImportJobState.count.should eq 1
       @user.destroy
       OpmlImportJobState.count.should eq 0
     end
 
-    it 'deletes the old data_import when adding a new one for a user' do
-      OpmlImportJobState.exists?(@data_import).should be_true
-      data_import2 = FactoryGirl.build :opml_import_job_state, user_id: @user.id
-      @user.data_import = data_import2
+    it 'deletes the old opml_import_job_state when adding a new one for a user' do
+      OpmlImportJobState.exists?(@opml_import_job_state).should be_true
+      opml_import_job_state2 = FactoryGirl.build :opml_import_job_state, user_id: @user.id
+      @user.opml_import_job_state = opml_import_job_state2
 
-      OpmlImportJobState.exists?(@data_import).should be_false
+      OpmlImportJobState.exists?(@opml_import_job_state).should be_false
     end
   end
 

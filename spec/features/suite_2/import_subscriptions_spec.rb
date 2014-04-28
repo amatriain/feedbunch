@@ -17,7 +17,7 @@ describe 'import subscriptions' do
 
   after :each do
     # Close the browser as soon as test is finished. Otherwise the javascript running in the client sometimes
-    # tries to retrieve JSON (e.g. data_imports) while test cleanup is happening, which sometimes gives weird
+    # tries to retrieve JSON (e.g. opml_import_job_states) while test cleanup is happening, which sometimes gives weird
     # errors (because a model instance has been deleted right in the middle of a controller action processing).
     page.execute_script "window.close();"
   end
@@ -38,24 +38,24 @@ describe 'import subscriptions' do
     end
 
     it 'shows link if user has an errored import', js: true do
-      data_import = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::ERROR
-      @user.data_import = data_import
+      opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::ERROR
+      @user.opml_import_job_state = opml_import_job_state
       visit read_path
       open_user_menu
       page.should have_css '.navbar a#nav-data-import', visible: true
     end
 
     it 'does not show link if user has a running import', js: true do
-      data_import = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING
-      @user.data_import = data_import
+      opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING
+      @user.opml_import_job_state = opml_import_job_state
       visit read_path
       open_user_menu
       page.should_not have_css '.navbar a#nav-data-import', visible: true
     end
 
     it 'shows link if user has a successful import', js: true do
-      data_import = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::SUCCESS
-      @user.data_import = data_import
+      opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::SUCCESS
+      @user.opml_import_job_state = opml_import_job_state
       visit read_path
       open_user_menu
       page.should have_css '.navbar a#nav-data-import', visible: true
@@ -69,8 +69,8 @@ describe 'import subscriptions' do
       User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
 
       find('a#start-data-import').click
-      page.should have_css '#data_import_file'
-      attach_file 'data_import_file', @data_file
+      page.should have_css '#opml_import_job_state_file'
+      attach_file 'opml_import_job_state_file', @data_file
       find('#data-import-submit').click
 
       current_path.should eq read_path
@@ -81,8 +81,8 @@ describe 'import subscriptions' do
 
     before :each do
       find('a#start-data-import').click
-      page.should have_css '#data_import_file'
-      attach_file 'data_import_file', @data_file
+      page.should have_css '#opml_import_job_state_file'
+      attach_file 'opml_import_job_state_file', @data_file
       find('#data-import-submit').click
       page.should have_text 'Your feed subscriptions are being imported'
     end
@@ -98,14 +98,14 @@ describe 'import subscriptions' do
     end
 
     it 'shows error message', js: true do
-      @user.reload.data_import.update! state: OpmlImportJobState::ERROR
+      @user.reload.opml_import_job_state.update! state: OpmlImportJobState::ERROR
 
       visit current_path
       page.should have_content 'There\'s been an error trying to import your feed subscriptions'
     end
 
     it 'shows success message', js: true do
-      @user.reload.data_import.update! state: OpmlImportJobState::SUCCESS
+      @user.reload.opml_import_job_state.update! state: OpmlImportJobState::SUCCESS
 
       visit read_path
       page.should have_content 'Your feed subscriptions have been successfully imported'
@@ -113,22 +113,22 @@ describe 'import subscriptions' do
 
     it 'shows import process progress', js: true do
       page.should have_content 'Your feed subscriptions are being imported'
-      data_import = @user.reload.data_import
-      data_import.update total_feeds: 412
-      data_import.update processed_feeds: 77
+      opml_import_job_state = @user.reload.opml_import_job_state
+      opml_import_job_state.update total_feeds: 412
+      opml_import_job_state.update processed_feeds: 77
       page.should have_content 'Subscriptions imported: 77 of 412'
     end
 
     it 'changes message when import finishes successfully', js: true do
-      data_import = @user.reload.data_import
-      data_import.update state: OpmlImportJobState::SUCCESS
+      opml_import_job_state = @user.reload.opml_import_job_state
+      opml_import_job_state.update state: OpmlImportJobState::SUCCESS
       page.should have_content 'Your feed subscriptions have been successfully imported'
     end
 
     it 'shows alert when import finishes successfully', js: true do
       read_feed @feed, @user
-      data_import = @user.reload.data_import
-      data_import.update state: OpmlImportJobState::SUCCESS
+      opml_import_job_state = @user.reload.opml_import_job_state
+      opml_import_job_state.update state: OpmlImportJobState::SUCCESS
       should_show_alert 'import-process-success'
     end
 
@@ -141,8 +141,8 @@ describe 'import subscriptions' do
       feed.entries << entry
       @user.subscribe feed.fetch_url
       folder.feeds << feed
-      data_import = @user.reload.data_import
-      data_import.update state: OpmlImportJobState::SUCCESS
+      opml_import_job_state = @user.reload.opml_import_job_state
+      opml_import_job_state.update state: OpmlImportJobState::SUCCESS
       within '#sidebar #folders-list' do
         page.should have_css "#folder-#{folder.id}"
       end
@@ -152,14 +152,14 @@ describe 'import subscriptions' do
     end
 
     it 'changes message when import finishes with an error', js: true do
-      data_import = @user.reload.data_import
-      data_import.update state: OpmlImportJobState::ERROR
+      opml_import_job_state = @user.reload.opml_import_job_state
+      opml_import_job_state.update state: OpmlImportJobState::ERROR
       page.should have_content 'There\'s been an error trying to import your feed subscriptions'
     end
 
     it 'shows alert when import finishes with an error', js: true do
-      data_import = @user.reload.data_import
-      data_import.update state: OpmlImportJobState::ERROR
+      opml_import_job_state = @user.reload.opml_import_job_state
+      opml_import_job_state.update state: OpmlImportJobState::ERROR
       should_show_alert 'import-process-error'
     end
   end
@@ -179,7 +179,7 @@ describe 'import subscriptions' do
     end
 
     it 'hides import data alert when the import finished with an error', js: true do
-      @user.reload.data_import.update state: OpmlImportJobState::ERROR
+      @user.reload.opml_import_job_state.update state: OpmlImportJobState::ERROR
       visit read_path
       page.should have_content 'There\'s been an error trying to import your feed subscriptions'
       close_import_alert
@@ -193,7 +193,7 @@ describe 'import subscriptions' do
     end
 
     it 'hides import data alert when the import finished successfully', js: true do
-      @user.reload.data_import.update state: OpmlImportJobState::SUCCESS
+      @user.reload.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
       visit read_path
       page.should have_content 'Your feed subscriptions have been successfully imported'
       close_import_alert
@@ -207,7 +207,7 @@ describe 'import subscriptions' do
     end
 
     it 'cannot hide import data alert while the import is running', js: true do
-      @user.reload.data_import.update state: OpmlImportJobState::RUNNING
+      @user.reload.opml_import_job_state.update state: OpmlImportJobState::RUNNING
       visit read_path
       page.should have_content 'Your feed subscriptions are being imported'
       page.should_not have_css '#start-info #import-process-state button.close', visible: true

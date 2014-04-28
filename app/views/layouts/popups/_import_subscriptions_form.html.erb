@@ -19,8 +19,8 @@
         </div>
         <hr>
 
-        <%= simple_form_for :data_import, url: api_data_imports_path, multipart: true,
-                            html: {:method => :post, id: 'form-data-import'} do |f| %>
+        <%= simple_form_for :opml_import_job_state, url: api_data_imports_path, multipart: true,
+                            html: {:method => :post, id: 'form-opml-import'} do |f| %>
           <%= f.input :file, as: :file, required: false %>
           <div class="modal-footer">
             <button id="data-import-cancel" class="btn btn-default" data-dismiss="modal" ><%= t 'layouts.popups.import_subscriptions.close' %></button>

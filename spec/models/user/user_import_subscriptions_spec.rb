@@ -20,22 +20,22 @@ describe User do
       @filename = "#{timestamp}.opml"
     end
 
-    it 'has a data_import with state NONE as soon as the user is created' do
-      @user.data_import.should be_present
-      @user.data_import.state.should eq OpmlImportJobState::NONE
+    it 'has a opml_import_job_state with state NONE as soon as the user is created' do
+      @user.opml_import_job_state.should be_present
+      @user.opml_import_job_state.state.should eq OpmlImportJobState::NONE
     end
 
-    it 'creates a new data_import with state RUNNING for the user' do
+    it 'creates a new opml_import_job_state with state RUNNING for the user' do
       @user.import_subscriptions @data_file
-      @user.data_import.should be_present
-      @user.data_import.state.should eq OpmlImportJobState::RUNNING
+      @user.opml_import_job_state.should be_present
+      @user.opml_import_job_state.state.should eq OpmlImportJobState::RUNNING
     end
 
-    it 'sets data_import state as ERROR if an error is raised' do
+    it 'sets opml_import_job_state state as ERROR if an error is raised' do
       Zip::File.stub(:open).and_raise StandardError.new
       expect{@user.import_subscriptions @data_file}.to raise_error StandardError
 
-      @user.data_import.state.should eq OpmlImportJobState::ERROR
+      @user.opml_import_job_state.state.should eq OpmlImportJobState::ERROR
     end
 
     context 'unzipped opml file' do
@@ -112,15 +112,15 @@ describe User do
   context 'change alert visibility' do
 
     it 'hides alert' do
-      @user.data_import.show_alert.should be_true
-      @user.set_data_import_visible false
-      @user.reload.data_import.show_alert.should be_false
+      @user.opml_import_job_state.show_alert.should be_true
+      @user.set_opml_import_job_state_visible false
+      @user.reload.opml_import_job_state.show_alert.should be_false
     end
 
     it 'shows alert' do
-      @user.data_import.update show_alert: false
-      @user.set_data_import_visible true
-      @user.reload.data_import.show_alert.should be_true
+      @user.opml_import_job_state.update show_alert: false
+      @user.set_opml_import_job_state_visible true
+      @user.reload.opml_import_job_state.show_alert.should be_true
     end
   end
 

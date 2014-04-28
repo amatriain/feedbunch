@@ -1,11 +1,11 @@
 {
-  "state": "<%= data_import.state %>",
-  "show_alert": <%= data_import.show_alert %>
-<% if data_import.state == OpmlImportJobState::RUNNING %>
+  "state": "<%= opml_import_job_state.state %>",
+  "show_alert": <%= opml_import_job_state.show_alert %>
+<% if opml_import_job_state.state == OpmlImportJobState::RUNNING %>
 ,
   "import": {
-    "processed": <%= data_import.processed_feeds %>,
-    "total": <%= data_import.total_feeds %>
+    "processed": <%= opml_import_job_state.processed_feeds %>,
+    "total": <%= opml_import_job_state.total_feeds %>
   }
 <% end %>
 }

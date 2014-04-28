@@ -25,7 +25,7 @@ class ExportSubscriptionsJob
     user = User.find user_id
 
     # Check that user has a data_export with state RUNNING
-    #if user.data_import.try(:state) != OpmlImportJobState::RUNNING
+    #if user.opml_import_job_state.try(:state) != OpmlImportJobState::RUNNING
     #  Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with state RUNNING, aborting OPML import"
     #  return
     #end
@@ -57,15 +57,15 @@ class ExportSubscriptionsJob
   private
 
   ##
-  # Sets the data_import state for the user as ERROR.
-  # Creates a new data_import if the user doesn't already have one.
+  # Sets the opml_import_job_state state for the user as ERROR.
+  # Creates a new opml_import_job_state if the user doesn't already have one.
   #
   # Receives as argument the user whose import process has failed.
 
   def self.import_state_error(user)
-    user.create_data_import if user.data_import.blank?
-    user.data_import.state = OpmlImportJobState::ERROR
-    user.data_import.save
+    user.create_opml_import_job_state if user.opml_import_job_state.blank?
+    user.opml_import_job_state.state = OpmlImportJobState::ERROR
+    user.opml_import_job_state.save
     Rails.logger.info "Sending data import error email to user #{user.id} - #{user.email}"
     DataImportMailer.import_finished_error_email(user).deliver
   end

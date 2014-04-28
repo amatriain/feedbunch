@@ -9,33 +9,33 @@ describe OpmlImportJobState do
   context 'validations' do
 
     it 'always belongs to a user' do
-      data_import = FactoryGirl.build :opml_import_job_state, user_id: nil
-      data_import.should_not be_valid
+      opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: nil
+      opml_import_job_state.should_not be_valid
     end
   end
 
   context 'default values' do
 
     it 'defaults to state NONE when created' do
-      @user.create_data_import
+      @user.create_opml_import_job_state
 
-      @user.data_import.state.should eq OpmlImportJobState::NONE
+      @user.opml_import_job_state.state.should eq OpmlImportJobState::NONE
     end
 
     it 'defaults to zero total_feeds' do
-      data_import = FactoryGirl.create :opml_import_job_state, total_feeds: nil
-      data_import.total_feeds.should eq 0
+      opml_import_job_state = FactoryGirl.create :opml_import_job_state, total_feeds: nil
+      opml_import_job_state.total_feeds.should eq 0
     end
 
     it 'defaults to zero processed_feeds' do
-      data_import = FactoryGirl.create :opml_import_job_state, processed_feeds: nil
-      data_import.processed_feeds.should eq 0
+      opml_import_job_state = FactoryGirl.create :opml_import_job_state, processed_feeds: nil
+      opml_import_job_state.processed_feeds.should eq 0
     end
 
     it 'defaults show_alert to true' do
-      data_import = FactoryGirl.build :opml_import_job_state, show_alert: nil
-      data_import.save!
-      data_import.show_alert.should be_true
+      opml_import_job_state = FactoryGirl.build :opml_import_job_state, show_alert: nil
+      opml_import_job_state.save!
+      opml_import_job_state.show_alert.should be_true
     end
 
   end
