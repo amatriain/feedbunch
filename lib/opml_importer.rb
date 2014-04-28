@@ -5,7 +5,7 @@ require 'nokogiri'
 ##
 # This class manages import of subscription data from Google Reader into Feedbunch
 
-class OpmlImporter
+class OPMLImporter
 
   ##
   # This method extracts subscriptions data from an OPML file and

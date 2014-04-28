@@ -193,10 +193,10 @@ class User < ActiveRecord::Base
 
   ##
   # Import an OPML (optionally zipped) with subscription data, and subscribe the user to the feeds
-  # in it. See OpmlImporter#enqueue_import_job
+  # in it. See OPMLImporter#enqueue_import_job
 
   def import_subscriptions(file)
-    OpmlImporter.enqueue_import_job file, self
+    OPMLImporter.enqueue_import_job file, self
   end
 
   ##

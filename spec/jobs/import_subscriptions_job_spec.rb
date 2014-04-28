@@ -57,7 +57,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'sets data import state to ERROR if an error is raised' do
-    OpmlImporter.stub(:import).and_raise StandardError.new
+    OPMLImporter.stub(:import).and_raise StandardError.new
     expect {ImportSubscriptionsJob.perform @filename, @user.id}.to raise_error
     @user.reload
     @user.opml_import_job_state.state.should eq OpmlImportJobState::ERROR

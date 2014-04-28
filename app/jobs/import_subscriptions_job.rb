@@ -35,7 +35,7 @@ class ImportSubscriptionsJob
       return
     end
 
-    OpmlImporter.import filename, user
+    OPMLImporter.import filename, user
 
   rescue => e
     # If an exception is raised, set the import process state to ERROR
