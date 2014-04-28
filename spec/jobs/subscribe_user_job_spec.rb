@@ -69,7 +69,7 @@ describe SubscribeUserJob do
   context 'running an OPML import' do
 
     before :each do
-      @data_import = FactoryGirl.build :data_import, user_id: @user.id, state: OpmlImportJobState::RUNNING,
+      @data_import = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
                                        total_feeds: 10, processed_feeds: 5
       @user.data_import = @data_import
 

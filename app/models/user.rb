@@ -4,7 +4,7 @@ require 'feed_refresh_manager'
 require 'entry_state_manager'
 require 'entries_pagination'
 require 'feeds_pagination'
-require 'data_import_manager'
+require 'opml_importer'
 require 'subscriptions_manager'
 
 ##
@@ -193,10 +193,10 @@ class User < ActiveRecord::Base
 
   ##
   # Import an OPML (optionally zipped) with subscription data, and subscribe the user to the feeds
-  # in it. See DataImportManager#import
+  # in it. See OpmlImporter#enqueue_import_job
 
   def import_subscriptions(file)
-    DataImportManager.import file, self
+    OpmlImporter.enqueue_import_job file, self
   end
 
   ##
@@ -226,8 +226,8 @@ class User < ActiveRecord::Base
   def before_save_user
     self.encrypted_password.encode! 'utf-8'
 
-    if self.data_import.blank?
-      self.create_data_import state: OpmlImportJobState::NONE
+    if self.opml_import_job_state.blank?
+      self.create_opml_import_job_state state: OpmlImportJobState::NONE
       Rails.logger.debug "User #{self.email} has no OpmlImportJobState, creating one with state NONE"
     end
   end

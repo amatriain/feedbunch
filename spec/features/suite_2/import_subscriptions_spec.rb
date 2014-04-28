@@ -38,7 +38,7 @@ describe 'import subscriptions' do
     end
 
     it 'shows link if user has an errored import', js: true do
-      data_import = FactoryGirl.build :data_import, user_id: @user.id, state: OpmlImportJobState::ERROR
+      data_import = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::ERROR
       @user.data_import = data_import
       visit read_path
       open_user_menu
@@ -46,7 +46,7 @@ describe 'import subscriptions' do
     end
 
     it 'does not show link if user has a running import', js: true do
-      data_import = FactoryGirl.build :data_import, user_id: @user.id, state: OpmlImportJobState::RUNNING
+      data_import = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING
       @user.data_import = data_import
       visit read_path
       open_user_menu
@@ -54,7 +54,7 @@ describe 'import subscriptions' do
     end
 
     it 'shows link if user has a successful import', js: true do
-      data_import = FactoryGirl.build :data_import, user_id: @user.id, state: OpmlImportJobState::SUCCESS
+      data_import = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::SUCCESS
       @user.data_import = data_import
       visit read_path
       open_user_menu

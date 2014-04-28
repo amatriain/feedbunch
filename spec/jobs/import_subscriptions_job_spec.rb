@@ -7,9 +7,9 @@ describe ImportSubscriptionsJob do
     File.stub(:delete).and_return 1
 
     @user = FactoryGirl.create :user
-    @data_import = FactoryGirl.build :data_import, user_id: @user.id, state: OpmlImportJobState::RUNNING,
+    @opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
                                      total_feeds: 0, processed_feeds: 0
-    @user.data_import = @data_import
+    @user.opml_import_job_state = @opml_import_job_state
 
     @filename = '1371324422.opml'
     @filepath = File.join __dir__, '..', 'attachments', @filename
@@ -29,38 +29,38 @@ describe ImportSubscriptionsJob do
   it 'updates the data import total number of feeds' do
     ImportSubscriptionsJob.perform @filename, @user.id
     @user.reload
-    @user.data_import.total_feeds.should eq 4
+    @user.opml_import_job_state.total_feeds.should eq 4
   end
 
   it 'sets data import state to ERROR if the file does not exist' do
-    ImportSubscriptionsJob.perform 'not.a.real.file', @user.id
+    expect {ImportSubscriptionsJob.perform 'not.a.real.file', @user.id}.to raise_error ImportDataError
     @user.reload
-    @user.data_import.state.should eq OpmlImportJobState::ERROR
+    @user.opml_import_job_state.state.should eq OpmlImportJobState::ERROR
   end
 
   it 'sets data import state to ERROR if the file is not well formed XML' do
     not_valid_xml_filename = File.join __dir__, '..', 'attachments', 'not-well-formed-xml.opml'
     file_contents = File.read not_valid_xml_filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
-    ImportSubscriptionsJob.perform not_valid_xml_filename, @user.id
+    expect {ImportSubscriptionsJob.perform not_valid_xml_filename, @user.id}.to raise_error Nokogiri::XML::SyntaxError
     @user.reload
-    @user.data_import.state.should eq OpmlImportJobState::ERROR
+    @user.opml_import_job_state.state.should eq OpmlImportJobState::ERROR
   end
 
   it 'sets data import state to ERROR if the file is not valid OPML' do
     not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
     file_contents = File.read not_valid_opml_filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
-    ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id
+    expect {ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id}.to raise_error ImportDataError
     @user.reload
-    @user.data_import.state.should eq OpmlImportJobState::ERROR
+    @user.opml_import_job_state.state.should eq OpmlImportJobState::ERROR
   end
 
   it 'sets data import state to ERROR if an error is raised' do
-    ImportSubscriptionsJob.stub(:import_feed).and_raise StandardError.new
+    OpmlImporter.stub(:import).and_raise StandardError.new
     expect {ImportSubscriptionsJob.perform @filename, @user.id}.to raise_error
     @user.reload
-    @user.data_import.state.should eq OpmlImportJobState::ERROR
+    @user.opml_import_job_state.state.should eq OpmlImportJobState::ERROR
   end
 
   it 'does nothing if the user does not exist' do
@@ -145,22 +145,22 @@ describe ImportSubscriptionsJob do
     folder_webcomics.should be_present
   end
 
-  it 'does nothing if the user does not have a data_import' do
-    @user.data_import.destroy
+  it 'does nothing if the user does not have a opml_import_job_state' do
+    @user.opml_import_job_state.destroy
     Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
-  it 'does nothing if the data_import for the user has state ERROR' do
-    @user.data_import.state = OpmlImportJobState::ERROR
-    @user.data_import.save
+  it 'does nothing if the opml_import_job_state for the user has state ERROR' do
+    @user.opml_import_job_state.state = OpmlImportJobState::ERROR
+    @user.opml_import_job_state.save
     Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
-  it 'does nothing if the data_import for the user has state SUCCESS' do
-    @user.data_import.state = OpmlImportJobState::SUCCESS
-    @user.data_import.save
+  it 'does nothing if the opml_import_job_state for the user has state SUCCESS' do
+    @user.opml_import_job_state.state = OpmlImportJobState::SUCCESS
+    @user.opml_import_job_state.save
     Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, @user.id
   end
@@ -186,7 +186,7 @@ describe ImportSubscriptionsJob do
       not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
       file_contents = File.read not_valid_opml_filename
       Feedbunch::Application.config.uploads_manager.stub read: file_contents
-      ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id
+      expect {ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id}.to raise_error ImportDataError
       mail_should_be_sent to: @user.email, text: 'There has been an error importing your feed subscriptions into Feedbunch'
     end
   end

@@ -46,7 +46,7 @@ class Api::DataImportsController < ApplicationController
   # displaying the state of the process.
 
   def update
-    @data_import = current_user.data_import
+    @opml_import_job_state = current_user.opml_import_job_state
     # Only if the string "false" is sent, set visibility to false. If anything else
     # is sent in the :show_alert request parameter, set visibility to true. This is the
     # safest default.

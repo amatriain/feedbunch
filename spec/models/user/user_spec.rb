@@ -136,7 +136,7 @@ describe User do
   context 'relationship with data_imports' do
 
     before :each do
-      @data_import = FactoryGirl.build :data_import, user_id: @user.id
+      @data_import = FactoryGirl.build :opml_import_job_state, user_id: @user.id
       @user.data_import = @data_import
     end
 
@@ -148,7 +148,7 @@ describe User do
 
     it 'deletes the old data_import when adding a new one for a user' do
       OpmlImportJobState.exists?(@data_import).should be_true
-      data_import2 = FactoryGirl.build :data_import, user_id: @user.id
+      data_import2 = FactoryGirl.build :opml_import_job_state, user_id: @user.id
       @user.data_import = data_import2
 
       OpmlImportJobState.exists?(@data_import).should be_false

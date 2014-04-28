@@ -25,19 +25,19 @@ describe Api::DataImportsController do
 
     it 'redirects to main application page if successful' do
       User.any_instance.stub :import_subscriptions
-      post :create, data_import: {file: 'mock_file'}
+      post :create, opml_import_job_state: {file: 'mock_file'}
       response.should redirect_to read_path
     end
 
     it 'redirects to main application page if an error happens' do
       User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
-      post :create, data_import: {file: 'mock_file'}
+      post :create, opml_import_job_state: {file: 'mock_file'}
       response.should redirect_to read_path
     end
 
     it 'creates a OpmlImportJobState instance with ERROR state if an error happens' do
       User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
-      post :create, data_import: {file: 'mock_file'}
+      post :create, opml_import_job_state: {file: 'mock_file'}
       @user.reload.data_import.state.should eq OpmlImportJobState::ERROR
     end
   end
@@ -45,18 +45,18 @@ describe Api::DataImportsController do
   context 'PUT update' do
 
     it 'asigns the correct OpmlImportJobState' do
-      put :update, data_import: {id: @user.data_import.id, show_alert: 'false'}, format: :json
-      assigns(:data_import).should eq @user.data_import
+      put :update, opml_import_job_state: {id: @user.data_import.id, show_alert: 'false'}, format: :json
+      assigns(:opml_import_job_state).should eq @user.data_import
     end
 
     it 'returns success' do
-      put :update, data_import: {id: @user.data_import.id, show_alert: 'false'}, format: :json
+      put :update, opml_import_job_state: {id: @user.data_import.id, show_alert: 'false'}, format: :json
       response.should be_success
     end
 
     it 'returns 500 if there is a problem changing the alert visibility' do
       User.any_instance.stub(:set_data_import_visible).and_raise StandardError.new
-      put :update, data_import: {id: @user.data_import.id, show_alert: 'false'}, format: :json
+      put :update, opml_import_job_state: {id: @user.data_import.id, show_alert: 'false'}, format: :json
       response.status.should eq 500
     end
   end
