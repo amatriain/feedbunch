@@ -61,7 +61,7 @@ class SubscribeUserJob
 
     # Check that user has a data_import with state RUNNING if requested to update it
     if running_data_import
-      if user.data_import.try(:state) != DataImport::RUNNING
+      if user.data_import.try(:state) != OpmlImportJobState::RUNNING
         Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with state RUNNING, aborting job"
         job_state.destroy if job_state.present?
         return
@@ -100,7 +100,7 @@ class SubscribeUserJob
     user.data_import.processed_feeds += 1
     user.data_import.save
     if self.import_finished? user, feed_url, folder_id
-      user.data_import.state = DataImport::SUCCESS
+      user.data_import.state = OpmlImportJobState::SUCCESS
       user.data_import.save
       Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
       DataImportMailer.import_finished_success_email(user).deliver

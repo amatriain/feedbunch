@@ -69,7 +69,7 @@ describe SubscribeUserJob do
   context 'running an OPML import' do
 
     before :each do
-      @data_import = FactoryGirl.build :data_import, user_id: @user.id, state: DataImport::RUNNING,
+      @data_import = FactoryGirl.build :data_import, user_id: @user.id, state: OpmlImportJobState::RUNNING,
                                        total_feeds: 10, processed_feeds: 5
       @user.data_import = @data_import
 
@@ -90,11 +90,11 @@ describe SubscribeUserJob do
     end
 
     it 'does nothing if the user does not have a running data import' do
-      @user.data_import.update state: DataImport::ERROR
+      @user.data_import.update state: OpmlImportJobState::ERROR
       @user.should_not_receive :subscribe
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
 
-      @user.data_import.update state: DataImport::SUCCESS
+      @user.data_import.update state: OpmlImportJobState::SUCCESS
       @user.should_not_receive :subscribe
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
 
@@ -121,7 +121,7 @@ describe SubscribeUserJob do
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
       @user.data_import.processed_feeds.should eq 10
-      @user.data_import.state.should eq DataImport::SUCCESS
+      @user.data_import.state.should eq OpmlImportJobState::SUCCESS
     end
 
     it 'leaves data import as RUNNING if more SubscribeUserJob instances are running' do
@@ -131,7 +131,7 @@ describe SubscribeUserJob do
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
       @user.data_import.processed_feeds.should eq 6
-      @user.data_import.state.should eq DataImport::RUNNING
+      @user.data_import.state.should eq OpmlImportJobState::RUNNING
     end
 
     it 'sets data import state to SUCCESS if this is the only SubscribeUserJob running and no other is enqueued' do
@@ -139,14 +139,14 @@ describe SubscribeUserJob do
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
       @user.data_import.processed_feeds.should eq 6
-      @user.data_import.state.should eq DataImport::SUCCESS
+      @user.data_import.state.should eq OpmlImportJobState::SUCCESS
     end
 
     it 'leaves data import as RUNNING if more SubscribeUserJob instances are enqueued' do
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
       @user.data_import.processed_feeds.should eq 6
-      @user.data_import.state.should eq DataImport::RUNNING
+      @user.data_import.state.should eq OpmlImportJobState::RUNNING
     end
 
     it 'sets data import state to SUCCESS if no import-related jobs are running or enqueued' do
@@ -154,7 +154,7 @@ describe SubscribeUserJob do
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
       @user.data_import.processed_feeds.should eq 6
-      @user.data_import.state.should eq DataImport::SUCCESS
+      @user.data_import.state.should eq OpmlImportJobState::SUCCESS
     end
 
     it 'sends an email if all feeds have been processed' do

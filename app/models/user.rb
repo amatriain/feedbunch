@@ -28,7 +28,7 @@ require 'subscriptions_manager'
 # - Folder: Each user can have many folders and each folder belongs to a single user (one-to-many relationship).
 # - Entry, through the Feed model: This enables us to retrieve all entries for all feeds a user is subscribed to.
 # - EntryState: This enables us to retrieve the state (read or unread) of all entries for all feeds a user is subscribed to.
-# - DataImport: This indicates whether the user has ever started an OPML import, and in this case it gives information about the import
+# - OpmlImportJobState: This indicates whether the user has ever started an OPML import, and in this case it gives information about the import
 # process (whether it's still running or not, number of feeds processed, etc).
 # - RefreshFeedJobState: Each instance of this class associated with a user represents an ocurrence of the user requesting
 # a refresh of a feed. The state attribute of the instance indicates if the refresh is running, successfully finished,
@@ -78,7 +78,7 @@ class User < ActiveRecord::Base
   has_many :folders, -> {uniq}, dependent: :destroy
   has_many :entries, through: :feeds
   has_many :entry_states, -> {uniq}, dependent: :destroy
-  has_one :data_import, dependent: :destroy
+  has_one :opml_import_job_state, dependent: :destroy
   has_many :refresh_feed_job_states, dependent: :destroy
   has_many :subscribe_job_states, dependent: :destroy
 
@@ -220,15 +220,15 @@ class User < ActiveRecord::Base
   ##
   # Operations necessary before saving a User in the database:
   # - ensure that the encrypted_password is encoded as utf-8
-  # - create a new DataImport instance for the user with state "NONE" if it doesn't already exist (to indicate that
+  # - create a new OpmlImportJobState instance for the user with state "NONE" if it doesn't already exist (to indicate that
   # the user has never ran an OPML import).
 
   def before_save_user
     self.encrypted_password.encode! 'utf-8'
 
     if self.data_import.blank?
-      self.create_data_import state: DataImport::NONE
-      Rails.logger.debug "User #{self.email} has no DataImport, creating one with state NONE"
+      self.create_data_import state: OpmlImportJobState::NONE
+      Rails.logger.debug "User #{self.email} has no OpmlImportJobState, creating one with state NONE"
     end
   end
 

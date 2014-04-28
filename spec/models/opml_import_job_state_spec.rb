@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataImport do
+describe OpmlImportJobState do
 
   before :each do
     @user = FactoryGirl.create :user
@@ -19,7 +19,7 @@ describe DataImport do
     it 'defaults to state NONE when created' do
       @user.create_data_import
 
-      @user.data_import.state.should eq DataImport::NONE
+      @user.data_import.state.should eq OpmlImportJobState::NONE
     end
 
     it 'defaults to zero total_feeds' do

@@ -7,7 +7,7 @@ describe ImportSubscriptionsJob do
     File.stub(:delete).and_return 1
 
     @user = FactoryGirl.create :user
-    @data_import = FactoryGirl.build :data_import, user_id: @user.id, state: DataImport::RUNNING,
+    @data_import = FactoryGirl.build :data_import, user_id: @user.id, state: OpmlImportJobState::RUNNING,
                                      total_feeds: 0, processed_feeds: 0
     @user.data_import = @data_import
 
@@ -35,7 +35,7 @@ describe ImportSubscriptionsJob do
   it 'sets data import state to ERROR if the file does not exist' do
     ImportSubscriptionsJob.perform 'not.a.real.file', @user.id
     @user.reload
-    @user.data_import.state.should eq DataImport::ERROR
+    @user.data_import.state.should eq OpmlImportJobState::ERROR
   end
 
   it 'sets data import state to ERROR if the file is not well formed XML' do
@@ -44,7 +44,7 @@ describe ImportSubscriptionsJob do
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
     ImportSubscriptionsJob.perform not_valid_xml_filename, @user.id
     @user.reload
-    @user.data_import.state.should eq DataImport::ERROR
+    @user.data_import.state.should eq OpmlImportJobState::ERROR
   end
 
   it 'sets data import state to ERROR if the file is not valid OPML' do
@@ -53,14 +53,14 @@ describe ImportSubscriptionsJob do
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
     ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id
     @user.reload
-    @user.data_import.state.should eq DataImport::ERROR
+    @user.data_import.state.should eq OpmlImportJobState::ERROR
   end
 
   it 'sets data import state to ERROR if an error is raised' do
     ImportSubscriptionsJob.stub(:import_feed).and_raise StandardError.new
     expect {ImportSubscriptionsJob.perform @filename, @user.id}.to raise_error
     @user.reload
-    @user.data_import.state.should eq DataImport::ERROR
+    @user.data_import.state.should eq OpmlImportJobState::ERROR
   end
 
   it 'does nothing if the user does not exist' do
@@ -152,14 +152,14 @@ describe ImportSubscriptionsJob do
   end
 
   it 'does nothing if the data_import for the user has state ERROR' do
-    @user.data_import.state = DataImport::ERROR
+    @user.data_import.state = OpmlImportJobState::ERROR
     @user.data_import.save
     Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
   it 'does nothing if the data_import for the user has state SUCCESS' do
-    @user.data_import.state = DataImport::SUCCESS
+    @user.data_import.state = OpmlImportJobState::SUCCESS
     @user.data_import.save
     Feedbunch::Application.config.uploads_manager.should_not_receive :read
     ImportSubscriptionsJob.perform @filename, @user.id

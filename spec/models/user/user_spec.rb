@@ -141,17 +141,17 @@ describe User do
     end
 
     it 'deletes data_imports when deleting a user' do
-      DataImport.count.should eq 1
+      OpmlImportJobState.count.should eq 1
       @user.destroy
-      DataImport.count.should eq 0
+      OpmlImportJobState.count.should eq 0
     end
 
     it 'deletes the old data_import when adding a new one for a user' do
-      DataImport.exists?(@data_import).should be_true
+      OpmlImportJobState.exists?(@data_import).should be_true
       data_import2 = FactoryGirl.build :data_import, user_id: @user.id
       @user.data_import = data_import2
 
-      DataImport.exists?(@data_import).should be_false
+      OpmlImportJobState.exists?(@data_import).should be_false
     end
   end
 

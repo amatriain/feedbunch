@@ -20,7 +20,7 @@ class DataImportManager
 
   def self.import(file, user)
     Rails.logger.info "User #{user.id} - #{user.email} requested import of a data file"
-    data_import = user.create_data_import state: DataImport::RUNNING
+    data_import = user.create_data_import state: OpmlImportJobState::RUNNING
 
     subscription_data = self.read_data_file file
 
@@ -33,7 +33,7 @@ class DataImportManager
     Rails.logger.error "Error trying to read OPML data from file uploaded by user #{user.id} - #{user.email}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    data_import.state = DataImport::ERROR
+    data_import.state = OpmlImportJobState::ERROR
     data_import.save
     raise ImportDataError.new
   end

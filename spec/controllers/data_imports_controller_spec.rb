@@ -35,16 +35,16 @@ describe Api::DataImportsController do
       response.should redirect_to read_path
     end
 
-    it 'creates a DataImport instance with ERROR state if an error happens' do
+    it 'creates a OpmlImportJobState instance with ERROR state if an error happens' do
       User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
       post :create, data_import: {file: 'mock_file'}
-      @user.reload.data_import.state.should eq DataImport::ERROR
+      @user.reload.data_import.state.should eq OpmlImportJobState::ERROR
     end
   end
 
   context 'PUT update' do
 
-    it 'asigns the correct DataImport' do
+    it 'asigns the correct OpmlImportJobState' do
       put :update, data_import: {id: @user.data_import.id, show_alert: 'false'}, format: :json
       assigns(:data_import).should eq @user.data_import
     end

@@ -1,11 +1,11 @@
 ##
-# DataImport model. Each instance of this class represents an ocurrence of a user importing subscription data
+# OpmlImportJobState model. Each instance of this class represents an ocurrence of a user importing subscription data
 # (e.g. from Google Reader).
 #
-# Each DataImport belongs to a single user, and each user can have at most only one DataImport (one-to-one relationship).
-# If a user imports data several times, each time the previous DataImport is updated.
+# Each OpmlImportJobState belongs to a single user, and each user can have at most only one OpmlImportJobState (one-to-one relationship).
+# If a user imports data several times, each time the previous OpmlImportJobState is updated.
 #
-# The DataImport model has the following fields:
+# The OpmlImportJobState model has the following fields:
 # - state: mandatory text that indicates the current state of the import process. Supported values are
 # "NONE" (the default), "RUNNING", "SUCCESS" and "ERROR".
 # - total_feeds: number of feeds in the data file
@@ -14,7 +14,7 @@
 # - show_alert: if true (the default), show an alert in the Start page informing of the data import state. If false,
 # the user has closed the alert related to OPML imports and doesn't want it to be displayed again.
 
-class DataImport < ActiveRecord::Base
+class OpmlImportJobState < ActiveRecord::Base
   # Class constants for the possible states
   NONE = 'NONE'
   RUNNING = 'RUNNING'
@@ -34,7 +34,7 @@ class DataImport < ActiveRecord::Base
   private
 
   ##
-  # By default, a DataImport is in the "NONE" state unless specified otherwise.
+  # By default, a OpmlImportJobState is in the "NONE" state unless specified otherwise.
 
   def default_values
     self.state = NONE if self.state.blank?

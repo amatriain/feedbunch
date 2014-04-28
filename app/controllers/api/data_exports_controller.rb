@@ -11,14 +11,14 @@ class Api::DataExportsController < ApplicationController
   # Return JSON indicating the state of the "import subscriptions" process for the current user
 
   # def show
-  #   if DataImport.exists? user_id: current_user.id
-  #     data_import = DataImport.where(user_id: current_user.id).first
+  #   if OpmlImportJobState.exists? user_id: current_user.id
+  #     data_import = OpmlImportJobState.where(user_id: current_user.id).first
   #   else
-  #     Rails.logger.warn "User #{current_user.id} - #{current_user.email} has no DataImport, creating one with state NONE"
-  #     data_import = current_user.create_data_import state: DataImport::NONE
+  #     Rails.logger.warn "User #{current_user.id} - #{current_user.email} has no OpmlImportJobState, creating one with state NONE"
+  #     data_import = current_user.create_data_import state: OpmlImportJobState::NONE
   #   end
   #
-  #   Rails.logger.debug "DataImport for user #{current_user.id} - #{current_user.email}: id #{data_import.try :id}, state #{data_import.try :state}"
+  #   Rails.logger.debug "OpmlImportJobState for user #{current_user.id} - #{current_user.email}: id #{data_import.try :id}, state #{data_import.try :state}"
   #   render 'show', locals: {data_import: data_import}
   # rescue => e
   #   handle_error e
@@ -33,13 +33,13 @@ class Api::DataExportsController < ApplicationController
     Rails.logger.error "Error exporting OPML data for user #{user.email} - #{user.name}"
     Rails.logger.error error.message
     Rails.logger.error error.backtrace
-    #data_import = current_user.create_data_import state: DataImport::ERROR
+    #data_import = current_user.create_data_import state: OpmlImportJobState::ERROR
   ensure
     redirect_to read_path
   end
 
   ##
-  # Update the DataImport for the current user. Currently the only supported change is showing or hiding the alert
+  # Update the OpmlImportJobState for the current user. Currently the only supported change is showing or hiding the alert
   # displaying the state of the process.
 
   # def update

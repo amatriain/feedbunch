@@ -1,7 +1,7 @@
 {
   "state": "<%= data_import.state %>",
   "show_alert": <%= data_import.show_alert %>
-<% if data_import.state == DataImport::RUNNING %>
+<% if data_import.state == OpmlImportJobState::RUNNING %>
 ,
   "import": {
     "processed": <%= data_import.processed_feeds %>,
