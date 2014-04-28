@@ -35,20 +35,39 @@ def mail_should_be_sent(path: nil, to: nil, text: nil)
     email.to.first.should eq to
   end
 
-  # Test only the first part of a multipart email (normally html and text versions are sent at once)
+  href = nil
+  # Test each part of a multipart email.
   if email.multipart?
-    email = email.parts[0]
-  end
+    path_ok = false
+    text_ok = false
+    email.parts.each do |part|
+      if path.present?
+        partBody = Nokogiri::HTML part.body.to_s
+        link = partBody.at_css "a[href*=\"#{path}\"]"
+        if link.present?
+          path_ok = true
+          href = link[:href]
+        end
+      end
 
-  if path.present?
-    emailBody = Nokogiri::HTML email.body.to_s
-    link = emailBody.at_css "a[href*=\"#{path}\"]"
-    link.present?.should be_true
-    href = link[:href]
-  end
+      if text.present?
+        text_ok = true if part.body.to_s.include? text
+      end
+    end
 
-  if text.present?
-    email.body.to_s.should include text
+    path_ok.should be_true if path.present?
+    text_ok.should be_true if text.present?
+  else
+    if path.present?
+      emailBody = Nokogiri::HTML email.body.to_s
+      link = emailBody.at_css "a[href*=\"#{path}\"]"
+      link.present?.should be_true
+      href = link[:href]
+    end
+
+    if text.present?
+      email.body.to_s.should include text
+    end
   end
 
   return href

@@ -16,14 +16,14 @@ class SubscribeUserJob
   # - boolean indicating whether the subscription is part of an OPML import process
   # - id of the SubscribeJobState instance that reflects the state of the job. If a nil is passed, ignore it.
   #
-  # If requested, the data_import of the user is updated so that the user can see the import progress.
+  # If requested, the opml_import_job_state of the user is updated so that the user can see the import progress.
   #
   # If a job_state_id is passed, the state field of the SubscribeJobState instance will be updated when
   # the job finishes, to reflect whether it finished successfully or with an error.
   #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 
-  def self.perform(user_id, feed_url, folder_id, running_data_import, job_state_id)
+  def self.perform(user_id, feed_url, folder_id, running_opml_import_job_state, job_state_id)
     # Find the SubscribeJobState instance for this job, if it exists
     if job_state_id.present?
       if SubscribeJobState.exists? job_state_id
@@ -59,9 +59,9 @@ class SubscribeUserJob
       end
     end
 
-    # Check that user has a data_import with state RUNNING if requested to update it
-    if running_data_import
-      if user.data_import.try(:state) != OpmlImportJobState::RUNNING
+    # Check that user has a opml_import_job_state with state RUNNING if requested to update it
+    if running_opml_import_job_state
+      if user.opml_import_job_state.try(:state) != OpmlImportJobState::RUNNING
         Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with state RUNNING, aborting job"
         job_state.destroy if job_state.present?
         return
@@ -85,23 +85,23 @@ class SubscribeUserJob
     raise e
   ensure
     # Once finished, mark import state as SUCCESS if requested.
-    self.update_import_state user, feed_url, folder_id if running_data_import && user.try(:data_import).present?
+    self.update_import_state user, feed_url, folder_id if running_opml_import_job_state && user.try(:opml_import_job_state).present?
   end
 
   private
 
   ##
-  # Sets the data_import state for the user as SUCCESS.
+  # Sets the opml_import_job_state state for the user as SUCCESS.
   #
   # Receives as argument the user whose import process has finished successfully, the
   # URL of the feed just subscribed, and the ID of the folder into which the feed as been moved.
 
   def self.update_import_state(user, feed_url, folder_id)
-    user.data_import.processed_feeds += 1
-    user.data_import.save
+    user.opml_import_job_state.processed_feeds += 1
+    user.opml_import_job_state.save
     if self.import_finished? user, feed_url, folder_id
-      user.data_import.state = OpmlImportJobState::SUCCESS
-      user.data_import.save
+      user.opml_import_job_state.state = OpmlImportJobState::SUCCESS
+      user.opml_import_job_state.save
       Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
       DataImportMailer.import_finished_success_email(user).deliver
     end
@@ -139,7 +139,7 @@ class SubscribeUserJob
 
   def self.import_finished?(user, feed_url, folder_id)
     # If the number of processed feeds equals the total number of feeds in the OPML, import is finished
-    if user.data_import.processed_feeds == user.data_import.total_feeds
+    if user.opml_import_job_state.processed_feeds == user.opml_import_job_state.total_feeds
       return true
     end
 

@@ -69,9 +69,9 @@ describe SubscribeUserJob do
   context 'running an OPML import' do
 
     before :each do
-      @data_import = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
+      @opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
                                        total_feeds: 10, processed_feeds: 5
-      @user.data_import = @data_import
+      @user.opml_import_job_state = @opml_import_job_state
 
       # Resque informs there is one more instance of SubscribeUserJob enqueued.
       enqueued_job = {'class' => 'SubscribeUserJob', 'args' => [@user.id, 'http://some.url.com', nil, true]}
@@ -90,15 +90,15 @@ describe SubscribeUserJob do
     end
 
     it 'does nothing if the user does not have a running data import' do
-      @user.data_import.update state: OpmlImportJobState::ERROR
+      @user.opml_import_job_state.update state: OpmlImportJobState::ERROR
       @user.should_not_receive :subscribe
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
 
-      @user.data_import.update state: OpmlImportJobState::SUCCESS
+      @user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
       @user.should_not_receive :subscribe
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
 
-      @user.data_import.destroy
+      @user.opml_import_job_state.destroy
       @user.should_not_receive :subscribe
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
     end
@@ -106,22 +106,22 @@ describe SubscribeUserJob do
     it 'updates number of processed feeds in the running import when subscribing user to existing feeds' do
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
-      @user.data_import.processed_feeds.should eq 6
+      @user.opml_import_job_state.processed_feeds.should eq 6
     end
 
     it 'updates number of processed feeds in the running import if the user is already subscribed to the feed' do
       @user.subscribe @feed.fetch_url
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
-      @user.data_import.processed_feeds.should eq 6
+      @user.opml_import_job_state.processed_feeds.should eq 6
     end
 
     it 'sets data import state to SUCCESS if all feeds have been processed' do
-      @user.data_import.update processed_feeds: 9
+      @user.opml_import_job_state.update processed_feeds: 9
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
-      @user.data_import.processed_feeds.should eq 10
-      @user.data_import.state.should eq OpmlImportJobState::SUCCESS
+      @user.opml_import_job_state.processed_feeds.should eq 10
+      @user.opml_import_job_state.state.should eq OpmlImportJobState::SUCCESS
     end
 
     it 'leaves data import as RUNNING if more SubscribeUserJob instances are running' do
@@ -130,37 +130,37 @@ describe SubscribeUserJob do
       Resque.stub(:working).and_return [@this_working_mock, another_working_mock]
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
-      @user.data_import.processed_feeds.should eq 6
-      @user.data_import.state.should eq OpmlImportJobState::RUNNING
+      @user.opml_import_job_state.processed_feeds.should eq 6
+      @user.opml_import_job_state.state.should eq OpmlImportJobState::RUNNING
     end
 
     it 'sets data import state to SUCCESS if this is the only SubscribeUserJob running and no other is enqueued' do
       Resque.stub(:peek).and_return nil
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
-      @user.data_import.processed_feeds.should eq 6
-      @user.data_import.state.should eq OpmlImportJobState::SUCCESS
+      @user.opml_import_job_state.processed_feeds.should eq 6
+      @user.opml_import_job_state.state.should eq OpmlImportJobState::SUCCESS
     end
 
     it 'leaves data import as RUNNING if more SubscribeUserJob instances are enqueued' do
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
-      @user.data_import.processed_feeds.should eq 6
-      @user.data_import.state.should eq OpmlImportJobState::RUNNING
+      @user.opml_import_job_state.processed_feeds.should eq 6
+      @user.opml_import_job_state.state.should eq OpmlImportJobState::RUNNING
     end
 
     it 'sets data import state to SUCCESS if no import-related jobs are running or enqueued' do
       Resque.stub(:peek).and_return nil
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
-      @user.data_import.processed_feeds.should eq 6
-      @user.data_import.state.should eq OpmlImportJobState::SUCCESS
+      @user.opml_import_job_state.processed_feeds.should eq 6
+      @user.opml_import_job_state.state.should eq OpmlImportJobState::SUCCESS
     end
 
     it 'sends an email if all feeds have been processed' do
       # Remove emails stil in the mail queue
       ActionMailer::Base.deliveries.clear
-      @user.data_import.update processed_feeds: 9
+      @user.opml_import_job_state.update processed_feeds: 9
       SubscribeUserJob.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       mail_should_be_sent to: @user.email, text: 'Your feed subscriptions have been imported into Feedbunch'
     end
