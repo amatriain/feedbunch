@@ -23,7 +23,7 @@ class SubscribeUserJob
   #
   # This method is intended to be invoked from Resque, which means it is performed in the background.
 
-  def self.perform(user_id, feed_url, folder_id, running_opml_import_job_state, job_state_id)
+  def self.perform(user_id, feed_url, folder_id, running_opml_import_job, job_state_id)
     # Find the SubscribeJobState instance for this job, if it exists
     if job_state_id.present?
       if SubscribeJobState.exists? job_state_id
@@ -60,7 +60,7 @@ class SubscribeUserJob
     end
 
     # Check that user has a opml_import_job_state with state RUNNING if requested to update it
-    if running_opml_import_job_state
+    if running_opml_import_job
       if user.opml_import_job_state.try(:state) != OpmlImportJobState::RUNNING
         Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with state RUNNING, aborting job"
         job_state.destroy if job_state.present?
@@ -85,7 +85,7 @@ class SubscribeUserJob
     raise e
   ensure
     # Once finished, mark import state as SUCCESS if requested.
-    self.update_import_state user, feed_url, folder_id if running_opml_import_job_state && user.try(:opml_import_job_state).present?
+    self.update_import_state user, feed_url, folder_id if running_opml_import_job && user.try(:opml_import_job_state).present?
   end
 
   private

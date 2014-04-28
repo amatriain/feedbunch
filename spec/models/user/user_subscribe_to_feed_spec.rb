@@ -9,12 +9,12 @@ describe User do
   context 'enqueue a job to subscribe to a feed' do
 
     it 'enqueues a job to subscribe to the feed' do
-      Resque.should_receive(:enqueue) do |job_class, user_id, fetch_url, folder_id, running_data_import, job_id|
+      Resque.should_receive(:enqueue) do |job_class, user_id, fetch_url, folder_id, running_opml_import, job_id|
         job_class.should eq SubscribeUserJob
         user_id.should eq @user.id
         fetch_url.should eq @feed.fetch_url
         folder_id.should be_nil
-        running_data_import.should be_false
+        running_opml_import.should be_false
         job_state = SubscribeJobState.find job_id
         job_state.user_id.should eq @user.id
         job_state.fetch_url.should eq @feed.fetch_url
