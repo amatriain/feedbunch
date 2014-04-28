@@ -38,25 +38,25 @@ describe Api::DataImportsController do
     it 'creates a OpmlImportJobState instance with ERROR state if an error happens' do
       User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
       post :create, opml_import_job_state: {file: 'mock_file'}
-      @user.reload.data_import.state.should eq OpmlImportJobState::ERROR
+      @user.reload.opml_import_job_state.state.should eq OpmlImportJobState::ERROR
     end
   end
 
   context 'PUT update' do
 
     it 'asigns the correct OpmlImportJobState' do
-      put :update, opml_import_job_state: {id: @user.data_import.id, show_alert: 'false'}, format: :json
-      assigns(:opml_import_job_state).should eq @user.data_import
+      put :update, opml_import_job_state: {id: @user.opml_import_job_state.id, show_alert: 'false'}, format: :json
+      assigns(:opml_import_job_state).should eq @user.opml_import_job_state
     end
 
     it 'returns success' do
-      put :update, opml_import_job_state: {id: @user.data_import.id, show_alert: 'false'}, format: :json
+      put :update, opml_import_job_state: {id: @user.opml_import_job_state.id, show_alert: 'false'}, format: :json
       response.should be_success
     end
 
     it 'returns 500 if there is a problem changing the alert visibility' do
-      User.any_instance.stub(:set_data_import_visible).and_raise StandardError.new
-      put :update, opml_import_job_state: {id: @user.data_import.id, show_alert: 'false'}, format: :json
+      User.any_instance.stub(:set_opml_import_job_state_visible).and_raise StandardError.new
+      put :update, opml_import_job_state: {id: @user.opml_import_job_state.id, show_alert: 'false'}, format: :json
       response.status.should eq 500
     end
   end

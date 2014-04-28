@@ -13,14 +13,14 @@ class Api::DataImportsController < ApplicationController
 
   def show
     if OpmlImportJobState.exists? user_id: current_user.id
-      data_import = OpmlImportJobState.where(user_id: current_user.id).first
+      opml_import_job_state = OpmlImportJobState.where(user_id: current_user.id).first
     else
       Rails.logger.warn "User #{current_user.id} - #{current_user.email} has no OpmlImportJobState, creating one with state NONE"
-      data_import = current_user.create_data_import state: OpmlImportJobState::NONE
+      opml_import_job_state = current_user.create_opml_import_job_state state: OpmlImportJobState::NONE
     end
 
-    Rails.logger.debug "OpmlImportJobState for user #{current_user.id} - #{current_user.email}: id #{data_import.try :id}, state #{data_import.try :state}"
-    render 'show', locals: {data_import: data_import}
+    Rails.logger.debug "OpmlImportJobState for user #{current_user.id} - #{current_user.email}: id #{opml_import_job_state.try :id}, state #{opml_import_job_state.try :state}"
+    render 'show', locals: {opml_import_job_state: opml_import_job_state}
   rescue => e
     handle_error e
   end
@@ -30,13 +30,13 @@ class Api::DataImportsController < ApplicationController
   # to the feeds there.
 
   def create
-    file = data_import_params[:file]
+    file = opml_import_job_state_params[:file]
     current_user.import_subscriptions file.tempfile
   rescue => e
     Rails.logger.error "Error importing OPML for user #{current_user.id} - #{current_user.email}"
-    Rails.logger.error error.message
-    Rails.logger.error error.backtrace
-    data_import = current_user.create_data_import state: OpmlImportJobState::ERROR
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    opml_import_job_state = current_user.create_opml_import_job_state state: OpmlImportJobState::ERROR
   ensure
     redirect_to read_path
   end
@@ -50,12 +50,12 @@ class Api::DataImportsController < ApplicationController
     # Only if the string "false" is sent, set visibility to false. If anything else
     # is sent in the :show_alert request parameter, set visibility to true. This is the
     # safest default.
-    if data_import_params[:show_alert]=='false'
+    if opml_import_job_state_params[:show_alert]=='false'
       show_alert = false
     else
       show_alert = true
     end
-    current_user.set_data_import_visible show_alert
+    current_user.set_opml_import_job_state_visible show_alert
     head :ok
   rescue => e
     handle_error e
@@ -63,8 +63,8 @@ class Api::DataImportsController < ApplicationController
 
   private
 
-  def data_import_params
-    params.require(:data_import).permit(:file, :show_alert)
+  def opml_import_job_state_params
+    params.require(:opml_import_job_state).permit(:file, :show_alert)
   end
 
 end

@@ -211,8 +211,8 @@ class User < ActiveRecord::Base
   # Change the visibility of the alert related to the OPML import state.
   # Receives a boolean argument and sets the alert to visible (if true) or hidden (if false).
 
-  def set_data_import_visible(visible)
-    self.data_import.update show_alert: visible
+  def set_opml_import_job_state_visible(visible)
+    self.opml_import_job_state.update show_alert: visible
   end
 
   private
