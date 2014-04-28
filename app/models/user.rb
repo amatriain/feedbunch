@@ -30,6 +30,8 @@ require 'subscriptions_manager'
 # - EntryState: This enables us to retrieve the state (read or unread) of all entries for all feeds a user is subscribed to.
 # - OpmlImportJobState: This indicates whether the user has ever started an OPML import, and in this case it gives information about the import
 # process (whether it's still running or not, number of feeds processed, etc).
+# - OpmlExportJobState: This indicates whether the user has ever started an OPML export, and in this case it gives information about the import
+# process state.
 # - RefreshFeedJobState: Each instance of this class associated with a user represents an ocurrence of the user requesting
 # a refresh of a feed. The state attribute of the instance indicates if the refresh is running, successfully finished,
 # or finished with an error.
@@ -79,6 +81,7 @@ class User < ActiveRecord::Base
   has_many :entries, through: :feeds
   has_many :entry_states, -> {uniq}, dependent: :destroy
   has_one :opml_import_job_state, dependent: :destroy
+  has_one :opml_export_job_state, dependent: :destroy
   has_many :refresh_feed_job_states, dependent: :destroy
   has_many :subscribe_job_states, dependent: :destroy
 
@@ -215,6 +218,14 @@ class User < ActiveRecord::Base
     self.opml_import_job_state.update show_alert: visible
   end
 
+  ##
+  # Change the visibility of the alert related to the OPML export state.
+  # Receives a boolean argument and sets the alert to visible (if true) or hidden (if false).
+
+  def set_opml_export_job_state_visible(visible)
+    self.opml_export_job_state.update show_alert: visible
+  end
+
   private
 
   ##
@@ -222,6 +233,8 @@ class User < ActiveRecord::Base
   # - ensure that the encrypted_password is encoded as utf-8
   # - create a new OpmlImportJobState instance for the user with state "NONE" if it doesn't already exist (to indicate that
   # the user has never ran an OPML import).
+  # - create a new OpmlExportJobState instance for the user with state "NONE" if it doesn't already exist (to indicate that
+  # the user has never ran an OPML export).
 
   def before_save_user
     self.encrypted_password.encode! 'utf-8'
@@ -229,6 +242,11 @@ class User < ActiveRecord::Base
     if self.opml_import_job_state.blank?
       self.create_opml_import_job_state state: OpmlImportJobState::NONE
       Rails.logger.debug "User #{self.email} has no OpmlImportJobState, creating one with state NONE"
+    end
+
+    if self.opml_export_job_state.blank?
+      self.create_opml_export_job_state state: OpmlExportJobState::NONE
+      Rails.logger.debug "User #{self.email} has no OpmlExportJobState, creating one with state NONE"
     end
   end
 

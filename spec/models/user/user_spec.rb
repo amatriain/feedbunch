@@ -155,6 +155,28 @@ describe User do
     end
   end
 
+  context 'relationship with opml_export_job_states' do
+
+    before :each do
+      @opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id
+      @user.opml_export_job_state = @opml_export_job_state
+    end
+
+    it 'deletes opml_export_job_states when deleting a user' do
+      OpmlExportJobState.count.should eq 1
+      @user.destroy
+      OpmlExportJobState.count.should eq 0
+    end
+
+    it 'deletes the old opml_export_job_state when adding a new one for a user' do
+      OpmlExportJobState.exists?(@opml_export_job_state).should be_true
+      opml_export_job_state2 = FactoryGirl.build :opml_export_job_state, user_id: @user.id
+      @user.opml_export_job_state = opml_export_job_state2
+
+      OpmlExportJobState.exists?(@opml_export_job_state).should be_false
+    end
+  end
+
   context 'relationship with refresh_feed_job_states' do
 
     before :each do

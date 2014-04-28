@@ -11,8 +11,15 @@ class OPMLExporter
 
   def self.enqueue_export_job(user)
     Rails.logger.info "Enqueuing export subscriptions job for user #{user.email} - #{user.name}"
+    opml_export_job_state = user.create_opml_export_job_state state: OpmlExportJobState::RUNNING
     Resque.enqueue ExportSubscriptionsJob, user.id
     return nil
+  rescue => e
+    Rails.logger.error "Error trying to export subscriptions in OPML format for user #{user.id} - #{user.email}"
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    opml_export_job_state.update state: OpmlExportJobState::ERROR
+    raise OpmlExportError.new
   end
 
   ##

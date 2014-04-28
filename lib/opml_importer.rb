@@ -34,8 +34,7 @@ class OPMLImporter
     Rails.logger.error "Error trying to read OPML data from file uploaded by user #{user.id} - #{user.email}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    opml_import_job_state.state = OpmlImportJobState::ERROR
-    opml_import_job_state.save
+    opml_import_job_state.update state: OpmlImportJobState::ERROR
     raise OpmlImportError.new
   end
 
