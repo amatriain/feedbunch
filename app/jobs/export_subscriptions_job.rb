@@ -33,6 +33,14 @@ class ExportSubscriptionsJob
     # Export and save the OPML file (actually XML)
     opml = OPMLExporter.export user
 
+    filename = self.user_filename user
+    # Save the OPML file in permanent storage for later retrieval.
+    Feedbunch::Application.config.uploads_manager.save filename, opml
+
+    # Update job state
+    user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
+                                      filename: filename
+
     # Send success notification email
     filename = 'feedbunch_export.opml'
     OpmlExportMailer.export_finished_success_email(user, filename, opml).deliver
@@ -49,5 +57,21 @@ class ExportSubscriptionsJob
 
     # Re-raise the exception so that Resque takes care of it
     raise e
+  end
+
+  private
+
+  ##
+  # Return the filename that will be used for the OPML export created by a user.
+  #
+  # This filename is guaranteed to be different for each user, and it's easy to find the file for a given user because
+  # the filename includes the user's email, which is guaranteed to be unique.
+  #
+  # The filename is always the same for a given user, because the app will not keep more than one OPML export for a given
+  # user.
+
+  def self.user_filename(user)
+    filename = "feedbunch_#{user.email}.opml"
+    return filename
   end
 end
