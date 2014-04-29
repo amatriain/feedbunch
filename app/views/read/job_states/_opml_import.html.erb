@@ -1,123 +1,130 @@
-<div class="row">
-  <div class="col-xs-12 col-md-9 alert alert-danger alert-block" ng-show="import_state=='ERROR'">
+<div id="import-process-state" class="row" ng-show="show_import_alert">
 
-    <button type="button"
-            class="close"
-            ng-click="hide_import_alert()"
-            title="<%= t 'read.job_states.dismiss' %>"
-            data-toggle="tooltip"
-            data-placement="top">
-      &times;
-    </button>
+  <div class="col-xs-12 col-md-10 col-md-offset-2">
 
     <div class="row">
-      <div class="col-xs-3 col-sm-2">
-        <i class="fa fa-warning fa-4x"></i>
-      </div>
+      <div class="col-xs-12 col-md-9 alert alert-danger alert-block" ng-show="import_state=='ERROR'">
 
-      <div class="col-xs-9 col-sm-10">
+        <button type="button"
+                class="close"
+                ng-click="hide_import_alert()"
+                title="<%= t 'read.job_states.dismiss' %>"
+                data-toggle="tooltip"
+                data-placement="top">
+          &times;
+        </button>
 
-        <p><%= t 'read.job_states.opml_import.error' %></p>
-        <p><a class="alert-link" data-toggle="modal" data-target="#opml-import-popup"><%= t 'read.job_states.opml_import.retry_error_1' %></a> <%= t 'read.job_states.opml_import.retry_error_2' %></p>
+        <div class="row">
+          <div class="col-xs-3 col-sm-2">
+            <i class="fa fa-warning fa-4x"></i>
+          </div>
 
-      </div>
-    </div>
+          <div class="col-xs-9 col-sm-10">
 
-  </div>
-</div>
+            <p><%= t 'read.job_states.opml_import.error' %></p>
+            <p><a class="alert-link" data-toggle="modal" data-target="#opml-import-popup"><%= t 'read.job_states.opml_import.retry_error_1' %></a> <%= t 'read.job_states.opml_import.retry_error_2' %></p>
 
-<div class="row">
-  <div id="opml-import-running" class="col-xs-12 col-md-9 alert alert-info alert-block" ng-show="import_state=='RUNNING'">
-
-    <div class="row">
-      <div class="col-xs-3 col-sm-2">
-        <i class="fa fa-cogs fa-4x"></i>
-      </div>
-
-      <div class="col-xs-9 col-sm-10">
-
-        <p><%= t 'read.job_states.opml_import.import_running' %></p>
-        <p>
-          <%= t 'read.job_states.opml_import.progress' %>
-        </p>
-        <div class="progress progress-striped active">
-          <div class="progress-bar" style="width: {{100 * import_processed / import_total}}%;">
-            <span class="sr-only">{{100 * import_processed / import_total}}%</span>
           </div>
         </div>
-        <p><%= t 'read.job_states.opml_import.import_background' %></p>
 
       </div>
     </div>
 
-  </div>
-</div>
-
-
-<div class="row">
-  <div class="col-xs-12 col-md-9 alert alert-success alert-block" ng-show="import_state=='SUCCESS'">
-
-    <button type="button"
-            class="close"
-            ng-click="hide_import_alert()"
-            title="<%= t 'read.job_states.dismiss' %>"
-            data-toggle="tooltip"
-            data-placement="top">
-      &times;
-    </button>
-
     <div class="row">
-      <div class="col-xs-3 col-sm-2">
-        <i class="fa fa-thumbs-o-up fa-4x"></i>
-      </div>
+      <div id="opml-import-running" class="col-xs-12 col-md-9 alert alert-info alert-block" ng-show="import_state=='RUNNING'">
 
-      <div class="col-xs-9 col-sm-10">
+        <div class="row">
+          <div class="col-xs-3 col-sm-2">
+            <i class="fa fa-cogs fa-4x"></i>
+          </div>
 
-        <p><%= t 'read.job_states.opml_import.success' %></p>
-        <p><a class="alert-link" data-toggle="modal" data-target="#opml-import-popup"><%= t 'read.job_states.opml_import.retry_success_1' %></a> <%= t 'read.job_states.opml_import.retry_success_2' %></p>
+          <div class="col-xs-9 col-sm-10">
+
+            <p><%= t 'read.job_states.opml_import.import_running' %></p>
+            <p>
+              <%= t 'read.job_states.opml_import.progress' %>
+            </p>
+            <div class="progress progress-striped active">
+              <div class="progress-bar" style="width: {{100 * import_processed / import_total}}%;">
+                <span class="sr-only">{{100 * import_processed / import_total}}%</span>
+              </div>
+            </div>
+            <p><%= t 'read.job_states.opml_import.import_background' %></p>
+
+          </div>
+        </div>
 
       </div>
     </div>
 
-  </div>
-</div>
-
-
-<div class="row">
-  <div class="col-xs-12 col-md-9 alert alert-warning alert-block" ng-show="import_state=='NONE'">
 
     <div class="row">
-      <button type="button"
-              class="close"
-              ng-click="hide_import_alert()"
-              title="<%= t 'read.job_states.dismiss' %>"
-              data-toggle="tooltip"
-              data-placement="top">
-        &times;
-      </button>
+      <div class="col-xs-12 col-md-9 alert alert-success alert-block" ng-show="import_state=='SUCCESS'">
+
+        <button type="button"
+                class="close"
+                ng-click="hide_import_alert()"
+                title="<%= t 'read.job_states.dismiss' %>"
+                data-toggle="tooltip"
+                data-placement="top">
+          &times;
+        </button>
+
+        <div class="row">
+          <div class="col-xs-3 col-sm-2">
+            <i class="fa fa-thumbs-o-up fa-4x"></i>
+          </div>
+
+          <div class="col-xs-9 col-sm-10">
+
+            <p><%= t 'read.job_states.opml_import.success' %></p>
+            <p><a class="alert-link" data-toggle="modal" data-target="#opml-import-popup"><%= t 'read.job_states.opml_import.retry_success_1' %></a> <%= t 'read.job_states.opml_import.retry_success_2' %></p>
+
+          </div>
+        </div>
+
+      </div>
     </div>
 
+
     <div class="row">
-      <div class="col-xs-3 col-sm-2">
-        <i class="fa fa-magic fa-4x"></i>
-      </div>
+      <div class="col-xs-12 col-md-9 alert alert-warning alert-block" ng-show="import_state=='NONE'">
 
-      <div class="col-xs-9 col-sm-10">
+        <div class="row">
+          <button type="button"
+                  class="close"
+                  ng-click="hide_import_alert()"
+                  title="<%= t 'read.job_states.dismiss' %>"
+                  data-toggle="tooltip"
+                  data-placement="top">
+            &times;
+          </button>
+        </div>
 
-        <p><%= t 'read.job_states.opml_import.introduction' %></p>
-        <ol class="start-list icons-ul">
-          <li>
-            <i class="fa fa-angle-right"></i>
-            <%= t 'read.job_states.opml_import.download_data_html' %>
-          </li>
-          <li>
-            <i class="fa fa-angle-right"></i>
-            <a id="start-opml-import"
-               class="alert-link"
-               data-toggle="modal"
-               data-target="#opml-import-popup"><%= t 'read.job_states.opml_import.import_data_1' %></a><%= t 'read.job_states.opml_import.import_data_2' %>
-          </li>
-        </ol>
+        <div class="row">
+          <div class="col-xs-3 col-sm-2">
+            <i class="fa fa-magic fa-4x"></i>
+          </div>
+
+          <div class="col-xs-9 col-sm-10">
+
+            <p><%= t 'read.job_states.opml_import.introduction' %></p>
+            <ol class="start-list icons-ul">
+              <li>
+                <i class="fa fa-angle-right"></i>
+                <%= t 'read.job_states.opml_import.download_data_html' %>
+              </li>
+              <li>
+                <i class="fa fa-angle-right"></i>
+                <a id="start-opml-import"
+                   class="alert-link"
+                   data-toggle="modal"
+                   data-target="#opml-import-popup"><%= t 'read.job_states.opml_import.import_data_1' %></a><%= t 'read.job_states.opml_import.import_data_2' %>
+              </li>
+            </ol>
+
+          </div>
+        </div>
 
       </div>
     </div>
