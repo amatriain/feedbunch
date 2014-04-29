@@ -11,14 +11,18 @@ class OPMLExporter
 
   def self.enqueue_export_job(user)
     Rails.logger.info "Enqueuing export subscriptions job for user #{user.email} - #{user.name}"
-    opml_export_job_state = user.create_opml_export_job_state state: OpmlExportJobState::RUNNING
+    # Destroy the current export job state for the user. This in turn triggers a deletion of any old OPML file for the user.
+    # This is not strictly necessary (just creating a new job state will delete the old one in the current ActiveRecord version),
+    # but I think it's better if something this important is as explicit as possible.
+    user.opml_export_job_state.destroy!
+    user.create_opml_export_job_state state: OpmlExportJobState::RUNNING
     Resque.enqueue ExportSubscriptionsJob, user.id
     return nil
   rescue => e
     Rails.logger.error "Error trying to export subscriptions in OPML format for user #{user.id} - #{user.email}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    opml_export_job_state.update state: OpmlExportJobState::ERROR
+    user.create_opml_export_job_state state: OpmlExportJobState::ERROR
     raise OpmlExportError.new
   end
 
@@ -63,8 +67,6 @@ class OPMLExporter
     opml = builder.to_xml
 
     filename = self.user_filename user
-    # Delete any OPML file already saved for this user (we only keep one file per user)
-    self.delete_user_export user
     # Save the OPML file in permanent storage for later retrieval.
     Feedbunch::Application.config.uploads_manager.save filename, opml
 
@@ -73,15 +75,6 @@ class OPMLExporter
                                       filename: filename
 
     return opml
-  end
-
-  ##
-  # Delete the OPML file saved for a user, if any.
-
-  def self.delete_user_export(user)
-    filename = self.user_filename user
-    exists = Feedbunch::Application.config.uploads_manager.exists? filename
-    Feedbunch::Application.config.uploads_manager.delete filename if exists
   end
 
   private

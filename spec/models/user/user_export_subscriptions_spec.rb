@@ -18,6 +18,24 @@ describe User do
       @user.opml_export_job_state.state.should eq OpmlExportJobState::RUNNING
     end
 
+    it 'deletes old export job state and OPML files for the user' do
+      filename = 'some_file.opml'
+      opml_export_job_state = FactoryGirl.build :opml_export_job_state,
+                                                user_id: @user.id,
+                                                state: OpmlExportJobState::SUCCESS,
+                                                filename: filename
+      @user.opml_export_job_state = opml_export_job_state
+
+      Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
+      Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |f|
+        f.should eq filename
+      end
+
+      @user.export_subscriptions
+
+      opml_export_job_state.destroyed?.should be_true
+    end
+
     it 'sets opml_import_job_state state as ERROR if an error is raised' do
       Resque.stub(:enqueue).and_raise StandardError.new
       expect{@user.export_subscriptions}.to raise_error StandardError

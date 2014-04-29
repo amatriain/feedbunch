@@ -27,6 +27,7 @@ class OpmlExportJobState < ActiveRecord::Base
   validate :filename_present_only_if_job_successful
 
   before_validation :default_values
+  before_destroy :delete_opml_file
 
   private
 
@@ -46,6 +47,18 @@ class OpmlExportJobState < ActiveRecord::Base
       errors.add :filename, "can't be blank if the job state is SUCCESS"
     elsif state != SUCCESS && filename.present?
       errors.add :filename, "must be blank if the job state is different from SUCCESS"
+    end
+  end
+
+  ##
+  # If there is a filename saved for this job state, check if it actually exists. If it does,
+  # delete it before destroying this job state.
+
+  def delete_opml_file
+    if self.filename.present?
+      if Feedbunch::Application.config.uploads_manager.exists? self.filename
+        Feedbunch::Application.config.uploads_manager.delete self.filename
+      end
     end
   end
 end

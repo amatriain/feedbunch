@@ -99,23 +99,6 @@ OPML_DOCUMENT
     ExportSubscriptionsJob.perform @user.id
   end
 
-  it 'deletes old OPML files for the user' do
-    Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
-    Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |filename|
-      filename.should eq "feedbunch_#{@user.email}.opml"
-    end
-    ExportSubscriptionsJob.perform @user.id
-  end
-
-  it 'deletes OPML files when deleting a user' do
-    Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
-    Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |filename|
-      filename.should eq "feedbunch_#{@user.email}.opml"
-    end
-
-    @user.destroy
-  end
-
   it 'sets data export state to ERROR if there is a problem doing the export' do
     OPMLExporter.stub(:export).and_raise StandardError.new
     expect {ExportSubscriptionsJob.perform @user.id}.to raise_error StandardError

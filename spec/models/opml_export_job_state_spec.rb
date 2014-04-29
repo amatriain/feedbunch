@@ -79,4 +79,16 @@ describe OpmlExportJobState do
 
   end
 
+  it 'deletes OPML file when deleting a opml_export_job_state' do
+    filename = 'some_filename.opml'
+    @user.create_opml_export_job_state
+    @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: filename
+    Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
+    Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |f|
+      f.should eq filename
+    end
+
+    @user.opml_export_job_state.destroy
+  end
+
 end
