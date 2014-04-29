@@ -15,7 +15,7 @@ describe ImportSubscriptionsJob do
     @filepath = File.join __dir__, '..', 'attachments', @filename
     @file_contents = File.read @filepath
 
-    Feedbunch::Application.config.uploads_manager.stub :read do |filename|
+    Feedbunch::Application.config.uploads_manager.stub :read do |folder, filename|
       if filename == @filename
         @file_contents
       else
@@ -69,7 +69,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'reads uploaded file' do
-    Feedbunch::Application.config.uploads_manager.should_receive(:read).with @filename
+    Feedbunch::Application.config.uploads_manager.should_receive(:read).with OPMLImporter::FOLDER, @filename
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
@@ -173,12 +173,12 @@ describe ImportSubscriptionsJob do
   end
 
   it 'deletes file after finishing successfully' do
-    Feedbunch::Application.config.uploads_manager.should_receive(:delete).with @filename
+    Feedbunch::Application.config.uploads_manager.should_receive(:delete).with OPMLImporter::FOLDER, @filename
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
   it 'deletes file after finishing with an error' do
-    Feedbunch::Application.config.uploads_manager.should_receive(:delete).with @filename
+    Feedbunch::Application.config.uploads_manager.should_receive(:delete).with OPMLImporter::FOLDER, @filename
     ImportSubscriptionsJob.perform @filename, 1234567890
   end
 

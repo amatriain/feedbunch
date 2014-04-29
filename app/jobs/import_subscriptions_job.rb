@@ -45,7 +45,7 @@ class ImportSubscriptionsJob
     # Re-raise the exception so that Resque takes care of it
     raise e
   ensure
-    Feedbunch::Application.config.uploads_manager.delete filename
+    Feedbunch::Application.config.uploads_manager.delete OPMLImporter::FOLDER, filename
   end
 
   private

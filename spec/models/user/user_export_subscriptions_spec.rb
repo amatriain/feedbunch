@@ -27,8 +27,9 @@ describe User do
       @user.opml_export_job_state = opml_export_job_state
 
       Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
-      Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |f|
-        f.should eq filename
+      Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |folder, file|
+        folder.should eq OPMLExporter::FOLDER
+        file.should eq filename
       end
 
       @user.export_subscriptions

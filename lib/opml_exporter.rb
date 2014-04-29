@@ -5,6 +5,9 @@ require 'nokogiri'
 
 class OPMLExporter
 
+  # Class constant for the directory in which OPML export files will be saved.
+  FOLDER = 'opml_exports'
+
   ##
   # Enqueue a background job to export a user's subscriptions in OPML format.
   # Receives as argument the user who is doing the export.

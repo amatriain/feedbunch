@@ -7,6 +7,9 @@ require 'nokogiri'
 
 class OPMLImporter
 
+  # Class constant for the directory in which OPML export files will be saved.
+  FOLDER = 'opml_imports'
+
   ##
   # This method extracts subscriptions data from an OPML file and
   # saves them in a (unzipped) OPML file in the filesystem. Afterwards it enqueues a background job
@@ -26,7 +29,7 @@ class OPMLImporter
     subscription_data = self.read_data_file file
 
     filename = "#{Time.now.to_i}.opml"
-    Feedbunch::Application.config.uploads_manager.save filename, subscription_data
+    Feedbunch::Application.config.uploads_manager.save FOLDER, filename, subscription_data
 
     Rails.logger.info "Enqueuing Import Subscriptions Job for user #{user.id} - #{user.email}, OPML file #{filename}"
     Resque.enqueue ImportSubscriptionsJob, filename, user.id
@@ -49,7 +52,7 @@ class OPMLImporter
 
   def self.import(filename, user)
     # Open file and check if it actually exists
-    xml_contents = Feedbunch::Application.config.uploads_manager.read filename
+    xml_contents = Feedbunch::Application.config.uploads_manager.read FOLDER, filename
     if xml_contents == nil
       Rails.logger.error "Trying to import for user #{user.id} from non-existing OPML file: #{filename}"
       raise OpmlImportError.new

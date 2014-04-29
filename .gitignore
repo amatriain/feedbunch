@@ -21,4 +21,5 @@ config/secrets.yml
 coverage/*
 redis/*.aof
 redis/*.rdb
-uploads/*.opml
+opml_imports/*
+opml_exports/*
