@@ -156,14 +156,14 @@ class SubscribeUserJob
 
     # If a SubscribeUserJob is enqueued, import process is not finished
     peek_start = 0
-    job = Resque.peek 'update_feeds', peek_start
+    job = Resque.peek 'subscriptions', peek_start
     while job.present?
       if job['class'] == 'SubscribeUserJob'
         args = job['args']
         return false if args[0] == user.id && (args[1] != feed_url || args[2] != folder_id) && args[3] == true
       end
       peek_start += 1
-      job = Resque.peek 'update_feeds', peek_start
+      job = Resque.peek 'subscriptions', peek_start
     end
 
     # If no jobs related to the import are running or queued, the import process has finished
