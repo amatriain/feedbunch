@@ -52,7 +52,7 @@ angular.module('feedbunch').service 'importStateSvc',
     #---------------------------------------------
     hide_alert: ->
       $rootScope.show_import_alert = false
-      $http.put("/api/opml_imports.json", opml_import_job_state: {show_alert: 'false'})
+      $http.put("/api/opml_imports.json", opml_import: {show_alert: 'false'})
 
   return service
 ]
