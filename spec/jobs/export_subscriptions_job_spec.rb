@@ -4,6 +4,9 @@ describe ExportSubscriptionsJob do
 
   before :each do
     @user = FactoryGirl.create :user
+    @opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+                                               state: OpmlExportJobState::RUNNING
+    @user.opml_export_job_state = @opml_export_job_state
 
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
@@ -59,9 +62,37 @@ OPML_DOCUMENT
   context 'validations' do
 
     it 'does nothing if user does not exist' do
+      Feedbunch::Application.config.uploads_manager.should_not receive :save
+      Feedbunch::Application.config.uploads_manager.should_not receive :delete
       ExportSubscriptionsJob.perform 1234567890
-      Feedbunch::Application.config.uploads_manager.should_not receive(:save)
-      Feedbunch::Application.config.uploads_manager.should_not receive(:delete)
+    end
+
+    it 'does nothing if the user does not have a opml_export_job_state' do
+      @user.opml_export_job_state.destroy
+      Feedbunch::Application.config.uploads_manager.should_not receive :save
+      Feedbunch::Application.config.uploads_manager.should_not receive :delete
+      ExportSubscriptionsJob.perform @user.id
+    end
+
+    it 'does nothing if the opml_import_job_state for the user has state NONE' do
+      @user.opml_export_job_state.update state: OpmlExportJobState::NONE
+      Feedbunch::Application.config.uploads_manager.should_not receive :save
+      Feedbunch::Application.config.uploads_manager.should_not receive :delete
+      ExportSubscriptionsJob.perform @user.id
+    end
+
+    it 'does nothing if the opml_import_job_state for the user has state ERROR' do
+      @user.opml_export_job_state.update state: OpmlExportJobState::ERROR
+      Feedbunch::Application.config.uploads_manager.should_not receive :save
+      Feedbunch::Application.config.uploads_manager.should_not receive :delete
+      ExportSubscriptionsJob.perform @user.id
+    end
+
+    it 'does nothing if the opml_import_job_state for the user has state SUCCESS' do
+      @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS
+      Feedbunch::Application.config.uploads_manager.should_not receive :save
+      Feedbunch::Application.config.uploads_manager.should_not receive :delete
+      ExportSubscriptionsJob.perform @user.id
     end
   end
 
@@ -90,15 +121,29 @@ OPML_DOCUMENT
     @user.destroy
   end
 
-  it 'sends notification email if finished successfully' do
-    ExportSubscriptionsJob.perform @user.id
-    mail_should_be_sent to: @user.email, text: 'Your feed subscriptions have been exported by Feedbunch'
+  it 'sets data export state to ERROR if there is a problem doing the export' do
+    OPMLExporter.stub(:export).and_raise StandardError.new
+    expect {ExportSubscriptionsJob.perform @user.id}.to raise_error StandardError
+    @user.reload.opml_export_job_state.state.should eq OpmlExportJobState::ERROR
   end
 
-  it 'sends notification email if finished with an error' do
-    OPMLExporter.stub(:export).and_raise StandardError.new
-    expect {ExportSubscriptionsJob.perform @user.id}.to raise_error
-    mail_should_be_sent to: @user.email, text: 'There has been an error exporting your feed subscriptions from Feedbunch'
+  it 'sets data export state to SUCCESS if the export finishes successfully' do
+    ExportSubscriptionsJob.perform @user.id
+    @user.reload.opml_export_job_state.state.should eq OpmlExportJobState::SUCCESS
+  end
+
+  context 'email notifications' do
+
+    it 'sends notification if finished successfully' do
+      ExportSubscriptionsJob.perform @user.id
+      mail_should_be_sent to: @user.email, text: 'Your feed subscriptions have been exported by Feedbunch'
+    end
+
+    it 'sends notification if finished with an error' do
+      OPMLExporter.stub(:export).and_raise StandardError.new
+      expect {ExportSubscriptionsJob.perform @user.id}.to raise_error
+      mail_should_be_sent to: @user.email, text: 'There has been an error exporting your feed subscriptions from Feedbunch'
+    end
   end
 
 end

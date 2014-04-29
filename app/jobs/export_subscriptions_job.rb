@@ -25,10 +25,10 @@ class ExportSubscriptionsJob
     user = User.find user_id
 
     # Check that user has a data_export with state RUNNING
-    #if user.opml_import_job_state.try(:state) != OpmlImportJobState::RUNNING
-    #  Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with state RUNNING, aborting OPML import"
-    #  return
-    #end
+    if user.opml_export_job_state.try(:state) != OpmlExportJobState::RUNNING
+      Rails.logger.error "User #{user.id} - #{user.email} does not have a data export with state RUNNING, aborting OPML export"
+      return
+    end
 
     # Export and save the OPML file (actually XML)
     opml = OPMLExporter.export user
@@ -38,7 +38,7 @@ class ExportSubscriptionsJob
     OpmlExportMailer.export_finished_success_email(user, filename, opml).deliver
 
     # Update job state
-    # TODO
+    user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS
   rescue => e
     # If an exception is raised, set the export process state to ERROR
     Rails.logger.error e.message
@@ -48,25 +48,9 @@ class ExportSubscriptionsJob
     OpmlExportMailer.export_finished_error_email(user).deliver
 
     # Update job state
-    #self.import_state_error user
+    user.opml_export_job_state.update state: OpmlExportJobState::ERROR if user.present?
 
     # Re-raise the exception so that Resque takes care of it
     raise e
-  end
-
-  private
-
-  ##
-  # Sets the opml_import_job_state state for the user as ERROR.
-  # Creates a new opml_import_job_state if the user doesn't already have one.
-  #
-  # Receives as argument the user whose import process has failed.
-
-  def self.import_state_error(user)
-    user.create_opml_import_job_state if user.opml_import_job_state.blank?
-    user.opml_import_job_state.state = OpmlImportJobState::ERROR
-    user.opml_import_job_state.save
-    Rails.logger.info "Sending data import error email to user #{user.id} - #{user.email}"
-    OpmlImportMailer.import_finished_error_email(user).deliver
   end
 end

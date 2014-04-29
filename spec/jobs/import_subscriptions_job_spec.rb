@@ -151,6 +151,13 @@ describe ImportSubscriptionsJob do
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
+  it 'does nothing if the opml_import_job_state for the user has state NONE' do
+    @user.opml_import_job_state.state = OpmlImportJobState::NONE
+    @user.opml_import_job_state.save
+    Feedbunch::Application.config.uploads_manager.should_not_receive :read
+    ImportSubscriptionsJob.perform @filename, @user.id
+  end
+
   it 'does nothing if the opml_import_job_state for the user has state ERROR' do
     @user.opml_import_job_state.state = OpmlImportJobState::ERROR
     @user.opml_import_job_state.save
