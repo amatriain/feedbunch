@@ -29,6 +29,7 @@ class OPMLExporter
   # - user doing the export.
   #
   # If successful, saves a file with the OPML export in the currently configured upload manager (Amazon S3 in production).
+  # It also updates the state attribute of the user's opml_export_job_state to "SUCCESS".
   #
   # Returns a string with the OPML.
 
@@ -67,6 +68,10 @@ class OPMLExporter
     # Save the OPML file in permanent storage for later retrieval.
     Feedbunch::Application.config.uploads_manager.save filename, opml
 
+    # Update job state
+    user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
+                                      filename: filename
+
     return opml
   end
 
@@ -78,6 +83,8 @@ class OPMLExporter
     exists = Feedbunch::Application.config.uploads_manager.exists? filename
     Feedbunch::Application.config.uploads_manager.delete filename if exists
   end
+
+  private
 
   ##
   # Return the filename that will be used for the OPML export created by a user.

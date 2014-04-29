@@ -63,35 +63,30 @@ OPML_DOCUMENT
 
     it 'does nothing if user does not exist' do
       Feedbunch::Application.config.uploads_manager.should_not receive :save
-      Feedbunch::Application.config.uploads_manager.should_not receive :delete
       ExportSubscriptionsJob.perform 1234567890
     end
 
     it 'does nothing if the user does not have a opml_export_job_state' do
       @user.opml_export_job_state.destroy
       Feedbunch::Application.config.uploads_manager.should_not receive :save
-      Feedbunch::Application.config.uploads_manager.should_not receive :delete
       ExportSubscriptionsJob.perform @user.id
     end
 
     it 'does nothing if the opml_import_job_state for the user has state NONE' do
       @user.opml_export_job_state.update state: OpmlExportJobState::NONE
       Feedbunch::Application.config.uploads_manager.should_not receive :save
-      Feedbunch::Application.config.uploads_manager.should_not receive :delete
       ExportSubscriptionsJob.perform @user.id
     end
 
     it 'does nothing if the opml_import_job_state for the user has state ERROR' do
       @user.opml_export_job_state.update state: OpmlExportJobState::ERROR
       Feedbunch::Application.config.uploads_manager.should_not receive :save
-      Feedbunch::Application.config.uploads_manager.should_not receive :delete
       ExportSubscriptionsJob.perform @user.id
     end
 
     it 'does nothing if the opml_import_job_state for the user has state SUCCESS' do
-      @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS
+      @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: 'some_filename.opml'
       Feedbunch::Application.config.uploads_manager.should_not receive :save
-      Feedbunch::Application.config.uploads_manager.should_not receive :delete
       ExportSubscriptionsJob.perform @user.id
     end
   end

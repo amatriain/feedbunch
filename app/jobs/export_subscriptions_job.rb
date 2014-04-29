@@ -34,11 +34,8 @@ class ExportSubscriptionsJob
     opml = OPMLExporter.export user
 
     # Send success notification email
-    filename = OPMLExporter.user_filename user
+    filename = 'feedbunch_export.opml'
     OpmlExportMailer.export_finished_success_email(user, filename, opml).deliver
-
-    # Update job state
-    user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS
   rescue => e
     # If an exception is raised, set the export process state to ERROR
     Rails.logger.error e.message
