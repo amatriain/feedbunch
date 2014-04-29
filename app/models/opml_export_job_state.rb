@@ -10,6 +10,7 @@
 # "NONE" (the default), "RUNNING", "SUCCESS" and "ERROR".
 # - show_alert: if true (the default), show an alert in the Start page informing of the data export state. If false,
 # the user has closed the alert related to OPML exports and doesn't want it to be displayed again.
+# - filename: name of the OPML file exported. It only takes value if the state is "SUCCESS"
 
 class OpmlExportJobState < ActiveRecord::Base
   # Class constants for the possible states
@@ -23,6 +24,7 @@ class OpmlExportJobState < ActiveRecord::Base
 
   validates :state, presence: true, inclusion: {in: [NONE, RUNNING, ERROR, SUCCESS]}
   validates :show_alert, inclusion: {in: [true, false]}
+  validate :filename_present_only_if_job_successful
 
   before_validation :default_values
 
@@ -34,5 +36,16 @@ class OpmlExportJobState < ActiveRecord::Base
   def default_values
     self.state = NONE if self.state.blank?
     self.show_alert = true if self.show_alert.nil?
+  end
+
+  ##
+  # Validate that the filename attribute is present if and only if the job state is "SUCCESS"
+
+  def filename_present_only_if_job_successful
+    if state == SUCCESS && filename.blank?
+      errors.add :filename, "can't be blank if the job state is SUCCESS"
+    elsif state != SUCCESS && filename.present?
+      errors.add :filename, "must be blank if the job state is different from SUCCESS"
+    end
   end
 end
