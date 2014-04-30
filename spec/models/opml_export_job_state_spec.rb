@@ -84,7 +84,8 @@ describe OpmlExportJobState do
     @user.create_opml_export_job_state
     @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: filename
     Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
-    Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |folder, file|
+    Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |user, folder, file|
+      user.should eq @user
       folder.should eq OPMLExporter::FOLDER
       file.should eq filename
     end

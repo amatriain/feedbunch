@@ -92,7 +92,8 @@ OPML_DOCUMENT
   end
 
   it 'uploads correct OPML file' do
-    Feedbunch::Application.config.uploads_manager.should receive(:save) do |folder, filename, content|
+    Feedbunch::Application.config.uploads_manager.should receive(:save) do |user, folder, filename, content|
+      user.should eq @user
       folder.should eq OPMLExporter::FOLDER
       filename.should eq "feedbunch_#{@user.email}.opml"
       content.should eq @opml

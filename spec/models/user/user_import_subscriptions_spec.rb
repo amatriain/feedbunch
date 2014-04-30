@@ -46,7 +46,7 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
-        Feedbunch::Application.config.uploads_manager.should_receive(:save).with OPMLImporter::FOLDER, @filename, @opml_data
+        Feedbunch::Application.config.uploads_manager.should_receive(:save).with @user, OPMLImporter::FOLDER, @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 
@@ -64,7 +64,7 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
-        Feedbunch::Application.config.uploads_manager.should_receive(:save).with OPMLImporter::FOLDER, @filename, @opml_data
+        Feedbunch::Application.config.uploads_manager.should_receive(:save).with @user, OPMLImporter::FOLDER, @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 
@@ -81,7 +81,7 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
-        Feedbunch::Application.config.uploads_manager.should_receive(:save).with OPMLImporter::FOLDER, @filename, @opml_data
+        Feedbunch::Application.config.uploads_manager.should_receive(:save).with @user, OPMLImporter::FOLDER, @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 
@@ -98,7 +98,7 @@ describe User do
       end
 
       it 'saves timestamped file in uploads folder' do
-        Feedbunch::Application.config.uploads_manager.should_receive(:save).with OPMLImporter::FOLDER, @filename, @opml_data
+        Feedbunch::Application.config.uploads_manager.should_receive(:save).with @user, OPMLImporter::FOLDER, @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 

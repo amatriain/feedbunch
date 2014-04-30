@@ -17,7 +17,7 @@ class OPMLExporter
     # Destroy the current export job state for the user. This in turn triggers a deletion of any old OPML file for the user.
     # This is not strictly necessary (just creating a new job state will delete the old one in the current ActiveRecord version),
     # but I think it's better if something this important is as explicit as possible.
-    user.opml_export_job_state.destroy!
+    user.opml_export_job_state.destroy
     user.create_opml_export_job_state state: OpmlExportJobState::RUNNING
     Resque.enqueue ExportSubscriptionsJob, user.id
     return nil

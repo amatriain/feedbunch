@@ -15,7 +15,8 @@ describe ImportSubscriptionsJob do
     @filepath = File.join __dir__, '..', 'attachments', @filename
     @file_contents = File.read @filepath
 
-    Feedbunch::Application.config.uploads_manager.stub :read do |folder, filename|
+    Feedbunch::Application.config.uploads_manager.stub :read do |user, folder, filename|
+      user.should eq @user
       if filename == @filename
         @file_contents
       else
@@ -69,7 +70,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'reads uploaded file' do
-    Feedbunch::Application.config.uploads_manager.should_receive(:read).with OPMLImporter::FOLDER, @filename
+    Feedbunch::Application.config.uploads_manager.should_receive(:read).with @user, OPMLImporter::FOLDER, @filename
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
@@ -173,13 +174,15 @@ describe ImportSubscriptionsJob do
   end
 
   it 'deletes file after finishing successfully' do
-    Feedbunch::Application.config.uploads_manager.should_receive(:delete).with OPMLImporter::FOLDER, @filename
+    Feedbunch::Application.config.uploads_manager.should_receive(:delete).with @user, OPMLImporter::FOLDER, @filename
     ImportSubscriptionsJob.perform @filename, @user.id
   end
 
   it 'deletes file after finishing with an error' do
-    Feedbunch::Application.config.uploads_manager.should_receive(:delete).with OPMLImporter::FOLDER, @filename
-    ImportSubscriptionsJob.perform @filename, 1234567890
+    User.any_instance.stub(:opml_import_job_state).and_raise StandardError.new
+    Feedbunch::Application.config.uploads_manager.should_receive(:delete).with @user, OPMLImporter::FOLDER, @filename
+
+    expect {ImportSubscriptionsJob.perform @filename, @user.id}.to raise_error StandardError
   end
 
   context 'email notifications' do
