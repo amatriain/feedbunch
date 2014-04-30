@@ -13,14 +13,14 @@ class Api::OpmlImportsController < ApplicationController
 
   def show
     if OpmlImportJobState.exists? user_id: current_user.id
-      opml_import_job_state = OpmlImportJobState.where(user_id: current_user.id).first
+      @opml_import_job_state = OpmlImportJobState.where(user_id: current_user.id).first
     else
       Rails.logger.warn "User #{current_user.id} - #{current_user.email} has no OpmlImportJobState, creating one with state NONE"
-      opml_import_job_state = current_user.create_opml_import_job_state state: OpmlImportJobState::NONE
+      @opml_import_job_state = current_user.create_opml_import_job_state state: OpmlImportJobState::NONE
     end
 
-    Rails.logger.debug "OpmlImportJobState for user #{current_user.id} - #{current_user.email}: id #{opml_import_job_state.try :id}, state #{opml_import_job_state.try :state}"
-    render 'show', locals: {opml_import_job_state: opml_import_job_state}
+    Rails.logger.debug "OpmlImportJobState for user #{current_user.id} - #{current_user.email}: id #{@opml_import_job_state.try :id}, state #{@opml_import_job_state.try :state}"
+    render 'show', locals: {opml_import_job_state: @opml_import_job_state}
   rescue => e
     handle_error e
   end

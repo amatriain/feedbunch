@@ -15,6 +15,11 @@ describe Api::OpmlImportsController do
       response.status.should eq 200
     end
 
+    it 'assigns the correct opml_import_job_state' do
+      get :show, format: :json
+      assigns(:opml_import_job_state).should eq @user.opml_import_job_state
+    end
+
   end
 
   context 'POST create' do
