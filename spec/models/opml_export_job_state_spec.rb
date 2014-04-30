@@ -30,36 +30,24 @@ describe OpmlExportJobState do
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::NONE,
                                                 filename: @filename
-      opml_export_job_state.should_not be_valid
-
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
-                                                state: OpmlExportJobState::NONE,
-                                                filename: nil
-      opml_export_job_state.should be_valid
+      opml_export_job_state.save!
+      opml_export_job_state.filename.should be_nil
     end
 
     it 'does not have a filename if it has state RUNNING' do
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::RUNNING,
                                                 filename: @filename
-      opml_export_job_state.should_not be_valid
-
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
-                                                state: OpmlExportJobState::RUNNING,
-                                                filename: nil
-      opml_export_job_state.should be_valid
+      opml_export_job_state.save!
+      opml_export_job_state.filename.should be_nil
     end
 
     it 'does not have a filename if it has state ERROR' do
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::ERROR,
                                                 filename: @filename
-      opml_export_job_state.should_not be_valid
-
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
-                                                state: OpmlExportJobState::ERROR,
-                                                filename: nil
-      opml_export_job_state.should be_valid
+      opml_export_job_state.save!
+      opml_export_job_state.filename.should be_nil
     end
   end
 

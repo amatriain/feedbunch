@@ -37,6 +37,7 @@ class OpmlExportJobState < ActiveRecord::Base
   def default_values
     self.state = NONE if self.state.blank?
     self.show_alert = true if self.show_alert.nil?
+    self.filename = nil if self.state != SUCCESS
   end
 
   ##
