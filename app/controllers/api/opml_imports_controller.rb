@@ -6,7 +6,7 @@ class Api::OpmlImportsController < ApplicationController
   before_filter :authenticate_user!
 
   respond_to :html, only: [:create]
-  respond_to :json, only: [:show]
+  respond_to :json, only: [:show, :update]
 
   ##
   # Return JSON indicating the state of the "import subscriptions" process for the current user
