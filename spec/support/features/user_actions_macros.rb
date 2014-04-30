@@ -382,6 +382,13 @@ def close_import_alert
 end
 
 ##
+# Click on the "close" button of the currently displayed opml-export alert
+
+def close_export_alert
+  find('#start-info #export-process-state button.close', visible: true).click
+end
+
+##
 # Click on the "close" button of a currently visible refresh feed job state alert.
 #
 # Receives the id of the job as argument.
@@ -397,4 +404,12 @@ end
 
 def close_subscribe_job_alert(job_id)
   find("#start-info #job-states #subscribe-state-#{job_id} button.close", visible: true).click
+end
+
+##
+# Go to the edit account page and click on the "export subscriptions" button.
+
+def export_subscriptions
+  visit edit_user_registration_path
+  find("a[href*='#{api_opml_exports_path}']").click
 end
