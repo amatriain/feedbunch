@@ -17,7 +17,7 @@ describe User do
 
       timestamp = 1371146348
       Time.stub(:now).and_return Time.at(timestamp)
-      @filename = "#{timestamp}.opml"
+      @filename = "feedbunch_import_#{timestamp}.opml"
     end
 
     it 'has a opml_import_job_state with state NONE as soon as the user is created' do

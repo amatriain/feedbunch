@@ -3,9 +3,11 @@ require 'spec_helper'
 describe S3Client do
 
   before :each do
+    @user = FactoryGirl.create :user
     @file_content = 'some_file_content'
     @filename = 'filename.txt'
-    @s3_key = 'some/s3/key'
+    @upload_folder = OPMLImporter::FOLDER
+    @s3_key = "#{@upload_folder}/#{@user.id.to_s}/#{@filename}"
 
     # Substitute the AWS S3 object that makes the call to the AWS API with
     # a mock object
@@ -20,17 +22,17 @@ describe S3Client do
   end
 
   it 'uploads file to S3' do
-    @s3_objects_mock.should_receive(:create).with("uploads/#{@filename}", @file_content)
-    S3Client.save @filename, @file_content
+    @s3_objects_mock.should_receive(:create).with(@s3_key, @file_content)
+    S3Client.save @user, @upload_folder, @filename, @file_content
   end
 
   it 'deletes file from S3' do
     @s3_object_mock.should_receive :delete
-    S3Client.delete @filename
+    S3Client.delete @user, @upload_folder, @filename
   end
 
   it 'reads file from S3' do
-    content = S3Client.read @filename
+    content = S3Client.read @user, @upload_folder, @filename
     content.should eq @file_content
   end
 
@@ -39,18 +41,18 @@ describe S3Client do
     error = AWS::Errors::Base.new(error_message)
     AWS::S3.any_instance.stub(:buckets).and_raise error
 
-    expect {S3Client.save @filename, @file_content}.to raise_error(AWS::Errors::Base, error_message)
-    expect {S3Client.delete @filename}.to raise_error(AWS::Errors::Base, error_message)
+    expect {S3Client.save @user, @upload_folder, @filename, @file_content}.to raise_error(AWS::Errors::Base, error_message)
+    expect {S3Client.delete @user, @upload_folder, @filename}.to raise_error(AWS::Errors::Base, error_message)
   end
 
   it 'returns true if file exists' do
-    exists = S3Client.exists? @filename
+    exists = S3Client.exists? @user, @upload_folder, @filename
     exists.should be_true
   end
 
   it 'returns false if file does not exist' do
     @s3_object_mock.stub(:exists?).and_return false
-    exists = S3Client.exists? @filename
+    exists = S3Client.exists? @user, @upload_folder, @filename
     exists.should be_false
   end
 
