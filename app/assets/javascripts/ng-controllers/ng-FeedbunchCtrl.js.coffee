@@ -3,11 +3,11 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
-['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'timerFlagSvc',
+['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'exportStateSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc'
-($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, timerFlagSvc,
+($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc)->
@@ -28,6 +28,9 @@ tooltipSvc, startPageSvc, jobStateSvc)->
   # Initialize import alert tooltips
   tooltipSvc.import_state_tooltips()
 
+  # Initialize export alert tooltips
+  tooltipSvc.export_state_tooltips()
+
   # Load configuration for the current user.
   userConfigSvc.load_config()
 
@@ -36,6 +39,9 @@ tooltipSvc, startPageSvc, jobStateSvc)->
 
   # Load folders and feeds via AJAX on startup
   feedsFoldersSvc.start_refresh_timer()
+
+  # Load state of data export process for the current user
+  exportStateSvc.load_data false
 
   # Load state of data import process for the current user
   importStateSvc.load_data false
@@ -296,6 +302,13 @@ tooltipSvc, startPageSvc, jobStateSvc)->
   #--------------------------------------------
   $scope.hide_import_alert = ->
     importStateSvc.hide_alert()
+    return
+
+  #--------------------------------------------
+  # Hide permanently the OPML export alert displayed in the start page
+  #--------------------------------------------
+  $scope.hide_export_alert = ->
+    exportStateSvc.hide_alert()
     return
 
   #--------------------------------------------

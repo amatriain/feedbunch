@@ -1,0 +1,11 @@
+<%# Notice displayed when the export process finishes successfully %>
+<div id="export-process-success" class="alert alert-success" ng-show="success_exporting">
+  <button type="button" class="close" ng-click="reset_flag('success_exporting')">&times;</button>
+  <p><%= t 'read.alerts.opml_export.finish_success' %></p>
+</div>
+
+<%# Notice displayed when the export process finishes with an error %>
+<div id="export-process-error" class="alert alert-danger" ng-show="error_exporting">
+  <button type="button" class="close" ng-click="reset_flag('error_exporting')">&times;</button>
+  <p><%= t 'read.alerts.opml_export.finish_error' %></p>
+</div>

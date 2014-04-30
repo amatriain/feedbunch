@@ -1,0 +1,88 @@
+<div id="export-process-state" class="row" ng-show="show_export_alert">
+
+  <div class="col-xs-12 col-md-10 col-md-offset-2">
+
+    <div class="row">
+      <div class="col-xs-12 col-md-9 alert alert-danger alert-block" ng-show="export_state=='ERROR'">
+
+        <button type="button"
+                class="close"
+                ng-click="hide_export_alert()"
+                title="<%= t 'read.job_states.dismiss' %>"
+                data-toggle="tooltip"
+                data-placement="top">
+          &times;
+        </button>
+
+        <div class="row">
+          <div class="col-xs-3 col-sm-2">
+            <i class="fa fa-warning fa-4x"></i>
+          </div>
+
+          <div class="col-xs-9 col-sm-10">
+
+            <p><%= t 'read.job_states.opml_export.error' %></p>
+            <p>
+              <%= link_to api_opml_exports_path(locale: I18n.locale),
+                          :method => :post,
+                          class: 'alert-link' do %>
+                <%= t 'read.job_states.opml_export.retry_error_1' %>
+              <% end %>
+              <%= t 'read.job_states.opml_export.retry_error_2' %>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="opml-export-running" class="col-xs-12 col-md-9 alert alert-info alert-block" ng-show="export_state=='RUNNING'">
+
+        <div class="row">
+          <div class="col-xs-3 col-sm-2">
+            <i class="fa fa-cog fa-spin fa-4x"></i>
+          </div>
+
+          <div class="col-xs-9 col-sm-10">
+
+            <p><%= t 'read.job_states.opml_export.export_running' %></p>
+            <p><%= t 'read.job_states.opml_export.export_background' %></p>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-xs-12 col-md-9 alert alert-success alert-block" ng-show="export_state=='SUCCESS'">
+
+        <button type="button"
+                class="close"
+                ng-click="hide_export_alert()"
+                title="<%= t 'read.job_states.dismiss' %>"
+                data-toggle="tooltip"
+                data-placement="top">
+          &times;
+        </button>
+
+        <div class="row">
+          <div class="col-xs-3 col-sm-2">
+            <i class="fa fa-share-square-o fa-4x"></i>
+          </div>
+
+          <div class="col-xs-9 col-sm-10">
+
+            <p><%= t 'read.job_states.opml_export.success' %></p>
+            <p><a class="alert-link"><%= t 'read.job_states.opml_export.download_success_1' %></a> <%= t 'read.job_states.opml_export.download_success_2' %></p>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

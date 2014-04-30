@@ -1,58 +1,56 @@
 ########################################################
-# AngularJS service to load data import state data in the scope.
+# AngularJS service to load data export state data in the scope.
 ########################################################
 
-angular.module('feedbunch').service 'importStateSvc',
+angular.module('feedbunch').service 'exportStateSvc',
 ['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'timerFlagSvc',
 ($rootScope, $http, $timeout, feedsFoldersSvc, timerFlagSvc)->
 
   #---------------------------------------------
-  # PRIVATE FUNCTION: load import process state via AJAX
+  # PRIVATE FUNCTION: load export process state via AJAX
   #
   # Note.- The first time this is invoked on page load by the angular controller, passing
-  # a false to the "show_alerts" argument. This means that if the import is not running
+  # a false to the "show_alerts" argument. This means that if the export is not running
   # (error, success or none, doesn't matter), no alert will be shown.
   #
-  # However if the import is found to be running, the function will be called every 5 seconds, with
+  # However if the export is found to be running, the function will be called every 5 seconds, with
   # a true to the "show_alerts" argument.
   #
-  # Basically this means that if when the page is loaded the import is running, and it finishes
+  # Basically this means that if when the page is loaded the export is running, and it finishes
   # afterwards, then and only then will an alert be displayed. Also when this happens new feeds and
   # folders will be inserted in the model automatically.
   #---------------------------------------------
-  load_import_state = (show_alerts=false)->
+  load_export_state = (show_alerts=false)->
     now = new Date()
-    $http.get("/api/opml_imports.json?time=#{now.getTime()}")
+    $http.get("/api/opml_exports.json?time=#{now.getTime()}")
     .success (data)->
-      $rootScope.show_import_alert = data["show_alert"]
-      $rootScope.import_state = data["state"]
+      $rootScope.show_export_alert = data["show_alert"]
+      $rootScope.export_state = data["state"]
       if data["state"] == "RUNNING"
-        # Update state from the server periodically while import is running
-        $rootScope.import_processed = data["import"]["processed"]
-        $rootScope.import_total = data["import"]["total"]
+        # Update state from the server periodically while export is running
         $timeout ->
-          load_import_state true
+          load_export_state true
         , 5000
       else if data["state"] == "ERROR" && show_alerts
-        timerFlagSvc.start 'error_importing'
+        timerFlagSvc.start 'error_exporting'
       else if data["state"] == "SUCCESS" && show_alerts
         # Automatically load new feeds and folders without needing a refresh
         feedsFoldersSvc.load_data()
-        timerFlagSvc.start 'success_importing'
+        timerFlagSvc.start 'success_exporting'
 
   service =
 
     #---------------------------------------------
-    # Load import process state via AJAX into the root scope
+    # Load export process state via AJAX into the root scope
     #---------------------------------------------
-    load_data: load_import_state
+    load_data: load_export_state
 
     #---------------------------------------------
-    # Hide the import state alert and notify the server via AJAX that it should not be displayed again.
+    # Hide the export state alert and notify the server via AJAX that it should not be displayed again.
     #---------------------------------------------
     hide_alert: ->
-      $rootScope.show_import_alert = false
-      $http.put("/api/opml_imports.json", opml_import: {show_alert: 'false'})
+      $rootScope.show_export_alert = false
+      $http.put("/api/opml_exports.json", opml_export: {show_alert: 'false'})
 
   return service
 ]

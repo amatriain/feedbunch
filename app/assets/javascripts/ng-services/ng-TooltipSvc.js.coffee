@@ -33,6 +33,14 @@ angular.module('feedbunch').service 'tooltipSvc',
       $("#start-info #import-process-state button.close[data-toggle='tooltip']").tooltip()
 
   #---------------------------------------------
+  # Enable tooltips on export state alert "close" button
+  #---------------------------------------------
+  export_state_tooltips: ->
+    # Do not enable tooltips in smartphone and tablet-sized screens
+    enquire.register md_min_media_query, ->
+      $("#start-info #export-process-state button.close[data-toggle='tooltip']").tooltip()
+
+  #---------------------------------------------
   # Enable tooltips on refresh feed job's state alert "close" button
   #---------------------------------------------
   refresh_job_state_tooltips: (job_state)->

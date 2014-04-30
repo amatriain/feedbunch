@@ -37,7 +37,7 @@ es:
     popups:
       import_subscriptions:
         title: "Importar suscripciones"
-        help_1: "Importa tus suscripciones a feeds en formato OPML desde otro servicio."
+        help_1: "Importa tus suscripciones a feeds en formato OPML desde otro agregador de feeds."
         help_2: "El fichero OPML opcionalmente puede estar comprimido en formato ZIP."
         close: "Cancelar"
         submit: "Enviar fichero"
@@ -78,6 +78,9 @@ es:
       opml_import:
         finish_success: "Tus suscripciones a feeds han sido importadas con éxito."
         finish_error: "Ha habido un error intentando importar tus suscripciones a feeds."
+      opml_export:
+        finish_success: "Tus suscripciones a feeds han sido exportadas con éxito."
+        finish_error: "Ha habido un error intentando exportar tus suscripciones a feeds."
     sidebar:
       start: "Inicio"
     popups:
@@ -106,10 +109,19 @@ es:
         success: "Tus suscripciones a feeds han sido importadas con éxito."
         retry_success_1: "Haz click aquí"
         retry_success_2: " para importar más suscripciones."
-        introduction: "Si quieres importar tus suscripciones a feeds desde otro servicio:"
+        introduction: "Si quieres importar tus suscripciones a feeds desde otro agregador de feeds:"
         download_data_html: "Exporta tus suscripciones en formato OPML en el otro servicio."
         import_data_1: "Haz click aquí"
         import_data_2: " para importar tus suscripciones a feeds."
+      opml_export:
+        error: "Ha habido un error intentando exportar tus suscripciones a feeds."
+        retry_error_1: "Haz click aquí"
+        retry_error_2: " para volverlo a intentar."
+        export_running: "Tus suscripciones a feeds están siendo exportadas."
+        export_background: "Puedes cerrar esta página, el proceso de exportación no se verá afectado."
+        success: "Tus suscripciones a feeds han sido exportadas con éxito."
+        download_success_1: "Haz click aquí"
+        download_success_2: " para descargar el fichero OPML."
       refresh_feed:
         error: "Ha habido un error intentando actualizar feed:"
         running: "Actualizando feed en estos momentos:"

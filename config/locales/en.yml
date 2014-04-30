@@ -58,7 +58,7 @@ en:
     popups:
       import_subscriptions:
         title: "Import subscriptions"
-        help_1: "Import your feed subscriptions in OPML format from another service."
+        help_1: "Import your feed subscriptions in OPML format from another feed aggregator."
         help_2: "The OPML file can optionally be compressed in ZIP format."
         close: "Cancel"
         submit: "Upload file"
@@ -99,6 +99,9 @@ en:
       opml_import:
         finish_success: "Your feed subscriptions have been successfully imported."
         finish_error: "There has been an error trying to import your feed subscriptions."
+      opml_export:
+        finish_success: "Your feed subscriptions have been successfully exported."
+        finish_error: "There has been an error trying to export your feed subscriptions."
     sidebar:
       start: "Start"
     popups:
@@ -127,10 +130,19 @@ en:
         success: "Your feed subscriptions have been successfully imported."
         retry_success_1: "Click here"
         retry_success_2: " to import more subscriptions."
-        introduction: "If you want to import your feed subscriptions from another service:"
+        introduction: "If you want to import your feed subscriptions from another feed aggregator:"
         download_data_html: "Export your subscriptions in OPML format from that service."
         import_data_1: "Click here"
         import_data_2: " to import your feed subscriptions."
+      opml_export:
+        error: "There's been an error trying to export your feed subscriptions."
+        retry_error_1: "Click here"
+        retry_error_2: " to try again."
+        export_running: "Your feed subscriptions are being exported."
+        export_background: "You can close this page, the export process will not be affected."
+        success: "Your feed subscriptions have been successfully exported."
+        download_success_1: "Click here"
+        download_success_2: " to download the OPML file."
       refresh_feed:
         error: "There's been an error trying to refresh feed:"
         running: "Currently refreshing feed:"
