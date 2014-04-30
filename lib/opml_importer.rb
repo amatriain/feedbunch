@@ -28,7 +28,7 @@ class OPMLImporter
 
     subscription_data = self.read_data_file file
 
-    filename = "#{Time.now.to_i}.opml"
+    filename = "feedbunch_import_#{Time.now.to_i}.opml"
     Feedbunch::Application.config.uploads_manager.save user, FOLDER, filename, subscription_data
 
     Rails.logger.info "Enqueuing Import Subscriptions Job for user #{user.id} - #{user.email}, OPML file #{filename}"

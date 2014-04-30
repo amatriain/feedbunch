@@ -33,7 +33,7 @@ class ExportSubscriptionsJob
     # Export and save the OPML file (actually XML)
     opml = OPMLExporter.export user
 
-    filename = self.user_filename user
+    filename = 'feedbunch_export.opml'
     # Save the OPML file in permanent storage for later retrieval.
     Feedbunch::Application.config.uploads_manager.save user, OPMLExporter::FOLDER, filename, opml
 
@@ -42,7 +42,6 @@ class ExportSubscriptionsJob
                                       filename: filename
 
     # Send success notification email
-    filename = 'feedbunch_export.opml'
     OpmlExportMailer.export_finished_success_email(user, filename, opml).deliver
   rescue => e
     # If an exception is raised, set the export process state to ERROR
