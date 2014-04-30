@@ -167,15 +167,15 @@ describe 'import subscriptions' do
   context 'hide alert' do
 
     it 'hides import data alert when the user has never ran an OPML import', js: true do
-      page.should have_content 'If you want to import your feed subscriptions from another service'
+      page.should have_content 'If you want to import your feed subscriptions from another feed aggregator'
       close_import_alert
 
       # alert immediately disappears
-      page.should_not have_content 'If you want to import your feed subscriptions from another service'
+      page.should_not have_content 'If you want to import your feed subscriptions from another feed aggregator'
       # alert is not displayed on page reload
       visit read_path
       page.should have_css '#start-info #import-process-state.ng-hide', visible: false
-      page.should_not have_content 'If you want to import your feed subscriptions from another service'
+      page.should_not have_content 'If you want to import your feed subscriptions from another feed aggregator'
     end
 
     it 'hides import data alert when the import finished with an error', js: true do
