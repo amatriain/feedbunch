@@ -1,5 +1,5 @@
 ##
-# Controller to import and export subscriptions data
+# Controller to import subscriptions data
 
 class Api::OpmlImportsController < ApplicationController
 
