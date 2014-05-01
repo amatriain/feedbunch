@@ -82,7 +82,6 @@ class Api::FeedsController < ApplicationController
       head :ok
     else
       Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
-      #TODO respond with data for search results, for instance with head status:300 (Multiple Choices)
       head status: 404
     end
 
