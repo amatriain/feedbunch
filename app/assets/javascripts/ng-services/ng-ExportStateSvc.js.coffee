@@ -17,8 +17,7 @@ angular.module('feedbunch').service 'exportStateSvc',
   # a true to the "show_alerts" argument.
   #
   # Basically this means that if when the page is loaded the export is running, and it finishes
-  # afterwards, then and only then will an alert be displayed. Also when this happens new feeds and
-  # folders will be inserted in the model automatically.
+  # afterwards, then and only then will an alert be displayed.
   #---------------------------------------------
   load_export_state = (show_alerts=false)->
     now = new Date()

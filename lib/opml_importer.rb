@@ -3,7 +3,7 @@ require 'zip/filesystem'
 require 'nokogiri'
 
 ##
-# This class manages import of subscription data from Google Reader into Feedbunch
+# This class manages import of subscription data from another feed aggretagor into Feedbunch
 
 class OPMLImporter
 
