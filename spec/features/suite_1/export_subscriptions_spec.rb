@@ -57,20 +57,20 @@ describe 'export subscriptions' do
     end
 
     it 'shows success message', js: true do
-      @user.reload.opml_export_job_state.update! state: OpmlExportJobState::SUCCESS, filename: 'feedbunch_export.opml'
+      @user.reload.opml_export_job_state.update! state: OpmlExportJobState::SUCCESS, filename: OPMLExporter::FILENAME
 
       visit read_path
       page.should have_content 'Your feed subscriptions have been successfully exported'
     end
 
     it 'changes message when export finishes successfully', js: true do
-      @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: 'feedbunch_export.opml'
+      @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: OPMLExporter::FILENAME
       page.should have_content 'Your feed subscriptions have been successfully exported'
     end
 
     it 'shows alert when export finishes successfully', js: true do
       read_feed @feed, @user
-      @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: 'feedbunch_export.opml'
+      @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: OPMLExporter::FILENAME
       should_show_alert 'export-process-success'
     end
 
@@ -107,7 +107,7 @@ describe 'export subscriptions' do
     end
 
     it 'hides import data alert when the export finished successfully', js: true do
-      @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: 'feedbunch_export.opml'
+      @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: OPMLExporter::FILENAME
       visit read_path
       page.should have_content 'Your feed subscriptions have been successfully exported'
       close_export_alert
@@ -125,6 +125,35 @@ describe 'export subscriptions' do
       visit read_path
       page.should have_content 'Your feed subscriptions are being exported'
       page.should_not have_css '#start-info #export-process-state button.close', visible: true
+    end
+  end
+
+  context 'file download' do
+
+    it 'downloads OPML file from alert link', js: true do
+      export_subscriptions
+      page.should have_text 'Your feed subscriptions are being exported'
+      @opml_data = File.read File.join(__dir__, '..', '..', 'attachments', 'subscriptions.xml')
+      Feedbunch::Application.config.uploads_manager.stub(:read).and_return @opml_data
+      Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
+      @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: OPMLExporter::FILENAME
+
+      find('a#download-opml-export').click
+
+      page.response_headers['Content-Type'].should eq 'application/xml'
+      page.body.should eq @opml_data
+    end
+
+    it 'shows alert when the OPML file does not exist', js: true do
+      export_subscriptions
+      page.should have_text 'Your feed subscriptions are being exported'
+      Feedbunch::Application.config.uploads_manager.stub(:read).and_raise OpmlExportDoesNotExistError.new
+      Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return false
+      @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: OPMLExporter::FILENAME
+
+      find('a#download-opml-export').click
+
+      page.should have_text 'Cannot download OPML export file. Please export your subscriptions again.'
     end
   end
 end

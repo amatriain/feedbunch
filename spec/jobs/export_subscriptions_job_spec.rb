@@ -95,7 +95,7 @@ OPML_DOCUMENT
     Feedbunch::Application.config.uploads_manager.should receive(:save) do |user, folder, filename, content|
       user.should eq @user
       folder.should eq OPMLExporter::FOLDER
-      filename.should eq "feedbunch_export.opml"
+      filename.should eq OPMLExporter::FILENAME
       content.should eq @opml
     end
     ExportSubscriptionsJob.perform @user.id

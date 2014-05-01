@@ -208,6 +208,14 @@ class User < ActiveRecord::Base
   end
 
   ##
+  # Get a previously exported OPML file.
+  # See OPMLExporter.get_export
+
+  def get_opml_export
+    OPMLExporter.get_export self
+  end
+
+  ##
   # Change the visibility of the alert related to the OPML import state.
   # Receives a boolean argument and sets the alert to visible (if true) or hidden (if false).
 

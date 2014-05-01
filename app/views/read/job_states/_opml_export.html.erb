@@ -76,7 +76,14 @@
           <div class="col-xs-9 col-sm-10">
 
             <p><%= t 'read.job_states.opml_export.success' %></p>
-            <p><a class="alert-link"><%= t 'read.job_states.opml_export.download_success_1' %></a> <%= t 'read.job_states.opml_export.download_success_2' %></p>
+            <p>
+              <%= link_to api_opml_exports_download_path,
+                          class: 'alert-link',
+                          id: 'download-opml-export' do %>
+                <%= t 'read.job_states.opml_export.download_success_1' %>
+              <% end %>
+              <%= t 'read.job_states.opml_export.download_success_2' %>
+            </p>
 
           </div>
         </div>

@@ -6,7 +6,7 @@ class Api::OpmlExportsController < ApplicationController
   before_filter :authenticate_user!
 
   respond_to :html, only: [:create]
-  respond_to :json, only: [:show, :update]
+  respond_to :json, only: [:show, :update, :download]
 
   ##
   # Return JSON indicating the state of the "export subscriptions" process for the current user
@@ -57,6 +57,20 @@ class Api::OpmlExportsController < ApplicationController
     head :ok
   rescue => e
     handle_error e
+  end
+
+  ##
+  # Download the OPML file previously exported by a user.
+
+  def download
+    @data = current_user.get_opml_export
+    send_data @data, filename: OPMLExporter::FILENAME, type: 'application/xml', disposition: 'attachment', status: '200'
+  rescue => e
+    Rails.logger.error "Error downloading OPML export file for user #{current_user.email} - #{current_user.name}"
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    flash[:alert] = t 'read.alerts.opml_export.download_error'
+    redirect_to read_path
   end
 
   private

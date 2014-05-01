@@ -8,6 +8,9 @@ class OPMLExporter
   # Class constant for the directory in which OPML export files will be saved.
   FOLDER = 'opml_exports'
 
+  # Class constant for the name with which the OPML export file will be downloaded and attached to the notification email.
+  FILENAME= 'feedbunch_export.opml'
+
   ##
   # Enqueue a background job to export a user's subscriptions in OPML format.
   # Receives as argument the user who is doing the export.
@@ -69,6 +72,32 @@ class OPMLExporter
     end
     opml = builder.to_xml
     return opml
+  end
+
+  ##
+  # Return the contents of a user's previously exported OPML file.
+  # Receives as argument the user who is retrieving the export file.
+  # Returns the contents of the OPML export file.
+  # If an export file doesn't exist for the user, an OpmlExportDoesNotExistError will be raised.
+
+  def self.get_export(user)
+    # User should have an OPML export filename saved in the db.
+    # This will only happen if the opml_export_job_state has state "SUCCESS", but the OpmlExportJobState model
+    # takes care of that.
+    if user.opml_export_job_state.filename.blank?
+      Rails.logger.error "User #{user.id} - #{user.email} tried to download his OPML export file, but he has none"
+      raise OpmlExportDoesNotExistError.new
+    end
+
+    filename = user.opml_export_job_state.filename
+    # Check that the file with the saved filename actually exists.
+    if !Feedbunch::Application.config.uploads_manager.exists? user, OPMLExporter::FOLDER, filename
+      Rails.logger.error "User #{user.id} - #{user.email} tried to download his OPML export file #{filename} but it doesn't exist"
+      raise OpmlExportDoesNotExistError.new
+    end
+
+    opml_data = Feedbunch::Application.config.uploads_manager.read user, OPMLExporter::FOLDER, filename
+    return opml_data
   end
 
 end

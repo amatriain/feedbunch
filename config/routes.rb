@@ -122,6 +122,9 @@ Feedbunch::Application.routes.draw do
     # Resourceful routes for subscriptions export process state
     resource :opml_exports, only: [:show, :create, :update]
 
+    # Download OPML export file
+    match '/opml_exports/download' => 'opml_exports#download', via: [:get], as: 'opml_exports_download'
+
     # Resourceful routes for user config
     resource :user_config, only: [:show]
 

@@ -81,6 +81,7 @@ es:
       opml_export:
         finish_success: "Tus suscripciones a feeds han sido exportadas con éxito."
         finish_error: "Ha habido un error intentando exportar tus suscripciones a feeds."
+        download_error: "No se puede descargar el fichero de exportación OPML. Por favor exporta de nuevo tus suscripciones."
     sidebar:
       start: "Inicio"
     popups:
