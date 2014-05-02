@@ -60,7 +60,7 @@ describe 'export subscriptions' do
       @user.reload.opml_export_job_state.update! state: OpmlExportJobState::SUCCESS, filename: OPMLExporter::FILENAME
 
       visit read_path
-      page.should have_content 'Your feed subscriptions have been successfully exported'
+      page.should have_content 'Your feed subscriptions were successfully exported'
     end
 
     it 'changes message when export finishes successfully', js: true do
@@ -89,6 +89,7 @@ describe 'export subscriptions' do
 
     it 'does not show an alert in the start page when the user has never ran an OPML export', js: true do
       @user.reload.opml_export_job_state.state.should eq OpmlExportJobState::NONE
+      visit read_path
       page.should_not have_css '#export-process-state'
     end
 
@@ -109,7 +110,7 @@ describe 'export subscriptions' do
     it 'hides import data alert when the export finished successfully', js: true do
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: OPMLExporter::FILENAME
       visit read_path
-      page.should have_content 'Your feed subscriptions have been successfully exported'
+      page.should have_content 'Your feed subscriptions were successfully exported'
       close_export_alert
 
       # alert immediately disappears
