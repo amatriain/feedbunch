@@ -88,7 +88,7 @@ describe 'export subscriptions' do
   context 'hide alert' do
 
     it 'does not show an alert in the start page when the user has never ran an OPML export', js: true do
-      @user.reload.opml_export_job_state.state.should eq OpmlExportJobState::NONE
+      @user.reload.opml_export_job_state.update state: OpmlExportJobState::NONE
       visit read_path
       page.should_not have_css '#export-process-state'
     end
