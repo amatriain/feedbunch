@@ -120,7 +120,7 @@ es:
         retry_error_2: " para volverlo a intentar."
         export_running: "Tus suscripciones a feeds están siendo exportadas."
         export_background: "Puedes cerrar esta página, el proceso de exportación no se verá afectado."
-        success: "Tus suscripciones a feeds han sido exportadas con éxito."
+        success: "Tus suscripciones a feeds fueron exportadas con éxito el {{export_date}}."
         download_success_1: "Haz click aquí"
         download_success_2: " para descargar el fichero OPML."
       refresh_feed:

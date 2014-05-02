@@ -76,12 +76,27 @@
       <div class="row">
         <div class="panel-body col-xs-12 col-sm-10 col-sm-offset-1">
           <p><%= t 'devise.views.export_subscriptions_text' %></p>
-          <%= link_to api_opml_exports_path(locale: I18n.locale),
-                      :method => :post,
-                      class: 'btn btn-primary' do %>
-            <i class="fa fa-share-square-o"></i>
-            <%= t('devise.views.export_subscriptions') %>
+
+          <% if current_user.opml_export_job_state.state == OpmlExportJobState::SUCCESS %>
+            <p><%= t 'devise.views.export_success', export_date: l(current_user.opml_export_job_state.updated_at.to_date, format: :long) %></p>
+            <p>
+              <%= link_to api_opml_exports_download_path,
+                          class: 'alert-link',
+                          id: 'download-opml-export' do %>
+                <%= t 'devise.views.export_download_1' %>
+              <% end %>
+              <%= t 'devise.views.export_download_2' %>
+            </p>
           <% end %>
+
+          <p>
+            <%= link_to api_opml_exports_path(locale: I18n.locale),
+                        :method => :post,
+                        class: 'btn btn-primary' do %>
+              <i class="fa fa-share-square-o"></i>
+              <%= t('devise.views.export_subscriptions') %>
+            <% end %>
+          </p>
         </div>
       </div>
     </div>

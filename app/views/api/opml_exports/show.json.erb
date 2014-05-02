@@ -1,4 +1,5 @@
 {
   "state": "<%= opml_export_job_state.state %>",
+  "export_date": "<%= l opml_export_job_state.updated_at.to_date, format: :long %>",
   "show_alert": <%= opml_export_job_state.show_alert %>
 }

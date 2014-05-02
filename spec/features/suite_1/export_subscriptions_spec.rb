@@ -130,14 +130,25 @@ describe 'export subscriptions' do
 
   context 'file download' do
 
-    it 'downloads OPML file from alert link', js: true do
+    before :each do
       export_subscriptions
       page.should have_text 'Your feed subscriptions are being exported'
       @opml_data = File.read File.join(__dir__, '..', '..', 'attachments', 'subscriptions.xml')
       Feedbunch::Application.config.uploads_manager.stub(:read).and_return @opml_data
       Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: OPMLExporter::FILENAME
+    end
 
+    it 'downloads OPML file from alert link', js: true do
+      visit read_path
+      find('a#download-opml-export').click
+
+      page.response_headers['Content-Type'].should eq 'application/xml'
+      page.body.should eq @opml_data
+    end
+
+    it 'downloads OPML file from edit registration view', js: true do
+      visit edit_user_registration_path
       find('a#download-opml-export').click
 
       page.response_headers['Content-Type'].should eq 'application/xml'
@@ -145,15 +156,33 @@ describe 'export subscriptions' do
     end
 
     it 'shows alert when the OPML file does not exist', js: true do
-      export_subscriptions
-      page.should have_text 'Your feed subscriptions are being exported'
       Feedbunch::Application.config.uploads_manager.stub(:read).and_raise OpmlExportDoesNotExistError.new
       Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return false
-      @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: OPMLExporter::FILENAME
 
+      visit read_path
       find('a#download-opml-export').click
 
       page.should have_text 'Cannot download OPML export file. Please export your subscriptions again.'
+    end
+
+    it 'does not show download link if job is not in state SUCCESS', js: true do
+      @user.reload.opml_export_job_state.update state: OpmlExportJobState::NONE
+      visit read_path
+      page.should_not have_css 'a#download-opml-export'
+      visit edit_user_registration_path
+      page.should_not have_css 'a#download-opml-export'
+
+      @user.reload.opml_export_job_state.update state: OpmlExportJobState::RUNNING
+      visit read_path
+      page.should_not have_css 'a#download-opml-export'
+      visit edit_user_registration_path
+      page.should_not have_css 'a#download-opml-export'
+
+      @user.reload.opml_export_job_state.update state: OpmlExportJobState::ERROR
+      visit read_path
+      page.should_not have_css 'a#download-opml-export'
+      visit edit_user_registration_path
+      page.should_not have_css 'a#download-opml-export'
     end
   end
 end

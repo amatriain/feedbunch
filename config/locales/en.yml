@@ -141,7 +141,7 @@ en:
         retry_error_2: " to try again."
         export_running: "Your feed subscriptions are being exported."
         export_background: "You can close this page, the export process will not be affected."
-        success: "Your feed subscriptions have been successfully exported."
+        success: "Your feed subscriptions were successfully exported on {{export_date}}."
         download_success_1: "Click here"
         download_success_2: " to download the OPML file."
       refresh_feed:

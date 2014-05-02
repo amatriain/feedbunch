@@ -24,6 +24,7 @@ angular.module('feedbunch').service 'exportStateSvc',
     $http.get("/api/opml_exports.json?time=#{now.getTime()}")
     .success (data)->
       $rootScope.show_export_alert = data["show_alert"]
+      $rootScope.export_date = data["export_date"]
       $rootScope.export_state = data["state"]
       if data["state"] == "RUNNING"
         # Update state from the server periodically while export is running
