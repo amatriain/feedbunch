@@ -21,6 +21,10 @@ require 'factory_girl_rails'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+# Runs pending migrations before tests are run.
+# If you are not using ActiveRecord, you can remove this line.
+ActiveRecord::Migration.maintain_test_schema!  if defined?(ActiveRecord::Migration)
+
 RSpec.configure do |config|
   # ## Mock Framework
   #
