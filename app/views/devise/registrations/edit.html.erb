@@ -21,6 +21,12 @@
                         :url => profile_path(locale: I18n.locale),
                         html: {:method => :put, autocomplete: 'off'} do |f| %>
 
+      <%= f.input :current_password, as: :password_icon,
+                  placeholder: t('simple_form.placeholders.user.current_password'),
+                  input_html: {autocomplete: 'off'}, required: true %>
+
+      <hr>
+
       <%= f.input :email, as: :email_icon, input_html: {autocomplete: 'off'} %>
       <%= f.input :name, as: :user_icon, required: false %>
 
@@ -47,10 +53,6 @@
                   label: false, inline_label: t('simple_form.labels.user.open_all_entries') %>
 
       <hr>
-
-      <%= f.input :current_password, as: :password_icon,
-                  placeholder: t('simple_form.placeholders.user.current_password'),
-                  input_html: {autocomplete: 'off'}, required: true %>
 
       <div class="form-group">
         <div class="row">
