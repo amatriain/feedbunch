@@ -78,6 +78,9 @@ group :development do
 end
 
 group :test, :development do
+  # Documentation generator
+  gem 'yard'
+
   # Sqlite database for testing and development
   gem 'sqlite3'
 

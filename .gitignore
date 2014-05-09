@@ -23,3 +23,5 @@ redis/*.aof
 redis/*.rdb
 opml_imports/*
 opml_exports/*
+.yardoc/*
+doc/
