@@ -22,10 +22,12 @@ es:
       export_success: "Tus suscripciones fueron exportadas el %{export_date}."
       export_download_1: "Haz click aquí"
       export_download_2: " para descargar el fichero OPML, o vuelve a exportar tus suscripciones haciendo click en el botón más abajo."
-      cancel_account: "Cancelar cuenta"
-      cancel_account_text: "¿Estás seguro de que quieres cancelar tu cuenta? ¡Esto borrará TODOS tus datos!"
-      cancel_account_confirm: "¿Estás seguro?"
       return: "Volver a feeds"
       change_password: "Cambia tu contraseña"
       new_password: "Nueva contraseña"
-
+      delete_account:
+        text: "Puedes borrar tu cuenta permanentemente."
+        title: "Borrar cuenta"
+        confirm: "¿Estás seguro de que quieres borrar tu cuenta? ¡Esto borrará TODOS tus datos!"
+        close: "Cancelar"
+        submit: "Borrar cuenta"

@@ -24,3 +24,9 @@ $(document).ready ->
 
   $("body").on "shown.bs.modal", "#opml-import-popup",  ->
     $("#opml-import-cancel", this).focus()
+
+  #-------------------------------------------------------
+  # Give focus to the cancel button when showing the "Unsubscribe" modal.
+  #-------------------------------------------------------
+  $("body").on "shown.bs.modal", "#profile-delete-popup",  ->
+    $("#profile-delete-cancel", this).focus()

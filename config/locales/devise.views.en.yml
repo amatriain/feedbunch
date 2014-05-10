@@ -22,10 +22,14 @@ en:
       export_success: "Your subscriptions were exported on %{export_date}."
       export_download_1: "Click here"
       export_download_2: " to download the OPML file, or export your subscriptions again clicking on the button below."
-      cancel_account: "Cancel account"
-      cancel_account_text: "Are you sure you want to cancel your account? This will delete ALL your data!"
-      cancel_account_confirm: "Are you sure?"
       return: "Return to feeds"
       change_password: "Change your password"
       new_password: "New password"
+      delete_account:
+        text: "You can delete your account permanently."
+        title: "Delete account"
+        confirm: "Are you sure you want to delete your account? This will delete ALL your data!"
+        close: "Cancel"
+        submit: "Delete account"
+
 

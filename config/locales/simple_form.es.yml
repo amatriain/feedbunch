@@ -29,10 +29,10 @@ es:
         file: "Archivo OPML"
     hints:
       user:
-        name: "Tu nombre de usuario puede ser visible para otros usuarios"
-        password: "Tu contraseña debe tener entre 8 y 128 caracteres"
-        current_password: "(tu contraseña actual es necesaria para confirmar los cambios)"
-        blank_password: "(déjala en blanco si no quieres cambiarla)"
+        name: "Tu nombre de usuario puede ser visible para otros usuarios."
+        password: "Tu contraseña debe tener entre 8 y 128 caracteres."
+        current_password: "Escribe tu contraseña actual para confirmar los cambios."
+        blank_password: "Déjala en blanco si no quieres cambiarla."
         quick_reading: "En el modo de Lectura Rápida, las entradas se marcan automáticamente como leídas al hacer scroll."
         open_all_entries: "Si se selecciona, todas las entradas estarán abiertas cuando se carguen."
       subscription:
