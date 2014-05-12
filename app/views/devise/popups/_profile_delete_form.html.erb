@@ -18,7 +18,7 @@
         </div>
         <hr>
 
-        <%= simple_form_for :profile_cancel, url: profile_delete_path,
+        <%= simple_form_for :delete_user_registration, url: delete_user_registration_path,
                             html: {:method => :delete, id: 'form-profile-cancel'} do |f| %>
           <%= f.input :password, as: :password_icon,
                     input_html: {autocomplete: 'off'}, required: true %>
