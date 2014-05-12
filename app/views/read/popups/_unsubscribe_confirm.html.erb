@@ -9,11 +9,13 @@
         <%= t 'read.popups.unsubscribe.confirm' %>
       </div>
       <div class="modal-footer">
-        <button id="unsubscribe-cancel"
+        <button type="button"
+                id="unsubscribe-cancel"
                 class="btn btn-default"
                 data-dismiss="modal"><%= t 'read.popups.unsubscribe.cancel' %>
         </button>
-        <button id="unsubscribe-submit"
+        <button type="submit"
+                id="unsubscribe-submit"
                 class="btn btn-danger"
                 data-dismiss="modal"
                 ng-click="unsubscribe()"><%= t 'read.popups.unsubscribe.submit' %>

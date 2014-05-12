@@ -13,11 +13,13 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-default"
+        <button type="button"
+                class="btn btn-default"
                 data-dismiss="modal" >
           <%= t 'read.popups.subscribe.close' %>
         </button>
-        <button id="subscribe-submit"
+        <button type="submit"
+                id="subscribe-submit"
                 ng-click="subscribe()"
                 class="btn btn-primary">
           <%= t 'read.popups.subscribe.submit' %>

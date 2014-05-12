@@ -13,11 +13,13 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-default"
+        <button type="button"
+                class="btn btn-default"
                 data-dismiss="modal" >
           <%= t 'read.popups.new_folder.close' %>
         </button>
-        <button id="new-folder-submit"
+        <button type="submit"
+                id="new-folder-submit"
                 ng-click="move_to_new_folder()"
                 class="btn btn-primary">
           <%= t 'read.popups.new_folder.submit' %>
