@@ -23,8 +23,8 @@
           <%= f.input :password, as: :password_icon,
                     input_html: {autocomplete: 'off'}, required: true %>
           <div class="modal-footer">
-            <button id="profile-delete-cancel" class="btn btn-default" data-dismiss="modal" ><%= t 'devise.views.delete_account.close' %></button>
-            <button id="profile-delete-submit" class="btn btn-danger"><%= t 'devise.views.delete_account.submit' %></button>
+            <button id="profile-delete-cancel" type="button" class="btn btn-default" data-dismiss="modal" ><%= t 'devise.views.delete_account.close' %></button>
+            <button id="profile-delete-submit" type="submit" class="btn btn-danger"><%= t 'devise.views.delete_account.submit' %></button>
           </div>
         <% end %>
 
