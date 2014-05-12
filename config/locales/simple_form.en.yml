@@ -37,6 +37,8 @@ en:
         open_all_entries: "If checked, all entries will be open when they are loaded."
       subscription:
         rss: "Enter a webpage or feed URL"
+      delete_user_registration:
+        password: "Enter your password to confirm account deletion."
     placeholders:
       user:
         email: "Your email address"

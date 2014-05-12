@@ -37,6 +37,8 @@ es:
         open_all_entries: "Si se selecciona, todas las entradas estarán abiertas cuando se carguen."
       subscription:
         rss: "Introduce la URL de una página web o un feed"
+      delete_user_registration:
+        password: "Escribe tu contraseña para confirmar el borrado de la cuenta."
     placeholders:
       user:
         email: "Tu dirección de email"
