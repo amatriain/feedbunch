@@ -512,13 +512,6 @@ describe 'authentication' do
         login_user_for_feature @user
       end
 
-      it 'deletes account', js: true do
-        handle_js_confirm do
-          click_on 'Cancel account'
-        end
-        User.all.blank?.should be_true
-      end
-
       it 'changes user language', js: true do
         # default language is english
         page.should have_text 'Update account'
@@ -533,6 +526,40 @@ describe 'authentication' do
         # After relogin, app should be in spanish
         login_user_for_feature @user
         page.should have_text 'Bienvenido a Feedbunch'
+      end
+
+    end
+
+    context 'delete account' do
+
+      before :each do
+        visit edit_user_registration_path
+        page.find('#profile-cancel-button', text: 'Delete account').click
+      end
+
+      it 'shows confirmation popup', js: true do
+        page.should have_css '#profile-delete-popup', visible: true
+      end
+
+      it 'does not allow deleting the account without entering a password', js: true do
+        page.find('#profile-delete-submit').click
+        # Popup should not be closed
+        page.should have_css '#profile-delete-popup', visible: true
+      end
+
+      it 'shows error message if wrong password is submitted', js: true do
+        fill_in 'Password', with: 'wrong password'
+        page.find('#profile-delete-submit').click
+        page.should have_text 'Invalid password'
+        should_show_alert 'alert'
+      end
+
+      it 'deletes account if correct password is submitted', js: true do
+        fill_in 'Password', with: @user.password
+        page.find('#profile-delete-submit').click
+        current_path.should eq root_path
+        page.should have_text 'Your account was successfully deleted'
+        User.all.blank?.should be_true
       end
 
     end
