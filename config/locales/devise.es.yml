@@ -24,7 +24,7 @@ es:
       updated: 'Tu contraseña fue cambiada correctamente. Has iniciado sesión.'
       updated_not_active: 'Tu contraseña fue cambiada correctamente.'
     registrations:
-      destroyed: 'Adiós, tu cuenta ha sido eliminada. Esperamos verte de vuelta pronto!'
+      destroyed: 'Adiós, tu cuenta ha sido borrada. Esperamos verte de vuelta pronto.'
       signed_up: 'Bienvenido! Te has registrado correctamente.'
       signed_up_but_inactive: 'Te has registrado correctamente, pero tu cuenta aun no ha sido activada.'
       signed_up_but_locked: 'Te has registrado correctamente, pero tu cuenta está bloqueada.'
@@ -73,3 +73,4 @@ es:
       not_saved:
         one: "Ha habido 1 error:"
         other: "Han habido %{count} errores:"
+      invalid_password: "Contraseña no válida"
