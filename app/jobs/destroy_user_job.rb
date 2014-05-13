@@ -5,7 +5,7 @@
 # Its perform method will be invoked from a Resque worker.
 
 class DestroyUserJob
-  @queue = :subscriptions
+  @queue = :maintenance
 
   ##
   # Destroy a user. This may trigger other destructions (see User class).
