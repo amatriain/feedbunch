@@ -67,7 +67,8 @@ describe Api::OpmlExportsController do
       @filename = OPMLExporter::FILENAME
       @opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
                                                  state: OpmlExportJobState::SUCCESS,
-                                                 filename: @filename
+                                                 filename: @filename,
+                                                 export_date: Time.zone.now
       @user.opml_export_job_state = @opml_export_job_state
 
       @feed1 = FactoryGirl.create :feed

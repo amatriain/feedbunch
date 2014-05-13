@@ -17,12 +17,14 @@ describe OpmlExportJobState do
     it 'has filename if it has state SUCCESS' do
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::SUCCESS,
-                                                filename: nil
+                                                filename: nil,
+                                                export_date: Time.zone.now
       opml_export_job_state.should_not be_valid
 
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::SUCCESS,
-                                                filename: @filename
+                                                filename: @filename,
+                                                export_date: Time.zone.now
       opml_export_job_state.should be_valid
     end
 
@@ -91,7 +93,6 @@ describe OpmlExportJobState do
 
     it 'defaults to state NONE when created' do
       @user.create_opml_export_job_state
-
       @user.opml_export_job_state.state.should eq OpmlExportJobState::NONE
     end
 
@@ -100,13 +101,14 @@ describe OpmlExportJobState do
       opml_export_job_state.save!
       opml_export_job_state.show_alert.should be_true
     end
-
   end
 
   it 'deletes OPML file when deleting a opml_export_job_state' do
     filename = 'some_filename.opml'
     @user.create_opml_export_job_state
-    @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: filename
+    @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
+                                       filename: filename,
+                                       export_date: Time.zone.now
     Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
     Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |user, folder, file|
       user.should eq @user

@@ -85,7 +85,9 @@ OPML_DOCUMENT
     end
 
     it 'does nothing if the opml_import_job_state for the user has state SUCCESS' do
-      @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS, filename: 'some_filename.opml'
+      @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
+                                         filename: 'some_filename.opml',
+                                         export_date: Time.zone.now
       Feedbunch::Application.config.uploads_manager.should_not receive :save
       ExportSubscriptionsJob.perform @user.id
     end

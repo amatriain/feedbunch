@@ -39,7 +39,8 @@ class ExportSubscriptionsJob
 
     # Update job state
     user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
-                                      filename: filename
+                                      filename: filename,
+                                      export_date: Time.zone.now
 
     # Send success notification email
     OpmlExportMailer.export_finished_success_email(user, filename, opml).deliver
