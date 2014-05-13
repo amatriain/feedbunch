@@ -231,6 +231,14 @@ class User < ActiveRecord::Base
     self.opml_export_job_state.update show_alert: visible
   end
 
+  ##
+  # Immediately lock the user account so that it cannot log in. Enqueue a job to destroy
+  # the user.
+  def delete_profile
+    self.lock_access! send_instructions: false
+    Resque.enqueue DestroyUserJob, self.id
+  end
+
   private
 
   ##

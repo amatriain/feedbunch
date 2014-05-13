@@ -19,7 +19,7 @@ class Devise::ProfilesController < Devise::RegistrationsController
     password = profiles_controller_params[:password]
     if current_user.valid_password? password
       Rails.logger.warn "User #{current_user.id} - #{current_user.email} provided correct password for account deletion"
-      current_user.destroy
+      current_user.delete_profile
       sign_out
       flash[:notice] = t 'devise.registrations.destroyed'
       redirect_to root_path

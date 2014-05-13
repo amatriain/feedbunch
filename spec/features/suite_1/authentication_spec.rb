@@ -554,12 +554,23 @@ describe 'authentication' do
         should_show_alert 'alert'
       end
 
-      it 'deletes account if correct password is submitted', js: true do
+      it 'enqueues job to delete account if correct password is submitted', js: true do
+        Resque.should_receive(:enqueue).with DestroyUserJob, @user.id
         fill_in 'Password', with: @user.password
         page.find('#profile-delete-submit').click
         current_path.should eq root_path
         page.should have_text 'Your account was successfully deleted'
-        User.all.blank?.should be_true
+      end
+
+      it 'prevents user from logging in again', js: true do
+        fill_in 'Password', with: @user.password
+        page.find('#profile-delete-submit').click
+        current_path.should eq root_path
+        visit new_user_session_path
+        fill_in 'Email', with: @user.email
+        fill_in 'Password', with: @user.password
+        click_on 'Sign in'
+        page.should have_text 'Invalid email or password'
       end
 
     end

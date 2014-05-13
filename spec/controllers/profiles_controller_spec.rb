@@ -9,16 +9,16 @@ describe Devise::ProfilesController do
 
   context 'DELETE destroy' do
 
-    it 'destroys user' do
-      User.exists?(@user.id).should be_true
+    it 'locks user and enqueues job to destroy it' do
+      Resque.should_receive(:enqueue).with DestroyUserJob, @user.id
       delete :destroy, delete_user_registration: {password: @user.password}
-      User.exists?(@user.id).should be_false
+      @user.reload.access_locked?.should be_true
     end
 
-    it 'does not destroy user if wrong password is submitted' do
-      User.exists?(@user.id).should be_true
+    it 'does not locl user nor enqueue job if wrong password is submitted' do
+      Resque.should_not_receive :enqueue
       delete :destroy, delete_user_registration: {password: 'wrong_password'}
-      User.exists?(@user.id).should be_true
+      @user.reload.access_locked?.should be_false
     end
 
     it 'redirects to root path' do
