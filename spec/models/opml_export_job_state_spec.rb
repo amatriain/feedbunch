@@ -49,6 +49,42 @@ describe OpmlExportJobState do
       opml_export_job_state.save!
       opml_export_job_state.filename.should be_nil
     end
+
+    it 'has export_date if it has state SUCCESS' do
+      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+                                                state: OpmlExportJobState::SUCCESS,
+                                                export_date: nil
+      opml_export_job_state.should_not be_valid
+
+      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+                                                state: OpmlExportJobState::SUCCESS,
+                                                export_date: Time.zone.now
+      opml_export_job_state.should be_valid
+    end
+
+    it 'does not have an export_date if it has state NONE' do
+      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+                                                state: OpmlExportJobState::NONE,
+                                                export_date: Time.zone.now
+      opml_export_job_state.save!
+      opml_export_job_state.export_date.should be_nil
+    end
+
+    it 'does not have an export_date if it has state RUNNING' do
+      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+                                                state: OpmlExportJobState::RUNNING,
+                                                export_date: Time.zone.now
+      opml_export_job_state.save!
+      opml_export_job_state.export_date.should be_nil
+    end
+
+    it 'does not have an export_date if it has state ERROR' do
+      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+                                                state: OpmlExportJobState::ERROR,
+                                                export_date: Time.zone.now
+      opml_export_job_state.save!
+      opml_export_job_state.export_date.should be_nil
+    end
   end
 
   context 'default values' do

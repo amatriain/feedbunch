@@ -8,5 +8,6 @@ FactoryGirl.define do
     show_alert true
     user
     filename {(state=='SUCCESS')?generate(:export_filename_sequence):nil}
+    export_date {Time.zone.now}
   end
 end
