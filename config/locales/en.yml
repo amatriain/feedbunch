@@ -79,7 +79,6 @@ en:
       mark_read: "Read"
       title_tooltip: "Open web page in a new tab"
       feed_tooltip: "Read entries from this feed"
-      published: "Published"
     alerts:
       problem_loading_folders: "There has been a problem loading folders. Please try again later."
       problem_loading_feeds: "There has been a problem loading feeds. Please try again later."

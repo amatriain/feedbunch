@@ -58,7 +58,6 @@ es:
       mark_read: "Leído"
       title_tooltip: "Abrir página web en una pestaña nueva"
       feed_tooltip: "Leer entradas de este feed"
-      published: "Publicado"
     alerts:
       problem_loading_folders: "Ha habido un problema cargando carpetas. Por favor inténtelo de nuevo más tarde."
       problem_loading_feeds: "Ha habido un problema cargando feeds. Por favor inténtelo de nuevo más tarde."

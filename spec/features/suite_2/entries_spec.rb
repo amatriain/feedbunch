@@ -315,16 +315,6 @@ describe 'feed entries' do
       end
     end
 
-    context 'publish date' do
-
-      it 'displays publish date above entry content', js: true do
-        read_entry @entry1
-        within "#entry-#{@entry1.id}-summary .entry-panel .entry-additional-info" do
-          page.should have_text I18n.l(@entry1.published, format: :short)
-        end
-      end
-    end
-
     context 'lazy load images' do
 
       before :each do
