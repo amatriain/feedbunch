@@ -27,38 +27,36 @@ describe 'import subscriptions' do
     page.should have_css '#opml-import-popup', visible: true
   end
 
-  context 'upload link in dropdown' do
+  context 'upload button in edit profile view' do
 
     before :each do
-      open_user_menu
+      visit edit_user_registration_path
     end
 
-    it 'show link if the user has never run an import', js: true do
-      page.should have_css '.navbar a#nav-opml-import', visible: true
+    it 'show button if the user has never run an import', js: true do
+      page.should have_css 'a#opml-import-button', visible: true
     end
 
-    it 'shows link if user has an errored import', js: true do
+    it 'shows button if user has an errored import', js: true do
       opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::ERROR
       @user.opml_import_job_state = opml_import_job_state
-      visit read_path
-      open_user_menu
-      page.should have_css '.navbar a#nav-opml-import', visible: true
+      visit edit_user_registration_path
+      page.should have_css 'a#opml-import-button', visible: true
     end
 
-    it 'does not show link if user has a running import', js: true do
+    it 'does not show button if user has a running import', js: true do
       opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING
       @user.opml_import_job_state = opml_import_job_state
-      visit read_path
-      open_user_menu
-      page.should_not have_css '.navbar a#nav-opml-import', visible: true
+      visit edit_user_registration_path
+      page.should_not have_css 'a#opml-import-button', visible: true
+      page.should have_text 'Your feed subscriptions are currently being imported'
     end
 
-    it 'shows link if user has a successful import', js: true do
+    it 'shows button if user has a successful import', js: true do
       opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::SUCCESS
       @user.opml_import_job_state = opml_import_job_state
-      visit read_path
-      open_user_menu
-      page.should have_css '.navbar a#nav-opml-import', visible: true
+      visit edit_user_registration_path
+      page.should have_css 'a#opml-import-button', visible: true
     end
 
   end

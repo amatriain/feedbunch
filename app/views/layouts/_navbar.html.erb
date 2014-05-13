@@ -193,19 +193,6 @@
                 <% end %>
               </li>
 
-              <%# Show an "import subscriptions" link only if the user has not a currently running import %>
-
-              <li ng-hide="import_state=='RUNNING'">
-                <a id="nav-opml-import"
-                   data-toggle="modal"
-                   data-target="#opml-import-popup">
-
-                  <i class="fa fa-magic"></i>
-
-                  <%= t 'layouts.navbar.import' %>
-                </a>
-              </li>
-
               <li>
                 <%=  link_to edit_user_registration_path, id: 'my_account' do %>
                   <i class="fa fa-gear"></i>

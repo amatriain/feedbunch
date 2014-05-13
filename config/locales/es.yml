@@ -31,7 +31,6 @@ es:
       background_jobs: "Tareas en background"
       my_account: "Mi cuenta"
       read_feeds: "Leer feeds"
-      import: "Importar suscripciones"
     footer:
       github: "Código fuente disponible en Github"
     popups:

@@ -52,7 +52,6 @@ en:
       background_jobs: "Background jobs"
       my_account: "My account"
       read_feeds: "Read feeds"
-      import: "Import subscriptions"
     footer:
       github: "Source code available at Github"
     popups:
