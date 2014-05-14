@@ -8,6 +8,10 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
 ($rootScope, $http, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
  feedsPaginationSvc, cleanupSvc, favicoSvc)->
 
+  # Maximum number of feeds in each page.
+  # This MUST match the feeds page size set in the server!
+  feeds_page_size = 25
+
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds. Reads the boolean flag "show_read" to know if
   # we want to load all feeds (true) or only feeds with unread entries (false).
@@ -25,8 +29,16 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     .success (data)->
       feedsPaginationSvc.load_feeds_page page, data.slice()
       feedsPaginationSvc.set_busy false
-      # Load the next page of feeds, until a 404 (no more feeds) is received
-      load_feeds page
+
+      # Load the next page of feeds until no more feeds are available
+      if data.length < feeds_page_size
+        # there are no more pages of feeds to retrieve
+        $rootScope.feeds_loaded = true
+        feedsPaginationSvc.pagination_finished()
+        favicoSvc.update_unread_badge()
+      else
+        # There is probably at least one more page of feeds available
+        load_feeds page
     .error (data, status)->
       feedsPaginationSvc.set_busy false
       if status == 404
