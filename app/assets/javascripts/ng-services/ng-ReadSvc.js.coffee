@@ -8,6 +8,10 @@ angular.module('feedbunch').service 'readSvc',
 ($rootScope, $http, $q, $timeout, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
 entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc, startPageSvc)->
 
+  # Maximum number of entries in each page.
+  # This MUST match the entries page size set in the server!
+  entries_page_size = 25
+
   #--------------------------------------------
   # PRIVATE FUNCTION: Load entries via AJAX in the root scope.
   #--------------------------------------------
@@ -42,6 +46,9 @@ entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc, 
     .success (data)->
       $rootScope.entries_http_canceler = null
       entriesPaginationSvc.set_busy false
+
+      # If less than a full page of entries is received, this is the last page of entries available.
+      entriesPaginationSvc.set_more_entries_available false if data.length < entries_page_size
 
       if !$rootScope.entries || $rootScope.entries?.length == 0
         $rootScope.entries = data.slice()
