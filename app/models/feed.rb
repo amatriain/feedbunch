@@ -16,6 +16,8 @@ require 'schedule_manager'
 #
 # Each feed can have many entries.
 #
+# Each feed can have many deleted_entries
+#
 # Each feed can be associated with many refresh_feed_job_states. Each such association represents an ocurrence of a user
 # manually requesting a refresh of this feed.
 #
@@ -49,6 +51,7 @@ class Feed < ActiveRecord::Base
   has_many :users, through: :feed_subscriptions
   has_and_belongs_to_many :folders, -> {uniq}, before_add: :single_user_folder
   has_many :entries, -> {uniq}, dependent: :destroy
+  has_many :deleted_entries, -> {uniq}, dependent: :destroy
   has_many :refresh_feed_job_states, dependent: :destroy
   has_many :subscribe_job_states, dependent: :destroy
 

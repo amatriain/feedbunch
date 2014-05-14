@@ -44,6 +44,19 @@ describe Entry do
       entry_dupe = FactoryGirl.build :entry, guid: @entry.guid, feed_id: feed2.id
       entry_dupe.should be_valid
     end
+
+    it 'does not accept the same guid as a deleted entry from the same feed' do
+      deleted_entry = FactoryGirl.create :deleted_entry
+      entry = FactoryGirl.build :entry, guid: deleted_entry.guid, feed_id: deleted_entry.feed_id
+      entry.should_not be_valid
+    end
+
+    it 'accepts the same guid as a deleted entry from another feed' do
+      feed = FactoryGirl.create :feed
+      deleted_entry = FactoryGirl.create :deleted_entry
+      entry = FactoryGirl.build :entry, guid: deleted_entry.guid, feed_id: feed.id
+      entry.should be_valid
+    end
   end
 
   context 'default values' do

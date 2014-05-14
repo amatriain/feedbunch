@@ -188,15 +188,16 @@ describe Feed do
     end
   end
 
-  context 'feed entries' do
-    it 'deletes entries when deleting a feed' do
-      entry1 = FactoryGirl.build :entry
-      entry2 = FactoryGirl.build :entry
+  context 'association with entries' do
+    it 'destroys entries when destroying a feed' do
+      entry1 = FactoryGirl.build :entry, feed_id: @feed.id
+      entry2 = FactoryGirl.build :entry, feed_id: @feed.id
       @feed.entries << entry1 << entry2
 
       Entry.count.should eq 2
 
       @feed.destroy
+
       Entry.count.should eq 0
     end
 
@@ -207,6 +208,20 @@ describe Feed do
 
       @feed.entries.count.should eq 1
       @feed.entries.where(id: entry.id).count.should eq 1
+    end
+  end
+
+  context 'association with deleted_entries' do
+    it 'destroys deleted_entries when destroying a feed' do
+      deleted_entry1 = FactoryGirl.build :deleted_entry, feed_id: @feed.id
+      deleted_entry2 = FactoryGirl.build :deleted_entry, feed_id: @feed.id
+      @feed.deleted_entries << deleted_entry1 << deleted_entry2
+
+      DeletedEntry.count.should eq 2
+
+      @feed.destroy
+
+      DeletedEntry.count.should eq 0
     end
   end
 

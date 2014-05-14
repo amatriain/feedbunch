@@ -16,9 +16,16 @@ require 'encoding_manager'
 # its feed (by saving as many entry_state instances as subscribed users into the database, all of them with the attribute
 # "read" set to false).
 #
-# Each entry is uniquely identified by its guid. Duplicate guids are not allowed.
+# Each entry is uniquely identified by its guid within the scope of a given feed.
+# Duplicate guids are not allowed for the same feed.
+#
+# When entries are deleted by an automated cleanup (because they are too old or the feed had too many entries),
+# a new DeletedEntry instance is saved in the database with the same feed_id and guid as the deleted entry.
+# An entry with the same guid and feed_id as an already existing DeletedEntry is not valid and won't be
+# saved in the database (it would indicate an entry that is at once deleted and not deleted).
 #
 # Attributes of the model:
+# - feed_id
 # - title
 # - url
 # - author
@@ -27,7 +34,7 @@ require 'encoding_manager'
 # - published
 # - guid
 #
-# All fields except "published" are sanitized before validation; this is, before saving/updating each
+# All fields except "published" and "feed_id" are sanitized before validation; this is, before saving/updating each
 # instance in the database.
 
 class Entry < ActiveRecord::Base
@@ -41,6 +48,7 @@ class Entry < ActiveRecord::Base
   validates :title, presence: true
   validates :url, presence: true, format: {with: URI::regexp(%w{http https})}
   validates :guid, presence: true, uniqueness: {case_sensitive: false, scope: :feed_id}
+  validate :entry_not_deleted
 
   before_validation :fix_attributes
   after_create :set_unread_state
@@ -58,6 +66,16 @@ class Entry < ActiveRecord::Base
   end
 
   private
+
+  ##
+  # Validate that the entry has not been deleted (there is a deleted_entries record with the
+  # same feed_id and guid)
+
+  def entry_not_deleted
+    if DeletedEntry.exists? feed_id: self.feed_id, guid: self.guid
+      errors.add :guid, 'entry already deleted'
+    end
+  end
 
   ##
   # Fix any problems with attribute values before validation:
