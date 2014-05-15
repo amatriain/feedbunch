@@ -73,6 +73,7 @@ class Entry < ActiveRecord::Base
 
   def entry_not_deleted
     if DeletedEntry.exists? feed_id: self.feed_id, guid: self.guid
+      Rails.logger.warn "Failed attempt to save already deleted entry - guid: #{self.try :guid}, published: #{self.try :published}, feed_id: #{self.feed_id}, feed title: #{self.feed.title}"
       errors.add :guid, 'entry already deleted'
     end
   end
