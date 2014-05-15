@@ -23,4 +23,18 @@ class DeletedEntry < ActiveRecord::Base
   belongs_to :feed
   validates :feed_id, presence: true
   validates :guid, presence: true, uniqueness: {case_sensitive: false, scope: :feed_id}
+  validate :entry_deleted
+
+  private
+
+  ##
+  # Validate that the entry has been deleted (there isn't an entry record with the
+  # same feed_id and guid)
+
+  def entry_deleted
+    if Entry.exists? feed_id: self.feed_id, guid: self.guid
+      Rails.logger.warn "Failed attempt to mark as deleted existing entry - guid: #{self.try :guid}, published: #{self.try :published}, feed_id: #{self.feed_id}, feed title: #{self.feed.title}"
+      errors.add :guid, 'entry not deleted'
+    end
+  end
 end
