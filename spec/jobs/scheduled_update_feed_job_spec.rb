@@ -334,4 +334,88 @@ describe ScheduledUpdateFeedJob do
     end
   end
 
+  context 'delete old entries' do
+
+    before :each do
+      @entries = []
+      time_oldest_entry = Time.zone.parse '2000-01-01'
+       # Feed has 498 entries
+      (1..498).each do |i|
+        entry = FactoryGirl.build :entry, feed_id: @feed.id, published: time_oldest_entry + i.days
+        @feed.entries << entry
+        @entries << entry
+      end
+
+      @time_now = Time.zone.parse '2050-01-01'
+      ActiveSupport::TimeZone.any_instance.stub(:now).and_return @time_now
+    end
+
+    it 'does not delete entries if they are under the limit' do
+      FeedClient.stub :fetch do
+        entry1 = FactoryGirl.build :entry, feed_id: @feed.id, published: @time_now
+        entry2 = FactoryGirl.build :entry, feed_id: @feed.id, published: @time_now + 1.day
+        @feed.entries << entry1 << entry2
+      end
+
+      @feed.entries.count.should eq 498
+      ScheduledUpdateFeedJob.perform @feed.id
+      @feed.entries.count.should eq 500
+    end
+
+    it 'deletes entries above the entries per feed limit, keeping the newer ones' do
+      FeedClient.stub :fetch do
+        (1..5).each do |i|
+          entry = FactoryGirl.build :entry, feed_id: @feed.id, published: @time_now + i.days
+          @feed.entries << entry
+        end
+      end
+
+      @feed.entries.count.should eq 498
+      ScheduledUpdateFeedJob.perform @feed.id
+      @feed.entries.count.should eq 500
+
+      # 3 oldest entries should be deleted
+      (0..2).each do |i|
+        Entry.exists?(@entries[i].id).should be_false
+        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be_true
+      end
+
+      # the rest of entries, which are newer, should not be deleted
+      (3..497).each do |i|
+        Entry.exists?(@entries[i].id).should be_true
+        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be_false
+      end
+    end
+
+    it 'deletes entries above the per feed limit, keeping newer ones and ignoring already deleted entries' do
+      deleted_entry = FactoryGirl.build :deleted_entry, feed_id: @feed.id
+      @feed.deleted_entries << deleted_entry
+
+      FeedClient.stub :fetch do
+        entry = FactoryGirl.build :entry, feed_id: @feed.id, published: @time_now, guid: deleted_entry.guid
+        @feed.entries << entry
+        (1..5).each do |i|
+          entry = FactoryGirl.build :entry, feed_id: @feed.id, published: @time_now + i.days
+          @feed.entries << entry
+        end
+      end
+
+      @feed.entries.count.should eq 498
+      ScheduledUpdateFeedJob.perform @feed.id
+      @feed.entries.count.should eq 500
+
+      # 3 oldest entries should be deleted
+      (0..2).each do |i|
+        Entry.exists?(@entries[i].id).should be_false
+        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be_true
+      end
+
+      # the rest of entries, which are newer, should not be deleted
+      (3..497).each do |i|
+        Entry.exists?(@entries[i].id).should be_true
+        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be_false
+      end
+    end
+  end
+
 end

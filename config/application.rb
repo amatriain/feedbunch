@@ -73,6 +73,9 @@ module Feedbunch
     # User-agent that feedbunch will use when fetching feeds
     config.user_agent = 'Feedbunch/1.0 (+http://www.feedbunch.com)'
 
+    # Maximum number of entries to keep for each feed.
+    config.max_feed_entries = 500
+
     # List of currently available locales
     I18n.available_locales = [:en, :es]
   end

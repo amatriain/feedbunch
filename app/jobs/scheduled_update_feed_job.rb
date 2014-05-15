@@ -45,6 +45,9 @@ class ScheduledUpdateFeedJob
     # If the update didn't fail, mark the feed as "not currently failing"
     feed.update failing_since: nil if !feed.failing_since.nil?
 
+    # Delete entries that are too old
+    OldEntriesCleaner.cleanup feed
+
   rescue RestClient::Exception, SocketError, Errno::ETIMEDOUT, Errno::ECONNREFUSED, EmptyResponseError, FeedAutodiscoveryError, FeedFetchError => e
     # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
     if feed.present?
