@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140519111415) do
+ActiveRecord::Schema.define(version: 20140519112821) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -119,6 +119,8 @@ ActiveRecord::Schema.define(version: 20140519111415) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "refresh_feed_job_states", ["user_id"], name: "index_refresh_feed_job_states_on_user_id"
 
   create_table "subscribe_job_states", force: true do |t|
     t.integer  "user_id",    null: false
