@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140519112821) do
+ActiveRecord::Schema.define(version: 20140519115517) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -87,6 +87,8 @@ ActiveRecord::Schema.define(version: 20140519112821) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_index "folders", ["user_id"], name: "index_folders_on_user_id"
 
   create_table "opml_export_job_states", force: true do |t|
     t.integer  "user_id",                    null: false
