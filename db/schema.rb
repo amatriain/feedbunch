@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140519171257) do
+ActiveRecord::Schema.define(version: 20140519171605) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -45,6 +45,8 @@ ActiveRecord::Schema.define(version: 20140519171257) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end
+
+  add_index "entries", ["published", "created_at", "id"], name: "index_entries_on_published_created_at_id"
 
   create_table "entry_states", force: true do |t|
     t.boolean  "read",       default: false, null: false
