@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140514164627) do
+ActiveRecord::Schema.define(version: 20140519110501) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -107,6 +107,8 @@ ActiveRecord::Schema.define(version: 20140514164627) do
     t.datetime "updated_at",                     null: false
     t.boolean  "show_alert",      default: true, null: false
   end
+
+  add_index "opml_import_job_states", ["user_id"], name: "index_opml_import_job_states_on_user_id"
 
   create_table "refresh_feed_job_states", force: true do |t|
     t.integer  "user_id",    null: false
