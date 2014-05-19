@@ -2,7 +2,16 @@
   "state": "<%= opml_export_job_state.state %>",
   "show_alert": <%= opml_export_job_state.show_alert %>
 <% if opml_export_job_state.state == OpmlExportJobState::SUCCESS %>
+  <%
+  # In the unlikely case the export_date field is set to NULL, use updated_at instead (guaranteed to have a
+  # value set by ActiveRecord)
+  if opml_export_job_state.export_date.present?
+    export_date = opml_export_job_state.export_date
+  else
+    export_date = opml_export_job_state.updated_at
+  end
+  %>
   ,
-  "export_date": "<%= l opml_export_job_state.export_date.to_date, format: :long %>"
+  "export_date": "<%= l export_date.to_date, format: :long %>"
 <% end %>
 }
