@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140519170851) do
+ActiveRecord::Schema.define(version: 20140519171056) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20140519170851) do
   end
 
   add_index "entry_states", ["entry_id"], name: "index_entry_states_on_entry_id"
+  add_index "entry_states", ["user_id"], name: "index_entry_states_on_user_id"
 
   create_table "feed_subscriptions", force: true do |t|
     t.integer  "user_id",                    null: false
