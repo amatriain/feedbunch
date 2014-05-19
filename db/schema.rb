@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140519115517) do
+ActiveRecord::Schema.define(version: 20140519123128) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -61,6 +61,10 @@ ActiveRecord::Schema.define(version: 20140519115517) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
+
+  add_index "feed_subscriptions", ["feed_id"], name: "index_feed_subscriptions_on_feed_id"
+  add_index "feed_subscriptions", ["user_id", "unread_entries"], name: "index_feed_subscriptions_on_user_id_unread_entries"
+  add_index "feed_subscriptions", ["user_id"], name: "index_feed_subscriptions_on_user_id"
 
   create_table "feeds", force: true do |t|
     t.text     "title",                              null: false
