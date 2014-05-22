@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140521160331) do
+ActiveRecord::Schema.define(version: 20140522125838) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -89,9 +89,7 @@ ActiveRecord::Schema.define(version: 20140521160331) do
     t.boolean  "available",           default: true, null: false
   end
 
-  add_index "feeds", ["fetch_url"], name: "index_feeds_on_fetch_url"
   add_index "feeds", ["title"], name: "index_feeds_on_title"
-  add_index "feeds", ["url"], name: "index_feeds_on_url"
 
   create_table "feeds_folders", force: true do |t|
     t.integer "feed_id",   null: false
@@ -108,6 +106,7 @@ ActiveRecord::Schema.define(version: 20140521160331) do
     t.datetime "updated_at", null: false
   end
 
+  add_index "folders", ["user_id", "title"], name: "index_folders_on_user_id_title"
   add_index "folders", ["user_id"], name: "index_folders_on_user_id"
 
   create_table "opml_export_job_states", force: true do |t|
