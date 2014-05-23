@@ -16,11 +16,13 @@ class DestroyOldJobStatesJob
     Rails.logger.info "Destroying job states created before #{time_old}"
 
     old_refresh_feed_jobs = RefreshFeedJobState.where 'created_at < ?', time_old
-    Rails.logger.info "Destroying #{old_refresh_feed_jobs.count} old instances of RefreshFeedJobState"
-    old_refresh_feed_jobs.destroy_all
+    old_refresh_feed_jobs_count = old_refresh_feed_jobs.count
+    Rails.logger.info "Destroying #{old_refresh_feed_jobs_count} old instances of RefreshFeedJobState"
+    old_refresh_feed_jobs.destroy_all if old_refresh_feed_jobs_count > 0
 
     old_subscribe_jobs = SubscribeJobState.where 'created_at < ?', time_old
-    Rails.logger.info "Destroying #{old_subscribe_jobs.count} old instances of SubscribeJobState"
-    old_subscribe_jobs.destroy_all
+    old_subscribe_jobs_count = old_subscribe_jobs.count
+    Rails.logger.info "Destroying #{old_subscribe_jobs_count} old instances of SubscribeJobState"
+    old_subscribe_jobs.destroy_all if old_subscribe_jobs_count > 0
   end
 end
