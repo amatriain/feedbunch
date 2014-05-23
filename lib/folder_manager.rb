@@ -42,6 +42,7 @@ class FolderManager
       end
 
       feeds_not_in_folders_sql = subscribed_feeds_sql.where(feeds_in_folders_condition.exists.not)
+                                  .order(feeds[:title])
 
       feeds_list = Feed.find_by_sql feeds_not_in_folders_sql.to_sql
     else
@@ -52,11 +53,12 @@ class FolderManager
       end
 
       if include_read
-        feeds_list = folder.feeds
+        feeds_list = folder.feeds.order(:title)
       else
         feeds_list = folder.feeds.joins(:feed_subscriptions)
-        .where(feed_subscriptions: {user_id: user.id})
-        .where('feed_subscriptions.unread_entries > 0')
+                      .where(feed_subscriptions: {user_id: user.id})
+                      .where('feed_subscriptions.unread_entries > 0')
+                      .order(:title)
       end
     end
 
