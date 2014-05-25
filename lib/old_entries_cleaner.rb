@@ -23,7 +23,7 @@ class OldEntriesCleaner
     if entries_count > max_entries
       entries_deleted_count = entries_count - max_entries
       Rails.logger.info "Feed #{feed.id} - #{feed.title} has more than the maximum #{max_entries}. Deleting #{entries_deleted_count} older entries"
-      entries_deleted = feed.entries.order(published: :asc).limit(entries_deleted_count)
+      entries_deleted = feed.entries.order(published: :asc, created_at: :asc, id: :asc).limit(entries_deleted_count)
       entries_deleted.each do |entry|
         entry.destroy
         feed.deleted_entries.create guid: entry.guid
