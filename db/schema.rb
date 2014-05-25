@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140524113211) do
+ActiveRecord::Schema.define(version: 20140525165518) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -32,6 +32,8 @@ ActiveRecord::Schema.define(version: 20140524113211) do
     t.integer "feed_id", null: false
     t.text    "guid",    null: false
   end
+
+  add_index "deleted_entries", ["guid", "feed_id"], name: "index_deleted_entries_on_guid_feed_id"
 
   create_table "entries", force: true do |t|
     t.text     "title",                       null: false
