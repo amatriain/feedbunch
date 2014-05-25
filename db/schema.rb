@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140525165518) do
+ActiveRecord::Schema.define(version: 20140525191641) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 20140525165518) do
     t.boolean  "available",           default: true, null: false
   end
 
+  add_index "feeds", ["available"], name: "index_feeds_on_available"
   add_index "feeds", ["fetch_url"], name: "index_feeds_on_fetch_url"
   add_index "feeds", ["title"], name: "index_feeds_on_title"
   add_index "feeds", ["url"], name: "index_feeds_on_url"
