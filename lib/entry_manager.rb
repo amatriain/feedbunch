@@ -7,7 +7,8 @@ class EntryManager
   # Save new feed entries in the database.
   #
   # For each entry passed, if an entry with the same guid for the same feed already exists in the database,
-  # ignore it. Otherwise save it as a new entry in the database.
+  # ignore it. Also, if an entry with the same guid for the same feed has been deleted in the past, indicated
+  # by a record in the deleted_entries table, ignore it. Otherwise save it as a new entry in the database.
   #
   # The argument passed are:
   # - the feed to which the entries belong (an instance of the Feed model)
@@ -25,13 +26,14 @@ class EntryManager
           next
         end
 
-        if !Entry.exists? guid: guid, feed_id: feed.id
-          # Otherwise, save a new entry in the DB
+        if Entry.exists? guid: guid, feed_id: feed.id
+          Rails.logger.debug "Already existing entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}. Ignoring it"
+        elsif DeletedEntry.exists? guid: guid, feed_id: feed.id
+          Rails.logger.debug "Already deleted entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}. Ignoring it"
+        else
           Rails.logger.debug "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}"
           entry_hash = self.entry_to_hash entry, guid
           feed.entries.create! entry_hash
-        else
-          Rails.logger.debug "Already existing entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}. Ignoring it"
         end
 
       rescue => e
