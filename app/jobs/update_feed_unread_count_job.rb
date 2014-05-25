@@ -9,7 +9,7 @@ class UpdateFeedUnreadCountJob
   @queue = :maintenance
 
   ##
-  # Update the unread entries count for a feed, for all subscribed users.
+  # Update the unread entries count for a feed, for a single user.
   # Receives as argument the id of the feed to update and the id of the user to update it for.
   #
   # If the feed or user does not exist, do nothing.
