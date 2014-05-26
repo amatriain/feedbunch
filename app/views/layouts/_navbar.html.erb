@@ -81,7 +81,7 @@
               <a id="add-subscription"
                  data-target="#subscribe-feed-popup"
                  data-toggle="modal">
-                <i class="fa fa-plus"></i> <%= t 'layouts.navbar.subscribe_button' %>
+                <i class="fa fa-plus fa-fw"></i> <%= t 'layouts.navbar.subscribe_button' %>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
               </a>
@@ -90,7 +90,7 @@
             <li ng-show="current_feed">
               <a id="refresh-feed"
                  ng-click="refresh_feed()">
-                <i class="fa fa-repeat"></i> <%= t 'layouts.navbar.refresh_button' %>
+                <i class="fa fa-repeat fa-fw"></i> <%= t 'layouts.navbar.refresh_button' %>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
               </a>
@@ -100,7 +100,7 @@
               <a id="unsubscribe-feed"
                  data-toggle="modal"
                  data-target="#unsubscribe-feed-popup">
-                <i class="fa fa-times"></i> <%= t 'layouts.navbar.unsubscribe_button' %>
+                <i class="fa fa-times fa-fw"></i> <%= t 'layouts.navbar.unsubscribe_button' %>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
               </a>
@@ -135,7 +135,8 @@
             <li ng-repeat="folder in folders | orderBy:'title'">
               <a data-folder-id="{{folder.id}}"
                  ng-click="move_to_folder(folder)">
-                <i class="fa fa-check" ng-show="get_current_feed().folder_id==folder.id"></i>&nbsp;
+                <i class="fa fa-check fa-fw" ng-show="get_current_feed().folder_id==folder.id"></i>
+                <i class="fa fa-fw" ng-hide="get_current_feed().folder_id==folder.id"></i>
                 <span class="dropdown-folder-title">{{folder.title}}</span>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
@@ -148,8 +149,8 @@
               <a data-folder-id="new"
                  data-toggle="modal"
                  data-target="#new-folder-popup">
-                <i class="fa fa-plus text-muted"></i>&nbsp;
-                <%= t 'layouts.navbar.folder_new' %>
+                <i class="fa fa-plus fa-fw text-muted"></i>
+                <span class="dropdown-folder-title"><%= t 'layouts.navbar.folder_new' %></span>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
               </a>
@@ -158,9 +159,9 @@
             <li>
               <a data-folder-id="none"
                  ng-click="remove_from_folder()">
-                <i class="fa fa-ban text-muted" ng-hide="get_current_feed().folder_id=='none'"></i>
-                <i class="fa fa-check" ng-show="get_current_feed().folder_id=='none'"></i>&nbsp;
-                <%= t 'layouts.navbar.folder_none' %>
+                <i class="fa fa-ban fa-fw text-muted" ng-hide="get_current_feed().folder_id=='none'"></i>
+                <i class="fa fa-check fa-fw" ng-show="get_current_feed().folder_id=='none'"></i>
+                <span class="dropdown-folder-title"><%= t 'layouts.navbar.folder_none' %></span>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                 <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
               </a>
@@ -186,7 +187,7 @@
               <% if can? :manage, ActiveAdmin %>
                 <li>
                   <%= link_to '/admin', target: '_blank' do %>
-                    <i class="fa fa-wrench"></i>
+                    <i class="fa fa-wrench fa-fw"></i>
                     <%= t 'layouts.navbar.admin' %>
                     <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                     <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
@@ -197,7 +198,7 @@
               <% if can? :manage, Resque %>
                 <li>
                   <%= link_to '/resque', target: '_blank' do %>
-                    <i class="fa fa-code-fork"></i>
+                    <i class="fa fa-code-fork fa-fw"></i>
                     <%= t 'layouts.navbar.background_jobs' %>
                     <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                     <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
@@ -207,7 +208,7 @@
 
               <li>
                 <%=  link_to read_path, id: 'read_feeds' do %>
-                  <i class="fa fa-rss"></i>
+                  <i class="fa fa-rss fa-fw"></i>
                   <%= t 'layouts.navbar.read_feeds' %>
                   <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                   <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
@@ -216,7 +217,7 @@
 
               <li>
                 <%=  link_to edit_user_registration_path, id: 'my_account' do %>
-                  <i class="fa fa-gear"></i>
+                  <i class="fa fa-gear fa-fw"></i>
                   <%= t 'layouts.navbar.my_account' %>
                   <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                   <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
@@ -225,7 +226,7 @@
 
               <li>
                 <%= link_to destroy_user_session_path, :method => :delete, id: 'sign_out' do %>
-                  <i class="fa fa-sign-out"></i>
+                  <i class="fa fa-sign-out fa-fw"></i>
                   <%= t 'layouts.navbar.logout' %>
                   <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
                   <i class="fa fa-fw hidden-sm hidden-md hidden-lg"></i>
