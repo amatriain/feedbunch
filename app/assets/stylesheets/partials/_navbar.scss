@@ -26,9 +26,7 @@ body.navbar-visible{
 
   .navbar-toggle-left {
     margin-left: 15px;
-  }
 
-  .navbar-toggle-right {
     padding: {
       left: 14px;
       right: 14px;
@@ -43,7 +41,7 @@ body.navbar-visible{
     }
 
     .navbar-collapse a{
-      text-align: right;
+      text-align: left;
     }
 
     /* Limit user name width in the navbar at different resolutions */
@@ -86,9 +84,6 @@ body.navbar-visible{
       text-overflow: ellipsis;
       vertical-align: middle;
       white-space: nowrap;
-      padding: {
-        left: 5px;
-      }
     }
   }
 
@@ -131,7 +126,11 @@ body.navbar-visible{
       overflow-x: hidden;
 
       .dropdown-menu {
-        background-color: #E7E7E7 !important;
+        background-color: #F2F2F2 !important;
+
+        .divider {
+          background-color: #B5B5B5;
+        }
       }
     }
   }
