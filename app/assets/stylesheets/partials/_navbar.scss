@@ -42,6 +42,10 @@ body.navbar-visible{
       background-color: #E7E7E7 !important;
     }
 
+    .navbar-collapse a{
+      text-align: right;
+    }
+
     /* Limit user name width in the navbar at different resolutions */
     #user-dropdown {
       max-width: 100%;
@@ -84,7 +88,6 @@ body.navbar-visible{
       white-space: nowrap;
       padding: {
         left: 5px;
-        right: 5px;
       }
     }
   }
@@ -126,6 +129,10 @@ body.navbar-visible{
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
       background-image: linear-gradient(to bottom, #FFFFFF 0px, #F8F8F8 100%);
       overflow-x: hidden;
+
+      .dropdown-menu {
+        background-color: #E7E7E7 !important;
+      }
     }
   }
 }
