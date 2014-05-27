@@ -29,6 +29,13 @@ class ScheduledUpdateFeedJob
     end
     feed = Feed.find feed_id
 
+    # Check that feed has not been marked as unavailable
+    if !feed.available
+      Rails.logger.warn "Feed #{feed_id} scheduled to be updated, but it has been marked as unavailable. Unscheduling further updates."
+      ScheduleManager.unschedule_feed_updates feed_id
+      return
+    end
+
     Rails.logger.debug "Updating feed #{feed.id} - #{feed.title}"
 
     # Initialize the number of entries in the feed before and after fetching, so the variables can be
@@ -64,7 +71,7 @@ class ScheduledUpdateFeedJob
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
   ensure
-    if feed.present?
+    if feed.present? && feed.try(:available)
       # Update timestamp of the last time the feed was fetched
       Rails.logger.debug "Updating time of last update for feed #{feed.id} - #{feed.title}"
       feed.update! last_fetched: Time.zone.now

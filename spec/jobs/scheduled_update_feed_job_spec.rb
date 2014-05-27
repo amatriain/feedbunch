@@ -32,8 +32,16 @@ describe ScheduledUpdateFeedJob do
     user.feed_unread_count(@feed).should eq 1
   end
 
-  it 'unschedules updates if the feed has been deleted when the job runs' do
+  it 'unschedules updates if the feed has been deleted' do
     @feed.destroy
+    Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
+    FeedClient.should_not_receive :fetch
+
+    ScheduledUpdateFeedJob.perform @feed.id
+  end
+
+  it 'unschedules updates if the feed has been marked as unavailable' do
+    @feed.update available: false
     Resque.should_receive(:remove_schedule).with "update_feed_#{@feed.id}"
     FeedClient.should_not_receive :fetch
 
