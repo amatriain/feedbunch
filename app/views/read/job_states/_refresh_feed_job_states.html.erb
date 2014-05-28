@@ -23,7 +23,7 @@
 
         <div class="col-xs-9 col-sm-10">
           <p><%= t 'read.job_states.refresh_feed.error' %></p>
-          <p><a class="job-feed-title" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
+          <p><a class="job-feed-title alert-link" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
         </div>
       </div>
 
@@ -47,7 +47,7 @@
 
         <div class="col-xs-9 col-sm-10">
           <p><%= t 'read.job_states.refresh_feed.running' %></p>
-          <p><a class="job-feed-title" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
+          <p><a class="job-feed-title alert-link" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
         </div>
       </div>
 
@@ -71,7 +71,7 @@
 
         <div class="col-xs-9 col-sm-10">
           <p><%= t 'read.job_states.refresh_feed.success' %></p>
-          <p><a class="job-feed-title" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
+          <p><a class="job-feed-title alert-link" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
         </div>
       </div>
 
