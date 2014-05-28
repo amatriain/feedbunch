@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
   before_filter :configure_permitted_parameters, if: :devise_controller?
   before_filter :set_locale
 
+  after_filter :set_csrf_cookie_for_angularjs
+
   private
 
   ##
@@ -72,9 +74,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  ##
+  # Configure Devise controllers to accept additional parameters from a POST.
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) << :name << :locale << :timezone
     devise_parameter_sanitizer.for(:account_update) << :name << :locale << :timezone << :quick_reading << :open_all_entries
+  end
+
+  ##
+  # Set a cookie called "XSRF-TOKEN" with the CSRF token associated with the current user session.
+  # This way the angularjs client can send it back in the X-CSRF-Token so that the protect_from_forgery filter
+  # does not block requests.
+
+  def set_csrf_cookie_for_angularjs
+    cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
   end
 
 end

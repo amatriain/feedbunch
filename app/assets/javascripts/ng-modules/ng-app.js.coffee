@@ -5,8 +5,12 @@
 module = angular.module 'feedbunch', ['infinite-scroll', 'ngSanitize', 'ngTouch']
 
 module.config ["$httpProvider", ($httpProvider)->
-  # Configure $http service to send the CSRF-prevention token, otherwise POST, DELETE etc requests will be rejected
-  $httpProvider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content')
+  # Configure $http service to send the CSRF-prevention token expected by rails,
+  # otherwise POST, DELETE etc requests will be rejected.
+  # Angularjs reads the CSRF token from the "XSRF-TOKEN" cookie by default. It sends it back in the
+  # X-XSRF-TOKEN header by default, but we have to change it to X-CSRF-Token which is the header expected
+  # by the Rails backend.
+  $httpProvider.defaults.xsrfHeaderName = 'X-CSRF-Token'
 
   # Redirect user to /login if any AJAX request is responded with a 401 status (unauthorized).
   # Otherwise pass on errors to the individual error handler callback.
