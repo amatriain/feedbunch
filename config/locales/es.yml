@@ -33,6 +33,7 @@ es:
       read_feeds: "Leer feeds"
     footer:
       github: "Código fuente disponible en Github"
+      twitter: "Síguenos en Twitter"
     popups:
       import_subscriptions:
         title: "Importar suscripciones"

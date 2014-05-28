@@ -3,8 +3,12 @@
 ########################################################
 
 angular.module('feedbunch').controller 'PagesCtrl',
-['timerFlagSvc', (timerFlagSvc)->
+['timerFlagSvc', 'tooltipSvc',
+(timerFlagSvc, tooltipSvc)->
 
   # If there is a rails alert, show it and close it after 5 seconds
   timerFlagSvc.start 'error_rails'
+
+  # Initialize footer tooltips
+  tooltipSvc.footer_tooltips()
 ]

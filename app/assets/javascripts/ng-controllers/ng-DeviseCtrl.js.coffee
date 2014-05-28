@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').controller 'DeviseCtrl',
-['$scope', '$window', 'timerFlagSvc', 'sidebarVisibleSvc',
-($scope, $window, timerFlagSvc, sidebarVisibleSvc)->
+['$scope', '$window', 'timerFlagSvc', 'sidebarVisibleSvc', 'tooltipSvc',
+($scope, $window, timerFlagSvc, sidebarVisibleSvc, tooltipSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -18,6 +18,9 @@ angular.module('feedbunch').controller 'DeviseCtrl',
 
   # If there is a rails alert, show it and close it after 5 seconds
   timerFlagSvc.start 'error_rails'
+
+  # Initialize footer tooltips
+  tooltipSvc.footer_tooltips()
 
   #--------------------------------------------
   # When clicking on the top-left navbar button (only visible in smartphone-sized viewports),

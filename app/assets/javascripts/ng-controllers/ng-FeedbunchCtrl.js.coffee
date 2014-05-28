@@ -25,6 +25,9 @@ tooltipSvc, startPageSvc, jobStateSvc)->
   # Initialize navbar tooltips
   tooltipSvc.navbar_tooltips()
 
+  # Initialize footer tooltips
+  tooltipSvc.footer_tooltips()
+
   # Initialize import alert tooltips
   tooltipSvc.import_state_tooltips()
 

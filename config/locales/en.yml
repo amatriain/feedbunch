@@ -53,7 +53,8 @@ en:
       my_account: "My account"
       read_feeds: "Read feeds"
     footer:
-      github: "Source code available at Github"
+      github: "Source code available on Github"
+      twitter: "Follow us on Twitter"
     popups:
       import_subscriptions:
         title: "Import subscriptions"
