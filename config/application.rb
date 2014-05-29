@@ -78,5 +78,8 @@ module Feedbunch
 
     # List of currently available locales
     I18n.available_locales = [:en, :es]
+
+    # Admin email
+    config.admin_email = 'admin@feedbunch.com'
   end
 end
