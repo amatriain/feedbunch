@@ -34,6 +34,7 @@ es:
     footer:
       github: "Código fuente disponible en Github"
       twitter: "Síguenos en Twitter"
+      email: "Envíanos un email"
     popups:
       import_subscriptions:
         title: "Importar suscripciones"

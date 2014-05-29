@@ -6,7 +6,14 @@
     color: #787878;
   }
 
-  .tooltip.top {
-    margin-top: -10px;
+  #github-footer-link, #twitter-footer-link {
+    + .tooltip.top {
+      margin-top: -15px;
+    }
+  }
+
+  #email-footer-link {
+    font-size: 2em;
+    text-decoration: none;
   }
 }

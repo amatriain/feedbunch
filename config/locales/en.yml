@@ -55,6 +55,7 @@ en:
     footer:
       github: "Source code available on Github"
       twitter: "Follow us on Twitter"
+      email: "Send us an email"
     popups:
       import_subscriptions:
         title: "Import subscriptions"
