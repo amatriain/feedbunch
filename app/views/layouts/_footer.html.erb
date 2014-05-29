@@ -1,4 +1,5 @@
 <hr>
+
 <div id="footer">
 
   <a id="github-footer-link"
@@ -22,5 +23,21 @@
              'data-toggle' => 'tooltip',
              'data-placement' => 'top',
              title: t('layouts.footer.email') %>
+
+  <div class="credit-line small">
+    <p>
+      <%= link_to t('pages.footer.img_credit'), 'http://commons.wikimedia.org/wiki/File:Generic_Feed-icon.svg', target: '_blank' %>
+      <%= t 'pages.footer.by' %>
+      <%= link_to 'Jahoe', 'http://commons.wikimedia.org/wiki/User:Jahoe', target: '_blank' %>
+      <%= t 'pages.footer.based_on' %> Mozilla Foundation.
+    </p>
+    <p><%= t 'pages.footer.license_1' %>
+      <%= link_to 'MPL', 'http://en.wikipedia.org/wiki/Mozilla_Public_License', target: '_blank' %>
+      /
+      <%= link_to 'GPL', 'http://commons.wikimedia.org/wiki/GPL', target: '_blank' %>
+      /
+      <%= link_to 'LGPL', 'http://commons.wikimedia.org/wiki/LGPL', target: '_blank' %>
+      <%= t 'pages.footer.license_2' %></p>
+  </div>
 
 </div>

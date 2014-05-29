@@ -2,7 +2,9 @@
   margin-bottom: 1em;
   text-align: center;
 
-  a {
+  #github-footer-link,
+  #twitter-footer-link,
+  #email-footer-link {
     color: #787878;
   }
 
@@ -15,5 +17,13 @@
   #email-footer-link {
     font-size: 2em;
     text-decoration: none;
+  }
+
+  .credit-line {
+    text-align: left;
+    margin: {
+      left: 2em;
+      top: 3em;
+    }
   }
 }

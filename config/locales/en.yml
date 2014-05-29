@@ -29,6 +29,12 @@ en:
       sign_up: "Sign up"
       or: "or"
       sign_in: "Sign in"
+    footer:
+      img_credit: "Feed icon"
+      by: "by"
+      based_on: "based on an image by"
+      license_1: "Licensed under Mozilla's"
+      license_2: "tri-license."
   layouts:
     noscript: "Your browser does not support JavaScript. Feedbunch needs JavaScript to work correctly."
     navbar:
