@@ -152,3 +152,19 @@ en:
         error: "Unable to add subscription to feed:"
         running: "Currently adding subscription to feed:"
         success: "Successfully added subscription to feed:"
+  error_pages:
+    error_404:
+      title: "Page not found."
+      message: "You may have mistyped the address or the page may have moved."
+      go_home: "Click here to go to the home page."
+      img_credit: "Image"
+    error_422:
+      title: "Rejected action."
+      message: "The action you attempted was rejected by the server. Have a cute cat instead."
+      go_home: "Click here to go to the home page."
+      img_credit: "Image"
+    error_500:
+      title: "Application error."
+      message: "An application error has ocurred. Sorry, we couldn't process your action."
+      go_home: "Click here to go to the home page."
+      img_credit: "Image by"

@@ -59,6 +59,9 @@ module Feedbunch
     # Append the lib directory to the autoload path while in development
     config.autoload_paths += %W(#{config.root}/lib)
 
+    # Use dynamic error pages
+    config.exceptions_app = self.routes
+
     # Maximum and minimum interval between updates for each feed, regardless of how often new entries appear.
     config.max_update_interval = 12.hours
     config.min_update_interval = 15.minutes

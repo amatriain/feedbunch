@@ -1,0 +1,18 @@
+<div class="error-page container text-center">
+
+  <div class="alert alert-danger">
+    <h1><%= t 'error_pages.error_500.title' %></h1>
+    <p class="lead"><%= t 'error_pages.error_500.message' %></p>
+    <p><%= link_to t('error_pages.error_500.go_home'), root_path, class: 'alert-link' %></p>
+  </div>
+
+  <%= link_to root_path, class: 'alert-link' do %>
+    <%= image_tag asset_path('Fire_explosions.jpg'), class: 'img-responsive img-thumbnail' %>
+  <% end %>
+
+  <p class="credit-line">
+    <%= link_to t('error_pages.error_500.img_credit'), 'http://www.public-domain-image.com/full-image/miscellaneous-public-domain-images-pictures/fire-flames-pictures/fire-explosions.jpg.html', target: '_blank' %>
+    &nbsp;Jon Sullivan / Public domain
+  </p>
+
+</div>

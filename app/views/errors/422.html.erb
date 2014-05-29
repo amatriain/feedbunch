@@ -1,0 +1,21 @@
+<div class="error-page container text-center">
+
+  <div class="alert alert-danger">
+    <h1><%= t 'error_pages.error_422.title' %></h1>
+    <p class="lead"><%= t 'error_pages.error_422.message' %></p>
+    <p><%= link_to t('error_pages.error_422.go_home'), root_path, class: 'alert-link' %></p>
+  </div>
+
+  <%= link_to root_path, class: 'alert-link' do %>
+    <%= image_tag asset_path('Confused_cat.jpg'), class: 'img-responsive img-thumbnail' %>
+  <% end %>
+
+  <p class="credit-line">
+    <%= link_to t('error_pages.error_422.img_credit'), 'http://flickr.com/photos/59594757@N00/7854816722', target: '_blank' %>
+    &nbsp;&copy;&nbsp;
+    <%= link_to 'Nisa yeh', 'http://www.flickr.com/people/59594757@N00', target: '_blank' %>
+    /
+    <%= link_to 'CC-BY-SA-2.0', 'http://creativecommons.org/licenses/by-sa/2.0/deed.en', target: '_blank' %>
+  </p>
+
+</div>

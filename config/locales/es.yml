@@ -131,3 +131,19 @@ es:
         error: "No se ha podido añadir suscripción al feed:"
         running: "Se está añadiendo suscripción al feed:"
         success: "Añadida con éxito suscripción al feed:"
+  error_pages:
+    error_404:
+      title: "Página no encontrada."
+      message: "Puede que hayas escrito mal la dirección o que la página se haya movido."
+      go_home: "Haz click aquí para ir a la página principal."
+      img_credit: "Imagen"
+    error_422:
+      title: "Acción rechazada."
+      message: "La acción que has intentado ha sido rechazada por el servidor. En su lugar, toma un gatito."
+      go_home: "Haz click aquí para ir a la página principal."
+      img_credit: "Imagen"
+    error_500:
+      title: "Error en la aplicación."
+      message: "Ha ocurrido un error en la aplicación. Lo sentimos, no hemos podido procesar tu acción."
+      go_home: "Haz click aquí para ir a la página principal."
+      img_credit: "Imagen por"

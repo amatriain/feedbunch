@@ -54,6 +54,11 @@ Feedbunch::Application.routes.draw do
   #     resources :products
   #   end
 
+  # Custom dynamic error pages
+  %w( 404 422 500 ).each do |code|
+    get code, :to => 'errors#show', :code => code
+  end
+
   devise_for :users, skip: [:sessions, :passwords, :registrations, :confirmations, :unlocks]
 
   # Customize login, logout etc routes instead of the Devise defaults.
