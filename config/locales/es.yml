@@ -38,8 +38,12 @@ es:
       img_credit: "Icono de feed"
       by: "por"
       based_on: "basado en una image por"
-      license_1: "Bajo licencia"
-      license_2: "triple de Mozilla."
+      license_mozilla_1: "Bajo licencia"
+      license_mozilla_2: "triple de Mozilla."
+      bootstrap_license: "Licencia MIT"
+      angularjs_license: "Licencia MIT"
+      rails_license: "Licencia MIT"
+      ruby_license: "Ruby license"
     popups:
       import_subscriptions:
         title: "Importar suscripciones"

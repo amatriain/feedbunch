@@ -59,8 +59,12 @@ en:
       img_credit: "Feed icon"
       by: "by"
       based_on: "based on an image by"
-      license_1: "Licensed under Mozilla's"
-      license_2: "tri-license."
+      license_mozilla_1: "Licensed under Mozilla's"
+      license_mozilla_2: "tri-license."
+      bootstrap_license: "MIT license"
+      angularjs_license: "MIT license"
+      rails_license: "MIT license"
+      ruby_license: "Ruby license"
     popups:
       import_subscriptions:
         title: "Import subscriptions"
