@@ -8,12 +8,6 @@ es:
       sign_up: "Crea una cuenta"
       or: "o"
       sign_in: "Entra en tu cuenta"
-    footer:
-      img_credit: "Icono de feed"
-      by: "por"
-      based_on: "basado en una image por"
-      license_1: "Bajo licencia"
-      license_2: "triple de Mozilla."
   layouts:
     noscript: "Tu navegador no soporta JavaScript. Feedbunch necesita JavaScript para funcionar correctamente."
     navbar:
@@ -41,6 +35,11 @@ es:
       github: "Código fuente disponible en Github"
       twitter: "Síguenos en Twitter"
       email: "Envíanos un email"
+      img_credit: "Icono de feed"
+      by: "por"
+      based_on: "basado en una image por"
+      license_1: "Bajo licencia"
+      license_2: "triple de Mozilla."
     popups:
       import_subscriptions:
         title: "Importar suscripciones"
