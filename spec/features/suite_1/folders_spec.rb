@@ -95,11 +95,24 @@ describe 'folders and feeds' do
 
     visit read_path
 
-    # Subscribe alert should be visible
-    within '#subscribe-state-alerts' do
-      page.should have_text 'Successfully added subscription to feed'
-      page.should have_content feed3.title
-    end
+    #folder3 should be visible
+    page.should have_content folder3.title
+  end
+
+  it 'shows folders without unread entries if a feed in the folder has a refresh job state alert', js: true do
+    # feed3 has a refresh job state alert in the start page
+    # feed3 is the only feed in folder3, and it has no unread entries
+    folder3 = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << folder3
+    feed3 = FactoryGirl.create :feed
+    @user.subscribe feed3.fetch_url
+    folder3.feeds << feed3
+    refresh_feed_job_state = FactoryGirl.build RefreshFeedJobState, state: SubscribeJobState::SUCCESS,
+                                            feed_id: feed3.id, user_id: @user.id
+    @user.refresh_feed_job_states << refresh_feed_job_state
+
+    visit read_path
+
     #folder3 should be visible
     page.should have_content folder3.title
   end

@@ -60,7 +60,7 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
           timerFlagSvc.start 'error_creating_folder'
 
   #--------------------------------------------
-  # Function to filter folders which should be visible. Returns true if
+  # Function to filter folders which should be visible. Returns a function that returns true if
   # the folder should be visible, false otherwise.
   #--------------------------------------------
   show_folder_filter: (folder)->
@@ -81,6 +81,8 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
         for feed in feeds
           subscribeJobStates = findSvc.find_feed_subscribe_jobs feed.id
           return true if subscribeJobStates?.length > 0
+          refreshFeedJobStates = findSvc.find_feed_refresh_jobs feed.id
+          return true if refreshFeedJobStates?.length > 0
 
       # If the folder is not in any of the above cases, show it only if it has unread entries
       return unreadCountSvc.folder_unread_entries(folder) > 0

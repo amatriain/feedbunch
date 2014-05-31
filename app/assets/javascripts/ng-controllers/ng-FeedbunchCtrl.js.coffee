@@ -361,7 +361,7 @@ tooltipSvc, startPageSvc, jobStateSvc)->
       return folder_id == feed.folder_id
 
   #--------------------------------------------
-  # Function to filter folders which should be visible. Returns true if the passed folder
+  # Function to filter folders which should be visible. Returns a function that returns true if the passed folder
   # should be visible, false otherwise.
   #--------------------------------------------
   $scope.show_folder = (folder)->
