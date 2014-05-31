@@ -77,9 +77,10 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
 
       # Always show a folder if any of its feeds has a job state alert in the start page
       feeds = findSvc.find_folder_feeds folder
-      for feed in feeds
-        subscribeJobStates = findSvc.find_feed_subscribe_jobs feed.id
-        return true if subscribeJobStates?.length > 0
+      if feeds?.length > 0
+        for feed in feeds
+          subscribeJobStates = findSvc.find_feed_subscribe_jobs feed.id
+          return true if subscribeJobStates?.length > 0
 
       # If the folder is not in any of the above cases, show it only if it has unread entries
       return unreadCountSvc.folder_unread_entries(folder) > 0
