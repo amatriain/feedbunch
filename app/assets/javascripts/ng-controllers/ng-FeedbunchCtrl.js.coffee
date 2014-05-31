@@ -361,21 +361,11 @@ tooltipSvc, startPageSvc, jobStateSvc)->
       return folder_id == feed.folder_id
 
   #--------------------------------------------
-  # Function to filter folders without unread entries, unless the global
-  # "show read feeds" flag is set.
+  # Function to filter folders which should be visible. Returns true if the passed folder
+  # should be visible, false otherwise.
   #--------------------------------------------
   $scope.show_folder = (folder)->
-    return (folder)->
-      if $rootScope.show_read
-        return true
-      else
-        # Do not hide the currently selected folder, nor the folder of the currently selected feed
-        current_feed = currentFeedSvc.get()
-        current_folder = currentFolderSvc.get()
-        if current_feed?.folder_id == folder.id || current_folder?.id == folder.id
-          return true
-        else
-          return unreadCountSvc.folder_unread_entries(folder) > 0
+    folderSvc.show_folder_filter folder
 
   #--------------------------------------------
   # Return a boolean indicating whether the "all subscriptions" link in a folder

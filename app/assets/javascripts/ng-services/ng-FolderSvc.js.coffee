@@ -3,8 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').service 'folderSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'timerFlagSvc', 'openFolderSvc', 'feedsFoldersSvc',
-($rootScope, $http, currentFeedSvc, timerFlagSvc, openFolderSvc, feedsFoldersSvc)->
+['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
+'feedsFoldersSvc', 'unreadCountSvc', 'findSvc',
+($rootScope, $http, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
+feedsFoldersSvc, unreadCountSvc, findSvc)->
 
   #--------------------------------------------
   # Remove a feed from a folder
@@ -56,4 +58,29 @@ angular.module('feedbunch').service 'folderSvc',
           timerFlagSvc.start 'error_already_existing_folder'
         else if status!=0
           timerFlagSvc.start 'error_creating_folder'
+
+  #--------------------------------------------
+  # Function to filter folders which should be visible. Returns true if
+  # the folder should be visible, false otherwise.
+  #--------------------------------------------
+  show_folder_filter: (folder)->
+    return (folder)->
+      # If "show_read" flag is set to true, always show all folders
+      if $rootScope.show_read
+        return true
+
+      # Always show the currently selected folder, or the folder of the currently selected feed
+      current_feed = currentFeedSvc.get()
+      current_folder = currentFolderSvc.get()
+      if current_feed?.folder_id == folder.id || current_folder?.id == folder.id
+        return true
+
+      # Always show a folder if any of its feeds has a job state alert in the start page
+      feeds = findSvc.find_folder_feeds folder
+      for feed in feeds
+        subscribeJobStates = findSvc.find_feed_subscribe_jobs feed.id
+        return true if subscribeJobStates?.length > 0
+
+      # If the folder is not in any of the above cases, show it only if it has unread entries
+      return unreadCountSvc.folder_unread_entries(folder) > 0
 ]
