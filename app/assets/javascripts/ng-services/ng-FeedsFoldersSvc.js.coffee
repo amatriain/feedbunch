@@ -102,6 +102,27 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       timerFlagSvc.start 'error_loading_folders' if status!=0
 
   #--------------------------------------------
+  # PRIVATE FUNCTION: Load feeds inside a single folder. Receives its id as argument.
+  #--------------------------------------------
+  load_folder_feeds = (id)->
+    # If this feed is already being loaded, do nothing
+    $rootScope.loading_single_folder_feeds ||= {}
+    return if $rootScope.loading_single_folder_feeds[id]
+
+    $rootScope.loading_single_folder_feeds[id] = true
+
+    now = new Date()
+    $http.get("/api/folders/#{id}/feeds.json?include_read=#{$rootScope.show_read}&time=#{now.getTime()}")
+    .success (data)->
+      delete $rootScope.loading_single_folder_feeds[id]
+      if data? && data?.length > 0
+        for feed in data
+          add_feed feed
+    .error (data, status)->
+      delete $rootScope.loading_single_folder_feeds[id]
+      timerFlagSvc.start 'error_loading_folders' if status!=0
+
+  #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds and folders.
   #--------------------------------------------
   load_data = ->
@@ -188,6 +209,17 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     # Load folders via AJAX into the root scope.
     #--------------------------------------------
     load_folders: load_folders
+
+    #---------------------------------------------
+    # Load feeds in a single folder via AJAX into the root scope.
+    #---------------------------------------------
+    load_folder_feeds: (folder)->
+      # If passed folder is "all", load all feeds in a paginated fashion.
+      if folder=="all"
+        load_feeds()
+      # If any other folder is passed, load feeds in that folder only (not paginated)
+      else
+        load_folder_feeds folder.id
 
     #---------------------------------------------
     # Push a feed in the feeds array. If the feeds array is empty, create it anew,

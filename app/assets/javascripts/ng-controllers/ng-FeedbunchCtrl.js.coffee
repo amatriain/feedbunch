@@ -155,6 +155,7 @@ tooltipSvc, startPageSvc, jobStateSvc)->
   $scope.set_current_folder = (folder)->
     currentFolderSvc.set folder
     readSvc.read_entries_page()
+    feedsFoldersSvc.load_folder_feeds folder
     menuCollapseSvc.close()
     $timeout ->
       sidebarVisibleSvc.set false
