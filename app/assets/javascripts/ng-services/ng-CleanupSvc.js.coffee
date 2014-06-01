@@ -57,23 +57,19 @@ angular.module('feedbunch').service 'cleanupSvc',
           return false
 
         # Feeds without unread entries with a refresh feed alert in the start page are not removed
-        refresh_job_states = $filter('filter') $rootScope.refresh_feed_job_states, (job_state)->
-          # Find refresh_feed_job_states for this feed
-          return job_state.feed_id == feed.id
-        if refresh_job_states? && refresh_job_states?.length > 0
-          return false
+        refresh_job_states = findSvc.find_feed_refresh_jobs feed.id
+        return false if refresh_job_states? && refresh_job_states?.length > 0
 
         # Feeds without unread entries with a subscribe alert in the start page are not removed
-        subscribe_job_states = $filter('filter') $rootScope.subscribe_job_states, (job_state)->
-          # Find subscribe_job_states for this feed
-          return job_state.feed_id == feed.id
-        if subscribe_job_states? && subscribe_job_states?.length > 0
-          return false
+        subscribe_job_states = findSvc.find_feed_subscribe_jobs feed.id
+        return false if subscribe_job_states? && subscribe_job_states?.length > 0
 
         # The rest of feeds are removed
         return true
+
       if read_feeds? && read_feeds?.length > 0
         for feed in read_feeds
+          # The current feed, or feeds in the current folder, are not removed
           if $rootScope.current_feed?.id != feed.id && $rootScope.current_folder?.id != feed.folder_id
             # Delete feed from the scope
             index = $rootScope.feeds.indexOf feed
