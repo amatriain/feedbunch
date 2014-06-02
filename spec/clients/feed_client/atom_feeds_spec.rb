@@ -215,7 +215,7 @@ FEED_XML
     end
   end
 
-  context 'xhtml content' do
+  context 'xhtml content in atom feeds' do
 
     before :each do
       @feed_title = 'ongoing by Tim Bray'
@@ -239,7 +239,7 @@ FEED_XML
   <title>#{@feed_title}</title>
   <link rel='hub' href='http://pubsubhubbub.appspot.com/' />
   <id>https://www.tbray.org/ongoing/</id>
-  <link href='"#{@feed_url}' />
+  <link href='#{@feed_url}' />
   <link rel='self' href='#{@feed_fetch_url}' />
   <link rel='replies'       thr:count='101'       href='https://www.tbray.org/ongoing/comments.atom' />
   <logo>rsslogo.jpg</logo>
@@ -296,6 +296,88 @@ FEED_XML
 
       entry = @feed.entries[0]
       entry.content.should eq "#{@entry.content}"
+    end
+  end
+
+  context 'xhtml content in atom feedburner feeds' do
+
+    before :each do
+      @feed_title = 'Not Invented Here'
+      @feed_url = 'http://notinventedhe.re/'
+      @feed_fetch_url = 'http://feeds.feedburner.com/NotInventedHere'
+      @feed = FactoryGirl.create :feed, title: @feed_title, url: @feed_url, fetch_url: @feed_fetch_url
+
+      @entry = FactoryGirl.build :entry
+      @entry.title = 'This strip was Not Invented Here on Thursday, May 29, 2014'
+      @entry.url = 'http://notinventedhe.re/on/2014-5-29/comic'
+      @entry.summary = nil
+      @entry.content = <<ENTRY_CONTENT
+<p><em>Not Invented Here</em> <a href="http://notinventedhe.re/book" target="_blank">collections</a> now available in ebook and good-old-fashioned paper versions!</p>
+<a href="/on/2014-5-29" target="_blank"><img alt="Not Invented Here strip for 5/29/2014" src="/images/Ajax-loader.gif" data-src="/images/Ajax-loader.gif"></a><a href="/on/2014-5-29/comic#disqus_thread" target="_blank">comments</a>|<a href="mailto:nihcomic@gmail.com" target="_blank">email</a>|<a href="http://www.twitter.com/nihcomic" target="_blank">twitter</a><img src="/images/Ajax-loader.gif" data-src=\"/images/Ajax-loader.gif\">
+ENTRY_CONTENT
+
+      @entry.published = '2014-05-29T07:00:00.0000000Z'
+      @entry.guid = 'http://notinventedhe.re/on/2014-5-29/comic/'
+
+      @feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" media="screen" href="/~d/styles/atom10full.xsl"?><?xml-stylesheet type="text/css" media="screen" href="http://feeds.feedburner.com/~d/styles/itemcontent.css"?><feed xmlns="http://www.w3.org/2005/Atom" xml:base="http://notinventedhe.re" xml:lang="en-us">
+  <id>http://notinventedhe.re/</id>
+  <link type="text/html" rel="alternate" href="#{@feed_url}" />
+  <title type="text">#{@feed_title}</title>
+  <icon>http://thiswas.notinventedhe.re/with/favicon.ico</icon>
+  <subtitle type="text">A comic about software and the people who make it</subtitle>
+  <updated>2014-05-29T07:00:00.0000000Z</updated>
+  <author>
+    <name>Bill Barnes</name>
+    <email>bill@overduemedia.com</email>
+  </author>
+  <author>
+    <name>Paul Southworth</name>
+    <email>pskl13@yahoo.com</email>
+  </author>
+  <rights>(c) Bill Barnes and Paul Southworth</rights>
+  <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/atom+xml" href="#{@feed_fetch_url}" /><feedburner:info xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0" uri="notinventedhere" /><atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/" />
+  <entry>
+    <id>#{@entry.guid}</id>
+    <title>
+      This strip was Not Invented Here on Thursday, May 29, 2014
+    </title>
+    <published>#{@entry.published}</published>
+    <updated>2014-05-29T07:00:00.0000000Z</updated>
+    <link type="text/html" rel="alternate" href="#{@entry.url}" />
+    <content type="xhtml">
+      <div xmlns="http://www.w3.org/1999/xhtml">#{@entry.content}</div>
+    </content>
+  </entry>
+</feed>
+
+FEED_XML
+
+      @feed_xml.stub(:headers).and_return {}
+      RestClient.stub get: @feed_xml
+    end
+
+    it 'fetches and saves entries' do
+      FeedClient.fetch @feed
+      @feed.reload
+      @feed.entries.count.should eq 1
+
+      entry = @feed.entries[0]
+      entry.title.should eq CGI.unescapeHTML(@entry.title)
+      entry.url.should eq @entry.url
+      entry.author.should eq @entry.author
+      entry.summary.should eq @entry.summary
+      entry.published.should eq @entry.published
+      entry.guid.should eq @entry.guid
+    end
+
+    it 'preserves markup in xhtml content' do
+      FeedClient.fetch @feed
+      @feed.reload
+
+      entry = @feed.entries[0]
+      entry.content.strip.should eq "#{@entry.content.strip}"
     end
   end
 
