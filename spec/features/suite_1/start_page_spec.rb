@@ -91,14 +91,18 @@ describe 'start page' do
     it 'updates number of subscribed feeds when subscribing to a feed', js: true do
       feed4 = FactoryGirl.create :feed
       job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: feed4.fetch_url
-      User.any_instance.stub :enqueue_subscribe_job do |url|
-        @user.subscribe feed4.fetch_url
-        @user.subscribe_job_states << job_state
+      User.any_instance.stub :enqueue_subscribe_job do |user, url|
+        if user.id == @user.id
+          user.subscribe feed4.fetch_url
+          user.subscribe_job_states << job_state
+        end
       end
 
-      User.any_instance.stub :find_subscribe_job_state do
-        job_state.update state: SubscribeJobState::SUCCESS
-        job_state
+      User.any_instance.stub :find_subscribe_job_state do |user|
+        if user.id == @user.id
+          job_state.update state: SubscribeJobState::SUCCESS
+          job_state
+        end
       end
 
       subscribe_feed feed4.fetch_url

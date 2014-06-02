@@ -89,14 +89,18 @@ describe 'unread entries count' do
       feed.entries << entry1 << entry2
       job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: feed.fetch_url
 
-      User.any_instance.stub :enqueue_subscribe_job do
-        @user.subscribe_job_states << job_state
+      User.any_instance.stub :enqueue_subscribe_job do |user|
+        if user.id == @user.id
+          user.subscribe_job_states << job_state
+        end
       end
 
-      User.any_instance.stub :find_subscribe_job_state do
-        @user.subscribe feed.fetch_url
-        job_state.update state: SubscribeJobState::SUCCESS, feed_id: feed.id
-        job_state
+      User.any_instance.stub :find_subscribe_job_state do |user|
+        if user.id == @user.id
+          user.subscribe feed.fetch_url
+          job_state.update state: SubscribeJobState::SUCCESS, feed_id: feed.id
+          job_state
+        end
       end
 
       subscribe_feed feed.url
@@ -112,16 +116,20 @@ describe 'unread entries count' do
 
     it 'updates number of unread entries when refreshing a feed', js: true do
       read_feed @feed1, @user
-      User.any_instance.stub :refresh_feed do
-        job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed1.id
-        @user.refresh_feed_job_states << job_state
+      User.any_instance.stub :refresh_feed do |user|
+        if user.id == @user.id
+          job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed1.id
+          user.refresh_feed_job_states << job_state
+        end
       end
 
-      User.any_instance.stub :find_refresh_feed_job_state do
-        FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first.update unread_entries: 4
-        job_state = RefreshFeedJobState.where(user_id: @user.id, feed_id: @feed1.id).first
-        job_state.update state: RefreshFeedJobState::SUCCESS
-        job_state
+      User.any_instance.stub :find_refresh_feed_job_state do |user|
+        if user.id == @user.id
+          FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first.update unread_entries: 4
+          job_state = RefreshFeedJobState.where(user_id: user.id, feed_id: @feed1.id).first
+          job_state.update state: RefreshFeedJobState::SUCCESS
+          job_state
+        end
       end
 
       refresh_feed

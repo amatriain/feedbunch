@@ -143,9 +143,9 @@ describe Api::FeedsController do
     end
 
     it 'enqueues job to unsubscribe from feed' do
-      User.any_instance.should_receive :enqueue_unsubscribe_job do |feed|
+      User.any_instance.should_receive :enqueue_unsubscribe_job do |user, feed|
         feed.id.should eq @feed1.id
-        id.should eq @user.id
+        user.id.should eq @user.id
       end
       delete :destroy, id: @feed1.id, format: :json
     end

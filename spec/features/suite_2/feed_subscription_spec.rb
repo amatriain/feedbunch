@@ -15,8 +15,10 @@ describe 'subscription to feeds' do
     @user.subscribe @feed1.fetch_url
 
     @job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed2.fetch_url
-    User.any_instance.stub :enqueue_subscribe_job do
-      @user.subscribe_job_states << @job_state
+    User.any_instance.stub :enqueue_subscribe_job do |user|
+      if user.id == @user.id
+        user.subscribe_job_states << @job_state
+      end
     end
 
     login_user_for_feature @user
@@ -76,9 +78,9 @@ describe 'subscription to feeds' do
     context 'subscription job finishes successfully' do
 
       before :each do
-        User.any_instance.stub :find_subscribe_job_state do
-          if @job_state.reload.state != SubscribeJobState::SUCCESS
-            @user.subscribe @feed2.fetch_url
+        User.any_instance.stub :find_subscribe_job_state do |user|
+          if user.id == @user.id && @job_state.reload.state != SubscribeJobState::SUCCESS
+            user.subscribe @feed2.fetch_url
             @job_state.update state: SubscribeJobState::SUCCESS, feed_id: @feed2.id
           end
           @job_state
@@ -164,9 +166,11 @@ describe 'subscription to feeds' do
     context 'subscription job finishes with an error' do
 
       before :each do
-        User.any_instance.stub :find_subscribe_job_state do
-          @job_state.update state: SubscribeJobState::ERROR
-          @job_state
+        User.any_instance.stub :find_subscribe_job_state do |user|
+          if user.if == @user.id
+            @job_state.update state: SubscribeJobState::ERROR
+            @job_state
+          end
         end
       end
 

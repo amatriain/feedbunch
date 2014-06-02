@@ -10,8 +10,10 @@ describe 'refresh feeds' do
     @user.subscribe @feed.fetch_url
 
     @job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed.id
-    User.any_instance.stub :refresh_feed do
-      @user.refresh_feed_job_states << @job_state
+    User.any_instance.stub :refresh_feed do |user|
+      if user.if == @user.id
+        @user.refresh_feed_job_states << @job_state
+      end
     end
 
     login_user_for_feature @user
@@ -100,11 +102,13 @@ describe 'refresh feeds' do
   context 'refresh finishes successfully' do
 
     before :each do
-      User.any_instance.stub :find_refresh_feed_job_state do
-        feed_subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
-        feed_subscription.update unread_entries: feed_subscription.unread_entries + 1
-        @job_state.update state: RefreshFeedJobState::SUCCESS
-        @job_state
+      User.any_instance.stub :find_refresh_feed_job_state do |user|
+        if user.id == @user.id
+          feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: @feed.id).first
+          feed_subscription.update unread_entries: feed_subscription.unread_entries + 1
+          @job_state.update state: RefreshFeedJobState::SUCCESS
+          @job_state
+        end
       end
     end
 
@@ -187,9 +191,11 @@ describe 'refresh feeds' do
   context 'refresh finishes with an error' do
 
     before :each do
-      User.any_instance.stub :find_refresh_feed_job_state do
-        @job_state.update state: RefreshFeedJobState::ERROR
-        @job_state
+      User.any_instance.stub :find_refresh_feed_job_state do |user|
+        if user.id == @user.id
+          @job_state.update state: RefreshFeedJobState::ERROR
+          @job_state
+        end
       end
     end
 
