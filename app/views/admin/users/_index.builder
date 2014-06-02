@@ -12,6 +12,6 @@ context.instance_eval  do
     column :timezone
     column :quick_reading
     column :open_all_entries
-    default_actions
+    actions
   end
 end

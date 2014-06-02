@@ -1,7 +1,7 @@
 context.instance_eval  do
   table_for(feeds, :sortable => true, :class => 'index_table') do |folder|
     selectable_column
-    default_actions
+    actions
     column :id
     column :title
     column :url
@@ -15,6 +15,6 @@ context.instance_eval  do
     column 'Entries' do |feed|
       feed.entries.count
     end
-    default_actions
+    actions
   end
 end
