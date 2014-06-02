@@ -19,7 +19,7 @@ class ScheduleManager
 
     Feed.where(available: true).each do |feed|
       # get update schedule for the feed
-      schedule = Resque.get_schedule "update_feed_#{feed.id}"
+      schedule = Resque.fetch_schedule "update_feed_#{feed.id}"
       Rails.logger.debug "Update schedule for feed #{feed.id}  #{feed.title}: #{schedule}"
 
       # if a feed has no update schedule, add it to the array of feeds to be fixed

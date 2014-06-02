@@ -52,7 +52,7 @@ gem 'nokogiri'
 
 # Background jobs
 gem 'resque'
-gem 'resque-scheduler', :require => 'resque_scheduler'
+gem 'resque-scheduler'
 
 # Process monitoring
 gem 'god'

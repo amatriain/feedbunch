@@ -2,8 +2,8 @@ require 'resque'
 require 'yaml'
 
 # Resque-scheduler additions to resque-web
-require 'resque_scheduler'
-require 'resque_scheduler/server'
+require 'resque-scheduler'
+require 'resque/scheduler/server'
 
 # For each Rails environment (production and staging) there are two different server roles; background servers
 # normally connect to Redis on localhost, while app servers connect to the Redis instance in the background server.

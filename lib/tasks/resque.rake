@@ -1,11 +1,11 @@
 require 'resque/tasks'
-require 'resque_scheduler/tasks'
+require 'resque/scheduler/tasks'
 require 'yaml'
 
 namespace :resque do
   task setup: :environment do
     require 'resque'
-    require 'resque_scheduler'
+    require 'resque-scheduler'
 
     # For each Rails environment (production and staging) there are two different server roles; background servers
     # connect to Redis on localhost, while app servers connect to the Redis instance in the background server.
