@@ -42,7 +42,7 @@ describe User, type: :model do
       folder.feeds << @feed
 
       @user.move_feed_to_folder @feed, folder_title: @title
-      Folder.exists?(folder).should be_false
+      Folder.exists?(folder).should be false
     end
 
     it 'does not delete old folder if it has more feeds' do

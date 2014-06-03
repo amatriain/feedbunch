@@ -9,7 +9,7 @@ describe DestroyUserJob do
   it 'destroys user' do
     User.exists?(@user.id).should be_true
     DestroyUserJob.perform @user.id
-    User.exists?(@user.id).should be_false
+    User.exists?(@user.id).should be false
   end
 
   context 'validations' do

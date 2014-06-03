@@ -27,13 +27,13 @@ describe User, type: :model do
     end
 
     it 'returns only feeds the user is suscribed to' do
-      @user.subscribed_feeds.include?(@feed3).should be_false
+      @user.subscribed_feeds.include?(@feed3).should be false
     end
 
     it 'returns only feeds with unread entries' do
       feeds = @user.subscribed_feeds
       feeds.include?(@feed1).should be_true
-      feeds.include?(@feed2).should be_false
+      feeds.include?(@feed2).should be false
     end
 
     it 'returns all feeds' do

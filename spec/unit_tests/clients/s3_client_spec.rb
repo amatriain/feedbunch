@@ -53,7 +53,7 @@ describe S3Client do
   it 'returns false if file does not exist' do
     @s3_object_mock.stub(:exists?).and_return false
     exists = S3Client.exists? @user, @upload_folder, @filename
-    exists.should be_false
+    exists.should be false
   end
 
 end

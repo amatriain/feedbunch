@@ -23,7 +23,7 @@ describe SubscribeUserJob do
   end
 
   it 'creates new feeds and subscribes user to them' do
-    Feed.exists?(fetch_url: @url).should be_false
+    Feed.exists?(fetch_url: @url).should be false
     SubscribeUserJob.perform @user.id, @url, @folder.id, false, nil
     @user.reload
     @user.feeds.where(fetch_url: @url).should be_present

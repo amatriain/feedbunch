@@ -29,7 +29,7 @@ describe User, type: :model do
     it 'unsubscribes a user from a feed' do
       @user.feeds.exists?(@feed.id).should be_true
       @user.unsubscribe @feed
-      @user.feeds.exists?(@feed.id).should be_false
+      @user.feeds.exists?(@feed.id).should be false
     end
 
     it 'raises error if the user is not subscribed to the feed' do
@@ -51,7 +51,7 @@ describe User, type: :model do
 
       @user.unsubscribe @feed
       Feed.exists?(@feed.id).should be_true
-      @user.feeds.exists?(@feed.id).should be_false
+      @user.feeds.exists?(@feed.id).should be false
       user2.feeds.exists?(@feed.id).should be_true
     end
 
@@ -60,7 +60,7 @@ describe User, type: :model do
 
       @user.unsubscribe @feed
 
-      Feed.exists?(@feed.id).should be_false
+      Feed.exists?(@feed.id).should be false
     end
 
     it 'does not delete feed if there are more users subscribed' do

@@ -307,7 +307,7 @@ describe ScheduledUpdateFeedJob do
 
       @feed.available.should be_true
       ScheduledUpdateFeedJob.perform @feed.id
-      @feed.reload.available.should be_false
+      @feed.reload.available.should be false
     end
 
     it 'unschedules updates for a feed when it has been failing longer than a week' do
@@ -384,14 +384,14 @@ describe ScheduledUpdateFeedJob do
 
       # 3 oldest entries should be deleted
       (0..2).each do |i|
-        Entry.exists?(@entries[i].id).should be_false
+        Entry.exists?(@entries[i].id).should be false
         DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be_true
       end
 
       # the rest of entries, which are newer, should not be deleted
       (3..497).each do |i|
         Entry.exists?(@entries[i].id).should be_true
-        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be_false
+        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be false
       end
     end
 
@@ -414,14 +414,14 @@ describe ScheduledUpdateFeedJob do
 
       # 3 oldest entries should be deleted
       (0..2).each do |i|
-        Entry.exists?(@entries[i].id).should be_false
+        Entry.exists?(@entries[i].id).should be false
         DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be_true
       end
 
       # the rest of entries, which are newer, should not be deleted
       (3..497).each do |i|
         Entry.exists?(@entries[i].id).should be_true
-        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be_false
+        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be false
       end
     end
   end

@@ -51,14 +51,14 @@ describe Feed, type: :model do
 
     it 'does not accept duplicate fetch URLs' do
       feed_dupe = FactoryGirl.build :feed, fetch_url: @feed.fetch_url
-      feed_dupe.valid?.should be_false
+      feed_dupe.valid?.should be false
     end
 
     it 'does not accept an empty title' do
       @feed.title = ''
-      @feed.valid?.should be_false
+      @feed.valid?.should be false
       @feed.title = nil
-      @feed.valid?.should be_false
+      @feed.valid?.should be false
     end
 
   end

@@ -36,7 +36,7 @@ describe User, type: :model do
 
       it 'removes feed cached count when unsubscribing from a feed' do
         @user.unsubscribe @feed
-        FeedSubscription.exists?(feed_id: @feed.id, user_id: @user.id).should be_false
+        FeedSubscription.exists?(feed_id: @feed.id, user_id: @user.id).should be false
       end
 
       it 'counts all entries as unread when subscribing to a feed' do

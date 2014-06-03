@@ -130,7 +130,7 @@ describe Api::FoldersController, type: :controller do
       @folder1.feeds.delete @feed2
 
       patch :update, id: Folder::NO_FOLDER, folder: {feed_id: @feed1.id}, format: :json
-      Folder.exists?(@folder1.id).should be_false
+      Folder.exists?(@folder1.id).should be false
     end
 
     it 'returns 500 if there is a problem removing feed from folder' do

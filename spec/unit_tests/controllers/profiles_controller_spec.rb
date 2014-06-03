@@ -18,7 +18,7 @@ describe Devise::ProfilesController, type: :controller do
     it 'does not locl user nor enqueue job if wrong password is submitted' do
       Resque.should_not_receive :enqueue
       delete :destroy, delete_user_registration: {password: 'wrong_password'}
-      @user.reload.access_locked?.should be_false
+      @user.reload.access_locked?.should be false
     end
 
     it 'redirects to root path' do

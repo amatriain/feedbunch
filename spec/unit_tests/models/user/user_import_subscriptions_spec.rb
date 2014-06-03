@@ -114,7 +114,7 @@ describe User, type: :model do
     it 'hides alert' do
       @user.opml_import_job_state.show_alert.should be_true
       @user.set_opml_import_job_state_visible false
-      @user.reload.opml_import_job_state.show_alert.should be_false
+      @user.reload.opml_import_job_state.show_alert.should be false
     end
 
     it 'shows alert' do

@@ -14,7 +14,7 @@ describe User, type: :model do
         user_id.should eq @user.id
         fetch_url.should eq @feed.fetch_url
         folder_id.should be_nil
-        running_opml_import.should be_false
+        running_opml_import.should be false
         job_state = SubscribeJobState.find job_id
         job_state.user_id.should eq @user.id
         job_state.fetch_url.should eq @feed.fetch_url
@@ -665,7 +665,7 @@ FEED_XML
 
       # At first the user is not subscribed to any feed
       success = @user.subscribe feed_url
-      success.should be_false
+      success.should be false
     end
 
   end

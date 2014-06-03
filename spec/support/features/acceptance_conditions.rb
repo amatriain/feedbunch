@@ -78,7 +78,7 @@ end
 
 def mail_should_not_be_sent
   email = ActionMailer::Base.deliveries.pop
-  email.present?.should be_false
+  email.present?.should be false
 end
 
 ##

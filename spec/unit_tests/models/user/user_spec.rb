@@ -13,12 +13,12 @@ describe User, type: :model do
 
     it 'does not allow duplicate emails' do
       user_dupe = FactoryGirl.build :user, email: @user.email
-      user_dupe.valid?.should be_false
+      user_dupe.valid?.should be false
     end
 
     it 'does not allow duplicate names' do
       user_dupe = FactoryGirl.build :user, name: @user.name
-      user_dupe.valid?.should be_false
+      user_dupe.valid?.should be false
     end
 
     it 'uses the email if no name is provided' do
@@ -151,7 +151,7 @@ describe User, type: :model do
       opml_import_job_state2 = FactoryGirl.build :opml_import_job_state, user_id: @user.id
       @user.opml_import_job_state = opml_import_job_state2
 
-      OpmlImportJobState.exists?(@opml_import_job_state).should be_false
+      OpmlImportJobState.exists?(@opml_import_job_state).should be false
     end
   end
 
@@ -173,7 +173,7 @@ describe User, type: :model do
       opml_export_job_state2 = FactoryGirl.build :opml_export_job_state, user_id: @user.id
       @user.opml_export_job_state = opml_export_job_state2
 
-      OpmlExportJobState.exists?(@opml_export_job_state).should be_false
+      OpmlExportJobState.exists?(@opml_export_job_state).should be false
     end
   end
 
@@ -270,13 +270,13 @@ describe User, type: :model do
       user = FactoryGirl.build :user, quick_reading: nil
       user.save!
       user.quick_reading.should_not be_nil
-      user.quick_reading.should be_false
+      user.quick_reading.should be false
     end
 
     it 'defaults to false if the passed value is not supported' do
       user = FactoryGirl.build :user, quick_reading: 'not-valid-boolean'
       user.save!
-      user.quick_reading.should be_false
+      user.quick_reading.should be false
     end
   end
 
@@ -286,13 +286,13 @@ describe User, type: :model do
       user = FactoryGirl.build :user, open_all_entries: nil
       user.save!
       user.open_all_entries.should_not be_nil
-      user.open_all_entries.should be_false
+      user.open_all_entries.should be false
     end
 
     it 'defaults to false if the passed value is not supported' do
       user = FactoryGirl.build :user, open_all_entries: 'not-valid-boolean'
       user.save!
-      user.open_all_entries.should be_false
+      user.open_all_entries.should be false
     end
   end
 

@@ -409,7 +409,7 @@ describe Entry, type: :model do
       entry_state.read = false
       entry_state.save
 
-      entry.read_by?(user).should be_false
+      entry.read_by?(user).should be false
     end
 
     it 'raises error trying to get state for an entry from an unsubscribed feed' do

@@ -25,7 +25,7 @@ describe FileClient do
     File.open(@filepath, 'w'){|f| f.write @file_content}
 
     FileClient.delete @user, @upload_folder, @filename
-    FileTest.exists?(@filepath).should be_false
+    FileTest.exists?(@filepath).should be false
   end
 
   it 'reads file from uploads folder' do
@@ -53,7 +53,7 @@ describe FileClient do
   end
 
   it 'returns false if file does not exist' do
-    FileClient.exists?(@user, @upload_folder, @filename).should be_false
+    FileClient.exists?(@user, @upload_folder, @filename).should be false
   end
 
 end

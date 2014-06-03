@@ -17,7 +17,7 @@ describe User, type: :model do
       end
 
       it 'marks entry as read' do
-        @entry1.read_by?(@user).should be_false
+        @entry1.read_by?(@user).should be false
 
         @user.change_entries_state @entry1, 'read'
         @entry1.read_by?(@user).should be_true
@@ -29,14 +29,14 @@ describe User, type: :model do
         entry_state.save
 
         @user.change_entries_state @entry1, 'unread'
-        @entry1.read_by?(@user).should be_false
+        @entry1.read_by?(@user).should be false
       end
 
       it 'does not change an entry state if passed an unknown state' do
-        @entry1.read_by?(@user).should be_false
+        @entry1.read_by?(@user).should be false
 
         @user.change_entries_state @entry1, 'somethingsomethingsomething'
-        @entry1.read_by?(@user).should be_false
+        @entry1.read_by?(@user).should be false
 
         entry_state = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
         entry_state.read = true
@@ -52,7 +52,7 @@ describe User, type: :model do
 
         @user.change_entries_state @entry1, 'read'
 
-        @entry1.read_by?(user2).should be_false
+        @entry1.read_by?(user2).should be false
       end
     end
 
@@ -71,9 +71,9 @@ describe User, type: :model do
         end
 
         it 'marks several entries as read' do
-          @entry1.read_by?(@user).should be_false
-          @entry2.read_by?(@user).should be_false
-          @entry3.read_by?(@user).should be_false
+          @entry1.read_by?(@user).should be false
+          @entry2.read_by?(@user).should be false
+          @entry3.read_by?(@user).should be false
 
           @user.change_entries_state @entry3, 'read', whole_feed: true
 
@@ -95,9 +95,9 @@ describe User, type: :model do
 
           @user.change_entries_state @entry3, 'unread', whole_feed: true
 
-          @entry1.read_by?(@user).should be_false
-          @entry2.read_by?(@user).should be_false
-          @entry3.read_by?(@user).should be_false
+          @entry1.read_by?(@user).should be false
+          @entry2.read_by?(@user).should be false
+          @entry3.read_by?(@user).should be false
         end
 
         it 'does not change state of newer entries from the same feed' do
@@ -105,13 +105,13 @@ describe User, type: :model do
           entry5 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2000, 12, 31)
           @feed.entries << entry4 << entry5
 
-          entry4.read_by?(@user).should be_false
-          entry5.read_by?(@user).should be_false
+          entry4.read_by?(@user).should be false
+          entry5.read_by?(@user).should be false
 
           @user.change_entries_state @entry3, 'read', whole_feed: true
 
-          entry4.read_by?(@user).should be_false
-          entry5.read_by?(@user).should be_false
+          entry4.read_by?(@user).should be false
+          entry5.read_by?(@user).should be false
         end
 
         it 'does not change state of entries from other feeds' do
@@ -120,11 +120,11 @@ describe User, type: :model do
           entry4 = FactoryGirl.build :entry, feed_id: feed2.id, published: Date.new(1975, 01, 01)
           feed2.entries << entry4
 
-          entry4.read_by?(@user).should be_false
+          entry4.read_by?(@user).should be false
 
           @user.change_entries_state @entry3, 'read', whole_feed: true
 
-          entry4.read_by?(@user).should be_false
+          entry4.read_by?(@user).should be false
         end
 
         it 'enqueues job to update the unread count for the feed' do
@@ -150,11 +150,11 @@ describe User, type: :model do
         end
 
         it 'marks several entries as read' do
-          @entry1.read_by?(@user).should be_false
-          @entry2.read_by?(@user).should be_false
-          @entry3.read_by?(@user).should be_false
-          @entry4.read_by?(@user).should be_false
-          @entry5.read_by?(@user).should be_false
+          @entry1.read_by?(@user).should be false
+          @entry2.read_by?(@user).should be false
+          @entry3.read_by?(@user).should be false
+          @entry4.read_by?(@user).should be false
+          @entry5.read_by?(@user).should be false
 
           @user.change_entries_state @entry5, 'read', whole_folder: true
 
@@ -184,11 +184,11 @@ describe User, type: :model do
 
           @user.change_entries_state @entry5, 'unread', whole_folder: true
 
-          @entry1.read_by?(@user).should be_false
-          @entry2.read_by?(@user).should be_false
-          @entry3.read_by?(@user).should be_false
-          @entry4.read_by?(@user).should be_false
-          @entry5.read_by?(@user).should be_false
+          @entry1.read_by?(@user).should be false
+          @entry2.read_by?(@user).should be false
+          @entry3.read_by?(@user).should be false
+          @entry4.read_by?(@user).should be false
+          @entry5.read_by?(@user).should be false
         end
 
         it 'does not change state of newer entries in the same folder' do
@@ -197,13 +197,13 @@ describe User, type: :model do
           @feed.entries << entry6
           @feed2.entries << entry7
 
-          entry6.read_by?(@user).should be_false
-          entry7.read_by?(@user).should be_false
+          entry6.read_by?(@user).should be false
+          entry7.read_by?(@user).should be false
 
           @user.change_entries_state @entry5, 'read', whole_folder: true
 
-          entry6.read_by?(@user).should be_false
-          entry7.read_by?(@user).should be_false
+          entry6.read_by?(@user).should be false
+          entry7.read_by?(@user).should be false
         end
 
         it 'does not change state of entries from other folders' do
@@ -221,13 +221,13 @@ describe User, type: :model do
           entry7 = FactoryGirl.build :entry, feed_id: feed3.id
           feed3.entries << entry7
 
-          entry6.read_by?(@user).should be_false
-          entry7.read_by?(@user).should be_false
+          entry6.read_by?(@user).should be false
+          entry7.read_by?(@user).should be false
 
           @user.change_entries_state @entry5, 'read', whole_folder: true
 
-          entry6.read_by?(@user).should be_false
-          entry7.read_by?(@user).should be_false
+          entry6.read_by?(@user).should be false
+          entry7.read_by?(@user).should be false
         end
 
         it 'enqueues job to update the unread count for all feeds in the folder' do
@@ -254,11 +254,11 @@ describe User, type: :model do
         end
 
         it 'marks several entries as read' do
-          @entry1.read_by?(@user).should be_false
-          @entry2.read_by?(@user).should be_false
-          @entry3.read_by?(@user).should be_false
-          @entry4.read_by?(@user).should be_false
-          @entry5.read_by?(@user).should be_false
+          @entry1.read_by?(@user).should be false
+          @entry2.read_by?(@user).should be false
+          @entry3.read_by?(@user).should be false
+          @entry4.read_by?(@user).should be false
+          @entry5.read_by?(@user).should be false
 
           @user.change_entries_state @entry5, 'read', all_entries: true
 
@@ -283,11 +283,11 @@ describe User, type: :model do
 
           @user.change_entries_state @entry5, 'unread', all_entries: true
 
-          @entry1.read_by?(@user).should be_false
-          @entry2.read_by?(@user).should be_false
-          @entry3.read_by?(@user).should be_false
-          @entry4.read_by?(@user).should be_false
-          @entry5.read_by?(@user).should be_false
+          @entry1.read_by?(@user).should be false
+          @entry2.read_by?(@user).should be false
+          @entry3.read_by?(@user).should be false
+          @entry4.read_by?(@user).should be false
+          @entry5.read_by?(@user).should be false
         end
 
         it 'does not change state of newer entries' do
@@ -296,13 +296,13 @@ describe User, type: :model do
           @feed.entries << entry6
           @feed2.entries << entry7
 
-          entry6.read_by?(@user).should be_false
-          entry7.read_by?(@user).should be_false
+          entry6.read_by?(@user).should be false
+          entry7.read_by?(@user).should be false
 
           @user.change_entries_state @entry5, 'read', all_entries: true
 
-          entry6.read_by?(@user).should be_false
-          entry7.read_by?(@user).should be_false
+          entry6.read_by?(@user).should be false
+          entry7.read_by?(@user).should be false
         end
 
         it 'enqueues job to update the unread count for all feeds' do

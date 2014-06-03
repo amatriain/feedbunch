@@ -55,7 +55,7 @@ describe Api::RefreshFeedJobStatesController, type: :controller do
 
     it 'deletes the job state' do
       delete :destroy, id: @job_state_1.id, format: :json
-      RefreshFeedJobState.exists?(@job_state_1.id).should be_false
+      RefreshFeedJobState.exists?(@job_state_1.id).should be false
     end
 
     it 'returns 404 if the job state does not exist' do

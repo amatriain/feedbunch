@@ -20,7 +20,7 @@ describe User, type: :model do
 
     it 'deletes the folder if it is empty' do
       @user.move_feed_to_folder @feed, folder: Folder::NO_FOLDER
-      Folder.exists?(id: @folder.id).should be_false
+      Folder.exists?(id: @folder.id).should be false
     end
 
     it 'does not delete the folder if it is not empty' do

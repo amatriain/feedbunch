@@ -6,17 +6,17 @@ describe EntryState, type: :model do
 
     it 'does not accept empty user' do
       entry_state = FactoryGirl.build :entry_state, user_id: nil
-      entry_state.valid?.should be_false
+      entry_state.valid?.should be false
     end
 
     it 'does not accept empty entry' do
       entry_state = FactoryGirl.build :entry_state, entry_id: nil
-      entry_state.valid?.should be_false
+      entry_state.valid?.should be false
     end
 
     it 'does not accept empty state' do
       entry_state = FactoryGirl.build :entry_state, read: nil
-      entry_state.valid?.should be_false
+      entry_state.valid?.should be false
     end
 
     it 'does not accept multiple states for the same entry and user' do

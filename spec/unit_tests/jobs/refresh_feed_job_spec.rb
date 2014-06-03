@@ -135,7 +135,7 @@ describe RefreshFeedJob do
     it 'sets available to true when an update runs successfully' do
       @feed.update available: false
 
-      @feed.reload.available.should be_false
+      @feed.reload.available.should be false
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
       @feed.reload.available.should be_true
     end
@@ -156,9 +156,9 @@ describe RefreshFeedJob do
       FeedClient.stub(:fetch).and_raise RestClient::Exception.new
       @feed.update available:false
 
-      @feed.available.should be_false
+      @feed.available.should be false
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      @feed.reload.available.should be_false
+      @feed.reload.available.should be false
     end
   end
 
