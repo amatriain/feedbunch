@@ -28,15 +28,15 @@ describe FeedClient do
   context 'ISO-8859-1 encoded feed fetching' do
 
     before :each do
-      feed_file = File.join __dir__, '..', '..', 'attachments', 'iso-8859-1-feed.xml'
+      feed_file = File.join __dir__, '..', '..', '..', 'attachments', 'iso-8859-1-feed.xml'
       feed_xml = File.read feed_file
       feed_xml.stub(:headers).and_return({})
       RestClient.stub get: feed_xml
     end
 
     it 'returns true if successful' do
-      success = FeedClient.fetch @feed
-      success.should be true
+      feed = FeedClient.fetch @feed
+      feed.should eq @feed
     end
 
     it 'fetches the right entries and saves them in the database' do
