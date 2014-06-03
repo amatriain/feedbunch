@@ -30,7 +30,7 @@ describe FeedClient do
     before :each do
       feed_file = File.join __dir__, '..', '..', 'attachments', 'iso-8859-1-feed.xml'
       feed_xml = File.read feed_file
-      feed_xml.stub(:headers).and_return {}
+      feed_xml.stub(:headers).and_return({})
       RestClient.stub get: feed_xml
     end
 

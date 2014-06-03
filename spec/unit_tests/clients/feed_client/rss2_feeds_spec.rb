@@ -53,7 +53,7 @@ describe FeedClient do
 </rss>
 FEED_XML
 
-      feed_xml.stub(:headers).and_return {}
+      feed_xml.stub(:headers).and_return({})
       RestClient.stub get: feed_xml
     end
 
@@ -172,7 +172,7 @@ FEED_XML
   </channel>
 </rss>
 FEED_XML
-      feed_xml.stub(:headers).and_return {}
+      feed_xml.stub(:headers).and_return({})
       RestClient.stub get: feed_xml
 
       FeedClient.fetch @feed
@@ -211,7 +211,7 @@ FEED_XML
   </channel>
 </rss>
 FEED_XML
-      feed_xml.stub(:headers).and_return {}
+      feed_xml.stub(:headers).and_return({})
       RestClient.stub get: feed_xml
 
       FeedClient.fetch @feed

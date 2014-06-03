@@ -95,7 +95,7 @@ describe FeedClient do
 </rss>
 FEED_XML
 
-      feed_xml.stub(:headers).and_return {}
+      feed_xml.stub(:headers).and_return({})
       RestClient.stub get: feed_xml
     end
 

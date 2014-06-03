@@ -42,7 +42,7 @@ describe FeedClient do
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
+      webpage_html.stub headers:({})
 
       # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
       RestClient.stub :get do |url|
@@ -421,7 +421,7 @@ WEBPAGE_HTML
 </feed>
 FEED_XML
 
-      feed_xml.stub(:headers).and_return {}
+      feed_xml.stub(:headers).and_return({})
       RestClient.stub get: feed_xml
 
       FeedClient.fetch @feed

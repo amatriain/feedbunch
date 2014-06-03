@@ -51,7 +51,7 @@ describe FeedClient do
 </feed>
 FEED_XML
 
-      @feed_xml.stub(:headers).and_return {}
+      @feed_xml.stub(:headers).and_return({})
       RestClient.stub get: @feed_xml
     end
 
@@ -168,7 +168,7 @@ FEED_XML
   </entry>
 </feed>
 FEED_XML
-      @feed_xml.stub(:headers).and_return {}
+      @feed_xml.stub(:headers).and_return({})
       RestClient.stub get: @feed_xml
 
       FeedClient.fetch @feed
@@ -206,7 +206,7 @@ FEED_XML
 </feed>
 FEED_XML
 
-      @feed_xml.stub(:headers).and_return {}
+      @feed_xml.stub(:headers).and_return({})
       RestClient.stub get: @feed_xml
 
       FeedClient.fetch @feed
@@ -272,7 +272,7 @@ FEED_XML
 </feed>
 FEED_XML
 
-      @feed_xml.stub(:headers).and_return {}
+      @feed_xml.stub(:headers).and_return({})
       RestClient.stub get: @feed_xml
     end
 
@@ -354,7 +354,7 @@ ENTRY_CONTENT
 
 FEED_XML
 
-      @feed_xml.stub(:headers).and_return {}
+      @feed_xml.stub(:headers).and_return({})
       RestClient.stub get: @feed_xml
     end
 

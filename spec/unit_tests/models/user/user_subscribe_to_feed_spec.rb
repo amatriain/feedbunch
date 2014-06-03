@@ -300,7 +300,7 @@ WEBPAGE_HTML
   </channel>
 </rss>
 FEED_XML
-      feed_xml.stub(:headers).and_return {}
+      feed_xml.stub(:headers).and_return({})
 
       RestClient.stub :get do |url|
         if url == alternate_webpage_url
@@ -418,7 +418,7 @@ WEBPAGE_HTML
   </channel>
 </rss>
 FEED_XML
-      feed_xml.stub(:headers).and_return {}
+      feed_xml.stub(:headers).and_return({})
 
       RestClient.stub :get do |url|
         if url == webpage_url || url == alternate_webpage_url
@@ -562,7 +562,7 @@ WEBPAGE_HTML
   </channel>
 </rss>
 FEED_XML
-      feed_xml.stub(:headers).and_return {}
+      feed_xml.stub(:headers).and_return({})
 
       RestClient.stub :get do |url|
         if url == webpage_url
@@ -617,7 +617,7 @@ WEBPAGE_HTML
   </channel>
 </rss>
 FEED_XML
-      feed_xml.stub(:headers).and_return {}
+      feed_xml.stub(:headers).and_return({})
 
       RestClient.stub :get do |url|
         if url == webpage_url
