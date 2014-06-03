@@ -6,9 +6,9 @@ if Rails.env=='ci'
     desc 'Run tests depending on the TEST_SUITE env variable: "unit"=>unit tests, "acceptance"=>acceptance tests'
     RSpec::Core::RakeTask.new(:travisci) do |task|
       all_tests = FileList['spec/**/*_spec.rb']
-      unit_tests = FileList['spec/**/*_spec.rb'].exclude 'spec/features/**/*_spec.rb'
-      acceptance_tests_1 = FileList['spec/features/suite_1/**/*_spec.rb']
-      acceptance_tests_2 = FileList['spec/features/suite_2/**/*_spec.rb']
+      unit_tests = FileList['spec/unit_tests/**/*_spec.rb']
+      acceptance_tests_1 = FileList['spec/acceptance_tests/suite_1/**/*_spec.rb']
+      acceptance_tests_2 = FileList['spec/acceptance_tests/suite_2/**/*_spec.rb']
 
       if ENV['TEST_SUITE'] == 'unit'
         # Include only unit tests
