@@ -12,7 +12,7 @@ describe ImportSubscriptionsJob do
     @user.opml_import_job_state = @opml_import_job_state
 
     @filename = '1371324422.opml'
-    @filepath = File.join __dir__, '..', 'attachments', @filename
+    @filepath = File.join __dir__, '..', '..', 'attachments', @filename
     @file_contents = File.read @filepath
 
     Feedbunch::Application.config.uploads_manager.stub :read do |user, folder, filename|
@@ -40,7 +40,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'sets data import state to ERROR if the file is not well formed XML' do
-    not_valid_xml_filename = File.join __dir__, '..', 'attachments', 'not-well-formed-xml.opml'
+    not_valid_xml_filename = File.join __dir__, '..', '..', 'attachments', 'not-well-formed-xml.opml'
     file_contents = File.read not_valid_xml_filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
     expect {ImportSubscriptionsJob.perform not_valid_xml_filename, @user.id}.to raise_error Nokogiri::XML::SyntaxError
@@ -49,7 +49,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'sets data import state to ERROR if the file is not valid OPML' do
-    not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
+    not_valid_opml_filename = File.join __dir__, '..', '..', 'attachments', 'not-valid-opml.opml'
     file_contents = File.read not_valid_opml_filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
     expect {ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id}.to raise_error OpmlImportError
@@ -87,7 +87,7 @@ describe ImportSubscriptionsJob do
   end
 
   it 'ignores feeds without xmlUrl attribute' do
-    filename = File.join __dir__, '..', 'attachments', '1371324422-with-feed-without-attributes.opml'
+    filename = File.join __dir__, '..', '..', 'attachments', '1371324422-with-feed-without-attributes.opml'
     file_contents = File.read filename
     Feedbunch::Application.config.uploads_manager.stub read: file_contents
 
@@ -112,7 +112,7 @@ describe ImportSubscriptionsJob do
     end
 
     it 'creates folders from TinyTinyRSS-style opml (without folder title)' do
-      filename = File.join __dir__, '..', 'attachments', 'TinyTinyRSS.opml'
+      filename = File.join __dir__, '..', '..', 'attachments', 'TinyTinyRSS.opml'
       file_contents = File.read filename
       Feedbunch::Application.config.uploads_manager.stub read: file_contents
 
@@ -193,7 +193,7 @@ describe ImportSubscriptionsJob do
     end
 
     it 'sends an email if it finishes with an error' do
-      not_valid_opml_filename = File.join __dir__, '..', 'attachments', 'not-valid-opml.opml'
+      not_valid_opml_filename = File.join __dir__, '..', '..', 'attachments', 'not-valid-opml.opml'
       file_contents = File.read not_valid_opml_filename
       Feedbunch::Application.config.uploads_manager.stub read: file_contents
       expect {ImportSubscriptionsJob.perform not_valid_opml_filename, @user.id}.to raise_error OpmlImportError
