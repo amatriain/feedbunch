@@ -11,7 +11,7 @@ describe 'refresh feeds' do
 
     @job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed.id
     User.any_instance.stub :refresh_feed do |user|
-      if user.if == @user.id
+      if user.id == @user.id
         @user.refresh_feed_job_states << @job_state
       end
     end

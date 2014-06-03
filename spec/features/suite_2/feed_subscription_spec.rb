@@ -167,7 +167,7 @@ describe 'subscription to feeds' do
 
       before :each do
         User.any_instance.stub :find_subscribe_job_state do |user|
-          if user.if == @user.id
+          if user.id == @user.id
             @job_state.update state: SubscribeJobState::ERROR
             @job_state
           end
