@@ -36,7 +36,7 @@ describe User, type: :model do
 
       @user.export_subscriptions
 
-      opml_export_job_state.destroyed?.should be_true
+      opml_export_job_state.destroyed?.should be true
     end
 
     it 'sets opml_import_job_state state as ERROR if an error is raised' do
@@ -51,7 +51,7 @@ describe User, type: :model do
   context 'change alert visibility' do
 
     it 'hides alert' do
-      @user.opml_export_job_state.show_alert.should be_true
+      @user.opml_export_job_state.show_alert.should be true
       @user.set_opml_export_job_state_visible false
       @user.reload.opml_export_job_state.show_alert.should be false
     end
@@ -59,7 +59,7 @@ describe User, type: :model do
     it 'shows alert' do
       @user.opml_export_job_state.update show_alert: false
       @user.set_opml_export_job_state_visible true
-      @user.reload.opml_export_job_state.show_alert.should be_true
+      @user.reload.opml_export_job_state.show_alert.should be true
     end
   end
 

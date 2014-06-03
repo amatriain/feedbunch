@@ -137,7 +137,7 @@ describe RefreshFeedJob do
 
       @feed.reload.available.should be false
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      @feed.reload.available.should be_true
+      @feed.reload.available.should be true
     end
 
     it 'does not change failing_since if the feed update fails' do

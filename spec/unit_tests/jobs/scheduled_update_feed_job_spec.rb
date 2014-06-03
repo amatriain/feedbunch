@@ -75,7 +75,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3240s'
         config[:every][1].should eq ({first_in: 3240})
@@ -92,7 +92,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
         config[:every][1].should eq ({first_in: 3960})
@@ -112,7 +112,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '900s'
         config[:every][1].should eq ({first_in: 900.seconds})
@@ -129,7 +129,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '43200s'
         config[:every][1].should eq ({first_in: 12.hours})
@@ -150,7 +150,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
         config[:every][1].should eq ({first_in: 3960})
@@ -167,7 +167,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
         config[:every][1].should eq ({first_in: 3960})
@@ -184,7 +184,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
         config[:every][1].should eq ({first_in: 3960})
@@ -201,7 +201,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
         config[:every][1].should eq ({first_in: 3960})
@@ -218,7 +218,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
         config[:every][1].should eq ({first_in: 3960})
@@ -235,7 +235,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
         config[:every][1].should eq ({first_in: 3960})
@@ -252,7 +252,7 @@ describe ScheduledUpdateFeedJob do
       Resque.should_receive :set_schedule do |name, config|
         name.should eq "update_feed_#{@feed.id}"
         config[:class].should eq 'ScheduledUpdateFeedJob'
-        config[:persist].should be_true
+        config[:persist].should be true
         config[:args].should eq @feed.id
         config[:every][0].should eq '3960s'
         config[:every][1].should eq ({first_in: 3960})
@@ -305,7 +305,7 @@ describe ScheduledUpdateFeedJob do
       ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
       @feed.update failing_since: date - (1.week + 1.day)
 
-      @feed.available.should be_true
+      @feed.available.should be true
       ScheduledUpdateFeedJob.perform @feed.id
       @feed.reload.available.should be false
     end
@@ -327,18 +327,18 @@ describe ScheduledUpdateFeedJob do
       ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
       @feed.update failing_since: date - (1.week + 1.day)
 
-      @feed.available.should be_true
+      @feed.available.should be true
       ScheduledUpdateFeedJob.perform @feed.id
-      @feed.reload.available.should be_true
+      @feed.reload.available.should be true
     end
 
     it 'does not mark feed as unavailable when it updates successfully' do
       FeedClient.stub :fetch
       @feed.update failing_since: nil
 
-      @feed.available.should be_true
+      @feed.available.should be true
       ScheduledUpdateFeedJob.perform @feed.id
-      @feed.reload.available.should be_true
+      @feed.reload.available.should be true
     end
   end
 
@@ -385,12 +385,12 @@ describe ScheduledUpdateFeedJob do
       # 3 oldest entries should be deleted
       (0..2).each do |i|
         Entry.exists?(@entries[i].id).should be false
-        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be_true
+        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be true
       end
 
       # the rest of entries, which are newer, should not be deleted
       (3..497).each do |i|
-        Entry.exists?(@entries[i].id).should be_true
+        Entry.exists?(@entries[i].id).should be true
         DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be false
       end
     end
@@ -415,12 +415,12 @@ describe ScheduledUpdateFeedJob do
       # 3 oldest entries should be deleted
       (0..2).each do |i|
         Entry.exists?(@entries[i].id).should be false
-        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be_true
+        DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be true
       end
 
       # the rest of entries, which are newer, should not be deleted
       (3..497).each do |i|
-        Entry.exists?(@entries[i].id).should be_true
+        Entry.exists?(@entries[i].id).should be true
         DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid).should be false
       end
     end

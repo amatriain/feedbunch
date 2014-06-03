@@ -47,7 +47,7 @@ describe S3Client do
 
   it 'returns true if file exists' do
     exists = S3Client.exists? @user, @upload_folder, @filename
-    exists.should be_true
+    exists.should be true
   end
 
   it 'returns false if file does not exist' do

@@ -36,8 +36,8 @@ describe DestroyOldJobStatesJob do
 
   it 'does not destroy newer states' do
     DestroyOldJobStatesJob.perform
-    SubscribeJobState.exists?(@subscribe_job_state_2.id).should be_true
-    RefreshFeedJobState.exists?(@refresh_feed_job_state_2.id).should be_true
+    SubscribeJobState.exists?(@subscribe_job_state_2.id).should be true
+    RefreshFeedJobState.exists?(@refresh_feed_job_state_2.id).should be true
   end
 
 end

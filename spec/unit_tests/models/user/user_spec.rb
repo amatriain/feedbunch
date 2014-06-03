@@ -147,7 +147,7 @@ describe User, type: :model do
     end
 
     it 'deletes the old opml_import_job_state when adding a new one for a user' do
-      OpmlImportJobState.exists?(@opml_import_job_state).should be_true
+      OpmlImportJobState.exists?(@opml_import_job_state).should be true
       opml_import_job_state2 = FactoryGirl.build :opml_import_job_state, user_id: @user.id
       @user.opml_import_job_state = opml_import_job_state2
 
@@ -169,7 +169,7 @@ describe User, type: :model do
     end
 
     it 'deletes the old opml_export_job_state when adding a new one for a user' do
-      OpmlExportJobState.exists?(@opml_export_job_state).should be_true
+      OpmlExportJobState.exists?(@opml_export_job_state).should be true
       opml_export_job_state2 = FactoryGirl.build :opml_export_job_state, user_id: @user.id
       @user.opml_export_job_state = opml_export_job_state2
 

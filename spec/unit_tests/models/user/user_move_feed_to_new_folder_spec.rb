@@ -53,7 +53,7 @@ describe User, type: :model do
       folder.feeds << @feed << feed2
 
       @user.move_feed_to_folder @feed, folder_title: @title
-      Folder.exists?(folder).should be_true
+      Folder.exists?(folder).should be true
     end
 
     it 'returns the new folder' do

@@ -99,7 +99,7 @@ describe OpmlExportJobState, type: :model do
     it 'defaults show_alert to true' do
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, show_alert: nil
       opml_export_job_state.save!
-      opml_export_job_state.show_alert.should be_true
+      opml_export_job_state.show_alert.should be true
     end
   end
 

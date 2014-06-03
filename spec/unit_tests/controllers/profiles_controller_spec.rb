@@ -12,7 +12,7 @@ describe Devise::ProfilesController, type: :controller do
     it 'locks user and enqueues job to destroy it' do
       Resque.should_receive(:enqueue).with DestroyUserJob, @user.id
       delete :destroy, delete_user_registration: {password: @user.password}
-      @user.reload.access_locked?.should be_true
+      @user.reload.access_locked?.should be true
     end
 
     it 'does not locl user nor enqueue job if wrong password is submitted' do

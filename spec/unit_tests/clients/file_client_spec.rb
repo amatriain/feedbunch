@@ -17,7 +17,7 @@ describe FileClient do
 
   it 'saves file in some folder' do
     FileClient.save @user, @upload_folder, @filename, @file_content
-    FileTest.exists?(@filepath).should be_true
+    FileTest.exists?(@filepath).should be true
   end
 
   it 'deletes file from uploads folder' do
@@ -49,7 +49,7 @@ describe FileClient do
 
   it 'returns true if file exists' do
     FileClient.save @user, @upload_folder, @filename, @file_content
-    FileClient.exists?(@user, @upload_folder, @filename).should be_true
+    FileClient.exists?(@user, @upload_folder, @filename).should be true
   end
 
   it 'returns false if file does not exist' do

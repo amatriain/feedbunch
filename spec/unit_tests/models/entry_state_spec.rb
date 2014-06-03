@@ -26,7 +26,7 @@ describe EntryState, type: :model do
       user = FactoryGirl.create :user
       user.subscribe feed.fetch_url
 
-      EntryState.exists?(entry_id: entry.id, user_id: user.id).should be_true
+      EntryState.exists?(entry_id: entry.id, user_id: user.id).should be true
 
       entry_state_dupe = FactoryGirl.build :entry_state, entry_id: entry.id, user_id: user.id
       entry_state_dupe.should_not be_valid
@@ -41,8 +41,8 @@ describe EntryState, type: :model do
       user2 = FactoryGirl.create :user
       user2.subscribe feed.fetch_url
 
-      EntryState.exists?(entry_id: entry.id, user_id: user1.id).should be_true
-      EntryState.exists?(entry_id: entry.id, user_id: user2.id).should be_true
+      EntryState.exists?(entry_id: entry.id, user_id: user1.id).should be true
+      EntryState.exists?(entry_id: entry.id, user_id: user2.id).should be true
     end
 
     it 'accepts multiple states for different entries and the same user' do
@@ -53,8 +53,8 @@ describe EntryState, type: :model do
       user = FactoryGirl.create :user
       user.subscribe feed.fetch_url
 
-      EntryState.exists?(entry_id: entry1.id, user_id: user.id).should be_true
-      EntryState.exists?(entry_id: entry2.id, user_id: user.id).should be_true
+      EntryState.exists?(entry_id: entry1.id, user_id: user.id).should be true
+      EntryState.exists?(entry_id: entry2.id, user_id: user.id).should be true
     end
   end
 end

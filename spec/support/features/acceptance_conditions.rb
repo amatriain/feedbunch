@@ -29,7 +29,7 @@ end
 
 def mail_should_be_sent(path: nil, to: nil, text: nil)
   email = ActionMailer::Base.deliveries.pop
-  email.present?.should be_true
+  email.present?.should be true
 
   if to.present?
     email.to.first.should eq to
@@ -55,13 +55,13 @@ def mail_should_be_sent(path: nil, to: nil, text: nil)
       end
     end
 
-    path_ok.should be_true if path.present?
-    text_ok.should be_true if text.present?
+    path_ok.should be true if path.present?
+    text_ok.should be true if text.present?
   else
     if path.present?
       emailBody = Nokogiri::HTML email.body.to_s
       link = emailBody.at_css "a[href*=\"#{path}\"]"
-      link.present?.should be_true
+      link.present?.should be true
       href = link[:href]
     end
 

@@ -71,7 +71,7 @@ describe 'quick reading mode', type: :feature do
       # first entry should be read
       entry_read = page.has_css? "a[data-entry-id='#{@entries[49].id}'].entry-read"
       entry_becoming_read = page.has_css? "a[data-entry-id='#{@entries[49].id}'].entry-becoming-read"
-      (entry_read || entry_becoming_read).should be_true
+      (entry_read || entry_becoming_read).should be true
     end
   end
 

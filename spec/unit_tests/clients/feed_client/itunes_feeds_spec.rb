@@ -101,7 +101,7 @@ FEED_XML
 
     it 'returns true if successful' do
       success = FeedClient.fetch @feed
-      success.should be_true
+      success.should be true
     end
 
     it 'fetches the right entries and saves them in the database' do

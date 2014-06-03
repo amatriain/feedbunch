@@ -29,7 +29,7 @@ describe User, type: :model do
       @folder.feeds << feed2
 
       @user.move_feed_to_folder @feed, folder: Folder::NO_FOLDER
-      Folder.exists?(id: @folder.id).should be_true
+      Folder.exists?(id: @folder.id).should be true
     end
 
     it 'returns nil' do

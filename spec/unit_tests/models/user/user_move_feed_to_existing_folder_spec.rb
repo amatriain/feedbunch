@@ -67,7 +67,7 @@ describe User, type: :model do
 
       @user.move_feed_to_folder @feed, folder: folder2
 
-      Folder.exists?(id: @folder.id).should be_true
+      Folder.exists?(id: @folder.id).should be true
     end
   end
 end

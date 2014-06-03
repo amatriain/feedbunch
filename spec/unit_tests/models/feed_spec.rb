@@ -9,7 +9,7 @@ describe Feed, type: :model do
   context 'validations' do
     it 'accepts valid URLs' do
       @feed.url = 'http://www.xkcd.com'
-      @feed.valid?.should be_true
+      @feed.valid?.should be true
     end
 
     it 'does not accept invalid URLs' do
@@ -20,19 +20,19 @@ describe Feed, type: :model do
 
     it 'accepts an empty URL' do
       @feed.url = ''
-      @feed.valid?.should be_true
+      @feed.valid?.should be true
       @feed.url = nil
-      @feed.valid?.should be_true
+      @feed.valid?.should be true
     end
 
     it 'accepts duplicate URLs' do
       feed_dupe = FactoryGirl.build :feed, url: @feed.url
-      feed_dupe.valid?.should be_true
+      feed_dupe.valid?.should be true
     end
 
     it 'accepts valid fetch URLs' do
       @feed.fetch_url = 'http://www.xkcd.com/rss.xml'
-      @feed.valid?.should be_true
+      @feed.valid?.should be true
     end
 
     it 'does not accept invalid fetch URLs' do
@@ -80,7 +80,7 @@ describe Feed, type: :model do
     it 'marks feed as available by default' do
       feed = FactoryGirl.build :feed, available: nil
       feed.save!
-      feed.available.should be_true
+      feed.available.should be true
     end
   end
 

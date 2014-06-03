@@ -395,7 +395,7 @@ describe Entry, type: :model do
       entry_state.read = true
       entry_state.save
 
-      entry.read_by?(user).should be_true
+      entry.read_by?(user).should be true
     end
 
     it 'retrieves state for an unread entry' do

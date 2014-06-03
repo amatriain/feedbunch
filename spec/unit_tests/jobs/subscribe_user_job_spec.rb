@@ -32,7 +32,7 @@ describe SubscribeUserJob do
   it 'fetches new feeds' do
     FeedClient.should_receive(:fetch) do |feed, autodiscovery|
       feed.fetch_url.should eq @url
-      autodiscovery.should be_true
+      autodiscovery.should be true
       feed
     end
     SubscribeUserJob.perform @user.id, @url, @folder.id, false, nil

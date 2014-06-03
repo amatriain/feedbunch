@@ -20,7 +20,7 @@ describe User, type: :model do
         @entry1.read_by?(@user).should be false
 
         @user.change_entries_state @entry1, 'read'
-        @entry1.read_by?(@user).should be_true
+        @entry1.read_by?(@user).should be true
       end
 
       it 'marks entry as unread' do
@@ -43,7 +43,7 @@ describe User, type: :model do
         entry_state.save!
 
         @user.change_entries_state @entry1, 'somethingsomethingsomething'
-        @entry1.read_by?(@user).should be_true
+        @entry1.read_by?(@user).should be true
       end
 
       it 'does not change state for other users' do
@@ -77,9 +77,9 @@ describe User, type: :model do
 
           @user.change_entries_state @entry3, 'read', whole_feed: true
 
-          @entry1.read_by?(@user).should be_true
-          @entry2.read_by?(@user).should be_true
-          @entry3.read_by?(@user).should be_true
+          @entry1.read_by?(@user).should be true
+          @entry2.read_by?(@user).should be true
+          @entry3.read_by?(@user).should be true
         end
 
         it 'marks several entries as unread' do
@@ -158,11 +158,11 @@ describe User, type: :model do
 
           @user.change_entries_state @entry5, 'read', whole_folder: true
 
-          @entry1.read_by?(@user).should be_true
-          @entry2.read_by?(@user).should be_true
-          @entry3.read_by?(@user).should be_true
-          @entry4.read_by?(@user).should be_true
-          @entry5.read_by?(@user).should be_true
+          @entry1.read_by?(@user).should be true
+          @entry2.read_by?(@user).should be true
+          @entry3.read_by?(@user).should be true
+          @entry4.read_by?(@user).should be true
+          @entry5.read_by?(@user).should be true
         end
 
         it 'marks several entries as unread' do
@@ -262,11 +262,11 @@ describe User, type: :model do
 
           @user.change_entries_state @entry5, 'read', all_entries: true
 
-          @entry1.read_by?(@user).should be_true
-          @entry2.read_by?(@user).should be_true
-          @entry3.read_by?(@user).should be_true
-          @entry4.read_by?(@user).should be_true
-          @entry5.read_by?(@user).should be_true
+          @entry1.read_by?(@user).should be true
+          @entry2.read_by?(@user).should be true
+          @entry3.read_by?(@user).should be true
+          @entry4.read_by?(@user).should be true
+          @entry5.read_by?(@user).should be true
         end
 
         it 'marks several entries as unread' do
