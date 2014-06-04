@@ -57,9 +57,9 @@ FEED_XML
       RestClient.stub get: feed_xml
     end
 
-    it 'returns true if successful' do
-      success = FeedClient.fetch @feed
-      success.should be true
+    it 'returns the feed if successful' do
+      feed = FeedClient.fetch @feed
+      feed.should eq @feed
     end
 
     it 'fetches the right entries and saves them in the database' do

@@ -659,13 +659,13 @@ FEED_XML
       Feed.where(url: feed_url).should be_blank
     end
 
-    it 'returns false if it cannot fetch the feed' do
+    it 'returns nil if it cannot fetch the feed' do
       feed_url = 'http://a.new.feed.url.com'
       FeedClient.stub fetch: nil
 
       # At first the user is not subscribed to any feed
       success = @user.subscribe feed_url
-      success.should be false
+      success.should be_nil
     end
 
   end
