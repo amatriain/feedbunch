@@ -34,7 +34,7 @@ describe FeedClient do
       RestClient.stub get: feed_xml
     end
 
-    it 'returns true if successful' do
+    it 'returns the feed if successful' do
       feed = FeedClient.fetch @feed
       feed.should eq @feed
     end
