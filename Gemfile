@@ -88,7 +88,7 @@ group :test, :development do
   gem 'brakeman', require: false
 
   # Testing framework
-  gem 'rspec-rails', '~> 2.0'
+  gem 'rspec-rails'
 
   # Factories instead of DB fixtures during testing
   gem 'factory_girl_rails'
