@@ -7,7 +7,6 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 
 # For acceptance testing
-require 'rspec/autorun'
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'capybara-webkit'
