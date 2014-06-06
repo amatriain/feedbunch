@@ -17,6 +17,7 @@
 RSpec.configure do |config|
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
+
 =begin
   # These two settings work together to allow you to limit a spec run
   # to individual examples or groups you care about by tagging them with
@@ -34,6 +35,21 @@ RSpec.configure do |config|
     # (e.g. via a command-line flag).
     config.default_formatter = 'doc'
   end
+
+  # rspec-mocks config goes here. You can use an alternate test double
+  # library (such as bogus or mocha) by changing the `mock_with` option here.
+  config.mock_with :rspec do |mocks|
+    # Enable only the newer, non-monkey-patching expect syntax.
+    # For more details, see:
+    #   - http://teaisaweso.me/blog/2013/05/27/rspecs-new-message-expectation-syntax/
+    mocks.syntax = :expect
+
+    # Prevents you from mocking or stubbing a method that does not exist on
+    # a real object. This is generally recommended.
+    mocks.verify_partial_doubles = true
+  end
+
+=end
 
   # Print the 10 slowest examples and example groups at the
   # end of the spec run, to help surface which specs are running
@@ -59,20 +75,18 @@ RSpec.configure do |config|
     # Enable only the newer, non-monkey-patching expect syntax.
     # For more details, see:
     #   - http://myronmars.to/n/dev-blog/2012/06/rspecs-new-expectation-syntax
-    expectations.syntax = :expect
+    #expectations.syntax = :expect
   end
 
-  # rspec-mocks config goes here. You can use an alternate test double
-  # library (such as bogus or mocha) by changing the `mock_with` option here.
-  config.mock_with :rspec do |mocks|
-    # Enable only the newer, non-monkey-patching expect syntax.
-    # For more details, see:
-    #   - http://teaisaweso.me/blog/2013/05/27/rspecs-new-message-expectation-syntax/
-    mocks.syntax = :expect
+  # methods stubbed in all specs
+  config.before :each do
+    # Ensure no HTTP calls are made during testing
+    RestClient.stub :get
 
-    # Prevents you from mocking or stubbing a method that does not exist on
-    # a real object. This is generally recommended.
-    mocks.verify_partial_doubles = true
+    # ensure no attempt to connect to Redis is done
+    Resque.stub :set_schedule
+    Resque.stub :remove_schedule
+    Resque.stub :enqueue
+    Resque.stub :enqueue_in
   end
-=end
 end

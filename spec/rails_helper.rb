@@ -1,7 +1,6 @@
 require 'coveralls'
 Coveralls.wear!('rails')
 
-# This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 require 'spec_helper'
 require File.expand_path("../../config/environment", __FILE__)
@@ -69,18 +68,6 @@ RSpec.configure do |config|
   # in case there's a long-running AJAX call running which changes the DOM after a few seconds
   # (or we're just running in a slow CI environment)
   Capybara.default_wait_time = 10
-
-  # methods stubbed in all specs
-  config.before :each do
-    # Ensure no HTTP calls are made during testing
-    RestClient.stub :get
-
-    # ensure no attempt to connect to Redis is done
-    Resque.stub :set_schedule
-    Resque.stub :remove_schedule
-    Resque.stub :enqueue
-    Resque.stub :enqueue_in
-  end
 
   # Include Warden helpers: login_as, logout...
   # For more about these helpers see Warden wiki: https://github.com/hassox/warden/wiki/Testing

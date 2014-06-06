@@ -57,29 +57,29 @@ FEED_XML
 
     it 'returns feed if successful' do
       feed = FeedClient.fetch @feed
-      feed.should eq @feed
+      expect(feed).to eq @feed
     end
 
     it 'fetches the right entries and saves them in the database' do
       FeedClient.fetch @feed
       @feed.reload
-      @feed.entries.count.should eq 2
+      expect(@feed.entries.count).to eq 2
 
       entry1 = @feed.entries[0]
-      entry1.title.should eq @entry1.title
-      entry1.url.should eq @entry1.url
-      entry1.author.should eq @entry1.author
-      entry1.summary.should eq CGI.unescapeHTML(@entry1.summary)
-      entry1.published.should eq @entry1.published
-      entry1.guid.should eq @entry1.guid
+      expect(entry1.title).to eq @entry1.title
+      expect(entry1.url).to eq @entry1.url
+      expect(entry1.author).to eq @entry1.author
+      expect(entry1.summary).to eq CGI.unescapeHTML(@entry1.summary)
+      expect(entry1.published).to eq @entry1.published
+      expect(entry1.guid).to eq @entry1.guid
 
       entry2 = @feed.entries[1]
-      entry2.title.should eq @entry2.title
-      entry2.url.should eq @entry2.url
-      entry2.author.should eq @entry2.author
-      entry2.summary.should eq CGI.unescapeHTML(@entry2.summary)
-      entry2.published.should eq @entry2.published
-      entry2.guid.should eq @entry2.guid
+      expect(entry2.title).to eq @entry2.title
+      expect(entry2.url).to eq @entry2.url
+      expect(entry2.author).to eq @entry2.author
+      expect(entry2.summary).to eq CGI.unescapeHTML(@entry2.summary)
+      expect(entry2.published).to eq @entry2.published
+      expect(entry2.guid).to eq @entry2.guid
     end
 
     it 'ignores entry if it is received again' do
@@ -95,13 +95,13 @@ FEED_XML
 
       # After fetching, relevant fields should be updated with the values received in the XML
       entry_after = Entry.where(guid: entry_before.guid, feed_id: entry_before.feed_id).first
-      entry_after.feed_id.should eq entry_before.feed_id
-      entry_after.title.should eq entry_before.title
-      entry_after.url.should eq entry_before.url
-      entry_after.author.should eq entry_before.author
-      entry_after.summary.should eq CGI.unescapeHTML(entry_before.summary)
-      entry_after.guid.should eq entry_before.guid
-      entry_after.published.should eq entry_before.published
+      expect(entry_after.feed_id).to eq entry_before.feed_id
+      expect(entry_after.title).to eq entry_before.title
+      expect(entry_after.url).to eq entry_before.url
+      expect(entry_after.author).to eq entry_before.author
+      expect(entry_after.summary).to eq CGI.unescapeHTML(entry_before.summary)
+      expect(entry_after.guid).to eq entry_before.guid
+      expect(entry_after.published).to eq entry_before.published
     end
 
     it 'saves entry if another one with the same guid but from a different feed is already in the database' do
@@ -120,29 +120,29 @@ FEED_XML
 
       # After fetching, entry should be left untouched
       entry.reload
-      entry.feed_id.should eq feed2.id
-      entry.title.should eq 'Original title'
-      entry.url.should eq 'http://origina.url.com'
-      entry.author.should eq 'Original author'
-      entry.summary.should eq '<p>Original summary</p>'
-      entry.published.should eq Time.zone.parse('2013-01-01T00:00:00')
-      entry.guid.should eq @entry1.guid
+      expect(entry.feed_id).to eq feed2.id
+      expect(entry.title).to eq 'Original title'
+      expect(entry.url).to eq 'http://origina.url.com'
+      expect(entry.author).to eq 'Original author'
+      expect(entry.summary).to eq '<p>Original summary</p>'
+      expect(entry.published).to eq Time.zone.parse('2013-01-01T00:00:00')
+      expect(entry.guid).to eq @entry1.guid
 
       # Fetched entry should also be saved in the database
       fetched_entry = Entry.where(guid: @entry1.guid, feed_id: @feed.id).first
-      fetched_entry.feed_id.should eq @feed.id
-      fetched_entry.title.should eq @entry1.title
-      fetched_entry.url.should eq @entry1.url
-      fetched_entry.author.should eq @entry1.author
-      fetched_entry.summary.should eq CGI.unescapeHTML(@entry1.summary)
-      fetched_entry.published.should eq @entry1.published
-      fetched_entry.guid.should eq @entry1.guid
+      expect(fetched_entry.feed_id).to eq @feed.id
+      expect(fetched_entry.title).to eq @entry1.title
+      expect(fetched_entry.url).to eq @entry1.url
+      expect(fetched_entry.author).to eq @entry1.author
+      expect(fetched_entry.summary).to eq CGI.unescapeHTML(@entry1.summary)
+      expect(fetched_entry.published).to eq @entry1.published
+      expect(fetched_entry.guid).to eq @entry1.guid
     end
 
     it 'retrieves the feed title and saves it in the database' do
       FeedClient.fetch @feed
       @feed.reload
-      @feed.title.should eq @feed_title
+      expect(@feed.title).to eq @feed_title
     end
 
     it 'does not update the feed title if it is not present in the feed' do
@@ -173,13 +173,13 @@ FEED_XML
 
       FeedClient.fetch @feed
       @feed.reload
-      @feed.title.should eq @original_feed_title
+      expect(@feed.title).to eq @original_feed_title
     end
 
     it 'retrieves the feed URL and saves it in the database' do
       FeedClient.fetch @feed
       @feed.reload
-      @feed.url.should eq @feed_url
+      expect(@feed.url).to eq @feed_url
     end
 
     it 'does not update the feed URL if it is not present in the feed' do
@@ -211,7 +211,7 @@ FEED_XML
 
       FeedClient.fetch @feed
       @feed.reload
-      @feed.url.should eq @original_feed_url
+      expect(@feed.url).to eq @original_feed_url
     end
   end
 
@@ -279,15 +279,15 @@ FEED_XML
     it 'fetches and saves entries' do
       FeedClient.fetch @feed
       @feed.reload
-      @feed.entries.count.should eq 1
+      expect(@feed.entries.count).to eq 1
 
       entry = @feed.entries[0]
-      entry.title.should eq CGI.unescapeHTML(@entry.title)
-      entry.url.should eq @entry.url
-      entry.author.should eq @entry.author
-      entry.summary.should eq @entry.summary
-      entry.published.should eq @entry.published
-      entry.guid.should eq @entry.guid
+      expect(entry.title).to eq CGI.unescapeHTML(@entry.title)
+      expect(entry.url).to eq @entry.url
+      expect(entry.author).to eq @entry.author
+      expect(entry.summary).to eq @entry.summary
+      expect(entry.published).to eq @entry.published
+      expect(entry.guid).to eq @entry.guid
     end
 
     it 'preserves markup in xhtml content' do
@@ -295,7 +295,7 @@ FEED_XML
       @feed.reload
 
       entry = @feed.entries[0]
-      entry.content.should eq "#{@entry.content}"
+      expect(entry.content).to eq "#{@entry.content}"
     end
   end
 
@@ -361,15 +361,15 @@ FEED_XML
     it 'fetches and saves entries' do
       FeedClient.fetch @feed
       @feed.reload
-      @feed.entries.count.should eq 1
+      @feed.entries.count. eq 1
 
       entry = @feed.entries[0]
-      entry.title.should eq CGI.unescapeHTML(@entry.title)
-      entry.url.should eq @entry.url
-      entry.author.should eq @entry.author
-      entry.summary.should eq @entry.summary
-      entry.published.should eq @entry.published
-      entry.guid.should eq @entry.guid
+      expect(entry.title).to eq CGI.unescapeHTML(@entry.title)
+      expect(entry.url).to eq @entry.url
+      expect(entry.author).to eq @entry.author
+      expect(entry.summary).to eq @entry.summary
+      expect(entry.published).to eq @entry.published
+      expect(entry.guid).to eq @entry.guid
     end
 
     it 'preserves markup in xhtml content' do
@@ -377,7 +377,7 @@ FEED_XML
       @feed.reload
 
       entry = @feed.entries[0]
-      entry.content.strip.should eq "#{@entry.content.strip}"
+      expect(entry.content.strip).to eq "#{@entry.content.strip}"
     end
   end
 
@@ -407,10 +407,10 @@ WEBPAGE_HTML
         end
       end
 
-      @feed.fetch_url.should_not eq feed_url
+      expect(@feed.fetch_url).to eq feed_url
       FeedClient.fetch @feed, true
       @feed.reload
-      @feed.fetch_url.should eq feed_url
+      expect(@feed.fetch_url).to eq feed_url
     end
 
     it 'updates fetch_url of the feed with autodiscovery relative URL' do
@@ -441,10 +441,10 @@ WEBPAGE_HTML
         end
       end
 
-      feed.fetch_url.should_not eq feed_fetch_url
+      expect(feed.fetch_url).not_to eq feed_fetch_url
       FeedClient.fetch feed, true
       feed.reload
-      feed.fetch_url.should eq feed_fetch_url
+      expect(feed.fetch_url).to eq feed_fetch_url
     end
 
     it 'fetches feed' do
@@ -489,10 +489,10 @@ FEED_XML
         end
       end
 
-      @feed.entries.should be_blank
+      expect(@feed.entries).to be_blank
       FeedClient.fetch @feed, true
-      @feed.entries.count.should eq 1
-      @feed.entries.where(guid: @entry1.guid).should be_present
+      expect(@feed.entries.count).to eq 1
+      expect( @feed.entries.where guid: @entry1.guid ).to be_present
     end
 
     it 'detects that autodiscovered feed is already in the database' do
@@ -540,15 +540,15 @@ FEED_XML
         end
       end
 
-      old_feed.entries.should be_blank
+      expect(old_feed.entries).to be_blank
 
       FeedClient.fetch new_feed, true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
-      old_feed.entries.count.should eq 1
-      old_feed.entries.where(guid: @entry1.guid).should be_present
-      Feed.exists?(id: new_feed).should be false
+      expect(old_feed.entries.count).to eq 1
+      expect( old_feed.entries.where guid: @entry1.guid ).to be_present
+      expect( Feed.exists? id: new_feed ).to be false
     end
 
     it 'uses first feed available for autodiscovery' do
@@ -581,10 +581,10 @@ WEBPAGE_HTML
         end
       end
 
-      @feed.fetch_url.should_not eq atom_url
+      expect(@feed.fetch_url).not_to eq atom_url
       FeedClient.fetch @feed, true
       @feed.reload
-      @feed.fetch_url.should eq atom_url
+      expect(@feed.fetch_url).to eq atom_url
     end
 
   end
