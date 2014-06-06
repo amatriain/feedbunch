@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Api::RefreshFeedJobStatesController, type: :controller do
 

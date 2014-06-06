@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'automatically closing notices and alerts', type: :feature do
   before :each do

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'export subscriptions', type: :feature do
   before :each do
