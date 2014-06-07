@@ -361,7 +361,7 @@ FEED_XML
     it 'fetches and saves entries' do
       FeedClient.fetch @feed
       @feed.reload
-      @feed.entries.count. eq 1
+      expect(@feed.entries.count).to eq 1
 
       entry = @feed.entries[0]
       expect(entry.title).to eq CGI.unescapeHTML(@entry.title)
@@ -407,7 +407,7 @@ WEBPAGE_HTML
         end
       end
 
-      expect(@feed.fetch_url).to eq feed_url
+      expect(@feed.fetch_url).not_to eq feed_url
       FeedClient.fetch @feed, true
       @feed.reload
       expect(@feed.fetch_url).to eq feed_url
