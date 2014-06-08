@@ -411,7 +411,7 @@ FEED_XML
 </body>
 </html>
 WEBPAGE_HTML
-      allow(webpage_html).to receive(headers).and_return({})
+      allow(webpage_html).to receive(:headers).and_return({})
 
       webpage_url = @feed.fetch_url
       # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
