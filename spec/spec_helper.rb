@@ -84,12 +84,12 @@ RSpec.configure do |config|
   # methods stubbed in all specs
   config.before :each do
     # Ensure no HTTP calls are made during testing
-    RestClient.stub :get
+    allow(RestClient).to receive(:get)
 
     # ensure no attempt to connect to Redis is done
-    Resque.stub :set_schedule
-    Resque.stub :remove_schedule
-    Resque.stub :enqueue
-    Resque.stub :enqueue_in
+    allow(Resque).to receive(:set_schedule)
+    allow(Resque).to receive(:remove_schedule)
+    allow(Resque).to receive(:enqueue)
+    allow(Resque).to receive(:enqueue_in)
   end
 end

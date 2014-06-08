@@ -51,8 +51,8 @@ describe FeedClient do
 </feed>
 FEED_XML
 
-      @feed_xml.stub(:headers).and_return({})
-      RestClient.stub get: @feed_xml
+      allow(@feed_xml).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return @feed_xml
     end
 
     it 'returns feed if successful' do
@@ -168,8 +168,8 @@ FEED_XML
   </entry>
 </feed>
 FEED_XML
-      @feed_xml.stub(:headers).and_return({})
-      RestClient.stub get: @feed_xml
+      allow(@feed_xml).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return @feed_xml
 
       FeedClient.fetch @feed
       @feed.reload
@@ -206,8 +206,8 @@ FEED_XML
 </feed>
 FEED_XML
 
-      @feed_xml.stub(:headers).and_return({})
-      RestClient.stub get: @feed_xml
+      allow(@feed_xml).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return @feed_xml
 
       FeedClient.fetch @feed
       @feed.reload
@@ -272,8 +272,8 @@ FEED_XML
 </feed>
 FEED_XML
 
-      @feed_xml.stub(:headers).and_return({})
-      RestClient.stub get: @feed_xml
+      allow(@feed_xml).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return @feed_xml
     end
 
     it 'fetches and saves entries' do
@@ -354,8 +354,8 @@ ENTRY_CONTENT
 
 FEED_XML
 
-      @feed_xml.stub(:headers).and_return({})
-      RestClient.stub get: @feed_xml
+      allow(@feed_xml).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return @feed_xml
     end
 
     it 'fetches and saves entries' do
@@ -396,10 +396,10 @@ FEED_XML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
+      allow(webpage_html).to receive(:headers).and_return({})
 
       # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
-      RestClient.stub :get do |url|
+      allow(RestClient).to receive(:get) do |url|
         if url==feed_url
           raise RestClient::NotModified.new
         else
@@ -430,10 +430,10 @@ WEBPAGE_HTML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
+      allow(webpage_html).to receive(:headers).and_return({})
 
       # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
-      RestClient.stub :get do |url|
+      allow(RestClient).to receive(:get) do |url|
         if url==feed_fetch_url
           raise RestClient::NotModified.new
         else
@@ -460,7 +460,7 @@ WEBPAGE_HTML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
+      allow(webpage_html).to receive(:headers).and_return({})
 
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -478,10 +478,10 @@ WEBPAGE_HTML
   </entry>
 </feed>
 FEED_XML
-      feed_xml.stub headers: {}
+      allow(feed_xml).to receive(:headers).and_return({})
 
       # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
-      RestClient.stub :get do |url|
+      allow(RestClient).to receive(:get) do |url|
         if url==feed_url
           feed_xml
         else
@@ -508,7 +508,7 @@ FEED_XML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
+      allow(webpage_html).to receive(:headers).and_return({})
 
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -526,13 +526,13 @@ WEBPAGE_HTML
   </entry>
 </feed>
 FEED_XML
-      feed_xml.stub headers: {}
+      allow(feed_xml).to receive(:headers).and_return({})
 
       old_feed = FactoryGirl.create :feed, fetch_url: feed_url
       new_feed = FactoryGirl.create :feed
 
       # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
-      RestClient.stub :get do |url|
+      allow(RestClient).to receive(:get) do |url|
         if url==feed_url
           feed_xml
         elsif url==new_feed.fetch_url
@@ -568,16 +568,15 @@ FEED_XML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
+      allow(webpage_html).to receive(:headers).and_return({})
 
       webpage_url = @feed.fetch_url
       # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
-      RestClient.stub :get do |url|
+      allow(RestClient).to receive(:get) do |url|
         if url==webpage_url
           webpage_html
         else
           raise RestClient::NotModified.new
-
         end
       end
 
