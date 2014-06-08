@@ -89,7 +89,7 @@ describe ImportSubscriptionsJob do
   it 'ignores feeds without xmlUrl attribute' do
     filename = File.join __dir__, '..', '..', 'attachments', '1371324422-with-feed-without-attributes.opml'
     file_contents = File.read filename
-    allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return: file_contents
+    allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return file_contents
 
     expect(Resque).to receive(:enqueue).exactly(3).times.with SubscribeUserJob, @user.id, anything, anything, true, nil
     ImportSubscriptionsJob.perform filename, @user.id
