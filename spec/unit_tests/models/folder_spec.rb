@@ -11,26 +11,26 @@ describe Folder, type: :model do
   context 'validations' do
     it 'always belongs to a user' do
       folder = FactoryGirl.build :folder, user_id: nil
-      folder.should_not be_valid
+      expect(folder).not_to be_valid
     end
 
     it 'requires a title' do
       folder_nil = FactoryGirl.build :folder, title: nil
-      folder_nil.should_not be_valid
+      expect(folder_nil).not_to be_valid
 
       folder_empty = FactoryGirl.build :folder, title: ''
-      folder_empty.should_not be_valid
+      expect(folder_empty).not_to be_valid
     end
 
     it 'does not accept duplicate titles for the same user' do
       folder_dupe = FactoryGirl.build :folder, user_id: @folder.user_id, title: @folder.title
-      folder_dupe.should_not be_valid
+      expect(folder_dupe).not_to be_valid
     end
 
     it 'accepts duplicate titles for different users' do
       folder_dupe = FactoryGirl.build :folder, title: @folder.title
-      folder_dupe.user_id.should_not eq @folder.user_id
-      folder_dupe.should be_valid
+      expect(folder_dupe.user_id).not_to eq @folder.user_id
+      expect(folder_dupe).to be_valid
     end
   end
 
@@ -47,21 +47,21 @@ describe Folder, type: :model do
     end
 
     it 'returns feeds associated with this folder' do
-      @folder.feeds.should include @feed1
-      @folder.feeds.should include @feed2
+      expect(@folder.feeds).to include @feed1
+      expect(@folder.feeds).to include @feed2
     end
 
     it 'does not return feeds not associated with this folder' do
-      @folder.feeds.should_not include @feed3
+      expect(@folder.feeds).not_to include @feed3
     end
 
     it 'does not allow associating the same feed more than once' do
-      @folder.feeds.count.should eq 2
-      @folder.feeds.where(id: @feed1.id).count.should eq 1
+      expect(@folder.feeds.count).to eq 2
+      expect(@folder.feeds.where(id: @feed1.id).count).to eq 1
 
       @folder.feeds << @feed1
-      @folder.feeds.count.should eq 2
-      @folder.feeds.where(id: @feed1.id).count.should eq 1
+      expect(@folder.feeds.count).to eq 2
+      expect(@folder.feeds.where(id: @feed1.id).count).to eq 1
     end
 
     it 'allows associating a feed with at most one folder for a single user' do
@@ -81,13 +81,13 @@ describe Folder, type: :model do
 
       folder1.feeds << feed
 
-      folder1.reload.feeds.should include feed
-      folder2.reload.feeds.should_not include feed
+      expect(folder1.reload.feeds).to include feed
+      expect(folder2.reload.feeds).not_to include feed
 
       folder2.feeds << feed
 
-      folder1.reload.feeds.should_not include feed
-      folder2.reload.feeds.should include feed
+      expect(folder1.reload.feeds).not_to include feed
+      expect(folder2.reload.feeds).to include feed
     end
 
     context 'add feed to folder' do
@@ -99,13 +99,13 @@ describe Folder, type: :model do
         @user.subscribe feed2.fetch_url
         @folder.feeds << feed2
 
-        @folder.feeds.should include @feed1
+        expect(@folder.feeds).to include @feed1
 
         folder2.feeds << @feed1
 
         @folder.reload
-        @folder.feeds.should_not include @feed1
-        folder2.feeds.should include @feed1
+        expect(@folder.feeds).not_to include @feed1
+        expect(folder2.feeds).to include @feed1
       end
 
       it 'does not change feed association with folders for other users' do
@@ -120,24 +120,24 @@ describe Folder, type: :model do
         user2.subscribe @feed1.fetch_url
         folder3.feeds << @feed1
 
-        @folder.user_id.should eq @user.id
-        @folder.feeds.should include @feed1
-        folder2.user_id.should eq @user.id
-        folder2.feeds.should_not include @feed1
-        folder3.user_id.should eq user2.id
-        folder3.feeds.should include @feed1
+        expect(@folder.user_id).to eq @user.id
+        expect(@folder.feeds).to include @feed1
+        expect(folder2.user_id).to eq @user.id
+        expect(folder2.feeds).not_to include @feed1
+        expect(folder3.user_id).to eq user2.id
+        expect(folder3.feeds).to include @feed1
 
         folder2.feeds << @feed1
         @folder.reload
         folder2.reload
         folder3.reload
 
-        @folder.user_id.should eq @user.id
-        @folder.feeds.should_not include @feed1
-        folder2.user_id.should eq @user.id
-        folder2.feeds.should include @feed1
-        folder3.user_id.should eq user2.id
-        folder3.feeds.should include @feed1
+        expect(@folder.user_id).to eq @user.id
+        expect(@folder.feeds).not_to include @feed1
+        expect(folder2.user_id).to eq @user.id
+        expect(folder2.feeds).to include @feed1
+        expect(folder3.user_id).to eq user2.id
+        expect(folder3.feeds).to include @feed1
       end
 
       it 'deletes old folder only if it has no more feeds' do
@@ -147,11 +147,11 @@ describe Folder, type: :model do
 
         # Move @feed1 from @folder to folder2. @folder1 should not be deleted because @feed2 is still in it
         folder2.feeds << @feed1
-        Folder.where(id: @folder.id).should_not be_blank
+        expect(Folder.where(id: @folder.id)).not_to be_blank
 
         # Move @feed1 from folder2 to @folder. folder should be deleted because it has no more feeds
         @folder.feeds << @feed1
-        Folder.where(id: folder2.id).should be_blank
+        expect(Folder.where(id: folder2.id)).to be_blank
       end
     end
 
@@ -160,13 +160,13 @@ describe Folder, type: :model do
       it 'removes feed from folder' do
         @folder.feeds.delete @feed1
         @folder.reload
-        @folder.feeds.should_not include @feed1
+        expect(@folder.feeds).not_to include @feed1
       end
 
       it 'deletes folder if there are no more feeds in it' do
         @folder.feeds.delete @feed2
-        @folder.feeds.count.should eq 1
-        @folder.feeds.should include @feed1
+        expect(@folder.feeds.count).to eq 1
+        expect(@folder.feeds).to include @feed1
 
         @folder.feeds.delete @feed1
 
@@ -181,8 +181,8 @@ describe Folder, type: :model do
         @folder.feeds.delete @feed1
 
         @folder.reload
-        @folder.feeds.should_not include @feed1
-        folder2.feeds.should include @feed1
+        expect(@folder.feeds).not_to include @feed1
+        expect(folder2.feeds).to include @feed1
       end
 
     end
@@ -201,10 +201,10 @@ describe Folder, type: :model do
       feed1.entries << entry1 << entry2
       feed2.entries << entry3
 
-      @folder.entries.count.should eq 3
-      @folder.entries.should include entry1
-      @folder.entries.should include entry2
-      @folder.entries.should include entry3
+      expect(@folder.entries.count).to eq 3
+      expect(@folder.entries).to include entry1
+      expect(@folder.entries).to include entry2
+      expect(@folder.entries).to include entry3
     end
   end
 
@@ -213,7 +213,7 @@ describe Folder, type: :model do
       title_unsanitized = '<script>alert("pwned!");</script>folder_title'
       title_sanitized = 'folder_title'
       folder = FactoryGirl.create :folder, title: title_unsanitized
-      folder.title.should eq title_sanitized
+      expect(folder.title).to eq title_sanitized
     end
   end
 

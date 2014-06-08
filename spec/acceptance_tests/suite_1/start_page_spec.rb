@@ -14,31 +14,31 @@ describe 'start page', type: :feature do
   end
 
   it 'shows start page by default', js: true do
-    page.should have_css '#start-info'
-    page.should_not have_css '#feed-entries', visible: true
+    expect(page).to have_css '#start-info'
+    expect(page).not_to have_css '#feed-entries', visible: true
   end
 
   it 'hides feed title and entries by default', js: true do
-    page.should_not have_css '#feed-title', visible: true
-    page.should_not have_css '#feed-entries', visible: true
+    expect(page).not_to have_css '#feed-title', visible: true
+    expect(page).not_to have_css '#feed-entries', visible: true
   end
 
   it 'hides Read All button by default', js: true do
-    page.should_not have_css '#read-all-button', visible: true
+    expect(page).not_to have_css '#read-all-button', visible: true
   end
 
   it 'hides folder management button by default', js: true do
-    page.should_not have_css '#folder-management', visible: true
+    expect(page).not_to have_css '#folder-management', visible: true
   end
 
   it 'hides start page when reading a feed', js: true do
-    page.should have_css '#start-info'
-    page.should_not have_css '#feed-entries', visible: true
+    expect(page).to have_css '#start-info'
+    expect(page).not_to have_css '#feed-entries', visible: true
 
     read_feed @feed1, @user
 
-    page.should_not have_css '#start-info', visible: true
-    page.should have_css '#feed-entries'
+    expect(page).not_to have_css '#start-info', visible: true
+    expect(page).to have_css '#feed-entries'
   end
 
   context 'click on Start link' do
@@ -50,17 +50,17 @@ describe 'start page', type: :feature do
     end
 
     it 'shows start page', js: true do
-      page.should have_css '#start-info'
-      page.should_not have_css '#feed-entries', visible: true
+      expect(page).to have_css '#start-info'
+      expect(page).not_to have_css '#feed-entries', visible: true
     end
 
     it 'hides feed title and entries', js: true do
-      page.should_not have_css '#feed-title', visible: true
-      page.should_not have_css '#feed-entries', visible: true
+      expect(page).not_to have_css '#feed-title', visible: true
+      expect(page).not_to have_css '#feed-entries', visible: true
     end
 
     it 'hides Read All button', js: true do
-      page.should_not have_css '#read-all-button', visible: true
+      expect(page).not_to have_css '#read-all-button', visible: true
     end
 
   end
@@ -85,20 +85,20 @@ describe 'start page', type: :feature do
     end
 
     it 'shows number of subscribed feeds', js: true do
-      page.should have_content 'Subscribed to 3 feeds'
+      expect(page).to have_content 'Subscribed to 3 feeds'
     end
 
     it 'updates number of subscribed feeds when subscribing to a feed', js: true do
       feed4 = FactoryGirl.create :feed
       job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: feed4.fetch_url
-      User.any_instance.stub :enqueue_subscribe_job do |user, url|
+      allow_any_instance_of(User).to receive :enqueue_subscribe_job do |user, url|
         if user.id == @user.id
           user.subscribe feed4.fetch_url
           user.subscribe_job_states << job_state
         end
       end
 
-      User.any_instance.stub :find_subscribe_job_state do |user|
+      allow_any_instance_of(User).to receive :find_subscribe_job_state do |user|
         if user.id == @user.id
           job_state.update state: SubscribeJobState::SUCCESS
           job_state
@@ -107,25 +107,25 @@ describe 'start page', type: :feature do
 
       subscribe_feed feed4.fetch_url
       go_to_start_page
-      page.should have_content 'Subscribed to 4 feeds'
+      expect(page).to have_content 'Subscribed to 4 feeds'
     end
 
     it 'updates number of subscribed feeds when unsubscribing from a feed', js: true do
       feed4 = FactoryGirl.create :feed
       unsubscribe_feed @feed1, @user
       go_to_start_page
-      page.should have_content 'Subscribed to 2 feeds'
+      expect(page).to have_content 'Subscribed to 2 feeds'
     end
 
     it 'shows number of unread entries', js: true do
-      page.should have_content 'with 3 unread entries'
+      expect(page).to have_content 'with 3 unread entries'
     end
 
     it 'updates number of unread entries when marking entries as read', js: true do
       read_feed @feed1, @user
       read_entry @entry1
       go_to_start_page
-      page.should have_content 'with 2 unread entries'
+      expect(page).to have_content 'with 2 unread entries'
     end
 
     it 'updates number of unread entries when marking entries as unread', js: true do
@@ -133,7 +133,7 @@ describe 'start page', type: :feature do
       read_feed @feed3, @user
       unread_entry @entry4
       go_to_start_page
-      page.should have_content 'with 4 unread entries'
+      expect(page).to have_content 'with 4 unread entries'
     end
   end
 

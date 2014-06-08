@@ -12,24 +12,24 @@ describe 'authentication', type: :feature do
 
     it 'does not redirect to read view when user tries to access the root URL' do
       visit root_path
-      current_path.should eq root_path
+      expect(current_path).to eq root_path
     end
 
     it 'shows a link to the app in the main page' do
       visit '/'
       within "a#sign_in[href*=\"#{read_path}\"]" do
-        page.should have_content 'Sign in'
+        expect(page).to have_content 'Sign in'
       end
     end
 
     it 'shows a signup link in the main page' do
       visit '/'
-      page.should have_css "a#sign_up[href*=\"#{new_user_registration_path}\"]"
+      expect(page).to have_css "a#sign_up[href*=\"#{new_user_registration_path}\"]"
     end
 
     it 'redirects user to feeds page after a successful login' do
       login_user_for_feature @user
-      current_path.should eq read_path
+      expect(current_path).to eq read_path
     end
 
     it 'stays on the login page after a failed login attempt' do
@@ -37,12 +37,12 @@ describe 'authentication', type: :feature do
       fill_in 'Email', with: @user.email
       fill_in 'Password', with: 'wrong password!!!'
       click_on 'Sign in'
-      current_path.should eq new_user_session_path
+      expect(current_path).to eq new_user_session_path
     end
 
     it 'does not show navbar' do
       visit '/'
-      page.should_not have_css 'div.navbar'
+      expect(page).not_to have_css 'div.navbar'
     end
 
     context 'sign up' do
@@ -121,7 +121,7 @@ describe 'authentication', type: :feature do
 
         # follow link received by email
         visit email_change_link
-        current_path.should eq edit_user_password_path
+        expect(current_path).to eq edit_user_password_path
 
         # submit password change form
         new_password = 'new_password'
@@ -130,7 +130,7 @@ describe 'authentication', type: :feature do
         click_on 'Change your password'
 
         # after password change, user should be logged in
-        current_path.should eq read_path
+        expect(current_path).to eq read_path
         user_should_be_logged_in
         logout_user
 
@@ -151,7 +151,7 @@ describe 'authentication', type: :feature do
 
         # follow link received by email
         visit email_change_link
-        current_path.should eq edit_user_password_path
+        expect(current_path).to eq edit_user_password_path
 
         # submit password change form
         new_password = 'new_password'
@@ -338,12 +338,12 @@ describe 'authentication', type: :feature do
     end
 
     it 'redirects to read view after a successful login' do
-      current_path.should eq read_path
+      expect(current_path).to eq read_path
     end
 
     it 'redirects to read view if user tries to access the root URL' do
       visit root_path
-      current_path.should eq read_path
+      expect(current_path).to eq read_path
     end
 
     it 'redirects to login page if an AJAX request is returned an HTTP 401 Unauthorized', js: true do
@@ -357,41 +357,41 @@ describe 'authentication', type: :feature do
       logout
       read_feed feed, @user
 
-      current_path.should eq new_user_session_path
+      expect(current_path).to eq new_user_session_path
     end
 
     it 'does not show the login link in the main page' do
-      page.should_not have_css "a#sign_in[href*=\"#{new_user_session_path}\"]"
+      expect(page).not_to have_css "a#sign_in[href*=\"#{new_user_session_path}\"]"
     end
 
     it 'does not show the signup link in the main page' do
-      page.should_not have_css "a#sign_up[href*=\"#{new_user_registration_path}\"]"
+      expect(page).not_to have_css "a#sign_up[href*=\"#{new_user_registration_path}\"]"
     end
 
     it 'shows navbar' do
-      page.should have_css 'div.navbar'
+      expect(page).to have_css 'div.navbar'
     end
 
     it 'shows link to feeds page in the navbar' do
-      page.should have_css 'div.navbar div.navbar-header a.navbar-brand'
+      expect(page).to have_css 'div.navbar div.navbar-header a.navbar-brand'
       find('div.navbar div.navbar-header a.navbar-brand').click
-      current_path.should eq read_path
+      expect(current_path).to eq read_path
     end
 
     it 'shows logout link in the navbar' do
-      page.should have_css 'div.navbar ul li a#sign_out'
+      expect(page).to have_css 'div.navbar ul li a#sign_out'
     end
 
     it 'logs out user and redirects to main page' do
       find('div.navbar ul li a#sign_out').click
-      current_path.should eq root_path
+      expect(current_path).to eq root_path
       user_should_not_be_logged_in
     end
 
     it 'shows account details link in the navbar' do
-      page.should have_css 'div.navbar ul li a#my_account'
+      expect(page).to have_css 'div.navbar ul li a#my_account'
       find('div.navbar ul li a#my_account').click
-      current_path.should eq edit_user_registration_path
+      expect(current_path).to eq edit_user_registration_path
     end
 
     context 'edit profile' do
@@ -401,13 +401,13 @@ describe 'authentication', type: :feature do
       end
 
       it 'shows navbar' do
-        page.should have_css 'div.navbar'
+        expect(page).to have_css 'div.navbar'
       end
 
       it 'shows link to go to feeds list' do
-        page.should have_css 'a#return'
+        expect(page).to have_css 'a#return'
         find('a#return').click
-        current_path.should eq read_path
+        expect(current_path).to eq read_path
       end
 
       it 'allows email change' do
@@ -514,18 +514,18 @@ describe 'authentication', type: :feature do
 
       it 'changes user language', js: true do
         # default language is english
-        page.should have_text 'Update account'
+        expect(page).to have_text 'Update account'
 
         # change to spanish
         fill_in 'Current password', with: @user.password
         select 'Español', from: 'Language'
         click_on 'Update account'
-        page.should have_text 'Mostrar leídos'
+        expect(page).to have_text 'Mostrar leídos'
         logout_user
 
         # After relogin, app should be in spanish
         login_user_for_feature @user
-        page.should have_text 'Bienvenido a Feedbunch'
+        expect(page).to have_text 'Bienvenido a Feedbunch'
       end
 
     end
@@ -538,39 +538,39 @@ describe 'authentication', type: :feature do
       end
 
       it 'shows confirmation popup', js: true do
-        page.should have_css '#profile-delete-popup', visible: true
+        expect(page).to have_css '#profile-delete-popup', visible: true
       end
 
       it 'does not allow deleting the account without entering a password', js: true do
         page.find('#profile-delete-submit').click
         # Popup should not be closed
-        page.should have_css '#profile-delete-popup', visible: true
+        expect(page).to have_css '#profile-delete-popup', visible: true
       end
 
       it 'shows error message if wrong password is submitted', js: true do
         fill_in 'Password', with: 'wrong password'
         page.find('#profile-delete-submit').click
-        page.should have_text 'Invalid password'
+        expect(page).to have_text 'Invalid password'
         should_show_alert 'alert'
       end
 
       it 'enqueues job to delete account if correct password is submitted', js: true do
-        Resque.should_receive(:enqueue).with DestroyUserJob, @user.id
+        expect(Resque).to receive(:enqueue).with DestroyUserJob, @user.id
         fill_in 'Password', with: @user.password
         page.find('#profile-delete-submit').click
-        current_path.should eq root_path
-        page.should have_text 'Your account was successfully deleted'
+        expect(current_path).to eq root_path
+        expect(page).to have_text 'Your account was successfully deleted'
       end
 
       it 'prevents user from logging in again', js: true do
         fill_in 'Password', with: @user.password
         page.find('#profile-delete-submit').click
-        current_path.should eq root_path
+        expect(current_path).to eq root_path
         visit new_user_session_path
         fill_in 'Email', with: @user.email
         fill_in 'Password', with: @user.password
         click_on 'Sign in'
-        page.should have_text 'Invalid email or password'
+        expect(page).to have_text 'Invalid email or password'
       end
 
     end

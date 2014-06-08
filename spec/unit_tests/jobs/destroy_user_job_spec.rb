@@ -7,16 +7,16 @@ describe DestroyUserJob do
   end
 
   it 'destroys user' do
-    User.exists?(@user.id).should be true
+    expect(User.exists?(@user.id)).to be true
     DestroyUserJob.perform @user.id
-    User.exists?(@user.id).should be false
+    expect(User.exists?(@user.id)).to be false
   end
 
   context 'validations' do
 
     it 'does nothing if the user does not exist' do
-      User.any_instance.should_not_receive :destroy!
-      User.any_instance.should_not_receive :destroy
+      expect_any_instance_of(User).not_to receive :destroy!
+      expect_any_instance_of(User).not_to receive :destroy
       DestroyUserJob.perform 1234567890
     end
 

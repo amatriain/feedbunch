@@ -25,7 +25,7 @@ describe 'quick reading mode', type: :feature do
     it 'does not enable quick reading mode by default', js: true do
       # Quick Reading checkbox should not be checked in edit registration page
       visit edit_user_registration_path
-      find('#user_quick_reading').should_not be_checked
+      expect(find('#user_quick_reading')).not_to be_checked
 
       visit read_path
       read_feed @feed, @user
@@ -44,7 +44,7 @@ describe 'quick reading mode', type: :feature do
       entry_should_be_marked_unread @entries[49]
       # after refresh first entry should still be visible
       read_feed @feed, @user
-      page.should have_text @entries[49].title
+      expect(page).to have_text @entries[49].title
     end
 
     it 'enables quick reading mode', js: true do
@@ -52,7 +52,7 @@ describe 'quick reading mode', type: :feature do
 
       # Quick Reading checkbox should be checked in edit registration page
       visit edit_user_registration_path
-      find('#user_quick_reading').should be_checked
+      expect(find('#user_quick_reading')).to be_checked
 
       visit read_path
       read_feed @feed, @user
@@ -71,7 +71,7 @@ describe 'quick reading mode', type: :feature do
       # first entry should be read
       entry_read = page.has_css? "a[data-entry-id='#{@entries[49].id}'].entry-read"
       entry_becoming_read = page.has_css? "a[data-entry-id='#{@entries[49].id}'].entry-becoming-read"
-      (entry_read || entry_becoming_read).should be true
+      expect(entry_read || entry_becoming_read).to be true
     end
   end
 
@@ -96,7 +96,7 @@ describe 'quick reading mode', type: :feature do
     it 'does not open all entries by default', js: true do
       # Open All Entries checkbox should not be checked in edit registration page
       visit edit_user_registration_path
-      find('#user_open_all_entries').should_not be_checked
+      expect(find('#user_open_all_entries')).not_to be_checked
 
       visit read_path
       read_feed @feed, @user
@@ -112,7 +112,7 @@ describe 'quick reading mode', type: :feature do
 
       # Open All Entries checkbox should be checked in edit registration page
       visit edit_user_registration_path
-      find('#user_open_all_entries').should be_checked
+      expect(find('#user_open_all_entries')).to be_checked
 
       visit read_path
       read_feed @feed, @user
@@ -120,7 +120,7 @@ describe 'quick reading mode', type: :feature do
       # all entries should be open
       (0..9).each do |i|
         entry_should_be_open @entries[i]
-        page.should have_text "entry summary #{i}"
+        expect(page).to have_text "entry summary #{i}"
       end
     end
 
@@ -132,7 +132,7 @@ describe 'quick reading mode', type: :feature do
 
       # entry should still be in the list
       within "#feed-entries #entry-#{@entries[0].id}" do
-        page.should have_text @entries[0].title
+        expect(page).to have_text @entries[0].title
       end
     end
 
@@ -146,19 +146,19 @@ describe 'quick reading mode', type: :feature do
 
       it 'loads images in entries initially inside the viewport', js: true do
         # @entries[9] is the most recent entry, so it will be first on the list (in the viewport at the start)
-        page.should have_css "#entry-#{@entries[9].id}-summary .entry-content img[src='http://feed.com/some_image_9.jpg']", visible: false
+        expect(page).to have_css "#entry-#{@entries[9].id}-summary .entry-content img[src='http://feed.com/some_image_9.jpg']", visible: false
       end
 
       it 'does not load images in entries outside the viewport', js: true do
         # @entries[0] is the oldest entry, so it will be last on the list (outside the viewport at the start)
-        page.should have_css "#entry-#{@entries[0].id}-summary .entry-content img[src='#{@spinner_url}'][data-src='http://feed.com/some_image_0.jpg']", visible: false
+        expect(page).to have_css "#entry-#{@entries[0].id}-summary .entry-content img[src='#{@spinner_url}'][data-src='http://feed.com/some_image_0.jpg']", visible: false
       end
 
       it 'loads images in entries when they are scrolled into the viewport', js: true do
         # scroll to bottom of page
         page.execute_script 'window.scrollBy(0,10000)'
         # @entries[0] is the oldest entry, so it will be last on the list (outside the viewport until the user scrolls down)
-        page.should have_css "#entry-#{@entries[0].id}-summary .entry-content img[src='http://feed.com/some_image_0.jpg']", visible: false
+        expect(page).to have_css "#entry-#{@entries[0].id}-summary .entry-content img[src='http://feed.com/some_image_0.jpg']", visible: false
       end
     end
   end

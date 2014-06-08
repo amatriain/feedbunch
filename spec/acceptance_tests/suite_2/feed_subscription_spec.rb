@@ -15,7 +15,7 @@ describe 'subscription to feeds', type: :feature do
     @user.subscribe @feed1.fetch_url
 
     @job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed2.fetch_url
-    User.any_instance.stub :enqueue_subscribe_job do |user|
+    allow_any_instance_of(User).to receive :enqueue_subscribe_job do |user|
       if user.id == @user.id
         user.subscribe_job_states << @job_state
       end
@@ -28,11 +28,11 @@ describe 'subscription to feeds', type: :feature do
   context 'display feeds' do
 
     it 'shows feeds the user is subscribed to', js: true do
-      page.should have_content @feed1.title
+      expect(page).to have_content @feed1.title
     end
 
     it 'does not show feeds the user is not subscribed to' do
-      page.should_not have_content @feed2.title
+      expect(page).not_to have_content @feed2.title
     end
   end
 
@@ -40,9 +40,9 @@ describe 'subscription to feeds', type: :feature do
 
     it 'goes to start page after adding a subscription', js: true do
       read_feed @feed1, @user
-      page.should_not have_css '#start-info'
+      expect(page).not_to have_css '#start-info'
       subscribe_feed @feed2.fetch_url
-      page.should have_css '#start-info'
+      expect(page).to have_css '#start-info'
     end
 
     context 'while subscription job is running' do
@@ -50,8 +50,8 @@ describe 'subscription to feeds', type: :feature do
       it 'shows message', js: true do
         subscribe_feed @feed2.fetch_url
         within '#subscribe-state-alerts' do
-          page.should have_text 'Currently adding subscription to feed'
-          page.should have_content @feed2.fetch_url
+          expect(page).to have_text 'Currently adding subscription to feed'
+          expect(page).to have_content @feed2.fetch_url
         end
       end
 
@@ -59,18 +59,18 @@ describe 'subscription to feeds', type: :feature do
         subscribe_feed @feed2.fetch_url
         visit current_path
         within '#subscribe-state-alerts' do
-          page.should have_text 'Currently adding subscription to feed'
-          page.should have_content @feed2.fetch_url
+          expect(page).to have_text 'Currently adding subscription to feed'
+          expect(page).to have_content @feed2.fetch_url
         end
       end
 
       it 'dismisses alert permanently', js: true do
         subscribe_feed @feed2.fetch_url
         close_subscribe_job_alert @job_state.reload.id
-        page.should_not have_text 'Currently adding subscription to feed'
+        expect(page).not_to have_text 'Currently adding subscription to feed'
         # alert should not be present after reloading
         visit current_path
-        page.should_not have_text 'Currently adding subscription to feed'
+        expect(page).not_to have_text 'Currently adding subscription to feed'
       end
 
     end
@@ -78,7 +78,7 @@ describe 'subscription to feeds', type: :feature do
     context 'subscription job finishes successfully' do
 
       before :each do
-        User.any_instance.stub :find_subscribe_job_state do |user|
+        allow_any_instance_of(User).to receive :find_subscribe_job_state do |user|
           if user.id == @user.id && @job_state.reload.state != SubscribeJobState::SUCCESS
             user.subscribe @feed2.fetch_url
             @job_state.update state: SubscribeJobState::SUCCESS, feed_id: @feed2.id
@@ -91,8 +91,8 @@ describe 'subscription to feeds', type: :feature do
         subscribe_feed @feed2.fetch_url
         should_show_alert 'success-subscribe-feed'
         within '#subscribe-state-alerts' do
-          page.should have_text 'Successfully added subscription to feed'
-          page.should have_content @feed2.title
+          expect(page).to have_text 'Successfully added subscription to feed'
+          expect(page).to have_content @feed2.title
         end
       end
 
@@ -100,24 +100,24 @@ describe 'subscription to feeds', type: :feature do
         subscribe_feed @feed2.fetch_url
         visit current_path
         within '#subscribe-state-alerts' do
-          page.should have_text 'Successfully added subscription to feed'
-          page.should have_content @feed2.title
+          expect(page).to have_text 'Successfully added subscription to feed'
+          expect(page).to have_content @feed2.title
         end
       end
 
       it 'dismisses alert permanently', js: true do
         subscribe_feed @feed2.fetch_url
         close_subscribe_job_alert @job_state.reload.id
-        page.should_not have_text 'Successfully added subscription to feed'
+        expect(page).not_to have_text 'Successfully added subscription to feed'
         # alert should not be present after reloading
         visit current_path
-        page.should_not have_text 'Successfully added subscription to feed'
+        expect(page).not_to have_text 'Successfully added subscription to feed'
       end
 
       it 'opens feed entries when clicking on feed title', js: true do
         subscribe_feed @feed2.fetch_url
         find("#subscribe-state-#{@job_state.reload.id} a.job-feed-title").click
-        page.should have_text @entry2.title
+        expect(page).to have_text @entry2.title
       end
 
       it 'opens folder in the sidebar when clicking on feed title', js: true do
@@ -138,17 +138,17 @@ describe 'subscription to feeds', type: :feature do
         subscribe_feed @feed2.fetch_url
         find("#subscribe-state-#{@job_state.reload.id} a.job-feed-title").click
         go_to_start_page
-        page.should_not have_text 'Successfully added subscription to feed'
+        expect(page).not_to have_text 'Successfully added subscription to feed'
         # alert should not be present after logout and login
         logout_user
         login_user_for_feature @user
         go_to_start_page
-        page.should_not have_text 'Successfully added subscription to feed'
+        expect(page).not_to have_text 'Successfully added subscription to feed'
       end
 
       it 'loads feed even if it has no unread entries', js: true do
         subscribe_feed @feed2.fetch_url
-        page.should have_text 'Successfully added subscription to feed'
+        expect(page).to have_text 'Successfully added subscription to feed'
         Entry.destroy_all
         subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first
         subscription.update unread_entries: 0
@@ -156,8 +156,8 @@ describe 'subscription to feeds', type: :feature do
         visit current_path
         unread_feed_entries_should_eq @feed2, 0, @user
         within '#subscribe-state-alerts' do
-          page.should have_text 'Successfully added subscription to feed'
-          page.should have_content @feed2.title
+          expect(page).to have_text 'Successfully added subscription to feed'
+          expect(page).to have_content @feed2.title
         end
       end
 
@@ -166,7 +166,7 @@ describe 'subscription to feeds', type: :feature do
     context 'subscription job finishes with an error' do
 
       before :each do
-        User.any_instance.stub :find_subscribe_job_state do |user|
+        allow_any_instance_of(User).to receive :find_subscribe_job_state do |user|
           if user.id == @user.id
             @job_state.update state: SubscribeJobState::ERROR
             @job_state
@@ -178,8 +178,8 @@ describe 'subscription to feeds', type: :feature do
         subscribe_feed @feed2.fetch_url
         should_show_alert 'problem-subscribing'
         within '#subscribe-state-alerts' do
-          page.should have_text 'Unable to add subscription to feed'
-          page.should have_content @feed2.fetch_url
+          expect(page).to have_text 'Unable to add subscription to feed'
+          expect(page).to have_content @feed2.fetch_url
         end
       end
 
@@ -187,18 +187,18 @@ describe 'subscription to feeds', type: :feature do
         subscribe_feed @feed2.fetch_url
         visit current_path
         within '#subscribe-state-alerts' do
-          page.should have_text 'Unable to add subscription to feed'
-          page.should have_content @feed2.fetch_url
+          expect(page).to have_text 'Unable to add subscription to feed'
+          expect(page).to have_content @feed2.fetch_url
         end
       end
 
       it 'dismisses alert permanently', js: true do
         subscribe_feed @feed2.fetch_url
         close_subscribe_job_alert @job_state.reload.id
-        page.should_not have_text 'Unable to add subscription to feed'
+        expect(page).not_to have_text 'Unable to add subscription to feed'
         # alert should not be present after reloading
         visit current_path
-        page.should_not have_text 'Unable to add subscription to feed'
+        expect(page).not_to have_text 'Unable to add subscription to feed'
       end
 
     end

@@ -6,7 +6,7 @@ describe DestroyOldJobStatesJob do
     date = Time.zone.parse '2000-01-01'
     date_old = date - (24.hours + 1.minute)
     date_not_old = date - 1.hour
-    ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
+    allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
     @user = FactoryGirl.create :user
     @feed1 = FactoryGirl.create :feed
@@ -30,14 +30,14 @@ describe DestroyOldJobStatesJob do
 
   it 'destroys old states' do
     DestroyOldJobStatesJob.perform
-    SubscribeJobState.exists?(@subscribe_job_state_1.id).should be false
-    RefreshFeedJobState.exists?(@refresh_feed_job_state_1.id).should be false
+    expect(SubscribeJobState.exists?(@subscribe_job_state_1.id)).to be false
+    expect(RefreshFeedJobState.exists?(@refresh_feed_job_state_1.id)).to be false
   end
 
   it 'does not destroy newer states' do
     DestroyOldJobStatesJob.perform
-    SubscribeJobState.exists?(@subscribe_job_state_2.id).should be true
-    RefreshFeedJobState.exists?(@refresh_feed_job_state_2.id).should be true
+    expect(SubscribeJobState.exists?(@subscribe_job_state_2.id)).to be true
+    expect(RefreshFeedJobState.exists?(@refresh_feed_job_state_2.id)).to be true
   end
 
 end

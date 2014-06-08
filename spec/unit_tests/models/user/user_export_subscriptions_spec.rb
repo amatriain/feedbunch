@@ -8,14 +8,14 @@ describe User, type: :model do
   context 'export subscriptions' do
 
     it 'has a opml_export_job_state with state NONE as soon as the user is created' do
-      @user.opml_export_job_state.should be_present
-      @user.opml_export_job_state.state.should eq OpmlExportJobState::NONE
+      expect(@user.opml_export_job_state).to be_present
+      expect(@user.opml_export_job_state.state).to eq OpmlExportJobState::NONE
     end
 
     it 'creates a new opml_export_job_state with state RUNNING for the user' do
       @user.export_subscriptions
-      @user.opml_export_job_state.should be_present
-      @user.opml_export_job_state.state.should eq OpmlExportJobState::RUNNING
+      expect(@user.opml_export_job_state).to be_present
+      expect(@user.opml_export_job_state.state).to eq OpmlExportJobState::RUNNING
     end
 
     it 'deletes old export job state and OPML files for the user' do
@@ -27,23 +27,23 @@ describe User, type: :model do
                                                 export_date: Time.zone.now
       @user.opml_export_job_state = opml_export_job_state
 
-      Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
-      Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |user, folder, file|
-        user.should eq @user
-        folder.should eq OPMLExporter::FOLDER
-        file.should eq filename
+      allow(Feedbunch::Application.config.uploads_manager).to receive(:exists?).and_return true
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).once do |user, folder, file|
+        expect(user).to eq @user
+        expect(folder).to eq OPMLExporter::FOLDER
+        expect(file).to eq filename
       end
 
       @user.export_subscriptions
 
-      opml_export_job_state.destroyed?.should be true
+      expect(opml_export_job_state.destroyed?).to be true
     end
 
     it 'sets opml_import_job_state state as ERROR if an error is raised' do
-      Resque.stub(:enqueue).and_raise StandardError.new
+      allow(Resque).to receive(:enqueue).and_raise StandardError.new
       expect{@user.export_subscriptions}.to raise_error StandardError
 
-      @user.opml_export_job_state.state.should eq OpmlExportJobState::ERROR
+      expect(@user.opml_export_job_state.state).to eq OpmlExportJobState::ERROR
     end
 
   end
@@ -51,15 +51,15 @@ describe User, type: :model do
   context 'change alert visibility' do
 
     it 'hides alert' do
-      @user.opml_export_job_state.show_alert.should be true
+      expect(@user.opml_export_job_state.show_alert).to be true
       @user.set_opml_export_job_state_visible false
-      @user.reload.opml_export_job_state.show_alert.should be false
+      expect(@user.reload.opml_export_job_state.show_alert).to be false
     end
 
     it 'shows alert' do
       @user.opml_export_job_state.update show_alert: false
       @user.set_opml_export_job_state_visible true
-      @user.reload.opml_export_job_state.show_alert.should be true
+      expect(@user.reload.opml_export_job_state.show_alert).to be true
     end
   end
 
@@ -88,7 +88,7 @@ describe User, type: :model do
       @folder.feeds << @feed3 << @feed4
 
       time_now = Time.zone.parse '2000-01-01'
-      ActiveSupport::TimeZone.any_instance.stub(:now).and_return time_now
+      allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return time_now
 
       @opml_data = <<OPML_DOCUMENT
 <?xml version="1.0" encoding="UTF-8"?>
@@ -110,13 +110,13 @@ describe User, type: :model do
 </opml>
 OPML_DOCUMENT
 
-      Feedbunch::Application.config.uploads_manager.stub(:read).and_return @opml_data
-      Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
+      allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return @opml_data
+      allow(Feedbunch::Application.config.uploads_manager).to receive(:exists?).and_return true
     end
 
     it 'returns the correct OPML data' do
       opml = @user.get_opml_export
-      opml.should eq @opml_data
+      expect(opml).to eq @opml_data
     end
 
     it 'raises an error if the user has not ran an OPML export' do
@@ -135,7 +135,7 @@ OPML_DOCUMENT
     end
 
     it 'raises an error if the file does not exist' do
-      Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return false
+      allow(Feedbunch::Application.config.uploads_manager).to receive(:exists?).and_return false
       expect {@user.get_opml_export}.to raise_error OpmlExportDoesNotExistError
     end
   end

@@ -12,12 +12,12 @@ describe Api::OpmlImportsController, type: :controller do
 
     it 'returns import process state successfully' do
       get :show, format: :json
-      response.status.should eq 200
+      expect(response.status).to eq 200
     end
 
     it 'assigns the correct opml_import_job_state' do
       get :show, format: :json
-      assigns(:opml_import_job_state).should eq @user.opml_import_job_state
+      expect(assigns(:opml_import_job_state)).to eq @user.opml_import_job_state
     end
 
   end
@@ -25,25 +25,25 @@ describe Api::OpmlImportsController, type: :controller do
   context 'POST create' do
 
     before :each do
-      String.any_instance.stub :tempfile
+      allow_any_instance_of(String).to receive :tempfile
     end
 
     it 'redirects to main application page if successful' do
-      User.any_instance.stub :import_subscriptions
+      allow_any_instance_of(User).to receive :import_subscriptions
       post :create, opml_import: {file: 'mock_file'}
-      response.should redirect_to read_path
+      expect(response).to redirect_to read_path
     end
 
     it 'redirects to main application page if an error happens' do
-      User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
+      allow_any_instance_of(User).to receive(:import_subscriptions).and_raise StandardError.new
       post :create, opml_import: {file: 'mock_file'}
-      response.should redirect_to read_path
+      expect(response).to redirect_to read_path
     end
 
     it 'creates a OpmlImportJobState instance with ERROR state if an error happens' do
-      User.any_instance.stub(:import_subscriptions).and_raise StandardError.new
+      allow_any_instance_of(User).to receive(:import_subscriptions).and_raise StandardError.new
       post :create, opml_import: {file: 'mock_file'}
-      @user.reload.opml_import_job_state.state.should eq OpmlImportJobState::ERROR
+      expect(@user.reload.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
     end
   end
 
@@ -51,18 +51,18 @@ describe Api::OpmlImportsController, type: :controller do
 
     it 'asigns the correct OpmlImportJobState' do
       put :update, opml_import: {show_alert: 'false'}, format: :json
-      assigns(:opml_import_job_state).should eq @user.opml_import_job_state
+      expect(assigns(:opml_import_job_state)).to eq @user.opml_import_job_state
     end
 
     it 'returns success' do
       put :update, opml_import: {show_alert: 'false'}, format: :json
-      response.should be_success
+      expect(response).to be_success
     end
 
     it 'returns 500 if there is a problem changing the alert visibility' do
-      User.any_instance.stub(:set_opml_import_job_state_visible).and_raise StandardError.new
+      allow_any_instance_of(User).to receive(:set_opml_import_job_state_visible).and_raise StandardError.new
       put :update, opml_import: {show_alert: 'false'}, format: :json
-      response.status.should eq 500
+      expect(response.status).to eq 500
     end
   end
 

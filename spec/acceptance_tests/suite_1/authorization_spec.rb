@@ -13,14 +13,14 @@ describe 'authorization', type: :feature do
       login_user_for_feature @admin_user
       visit read_path
 
-      page.should have_css 'a[href="/resque"]'
+      expect(page).to have_css 'a[href="/resque"]'
     end
 
     it 'does not show Resque link to non-admin users' do
       login_user_for_feature @normal_user
       visit read_path
 
-      page.should_not have_css 'a[href="/resque"]'
+      expect(page).not_to have_css 'a[href="/resque"]'
     end
 
     it 'does not allow access to Resque to non-admin users' do
@@ -36,14 +36,14 @@ describe 'authorization', type: :feature do
       login_user_for_feature @admin_user
       visit read_path
 
-      page.should have_css 'a[href="/admin"]'
+      expect(page).to have_css 'a[href="/admin"]'
     end
 
     it 'does not show ActiveAdmin link to non-admin users' do
       login_user_for_feature @normal_user
       visit read_path
 
-      page.should_not have_css 'a[href="/admin"]'
+      expect(page).not_to have_css 'a[href="/admin"]'
     end
 
     it 'allows access to ActiveAdmin to admin users' do

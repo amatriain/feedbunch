@@ -18,7 +18,7 @@ def logout_user
   user_should_be_logged_in
   open_user_menu
   find('a#sign_out').click
-  current_path.should eq root_path
+  expect(current_path).to eq root_path
 end
 
 ##
@@ -27,7 +27,7 @@ end
 def open_user_menu
   user_should_be_logged_in
   find('#user-dropdown .dropdown-toggle').click
-  page.should have_css 'a#sign_out', visible: true
+  expect(page).to have_css 'a#sign_out', visible: true
 end
 
 ##
@@ -36,7 +36,7 @@ end
 def open_feeds_menu
   user_should_be_logged_in
   find('#feed-dropdown .dropdown-toggle').click
-  page.should have_css 'a#add-subscription', visible: true
+  expect(page).to have_css 'a#add-subscription', visible: true
 end
 
 ##
@@ -59,11 +59,11 @@ end
 # Open a folder in the sidebar. Receives the folder as argument.
 
 def open_folder(folder)
-  page.should have_css "#folders-list #folder-#{folder.id}"
+  expect(page).to have_css "#folders-list #folder-#{folder.id}"
   # Open folder only if it is closed
   if !page.has_css? "#folders-list #feeds-#{folder.id}.in"
     find("a#open-folder-#{folder.id}").click
-    page.should have_css "#folders-list #feeds-#{folder.id}.in"
+    expect(page).to have_css "#folders-list #feeds-#{folder.id}.in"
   end
 end
 
@@ -78,14 +78,14 @@ def read_feed(feed, user)
   open_folder folder if folder.present?
   folder_id = folder.try(:id) || 'none'
   within "#folders-list #folder-#{folder_id}" do
-    page.should have_css "[data-sidebar-feed][data-feed-id='#{feed.id}']", visible: true
+    expect(page).to have_css "[data-sidebar-feed][data-feed-id='#{feed.id}']", visible: true
 
     # Click on feed to read its entries
     find("[data-sidebar-feed][data-feed-id='#{feed.id}']", visible: true).click
   end
 
   # Ensure entries have finished loading
-  page.should_not have_css 'div#loading'
+  expect(page).not_to have_css 'div#loading'
 end
 
 ##
@@ -106,7 +106,7 @@ def read_folder(folder)
   end
 
   # Ensure entries have finished loading
-  page.should_not have_css 'div#loading'
+  expect(page).not_to have_css 'div#loading'
 end
 
 ##
@@ -116,7 +116,7 @@ end
 # If the entry is not unread, the test will immediately fail.
 
 def read_entry(entry)
-  page.should have_css "#feed-entries #entry-#{entry.id}"
+  expect(page).to have_css "#feed-entries #entry-#{entry.id}"
   entry_should_be_marked_unread entry
   open_entry entry
   entry_should_be_marked_read entry
@@ -130,7 +130,7 @@ end
 # If the entry is not open, it is opened before marking it as unread.
 
 def unread_entry(entry)
-  page.should have_css "#feed-entries #entry-#{entry.id}"
+  expect(page).to have_css "#feed-entries #entry-#{entry.id}"
   entry_should_be_marked_read entry
   open_entry entry
   find("div[id='entry-#{entry.id}'] a[ng-click='unread_entry(entry)']").click
@@ -143,12 +143,12 @@ end
 # If the entry is not in the entries list, the test will immediately fail.
 
 def open_entry(entry)
-  page.should have_css "#feed-entries #entry-#{entry.id}"
+  expect(page).to have_css "#feed-entries #entry-#{entry.id}"
 
   # Open entry only if it is closed
   if !page.has_css? "#feed-entries #entry-#{entry.id}-summary.in"
     find("#feed-entries [data-entry-id='#{entry.id}']").click
-    page.should have_css "#feed-entries #entry-#{entry.id}-summary.in"
+    expect(page).to have_css "#feed-entries #entry-#{entry.id}-summary.in"
   end
 end
 
@@ -158,12 +158,12 @@ end
 # If the entry is not currently in the entries list, the test will immediately fail.
 
 def close_entry(entry)
-  page.should have_css "#feed-entries #entry-#{entry.id}"
+  expect(page).to have_css "#feed-entries #entry-#{entry.id}"
 
   # Close entry only if it is open
   if page.has_css? "#feed-entries #entry-#{entry.id}-summary.in"
     find("#feed-entries [data-entry-id='#{entry.id}']").click
-    page.should_not have_css "#feed-entries #entry-#{entry.id}-summary.in"
+    expect(page).not_to have_css "#feed-entries #entry-#{entry.id}-summary.in"
   end
 end
 
@@ -172,10 +172,10 @@ end
 
 def refresh_feed
   open_feeds_menu
-  page.should have_css '#refresh-feed'
+  expect(page).to have_css '#refresh-feed'
   find('#refresh-feed').click
   # Ensure entries have finished loading
-  page.should_not have_css 'div#loading'
+  expect(page).not_to have_css 'div#loading'
 end
 
 ##
@@ -185,8 +185,8 @@ end
 
 def mark_all_as_read
   find('#read-all-button').click
-  page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
-  page.should_not have_css 'feed-entries a[data-entry-id].entry-becoming-read'
+  expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
+  expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-becoming-read'
 end
 
 ##
@@ -196,7 +196,7 @@ def show_read
   find('#show-read').click
 
   # Ensure entries have finished loading
-  page.should_not have_css 'div#loading'
+  expect(page).not_to have_css 'div#loading'
 end
 
 ##
@@ -206,7 +206,7 @@ def hide_read
   find('#hide-read').click
 
   # Ensure entries have finished loading
-  page.should_not have_css 'div#loading'
+  expect(page).not_to have_css 'div#loading'
 end
 
 ##
@@ -214,14 +214,14 @@ end
 
 def open_folder_dropdown
   # Only click on button if it's enabled
-  page.should have_css '#folder-management-dropdown #folder-management'
-  page.should_not have_css '#folder-management-dropdown #folder-management.disabled'
+  expect(page).to have_css '#folder-management-dropdown #folder-management'
+  expect(page).not_to have_css '#folder-management-dropdown #folder-management.disabled'
 
   #Only open dropdown if it's closed
-  page.should_not have_css '#folder-management-dropdown.open'
+  expect(page).not_to have_css '#folder-management-dropdown.open'
 
   find('#folder-management').click
-  page.should have_css '#folder-management-dropdown.open'
+  expect(page).to have_css '#folder-management-dropdown.open'
 end
 
 ##
@@ -238,14 +238,14 @@ def move_feed_to_new_folder(feed, title, user)
   within '#folder-management-dropdown ul.dropdown-menu' do
     find('a[data-folder-id="new"]').click
   end
-  page.should have_css '#new-folder-popup'
+  expect(page).to have_css '#new-folder-popup'
   within '#new-folder-popup' do
     fill_in 'Title', with: title
     find('#new-folder-submit').click
   end
   # Ensure new feed appears in the sidebar
   within '#folders-list' do
-    page.should have_text title
+    expect(page).to have_text title
   end
 end
 
@@ -266,10 +266,10 @@ def move_feed_to_folder(feed, folder, user)
 
   # Ensure feed has been moved to folder
   open_folder folder
-  page.should have_css "#folders-list #folder-#{folder.id} [data-sidebar-feed][data-feed-id='#{feed.id}']"
+  expect(page).to have_css "#folders-list #folder-#{folder.id} [data-sidebar-feed][data-feed-id='#{feed.id}']"
   within "#folder-management-dropdown ul.dropdown-menu a[data-folder-id='#{folder.id}']", visible: false do
-    page.should have_css 'i.fa.fa-check', visible: false
-    page.should_not have_css 'i.fa.fa-check.hidden', visible: false
+    expect(page).to have_css 'i.fa.fa-check', visible: false
+    expect(page).not_to have_css 'i.fa.fa-check.hidden', visible: false
   end
 end
 
@@ -290,7 +290,7 @@ def remove_feed_from_folder(feed, user)
   end
 
   # Ensure feed has been removed from folder
-  page.should_not have_css "#folders-list li#folder-#{folder_id} [data-sidebar-feed][data-feed-id='#{feed.id}']"
+  expect(page).not_to have_css "#folders-list li#folder-#{folder_id} [data-sidebar-feed][data-feed-id='#{feed.id}']"
 end
 
 ##
@@ -300,14 +300,14 @@ end
 def subscribe_feed(url)
   open_feeds_menu
   find('#add-subscription').click
-  page.should have_css '#subscribe-feed-popup'
+  expect(page).to have_css '#subscribe-feed-popup'
   within '#subscribe-feed-popup' do
     fill_in 'Feed', with: url
     find('#subscribe-submit').click
   end
 
   # Ensure entries have finished loading
-  page.should_not have_css 'div#loading'
+  expect(page).not_to have_css 'div#loading'
 end
 
 ##
@@ -323,10 +323,10 @@ def unsubscribe_feed(feed, user)
   find('#unsubscribe-submit').click
 
   # Ensure popup has closed
-  page.should_not have_css '#unsubscribe-feed-popup'
+  expect(page).not_to have_css '#unsubscribe-feed-popup'
 
   # Ensure user is shown the start page
-  page.should have_css '#sidebar li.active a#start-page'
+  expect(page).to have_css '#sidebar li.active a#start-page'
 end
 
 ##
@@ -345,7 +345,7 @@ def enable_quick_reading(user)
 
   fill_in 'user_current_password', with: user.password
   click_on 'Update account'
-  current_path.should eq read_path
+  expect(current_path).to eq read_path
 end
 
 ##
@@ -364,7 +364,7 @@ def enable_open_all_entries(user)
 
   fill_in 'user_current_password', with: user.password
   click_on 'Update account'
-  current_path.should eq read_path
+  expect(current_path).to eq read_path
 end
 
 ##

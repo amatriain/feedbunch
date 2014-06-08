@@ -23,7 +23,7 @@ describe FeedClient do
   end
 
   it 'downloads the feed XML and raises an error if response is empty' do
-    RestClient.should_receive(:get).with @feed.fetch_url, anything
+    expect(RestClient).to receive(:get).with @feed.fetch_url, anything
     expect{FeedClient.fetch @feed}.to raise_error EmptyResponseError
   end
 
@@ -42,10 +42,10 @@ describe FeedClient do
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers:({})
+      allow(webpage_html).to receive(:headers).and_return({})
 
       # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
-      RestClient.stub :get do |url|
+      allow(RestClient).to receive :get do |url|
         if url==feed_url
           raise RestClient::NotModified.new
         else
@@ -53,10 +53,10 @@ WEBPAGE_HTML
         end
       end
 
-      @feed.fetch_url.should_not eq feed_url
+      expect(@feed.fetch_url).not_to eq feed_url
       FeedClient.fetch @feed, true
       @feed.reload
-      @feed.fetch_url.should eq feed_url
+      expect(@feed.fetch_url).to eq feed_url
     end
 
     it 'updates fetch_url of the feed with autodiscovery relative URL' do
@@ -76,10 +76,10 @@ WEBPAGE_HTML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
+      allow(webpage_html).to receive(:headers).and_return({})
 
       # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
-      RestClient.stub :get do |url|
+      allow(RestClient).to receive :get do |url|
         if url==feed_fetch_url
           raise RestClient::NotModified.new
         else
@@ -87,10 +87,10 @@ WEBPAGE_HTML
         end
       end
 
-      feed.fetch_url.should_not eq feed_fetch_url
+      expect(feed.fetch_url).not_to eq feed_fetch_url
       FeedClient.fetch feed, true
       feed.reload
-      feed.fetch_url.should eq feed_fetch_url
+      expect(feed.fetch_url).to eq feed_fetch_url
     end
 
     it 'fetches feed' do
@@ -106,7 +106,7 @@ WEBPAGE_HTML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
+      allow(webpage_html).to receive(:headers).and_return({})
 
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -124,10 +124,10 @@ WEBPAGE_HTML
   </entry>
 </feed>
 FEED_XML
-      feed_xml.stub headers: {}
+      allow(feed_xml).to receive(:headers).and_return({})
 
       # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
-      RestClient.stub :get do |url|
+      allow(RestClient).to receive :get do |url|
         if url==feed_url
           feed_xml
         else
@@ -135,10 +135,10 @@ FEED_XML
         end
       end
 
-      @feed.entries.should be_blank
+      expect(@feed.entries).to be_blank
       FeedClient.fetch @feed, true
-      @feed.entries.count.should eq 1
-      @feed.entries.where(guid: @entry1.guid).should be_present
+      expect(@feed.entries.count).to eq 1
+      expect(@feed.entries.where(guid: @entry1.guid)).to be_present
     end
 
     it 'detects that autodiscovered feed is already in the database' do
@@ -154,7 +154,7 @@ FEED_XML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
+      allow(webpage_html).to receive(:headers).and_return({})
 
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -172,13 +172,13 @@ WEBPAGE_HTML
   </entry>
 </feed>
 FEED_XML
-      feed_xml.stub headers: {}
+      allow(feed_xml).to receive(:headers).and_return({})
 
       old_feed = FactoryGirl.create :feed, fetch_url: feed_url
       new_feed = FactoryGirl.create :feed
 
       # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
-      RestClient.stub :get do |url|
+      allow(RestClient).to receive :get do |url|
         if url==feed_url
           feed_xml
         elsif url==new_feed.fetch_url
@@ -186,15 +186,15 @@ FEED_XML
         end
       end
 
-      old_feed.entries.should be_blank
+      expect(old_feed.entries).to be_blank
 
       FeedClient.fetch new_feed, true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
-      old_feed.entries.count.should eq 1
-      old_feed.entries.where(guid: @entry1.guid).should be_present
-      Feed.exists?(id: new_feed).should be false
+      expect(old_feed.entries.count).to eq 1
+      expect(old_feed.entries.where(guid: @entry1.guid)).to be_present
+      expect(Feed.exists?(id: new_feed)).to be false
     end
 
     it 'uses first feed available for autodiscovery' do
@@ -214,11 +214,11 @@ FEED_XML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
+      allow(webpage_html).to receive(:headers).and_return({})
 
       webpage_url = @feed.fetch_url
       # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
-      RestClient.stub :get do |url|
+      allow(RestClient).to receive :get do |url|
         if url==webpage_url
           webpage_html
         else
@@ -227,10 +227,10 @@ WEBPAGE_HTML
         end
       end
 
-      @feed.fetch_url.should_not eq feed_url
+      expect(@feed.fetch_url).not_to eq feed_url
       FeedClient.fetch @feed, true
       @feed.reload
-      @feed.fetch_url.should eq feed_url
+      expect(@feed.fetch_url).to eq feed_url
     end
     
   end
@@ -252,61 +252,61 @@ FEED_XML
       @last_modified = "Wed, 12 Jun 2013 04:00:06 GMT"
       @user_agent = Feedbunch::Application.config.user_agent
       @headers = {etag: @etag, last_modified: @last_modified, user_agent: @user_agent}
-      @feed_xml.stub(:headers).and_return @headers
-      RestClient.stub(:get).and_return @feed_xml
+      allow(@feed_xml).to receive(:headers).and_return @headers
+      allow(RestClient).to receive(:get).and_return @feed_xml
     end
 
     it 'saves etag and last-modified headers if they are in the response' do
       FeedClient.fetch @feed
       @feed.reload
-      @feed.etag.should eq @etag
-      @feed.last_modified.to_i.should eq @last_modified.to_i
+      expect(@feed.etag).to eq @etag
+      expect(@feed.last_modified.to_i).to eq @last_modified.to_i
     end
 
     it 'sets etag to nil in the database if the header is not present' do
       @feed = FactoryGirl.create :feed, etag:'some_etag'
-      @feed.etag.should_not be_nil
+      expect(@feed.etag).not_to be_nil
       @headers = {last_modified: @last_modified}
-      @feed_xml.stub(:headers).and_return @headers
+      allow(@feed_xml).to receive(:headers).and_return @headers
 
       FeedClient.fetch @feed
       @feed.reload
-      @feed.etag.should be_nil
+      expect(@feed.etag).to be_nil
     end
 
     it 'sets last-modified to nil in the database if the header is not present' do
       @feed = FactoryGirl.create :feed, last_modified: Time.zone.now
-      @feed.last_modified.should_not be_nil
+      expect(@feed.last_modified).not_to be_nil
       @headers = {etag: @etag}
-      @feed_xml.stub(:headers).and_return @headers
+      allow(@feed_xml).to receive(:headers).and_return @headers
 
       FeedClient.fetch @feed
       @feed.reload
-      @feed.last_modified.should be_nil
+      expect(@feed.last_modified).to be_nil
     end
 
     it 'tries to cache data using an etag' do
       @headers = {etag: @etag}
-      @feed_xml.stub(:headers).and_return @headers
+      allow(@feed_xml).to receive(:headers).and_return @headers
       # Fetch the feed a first time, so the etag is saved
       FeedClient.fetch @feed
 
       # Next time the feed is fetched, the etag from the last time will be sent in the if-none-match header
       @feed.reload
-      RestClient.should_receive(:get).with @feed.fetch_url,
+      expect(RestClient).to receive(:get).with @feed.fetch_url,
                                            {if_none_match: @feed.etag, user_agent: @user_agent}
       FeedClient.fetch @feed
     end
 
     it 'tries to cache data using last-modified' do
       @headers = {last_modified: @last_modified}
-      @feed_xml.stub(:headers).and_return @headers
+      allow(@feed_xml).to receive(:headers).and_return @headers
       # Fetch the feed a first time, so the last-modified is saved
       FeedClient.fetch @feed
 
       # Next time the feed is fetched, the last-modified from the last time will be sent in the if-modified-since header
       @feed.reload
-      RestClient.should_receive(:get).with @feed.fetch_url,
+      expect(RestClient).to receive(:get).with @feed.fetch_url,
                                            {if_modified_since: @feed.last_modified, user_agent: @user_agent}
       FeedClient.fetch @feed
     end
@@ -317,7 +317,7 @@ FEED_XML
 
       # Next time the feed is fetched, the last-modified from the last time will be sent in the if-modified-since header
       @feed.reload
-      RestClient.should_receive(:get).with @feed.fetch_url,
+      expect(RestClient).to receive(:get).with @feed.fetch_url,
                                            {if_none_match: @feed.etag,
                                             if_modified_since: @feed.last_modified,
                                             user_agent: @user_agent}
@@ -325,7 +325,7 @@ FEED_XML
     end
 
     it 'does not raise errors if the server responds with 304-not modified' do
-      RestClient.stub(:get).and_raise RestClient::NotModified.new
+      allow(RestClient).to receive(:get).and_raise RestClient::NotModified.new
       expect {FeedClient.fetch @feed}.to_not raise_error
     end
   end
@@ -333,7 +333,7 @@ FEED_XML
   context 'error handling' do
 
     it 'raises error if trying to fetch from an unreachable URL' do
-      RestClient.stub(:get).and_raise SocketError.new
+      allow(RestClient).to receive(:get).and_raise SocketError.new
       expect {FeedClient.fetch @feed}.to raise_error SocketError
     end
 
@@ -348,8 +348,8 @@ FEED_XML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
-      RestClient.stub get: webpage_html
+      allow(webpage_html).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return webpage_html
 
       expect {FeedClient.fetch @feed, true}.to raise_error FeedAutodiscoveryError
     end
@@ -367,16 +367,16 @@ WEBPAGE_HTML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
-      RestClient.stub get: webpage_html
+      allow(webpage_html).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return webpage_html
 
       expect{FeedClient.fetch @feed, false}.to raise_error FeedFetchError
     end
 
     it 'raises error if trying to perform feed autodiscovery on a malformed webpage' do
       webpage_html = '<!DOCTYPE html><html NOT A VALID HTML AFTER ALL'
-      webpage_html.stub headers: {}
-      RestClient.stub get: webpage_html
+      allow(webpage_html).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return webpage_html
 
       expect {FeedClient.fetch @feed, true}.to raise_error FeedAutodiscoveryError
     end
@@ -393,10 +393,10 @@ WEBPAGE_HTML
 </body>
 </html>
 WEBPAGE_HTML
-      webpage_html.stub headers: {}
-      RestClient.stub get: webpage_html
+      allow(webpage_html).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return webpage_html
 
-      RestClient.should_receive(:get).twice
+      expect(RestClient).to receive(:get).twice
       expect {FeedClient.fetch @feed, true}.to raise_error FeedFetchError
     end
 
@@ -421,20 +421,20 @@ WEBPAGE_HTML
 </feed>
 FEED_XML
 
-      feed_xml.stub(:headers).and_return({})
-      RestClient.stub get: feed_xml
+      allow(feed_xml).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return feed_xml
 
       FeedClient.fetch @feed
       @feed.reload
-      @feed.entries.count.should eq 1
+      expect(@feed.entries.count).to eq 1
 
       entry1 = @feed.entries[0]
-      entry1.title.should eq @entry1.title
-      entry1.url.should eq @entry1.url
-      entry1.author.should eq @entry1.author
-      entry1.summary.should eq CGI.unescapeHTML(@entry1.summary)
-      entry1.published.should eq @entry1.published
-      entry1.guid.should eq @entry1.guid
+      expect(entry1.title).to eq @entry1.title
+      expect(entry1.url).to eq @entry1.url
+      expect(entry1.author).to eq @entry1.author
+      expect(entry1.summary).to eq CGI.unescapeHTML(@entry1.summary)
+      expect(entry1.published).to eq @entry1.published
+      expect(entry1.guid).to eq @entry1.guid
     end
   end
 end

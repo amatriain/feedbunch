@@ -28,7 +28,7 @@ describe ExportSubscriptionsJob do
     @folder.feeds << @feed3 << @feed4
 
     time_now = Time.zone.parse '2000-01-01'
-    ActiveSupport::TimeZone.any_instance.stub(:now).and_return time_now
+    allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return time_now
 
     @opml = <<OPML_DOCUMENT
 <?xml version="1.0" encoding="UTF-8"?>
@@ -50,8 +50,8 @@ describe ExportSubscriptionsJob do
 </opml>
 OPML_DOCUMENT
 
-    Feedbunch::Application.config.uploads_manager.stub :save
-    Feedbunch::Application.config.uploads_manager.stub :delete
+    allow(Feedbunch::Application.config.uploads_manager).to receive :save
+    allow(Feedbunch::Application.config.uploads_manager).to receive :delete
   end
 
   after :each do
@@ -62,25 +62,25 @@ OPML_DOCUMENT
   context 'validations' do
 
     it 'does nothing if user does not exist' do
-      Feedbunch::Application.config.uploads_manager.should_not receive :save
+      expect(Feedbunch::Application.config.uploads_manager).not_to receive :save
       ExportSubscriptionsJob.perform 1234567890
     end
 
     it 'does nothing if the user does not have a opml_export_job_state' do
       @user.opml_export_job_state.destroy
-      Feedbunch::Application.config.uploads_manager.should_not receive :save
+      expect(Feedbunch::Application.config.uploads_manager).not_to receive :save
       ExportSubscriptionsJob.perform @user.id
     end
 
     it 'does nothing if the opml_import_job_state for the user has state NONE' do
       @user.opml_export_job_state.update state: OpmlExportJobState::NONE
-      Feedbunch::Application.config.uploads_manager.should_not receive :save
+      expect(Feedbunch::Application.config.uploads_manager).not_to receive :save
       ExportSubscriptionsJob.perform @user.id
     end
 
     it 'does nothing if the opml_import_job_state for the user has state ERROR' do
       @user.opml_export_job_state.update state: OpmlExportJobState::ERROR
-      Feedbunch::Application.config.uploads_manager.should_not receive :save
+      expect(Feedbunch::Application.config.uploads_manager).not_to receive :save
       ExportSubscriptionsJob.perform @user.id
     end
 
@@ -88,30 +88,30 @@ OPML_DOCUMENT
       @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
                                          filename: 'some_filename.opml',
                                          export_date: Time.zone.now
-      Feedbunch::Application.config.uploads_manager.should_not receive :save
+      expect(Feedbunch::Application.config.uploads_manager).not_to receive :save
       ExportSubscriptionsJob.perform @user.id
     end
   end
 
   it 'uploads correct OPML file' do
-    Feedbunch::Application.config.uploads_manager.should receive(:save) do |user, folder, filename, content|
-      user.should eq @user
-      folder.should eq OPMLExporter::FOLDER
-      filename.should eq OPMLExporter::FILENAME
-      content.should eq @opml
+    expect(Feedbunch::Application.config.uploads_manager).to receive(:save) do |user, folder, filename, content|
+      expect(user).to eq @user
+      expect(folder).to eq OPMLExporter::FOLDER
+      expect(filename).to eq OPMLExporter::FILENAME
+      expect(content).to eq @opml
     end
     ExportSubscriptionsJob.perform @user.id
   end
 
   it 'sets data export state to ERROR if there is a problem doing the export' do
-    OPMLExporter.stub(:export).and_raise StandardError.new
+    allow(OPMLExporter).to receive(:export).and_raise StandardError.new
     expect {ExportSubscriptionsJob.perform @user.id}.to raise_error StandardError
-    @user.reload.opml_export_job_state.state.should eq OpmlExportJobState::ERROR
+    expect(@user.reload.opml_export_job_state.state).to eq OpmlExportJobState::ERROR
   end
 
   it 'sets data export state to SUCCESS if the export finishes successfully' do
     ExportSubscriptionsJob.perform @user.id
-    @user.reload.opml_export_job_state.state.should eq OpmlExportJobState::SUCCESS
+    expect(@user.reload.opml_export_job_state.state).to eq OpmlExportJobState::SUCCESS
   end
 
   context 'email notifications' do
@@ -122,7 +122,7 @@ OPML_DOCUMENT
     end
 
     it 'sends notification if finished with an error' do
-      OPMLExporter.stub(:export).and_raise StandardError.new
+      allow(OPMLExporter).to receive(:export).and_raise StandardError.new
       expect {ExportSubscriptionsJob.perform @user.id}.to raise_error
       mail_should_be_sent to: @user.email, text: 'There has been an error exporting your feed subscriptions from Feedbunch'
     end

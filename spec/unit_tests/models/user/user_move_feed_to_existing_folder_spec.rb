@@ -12,11 +12,11 @@ describe User, type: :model do
   context 'add feed to folder' do
 
     it 'adds a feed to a folder' do
-      @folder.feeds.should be_blank
+      expect(@folder.feeds).to be_blank
       @user.move_feed_to_folder @feed, folder: @folder
       @folder.reload
-      @folder.feeds.count.should eq 1
-      @folder.feeds.should include @feed
+      expect(@folder.feeds.count).to eq 1
+      expect(@folder.feeds).to include @feed
     end
 
     it 'removes the feed from its old folder' do
@@ -31,7 +31,7 @@ describe User, type: :model do
       @user.move_feed_to_folder @feed, folder: folder2
 
       @folder.reload
-      @folder.feeds.should_not include @feed
+      expect(@folder.feeds).not_to include @feed
     end
 
     it 'does not change feed/folder if asked to move feed to the same folder' do
@@ -39,13 +39,13 @@ describe User, type: :model do
 
       @user.move_feed_to_folder @feed, folder: @folder
 
-      @folder.feeds.count.should eq 1
-      @folder.feeds.should include @feed
+      expect(@folder.feeds.count).to eq 1
+      expect(@folder.feeds).to include @feed
     end
 
     it 'returns the new folder' do
       folder = @user.move_feed_to_folder @feed, folder: @folder
-      folder.should eq @folder
+      expect(folder).to eq @folder
     end
 
     it 'deletes the old folder if it had no more feeds' do
@@ -55,7 +55,7 @@ describe User, type: :model do
 
       @user.move_feed_to_folder @feed, folder: folder2
 
-      Folder.exists?(id: @folder.id).should be false
+      expect(Folder.exists?(id: @folder.id)).to be false
     end
 
     it 'does not delete the old folder if it has more feeds' do
@@ -67,7 +67,7 @@ describe User, type: :model do
 
       @user.move_feed_to_folder @feed, folder: folder2
 
-      Folder.exists?(id: @folder.id).should be true
+      expect(Folder.exists?(id: @folder.id)).to be true
     end
   end
 end

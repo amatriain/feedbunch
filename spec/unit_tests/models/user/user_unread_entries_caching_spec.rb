@@ -19,24 +19,24 @@ describe User, type: :model do
     context 'feed unread entries count' do
       it 'retrieves feed cached count' do
         unread_entries = @user.feed_unread_count @feed
-        unread_entries.should eq 1
+        expect(unread_entries).to eq 1
       end
 
       it 'decrements feed cached count when marking an entry as read' do
         @user.change_entries_state @entry2, 'read'
         unread_entries = @user.feed_unread_count @feed
-        unread_entries.should eq 0
+        expect(unread_entries).to eq 0
       end
 
       it 'increments feed cached count when marking an entry as unread' do
         @user.change_entries_state @entry1, 'unread'
         unread_entries = @user.feed_unread_count @feed
-        unread_entries.should eq 2
+        expect(unread_entries).to eq 2
       end
 
       it 'removes feed cached count when unsubscribing from a feed' do
         @user.unsubscribe @feed
-        FeedSubscription.exists?(feed_id: @feed.id, user_id: @user.id).should be false
+        expect(FeedSubscription.exists?(feed_id: @feed.id, user_id: @user.id)).to be false
       end
 
       it 'counts all entries as unread when subscribing to a feed' do
@@ -47,7 +47,7 @@ describe User, type: :model do
         @user.subscribe feed2.fetch_url
 
         unread_entries = @user.feed_unread_count feed2
-        unread_entries.should eq 2
+        expect(unread_entries).to eq 2
       end
 
     end

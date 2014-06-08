@@ -31,50 +31,50 @@ describe User, type: :model do
 
     it 'retrieves unread entries in a feed' do
       entries = @user.feed_entries @feed1
-      entries.count.should eq 2
-      entries.should include @entry1
-      entries.should include @entry2
-      entries.should_not include @entry3
+      expect(entries.count).to eq 2
+      expect(entries).to include @entry1
+      expect(entries).to include @entry2
+      expect(entries).not_to include @entry3
     end
 
     it 'retrieves read and unread entries in a feed' do
       entries = @user.feed_entries @feed1, include_read: true
-      entries.count.should eq 3
-      entries.should include @entry1
-      entries.should include @entry2
-      entries.should include @entry3
+      expect(entries.count).to eq 3
+      expect(entries).to include @entry1
+      expect(entries).to include @entry2
+      expect(entries).to include @entry3
     end
 
     it 'retrieves unread entries from a folder' do
       entries = @user.folder_entries @folder
-      entries.count.should eq 2
-      entries.should include @entry1
-      entries.should include @entry2
+      expect(entries.count).to eq 2
+      expect(entries).to include @entry1
+      expect(entries).to include @entry2
     end
 
     it 'retrieves read and unread entries from a folder' do
       entries = @user.folder_entries @folder, include_read: true
-      entries.count.should eq 3
-      entries.should include @entry1
-      entries.should include @entry2
-      entries.should include @entry3
+      expect(entries.count).to eq 3
+      expect(entries).to include @entry1
+      expect(entries).to include @entry2
+      expect(entries).to include @entry3
     end
 
     it 'retrieves unread entries for all subscribed feeds' do
       entries = @user.folder_entries 'all'
-      entries.count.should eq 3
-      entries.should include @entry1
-      entries.should include @entry2
-      entries.should include @entry4
+      expect(entries.count).to eq 3
+      expect(entries).to include @entry1
+      expect(entries).to include @entry2
+      expect(entries).to include @entry4
     end
 
     it 'retrieves read and unread entries for all subscribed feeds' do
       entries = @user.folder_entries 'all', include_read: true
-      entries.count.should eq 4
-      entries.should include @entry1
-      entries.should include @entry2
-      entries.should include @entry3
-      entries.should include @entry4
+      expect(entries.count).to eq 4
+      expect(entries).to include @entry1
+      expect(entries).to include @entry2
+      expect(entries).to include @entry3
+      expect(entries).to include @entry4
     end
 
   end
@@ -104,92 +104,92 @@ describe User, type: :model do
 
     it 'retrieves first page of unread entries in a feed' do
       entries = @user.feed_entries @feed1, page: 1
-      entries.count.should eq 25
+      expect(entries.count).to eq 25
       entries.each_with_index do |entry, index|
-        entry.should eq @entries[index]
+        expect(entry).to eq @entries[index]
       end
     end
 
     it 'retrieves last page of unread entries in a feed' do
       entries = @user.feed_entries @feed1, page: 2
-      entries.count.should eq 1
-      entries[0].should eq @entries[25]
+      expect(entries.count).to eq 1
+      expect(entries[0]).to eq @entries[25]
     end
 
     it 'retrieves first page of all entries in a feed' do
       entries = @user.feed_entries @feed1, include_read: true, page: 1
-      entries.count.should eq 25
+      expect(entries.count).to eq 25
       entries.each_with_index do |entry, index|
-        entry.should eq @entries[index]
+        expect(entry).to eq @entries[index]
       end
     end
 
     it 'retrieves last page of all entries in a feed' do
       entries = @user.feed_entries @feed1, include_read: true, page: 2
-      entries.count.should eq 5
+      expect(entries.count).to eq 5
       entries.each_with_index do |entry, index|
-        entry.should eq @entries[25 + index]
+        expect(entry).to eq @entries[25 + index]
       end
     end
 
     it 'retrieves first page of unread entries in all feeds' do
       entries = @user.folder_entries 'all', page: 1
-      entries.count.should eq 25
+      expect(entries.count).to eq 25
       entries.each_with_index do |entry, index|
-        entry.should eq @entries[index]
+        expect(entry).to eq @entries[index]
       end
     end
 
     it 'retrieves last page of unread entries in all feeds' do
       entries = @user.folder_entries 'all', page: 2
-      entries.count.should eq 2
-      entries[0].should eq @entries[25]
-      entries[1].should eq @entry2
+      expect(entries.count).to eq 2
+      expect(entries[0]).to eq @entries[25]
+      expect(entries[1]).to eq @entry2
     end
 
     it 'retrieves first page of all entries in all feeds' do
       entries = @user.folder_entries 'all', include_read: true, page: 1
-      entries.count.should eq 25
+      expect(entries.count).to eq 25
       entries.each_with_index do |entry, index|
-        entry.should eq @entries[index]
+        expect(entry).to eq @entries[index]
       end
     end
 
     it 'retrieves last page of all entries in all feeds' do
       entries = @user.folder_entries 'all', include_read: true, page: 2
-      entries.count.should eq 7
+      expect(entries.count).to eq 7
       entries.each_with_index do |entry, index|
-        entry.should eq @entries[25+index]
+        expect(entry).to eq @entries[25+index]
       end
     end
 
     it 'retrieves first page of unread entries in a folder' do
       entries = @user.folder_entries @folder, page: 1
-      entries.count.should eq 25
+      expect(entries.count).to eq 25
       entries.each_with_index do |entry, index|
-        entry.should eq @entries[index]
+        expect(entry).to eq @entries[index]
       end
     end
 
     it 'retrieves last page of unread entries in a folder' do
       entries = @user.folder_entries @folder, page: 2
-      entries.count.should eq 1
-      entries[0].should eq @entries[25]
+      expect(entries.count).to eq 1
+      expect(entries[0]).to eq @entries[25]
     end
 
     it 'retrieves first page of all entries in a folder' do
       entries = @user.folder_entries @folder, include_read: true, page: 1
-      entries.count.should eq 25
+      expect(entries.count).to eq 25
       entries.each_with_index do |entry, index|
-        entry.should eq @entries[index]
+        expect(entry).to eq @entries[index]
       end
     end
 
     it 'retrieves last page of all entries in a folder' do
       entries = @user.folder_entries @folder, include_read: true, page: 2
-      entries.count.should eq 5
+      expect(entries.count).to eq 5
       entries.each_with_index do |entry, index|
-        entry.should eq @entries[25+index]
+        expect(entry).to eq @entries[25+index]
       end
     end
 

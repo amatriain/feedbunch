@@ -35,47 +35,47 @@ describe 'feed entries', type: :feature do
 
       within '#feed-entries' do
         within "#entry-#{@entry1.id}" do
-          page.should have_text @feed1.title, visible: true
-          page.should have_text @entry1.title, visible: true
+          expect(page).to have_text @feed1.title, visible: true
+          expect(page).to have_text @entry1.title, visible: true
         end
 
         within "#entry-#{@entry2.id}" do
-          page.should have_text @feed1.title, visible: true
-          page.should have_text @entry2.title, visible: true
+          expect(page).to have_text @feed1.title, visible: true
+          expect(page).to have_text @entry2.title, visible: true
         end
 
         within "#entry-#{@entry3.id}" do
-          page.should have_text @feed2.title, visible: true
-          page.should have_text @entry3.title, visible: true
+          expect(page).to have_text @feed2.title, visible: true
+          expect(page).to have_text @entry3.title, visible: true
         end
       end
     end
 
     it 'opens an entry', js: true do
       # Entry summary should not be visible
-      page.should_not have_content @entry1.summary
+      expect(page).not_to have_content @entry1.summary
 
       read_entry @entry1
-      page.should have_content Nokogiri::HTML(@entry1.summary).text
+      expect(page).to have_content Nokogiri::HTML(@entry1.summary).text
     end
 
     it 'opens title link in a new tab', js: true do
       read_entry @entry1
 
       within "#entry-#{@entry1.id}-summary .entry-panel .lead" do
-        page.should have_css "a[target='_blank'][href='#{@entry1.url}']"
+        expect(page).to have_css "a[target='_blank'][href='#{@entry1.url}']"
       end
     end
 
     it 'closes other entries when opening an entry', js: true do
       read_entry @entry1
       # Only summary of first entry should be visible
-      page.should have_content Nokogiri::HTML(@entry1.summary).text
-      page.should_not have_content Nokogiri::HTML(@entry2.summary).text
+      expect(page).to have_content Nokogiri::HTML(@entry1.summary).text
+      expect(page).not_to have_content Nokogiri::HTML(@entry2.summary).text
       read_entry @entry2
       # Only summary of second entry should be visible
-      page.should_not have_content Nokogiri::HTML(@entry1.summary).text
-      page.should have_content Nokogiri::HTML(@entry2.summary).text
+      expect(page).not_to have_content Nokogiri::HTML(@entry1.summary).text
+      expect(page).to have_content Nokogiri::HTML(@entry2.summary).text
     end
 
     it 'by default only shows unread entries in a feed', js: true do
@@ -85,8 +85,8 @@ describe 'feed entries', type: :feature do
 
       read_feed @feed1, @user
 
-      page.should have_content @entry2.title
-      page.should_not have_content @entry1.title
+      expect(page).to have_content @entry2.title
+      expect(page).not_to have_content @entry1.title
     end
 
     it 'by default only shows unread entries in a folder', js: true do
@@ -99,9 +99,9 @@ describe 'feed entries', type: :feature do
       visit read_path
       read_folder @folder
 
-      page.should_not have_content @entry1.title
-      page.should have_content @entry2.title
-      page.should have_content @entry3.title
+      expect(page).not_to have_content @entry1.title
+      expect(page).to have_content @entry2.title
+      expect(page).to have_content @entry3.title
     end
 
     it 'by default only shows unread entries when reading all subscriptions', js: true do
@@ -118,10 +118,10 @@ describe 'feed entries', type: :feature do
       page.driver.resize_window(800, 600)
       read_folder 'all'
 
-      page.should_not have_content @entry1.title
-      page.should have_content @entry2.title
-      page.should have_content @entry3.title
-      page.should have_content entry4.title
+      expect(page).not_to have_content @entry1.title
+      expect(page).to have_content @entry2.title
+      expect(page).to have_content @entry3.title
+      expect(page).to have_content entry4.title
     end
 
     it 'marks as read an entry when reading a feed and opening an entry', js: true do
@@ -132,7 +132,7 @@ describe 'feed entries', type: :feature do
       # On refresh, @entry1 should no longer appear
       visit read_path
       read_feed @feed1, @user
-      page.should_not have_content @entry1.title
+      expect(page).not_to have_content @entry1.title
     end
 
     # Regression test for bug #177
@@ -148,11 +148,11 @@ describe 'feed entries', type: :feature do
       # On refresh, @entry1 should no longer appear
       visit read_path
       read_feed @feed1, @user
-      page.should_not have_content @entry1.title
+      expect(page).not_to have_content @entry1.title
     end
 
     it 'shows an alert if it cannot mark entry as read', js: true do
-      User.any_instance.stub(:change_entries_state).and_raise StandardError.new
+      allow_any_instance_of(User).to receive(:change_entries_state).and_raise StandardError.new
       open_entry @entry1
 
       should_show_alert 'problem-entry-state-change'
@@ -161,28 +161,28 @@ describe 'feed entries', type: :feature do
     it 'marks all feed entries as read', js: true do
       mark_all_as_read
 
-      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
     end
 
     it 'marks all folder entries as read', js: true do
       read_folder @folder
       mark_all_as_read
 
-      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
     end
 
     it 'marks all entries as read', js: true do
       read_folder 'all'
       mark_all_as_read
 
-      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
     end
 
     it 'hides Read button for read entries', js: true do
       read_entry @entry1
       entry_should_be_marked_read @entry1
-      page.should have_css "div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']"
-      page.should_not have_css "div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']"
+      expect(page).to have_css "div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']"
+      expect(page).not_to have_css "div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']"
     end
 
     it 'hides Unead button for unread entries', js: true do
@@ -191,8 +191,8 @@ describe 'feed entries', type: :feature do
       find("div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']").click
       entry_should_be_marked_unread @entry1
 
-      page.should_not have_css "div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']"
-      page.should have_css "div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']"
+      expect(page).not_to have_css "div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']"
+      expect(page).to have_css "div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']"
     end
 
     it 'marks an entry as unread', js: true do
@@ -201,7 +201,7 @@ describe 'feed entries', type: :feature do
 
       # entry should still be present when reloading feed entries
       read_feed @feed1, @user
-      page.should have_content @entry1.title
+      expect(page).to have_content @entry1.title
     end
 
     it 'marks an entry as read', js: true do
@@ -215,7 +215,7 @@ describe 'feed entries', type: :feature do
 
       # entry should not be present when reloading feed entries
       read_feed @feed1, @user
-      page.should_not have_content @entry1.title
+      expect(page).not_to have_content @entry1.title
     end
 
     it 'shows all entries in a feed, including read ones', js: true do
@@ -227,18 +227,18 @@ describe 'feed entries', type: :feature do
       read_feed @feed1, @user
 
       # @entry1 is read, should not appear on the page
-      page.should_not have_content @entry1.title
-      page.should have_content @entry2.title
+      expect(page).not_to have_content @entry1.title
+      expect(page).to have_content @entry2.title
 
       show_read
 
       # both @entry1 and @entry2 should appear on the page
-      page.should have_content @entry1.title
-      page.should have_content @entry2.title
+      expect(page).to have_content @entry1.title
+      expect(page).to have_content @entry2.title
 
       # entries should have the correct CSS class
-      page.should have_css "a[data-entry-id='#{@entry1.id}'].entry-read"
-      page.should have_css "a[data-entry-id='#{@entry2.id}'].entry-unread"
+      expect(page).to have_css "a[data-entry-id='#{@entry1.id}'].entry-read"
+      expect(page).to have_css "a[data-entry-id='#{@entry2.id}'].entry-unread"
     end
 
     it 'shows all entries in a folder, including read ones', js: true do
@@ -248,37 +248,37 @@ describe 'feed entries', type: :feature do
       read_folder @folder
 
       # @entry1 is read, should not appear on the page
-      page.should_not have_content @entry1.title
-      page.should have_content @entry2.title
+      expect(page).not_to have_content @entry1.title
+      expect(page).to have_content @entry2.title
 
       show_read
 
       # both @entry1 and @entry2 should appear on the page
-      page.should have_content @entry1.title
-      page.should have_content @entry2.title
+      expect(page).to have_content @entry1.title
+      expect(page).to have_content @entry2.title
 
       # entries should have the correct CSS class
-      page.should have_css "a[data-entry-id='#{@entry1.id}'].entry-read"
-      page.should have_css "a[data-entry-id='#{@entry2.id}'].entry-unread"
+      expect(page).to have_css "a[data-entry-id='#{@entry1.id}'].entry-read"
+      expect(page).to have_css "a[data-entry-id='#{@entry2.id}'].entry-unread"
     end
 
     it 'shows day, month and time for entries published in the current year', js: true do
       today = Date.new 2000, 01, 01
-      Date.stub today: today
+      allow(Date).to receive(:today).and_return today
       @entry1.update published: Time.zone.parse('2000-07-07')
       read_feed @feed1, @user
       within "#entry-#{@entry1.id}" do
-        page.should have_text '07 Jul 00:00'
+        expect(page).to have_text '07 Jul 00:00'
       end
     end
 
     it 'shows day, month and year for entries published in a previous year', js: true do
       today = Date.new 2000, 01, 01
-      Date.stub today: today
+      allow(Date).to receive(:today).and_return today
       @entry1.update published: Time.zone.parse('1999-07-07')
       read_feed @feed1, @user
       within "#entry-#{@entry1.id}" do
-        page.should have_text '07 Jul 1999'
+        expect(page).to have_text '07 Jul 1999'
       end
     end
 
@@ -287,7 +287,7 @@ describe 'feed entries', type: :feature do
       it 'displays feed title above entry content', js: true do
         read_entry @entry1
         within "#entry-#{@entry1.id}-summary .entry-panel .entry-additional-info" do
-          page.should have_text @feed1.title
+          expect(page).to have_text @feed1.title
         end
       end
 
@@ -322,14 +322,14 @@ describe 'feed entries', type: :feature do
       end
 
       it 'shows a spinner instead of images before opening an entry', js: true do
-        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url_load}']", visible: false
-        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url_fail}']", visible: false
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url_load}']", visible: false
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url_fail}']", visible: false
       end
 
       it 'loads images when opening an entry', js: true do
         read_entry @entry1
-        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_load}']", visible: false
-        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_fail}']", visible: false
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_load}']", visible: false
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_fail}']", visible: false
       end
 
       it 'displays images not prepared for lazy loading', js: true do
@@ -338,9 +338,9 @@ describe 'feed entries', type: :feature do
         visit read_path
         read_feed @feed1, @user
 
-        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: false
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: false
         read_entry @entry1
-        page.should have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: true
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: true
       end
     end
   end
@@ -377,10 +377,10 @@ describe 'feed entries', type: :feature do
 
     it 'loads the first two pages of unread feed entries', js: true do
       (0..49).each do |i|
-        page.should have_content @entries[i].title
+        expect(page).to have_content @entries[i].title
       end
       (50..54).each do |i|
-        page.should_not have_content @entries[i].title
+        expect(page).not_to have_content @entries[i].title
       end
     end
 
@@ -388,20 +388,20 @@ describe 'feed entries', type: :feature do
       page.execute_script 'window.scrollTo(0,100000)'
       sleep 1
       (0..50).each do |i|
-        page.should have_content @entries[i].title
+        expect(page).to have_content @entries[i].title
       end
       (51..54).each do |i|
-        page.should_not have_content @entries[i].title
+        expect(page).not_to have_content @entries[i].title
       end
     end
 
     it 'loads the first two pages of all entries in a feed', js: true do
       show_read
       (0..49).each do |i|
-        page.should have_content @entries[i].title
+        expect(page).to have_content @entries[i].title
       end
       (50..54).each do |i|
-        page.should_not have_content @entries[i].title
+        expect(page).not_to have_content @entries[i].title
       end
     end
 
@@ -410,19 +410,19 @@ describe 'feed entries', type: :feature do
       page.execute_script 'window.scrollTo(0,100000)'
       sleep 1
       (0..54).each do |i|
-        page.should have_content @entries[i].title
+        expect(page).to have_content @entries[i].title
       end
     end
 
     it 'loads the first two pages of unread folder entries', js: true do
       read_folder @folder
       (0..49).each do |i|
-        page.should have_content @entries[i].title
+        expect(page).to have_content @entries[i].title
       end
       (54..54).each do |i|
-        page.should_not have_content @entries[i].title
+        expect(page).not_to have_content @entries[i].title
       end
-      page.should_not have_content @entry2.title
+      expect(page).not_to have_content @entry2.title
     end
 
     it 'loads the third page of unread folder entries when scrolling down', js: true do
@@ -430,24 +430,24 @@ describe 'feed entries', type: :feature do
       page.execute_script 'window.scrollTo(0,100000)'
       sleep 1
       (0..50).each do |i|
-        page.should have_content @entries[i].title
+        expect(page).to have_content @entries[i].title
       end
       (51..54).each do |i|
-        page.should_not have_content @entries[i].title
+        expect(page).not_to have_content @entries[i].title
       end
-      page.should have_content @entry2.title
+      expect(page).to have_content @entry2.title
     end
 
     it 'loads the first two pages of all entries in a folder', js: true do
       read_folder @folder
       show_read
       (0..49).each do |i|
-        page.should have_content @entries[i].title
+        expect(page).to have_content @entries[i].title
       end
       (50..54).each do |i|
-        page.should_not have_content @entries[i].title
+        expect(page).not_to have_content @entries[i].title
       end
-      page.should_not have_content @entry2.title
+      expect(page).not_to have_content @entry2.title
     end
 
     it 'loads the third page of all entries in a folder when scrolling down', js: true do
@@ -456,15 +456,15 @@ describe 'feed entries', type: :feature do
       page.execute_script 'window.scrollTo(0,100000)'
       sleep 1
       (0..54).each do |i|
-        page.should have_content @entries[i].title
+        expect(page).to have_content @entries[i].title
       end
-      page.should have_content @entry2.title
+      expect(page).to have_content @entry2.title
     end
 
     it 'marks all feed entries as read', js: true do
       mark_all_as_read
 
-      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
       unread_feed_entries_should_eq @feed1, 0, @user
     end
 
@@ -472,7 +472,7 @@ describe 'feed entries', type: :feature do
       read_folder @folder
       mark_all_as_read
 
-      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
       unread_folder_entries_should_eq @folder, 0
     end
 
@@ -480,7 +480,7 @@ describe 'feed entries', type: :feature do
       read_folder 'all'
       mark_all_as_read
 
-      page.should_not have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
       unread_folder_entries_should_eq 'all', 0
     end
 

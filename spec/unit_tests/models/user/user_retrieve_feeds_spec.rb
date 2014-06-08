@@ -27,19 +27,19 @@ describe User, type: :model do
     end
 
     it 'returns only feeds the user is suscribed to' do
-      @user.subscribed_feeds.include?(@feed3).should be false
+      expect(@user.subscribed_feeds.include?(@feed3)).to be false
     end
 
     it 'returns only feeds with unread entries' do
       feeds = @user.subscribed_feeds
-      feeds.include?(@feed1).should be true
-      feeds.include?(@feed2).should be false
+      expect(feeds.include?(@feed1)).to be true
+      expect(feeds.include?(@feed2)).to be false
     end
 
     it 'returns all feeds' do
       feeds = @user.subscribed_feeds include_read: true
-      feeds.include?(@feed1).should be true
-      feeds.include?(@feed2).should be true
+      expect(feeds.include?(@feed1)).to be true
+      expect(feeds.include?(@feed2)).to be true
     end
 
   end
@@ -68,31 +68,31 @@ describe User, type: :model do
 
     it 'returns first page of unread feeds' do
       feeds = @user.subscribed_feeds page: 1
-      feeds.count.should eq 25
+      expect(feeds.count).to eq 25
       feeds.each_with_index do |feed, index|
-        feed.should eq @feeds[index]
+        expect(feed).to eq @feeds[index]
       end
     end
 
     it 'returns last page of unread feeds' do
       feeds = @user.subscribed_feeds page: 2
-      feeds.count.should eq 1
-      feeds[0].should eq @feeds[25]
+      expect(feeds.count).to eq 1
+      expect(feeds[0]).to eq @feeds[25]
     end
 
     it 'returns first page of all feeds' do
       feeds = @user.subscribed_feeds include_read: true, page: 1
-      feeds.count.should eq 25
+      expect(feeds.count).to eq 25
       feeds.each_with_index do |feed, index|
-        feed.should eq @feeds[index]
+        expect(feed).to eq @feeds[index]
       end
     end
 
     it 'returns last page of all feeds' do
       feeds = @user.subscribed_feeds include_read: true, page: 2
-      feeds.count.should eq 5
+      expect(feeds.count).to eq 5
       feeds.each_with_index do |feed, index|
-        feed.should eq @feeds[25+index]
+        expect(feed).to eq @feeds[25+index]
       end
     end
 
@@ -125,28 +125,28 @@ describe User, type: :model do
 
     it 'returns feeds in a folder with unread entries' do
       feeds = @user.folder_feeds @folder
-      feeds.count.should eq 1
-      feeds.should include @feed1
+      expect(feeds.count).to eq 1
+      expect(feeds).to include @feed1
     end
 
     it 'returns all feeds in a folder' do
       feeds = @user.folder_feeds @folder, include_read: true
-      feeds.count.should eq 2
-      feeds.should include @feed1
-      feeds.should include @feed2
+      expect(feeds.count).to eq 2
+      expect(feeds).to include @feed1
+      expect(feeds).to include @feed2
     end
 
     it 'returns feeds with unread entries which are not in any folder' do
       feeds = @user.folder_feeds Folder::NO_FOLDER
-      feeds.count.should eq 1
-      feeds.should include @feed3
+      expect(feeds.count).to eq 1
+      expect(feeds).to include @feed3
     end
 
     it 'returns all feeds which are not in any folder' do
       feeds = @user.folder_feeds Folder::NO_FOLDER, include_read: true
-      feeds.count.should eq 2
-      feeds.should include @feed3
-      feeds.should include @feed4
+      expect(feeds.count).to eq 2
+      expect(feeds).to include @feed3
+      expect(feeds).to include @feed4
     end
 
     it 'raises an error if user does not own the folder' do

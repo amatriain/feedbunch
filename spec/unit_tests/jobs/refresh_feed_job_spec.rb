@@ -7,11 +7,11 @@ describe RefreshFeedJob do
     @feed = FactoryGirl.create :feed
     @user.subscribe @feed.fetch_url
     @refresh_feed_job_state = FactoryGirl.create :refresh_feed_job_state, user_id: @user.id, feed_id: @feed.id
-    FeedClient.stub :fetch
+    allow(FeedClient).to receive :fetch
   end
 
   it 'updates feed when the job runs' do
-    FeedClient.should_receive(:fetch).with @feed
+    expect(FeedClient).to receive(:fetch).with @feed
 
     RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
   end
@@ -32,14 +32,14 @@ describe RefreshFeedJob do
     RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
 
     # Unread count should be corrected
-    user.feed_unread_count(@feed).should eq 1
+    expect(user.feed_unread_count(@feed)).to eq 1
   end
 
   context 'validations' do
 
     it 'updates feed even if the refresh_feed_job_state does not exist' do
       @refresh_feed_job_state.destroy
-      FeedClient.should_receive(:fetch).with @feed
+      expect(FeedClient).to receive(:fetch).with @feed
 
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
     end
@@ -49,22 +49,22 @@ describe RefreshFeedJob do
       user2 = FactoryGirl.create :user
       user2.subscribe @feed.fetch_url
       @user.destroy
-      FeedClient.should_not_receive :fetch
+      expect(FeedClient).not_to receive :fetch
 
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
     end
 
     it 'destroys refresh_feed_job_state if the user does not exist' do
       @user.delete
-      FeedClient.should_not_receive :fetch
+      expect(FeedClient).not_to receive :fetch
 
-      RefreshFeedJobState.count.should eq 1
+      expect(RefreshFeedJobState.count).to eq 1
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      RefreshFeedJobState.count.should eq 0
+      expect(RefreshFeedJobState.count).to eq 0
     end
 
     it 'does not update feed if it does not exist' do
-      FeedClient.should_not_receive :fetch
+      expect(FeedClient).not_to receive :fetch
       @feed.destroy
 
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
@@ -72,28 +72,28 @@ describe RefreshFeedJob do
 
     it 'destroys refresh_feed_job_state if the feed does not exist' do
       @feed.delete
-      FeedClient.should_not_receive :fetch
+      expect(FeedClient).not_to receive :fetch
 
-      RefreshFeedJobState.count.should eq 1
+      expect(RefreshFeedJobState.count).to eq 1
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      RefreshFeedJobState.count.should eq 0
+      expect(RefreshFeedJobState.count).to eq 0
     end
 
 
     it 'does not update feed if the user is not subscribed' do
       FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first.delete
-      FeedClient.should_not_receive :fetch
+      expect(FeedClient).not_to receive :fetch
 
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
     end
 
     it 'destroys refresh_feed_job_state if the user is not subscribed' do
       FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first.delete
-      FeedClient.should_not_receive :fetch
+      expect(FeedClient).not_to receive :fetch
 
-      RefreshFeedJobState.count.should eq 1
+      expect(RefreshFeedJobState.count).to eq 1
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      RefreshFeedJobState.count.should eq 0
+      expect(RefreshFeedJobState.count).to eq 0
     end
   end
 
@@ -101,64 +101,64 @@ describe RefreshFeedJob do
 
     it 'does not update feed if refresh_feed_job_state is not RUNNING' do
       @refresh_feed_job_state.update state: RefreshFeedJobState::SUCCESS
-      FeedClient.should_not_receive :fetch
+      expect(FeedClient).not_to receive :fetch
 
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
     end
 
     it 'updates refresh_feed_job_state to SUCCESS if successful' do
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      @refresh_feed_job_state.reload.state.should eq RefreshFeedJobState::SUCCESS
+      expect(@refresh_feed_job_state.reload.state).to eq RefreshFeedJobState::SUCCESS
     end
 
     it 'updates refresh_feed_job_state to ERROR if an error is raised when fetching feed' do
-      FeedClient.stub(:fetch).and_raise RestClient::Exception.new
+      allow(FeedClient).to receive(:fetch).and_raise RestClient::Exception.new
 
-      @refresh_feed_job_state.reload.state.should eq RefreshFeedJobState::RUNNING
+      expect(@refresh_feed_job_state.reload.state).to eq RefreshFeedJobState::RUNNING
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      @refresh_feed_job_state.reload.state.should eq RefreshFeedJobState::ERROR
+      expect(@refresh_feed_job_state.reload.state).to eq RefreshFeedJobState::ERROR
     end
   end
 
   context 'failing feed' do
 
     it 'sets failing_since to nil when an update runs successfully' do
-      FeedClient.stub(:fetch)
+      allow(FeedClient).to receive(:fetch)
       date = Time.zone.parse '2000-01-01'
       @feed.update failing_since: date
 
-      @feed.failing_since.should eq date
+      expect(@feed.failing_since).to eq date
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      @feed.reload.failing_since.should be_nil
+      expect(@feed.reload.failing_since).to be_nil
     end
 
     it 'sets available to true when an update runs successfully' do
       @feed.update available: false
 
-      @feed.reload.available.should be false
+      expect(@feed.reload.available).to be false
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      @feed.reload.available.should be true
+      expect(@feed.reload.available).to be true
     end
 
     it 'does not change failing_since if the feed update fails' do
-      FeedClient.stub(:fetch).and_raise RestClient::Exception.new
+      allow(FeedClient).to receive(:fetch).and_raise RestClient::Exception.new
       date = Time.zone.parse '2000-01-01'
-      ActiveSupport::TimeZone.any_instance.stub(:now).and_return date
+      allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
       date2 = Time.zone.parse '1990-01-01'
       @feed.update failing_since: date2
 
-      @feed.failing_since.should eq date2
+      expect(@feed.failing_since).to eq date2
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      @feed.reload.failing_since.should eq date2
+      expect(@feed.reload.failing_since).to eq date2
     end
 
     it 'does not mark feed as available when the feed update fails' do
-      FeedClient.stub(:fetch).and_raise RestClient::Exception.new
+      allow(FeedClient).to receive(:fetch).and_raise RestClient::Exception.new
       @feed.update available:false
 
-      @feed.available.should be false
+      expect(@feed.available).to be false
       RefreshFeedJob.perform @refresh_feed_job_state.id, @feed.id, @user.id
-      @feed.reload.available.should be false
+      expect(@feed.reload.available).to be false
     end
   end
 

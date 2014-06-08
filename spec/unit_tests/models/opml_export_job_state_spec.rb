@@ -11,7 +11,7 @@ describe OpmlExportJobState, type: :model do
 
     it 'always belongs to a user' do
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: nil
-      opml_export_job_state.should_not be_valid
+      expect(opml_export_job_state).not_to be_valid
     end
 
     it 'has filename if it has state SUCCESS' do
@@ -19,13 +19,13 @@ describe OpmlExportJobState, type: :model do
                                                 state: OpmlExportJobState::SUCCESS,
                                                 filename: nil,
                                                 export_date: Time.zone.now
-      opml_export_job_state.should_not be_valid
+      expect(opml_export_job_state).not_to be_valid
 
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::SUCCESS,
                                                 filename: @filename,
                                                 export_date: Time.zone.now
-      opml_export_job_state.should be_valid
+      expect(opml_export_job_state).to be_valid
     end
 
     it 'does not have a filename if it has state NONE' do
@@ -33,7 +33,7 @@ describe OpmlExportJobState, type: :model do
                                                 state: OpmlExportJobState::NONE,
                                                 filename: @filename
       opml_export_job_state.save!
-      opml_export_job_state.filename.should be_nil
+      expect(opml_export_job_state.filename).to be_nil
     end
 
     it 'does not have a filename if it has state RUNNING' do
@@ -41,7 +41,7 @@ describe OpmlExportJobState, type: :model do
                                                 state: OpmlExportJobState::RUNNING,
                                                 filename: @filename
       opml_export_job_state.save!
-      opml_export_job_state.filename.should be_nil
+      expect(opml_export_job_state.filename).to be_nil
     end
 
     it 'does not have a filename if it has state ERROR' do
@@ -49,19 +49,19 @@ describe OpmlExportJobState, type: :model do
                                                 state: OpmlExportJobState::ERROR,
                                                 filename: @filename
       opml_export_job_state.save!
-      opml_export_job_state.filename.should be_nil
+      expect(opml_export_job_state.filename).to be_nil
     end
 
     it 'has export_date if it has state SUCCESS' do
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::SUCCESS,
                                                 export_date: nil
-      opml_export_job_state.should_not be_valid
+      expect(opml_export_job_state).not_to be_valid
 
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::SUCCESS,
                                                 export_date: Time.zone.now
-      opml_export_job_state.should be_valid
+      expect(opml_export_job_state).to be_valid
     end
 
     it 'does not have an export_date if it has state NONE' do
@@ -69,7 +69,7 @@ describe OpmlExportJobState, type: :model do
                                                 state: OpmlExportJobState::NONE,
                                                 export_date: Time.zone.now
       opml_export_job_state.save!
-      opml_export_job_state.export_date.should be_nil
+      expect(opml_export_job_state.export_date).to be_nil
     end
 
     it 'does not have an export_date if it has state RUNNING' do
@@ -77,7 +77,7 @@ describe OpmlExportJobState, type: :model do
                                                 state: OpmlExportJobState::RUNNING,
                                                 export_date: Time.zone.now
       opml_export_job_state.save!
-      opml_export_job_state.export_date.should be_nil
+      expect(opml_export_job_state.export_date).to be_nil
     end
 
     it 'does not have an export_date if it has state ERROR' do
@@ -85,7 +85,7 @@ describe OpmlExportJobState, type: :model do
                                                 state: OpmlExportJobState::ERROR,
                                                 export_date: Time.zone.now
       opml_export_job_state.save!
-      opml_export_job_state.export_date.should be_nil
+      expect(opml_export_job_state.export_date).to be_nil
     end
   end
 
@@ -93,13 +93,13 @@ describe OpmlExportJobState, type: :model do
 
     it 'defaults to state NONE when created' do
       @user.create_opml_export_job_state
-      @user.opml_export_job_state.state.should eq OpmlExportJobState::NONE
+      expect(@user.opml_export_job_state.state).to eq OpmlExportJobState::NONE
     end
 
     it 'defaults show_alert to true' do
       opml_export_job_state = FactoryGirl.build :opml_export_job_state, show_alert: nil
       opml_export_job_state.save!
-      opml_export_job_state.show_alert.should be true
+      expect(opml_export_job_state.show_alert).to be true
     end
   end
 
@@ -109,11 +109,11 @@ describe OpmlExportJobState, type: :model do
     @user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
                                        filename: filename,
                                        export_date: Time.zone.now
-    Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
-    Feedbunch::Application.config.uploads_manager.should receive(:delete).once do |user, folder, file|
-      user.should eq @user
-      folder.should eq OPMLExporter::FOLDER
-      file.should eq filename
+    allow(Feedbunch::Application.config.uploads_manager).to receive(:exists?).and_return true
+    expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).once do |user, folder, file|
+      expect(user).to eq @user
+      expect(folder).to eq OPMLExporter::FOLDER
+      expect(file).to eq filename
     end
 
     @user.opml_export_job_state.destroy

@@ -6,17 +6,17 @@ describe EntryState, type: :model do
 
     it 'does not accept empty user' do
       entry_state = FactoryGirl.build :entry_state, user_id: nil
-      entry_state.valid?.should be false
+      expect(entry_state.valid?).to be false
     end
 
     it 'does not accept empty entry' do
       entry_state = FactoryGirl.build :entry_state, entry_id: nil
-      entry_state.valid?.should be false
+      expect(entry_state.valid?).to be false
     end
 
     it 'does not accept empty state' do
       entry_state = FactoryGirl.build :entry_state, read: nil
-      entry_state.valid?.should be false
+      expect(entry_state.valid?).to be false
     end
 
     it 'does not accept multiple states for the same entry and user' do
@@ -26,10 +26,10 @@ describe EntryState, type: :model do
       user = FactoryGirl.create :user
       user.subscribe feed.fetch_url
 
-      EntryState.exists?(entry_id: entry.id, user_id: user.id).should be true
+      expect(EntryState.exists?(entry_id: entry.id, user_id: user.id)).to be true
 
       entry_state_dupe = FactoryGirl.build :entry_state, entry_id: entry.id, user_id: user.id
-      entry_state_dupe.should_not be_valid
+      expect(entry_state_dupe).not_to be_valid
     end
 
     it 'accepts multiple states for the same entry and different users' do
@@ -41,8 +41,8 @@ describe EntryState, type: :model do
       user2 = FactoryGirl.create :user
       user2.subscribe feed.fetch_url
 
-      EntryState.exists?(entry_id: entry.id, user_id: user1.id).should be true
-      EntryState.exists?(entry_id: entry.id, user_id: user2.id).should be true
+      expect(EntryState.exists?(entry_id: entry.id, user_id: user1.id)).to be true
+      expect(EntryState.exists?(entry_id: entry.id, user_id: user2.id)).to be true
     end
 
     it 'accepts multiple states for different entries and the same user' do
@@ -53,8 +53,8 @@ describe EntryState, type: :model do
       user = FactoryGirl.create :user
       user.subscribe feed.fetch_url
 
-      EntryState.exists?(entry_id: entry1.id, user_id: user.id).should be true
-      EntryState.exists?(entry_id: entry2.id, user_id: user.id).should be true
+      expect(EntryState.exists?(entry_id: entry1.id, user_id: user.id)).to be true
+      expect(EntryState.exists?(entry_id: entry2.id, user_id: user.id)).to be true
     end
   end
 end

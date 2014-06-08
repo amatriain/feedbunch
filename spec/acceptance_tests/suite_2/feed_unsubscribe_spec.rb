@@ -23,13 +23,13 @@ describe 'unsubscribe from feed', type: :feature do
   it 'hides unsubscribe button until a feed is selected', js: true do
     visit read_path
     open_feeds_menu
-    page.should_not have_css '#unsubscribe-feed', visible: true
+    expect(page).not_to have_css '#unsubscribe-feed', visible: true
   end
 
   it 'shows unsubscribe button when a feed is selected', js: true do
     read_feed @feed1, @user
     open_feeds_menu
-    page.should have_css '#unsubscribe-feed', visible: true
+    expect(page).to have_css '#unsubscribe-feed', visible: true
   end
 
   it 'still shows buttons after unsubscribing from a feed', js: true do
@@ -40,16 +40,16 @@ describe 'unsubscribe from feed', type: :feature do
 
     # Read @feed2. All buttons should be visible and enabled
     read_feed @feed2, @user
-    page.should have_css '#show-read', visible: true
-    page.should have_css '#feeds-management', visible: true
-    page.should have_css '#read-all-button', visible: true
-    page.should have_css '#folder-management', visible: true
+    expect(page).to have_css '#show-read', visible: true
+    expect(page).to have_css '#feeds-management', visible: true
+    expect(page).to have_css '#read-all-button', visible: true
+    expect(page).to have_css '#folder-management', visible: true
   end
 
   it 'hides unsubscribe button when reading all feeds', js: true do
     read_folder 'all'
     open_feeds_menu
-    page.should_not have_css '#unsubscribe-feed', visible: true
+    expect(page).not_to have_css '#unsubscribe-feed', visible: true
   end
 
   it 'hides unsubscribe button when reading a whole folder', js: true do
@@ -63,26 +63,26 @@ describe 'unsubscribe from feed', type: :feature do
 
     read_folder @folder
     open_feeds_menu
-    page.should_not have_css '#unsubscribe-feed', visible: true
+    expect(page).not_to have_css '#unsubscribe-feed', visible: true
   end
 
   it 'shows a confirmation popup', js: true do
     read_feed @feed1, @user
     open_feeds_menu
     find('#unsubscribe-feed').click
-    page.should have_css '#unsubscribe-feed-popup'
+    expect(page).to have_css '#unsubscribe-feed-popup'
   end
 
   it 'unsubscribes from a feed', js: true do
     unsubscribe_feed @feed1, @user
 
     # Only @feed2 should be present, @feed1 has been unsubscribed
-    page.should_not have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']", visible: false
-    page.should have_css "#sidebar li > a[data-feed-id='#{@feed2.id}']", visible: false
+    expect(page).not_to have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']", visible: false
+    expect(page).to have_css "#sidebar li > a[data-feed-id='#{@feed2.id}']", visible: false
   end
 
   it 'shows an alert if there is a problem unsubscribing from a feed', js: true do
-    User.any_instance.stub(:enqueue_unsubscribe_job).and_raise StandardError.new
+    allow_any_instance_of(User).to receive(:enqueue_unsubscribe_job).and_raise StandardError.new
 
     unsubscribe_feed @feed1, @user
 
@@ -91,21 +91,21 @@ describe 'unsubscribe from feed', type: :feature do
 
   it 'makes feed disappear from folder', js: true do
     # Feed should be in the folder
-    page.should have_css "#sidebar #folder-#{@folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+    expect(page).to have_css "#sidebar #folder-#{@folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
 
     unsubscribe_feed @feed1, @user
 
     # Feed should disappear completely from the folder
-    page.should_not have_css "#sidebar > li#folder-#{@folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
+    expect(page).not_to have_css "#sidebar > li#folder-#{@folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
   end
 
   it 'shows start page after unsubscribing', js: true do
     read_feed @feed1, @user
-    page.should_not have_css '#start-info', visible: true
+    expect(page).not_to have_css '#start-info', visible: true
 
     unsubscribe_feed @feed1, @user
 
-    page.should have_css '#start-info', visible: true
+    expect(page).to have_css '#start-info', visible: true
   end
 
   it 'still shows the feed for other subscribed users', js: true do
@@ -118,7 +118,7 @@ describe 'unsubscribe from feed', type: :feature do
 
     # user2 should still see the feed in his own list
     login_user_for_feature user2
-    page.should have_css "#folder-none a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+    expect(page).to have_css "#folder-none a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
   end
 
   it 'removes folders without feeds', js: true do
@@ -126,16 +126,16 @@ describe 'unsubscribe from feed', type: :feature do
 
     # Folder should be removed from the sidebar
     within '#sidebar #folders-list' do
-      page.should_not have_content @folder.title
+      expect(page).not_to have_content @folder.title
     end
-    page.should_not have_css "#folders-list li[data-folder-id='#{@folder.id}']"
+    expect(page).not_to have_css "#folders-list li[data-folder-id='#{@folder.id}']"
 
     read_feed @feed2, @user
     # Folder should be removed from the dropdown
     find('#folder-management').click
     within '#folder-management-dropdown ul.dropdown-menu' do
-      page.should_not have_content @folder.title
-      page.should_not have_css "a[data-folder-id='#{@folder.id}']"
+      expect(page).not_to have_content @folder.title
+      expect(page).not_to have_css "a[data-folder-id='#{@folder.id}']"
     end
   end
 
@@ -149,17 +149,17 @@ describe 'unsubscribe from feed', type: :feature do
 
     # Folder should be removed from the sidebar (it has no unread entries)
     within '#sidebar #folders-list' do
-      page.should_not have_content @folder.title
+      expect(page).not_to have_content @folder.title
     end
-    page.should_not have_css "#folders-list li[data-folder-id='#{@folder.id}']"
+    expect(page).not_to have_css "#folders-list li[data-folder-id='#{@folder.id}']"
 
     read_feed @feed2, @user
     # Folder should not be removed from the dropdown (all folders appear in the dropdown, regardless
     # of whether they have unread entries or not)
     find('#folder-management').click
     within '#folder-management-dropdown ul.dropdown-menu' do
-      page.should have_content @folder.title
-      page.should have_css "a[data-folder-id='#{@folder.id}']"
+      expect(page).to have_content @folder.title
+      expect(page).to have_css "a[data-folder-id='#{@folder.id}']"
     end
   end
 
@@ -168,22 +168,22 @@ describe 'unsubscribe from feed', type: :feature do
     @folder.feeds << @feed2
 
     visit read_path
-    page.should have_content @folder.title
+    expect(page).to have_content @folder.title
 
     unsubscribe_feed @feed1, @user
 
     # Folder should not be removed from the sidebar
     within '#sidebar #folders-list' do
-      page.should have_content @folder.title
+      expect(page).to have_content @folder.title
     end
-    page.should have_css "#folders-list [data-folder-id='#{@folder.id}']"
+    expect(page).to have_css "#folders-list [data-folder-id='#{@folder.id}']"
 
     read_feed @feed2, @user
     # Folder should not be removed from the dropdown
     find('#folder-management').click
     within '#folder-management-dropdown ul.dropdown-menu' do
-      page.should have_content @folder.title
-      page.should have_css "a[data-folder-id='#{@folder.id}']"
+      expect(page).to have_content @folder.title
+      expect(page).to have_css "a[data-folder-id='#{@folder.id}']"
     end
   end
 
@@ -192,15 +192,15 @@ describe 'unsubscribe from feed', type: :feature do
     @user.refresh_feed_job_states << job_state
     go_to_start_page
     within '#refresh-state-alerts' do
-      page.should have_text 'Currently refreshing feed'
-      page.should have_content @feed1.title
+      expect(page).to have_text 'Currently refreshing feed'
+      expect(page).to have_content @feed1.title
     end
 
     unsubscribe_feed @feed1, @user
 
-    page.should have_text 'To read a feed, click on its title in the sidebar.'
-    page.should_not have_text 'Currently refreshing feed'
-    page.should_not have_content @feed1.title
+    expect(page).to have_text 'To read a feed, click on its title in the sidebar.'
+    expect(page).not_to have_text 'Currently refreshing feed'
+    expect(page).not_to have_content @feed1.title
   end
 
   it 'removes subscribe job state alert for the unsubscribed feed', js: true do
@@ -209,15 +209,15 @@ describe 'unsubscribe from feed', type: :feature do
     @user.subscribe_job_states << job_state
     go_to_start_page
     within '#subscribe-state-alerts' do
-      page.should have_text 'Successfully added subscription to feed'
-      page.should have_content @feed1.title
+      expect(page).to have_text 'Successfully added subscription to feed'
+      expect(page).to have_content @feed1.title
     end
 
     unsubscribe_feed @feed1, @user
 
-    page.should have_text 'To read a feed, click on its title in the sidebar.'
-    page.should_not have_text 'Successfully added subscription to feed'
-    page.should_not have_content @feed1.title
+    expect(page).to have_text 'To read a feed, click on its title in the sidebar.'
+    expect(page).not_to have_text 'Successfully added subscription to feed'
+    expect(page).not_to have_content @feed1.title
   end
 
 end

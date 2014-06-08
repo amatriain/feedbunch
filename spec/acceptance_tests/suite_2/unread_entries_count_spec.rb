@@ -89,13 +89,13 @@ describe 'unread entries count', type: :feature do
       feed.entries << entry1 << entry2
       job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: feed.fetch_url
 
-      User.any_instance.stub :enqueue_subscribe_job do |user|
+      allow_any_instance_of(User).to receive :enqueue_subscribe_job do |user|
         if user.id == @user.id
           user.subscribe_job_states << job_state
         end
       end
 
-      User.any_instance.stub :find_subscribe_job_state do |user|
+      allow_any_instance_of(User).to receive :find_subscribe_job_state do |user|
         if user.id == @user.id
           user.subscribe feed.fetch_url
           job_state.update state: SubscribeJobState::SUCCESS, feed_id: feed.id
@@ -116,14 +116,14 @@ describe 'unread entries count', type: :feature do
 
     it 'updates number of unread entries when refreshing a feed', js: true do
       read_feed @feed1, @user
-      User.any_instance.stub :refresh_feed do |user|
+      allow_any_instance_of(User).to receive :refresh_feed do |user|
         if user.id == @user.id
           job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed1.id
           user.refresh_feed_job_states << job_state
         end
       end
 
-      User.any_instance.stub :find_refresh_feed_job_state do |user|
+      allow_any_instance_of(User).to receive :find_refresh_feed_job_state do |user|
         if user.id == @user.id
           FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first.update unread_entries: 4
           job_state = RefreshFeedJobState.where(user_id: user.id, feed_id: @feed1.id).first
@@ -134,7 +134,7 @@ describe 'unread entries count', type: :feature do
 
       refresh_feed
 
-      page.should have_text 'Feed refreshed successfully'
+      expect(page).to have_text 'Feed refreshed successfully'
       unread_folder_entries_should_eq 'all', 5
       unread_folder_entries_should_eq @folder1, 5
       unread_feed_entries_should_eq @feed1, 4, @user
@@ -167,10 +167,10 @@ describe 'unread entries count', type: :feature do
     it 'sets total number of unread entries to zero when marking all as read', js: true do
       sleep 0.25
       read_folder 'all'
-      page.should have_text @entry1_1.title
-      page.should have_text @entry1_2.title
-      page.should have_text @entry1_3.title
-      page.should have_text @entry2_1.title
+      expect(page).to have_text @entry1_1.title
+      expect(page).to have_text @entry1_2.title
+      expect(page).to have_text @entry1_3.title
+      expect(page).to have_text @entry2_1.title
       mark_all_as_read
 
       unread_folder_entries_should_eq 'all', 0

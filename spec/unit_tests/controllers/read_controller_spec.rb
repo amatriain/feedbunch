@@ -20,7 +20,7 @@ describe ReadController, type: :controller do
 
     it 'returns success' do
       get :index
-      response.should be_success
+      expect(response).to be_success
     end
   end
 end

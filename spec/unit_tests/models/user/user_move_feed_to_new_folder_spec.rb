@@ -14,7 +14,7 @@ describe User, type: :model do
       @user.move_feed_to_folder @feed, folder_title: @title
 
       @user.reload
-      @user.folders.where(title: @title).should be_present
+      expect(@user.folders.where(title: @title)).to be_present
     end
 
     it 'adds feed to new folder' do
@@ -22,8 +22,8 @@ describe User, type: :model do
       @user.reload
 
       folder = @user.folders.where(title: @title).first
-      folder.feeds.count.should eq 1
-      folder.feeds.should include @feed
+      expect(folder.feeds.count).to eq 1
+      expect(folder.feeds).to include @feed
     end
 
     it 'removes feed from its old folder' do
@@ -31,9 +31,9 @@ describe User, type: :model do
       @user.folders << folder
       folder.feeds << @feed
 
-      folder.feeds.count.should eq 1
+      expect(folder.feeds.count).to eq 1
       @user.move_feed_to_folder @feed, folder_title: @title
-      folder.feeds.count.should eq 0
+      expect(folder.feeds.count).to eq 0
     end
 
     it 'deletes old folder if it has no more feeds' do
@@ -42,7 +42,7 @@ describe User, type: :model do
       folder.feeds << @feed
 
       @user.move_feed_to_folder @feed, folder_title: @title
-      Folder.exists?(folder).should be false
+      expect(Folder.exists?(folder)).to be false
     end
 
     it 'does not delete old folder if it has more feeds' do
@@ -53,13 +53,13 @@ describe User, type: :model do
       folder.feeds << @feed << feed2
 
       @user.move_feed_to_folder @feed, folder_title: @title
-      Folder.exists?(folder).should be true
+      expect(Folder.exists?(folder)).to be true
     end
 
     it 'returns the new folder' do
       folder = @user.move_feed_to_folder @feed, folder_title: @title
-      folder.user_id.should eq @user.id
-      folder.title.should eq @title
+      expect(folder.user_id).to eq @user.id
+      expect(folder.title).to eq @title
     end
 
     it 'raises an error if the user already has a folder with the same title' do

@@ -4,7 +4,7 @@
 # To see if the user is logged in, we check the presence of a "Logout" link in the navbar.
 
 def user_should_be_logged_in
-  page.should have_css 'div.navbar #user-dropdown'
+  expect(page).to have_css 'div.navbar #user-dropdown'
 end
 
 ##
@@ -13,7 +13,7 @@ end
 # To see if the user is not logged in, we check the absence of a "Logout" link in the navbar.
 
 def user_should_not_be_logged_in
-  page.should_not have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+  expect(page).not_to have_css 'div.navbar div.navbar-inner ul li a#sign_out'
 end
 
 ##
@@ -29,10 +29,10 @@ end
 
 def mail_should_be_sent(path: nil, to: nil, text: nil)
   email = ActionMailer::Base.deliveries.pop
-  email.present?.should be true
+  expect(email.present?).to be true
 
   if to.present?
-    email.to.first.should eq to
+    expect(email.to.first).to eq to
   end
 
   href = nil
@@ -55,18 +55,18 @@ def mail_should_be_sent(path: nil, to: nil, text: nil)
       end
     end
 
-    path_ok.should be true if path.present?
-    text_ok.should be true if text.present?
+    expect(path_ok).to be true if path.present?
+    expect(text_ok).to be true if text.present?
   else
     if path.present?
       emailBody = Nokogiri::HTML email.body.to_s
       link = emailBody.at_css "a[href*=\"#{path}\"]"
-      link.present?.should be true
+      expect(link.present?).to be true
       href = link[:href]
     end
 
     if text.present?
-      email.body.to_s.should include text
+      expect(email.body.to_s).to include text
     end
   end
 
@@ -78,7 +78,7 @@ end
 
 def mail_should_not_be_sent
   email = ActionMailer::Base.deliveries.pop
-  email.present?.should be false
+  expect(email.present?).to be false
 end
 
 ##
@@ -88,11 +88,11 @@ end
 def unread_folder_entries_should_eq(folder, count)
   if folder=='all'
     within '#sidebar #folders-list #folder-none #all-feeds span.badge' do
-      page.should have_content "#{count}"
+      expect(page).to have_content "#{count}"
     end
   else
     within "#sidebar #folders-list #folder-#{folder.id} #open-folder-#{folder.id} span.folder-unread-badge" do
-      page.should have_content "#{count}"
+      expect(page).to have_content "#{count}"
     end
   end
 end
@@ -109,7 +109,7 @@ def unread_feed_entries_should_eq(feed, count, user)
   folder_id = folder.try(:id) || 'none'
   open_folder folder if folder.present?
   within "#sidebar #folders-list #folder-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed.id}'] span.badge" do
-    page.should have_content "#{count}"
+    expect(page).to have_content "#{count}"
   end
 end
 
@@ -118,27 +118,27 @@ end
 # after 5 seconds.
 
 def should_show_alert(alert_id)
-  page.should have_css "div##{alert_id}", visible: true
+  expect(page).to have_css "div##{alert_id}", visible: true
 
   # It should close automatically after 5 seconds
   sleep 5
-  page.should_not have_css "div##{alert_id}", visible: true
+  expect(page).not_to have_css "div##{alert_id}", visible: true
 end
 
 ##
 # Test that an alert with the passed id is hidden-
 
 def should_hide_alert(alert_id)
-  page.should_not have_css "div##{alert_id}", visible: true
+  expect(page).not_to have_css "div##{alert_id}", visible: true
 end
 
 ##
 # Test that the passed entry is visible.
 
 def entry_should_be_visible(entry)
-  page.should have_css "#feed-entries #entry-#{entry.id}"
+  expect(page).to have_css "#feed-entries #entry-#{entry.id}"
   within "#feed-entries #entry-#{entry.id}" do
-    page.should have_text entry.title, visible: true
+    expect(page).to have_text entry.title, visible: true
   end
 end
 
@@ -146,58 +146,58 @@ end
 # Test that the passed entry is not visible.
 
 def entry_should_not_be_visible(entry)
-  page.should_not have_css "#feed-entries #entry-#{entry.id}"
+  expect(page).not_to have_css "#feed-entries #entry-#{entry.id}"
 end
 
 ##
 # Test that the passed entry is visible and marked as read
 
 def entry_should_be_marked_read(entry)
-  page.should have_css "a[data-entry-id='#{entry.id}'].entry-read"
+  expect(page).to have_css "a[data-entry-id='#{entry.id}'].entry-read"
 end
 
 ##
 # Test that the passed entry is visible and marked as unread
 
 def entry_should_be_marked_unread(entry)
-  page.should have_css "a[data-entry-id='#{entry.id}'].entry-unread"
+  expect(page).to have_css "a[data-entry-id='#{entry.id}'].entry-unread"
 end
 
 ##
 # Test that the passed entry is open.
 
 def entry_should_be_open(entry)
-  page.should have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.in"
+  expect(page).to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.in"
 end
 
 ##
 # Test that the passed entry is open.
 
 def entry_should_be_closed(entry)
-  page.should have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary", visible: false
-  page.should_not have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.in", visible: false
-  page.should_not have_text entry.summary
+  expect(page).to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary", visible: false
+  expect(page).not_to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.in", visible: false
+  expect(page).not_to have_text entry.summary
 end
 
 ##
 # Test that the passed feed is currently selected for reading
 
 def feed_should_be_selected(feed)
-  page.should have_css "#sidebar .active > [data-sidebar-feed][data-feed-id='#{feed.id}']"
+  expect(page).to have_css "#sidebar .active > [data-sidebar-feed][data-feed-id='#{feed.id}']"
 end
 
 ##
 # Test that the passed folder is open in the sidebar
 
 def folder_should_be_open(folder)
-  page.should have_css "#sidebar #folders-list #folder-#{folder.id}"
-  page.should have_css "#sidebar #folders-list #feeds-#{folder.id}.in"
+  expect(page).to have_css "#sidebar #folders-list #folder-#{folder.id}"
+  expect(page).to have_css "#sidebar #folders-list #feeds-#{folder.id}.in"
 end
 
 ##
 # Test that the passed folder is closed in the sidebar
 
 def folder_should_be_closed(folder)
-  page.should have_css "#sidebar #folders-list #folder-#{folder.id}"
-  page.should_not have_css "#sidebar #folders-list #feeds-#{folder.id}.in"
+  expect(page).to have_css "#sidebar #folders-list #folder-#{folder.id}"
+  expect(page).not_to have_css "#sidebar #folders-list #feeds-#{folder.id}.in"
 end

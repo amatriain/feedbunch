@@ -5,7 +5,7 @@ describe FixSchedulesJob do
   before :each do
     @feed = FactoryGirl.create :feed
 
-    Resque.stub :fetch_schedule do
+    allow(Resque).to receive :fetch_schedule do
       {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"3600s"}
     end
   end
@@ -13,7 +13,7 @@ describe FixSchedulesJob do
   it 'adds missing scheduled feed updates' do
     feed_unscheduled = FactoryGirl.create :feed
     # @feed has scheduled updates, feed_unscheduled does not
-    Resque.stub :fetch_schedule do |name|
+    allow(Resque).to receive :fetch_schedule do |name|
       if name == "update_feed_#{@feed.id}"
         {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"3600s"}
       else
@@ -22,11 +22,11 @@ describe FixSchedulesJob do
     end
 
     # A job to schedule updates for feed_unscheduled should be enqueued to be run in the next hour
-    Resque.should_receive(:set_schedule).once do |name, config|
-      name.should eq "update_feed_#{feed_unscheduled.id}"
-      config[:class].should eq 'ScheduledUpdateFeedJob'
-      config[:args].should eq feed_unscheduled.id
-      config[:every][0].should eq '3600s'
+    expect(Resque).to receive(:set_schedule).once do |name, config|
+      expect(name).to eq "update_feed_#{feed_unscheduled.id}"
+      expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
+      expect(config[:args]).to eq feed_unscheduled.id
+      expect(config[:every][0]).to eq '3600s'
     end
 
     FixSchedulesJob.perform
@@ -37,16 +37,16 @@ describe FixSchedulesJob do
     @feed.update fetch_interval_secs: 12.hours
 
     time_now = Time.zone.parse('2000-01-01 10:00:00')
-    ActiveSupport::TimeZone.any_instance.stub(:now).and_return time_now
-    Resque.stub :fetch_schedule
+    allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return time_now
+    allow(Resque).to receive :fetch_schedule
 
     # A job to schedule updates for @feed should be enqueued to be run at 2000-01-01 13:00:00
-    Resque.should_receive(:set_schedule).once do |name, config|
-      name.should eq "update_feed_#{@feed.id}"
-      config[:class].should eq 'ScheduledUpdateFeedJob'
-      config[:args].should eq @feed.id
-      config[:every][0].should eq "#{12.hours}s"
-      config[:every][1][:first_in].should eq 3.hours
+    expect(Resque).to receive(:set_schedule).once do |name, config|
+      expect(name).to eq "update_feed_#{@feed.id}"
+      expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
+      expect(config[:args]).to eq @feed.id
+      expect(config[:every][0]).to eq "#{12.hours}s"
+      expect(config[:every][1][:first_in]).to eq 3.hours
     end
 
     FixSchedulesJob.perform
@@ -57,41 +57,41 @@ describe FixSchedulesJob do
     @feed.update fetch_interval_secs: 12.hours
 
     time_now = Time.zone.parse('2000-01-02 01:00:00')
-    ActiveSupport::TimeZone.any_instance.stub(:now).and_return time_now
-    Resque.stub :fetch_schedule
+    allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return time_now
+    allow(Resque).to receive :fetch_schedule
 
     # A job to schedule updates for @feed should be enqueued to be run immediately
-    Resque.should_receive(:set_schedule).once do |name, config|
-      name.should eq "update_feed_#{@feed.id}"
-      config[:class].should eq 'ScheduledUpdateFeedJob'
-      config[:args].should eq @feed.id
-      config[:every][0].should eq "#{12.hours}s"
-      config[:every][1][:first_in].should be_between 0.minutes, 15.minutes
+    expect(Resque).to receive(:set_schedule).once do |name, config|
+      expect(name).to eq "update_feed_#{@feed.id}"
+      expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
+      expect(config[:args]).to eq @feed.id
+      expect(config[:every][0]).to eq "#{12.hours}s"
+      expect(config[:every][1][:first_in]).to be_between 0.minutes, 15.minutes
     end
 
     FixSchedulesJob.perform
   end
 
   it 'schedules next update in the following hour if feed has never been updated' do
-    Resque.stub :fetch_schedule
+    allow(Resque).to receive :fetch_schedule
 
     # A job to schedule updates for @feed should be scheduled sometime during the next hour
-    Resque.should_receive(:set_schedule).once do |name, config|
-      name.should eq "update_feed_#{@feed.id}"
-      config[:class].should eq 'ScheduledUpdateFeedJob'
-      config[:args].should eq @feed.id
-      config[:every][0].should eq "#{1.hour}s"
-      config[:every][1][:first_in].should be_between 0.minutes, 60.minutes
+    expect(Resque).to receive(:set_schedule).once do |name, config|
+      expect(name).to eq "update_feed_#{@feed.id}"
+      expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
+      expect(config[:args]).to eq @feed.id
+      expect(config[:every][0]).to eq "#{1.hour}s"
+      expect(config[:every][1][:first_in]).to be_between 0.minutes, 60.minutes
     end
 
-    @feed.last_fetched.should be_nil
+    expect(@feed.last_fetched).to be_nil
     FixSchedulesJob.perform
   end
 
   it 'does nothing for existing feed updates' do
     feed_scheduled = FactoryGirl.create :feed
     # @feed and feed_scheduled have scheduled updates
-    Resque.stub :fetch_schedule do |name|
+    allow(Resque).to receive :fetch_schedule do |name|
       if name == "update_feed_#{@feed.id}"
         {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"1h"}
       elsif name == "update_feed_#{feed_scheduled.id}"
@@ -100,16 +100,16 @@ describe FixSchedulesJob do
     end
 
     # No job to schedule updates should be enqueued
-    Resque.should_not_receive :set_schedule
+    expect(Resque).not_to receive :set_schedule
 
     FixSchedulesJob.perform
   end
 
   it 'does not add a schedule for an unavailable feed' do
     @feed.update available: false
-    Resque.stub :fetch_schedule
+    allow(Resque).to receive :fetch_schedule
 
-    Resque.should_not_receive :set_schedule
+    expect(Resque).not_to receive :set_schedule
 
     FixSchedulesJob.perform
   end

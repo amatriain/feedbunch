@@ -8,24 +8,24 @@ describe User, type: :model do
   context 'validations' do
     it 'does now allow empty emails' do
       user = FactoryGirl.build :user, email: nil
-      user.should_not be_valid
+      expect(user).not_to be_valid
     end
 
     it 'does not allow duplicate emails' do
       user_dupe = FactoryGirl.build :user, email: @user.email
-      user_dupe.valid?.should be false
+      expect(user_dupe.valid?).to be false
     end
 
     it 'does not allow duplicate names' do
       user_dupe = FactoryGirl.build :user, name: @user.name
-      user_dupe.valid?.should be false
+      expect(user_dupe.valid?).to be false
     end
 
     it 'uses the email if no name is provided' do
       user = FactoryGirl.build :user, name: nil
       user.save!
-      user.name.should be_present
-      user.name.should eq user.email
+      expect(user.name).to be_present
+      expect(user.name).to eq user.email
     end
   end
 
@@ -36,19 +36,19 @@ describe User, type: :model do
     end
 
     it 'deletes folders when deleting a user' do
-      Folder.count.should eq 1
+      expect(Folder.count).to eq 1
       @user.destroy
-      Folder.count.should eq 0
+      expect(Folder.count).to eq 0
     end
 
     it 'does not allow associating to the same folder more than once' do
-      @user.folders.count.should eq 1
-      @user.folders.should include @folder
+      expect(@user.folders.count).to eq 1
+      expect(@user.folders).to include @folder
 
       @user.folders << @folder
 
-      @user.folders.count.should eq 1
-      @user.folders.first.should eq @folder
+      expect(@user.folders.count).to eq 1
+      expect(@user.folders.first).to eq @folder
     end
 
   end
@@ -61,9 +61,9 @@ describe User, type: :model do
       feed.entries << entry1 << entry2
       @user.subscribe feed.fetch_url
 
-      @user.entry_states.count.should eq 2
-      @user.entry_states.where(entry_id: entry1.id).count.should eq 1
-      @user.entry_states.where(entry_id: entry2.id).count.should eq 1
+      expect(@user.entry_states.count).to eq 2
+      expect(@user.entry_states.where(entry_id: entry1.id).count).to eq 1
+      expect(@user.entry_states.where(entry_id: entry2.id).count).to eq 1
     end
 
     it 'deletes entry states when deleting a user' do
@@ -72,9 +72,9 @@ describe User, type: :model do
       feed.entries << entry
       @user.subscribe feed.fetch_url
 
-      EntryState.count.should eq 1
+      expect(EntryState.count).to eq 1
       @user.destroy
-      EntryState.count.should eq 0
+      expect(EntryState.count).to eq 0
     end
 
     it 'does not allow duplicate entry states' do
@@ -83,12 +83,12 @@ describe User, type: :model do
       feed.entries << entry
       @user.subscribe feed.fetch_url
 
-      @user.entry_states.count.should eq 1
+      expect(@user.entry_states.count).to eq 1
 
       entry_state = FactoryGirl.build :entry_state, user_id: @user.id, entry_id: entry.id
       @user.entry_states << entry_state
 
-      @user.entry_states.count.should eq 1
+      expect(@user.entry_states.count).to eq 1
     end
 
     it 'saves unread entry states for all feed entries when subscribing to a feed' do
@@ -98,9 +98,9 @@ describe User, type: :model do
       feed.entries << entry1 << entry2
 
       @user.subscribe feed.fetch_url
-      @user.entry_states.count.should eq 2
-      @user.entry_states.where(entry_id: entry1.id, read: false).should be_present
-      @user.entry_states.where(entry_id: entry2.id, read: false).should be_present
+      expect(@user.entry_states.count).to eq 2
+      expect(@user.entry_states.where(entry_id: entry1.id, read: false)).to be_present
+      expect(@user.entry_states.where(entry_id: entry2.id, read: false)).to be_present
     end
 
     it 'removes entry states for all feed entries when unsubscribing from a feed' do
@@ -110,9 +110,9 @@ describe User, type: :model do
       feed.entries << entry1 << entry2
       @user.subscribe feed.fetch_url
 
-      @user.entry_states.count.should eq 2
+      expect(@user.entry_states.count).to eq 2
       @user.unsubscribe feed
-      @user.entry_states.count.should eq 0
+      expect(@user.entry_states.count).to eq 0
     end
 
     it 'does not affect entry states for other feeds when unsubscribing from a feed' do
@@ -125,10 +125,10 @@ describe User, type: :model do
       @user.subscribe feed1.fetch_url
       @user.subscribe feed2.fetch_url
 
-      @user.entry_states.count.should eq 2
+      expect(@user.entry_states.count).to eq 2
       @user.unsubscribe feed1
-      @user.entry_states.count.should eq 1
-      @user.entry_states.where(user_id: @user.id, entry_id: entry2.id).should be_present
+      expect(@user.entry_states.count).to eq 1
+      expect(@user.entry_states.where(user_id: @user.id, entry_id: entry2.id)).to be_present
     end
 
   end
@@ -141,17 +141,17 @@ describe User, type: :model do
     end
 
     it 'deletes opml_import_job_states when deleting a user' do
-      OpmlImportJobState.count.should eq 1
+      expect(OpmlImportJobState.count).to eq 1
       @user.destroy
-      OpmlImportJobState.count.should eq 0
+      expect(OpmlImportJobState.count).to eq 0
     end
 
     it 'deletes the old opml_import_job_state when adding a new one for a user' do
-      OpmlImportJobState.exists?(@opml_import_job_state).should be true
+      expect(OpmlImportJobState.exists?(@opml_import_job_state)).to be true
       opml_import_job_state2 = FactoryGirl.build :opml_import_job_state, user_id: @user.id
       @user.opml_import_job_state = opml_import_job_state2
 
-      OpmlImportJobState.exists?(@opml_import_job_state).should be false
+      expect(OpmlImportJobState.exists?(@opml_import_job_state)).to be false
     end
   end
 
@@ -163,17 +163,17 @@ describe User, type: :model do
     end
 
     it 'deletes opml_export_job_states when deleting a user' do
-      OpmlExportJobState.count.should eq 1
+      expect(OpmlExportJobState.count).to eq 1
       @user.destroy
-      OpmlExportJobState.count.should eq 0
+      expect(OpmlExportJobState.count).to eq 0
     end
 
     it 'deletes the old opml_export_job_state when adding a new one for a user' do
-      OpmlExportJobState.exists?(@opml_export_job_state).should be true
+      expect(OpmlExportJobState.exists?(@opml_export_job_state)).to be true
       opml_export_job_state2 = FactoryGirl.build :opml_export_job_state, user_id: @user.id
       @user.opml_export_job_state = opml_export_job_state2
 
-      OpmlExportJobState.exists?(@opml_export_job_state).should be false
+      expect(OpmlExportJobState.exists?(@opml_export_job_state)).to be false
     end
   end
 
@@ -188,9 +188,9 @@ describe User, type: :model do
     end
 
     it 'deletes refresh_feed_job_states when deleting a user' do
-      RefreshFeedJobState.count.should eq 1
+      expect(RefreshFeedJobState.count).to eq 1
       @user.destroy
-      RefreshFeedJobState.count.should eq 0
+      expect(RefreshFeedJobState.count).to eq 0
     end
 
     it 'deletes refresh_feed_job_states when unsubscribing from a feed' do
@@ -198,9 +198,9 @@ describe User, type: :model do
       user2 = FactoryGirl.create :user
       user2.subscribe @feed.fetch_url
 
-      RefreshFeedJobState.count.should eq 1
+      expect(RefreshFeedJobState.count).to eq 1
       @user.unsubscribe @feed
-      RefreshFeedJobState.count.should eq 0
+      expect(RefreshFeedJobState.count).to eq 0
     end
   end
 
@@ -216,9 +216,9 @@ describe User, type: :model do
     end
 
     it 'deletes subscribe_job_states when deleting a user' do
-      SubscribeJobState.count.should eq 1
+      expect(SubscribeJobState.count).to eq 1
       @user.destroy
-      SubscribeJobState.count.should eq 0
+      expect(SubscribeJobState.count).to eq 0
     end
 
     it 'deletes subscribe_job_states when unsubscribing from a feed' do
@@ -226,9 +226,9 @@ describe User, type: :model do
       user2 = FactoryGirl.create :user
       user2.subscribe @feed.fetch_url
 
-      SubscribeJobState.count.should eq 1
+      expect(SubscribeJobState.count).to eq 1
       @user.unsubscribe @feed
-      SubscribeJobState.count.should eq 0
+      expect(SubscribeJobState.count).to eq 0
     end
   end
 
@@ -237,13 +237,13 @@ describe User, type: :model do
     it 'gives a default english locale' do
       user = FactoryGirl.build :user, locale: nil
       user.save!
-      user.locale.should eq 'en'
+      expect(user.locale).to eq 'en'
     end
 
     it 'defaults to english if the passed locale is not supported' do
       user = FactoryGirl.build :user, locale: 'not-supported-locale'
       user.save!
-      user.locale.should eq 'en'
+      expect(user.locale).to eq 'en'
     end
 
   end
@@ -253,13 +253,13 @@ describe User, type: :model do
     it 'gives a default UTC timezone' do
       user = FactoryGirl.build :user, timezone: nil
       user.save!
-      user.timezone.should eq 'UTC'
+      expect(user.timezone).to eq 'UTC'
     end
 
     it 'defaults to UTC if the passed timezone is not supported' do
       user = FactoryGirl.build :user, timezone: 'Amber/Castle Amber'
       user.save!
-      user.timezone.should eq 'UTC'
+      expect(user.timezone).to eq 'UTC'
     end
 
   end
@@ -269,14 +269,14 @@ describe User, type: :model do
     it 'gives a default value of false' do
       user = FactoryGirl.build :user, quick_reading: nil
       user.save!
-      user.quick_reading.should_not be_nil
-      user.quick_reading.should be false
+      expect(user.quick_reading).not_to be_nil
+      expect(user.quick_reading).to be false
     end
 
     it 'defaults to false if the passed value is not supported' do
       user = FactoryGirl.build :user, quick_reading: 'not-valid-boolean'
       user.save!
-      user.quick_reading.should be false
+      expect(user.quick_reading).to be false
     end
   end
 
@@ -285,14 +285,14 @@ describe User, type: :model do
     it 'gives a default value of false' do
       user = FactoryGirl.build :user, open_all_entries: nil
       user.save!
-      user.open_all_entries.should_not be_nil
-      user.open_all_entries.should be false
+      expect(user.open_all_entries).not_to be_nil
+      expect(user.open_all_entries).to be false
     end
 
     it 'defaults to false if the passed value is not supported' do
       user = FactoryGirl.build :user, open_all_entries: 'not-valid-boolean'
       user.save!
-      user.open_all_entries.should be false
+      expect(user.open_all_entries).to be false
     end
   end
 

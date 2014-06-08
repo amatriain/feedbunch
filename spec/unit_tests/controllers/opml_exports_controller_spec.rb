@@ -11,12 +11,12 @@ describe Api::OpmlExportsController, type: :controller do
 
     it 'returns export process state successfully' do
       get :show, format: :json
-      response.status.should eq 200
+      expect(response.status).to eq 200
     end
 
     it 'assigns the correct opml_export_job_state' do
       get :show, format: :json
-      assigns(:opml_export_job_state).should eq @user.opml_export_job_state
+      expect(assigns(:opml_export_job_state)).to eq @user.opml_export_job_state
     end
 
   end
@@ -24,21 +24,21 @@ describe Api::OpmlExportsController, type: :controller do
   context 'POST create' do
 
     it 'redirects to main application page if successful' do
-      User.any_instance.stub :export_subscriptions
+      allow_any_instance_of(User).to receive :export_subscriptions
       post :create
-      response.should redirect_to read_path
+      expect(response).to redirect_to read_path
     end
 
     it 'redirects to main application page if an error happens' do
-      User.any_instance.stub(:export_subscriptions).and_raise StandardError.new
+      allow_any_instance_of(User).to receive(:export_subscriptions).and_raise StandardError.new
       post :create
-      response.should redirect_to read_path
+      expect(response).to redirect_to read_path
     end
 
     it 'creates a OpmlExportJobState instance with ERROR state if an error happens' do
-      User.any_instance.stub(:export_subscriptions).and_raise StandardError.new
+      allow_any_instance_of(User).to receive(:export_subscriptions).and_raise StandardError.new
       post :create
-      @user.reload.opml_export_job_state.state.should eq OpmlExportJobState::ERROR
+      expect(@user.reload.opml_export_job_state.state).to eq OpmlExportJobState::ERROR
     end
   end
 
@@ -46,18 +46,18 @@ describe Api::OpmlExportsController, type: :controller do
 
     it 'asigns the correct OpmlExportJobState' do
       put :update, opml_export: {show_alert: 'false'}, format: :json
-      assigns(:opml_export_job_state).should eq @user.opml_export_job_state
+      expect(assigns(:opml_export_job_state)).to eq @user.opml_export_job_state
     end
 
     it 'returns success' do
       put :update, opml_export: {show_alert: 'false'}, format: :json
-      response.should be_success
+      expect(response).to be_success
     end
 
     it 'returns 500 if there is a problem changing the alert visibility' do
-      User.any_instance.stub(:set_opml_export_job_state_visible).and_raise StandardError.new
+      allow_any_instance_of(User).to receive(:set_opml_export_job_state_visible).and_raise StandardError.new
       put :update, opml_export: {show_alert: 'false'}, format: :json
-      response.status.should eq 500
+      expect(response.status).to eq 500
     end
   end
 
@@ -86,7 +86,7 @@ describe Api::OpmlExportsController, type: :controller do
       @folder.feeds << @feed3 << @feed4
 
       time_now = Time.zone.parse '2000-01-01'
-      ActiveSupport::TimeZone.any_instance.stub(:now).and_return time_now
+      allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return time_now
 
       @opml_data = <<OPML_DOCUMENT
 <?xml version="1.0" encoding="UTF-8"?>
@@ -108,25 +108,25 @@ describe Api::OpmlExportsController, type: :controller do
 </opml>
 OPML_DOCUMENT
 
-      Feedbunch::Application.config.uploads_manager.stub(:read).and_return @opml_data
-      Feedbunch::Application.config.uploads_manager.stub(:exists?).and_return true
+      allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return @opml_data
+      allow(Feedbunch::Application.config.uploads_manager).to receive(:exists?).and_return true
     end
 
     it 'assigns the correct OPML data' do
       get :download, format: :json
-      assigns(:data).should eq @opml_data
+      expect(assigns(:data)).to eq @opml_data
     end
 
     it 'redirects to main application page if an error happens' do
-      User.any_instance.stub(:get_opml_export).and_raise OpmlExportDoesNotExistError.new
+      allow_any_instance_of(User).to receive(:get_opml_export).and_raise OpmlExportDoesNotExistError.new
       get :download, format: :json
-      response.should redirect_to read_path
+      expect(response).to redirect_to read_path
     end
 
     it 'puts alert in flash if an error happens' do
-      User.any_instance.stub(:get_opml_export).and_raise OpmlExportDoesNotExistError.new
+      allow_any_instance_of(User).to receive(:get_opml_export).and_raise OpmlExportDoesNotExistError.new
       get :download, format: :json
-      flash[:alert].should_not be_blank
+      expect(flash[:alert]).not_to be_blank
     end
   end
 

@@ -17,7 +17,7 @@ describe FileClient do
 
   it 'saves file in some folder' do
     FileClient.save @user, @upload_folder, @filename, @file_content
-    FileTest.exists?(@filepath).should be true
+    expect(FileTest.exists?(@filepath)).to be true
   end
 
   it 'deletes file from uploads folder' do
@@ -25,7 +25,7 @@ describe FileClient do
     File.open(@filepath, 'w'){|f| f.write @file_content}
 
     FileClient.delete @user, @upload_folder, @filename
-    FileTest.exists?(@filepath).should be false
+    expect(FileTest.exists?(@filepath)).to be false
   end
 
   it 'reads file from uploads folder' do
@@ -33,15 +33,15 @@ describe FileClient do
     File.open(@filepath, 'w') {|f| f.write @file_content}
 
     contents = FileClient.read @user, @upload_folder, @filename
-    contents.should eq @file_content
+    expect(contents).to eq @file_content
   end
 
   it 're-raises any errors' do
     FileUtils.mkdir_p File.dirname(@filepath)
     File.open(@filepath, 'w') {|f| f.write @file_content}
     error = StandardError.new
-    File.stub(:open).and_raise error
-    File.stub(:delete).and_raise error
+    allow(File).to receive(:open).and_raise error
+    allow(File).to receive(:delete).and_raise error
 
     expect {FileClient.save @user, @upload_folder, @filename, @file_content}.to raise_error(StandardError)
     expect {FileClient.delete @user, @upload_folder, @filename}.to raise_error(StandardError)
@@ -49,11 +49,11 @@ describe FileClient do
 
   it 'returns true if file exists' do
     FileClient.save @user, @upload_folder, @filename, @file_content
-    FileClient.exists?(@user, @upload_folder, @filename).should be true
+    expect(FileClient.exists?(@user, @upload_folder, @filename)).to be true
   end
 
   it 'returns false if file does not exist' do
-    FileClient.exists?(@user, @upload_folder, @filename).should be false
+    expect(FileClient.exists?(@user, @upload_folder, @filename)).to be false
   end
 
 end
