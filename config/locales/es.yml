@@ -35,6 +35,7 @@ es:
       github: "Código fuente disponible en Github"
       twitter: "Síguenos en Twitter"
       email: "Envíanos un email"
+      acknowledgements: "Agradecimientos:"
       img_credit: "Icono de feed"
       by: "por"
       based_on: "basado en una image por"
