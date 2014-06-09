@@ -4,30 +4,25 @@
 
 
 <div class="row">
-  <div class="col-xs-12 col-md-10 col-md-offset-1 well">
 
-    <div class="row">
+  <div class="col-xs-12 col-md-8">
+    <%= simple_form_for resource, :as => resource_name,
+                        :url => user_unlock_path(locale: I18n.locale),
+                        html: {:method => :post} do |f| %>
+      <%= f.input :email, as: :email_icon, autofocus: true %>
 
-      <div class="col-xs-12 col-md-8">
-        <%= simple_form_for resource, :as => resource_name,
-                            :url => user_unlock_path(locale: I18n.locale),
-                            html: {:method => :post} do |f| %>
-          <%= f.input :email, as: :email_icon, autofocus: true %>
-
-          <div class="form-group">
-            <div class="col-xs-12 col-sm-9 col-sm-offset-3">
-              <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
-                <i class="fa fa-share"></i> <%= t 'devise.views.send_unlock' %>
-              <% end %>
-            </div>
-          </div>
-
-        <% end %>
+      <div class="form-group">
+        <div class="col-xs-12 col-sm-9 col-sm-offset-3">
+          <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
+            <i class="fa fa-share"></i> <%= t 'devise.views.send_unlock' %>
+          <% end %>
+        </div>
       </div>
 
-      <div class="col-xs-12 col-md-4 col-sm-offset-3 col-md-offset-0">
-        <%= render 'devise/shared/links' %>
-      </div>
-    </div>
+    <% end %>
+  </div>
+
+  <div class="col-xs-12 col-md-4 col-sm-offset-3 col-md-offset-0">
+    <%= render 'devise/shared/links' %>
   </div>
 </div>

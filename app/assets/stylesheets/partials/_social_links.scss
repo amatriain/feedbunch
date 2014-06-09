@@ -1,0 +1,21 @@
+#social-links {
+  margin-bottom: -20px;
+  text-align: center;
+
+  #github-footer-link,
+  #twitter-footer-link,
+  #email-footer-link {
+    color: #787878;
+  }
+
+  #github-footer-link, #twitter-footer-link {
+    + .tooltip.top {
+      margin-top: -15px;
+    }
+  }
+
+  #email-footer-link {
+    font-size: 2em;
+    text-decoration: none;
+  }
+}

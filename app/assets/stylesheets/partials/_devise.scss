@@ -11,15 +11,14 @@
 }
 
 #devise-view {
-
-  #devise-locale-dropdown {
-    position: fixed;
-    top: -20px;
-    width: 100%;
-    padding-right: 40px;
-  }
+  padding-top: 50px;
 
   .page-header {
+
+    h1 {
+      font-size: 36px;
+    }
+
     img {
       margin-right: 10px;
       max-width: 20%;

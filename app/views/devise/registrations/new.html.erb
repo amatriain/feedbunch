@@ -3,34 +3,29 @@
 <% end %>
 
 <div class="row">
-  <div class="col-xs-12 col-md-10 col-md-offset-1 well">
 
-    <div class="row">
+  <div class="col-xs-12 col-md-8">
+    <%= simple_form_for resource, :as => resource_name,
+                        :url => user_registration_path(locale: I18n.locale) do |f| %>
+      <%= f.input :email, as: :email_icon, autofocus: true %>
+      <%= f.input :name, as: :user_icon, required: false %>
+      <%= f.input :password, as: :password_icon %>
+      <%= f.input :password_confirmation, as: :password_icon,
+                  placeholder: t('simple_form.placeholders.user.password_confirmation')%>
+      <%= f.input :locale, as: :locale, required: false %>
+      <%= f.input :timezone, as: :timezone_clock_icon, required: false %>
 
-      <div class="col-xs-12 col-md-8">
-        <%= simple_form_for resource, :as => resource_name,
-                            :url => user_registration_path(locale: I18n.locale) do |f| %>
-          <%= f.input :email, as: :email_icon, autofocus: true %>
-          <%= f.input :name, as: :user_icon, required: false %>
-          <%= f.input :password, as: :password_icon %>
-          <%= f.input :password_confirmation, as: :password_icon,
-                      placeholder: t('simple_form.placeholders.user.password_confirmation')%>
-          <%= f.input :locale, as: :locale, required: false %>
-          <%= f.input :timezone, as: :timezone_clock_icon, required: false %>
-
-          <div class="form-group">
-            <div class="col-xs-12 col-sm-9 col-sm-offset-3">
-              <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
-                <i class="fa fa-plus-circle"></i> <%= t 'devise.views.sign_up' %>
-              <% end %>
-            </div>
-          </div>
-      <% end %>
+      <div class="form-group">
+        <div class="col-xs-12 col-sm-9 col-sm-offset-3">
+          <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
+            <i class="fa fa-plus-circle"></i> <%= t 'devise.views.sign_up' %>
+          <% end %>
+        </div>
       </div>
+  <% end %>
+  </div>
 
-      <div class="col-xs-12 col-md-4 col-sm-offset-3 col-md-offset-0">
-        <%= render 'devise/shared/links' %>
-      </div>
-    </div>
+  <div class="col-xs-12 col-md-4 col-sm-offset-3 col-md-offset-0">
+    <%= render 'devise/shared/links' %>
   </div>
 </div>
