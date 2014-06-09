@@ -1,64 +1,44 @@
-<hr>
+<div class="container">
 
-<div id="footer">
+  <div id="footer" class="jumbotron">
 
-  <a id="github-footer-link"
-     href="https://github.com/amatriain/feedbunch"
-     target="_blank"
-     data-toggle="tooltip"
-     data-placement="top"
-     title="<%= t 'layouts.footer.github' %>">
-    <i class="fa fa-github fa-2x fa-fw"></i></a>
+    <div class="credit-line">
 
-  <a id="twitter-footer-link"
-     href="https://twitter.com/feedbunch"
-     target="_blank"
-     data-toggle="tooltip"
-     data-placement="top"
-     title="<%= t 'layouts.footer.twitter' %>">
-    <i class="fa fa-twitter fa-2x fa-fw"></i></a>
+      <p>
+        <%= link_to 'Bootstrap', 'http://getbootstrap.com', target: '_blank' %> &copy; Twitter, Inc / <%= link_to t('layouts.footer.bootstrap_license'), 'https://github.com/twbs/bootstrap/blob/master/LICENSE', target: '_blank' %>
+      </p>
 
-  <%= mail_to Feedbunch::Application.config.admin_email, '@',
-             id: 'email-footer-link',
-             'data-toggle' => 'tooltip',
-             'data-placement' => 'top',
-             title: t('layouts.footer.email') %>
+      <p>
+        <%= link_to 'AngularJS', 'https://angularjs.org/', target: '_blank' %> &copy; Google, Inc / <%= link_to t('layouts.footer.angularjs_license'), 'https://github.com/angular/angular.js/blob/master/LICENSE', target: '_blank' %>
+      </p>
 
-  <div class="credit-line small">
+      <p>
+        <%= link_to 'Font Awesome', 'http://fontawesome.io', target: '_blank' %> <%= t 'layouts.footer.by' %> Dave Gandy
+      </p>
 
-    <p>
-      <%= link_to 'Bootstrap', 'http://getbootstrap.com', target: '_blank' %> &copy; Twitter, Inc / <%= link_to t('layouts.footer.bootstrap_license'), 'https://github.com/twbs/bootstrap/blob/master/LICENSE', target: '_blank' %>
-    </p>
+      <p>
+        <%= link_to t('layouts.footer.img_credit'), 'http://commons.wikimedia.org/wiki/File:Generic_Feed-icon.svg', target: '_blank' %>
+        <%= t 'layouts.footer.by' %>
+        <%= link_to 'Jahoe', 'http://commons.wikimedia.org/wiki/User:Jahoe', target: '_blank' %>
+        <%= t 'layouts.footer.based_on' %> Mozilla Foundation.
+        <%= t 'layouts.footer.license_mozilla_1' %>
+        <%= link_to 'MPL', 'http://en.wikipedia.org/wiki/Mozilla_Public_License', target: '_blank' %>
+        /
+        <%= link_to 'GPL', 'http://commons.wikimedia.org/wiki/GPL', target: '_blank' %>
+        /
+        <%= link_to 'LGPL', 'http://commons.wikimedia.org/wiki/LGPL', target: '_blank' %>
+        <%= t 'layouts.footer.license_mozilla_2' %>
+      </p>
 
-    <p>
-      <%= link_to 'AngularJS', 'https://angularjs.org/', target: '_blank' %> &copy; Google, Inc / <%= link_to t('layouts.footer.angularjs_license'), 'https://github.com/angular/angular.js/blob/master/LICENSE', target: '_blank' %>
-    </p>
+      <p>
+        <%= link_to 'Ruby on Rails', 'http://rubyonrails.org/', target: '_blank' %> <%= t 'layouts.footer.by' %> David Heinemeier Hansson / <%= link_to t('layouts.footer.rails_license'), 'http://www.opensource.org/licenses/mit-license.php', target: '_blank' %>
+      </p>
 
-    <p>
-      <%= link_to 'Font Awesome', 'http://fontawesome.io', target: '_blank' %> <%= t 'layouts.footer.by' %> Dave Gandy
-    </p>
+      <p>
+        <%= link_to 'Ruby', 'https://www.ruby-lang.org', target: '_blank' %> &copy; Yukihiro Matsumoto / <%= link_to t('layouts.footer.ruby_license'), 'https://www.ruby-lang.org/en/about/license.txt', target: '_blank' %>
+      </p>
 
-    <p>
-      <%= link_to t('layouts.footer.img_credit'), 'http://commons.wikimedia.org/wiki/File:Generic_Feed-icon.svg', target: '_blank' %>
-      <%= t 'layouts.footer.by' %>
-      <%= link_to 'Jahoe', 'http://commons.wikimedia.org/wiki/User:Jahoe', target: '_blank' %>
-      <%= t 'layouts.footer.based_on' %> Mozilla Foundation.
-      <%= t 'layouts.footer.license_mozilla_1' %>
-      <%= link_to 'MPL', 'http://en.wikipedia.org/wiki/Mozilla_Public_License', target: '_blank' %>
-      /
-      <%= link_to 'GPL', 'http://commons.wikimedia.org/wiki/GPL', target: '_blank' %>
-      /
-      <%= link_to 'LGPL', 'http://commons.wikimedia.org/wiki/LGPL', target: '_blank' %>
-      <%= t 'layouts.footer.license_mozilla_2' %>
-    </p>
-
-    <p>
-      <%= link_to 'Ruby on Rails', 'http://rubyonrails.org/', target: '_blank' %> <%= t 'layouts.footer.by' %> David Heinemeier Hansson / <%= link_to t('layouts.footer.rails_license'), 'http://www.opensource.org/licenses/mit-license.php', target: '_blank' %>
-    </p>
-
-    <p>
-      <%= link_to 'Ruby', 'https://www.ruby-lang.org', target: '_blank' %> &copy; Yukihiro Matsumoto / <%= link_to t('layouts.footer.ruby_license'), 'https://www.ruby-lang.org/en/about/license.txt', target: '_blank' %>
-    </p>
+    </div>
 
   </div>
 

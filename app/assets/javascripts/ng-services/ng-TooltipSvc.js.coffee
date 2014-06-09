@@ -70,5 +70,5 @@ angular.module('feedbunch').service 'tooltipSvc',
   footer_tooltips: ->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#footer a[data-toggle='tooltip']").tooltip()
+      $("#social-links a[data-toggle='tooltip']").tooltip()
 ]

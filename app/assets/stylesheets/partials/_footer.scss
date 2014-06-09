@@ -1,29 +1,11 @@
 #footer {
-  margin-bottom: 1em;
-  text-align: center;
-
-  #github-footer-link,
-  #twitter-footer-link,
-  #email-footer-link {
-    color: #787878;
-  }
-
-  #github-footer-link, #twitter-footer-link {
-    + .tooltip.top {
-      margin-top: -15px;
-    }
-  }
-
-  #email-footer-link {
-    font-size: 2em;
-    text-decoration: none;
-  }
+  margin-top: 5em;
 
   .credit-line {
-    text-align: left;
-    margin: {
-      left: 2em;
-      top: 3em;
+    margin-bottom: -15px;
+
+    p {
+      font-size: 12px;
     }
   }
 }
