@@ -62,6 +62,7 @@ en:
       based_on: "based on an image by"
       license_mozilla_1: "Licensed under Mozilla's"
       license_mozilla_2: "tri-license."
+      bg_image: "Background image"
       bootstrap_license: "MIT license"
       angularjs_license: "MIT license"
       rails_license: "MIT license"

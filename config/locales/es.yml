@@ -41,6 +41,7 @@ es:
       based_on: "basado en una image por"
       license_mozilla_1: "Bajo licencia"
       license_mozilla_2: "triple de Mozilla."
+      bg_image: "Imagen de fondo"
       bootstrap_license: "Licencia MIT"
       angularjs_license: "Licencia MIT"
       rails_license: "Licencia MIT"
