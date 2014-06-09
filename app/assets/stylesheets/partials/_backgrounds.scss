@@ -1,3 +1,13 @@
+/* Fix for background-size: cover not working in Chrome for Android */
+
+html{
+  height:100%;
+  min-height:100%;
+}
+body{
+  min-height:100%;
+}
+
 @media (max-width: $screen-sm-min) {
   .page-with-bg-image {
     background: image-url('glasses_768x512.jpg') no-repeat center center fixed;
