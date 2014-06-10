@@ -58,7 +58,7 @@ gem 'resque-scheduler'
 gem 'god'
 
 # Authorization management
-gem 'cancan'
+gem 'cancancan'
 
 # Manage zip files
 gem 'rubyzip'
