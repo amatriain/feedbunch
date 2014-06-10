@@ -1,5 +1,5 @@
 class OpmlImportMailer < ActionMailer::Base
-  default from: 'info@feedbunch.com'
+  default from: Feedbunch::Application.config.admin_email
 
   ##
   # Send an email when the Import OPML background process is finished successfully
