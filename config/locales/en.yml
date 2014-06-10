@@ -89,6 +89,8 @@ en:
       mark_unread: "Unread"
       mark_read_tooltip: "Mark this entry as read"
       mark_read: "Read"
+      share_twitter_tooltip: "Share entry on Twitter"
+      share_twitter: "Twitter"
       title_tooltip: "Open web page in a new tab"
       feed_tooltip: "Read entries from this feed"
     alerts:

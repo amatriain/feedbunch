@@ -68,6 +68,8 @@ es:
       mark_unread: "No leído"
       mark_read_tooltip: "Marcar esta entrada como leída"
       mark_read: "Leído"
+      share_twitter_tooltip: "Compartir entrada en Twitter"
+      share_twitter: "Twitter"
       title_tooltip: "Abrir página web en una pestaña nueva"
       feed_tooltip: "Leer entradas de este feed"
     alerts:
