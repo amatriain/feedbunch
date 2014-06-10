@@ -63,6 +63,7 @@
              title="<%= t 'read.entries.mark_unread_tooltip' %>">
             <i class="fa fa-square"></i>&nbsp;<%= t 'read.entries.mark_unread' %>
           </a>
+
           <a class="btn btn-default btn-sm"
              data-toggle="tooltip" data-placement="top"
              ng-click="read_entry(entry)"
@@ -70,10 +71,12 @@
              title="<%= t 'read.entries.mark_read_tooltip' %>">
             <i class="fa fa-check-square"></i>&nbsp;<%= t 'read.entries.mark_read' %>
           </a>
+
           <a class="btn btn-default btn-sm"
              href="https://twitter.com/intent/tweet?url={{entry.url}}&via=feedbunch&text={{entry.title}}"
              data-toggle="tooltip" data-placement="top"
-             title="<%= t 'read.entries.share_twitter_tooltip' %>">
+             title="<%= t 'read.entries.share_twitter_tooltip' %>"
+             target="_blank">
             <i class="fa fa-twitter"></i>&nbsp;<%= t 'read.entries.share_twitter' %>
           </a>
         </div>
