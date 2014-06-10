@@ -31,4 +31,4 @@ es:
       body_1: "Lo sentimos %{name}, pero por desgracia no hemos podido exportar tus suscripciones en Feedbunch."
       body_2_html: "Puede que se trate de un error transitorio. Por favor espera unos minutos y %{link} para volver a intentarlo."
       try_again_link: "ve a Feedbunch"
-      body_3: "Si el error persiste, por favor contacta con nosotros. Puedes escribirnos a %{webmaster_email}, por favor no respondas a este email."
+      body_3: "Si el error persiste, por favor contacta con nosotros. Puedes escribirnos a %{admin_email}, por favor no respondas a este email."

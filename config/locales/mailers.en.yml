@@ -32,4 +32,4 @@ en:
       body_1: "We're sorry %{name}, but unfortunately we haven't been able to export your subscriptions from Feedbunch."
       body_2_html: "It may be a temporary error. Please wait a few minutes and %{link} to try again."
       try_again_link: "go to Feedbunch"
-      body_3: "If the error persists, please contact us. You can write us at %{webmaster_email}, please do not respond this email."
+      body_3: "If the error persists, please contact us. You can write us at %{admin_email}, please do not respond this email."
