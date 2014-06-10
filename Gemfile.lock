@@ -165,6 +165,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.0)
+    newrelic_rpm (3.8.1.221)
     nokogiri (1.6.2.1)
       mini_portile (= 0.6.0)
     orm_adapter (0.5.0)
@@ -329,6 +330,7 @@ DEPENDENCIES
   jquery-rails
   kaminari
   launchy
+  newrelic_rpm
   nokogiri
   pg
   rails (~> 4.1.0)

@@ -25,3 +25,4 @@ opml_imports/*
 opml_exports/*
 .yardoc/*
 doc/
+config/newrelic.yml
