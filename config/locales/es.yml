@@ -74,6 +74,8 @@ es:
       share_facebook: "Facebook"
       share_gplus_tooltip: "Compartir entrada en Google+"
       share_gplus: "Google+"
+      share_linkedin_tooltip: "Compartir entrada en Linkedin"
+      share_linkedin: "Linkedin"
       title_tooltip: "Abrir página web en una pestaña nueva"
       feed_tooltip: "Leer entradas de este feed"
     alerts:

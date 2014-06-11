@@ -261,6 +261,14 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
     return
 
   #--------------------------------------------
+  # Share an entry on Linkedin
+  #--------------------------------------------
+  $scope.share_linkedin_entry = (entry)->
+    socialNetworksSvc.share_linkedin_entry entry
+    menuCollapseSvc.close()
+    return
+
+  #--------------------------------------------
   # Return the title of the feed to which an entry belongs
   #--------------------------------------------
   $scope.entry_feed_title = (entry)->

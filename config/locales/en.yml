@@ -95,6 +95,8 @@ en:
       share_facebook: "Facebook"
       share_gplus_tooltip: "Share entry on Google+"
       share_gplus: "Google+"
+      share_linkedin_tooltip: "Share entry on Linkedin"
+      share_linkedin: "Linkedin"
       title_tooltip: "Open web page in a new tab"
       feed_tooltip: "Read entries from this feed"
     alerts:
