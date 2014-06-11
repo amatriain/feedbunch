@@ -15,6 +15,7 @@ angular.module('feedbunch').service 'tooltipSvc',
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
       $("#entry-#{entry.id} a[data-toggle='tooltip']").tooltip container: 'body'
+      $("#entry-#{entry.id} a[data-share-entry-dropdown]").tooltip container: 'body'
 
   #---------------------------------------------
   # Enable tooltips on navbar buttons

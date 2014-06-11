@@ -1,10 +1,11 @@
-<div class="entry-toolbar btn-toolbar">
+<div class="entry-toolbar btn-group">
+
   <a class="btn btn-default btn-sm"
      data-toggle="tooltip" data-placement="top"
      ng-click="unread_entry(entry)"
      ng-show="entry.read"
      title="<%= t 'read.entries.mark_unread_tooltip' %>">
-    <i class="fa fa-square"></i>&nbsp;<%= t 'read.entries.mark_unread' %>
+    <i class="fa fa-fw fa-square"></i>&nbsp;<%= t 'read.entries.mark_unread' %>
   </a>
 
   <a class="btn btn-default btn-sm"
@@ -12,39 +13,50 @@
      ng-click="read_entry(entry)"
      ng-show="!entry.read"
      title="<%= t 'read.entries.mark_read_tooltip' %>">
-    <i class="fa fa-check-square"></i>&nbsp;<%= t 'read.entries.mark_read' %>
+    <i class="fa fa-fw fa-check-square"></i>&nbsp;<%= t 'read.entries.mark_read' %>
   </a>
 
-  <a class="btn btn-default btn-sm"
-     href="https://twitter.com/intent/tweet?url={{entry.url}}&via=feedbunch&text={{entry.title}}"
-     data-toggle="tooltip" data-placement="top"
-     title="<%= t 'read.entries.share_twitter_tooltip' %>"
-     target="_blank">
-    <i class="fa fa-twitter"></i>&nbsp;<%= t 'read.entries.share_twitter' %>
-  </a>
+  <div class="btn-group">
 
-  <a class="btn btn-default btn-sm"
-     data-toggle="tooltip" data-placement="top"
-     ng-click="share_facebook_entry(entry)"
-     title="<%= t 'read.entries.share_facebook_tooltip' %>"
-     target="_blank">
-    <i class="fa fa-facebook"></i>&nbsp;<%= t 'read.entries.share_facebook' %>
-  </a>
+    <a class="btn btn-default btn-sm dropdown-toggle"
+       data-share-entry-dropdown
+       data-placement="top"
+       title="<%= t 'read.entries.share_tooltip' %>"
+       data-toggle="dropdown">
+      <i class="fa fa-fw fa-share-alt"></i> <%= t 'read.entries.share' %>  <i class="fa fa-fw fa-caret-down"></i>
+    </a>
 
-  <a class="btn btn-default btn-sm"
-     data-toggle="tooltip" data-placement="top"
-     ng-click="share_gplus_entry(entry)"
-     title="<%= t 'read.entries.share_gplus_tooltip' %>"
-     target="_blank">
-    <i class="fa fa-google-plus"></i>&nbsp;<%= t 'read.entries.share_gplus' %>
-  </a>
+    <ul class="dropdown-menu" role="menu">
 
-  <a class="btn btn-default btn-sm"
-     data-toggle="tooltip" data-placement="top"
-     ng-click="share_linkedin_entry(entry)"
-     title="<%= t 'read.entries.share_linkedin_tooltip' %>"
-     target="_blank">
-    <i class="fa fa-linkedin"></i>&nbsp;<%= t 'read.entries.share_linkedin' %>
-  </a>
+      <li>
+        <a href="https://twitter.com/intent/tweet?url={{entry.url}}&via=feedbunch&text={{entry.title}}"
+           target="_blank">
+          <i class="fa fa-fw fa-twitter"></i>&nbsp;<%= t 'read.entries.share_twitter' %>
+        </a>
+      </li>
+
+      <li>
+        <a ng-click="share_facebook_entry(entry)"
+           target="_blank">
+          <i class="fa fa-fw fa-facebook"></i>&nbsp;<%= t 'read.entries.share_facebook' %>
+        </a>
+      </li>
+
+      <li>
+        <a ng-click="share_gplus_entry(entry)"
+           target="_blank">
+          <i class="fa fa-fw fa-google-plus"></i>&nbsp;<%= t 'read.entries.share_gplus' %>
+        </a>
+      </li>
+
+      <li>
+        <a ng-click="share_linkedin_entry(entry)"
+           target="_blank">
+          <i class="fa fa-fw fa-linkedin"></i>&nbsp;<%= t 'read.entries.share_linkedin' %>
+        </a>
+      </li>
+
+    </ul>
+  </div>
 
 </div>
