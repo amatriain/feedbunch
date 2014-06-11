@@ -88,6 +88,14 @@
             <i class="fa fa-facebook"></i>&nbsp;<%= t 'read.entries.share_facebook' %>
           </a>
 
+          <a class="btn btn-default btn-sm"
+             data-toggle="tooltip" data-placement="top"
+             ng-click="share_gplus_entry(entry)"
+             title="<%= t 'read.entries.share_gplus_tooltip' %>"
+             target="_blank">
+            <i class="fa fa-google-plus"></i>&nbsp;<%= t 'read.entries.share_gplus' %>
+          </a>
+
         </div>
 
         <div class="lead entry-lead">

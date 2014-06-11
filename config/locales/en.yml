@@ -93,6 +93,8 @@ en:
       share_twitter: "Twitter"
       share_facebook_tooltip: "Share entry on Facebook"
       share_facebook: "Facebook"
+      share_gplus_tooltip: "Share entry on Google+"
+      share_gplus: "Google+"
       title_tooltip: "Open web page in a new tab"
       feed_tooltip: "Read entries from this feed"
     alerts:

@@ -253,6 +253,14 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
     return
 
   #--------------------------------------------
+  # Share an entry on Google+
+  #--------------------------------------------
+  $scope.share_gplus_entry = (entry)->
+    socialNetworksSvc.share_gplus_entry entry
+    menuCollapseSvc.close()
+    return
+
+  #--------------------------------------------
   # Return the title of the feed to which an entry belongs
   #--------------------------------------------
   $scope.entry_feed_title = (entry)->

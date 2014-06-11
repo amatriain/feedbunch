@@ -29,4 +29,12 @@ describe 'social sharing', type: :feature do
     end
   end
 
+  it 'shows google+ share link', js: true do
+    read_entry @entry
+
+    within "#entry-#{@entry.id}-summary .entry-toolbar" do
+      expect(page).to have_css "a[target='_blank'][ng-click='share_gplus_entry(entry)']"
+    end
+  end
+
 end
