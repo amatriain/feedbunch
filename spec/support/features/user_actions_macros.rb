@@ -168,6 +168,23 @@ def close_entry(entry)
 end
 
 ##
+# Click on the "share" button in an entry's toolbar, to open the dropdown menu.
+
+def open_entry_share_dropdown(entry)
+  # Open entry if not already open
+  open_entry entry
+
+  # Ensure button is visible
+  expect(page).to have_css "#entry-#{entry.id}-summary .entry-toolbar a[data-share-entry-dropdown]", visible: true
+
+  #Only open dropdown if it's closed
+  expect(page).not_to have_css "#entry-#{entry.id}-summary .entry-toolbar div.open > a[data-share-entry-dropdown]"
+
+  find("#entry-#{entry.id}-summary .entry-toolbar a[data-share-entry-dropdown]").click
+  expect(page).to have_css "#entry-#{entry.id}-summary .entry-toolbar div.open > a[data-share-entry-dropdown]"
+end
+
+##
 # Click on the "refresh feed" button to fetch new entries for the feed
 
 def refresh_feed
