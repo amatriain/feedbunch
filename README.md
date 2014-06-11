@@ -1,6 +1,6 @@
 Feedbunch
 ==========
-[![Build Status](https://travis-ci.org/amatriain/feedbunch.png?branch=master)](https://travis-ci.org/amatriain/feedbunch) [![Coverage Status](https://coveralls.io/repos/amatriain/feedbunch/badge.png?branch=master)](https://coveralls.io/r/amatriain/feedbunch) [![Code Climate](https://codeclimate.com/github/amatriain/feedbunch.png)](https://codeclimate.com/github/amatriain/feedbunch) [![Dependency Status](https://gemnasium.com/amatriain/feedbunch.png)](https://gemnasium.com/amatriain/feedbunch)
+[![Build Status](https://travis-ci.org/amatriain/feedbunch.png?branch=master)](https://travis-ci.org/amatriain/feedbunch) [![Coverage Status](https://coveralls.io/repos/amatriain/feedbunch/badge.png?branch=master)](https://coveralls.io/r/amatriain/feedbunch) [![Code Climate](https://codeclimate.com/github/amatriain/feedbunch.png)](https://codeclimate.com/github/amatriain/feedbunch) [![Inline docs](http://inch-ci.org/github/amatriain/feedbunch.png)](http://inch-ci.org/github/amatriain/feedbunch) [![Dependency Status](https://gemnasium.com/amatriain/feedbunch.png)](https://gemnasium.com/amatriain/feedbunch)
 
 Licensed under the MIT license (see LICENSE.txt file in the root directory for details).
 
