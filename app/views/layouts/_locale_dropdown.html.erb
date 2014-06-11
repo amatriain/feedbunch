@@ -4,12 +4,10 @@
   <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
     <% if I18n.locale == :en %>
       <%= image_tag asset_path('flags/us.png'), class: 'locale-flag' %>
-      English
-      <b class="caret"></b>
+      English <i class="fa fa-fw fa-caret-down"></i>
     <% elsif I18n.locale == :es %>
       <%= image_tag asset_path('flags/es.png'), class: 'locale-flag' %>
-      Español
-      <b class="caret"></b>
+      Español <i class="fa fa-fw fa-caret-down"></i>
     <% end %>
   </a>
   <ul class="dropdown-menu text-left" role="menu" aria-labelledby="dropdownMenu">
