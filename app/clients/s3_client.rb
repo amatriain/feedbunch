@@ -1,10 +1,10 @@
+require 'uri'
+
 ##
 # Class to manage uploading and deleting files from Amazon S3.
 # Bucket name is feedbunch-#{Rails.env}, i.e. feedbunch-production for the production environment and
 # feedbunch-staging for the staging environment.
 # Files are uploaded and deleted from the "uploads" folder in the bucket.
-
-require 'uri'
 
 class S3Client
 
