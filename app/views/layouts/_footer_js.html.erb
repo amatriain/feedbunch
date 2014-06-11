@@ -1,10 +1,28 @@
+<%# Facebook SDK for javascript initialization %>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : <%= Rails.application.secrets.facebook_app_ID %>,
+      version    : 'v2.0'
+    });
+  };
+
+  (function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<%= javascript_include_tag '//platform.twitter.com/widgets.js' %>
 <%= javascript_include_tag '//code.jquery.com/jquery-1.11.1.min.js' %>
 <%= javascript_include_tag '//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js' %>
 <%= javascript_include_tag '//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.min.js' %>
 <%= javascript_include_tag '//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-touch.min.js' %>
 <%= javascript_include_tag '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js' %>
 <%= javascript_include_tag '//cdnjs.cloudflare.com/ajax/libs/favico.js/0.3.4/favico.min.js' %>
-<%= javascript_include_tag '//platform.twitter.com/widgets.js' %>
 <%= javascript_include_tag 'application' %>
 
 <%= render 'layouts/noscript_warning' %>

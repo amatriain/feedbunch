@@ -6,11 +6,11 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'exportStateSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
-'tooltipSvc', 'startPageSvc', 'jobStateSvc'
+'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
-tooltipSvc, startPageSvc, jobStateSvc)->
+tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -241,6 +241,14 @@ tooltipSvc, startPageSvc, jobStateSvc)->
   #--------------------------------------------
   $scope.read_entry = (entry)->
     entrySvc.read_entry entry
+    menuCollapseSvc.close()
+    return
+
+  #--------------------------------------------
+  # Share an entry on Facebook
+  #--------------------------------------------
+  $scope.share_facebook_entry = (entry)->
+    socialNetworksSvc.share_facebook_entry entry
     menuCollapseSvc.close()
     return
 
