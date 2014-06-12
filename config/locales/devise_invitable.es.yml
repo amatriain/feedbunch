@@ -1,0 +1,21 @@
+es:
+  devise:
+    invitations:
+      send_instructions: 'Se ha enviado un correo electrónico de invitación a %{email}.'
+      invitation_token_invalid: 'El código de invitación introducido no es válido!'
+      updated: 'Tu contraseña se ha guardado correctamente. Ya estás autenticado.'
+      no_invitations_remaining: "No quedan invitaciónes"
+      invitation_removed: 'Tu invitación fue eliminada.'
+      new:
+        header: "Enviar invitación"
+        submit_button: "Enviar una invitación"
+      edit:
+        header: "Guardar contraseña"
+        submit_button: "Guardar mi contraseña"
+    mailer:
+      invitation_instructions:
+        subject: 'Invitación a Feedbunch'
+        hello: 'Hola %{email}'
+        someone_invited_you: 'Alguien te envía una invitación a %{url}, puedes aceptarla siguiendo este link:'
+        accept: 'Aceptar invitación'
+        ignore: "Si no quieres aceptar la invitación, por favor ignora este email.<br />Tu cuenta no se creará hasta que accedas al link de más arriba y escojas una contraseña."
