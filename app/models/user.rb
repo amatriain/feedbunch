@@ -70,6 +70,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :timeoutable
 
+  has_many :invitations, class_name: 'User', as: :invited_by
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy,
            after_add: :mark_unread_entries,
            before_remove: :before_remove_feed_subscription,
