@@ -1,5 +1,3 @@
-<%= render 'devise/popups/profile_delete_form' %>
-
 <div class="page-header edit-registration-header">
   <div class="row">
     <div class="col-xs-12 col-md-10 col-md-offset-1">
@@ -68,6 +66,36 @@
 
 
     <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12 col-md-10 col-md-offset-1">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <span class="lead"><%= t 'devise.views.invite_friend' %></span>
+      </div>
+      <div class="row">
+        <div class="panel-body col-xs-12 col-sm-10 col-sm-offset-1">
+
+          <p>
+            <%= t 'devise.views.invite_friend_text' %>
+          </p>
+          <p>
+            <a id=""
+               class="btn btn-primary"
+               data-toggle="modal"
+               data-target="#invite-friend-popup">
+
+              <i class="fa fa-magic"></i>
+
+              <%= t 'devise.views.invite_friend' %>
+            </a>
+          </p>
+
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

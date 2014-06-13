@@ -17,6 +17,8 @@ en:
       edit_account: "My account"
       unconfirmed_email: "currently waiting confirmation for: %{email}"
       update_account: "Update account"
+      invite_friend: "Invite a friend"
+      invite_friend_text: "You can send an invitation to join Feedbunch to a friend."
       import_subscriptions: "Import subscriptions"
       import_subscriptions_text: "You can import your subscriptions in OPML format from another feed aggregator."
       import_subscriptions_running: "Your feed subscriptions are currently being imported."
