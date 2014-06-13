@@ -91,4 +91,12 @@ class ApplicationController < ActionController::Base
     cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
   end
 
+  # TODO after beta stage remove this method override to allow anyone to invite friends
+
+  ##
+  #
+
+  def authenticate_inviter!
+    head status: 403 if !current_user.admin
+  end
 end
