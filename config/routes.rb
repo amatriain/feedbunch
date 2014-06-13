@@ -93,12 +93,12 @@ Feedbunch::Application.routes.draw do
     get '/unlock_account' => 'devise/unlocks#show'
 
     # invitations
-    get '/accept_invitation' => 'devise/invitations#edit', as: :accept_user_invitation
-    delete '/remove_invitation' => 'devise/invitations#destroy', as: :remove_user_invitation
-    post '/invitation' => 'devise/invitations#create', as: :user_invitation
     get '/invite_friend' => 'devise/invitations#new', as: :new_user_invitation
+    post '/invitation' => 'devise/invitations#create', as: :user_invitation
     patch '/invitation' => 'devise/invitations#update'
     put '/invitation' => 'devise/invitations#update'
+    get '/accept_invitation' => 'devise/invitations#edit', as: :accept_user_invitation
+    delete '/remove_invitation' => 'devise/invitations#destroy', as: :remove_user_invitation
   end
 
   # Redirect authenticated users that access the root URL to '/read'
