@@ -17,8 +17,6 @@ es:
       edit_account: "Mi cuenta"
       unconfirmed_email: "pendiente de confirmación para el email: %{email}"
       update_account: "Actualizar cuenta"
-      invite_friend: "Invitar a un amigo"
-      invite_friend_text: "Puedes enviar a un amigo una invitación para entrar en Feedbunch."
       import_subscriptions: "Importar suscripciones"
       import_subscriptions_text: "Puedes importar tus suscripciones en formato OPML desde otro agregador de feeds."
       import_subscriptions_running: "Tus suscripciones a feeds se están importando en estos momentos."
@@ -36,3 +34,8 @@ es:
         confirm: "¿Estás seguro de que quieres borrar tu cuenta? ¡Esto borrará TODOS tus datos!"
         close: "Cancelar"
         submit: "Borrar cuenta"
+      invite_friend:
+        title: "Invitar a un amigo"
+        text: "Puedes enviar a un amigo una invitación para entrar en Feedbunch."
+        close: "Cancelar"
+        submit: "Enviar invitación"

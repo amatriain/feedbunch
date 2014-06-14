@@ -17,8 +17,6 @@ en:
       edit_account: "My account"
       unconfirmed_email: "currently waiting confirmation for: %{email}"
       update_account: "Update account"
-      invite_friend: "Invite a friend"
-      invite_friend_text: "You can send a friend an invitation to join Feedbunch."
       import_subscriptions: "Import subscriptions"
       import_subscriptions_text: "You can import your subscriptions in OPML format from another feed aggregator."
       import_subscriptions_running: "Your feed subscriptions are currently being imported."
@@ -36,3 +34,9 @@ en:
         confirm: "Are you sure you want to delete your account? This will delete ALL your data!"
         close: "Cancel"
         submit: "Delete account"
+      invite_friend:
+        title: "Invite a friend"
+        text: "You can send a friend an invitation to join Feedbunch."
+        close: "Cancel"
+        submit: "Send invitation"
+

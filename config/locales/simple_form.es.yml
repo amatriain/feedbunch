@@ -39,6 +39,8 @@ es:
         rss: "Introduce la URL de una página web o un feed"
       delete_user_registration:
         password: "Escribe tu contraseña para confirmar el borrado de la cuenta."
+      user_invitation:
+        email: "Se enviará la invitación a esta dirección de correo electrónico"
     placeholders:
       user:
         email: "Tu dirección de email"
@@ -51,3 +53,5 @@ es:
         rss: "URL"
       new_folder:
         title: "Título de la nueva carpeta"
+      user_invitation:
+        email: "Correo electrónico de tu amigo"

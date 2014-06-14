@@ -30,3 +30,9 @@ $(document).ready ->
   #-------------------------------------------------------
   $("body").on "shown.bs.modal", "#profile-delete-popup",  ->
     $("#profile-delete-cancel", this).focus()
+
+  #-------------------------------------------------------
+  # Give focus to the email field when showing the "Send invitation" modal.
+  #-------------------------------------------------------
+  $("body").on "shown.bs.modal", "#invite-friend-popup",  ->
+    $("#user_invitation_email", this).focus()

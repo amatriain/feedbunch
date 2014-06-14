@@ -39,6 +39,8 @@ en:
         rss: "Enter a webpage or feed URL"
       delete_user_registration:
         password: "Enter your password to confirm account deletion."
+      user_invitation:
+        email: "The invitation will be sent to this email address"
     placeholders:
       user:
         email: "Your email address"
@@ -51,3 +53,5 @@ en:
         rss: "URL"
       new_folder:
         title: "Title of the new folder"
+      user_invitation:
+        email: "Your friend's email address"
