@@ -8,3 +8,27 @@
     </ul>
   </div>
 <% end %>
+
+<%# Alert displayed when an invitation is sent successfully %>
+<div id="success-invite-friend" class="alert alert-success" ng-show="success_invite_friend">
+  <button type="button" class="close" ng-click="reset_flag('success_invite_friend')">&times;</button>
+  <p><%= t 'devise.invitations.success' %></p>
+</div>
+
+<%# Alert displayed when the user attempts to send an invitation without having been authorized %>
+<div id="problem-invite-friend-unauthorized" class="alert alert-danger" ng-show="invite_friend_unauthorized">
+  <button type="button" class="close" ng-click="reset_flag('invite_friend_unauthorized')">&times;</button>
+  <p><%= t 'devise.invitations.unauthorized' %></p>
+</div>
+
+<%# Alert displayed when the user attempts to send an invitation having no invitations left %>
+<div id="problem-no-invitations-left" class="alert alert-danger" ng-show="no_invitations_left">
+  <button type="button" class="close" ng-click="reset_flag('no_invitations_left')">&times;</button>
+  <p><%= t 'devise.invitations.no_invitations_remaining' %></p>
+</div>
+
+<%# Alert displayed when there is an error sending an invitation %>
+<div id="problem-sending-invitation" class="alert alert-danger" ng-show="error_sending_invitation">
+  <button type="button" class="close" ng-click="reset_flag('error_sending_invitation')">&times;</button>
+  <p><%= t 'devise.invitations.error' %></p>
+</div>

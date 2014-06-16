@@ -1,14 +1,13 @@
 en:
   devise:
     invitations:
-      send_instructions: 'An invitation email has been sent to %{email}.'
+      success: 'An invitation email has been sent to %{email}'
+      unauthorized: 'You are not authorized to send invitations'
+      no_invitations_remaining: "You have no invitations remaining"
+      error: 'There has been an error that prevented the invitation from being sent'
       invitation_token_invalid: 'The invitation token provided is not valid!'
       updated: 'Your password was set successfully. You are now signed in.'
-      no_invitations_remaining: "No invitations remaining"
       invitation_removed: 'Your invitation was removed.'
-      new:
-        header: "Send invitation"
-        submit_button: "Send an invitation"
       edit:
         header: "Set your password"
         submit_button: "Set my password"

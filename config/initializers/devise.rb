@@ -105,9 +105,7 @@ Devise.setup do |config|
   # You can change invitation_limit column for some users so they can send more
   # or less invitations, even with global invitation_limit = 0
   # Default: nil
-
-  # TODO after beta stage comment this line to set the limit to its default value of nil (allowing anyone to invite friends)
-  config.invitation_limit = 0
+  # config.invitation_limit = nil
 
   # The key to be used to check existing users when sending an invitation
   # and the regexp used to test it when validate_on_invite is not set.

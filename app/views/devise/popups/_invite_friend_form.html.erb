@@ -18,9 +18,11 @@
         </div>
         <hr>
 
-        <%= simple_form_for :user_invitation, url: user_invitation_path,
-                            html: {:method => :post, id: 'form-invite-friend'} do |f| %>
-          <%= f.input :email, as: :email_icon, required: true, placeholder: t('simple_form.placeholders.user_invitation.email') %>
+        <%= simple_form_for :user_invitation, url: '',
+                            html: {id: 'form-invite-friend',
+                            'ng-submit' => 'send_invitation()'} do |f| %>
+          <%= f.input :email, as: :email_icon, required: true, placeholder: t('simple_form.placeholders.user_invitation.email'),
+                      input_html: {'ng-model' => 'invitation_email'}%>
           <div class="modal-footer">
             <button id="invite-friend-cancel" type="button" class="btn btn-default" data-dismiss="modal" ><%= t 'devise.views.friend.close' %></button>
             <button id="invite-friend-submit" type="submit" class="btn btn-primary"><%= t 'devise.views.friend.submit' %></button>

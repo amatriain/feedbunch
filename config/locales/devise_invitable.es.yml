@@ -1,14 +1,13 @@
 es:
   devise:
     invitations:
-      send_instructions: 'Se ha enviado un correo electrónico de invitación a %{email}.'
+      success: 'Se ha enviado un correo electrónico de invitación a %{email}'
+      unauthorized: 'No estás autorizado para enviar invitaciones'
+      no_invitations_remaining: "No te quedan invitaciónes que enviar"
+      error: 'Ha ocurrido un error que impidió que la invitación fuera enviada'
       invitation_token_invalid: 'El código de invitación introducido no es válido!'
       updated: 'Tu contraseña se ha guardado correctamente. Ya estás autenticado.'
-      no_invitations_remaining: "No quedan invitaciónes"
       invitation_removed: 'Tu invitación fue eliminada.'
-      new:
-        header: "Enviar invitación"
-        submit_button: "Enviar una invitación"
       edit:
         header: "Guardar contraseña"
         submit_button: "Guardar mi contraseña"
