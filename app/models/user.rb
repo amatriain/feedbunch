@@ -68,7 +68,8 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :confirmable, :lockable, :timeoutable
+         :confirmable, :lockable, :timeoutable,
+         invite_key: {email: Devise.email_regexp}
 
   has_many :invitations, class_name: 'User', as: :invited_by
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy,

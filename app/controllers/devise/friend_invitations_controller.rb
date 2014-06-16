@@ -13,23 +13,23 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
   prepend_before_filter :resource_from_invitation_token, :only => [:edit, :destroy]
   helper_method :after_sign_in_path_for
 
-  # POST /resource/invitation
+  ##
+  # Send an invitation email to the passed email address.
   def create
-    self.resource = invite_resource
-
     # TODO after beta stage remove this to allow anyone to invite friends
     if !current_user.admin
       head status: 403
       return
     end
 
-    if resource.errors.empty?
-      yield resource if block_given?
-      set_flash_message :notice, :send_instructions, :email => self.resource.email if self.resource.invitation_sent_at
-      respond_with resource, :location => after_invite_path_for(resource)
-    else
-      respond_with_navigational(resource) { render :new }
-    end
+    # Create record for the invited user
+    @invited_user = invite_user
+    # If the created user is invalid, this will raise an error
+    @invited_user.save!
+    Rails.logger.info "User #{current_user.id} - #{current_user.email} sent invitation to join Feedbunch to user #{@invited_user.id} - #{@invited_user.email}"
+    head status: :ok
+  rescue => e
+    handle_error e
   end
 
   # GET /resource/invitation/accept?invitation_token=abcdef
@@ -62,7 +62,7 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
 
   protected
 
-  def invite_resource(&block)
+  def invite_user(&block)
     resource_class.invite!(invite_params, current_inviter, &block)
   end
 
