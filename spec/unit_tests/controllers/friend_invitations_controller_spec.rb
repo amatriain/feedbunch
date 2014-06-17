@@ -11,7 +11,7 @@ describe Devise::FriendInvitationsController, type: :controller do
   context 'POST create' do
 
     it 'returns success' do
-      post :create, email: @friend_email, format: :json
+      post :create, user: {email: @friend_email}, format: :json
       expect(response).to be_success
     end
   end
