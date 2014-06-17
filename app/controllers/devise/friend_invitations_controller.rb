@@ -65,8 +65,8 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
   def invite_user
     invitation_params = {email: friend_invitation_params[:email],
                          name: friend_invitation_params[:email],
-                         locale: current_user.locale,
-                         timezone: current_user.timezone}
+                         locale: current_inviter.locale,
+                         timezone: current_inviter.timezone}
     User.invite! invitation_params, current_inviter
   end
 
