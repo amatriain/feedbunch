@@ -12,7 +12,7 @@ angular.module('feedbunch').service 'invitationsSvc',
   send_invitation: (email)->
     # Email to send the invitation to
     if email
-      $http.post('/invitation.json', email: email)
+      $http.post('/invitation.json', user: {email: email})
       .success (data)->
         timerFlagSvc.start 'success_invite_friend'
       .error (data, status)->

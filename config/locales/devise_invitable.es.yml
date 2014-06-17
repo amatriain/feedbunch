@@ -1,7 +1,7 @@
 es:
   devise:
     invitations:
-      success: 'Se ha enviado un correo electrónico de invitación a %{email}'
+      success: 'Se ha enviado un correo electrónico de invitación'
       unauthorized: 'No estás autorizado para enviar invitaciones'
       no_invitations_remaining: "No te quedan invitaciónes que enviar"
       error: 'Ha ocurrido un error que impidió que la invitación fuera enviada'
@@ -15,6 +15,6 @@ es:
       invitation_instructions:
         subject: 'Invitación a Feedbunch'
         hello: 'Hola %{email}'
-        someone_invited_you: 'Alguien te envía una invitación a %{url}, puedes aceptarla siguiendo este link:'
+        someone_invited_you: 'Alguien te envía una invitación a %{url}, puedes aceptarla siguiendo este enlace:'
         accept: 'Aceptar invitación'
-        ignore: "Si no quieres aceptar la invitación, por favor ignora este email.<br />Tu cuenta no se creará hasta que accedas al link de más arriba y escojas una contraseña."
+        ignore: "Si no quieres aceptar la invitación, por favor ignora este email.<br />Tu cuenta no se creará hasta que accedas al enlace anterior y escojas una contraseña."

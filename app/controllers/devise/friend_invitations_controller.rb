@@ -62,8 +62,12 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
 
   protected
 
-  def invite_user(&block)
-    resource_class.invite!(invite_params, current_inviter, &block)
+  def invite_user
+    invitation_params = {email: friend_invitation_params[:email],
+                         name: friend_invitation_params[:email],
+                         locale: current_user.locale,
+                         timezone: current_user.timezone}
+    User.invite! invitation_params, current_inviter
   end
 
   def accept_resource
@@ -89,11 +93,11 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
     end
   end
 
-  def invite_params
-    devise_parameter_sanitizer.sanitize(:invite)
-  end
-
   def update_resource_params
     devise_parameter_sanitizer.sanitize(:accept_invitation)
+  end
+
+  def friend_invitation_params
+    params.require(:user).permit(:email)
   end
 end

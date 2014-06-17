@@ -1,7 +1,7 @@
 en:
   devise:
     invitations:
-      success: 'An invitation email has been sent to %{email}'
+      success: 'An invitation email has been sent'
       unauthorized: 'You are not authorized to send invitations'
       no_invitations_remaining: "You have no invitations remaining"
       error: 'There has been an error that prevented the invitation from being sent'
