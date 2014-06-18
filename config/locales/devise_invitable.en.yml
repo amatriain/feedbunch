@@ -10,7 +10,7 @@ en:
       updated: 'Your password was set successfully. You are now signed in.'
       invitation_removed: 'Your invitation was removed.'
       edit:
-        header: "Set your password"
+        header: "Accept invitation"
         submit_button: "Set my password"
     mailer:
       invitation_instructions:

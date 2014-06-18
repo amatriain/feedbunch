@@ -10,7 +10,7 @@ es:
       updated: 'Tu contraseña se ha guardado correctamente. Ya estás autenticado.'
       invitation_removed: 'Tu invitación fue eliminada.'
       edit:
-        header: "Guardar contraseña"
+        header: "Aceptar invitación"
         submit_button: "Guardar mi contraseña"
     mailer:
       invitation_instructions:
