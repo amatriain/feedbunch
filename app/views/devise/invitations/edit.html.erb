@@ -1,7 +1,8 @@
-<h2><%= t 'devise.invitations.edit.header' %></h2>
+<% content_for :heading do %>
+  <%= t 'devise.invitations.edit.header' %>
+<% end %>
 
 <%= simple_form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put } do |f| %>
-  <%= devise_error_messages! %>
   <%= f.hidden_field :invitation_token %>
 
   <%= f.input :password %>
