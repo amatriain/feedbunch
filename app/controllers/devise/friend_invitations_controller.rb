@@ -5,12 +5,12 @@
 class Devise::FriendInvitationsController < Devise::InvitationsController
 
   respond_to :json, only: [:create]
-  respond_to :html, only: [:edit, :update, :destroy]
+  respond_to :html, only: [:update, :destroy]
 
   prepend_before_filter :authenticate_inviter!, :only => [:create]
   prepend_before_filter :has_invitations_left?, :only => [:create]
-  prepend_before_filter :require_no_authentication, :only => [:edit, :update, :destroy]
-  prepend_before_filter :resource_from_invitation_token, :only => [:edit, :destroy]
+  prepend_before_filter :require_no_authentication, :only => [:update, :destroy]
+  prepend_before_filter :resource_from_invitation_token, :only => [:destroy]
   helper_method :after_sign_in_path_for
 
   ##
@@ -40,12 +40,6 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
     head status: :ok
   rescue => e
     handle_error e
-  end
-
-  # GET /resource/invitation/accept?invitation_token=abcdef
-  def edit
-    resource.invitation_token = params[:invitation_token]
-    render :edit
   end
 
   # PUT /resource/invitation
