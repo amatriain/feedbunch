@@ -17,7 +17,7 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
   # Send an invitation email to the passed email address.
   def create
     # TODO after beta stage remove this to allow anyone to invite friends
-    if !current_user.admin
+    if !current_inviter.admin
       head status: 403
       return
     end
@@ -26,7 +26,7 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
     @invited_user = invite_user
     # If the created user is invalid, this will raise an error
     @invited_user.save!
-    Rails.logger.info "User #{current_user.id} - #{current_user.email} sent invitation to join Feedbunch to user #{@invited_user.id} - #{@invited_user.email}"
+    Rails.logger.info "User #{current_inviter.id} - #{current_inviter.email} sent invitation to join Feedbunch to user #{@invited_user.id} - #{@invited_user.email}"
     head status: :ok
   rescue => e
     handle_error e
