@@ -14,8 +14,8 @@ es:
         submit_button: "Guardar mi contraseña"
     mailer:
       invitation_instructions:
-        subject: 'Invitación a Feedbunch'
+        subject: 'Invitación a entrar en Feedbunch'
         hello: 'Hola %{email}'
-        someone_invited_you: 'Alguien te envía una invitación a %{url}, puedes aceptarla siguiendo este enlace:'
+        someone_invited_you: 'Alguien te envía una invitación para entrar en Feedbunch, un lector de feeds de código abierto. Puedes aceptar la invitación siguiendo este enlace:'
         accept: 'Aceptar invitación'
-        ignore: "Si no quieres aceptar la invitación, por favor ignora este email.<br />Tu cuenta no se creará hasta que accedas al enlace anterior y escojas una contraseña."
+        ignore: "Si no quieres aceptar la invitación, por favor ignora este email."

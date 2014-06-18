@@ -52,6 +52,5 @@ describe Devise::FriendInvitationsController, type: :controller do
       expect(invited.timezone).to eq 'Madrid'
     end
 
-
   end
 end

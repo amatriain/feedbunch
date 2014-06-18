@@ -14,8 +14,8 @@ en:
         submit_button: "Set my password"
     mailer:
       invitation_instructions:
-        subject: 'Invitation to Feedbunch'
+        subject: 'Invitation to join Feedbunch'
         hello: 'Hello %{email}'
-        someone_invited_you: 'Someone has invited you to %{url}, you can accept it through the link below.'
+        someone_invited_you: 'Someone has invited you to join Feedbunch, an open source feed reader. You can accept the invitation following this link:'
         accept: 'Accept invitation'
-        ignore: "If you don't want to accept the invitation, please ignore this email.<br />Your account won't be created until you access the link above and set your password."
+        ignore: "If you don't want to accept the invitation, please ignore this email."
