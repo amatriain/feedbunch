@@ -65,8 +65,9 @@ angular.module('feedbunch').service 'feedsPaginationSvc',
       # Set to zero the unread count of feeds that have not been refreshed during the refresh cycle
       # (this means those feeds are in the root scope but have not been returned by the server, which means
       # their unread count is zero if only unread feeds are being retrieved)
-      for feed in $rootScope.feeds
-        feed.unread_entries = 0 if !feed.refreshed
+      if $rootScope.feeds && $rootScope.feeds?.length>0
+        for feed in $rootScope.feeds
+          feed.unread_entries = 0 if !feed.refreshed
 
   return service
 ]
