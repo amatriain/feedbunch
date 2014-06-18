@@ -16,6 +16,6 @@ en:
       invitation_instructions:
         subject: 'Invitation to join Feedbunch'
         hello: 'Hello %{email}'
-        someone_invited_you: 'Someone has invited you to join Feedbunch, an open source feed reader. You can accept the invitation following this link:'
+        someone_invited_you: 'Someone has invited you to join <a href="%{url}">Feedbunch</a>, an open source feed reader. You can accept the invitation following this link:'
         accept: 'Accept invitation'
         ignore: "If you don't want to accept the invitation, please ignore this email."
