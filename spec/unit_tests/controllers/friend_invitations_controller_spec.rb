@@ -35,11 +35,13 @@ describe Devise::FriendInvitationsController, type: :controller do
       expect(invited.locale).to eq 'en'
       expect(invited.timezone).to eq 'UTC'
 
+      sign_out @user
       @user.update locale: 'es', timezone: 'Madrid'
+      login_user_for_unit @user
       post :create, user: {email: @friend_email}, format: :json
       invited = User.find_by_email @friend_email
       expect(invited.locale).to eq 'es'
-      expect(invited.timezone).to eq 'Europe/Madrid'
+      expect(invited.timezone).to eq 'Madrid'
     end
   end
 end
