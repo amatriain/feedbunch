@@ -27,6 +27,12 @@
   <p><%= t 'devise.invitations.no_invitations_remaining' %></p>
 </div>
 
+<%# Alert displayed when the user attempts to send an invitation to a user that already exists %>
+<div id="problem-invited-user-exists" class="alert alert-danger" ng-show="error_invited_user_exists">
+  <button type="button" class="close" ng-click="reset_flag('error_invited_user_exists')">&times;</button>
+  <p><%= t 'devise.invitations.invited_user_exists' %></p>
+</div>
+
 <%# Alert displayed when there is an error sending an invitation %>
 <div id="problem-sending-invitation" class="alert alert-danger" ng-show="error_sending_invitation">
   <button type="button" class="close" ng-click="reset_flag('error_sending_invitation')">&times;</button>

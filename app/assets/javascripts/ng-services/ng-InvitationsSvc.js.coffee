@@ -19,6 +19,8 @@ angular.module('feedbunch').service 'invitationsSvc',
         # Show alert
         if status == 403
           timerFlagSvc.start 'invite_friend_unauthorized'
+        else if status == 409
+          timerFlagSvc.start 'error_invited_user_exists'
         else if status == 400
           timerFlagSvc.start 'no_invitations_left'
         else

@@ -21,6 +21,12 @@ describe Devise::FriendInvitationsController, type: :controller do
       expect(response.status).to eq 403
     end
 
+    it 'returns 409 if user already exists' do
+      user2 = FactoryGirl.create :user, email: @friend_email
+      post :create, user: {email: @friend_email}, format: :json
+      expect(response.status).to eq 409
+    end
+
     it 'invites user with the passed email' do
       post :create, user: {email: @friend_email}, format: :json
       expect(assigns(:invited_user).email).to eq @friend_email
@@ -35,13 +41,17 @@ describe Devise::FriendInvitationsController, type: :controller do
       expect(invited.locale).to eq 'en'
       expect(invited.timezone).to eq 'UTC'
 
+      User.find_by_email(@friend_email).destroy
       sign_out @user
       @user.update locale: 'es', timezone: 'Madrid'
       login_user_for_unit @user
+
       post :create, user: {email: @friend_email}, format: :json
       invited = User.find_by_email @friend_email
       expect(invited.locale).to eq 'es'
       expect(invited.timezone).to eq 'Madrid'
     end
+
+
   end
 end

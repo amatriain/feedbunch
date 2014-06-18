@@ -16,14 +16,24 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
   ##
   # Send an invitation email to the passed email address.
   def create
+    invited_email = friend_invitation_params[:email]
+
     # TODO after beta stage remove this to allow anyone to invite friends
     if !current_inviter.admin
+      Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} tried to send invitation to #{invited_email} without being an admin"
       head status: 403
       return
     end
 
+    # Check if user already exists
+    if User.exists? email: invited_email
+      Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} tried to send invitation to #{invited_email} but a user with that email already exists"
+      head status: 409
+      return
+    end
+
     # Create record for the invited user
-    @invited_user = invite_user
+    @invited_user = invite_user invited_email
     # If the created user is invalid, this will raise an error
     @invited_user.save!
     Rails.logger.info "User #{current_inviter.id} - #{current_inviter.email} sent invitation to join Feedbunch to user #{@invited_user.id} - #{@invited_user.email}"
@@ -62,9 +72,9 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
 
   protected
 
-  def invite_user
-    invitation_params = {email: friend_invitation_params[:email],
-                         name: friend_invitation_params[:email],
+  def invite_user(email)
+    invitation_params = {email: email,
+                         name: email,
                          locale: current_inviter.locale,
                          timezone: current_inviter.timezone}
     User.invite! invitation_params, current_inviter

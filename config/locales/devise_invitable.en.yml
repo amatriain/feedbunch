@@ -4,6 +4,7 @@ en:
       success: 'An invitation email has been sent'
       unauthorized: 'You are not authorized to send invitations'
       no_invitations_remaining: "You have no invitations remaining"
+      invited_user_exists: "There is already a user with that email address. Cannot send the invitation."
       error: 'There has been an error that prevented the invitation from being sent'
       invitation_token_invalid: 'The invitation token provided is not valid!'
       updated: 'Your password was set successfully. You are now signed in.'

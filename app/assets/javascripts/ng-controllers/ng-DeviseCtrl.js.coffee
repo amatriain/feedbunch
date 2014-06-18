@@ -38,4 +38,12 @@ angular.module('feedbunch').controller 'DeviseCtrl',
     invitationsSvc.send_invitation $scope.invitation_email
     $scope.invitation_email = null
     return
+
+  #--------------------------------------------
+  # Set a boolean flag in the root scope as false. The flag name must be passed as a string.
+  # This is used to hide alerts when clicking on their X button.
+  #--------------------------------------------
+  $scope.reset_flag = (flag)->
+    timerFlagSvc.reset flag
+    return
 ]

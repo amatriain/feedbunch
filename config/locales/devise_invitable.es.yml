@@ -4,6 +4,7 @@ es:
       success: 'Se ha enviado un correo electrónico de invitación'
       unauthorized: 'No estás autorizado para enviar invitaciones'
       no_invitations_remaining: "No te quedan invitaciónes que enviar"
+      invited_user_exists: "Ya existe un usuario con esa dirección de correo electrónico. No se puede enviar la invitación."
       error: 'Ha ocurrido un error que impidió que la invitación fuera enviada'
       invitation_token_invalid: 'El código de invitación introducido no es válido!'
       updated: 'Tu contraseña se ha guardado correctamente. Ya estás autenticado.'
