@@ -15,13 +15,10 @@ describe 'invite friend', type: :feature do
   context 'send invitation' do
 
     # TODO remove this test when friend invitation is opened to everyone
-    it 'does not send invitation for non-admin users', js: true do
+    it 'non-admin users cannot send invitations', js: true do
       @user.update admin: false
-      send_invitation @friend_email
-
-      should_show_alert 'problem-invite-friend-unauthorized'
-      mail_should_not_be_sent
-      expect(User.exists? email: @friend_email).to be false
+      visit edit_user_registration_path
+      expect(page).not_to have_css '#send-invitation-button', visible: true
     end
 
 
