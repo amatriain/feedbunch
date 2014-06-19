@@ -50,6 +50,15 @@ context.instance_eval  do
 
   br
 
+  render 'admin/subscribe_jobs/index', jobs: user.subscribe_job_states, context: self
+
+
+  br
+
+  render 'admin/refresh_feed_jobs/index', jobs: user.refresh_feed_job_states, context: self
+
+  br
+
   render 'admin/folders/index', folders: user.folders, context: self
 
   br
