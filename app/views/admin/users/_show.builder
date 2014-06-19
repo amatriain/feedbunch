@@ -8,6 +8,18 @@ context.instance_eval  do
     row :timezone
     row :quick_reading
     row :open_all_entries
+    row 'OPML import state' do |user|
+      user.opml_import_job_state.state
+    end
+    row 'OPML import date' do |user|
+      user.opml_import_job_state.updated_at
+    end
+    row 'OPML export state' do |user|
+      user.opml_export_job_state.state
+    end
+    row 'OPML export date' do |user|
+      user.opml_export_job_state.updated_at
+    end
     row :created_at
     row :updated_at
     row :confirmed_at
