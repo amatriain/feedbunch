@@ -8,6 +8,10 @@ context.instance_eval  do
     row :timezone
     row :quick_reading
     row :open_all_entries
+    row :created_at
+    row :updated_at
+    row :confirmed_at
+    row :confirmation_sent_at
     row :reset_password_sent_at
     row :remember_created_at
     row :sign_in_count
@@ -15,11 +19,17 @@ context.instance_eval  do
     row :last_sign_in_at
     row :current_sign_in_ip
     row :last_sign_in_ip
-    row :confirmed_at
-    row :confirmation_sent_at
     row :unconfirmed_email
     row :failed_attempts
     row :locked_at
+    row :unlock_token
+    row :invited_by_id
+    row :invitation_token
+    row :invitation_created_at
+    row :invitation_sent_at
+    row :invitation_accepted_at
+    row :invitation_limit
+    row :invitations_count
   end
 
   br
