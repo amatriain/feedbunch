@@ -11,7 +11,8 @@ en:
       invitation_removed: 'Your invitation was removed.'
       edit:
         header: "Accept invitation"
-        submit_button: "Set my password"
+        password: "Choose your password"
+        submit_button: "Activate account"
     mailer:
       invitation_instructions:
         subject: 'Invitation to join Feedbunch'
