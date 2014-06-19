@@ -5,7 +5,7 @@ context.instance_eval  do
     column :email
     column :invitation_sent_at
     column :invitation_accepted_at
-    column do |folder|
+    column do |invitation|
       link_to 'View', "/admin/users/#{invitation.id}"
     end
   end
