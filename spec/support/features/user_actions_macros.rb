@@ -430,3 +430,17 @@ def export_subscriptions
   visit edit_user_registration_path
   find("a[href*='#{api_opml_exports_path}']").click
 end
+
+##
+# Send an invitation to a friend.
+#
+# Receives as argument the friend's email address
+
+def send_invitation(invited_email)
+  visit edit_user_registration_path
+  find('#send-invitation-button').click
+  expect(page).to have_css '#invite-friend-popup', visible: true
+  fill_in 'user_invitation_email', with: invited_email
+  click_on 'Send invitation'
+  expect(page).not_to have_css '#invite-friend-popup', visible: true
+end
