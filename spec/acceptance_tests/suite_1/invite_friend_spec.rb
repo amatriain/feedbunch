@@ -40,8 +40,10 @@ describe 'invite friend', type: :feature do
       expect(invited_user.name).to eq @friend_email
       expect(invited_user.locale).to eq @user.locale
       expect(invited_user.timezone).to eq @user.timezone
+
       # Inviter and invited should be related
       expect(invited_user.invited_by).to eq @user
+      expect(@user.invitations).to include invited_user
     end
 
   end

@@ -123,7 +123,7 @@ Devise.setup do |config|
   # The class name of the inviting model. If this is nil,
   # the #invited_by association is declared to be polymorphic.
   # Default: nil
-  config.invited_by_class_name = 'User'
+  # config.invited_by_class_name = nil
 
   # The column name used for counter_cache column. If this is nil,
   # the #invited_by association is declared without counter_cache.
