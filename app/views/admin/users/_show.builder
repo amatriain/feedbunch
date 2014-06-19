@@ -34,6 +34,10 @@ context.instance_eval  do
 
   br
 
+  render 'admin/invitations/index', invitations: user.invitations, context: self
+
+  br
+
   render 'admin/folders/index', folders: user.folders, context: self
 
   br
