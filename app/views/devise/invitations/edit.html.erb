@@ -6,7 +6,7 @@
 
   <div class="col-xs-12 col-md-8">
     <%= simple_form_for resource, :as => resource_name,
-                        :url => invitation_path(resource_name),
+                        :url => invitation_path(locale: I18n.locale),
                         :html => { :method => :put } do |f| %>
       <%= f.hidden_field :invitation_token %>
 

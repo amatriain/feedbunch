@@ -94,10 +94,9 @@ Feedbunch::Application.routes.draw do
 
     # invitations
     post '/invitation' => 'devise/friend_invitations#create', as: :user_invitation
-    patch '/invitation' => 'devise/friend_invitations#update'
-    put '/invitation' => 'devise/friend_invitations#update'
+    patch '/invitation' => 'devise/invitations#update'
+    put '/invitation' => 'devise/invitations#update'
     get '/accept_invitation' => 'devise/invitations#edit', as: :accept_user_invitation
-    delete '/remove_invitation' => 'devise/friend_invitations#destroy', as: :remove_user_invitation
   end
 
   # Redirect authenticated users that access the root URL to '/read'

@@ -5,16 +5,14 @@
 class Devise::FriendInvitationsController < Devise::InvitationsController
 
   respond_to :json, only: [:create]
-  respond_to :html, only: [:update, :destroy]
 
   prepend_before_filter :authenticate_inviter!, :only => [:create]
   prepend_before_filter :has_invitations_left?, :only => [:create]
-  prepend_before_filter :require_no_authentication, :only => [:update, :destroy]
-  prepend_before_filter :resource_from_invitation_token, :only => [:destroy]
   helper_method :after_sign_in_path_for
 
   ##
   # Send an invitation email to the passed email address.
+
   def create
     invited_email = friend_invitation_params[:email]
 
@@ -42,29 +40,16 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
     handle_error e
   end
 
-  # PUT /resource/invitation
-  def update
-    self.resource = accept_resource
-
-    if resource.errors.empty?
-      yield resource if block_given?
-      flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
-      set_flash_message :notice, flash_message
-      sign_in(resource_name, resource)
-      respond_with resource, :location => after_accept_path_for(resource)
-    else
-      respond_with_navigational(resource){ render :edit }
-    end
-  end
-
-  # GET /resource/invitation/remove?invitation_token=abcdef
-  def destroy
-    resource.destroy
-    set_flash_message :notice, :invitation_removed
-    redirect_to after_sign_out_path_for(resource_name)
-  end
-
   protected
+
+  ##
+  # Create a user invitation.
+
+  # This creates a User instance in unconfirmed state, and sends an invitation email.
+  # The new user initially has the same locale and timezone as the inviter, and his username will default to his
+  # email address. All these values can be changed after accepting the invitation.
+  #
+  # Receives as argument the email of the invited user. The invitation will be sent to this email address.
 
   def invite_user(email)
     invitation_params = {email: email,
@@ -74,13 +59,16 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
     User.invite! invitation_params, current_inviter
   end
 
-  def accept_resource
-    resource_class.accept_invitation!(update_resource_params)
-  end
+  ##
+  # Return the user who is sending the invitation.
 
   def current_inviter
     authenticate_inviter!
   end
+
+  ##
+  # Validate that the user sending the invitation actually has invitations left.
+  # If he doesn't, an HTTP 400 is returned and the response chain is aborted.
 
   def has_invitations_left?
     unless current_inviter.nil? || current_inviter.has_invitations_left?
@@ -90,16 +78,8 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
     end
   end
 
-  def resource_from_invitation_token
-    unless params[:invitation_token] && self.resource = resource_class.find_by_invitation_token(params[:invitation_token], true)
-      set_flash_message(:alert, :invitation_token_invalid)
-      redirect_to after_sign_out_path_for(resource_name)
-    end
-  end
-
-  def update_resource_params
-    devise_parameter_sanitizer.sanitize(:accept_invitation)
-  end
+  ##
+  # Filter the accepted HTTP params, according to Rails 4 Strong Parameters feature.
 
   def friend_invitation_params
     params.require(:user).permit(:email)
