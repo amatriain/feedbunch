@@ -46,6 +46,20 @@ describe 'invite friend', type: :feature do
       expect(@user.invitations).to include invited_user
     end
 
+    it 'cannot invite already existing user', js: true do
+      existing_user = FactoryGirl.create :user, email: @friend_email
+
+      send_invitation @friend_email
+      should_show_alert 'problem-invited-user-exists'
+
+      mail_should_not_be_sent
+      expect(User.find_by_email @friend_email).to eq existing_user
+    end
+
+    it 'cannot reinvite already invited user'
+
+    it 'cannot send invitation if user has no invitations left'
+
   end
 
   context 'accept invitation' do
