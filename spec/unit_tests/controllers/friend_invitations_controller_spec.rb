@@ -62,6 +62,8 @@ describe Devise::FriendInvitationsController, type: :controller do
       invited_user = FactoryGirl.create :user, email: @friend_email,
                                         confirmed_at: nil, invitation_token: invitation_token,
                                         invitation_created_at: date_now, invitation_sent_at: date_now
+      # Delete from the mail queue any email notifications sent when creating invited_user
+      ActionMailer::Base.deliveries.clear
       invitations_before = @user.invitations_count
 
       post :create, user: {email: @friend_email}, format: :json

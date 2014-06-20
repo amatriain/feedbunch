@@ -3,7 +3,6 @@
 # It has been customized to better work with AJAX requests.
 
 class Devise::FriendInvitationsController < Devise::InvitationsController
-
   respond_to :json, only: [:create]
 
   prepend_before_filter :authenticate_inviter!, :only => [:create]
@@ -23,15 +22,14 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
       return
     end
 
-    invitation_resent = false
     # Check if user already exists
     if User.exists? email: invited_email
       user = User.find_by_email invited_email
-
       if user.invited_to_sign_up?
         # If user was invited and is awaiting confirmation, the invitation email will be resent.
-        Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} is resending invitation to #{invited_email} that was already invited on #{user.invitation_sent_at}"
-        invitation_resent = true
+        resend_invitation_email user
+        head status: 202
+        return
       else
         # If user already exists (not through an invitation), it cannot be sent an invitation.
         Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} tried to send invitation to #{invited_email} but a user with that email already exists"
@@ -45,11 +43,7 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
     # If the created user is invalid, this will raise an error
     @invited_user.save!
     Rails.logger.info "User #{current_inviter.id} - #{current_inviter.email} sent invitation to join Feedbunch to user #{@invited_user.id} - #{@invited_user.email}"
-    if invitation_resent
-      head status: 202
-    else
-      head status: :ok
-    end
+    head status: :ok
 
   rescue => e
     handle_error e
@@ -59,12 +53,13 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
 
   ##
   # Create a user invitation.
-
+  #
   # This creates a User instance in unconfirmed state, and sends an invitation email.
   # The new user initially has the same locale and timezone as the inviter, and his username will default to his
   # email address. All these values can be changed after accepting the invitation.
   #
-  # Receives as argument the email of the invited user. The invitation will be sent to this email address.
+  # Receives as argument:
+  # - email of the invited user. The invitation will be sent to this email address.
 
   def invite_user(email)
     invitation_params = {email: email,
@@ -72,6 +67,20 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
                          locale: current_inviter.locale,
                          timezone: current_inviter.timezone}
     User.invite! invitation_params, current_inviter
+  end
+
+  ##
+  # Send again an invitation email for an already invited user.
+  # The invitation token is not changed; this means that the "accept" link in this email is exactly the same as the one sent when originally invited.
+  # The invitations_count attribute of the inviter is incremented by 1.
+
+  # TODO validate that the user has invitations left, otherwise return an error code without sending the email
+
+  def resend_invitation_email(user)
+    Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} is resending invitation to #{user.email} that was already invited on #{user.invitation_sent_at}"
+    Devise.mailer.invitation_instructions(user, user.invitation_token).deliver
+    current_inviter.update invitations_count: (current_inviter.invitations_count + 1)
+    return
   end
 
   ##
