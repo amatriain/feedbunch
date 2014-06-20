@@ -23,11 +23,21 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
       return
     end
 
+    invitation_resent = false
     # Check if user already exists
     if User.exists? email: invited_email
-      Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} tried to send invitation to #{invited_email} but a user with that email already exists"
-      head status: 409
-      return
+      user = User.find_by_email invited_email
+
+      if user.invited_to_sign_up?
+        # If user was invited and is awaiting confirmation, the invitation email will be resent.
+        Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} is resending invitation to #{invited_email} that was already invited on #{user.invitation_sent_at}"
+        invitation_resent = true
+      else
+        # If user already exists (not through an invitation), it cannot be sent an invitation.
+        Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} tried to send invitation to #{invited_email} but a user with that email already exists"
+        head status: 409
+        return
+      end
     end
 
     # Create record for the invited user
@@ -35,7 +45,12 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
     # If the created user is invalid, this will raise an error
     @invited_user.save!
     Rails.logger.info "User #{current_inviter.id} - #{current_inviter.email} sent invitation to join Feedbunch to user #{@invited_user.id} - #{@invited_user.email}"
-    head status: :ok
+    if invitation_resent
+      head status: 202
+    else
+      head status: :ok
+    end
+
   rescue => e
     handle_error e
   end
