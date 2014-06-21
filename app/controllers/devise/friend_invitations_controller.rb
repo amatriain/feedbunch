@@ -95,7 +95,13 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
   # If he doesn't, an HTTP 400 is returned and the response chain is aborted.
 
   def has_invitations_left?
-    unless current_inviter.nil? || current_inviter.has_invitations_left?
+    # Admin users have no invitations limit
+    return true if current_inviter.admin
+
+    # If no invitation limit has been set, there are always invitations left
+    return true if current_inviter.invitation_limit.nil?
+
+    if current_inviter.invitations_count >= current_inviter.invitation_limit
       Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} tried to send an invitation, but has no invitations left"
       head status: 400
       return
