@@ -135,7 +135,7 @@ describe Devise::FriendInvitationsController, type: :controller do
         expect(@user.reload.invitations_count).to eq 10
       end
 
-it 'returns success regardless of invitations sent if no invitations limit is set' do
+    it 'returns success regardless of invitations sent if no invitations limit is set' do
         @user.update invitation_limit: nil, invitations_count: 10
 
         post :create, user: {email: @friend_email}, format: :json
