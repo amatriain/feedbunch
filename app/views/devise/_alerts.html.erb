@@ -15,6 +15,12 @@
   <p><%= t 'devise.invitations.success' %></p>
 </div>
 
+<%# Alert displayed when an invitation is resent successfully %>
+<div id="success-invitation-resend" class="alert alert-success" ng-show="success_invitation_resend">
+  <button type="button" class="close" ng-click="reset_flag('success_invitation_resend')">&times;</button>
+  <p><%= t 'devise.invitations.resend_success' %></p>
+</div>
+
 <%# Alert displayed when the user attempts to send an invitation without having been authorized %>
 <div id="problem-invite-friend-unauthorized" class="alert alert-danger" ng-show="invite_friend_unauthorized">
   <button type="button" class="close" ng-click="reset_flag('invite_friend_unauthorized')">&times;</button>

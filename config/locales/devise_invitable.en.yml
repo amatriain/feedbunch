@@ -2,6 +2,7 @@ en:
   devise:
     invitations:
       success: 'An invitation email has been sent'
+      resend_success: 'Your friend had already been invited. An invitation email has been sent again.'
       unauthorized: 'You are not authorized to send invitations'
       no_invitations_remaining: "You have no invitations remaining"
       invited_user_exists: "There is already a user with that email address. Cannot send the invitation."

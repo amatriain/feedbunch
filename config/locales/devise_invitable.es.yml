@@ -2,6 +2,7 @@ es:
   devise:
     invitations:
       success: 'Se ha enviado un correo electrónico de invitación'
+      resend_success: 'Tu amigo ya había sido invitado. Se ha vuelto a enviar un correo electrónico de invitación.'
       unauthorized: 'No estás autorizado para enviar invitaciones'
       no_invitations_remaining: "No te quedan invitaciónes que enviar"
       invited_user_exists: "Ya existe un usuario con esa dirección de correo electrónico. No se puede enviar la invitación."
