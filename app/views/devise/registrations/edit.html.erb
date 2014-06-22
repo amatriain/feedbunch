@@ -126,6 +126,7 @@
                  export_date = current_user.opml_export_job_state.updated_at
                end
             %>
+            <hr>
             <p><%= t 'devise.views.export_success', export_date: l(export_date.to_date, format: :long) %></p>
             <p>
               <%= link_to api_opml_exports_download_path,
