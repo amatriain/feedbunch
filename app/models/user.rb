@@ -70,6 +70,9 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :timeoutable
 
+  # Accessor to the unencrypted invitation token, to be able to resend invitations.
+  attr_reader :raw_invitation_token
+
   has_many :invitations, class_name: self.to_s, as: :invited_by
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy,
            after_add: :mark_unread_entries,

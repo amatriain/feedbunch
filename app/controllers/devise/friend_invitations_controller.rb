@@ -66,7 +66,13 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
                          name: email,
                          locale: current_inviter.locale,
                          timezone: current_inviter.timezone}
-    User.invite! invitation_params, current_inviter
+    invited_user = User.invite! invitation_params, current_inviter
+
+    # Persist the unencrypted invitation token so that it can be reused to resend invitations to the same email address.
+    # We need to save in "unencrypted_invitation_token" because "raw_invitation_token" is an instance method that
+    # only has value for this User instance, devise_invitable does not persist it in the DB.
+    invited_user.update unencrypted_invitation_token: invited_user.raw_invitation_token
+    return invited_user
   end
 
   ##
@@ -78,7 +84,7 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
 
   def resend_invitation_email(user)
     Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} is resending invitation to #{user.email} that was already invited on #{user.invitation_sent_at}"
-    Devise.mailer.invitation_instructions(user, user.invitation_token).deliver
+    Devise.mailer.invitation_instructions(user, user.unencrypted_invitation_token).deliver
     current_inviter.update invitations_count: (current_inviter.invitations_count + 1)
     return
   end

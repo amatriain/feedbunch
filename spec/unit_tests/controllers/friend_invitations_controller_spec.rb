@@ -97,8 +97,10 @@ describe Devise::FriendInvitationsController, type: :controller do
       before :each do
         @date_now = Time.zone.parse '2000-01-01'
         @invitation_token = 'abc'
+        @unencrypted_invitation_token = 'def'
         @invited_user = FactoryGirl.create :user, email: @friend_email,
                                           confirmed_at: nil, invitation_token: @invitation_token,
+                                          unencrypted_invitation_token: @unencrypted_invitation_token,
                                           invitation_created_at: @date_now, invitation_sent_at: @date_now
         # Delete from the mail queue any email notifications sent when creating @invited_user
         ActionMailer::Base.deliveries.clear
@@ -116,7 +118,7 @@ describe Devise::FriendInvitationsController, type: :controller do
         # Invitation token should not change
         expect(@invited_user.reload.invitation_token).to eq @invitation_token
         # Invitation email should be sent again
-        mail_should_be_sent path: "/accept_invitation?invitation_token=#{@invitation_token}",
+        mail_should_be_sent path: "/accept_invitation?invitation_token=#{@unencrypted_invitation_token}",
                             to: @friend_email,
                             text: 'Someone has invited you'
         # Inviter's invitations count should increase by 1
