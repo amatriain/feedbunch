@@ -41,28 +41,76 @@ describe 'invite friend', type: :feature do
       expect(invited_user.locale).to eq @user.locale
       expect(invited_user.timezone).to eq @user.timezone
 
+      # Invitations count for the inviter should be incremented by 1
+      expect(@user.reload.invitations_count).to eq 1
+
       # Inviter and invited should be related
       expect(invited_user.invited_by).to eq @user
       expect(@user.invitations).to include invited_user
     end
 
-    it 'cannot invite already existing user', js: true do
+    it 'cannot invite already confirmed user', js: true do
       existing_user = FactoryGirl.create :user, email: @friend_email
 
       send_invitation @friend_email
       should_show_alert 'problem-invited-user-exists'
 
       mail_should_not_be_sent
+      # Existing user should not be modified
       expect(User.find_by_email @friend_email).to eq existing_user
+      # Invitations count for the inviter should not be incremented
+      expect(@user.reload.invitations_count).to eq 0
     end
 
-    it 'cannot reinvite already invited user'
+    it 'resends invitation to already invited user', js: true do
+      send_invitation @friend_email
+      # Delete from the mail queue any email notifications sent when sending invitation
+      ActionMailer::Base.deliveries.clear
 
-    it 'cannot send invitation if user has no invitations left'
+      send_invitation @friend_email
+      should_show_alert 'success-invitation-resend'
+
+      # test that an invitation email is sent
+      mail_should_be_sent path: '/accept_invitation',
+                          to: @friend_email, text: 'Someone has invited you'
+
+      reinvited_user = User.find_by_email @friend_email
+
+      # Invitations count for the inviter should be incremented by 1
+      expect(@user.reload.invitations_count).to eq 2
+
+      # Inviter and invited should be related
+      expect(reinvited_user.invited_by).to eq @user
+      expect(@user.invitations).to include reinvited_user
+    end
+
+    # TODO uncomment this test when the invite feature is opened to everyone
+=begin
+    it 'cannot send invitation if user has no invitations left', js: true do
+      @user.update invitation_limit: 10, invitations_count: 10
+
+      send_invitation @friend_email
+      should_show_alert 'problem-no-invitations-left'
+
+      mail_should_not_be_sent
+      expect(User.exists? email: @friend_email).to be false
+    end
+=end
 
   end
 
   context 'accept invitation' do
+
+    before :each do
+      send_invitation @friend_email
+      logout_user
+      @accept_link = mail_should_be_sent path: '/accept_invitation',
+                                         to: @friend_email, text: 'Someone has invited you'
+    end
+
+    it 'accepts invitation', js: true do
+      visit @accept_link
+    end
 
   end
 

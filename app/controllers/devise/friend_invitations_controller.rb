@@ -81,8 +81,6 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
   # The invitation token is not changed; this means that the "accept" link in this email is exactly the same as the one sent when originally invited.
   # The invitations_count attribute of the inviter is incremented by 1.
 
-  # TODO validate that the user has invitations left, otherwise return an error code without sending the email
-
   def resend_invitation_email(user)
     Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} is resending invitation to #{user.email} that was already invited on #{user.invitation_sent_at}"
     Devise.mailer.invitation_instructions(user, user.unencrypted_invitation_token).deliver
