@@ -67,6 +67,7 @@ class Devise::FriendInvitationsController < Devise::InvitationsController
                          locale: current_inviter.locale,
                          timezone: current_inviter.timezone}
     invited_user = User.invite! invitation_params, current_inviter
+    current_inviter.update invitations_count: (current_inviter.invitations_count + 1)
 
     # Persist the unencrypted invitation token so that it can be reused to resend invitations to the same email address.
     # We need to save in "unencrypted_invitation_token" because "raw_invitation_token" is an instance method that

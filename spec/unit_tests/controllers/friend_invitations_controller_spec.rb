@@ -63,11 +63,16 @@ describe Devise::FriendInvitationsController, type: :controller do
       end
 
       it 'invites user with the passed email' do
+        invitations_before = @user.invitations_count
+
         post :create, user: {email: @friend_email}, format: :json
 
         expect(assigns(:invited_user).email).to eq @friend_email
         expect(assigns(:invited_user).name).to eq @friend_email
         mail_should_be_sent path: '/accept_invitation', to: @friend_email, text: 'Someone has invited you'
+
+        # Inviter's invitations count should increase by 1
+        expect(@user.reload.invitations_count).to eq invitations_before + 1
       end
 
       it 'initially assigns the inviter locale and timezone to the invited' do
