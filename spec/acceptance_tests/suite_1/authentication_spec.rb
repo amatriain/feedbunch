@@ -347,16 +347,10 @@ describe 'authentication', type: :feature do
     end
 
     it 'redirects to login page if an AJAX request is returned an HTTP 401 Unauthorized', js: true do
-      feed = FactoryGirl.create :feed
-      entry = FactoryGirl.build :entry, feed_id: feed.id
-      feed.entries << entry
-      @user.subscribe feed.fetch_url
+      page.driver.browser.clear_cookies
+      go_to_start_page
 
-      visit read_path
-      read_feed feed, @user
-      logout
-      read_feed feed, @user
-
+      expect(page).to have_text 'Sign in'
       expect(current_path).to eq new_user_session_path
     end
 
