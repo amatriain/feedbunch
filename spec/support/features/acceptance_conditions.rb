@@ -4,7 +4,7 @@
 # To see if the user is logged in, we check the presence of a "Logout" link in the navbar.
 
 def user_should_be_logged_in
-  expect(page).to have_css 'div.navbar #user-dropdown'
+  expect(page).to have_css 'div.navbar #user-dropdown', visible: true
 end
 
 ##

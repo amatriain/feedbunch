@@ -125,9 +125,13 @@ describe 'invite friend', type: :feature do
       # Test that user cannot login before confirming the email address
       failed_login_user_for_feature @friend_email, friend_password
 
+      # Convert the link sent by email into a relative URL that can be accessed during testing
+      confirmation_url = get_confirm_address_link_from_email confirmation_link
       # Follow confirmation link received by email, user should be able to log in afterwards
-      visit confirmation_link
+      visit confirmation_url
       friend = User.find_by_email @friend_email
+      # Give value to password (instance attribute) so that user can sign in
+      friend.password = friend_password
       login_user_for_feature friend
       user_should_be_logged_in
     end
@@ -147,10 +151,7 @@ describe 'invite friend', type: :feature do
                                          to: @friend_email, text: 'Someone has invited you'
 
       # Build the correct URL that must be used in testing for accepting invitations
-      uri = URI accept_link
-      accept_uri = URI accept_user_invitation_path
-      accept_uri.query = uri.query
-      @accept_url = accept_uri.to_s
+      @accept_url = get_accept_invitation_link_from_email accept_link
 
       @password = 'invited_password'
     end
@@ -201,10 +202,7 @@ describe 'invite friend', type: :feature do
       # Link in second invitation should be the same as in the first
       resent_link = mail_should_be_sent path: '/accept_invitation',
                                         to: @friend_email, text: 'Someone has invited you'
-      resent_uri = URI resent_link
-      resent_accept_uri = URI accept_user_invitation_path
-      resent_accept_uri.query = resent_uri.query
-      resent_accept_url = resent_accept_uri.to_s
+      resent_accept_url = get_accept_invitation_link_from_email resent_link
 
       expect(resent_accept_url).to eq @accept_url
 

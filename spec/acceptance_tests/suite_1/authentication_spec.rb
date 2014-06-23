@@ -60,14 +60,17 @@ describe 'authentication', type: :feature do
         fill_in 'Confirm password', with: new_password
         click_on 'Sign up'
 
-        # test that a confirmation email is sent
+        # Test that a confirmation email is sent
         confirmation_link = mail_should_be_sent path: confirmation_path, to: user.email
+
+        # Convert absolute URL en email into relative URL
+        confirmation_url = get_confirm_address_link_from_email confirmation_link
 
         # Test that user cannot login before confirming the email address
         failed_login_user_for_feature new_email, new_password
 
         # Follow link received by email, user should be able to log in afterwards
-        visit confirmation_link
+        visit confirmation_url
         login_user_for_feature @user
         user_should_be_logged_in
       end
