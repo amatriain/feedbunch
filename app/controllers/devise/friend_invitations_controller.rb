@@ -1,6 +1,7 @@
 ##
 # Customized version of Devise::InvitationsController.
-# It has been customized to better work with AJAX requests.
+# It has been customized to better work with AJAX requests. It also can resend invitation emails without generating
+# a new invitation token.
 
 class Devise::FriendInvitationsController < Devise::InvitationsController
   respond_to :json, only: [:create]
