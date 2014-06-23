@@ -77,7 +77,7 @@ Feedbunch::Application.routes.draw do
 
     # registrations
     get '/signup' => 'devise/registrations#new', as: :new_user_registration
-    post '/signup' => 'devise/registrations#create', as: :user_registration
+    post '/signup' => 'devise/profiles#create', as: :user_registration
     get '/profile' => 'devise/registrations#edit', as: :edit_user_registration
     put '/profile' => 'devise/registrations#update'
     delete '/profile' => 'devise/profiles#destroy', as: :delete_user_registration
