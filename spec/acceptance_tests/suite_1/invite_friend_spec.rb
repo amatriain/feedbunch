@@ -117,6 +117,7 @@ describe 'invite friend', type: :feature do
       fill_in 'Password', with: friend_password
       fill_in 'Confirm password', with: friend_password
       click_on 'Sign up'
+      expect(current_path).to eq root_path
 
       # test that a confirmation email is sent
       confirmation_link = mail_should_be_sent path: confirmation_path, to: @friend_email
@@ -130,6 +131,10 @@ describe 'invite friend', type: :feature do
       login_user_for_feature friend
       user_should_be_logged_in
     end
+
+    it 'cannot accept invitation after signing up'
+
+    it 'does not destroy confirmed user when signing up'
 
   end
 
