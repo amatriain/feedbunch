@@ -136,9 +136,39 @@ describe 'invite friend', type: :feature do
       user_should_be_logged_in
     end
 
-    it 'cannot accept invitation after signing up'
+    it 'cannot accept invitation after signing up', js: true do
+      # Friend is sent an invitation
+      send_invitation @friend_email
+      should_show_alert 'success-invite-friend'
+      accept_link = mail_should_be_sent path: '/accept_invitation', to: @friend_email, text: 'Someone has invited you'
+      logout_user
 
-    it 'does not destroy confirmed user when signing up'
+      # Friend signs up through the sign up view instead of clicking on the "accept invitation" link in the email
+      visit new_user_registration_path
+      friend_password = 'friend_password'
+      fill_in 'Email', with: @friend_email
+      fill_in 'Password', with: friend_password
+      fill_in 'Confirm password', with: friend_password
+      click_on 'Sign up'
+      expect(current_path).to eq root_path
+
+      # test that a confirmation email is sent
+      confirmation_link = mail_should_be_sent path: confirmation_path, to: @friend_email
+
+      # user should not be able to accept invitation after signup (before confirmation)
+      accept_url = get_accept_invitation_link_from_email accept_link
+      visit accept_url
+      expect(page).to have_text 'The invitation token provided is not valid'
+
+      # confirm email address entered during signup
+      confirmation_url = get_confirm_address_link_from_email confirmation_link
+
+      # user should not be able to accept invitation after signup (after confirmation)
+      visit accept_url
+      expect(page).to have_text 'The invitation token provided is not valid'
+    end
+
+    it 'does not destroy confirmed user when trying to sign up again'
 
   end
 
