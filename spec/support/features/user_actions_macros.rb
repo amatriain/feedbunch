@@ -444,3 +444,59 @@ def send_invitation(invited_email)
   click_on 'Send invitation'
   expect(page).not_to have_css '#invite-friend-popup', visible: true
 end
+
+##
+# Accept an invitation to join Feedbunch.
+# Optional arguments:
+# - the password to set for the user. If not passed, the default string "some_password" will be used.
+# - the accept link present in the sent email. If the accept link is not passed, the invitation email
+# is popped from the ActionMailer deliveries queue.
+# - email address to which the invitation is sent. This argument is only used if the accept_link argument
+# is not passed; in this case, if the invited_email argument is passed, the method validates that the
+# invitation email is sent to this email address. If neither accept_invitation nor invited_email are passed,
+# the email address to which the invitation is sent will not be validated.
+#
+# Important: an email can be popped from the deliveries queue only once. This means that if the test that
+# invokes this function needs to do some validation on the invitation email, the email must be popped
+# and parsed in the test, and the accept link must be passed as argument to this function, because the
+# function has no way to retrieve the accept link otherwise.
+
+def accept_invitation(password: nil, accept_link: nil, invited_email: nil)
+  password ||= 'some_password'
+  if accept_link.nil?
+    email_params = {path: '/accept_invitation', text: 'Someone has invited you'}
+    email_params.merge!({to: invited_email}) if invited_email.present?
+    accept_link = mail_should_be_sent email_params
+  end
+  accept_url = get_accept_invitation_link_from_email accept_link
+  visit accept_url
+  fill_in 'Password', with: password
+  fill_in 'Confirm password', with: password
+  click_on 'Activate account'
+  expect(current_path).to eq read_path
+  user_should_be_logged_in
+end
+
+##
+# Sign up a new user account.
+# Receives as arguments the email address and password for the new account.
+
+def sign_up(email, password)
+  visit new_user_registration_path
+  fill_in 'Email', with: email
+  fill_in 'Password', with: password
+  fill_in 'Confirm password', with: password
+  click_on 'Sign up'
+  expect(current_path).to eq root_path
+
+  # test that a confirmation email is sent
+  confirmation_link = mail_should_be_sent path: confirmation_path, to: email
+
+  # Test that user cannot login before confirming the email address
+  failed_login_user_for_feature email, password
+
+  # Convert the link sent by email into a relative URL that can be accessed during testing
+  confirmation_url = get_confirm_address_link_from_email confirmation_link
+  # Follow confirmation link received by email, user should be able to log in afterwards
+  visit confirmation_url
+end

@@ -67,19 +67,9 @@ describe 'invite friend', type: :feature do
       send_invitation @friend_email
       logout_user
       expect(@user.reload.invitations_count).to eq 1
-      accept_link = mail_should_be_sent path: '/accept_invitation',
-                                        to: @friend_email, text: 'Someone has invited you'
-      accept_url = get_accept_invitation_link_from_email accept_link
-      password = 'invited_password'
-      visit accept_url
-      password = 'invited_password'
-      fill_in 'Password', with: password
-      fill_in 'Confirm password', with: password
-      click_on 'Activate account'
-      expect(current_path).to eq read_path
-      user_should_be_logged_in
-      invited_user = User.find_by_email @friend_email
+      accept_invitation invited_email: @friend_email
       logout_user
+      invited_user = User.find_by_email @friend_email
 
       # send invitation again to the same friend
       login_user_for_feature @user
@@ -141,25 +131,9 @@ describe 'invite friend', type: :feature do
       mail_should_be_sent path: '/accept_invitation', to: @friend_email, text: 'Someone has invited you'
       logout_user
 
-      # Friend signs up through the sign up view instead of clicking on the "accept invitation" link in the email
-      visit new_user_registration_path
       friend_password = 'friend_password'
-      fill_in 'Email', with: @friend_email
-      fill_in 'Password', with: friend_password
-      fill_in 'Confirm password', with: friend_password
-      click_on 'Sign up'
-      expect(current_path).to eq root_path
+      sign_up @friend_email, friend_password
 
-      # test that a confirmation email is sent
-      confirmation_link = mail_should_be_sent path: confirmation_path, to: @friend_email
-
-      # Test that user cannot login before confirming the email address
-      failed_login_user_for_feature @friend_email, friend_password
-
-      # Convert the link sent by email into a relative URL that can be accessed during testing
-      confirmation_url = get_confirm_address_link_from_email confirmation_link
-      # Follow confirmation link received by email, user should be able to log in afterwards
-      visit confirmation_url
       friend = User.find_by_email @friend_email
       # Give value to password (instance attribute) so that user can sign in
       friend.password = friend_password
@@ -222,16 +196,8 @@ describe 'invite friend', type: :feature do
       # User is sent and accepts invitation
       send_invitation @friend_email
       logout_user
-      accept_link = mail_should_be_sent path: '/accept_invitation',
-                                        to: @friend_email, text: 'Someone has invited you'
-      accept_url = get_accept_invitation_link_from_email accept_link
       password = 'invited_password'
-      visit accept_url
-      fill_in 'Password', with: password
-      fill_in 'Confirm password', with: password
-      click_on 'Activate account'
-      expect(current_path).to eq read_path
-      user_should_be_logged_in
+      accept_invitation password: password, invited_email: @friend_email
       logout_user
       invited_user = User.find_by_email @friend_email
 
@@ -256,11 +222,11 @@ describe 'invite friend', type: :feature do
     before :each do
       send_invitation @friend_email
       logout_user
-      accept_link = mail_should_be_sent path: '/accept_invitation',
+      @accept_link = mail_should_be_sent path: '/accept_invitation',
                                          to: @friend_email, text: 'Someone has invited you'
 
       # Build the correct URL that must be used in testing for accepting invitations
-      @accept_url = get_accept_invitation_link_from_email accept_link
+      @accept_url = get_accept_invitation_link_from_email @accept_link
 
       @password = 'invited_password'
     end
@@ -335,7 +301,25 @@ describe 'invite friend', type: :feature do
       user_should_be_logged_in
     end
 
-    it 'cannot sign up after accepting invitation'
+    it 'cannot sign up after accepting invitation', js: true do
+      accept_invitation password: @password, accept_link: @accept_link, invited_email: @friend_email
+      logout_user
+
+      invited_user = User.find_by_email @friend_email
+
+      # User should not be destroyed when trying to sign up
+      expect_any_instance_of(User).not_to receive :destroy
+
+      visit new_user_registration_path
+      fill_in 'Email', with: @friend_email
+      fill_in 'Password', with: @password
+      fill_in 'Confirm password', with: @password
+      click_on 'Sign up'
+
+      expect(page).to have_text 'Email has already been taken'
+      # User should not be changed by this signup attempt
+      expect(User.find_by_email @friend_email).to eq invited_user
+    end
 
   end
 

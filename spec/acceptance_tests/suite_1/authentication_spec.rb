@@ -54,23 +54,9 @@ describe 'authentication', type: :feature do
       it 'signs up new user' do
         new_email = 'new_email@test.com'
         new_password = 'new_password'
-        user = FactoryGirl.build :user, email: new_email, password: new_password
-        fill_in 'Email', with: new_email
-        fill_in 'Password', with: new_password
-        fill_in 'Confirm password', with: new_password
-        click_on 'Sign up'
 
-        # Test that a confirmation email is sent
-        confirmation_link = mail_should_be_sent path: confirmation_path, to: user.email
+        sign_up new_email, new_password
 
-        # Convert absolute URL en email into relative URL
-        confirmation_url = get_confirm_address_link_from_email confirmation_link
-
-        # Test that user cannot login before confirming the email address
-        failed_login_user_for_feature new_email, new_password
-
-        # Follow link received by email, user should be able to log in afterwards
-        visit confirmation_url
         login_user_for_feature @user
         user_should_be_logged_in
       end
@@ -82,6 +68,8 @@ describe 'authentication', type: :feature do
         fill_in 'Password', with: new_password
         fill_in 'Confirm password', with: new_password
         click_on 'Sign up'
+
+        expect(page).to have_text 'Email has already been taken'
 
         # test that a confirmation email is not sent
         mail_should_not_be_sent
@@ -98,6 +86,8 @@ describe 'authentication', type: :feature do
         fill_in 'Password', with: new_password
         fill_in 'Confirm password', with: different_password
         click_on 'Sign up'
+
+        expect(page).to have_text "Password confirmation doesn't match Password"
 
         # test that a confirmation email is not sent
         mail_should_not_be_sent
