@@ -62,6 +62,37 @@ describe 'invite friend', type: :feature do
       expect(@user.reload.invitations_count).to eq 0
     end
 
+    it 'cannot invite user who accepted an invitation', js: true do
+      # friend receives and accepts an invitation
+      send_invitation @friend_email
+      logout_user
+      expect(@user.reload.invitations_count).to eq 1
+      accept_link = mail_should_be_sent path: '/accept_invitation',
+                                        to: @friend_email, text: 'Someone has invited you'
+      accept_url = get_accept_invitation_link_from_email accept_link
+      password = 'invited_password'
+      visit accept_url
+      password = 'invited_password'
+      fill_in 'Password', with: password
+      fill_in 'Confirm password', with: password
+      click_on 'Activate account'
+      expect(current_path).to eq read_path
+      user_should_be_logged_in
+      invited_user = User.find_by_email @friend_email
+      logout_user
+
+      # send invitation again to the same friend
+      login_user_for_feature @user
+      send_invitation @friend_email
+      should_show_alert 'problem-invited-user-exists'
+
+      mail_should_not_be_sent
+      # Existing user should not be modified
+      expect(User.find_by_email @friend_email).to eq invited_user
+      # Invitations count for the inviter should not be incremented
+      expect(@user.reload.invitations_count).to eq 1
+    end
+
     it 'resends invitation to already invited user', js: true do
       send_invitation @friend_email
       # Delete from the mail queue any email notifications sent when sending invitation
@@ -168,7 +199,55 @@ describe 'invite friend', type: :feature do
       expect(page).to have_text 'The invitation token provided is not valid'
     end
 
-    it 'does not destroy confirmed user when trying to sign up again'
+    it 'does not destroy confirmed user when trying to sign up again', js: true do
+      password = 'friend_password'
+      existing_user = FactoryGirl.create :user, email: @friend_email, password: password
+      logout_user
+
+      expect_any_instance_of(User).not_to receive :destroy
+
+      # existing user tries to sign up again
+      visit new_user_registration_path
+      fill_in 'Email', with: @friend_email
+      fill_in 'Password', with: password
+      fill_in 'Confirm password', with: password
+      click_on 'Sign up'
+      expect(page).to have_text 'Email has already been taken'
+      expect(current_path).to eq new_user_registration_path
+      # User instance should not have changed
+      expect(User.find_by_email @friend_email).to eq existing_user
+    end
+
+    it 'does not destroy user who accepted an invitation when trying to sign up again', js: true do
+      # User is sent and accepts invitation
+      send_invitation @friend_email
+      logout_user
+      accept_link = mail_should_be_sent path: '/accept_invitation',
+                                        to: @friend_email, text: 'Someone has invited you'
+      accept_url = get_accept_invitation_link_from_email accept_link
+      password = 'invited_password'
+      visit accept_url
+      fill_in 'Password', with: password
+      fill_in 'Confirm password', with: password
+      click_on 'Activate account'
+      expect(current_path).to eq read_path
+      user_should_be_logged_in
+      logout_user
+      invited_user = User.find_by_email @friend_email
+
+      expect_any_instance_of(User).not_to receive :destroy
+
+      # existing user tries to sign up again
+      visit new_user_registration_path
+      fill_in 'Email', with: @friend_email
+      fill_in 'Password', with: password
+      fill_in 'Confirm password', with: password
+      click_on 'Sign up'
+      expect(page).to have_text 'Email has already been taken'
+      expect(current_path).to eq new_user_registration_path
+      # User instance should not have changed
+      expect(User.find_by_email @friend_email).to eq invited_user
+    end
 
   end
 
@@ -255,6 +334,8 @@ describe 'invite friend', type: :feature do
 
       user_should_be_logged_in
     end
+
+    it 'cannot sign up after accepting invitation'
 
   end
 
