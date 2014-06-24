@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/gregbell/active_admin.git
-  revision: f99eef71df31504055f50438128e8cfc0d1a7809
+  revision: d7dfc134574e08a5509291ee9d5df386540533ce
   specs:
     activeadmin (1.0.0.pre)
       arbre (~> 1.0)
@@ -141,9 +141,9 @@ GEM
     hike (1.2.3)
     http_accept_language (2.0.1)
     i18n (0.6.9)
-    inherited_resources (1.4.1)
+    inherited_resources (1.5.0)
       has_scope (~> 0.6.0.rc)
-      responders (~> 1.0.0.rc)
+      responders (~> 1.0)
     jquery-rails (3.1.1)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
@@ -206,7 +206,7 @@ GEM
     redis (3.0.7)
     redis-namespace (1.4.1)
       redis (~> 3.0.4)
-    responders (1.0.0)
+    responders (1.1.0)
       railties (>= 3.2, < 5)
     resque (1.25.2)
       mono_logger (~> 1.0)
