@@ -136,7 +136,7 @@ GEM
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
-    high_voltage (2.1.0)
+    high_voltage (2.2.0)
     highline (1.6.21)
     hike (1.2.3)
     http_accept_language (2.0.1)
