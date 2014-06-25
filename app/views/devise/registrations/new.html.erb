@@ -2,9 +2,23 @@
   <%= t 'devise.views.sign_up' %>
 <% end %>
 
+<%# TODO delete this div when beta stage ends and signup is again open for everyone %>
+<div class="alert alert-warning">
+  <div class="row">
+    <div class="col-xs-3 col-sm-2">
+      <i class="fa fa-flask fa-4x"></i>
+    </div>
+
+    <div class="col-xs-9 col-sm-10">
+      <p><%= t 'devise.views.sign_up_disabled' %></p>
+    </div>
+  </div>
+</div>
+
 <div class="row">
 
   <div class="col-xs-12 col-md-8">
+
     <%= simple_form_for resource, :as => resource_name,
                         :url => user_registration_path(locale: I18n.locale) do |f| %>
 
