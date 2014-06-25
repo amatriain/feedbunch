@@ -51,6 +51,8 @@ describe 'authentication', type: :feature do
         visit new_user_registration_path
       end
 
+      # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
       it 'signs up new user' do
         new_email = 'new_email@test.com'
         new_password = 'new_password'
@@ -60,7 +62,10 @@ describe 'authentication', type: :feature do
         login_user_for_feature @user
         user_should_be_logged_in
       end
+=end
 
+      # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
       it 'does not sign up user if email already registered' do
         new_password = 'new_password'
         user = FactoryGirl.build :user, email: @user.email, password: new_password
@@ -77,7 +82,10 @@ describe 'authentication', type: :feature do
         # Test that user cannot login
         failed_login_user_for_feature user.email, new_password
       end
+=end
 
+      # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
       it 'does not sign up user if both password fields do not match' do
         new_email = 'new_email@test.com'
         new_password = 'new_password'
@@ -96,6 +104,7 @@ describe 'authentication', type: :feature do
         failed_login_user_for_feature new_email, new_password
         failed_login_user_for_feature new_email, different_password
       end
+=end
 
     end
 
@@ -177,6 +186,8 @@ describe 'authentication', type: :feature do
 
     context 'resend confirmation email' do
 
+      # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
       it 'sends confirmation email to unconfirmed user' do
         # sign up new user
         visit new_user_registration_path
@@ -208,7 +219,10 @@ describe 'authentication', type: :feature do
         # Check that user can log in
         login_user_for_feature user
       end
+=end
 
+      # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
       it 'does not send confirmation email to a confirmed user' do
         # sign up new user
         visit new_user_registration_path
@@ -232,6 +246,7 @@ describe 'authentication', type: :feature do
         # Check that no email is sent
         mail_should_not_be_sent
       end
+=end
 
       it 'does not send confirmation email to an unregistered user' do
         unregistered_email = 'unregistered@test.com'

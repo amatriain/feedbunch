@@ -124,6 +124,8 @@ describe 'invite friend', type: :feature do
       should_show_alert 'problem-sending-invitation'
     end
 
+    # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
     it 'can sign up instead of accepting an invitation', js: true do
       # Friend is sent an invitation
       send_invitation @friend_email
@@ -140,7 +142,10 @@ describe 'invite friend', type: :feature do
       login_user_for_feature friend
       user_should_be_logged_in
     end
+=end
 
+    # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
     it 'cannot accept invitation after signing up', js: true do
       # Friend is sent an invitation
       send_invitation @friend_email
@@ -172,7 +177,10 @@ describe 'invite friend', type: :feature do
       visit accept_url
       expect(page).to have_text 'The invitation token provided is not valid'
     end
+=end
 
+    # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
     it 'does not destroy confirmed user when trying to sign up again', js: true do
       password = 'friend_password'
       existing_user = FactoryGirl.create :user, email: @friend_email, password: password
@@ -191,7 +199,10 @@ describe 'invite friend', type: :feature do
       # User instance should not have changed
       expect(User.find_by_email @friend_email).to eq existing_user
     end
+=end
 
+    # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
     it 'does not destroy user who accepted an invitation when trying to sign up again', js: true do
       # User is sent and accepts invitation
       send_invitation @friend_email
@@ -214,6 +225,7 @@ describe 'invite friend', type: :feature do
       # User instance should not have changed
       expect(User.find_by_email @friend_email).to eq invited_user
     end
+=end
 
   end
 
@@ -301,6 +313,8 @@ describe 'invite friend', type: :feature do
       user_should_be_logged_in
     end
 
+    # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
     it 'cannot sign up after accepting invitation', js: true do
       accept_invitation password: @password, accept_link: @accept_link, invited_email: @friend_email
       logout_user
@@ -320,6 +334,7 @@ describe 'invite friend', type: :feature do
       # User should not be changed by this signup attempt
       expect(User.find_by_email @friend_email).to eq invited_user
     end
+=end
 
   end
 

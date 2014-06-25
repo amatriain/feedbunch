@@ -23,6 +23,8 @@ describe 'automatically closing notices and alerts', type: :feature do
     expect(page).not_to have_css 'div#alert'
   end
 
+  # TODO uncomment this test when beta ends and signup is opened to everyone
+=begin
   it 'closes Devise errors after 5 seconds', js: true do
     visit new_user_registration_path
     fill_in 'Email', with: @user.email
@@ -34,4 +36,5 @@ describe 'automatically closing notices and alerts', type: :feature do
     sleep 5
     expect(page).not_to have_css 'div#devise-error'
   end
+=end
 end
