@@ -28,6 +28,11 @@ class Devise::ProfilesController < Devise::RegistrationsController
   # returned by default, which is not the behavior we desire).
 
   def create
+
+    # TODO remove these two lines when the beta stage ends and signup is open to everyone
+    head status: 403
+    return
+
     if User.exists? email: params[:user][:email]
       user = User.find_by_email params[:user][:email]
       if user.invited_to_sign_up?
