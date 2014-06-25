@@ -5,7 +5,7 @@
   <div id="refresh-state-{{job_state.id}}"
        ng-mouseenter="tooltips_refresh_job_state(job_state)">
 
-    <div class="col-xs-12 col-md-9 alert alert-danger alert-block" ng-show="job_state.state=='ERROR'">
+    <div class="col-xs-12 col-md-9 alert alert-danger" ng-show="job_state.state=='ERROR'">
 
       <button type="button"
               class="close"
@@ -29,7 +29,7 @@
 
     </div>
 
-    <div class="col-xs-12 col-md-9 alert alert-info alert-block" ng-show="job_state.state=='RUNNING'">
+    <div class="col-xs-12 col-md-9 alert alert-info" ng-show="job_state.state=='RUNNING'">
 
       <button type="button"
               class="close"
@@ -53,7 +53,7 @@
 
     </div>
 
-    <div class="col-xs-12 col-md-9 alert alert-success alert-block" ng-show="job_state.state=='SUCCESS'">
+    <div class="col-xs-12 col-md-9 alert alert-success" ng-show="job_state.state=='SUCCESS'">
 
       <button type="button"
               class="close"
