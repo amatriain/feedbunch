@@ -14,6 +14,6 @@
 class PasswordIconInput < SimpleForm::Inputs::Base
   def input
     input_html_options[:placeholder] ||= I18n.t 'simple_form.placeholders.user.password'
-    "<span class=\"input-group-addon\"><i class=\"fa fa-key\"></i></span>#{@builder.password_field(attribute_name, input_html_options)}".html_safe
+    "<span class=\"input-group-addon\"><i class=\"fa fa-fw fa-key\"></i></span>#{@builder.password_field(attribute_name, input_html_options)}".html_safe
   end
 end

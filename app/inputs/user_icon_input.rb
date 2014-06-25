@@ -14,6 +14,6 @@
 class UserIconInput < SimpleForm::Inputs::Base
   def input
     input_html_options[:placeholder] ||= I18n.t 'simple_form.placeholders.user.username'
-    "<span class=\"input-group-addon\"><i class=\"fa fa-user\"></i></span>#{@builder.text_field(attribute_name, input_html_options)}".html_safe
+    "<span class=\"input-group-addon\"><i class=\"fa fa-fw fa-user\"></i></span>#{@builder.text_field(attribute_name, input_html_options)}".html_safe
   end
 end
