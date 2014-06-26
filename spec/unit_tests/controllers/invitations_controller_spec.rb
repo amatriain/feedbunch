@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Devise::FriendInvitationsController, type: :controller do
+describe FeedbunchAuth::InvitationsController, type: :controller do
 
   before :each do
     # TODO remove admin: true when the invite feature is opened to everyone

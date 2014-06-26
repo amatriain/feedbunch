@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Devise::ProfilesController, type: :controller do
+describe FeedbunchAuth::RegistrationsController, type: :controller do
 
   context 'POST create' do
 

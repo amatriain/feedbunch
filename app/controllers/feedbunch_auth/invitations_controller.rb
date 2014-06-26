@@ -3,7 +3,7 @@
 # It has been customized to better work with AJAX requests. It also can resend invitation emails without generating
 # a new invitation token.
 
-class Devise::FriendInvitationsController < Devise::InvitationsController
+class FeedbunchAuth::InvitationsController < Devise::InvitationsController
   respond_to :json, only: [:create]
 
   prepend_before_filter :authenticate_inviter!, :only => [:create]

@@ -1,16 +1,16 @@
 ##
 # Customized version of Devise::RegistrationsController.
 #
-# Before creating an account (ProfilesController#create), it checks if the passed email is already in the db
+# Before creating an account (RegistrationsController#create), it checks if the passed email is already in the db
 # associated with a user that was sent an invitation email but never accepted it. In this case the already-existing
 # user is destroyed before yielding to the default Devise controller. This allows users who received an invitation
 # email but never accepted it to sign up normally.
 #
-# Before accepting an account deletion (ProfilesController#destroy method), it
+# Before accepting an account deletion (RegistrationsController#destroy method), it
 # validates that the user-submitted password is correct. Only if the password is correct
 # RegistrationsController#destroy is invoked to actually delete the account.
 
-class Devise::ProfilesController < Devise::RegistrationsController
+class FeedbunchAuth::RegistrationsController < Devise::RegistrationsController
 
   before_filter :authenticate_user!, except: [:create]
 

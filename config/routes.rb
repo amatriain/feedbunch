@@ -77,10 +77,10 @@ Feedbunch::Application.routes.draw do
 
     # registrations
     get '/signup' => 'devise/registrations#new', as: :new_user_registration
-    post '/signup' => 'devise/profiles#create', as: :user_registration
+    post '/signup' => 'feedbunch_auth/registrations#create', as: :user_registration
     get '/profile' => 'devise/registrations#edit', as: :edit_user_registration
     put '/profile' => 'devise/registrations#update'
-    delete '/profile' => 'devise/profiles#destroy', as: :delete_user_registration
+    delete '/profile' => 'feedbunch_auth/registrations#destroy', as: :delete_user_registration
 
     # confirmations
     get '/resend_confirmation' => 'devise/confirmations#new', as: :new_user_confirmation
@@ -93,7 +93,7 @@ Feedbunch::Application.routes.draw do
     get '/unlock_account' => 'devise/unlocks#show'
 
     # invitations
-    post '/invitation' => 'devise/friend_invitations#create', as: :user_invitation
+    post '/invitation' => 'feedbunch_auth/invitations#create', as: :user_invitation
     patch '/invitation' => 'devise/invitations#update'
     put '/invitation' => 'devise/invitations#update'
     get '/accept_invitation' => 'devise/invitations#edit', as: :accept_user_invitation
