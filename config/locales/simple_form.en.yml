@@ -31,7 +31,7 @@ en:
       user:
         name: "Your username may be visible to other users."
         password: "Password length must be between 8 and 128 characters."
-        current_password: "Enter your current password to confirm your changes."
+        current_password: "(REQUIRED) Enter your current password to confirm your changes."
         blank_password: "Leave blank if you don't want to change it."
         quick_reading: "In Quick Reading mode, entries are automatically marked as read while scrolling."
         open_all_entries: "If checked, all entries will be open when they are loaded."
