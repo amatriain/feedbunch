@@ -91,5 +91,8 @@ RSpec.configure do |config|
     allow(Resque).to receive(:remove_schedule)
     allow(Resque).to receive(:enqueue)
     allow(Resque).to receive(:enqueue_in)
+
+    # Clear the email delivery queue before each test.
+    ActionMailer::Base.deliveries.clear
   end
 end
