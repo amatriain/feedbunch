@@ -12,6 +12,7 @@ es:
       invitation_removed: 'Tu invitación fue eliminada.'
       edit:
         header: "Aceptar invitación"
+        instructions: "Gracias por aceptar la invitación para entrar en Feedbunch. Por favor escoje una contraseña para que tu cuenta se pueda activar."
         password: "Escoge tu contraseña"
         submit_button: "Activar cuenta"
     mailer:
