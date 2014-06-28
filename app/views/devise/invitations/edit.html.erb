@@ -17,8 +17,20 @@
 <div class="row">
 
   <div class="col-xs-12 col-md-8">
+
+    <%
+       # The URL for the form action has the locale and invitation_token params. This way if the POST
+       # fails (e.g. because the password is left blank), the user is displayed again the same form and the
+       # invitation_token is in the params; this is necessary for the links in the locale dropdown to also have
+       # the invitation_token, which means that after an error POSTing the user can switch locales and the
+       # form will stil work.
+       invitation_token = params[:invitation_token]
+       form_url = invitation_path( {locale: I18n.locale}.
+           merge( (invitation_token.present?) ? {invitation_token: invitation_token} : {}))
+    %>
+
     <%= simple_form_for resource, :as => resource_name,
-                        :url => invitation_path(locale: I18n.locale),
+                        :url => form_url,
                         :html => { :method => :put } do |f| %>
       <%= f.hidden_field :invitation_token %>
 
