@@ -464,7 +464,7 @@ end
 def accept_invitation(password: nil, accept_link: nil, invited_email: nil)
   password ||= 'some_password'
   if accept_link.nil?
-    email_params = {path: '/accept_invitation', text: 'Someone has invited you'}
+    email_params = {path: '/invitation', text: 'Someone has invited you'}
     email_params.merge!({to: invited_email}) if invited_email.present?
     accept_link = mail_should_be_sent email_params
   end
