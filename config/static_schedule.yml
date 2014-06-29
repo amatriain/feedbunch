@@ -10,3 +10,9 @@ DestroyOldJobStatesJob:
   every:
     - "1h"
     - :first_in: "10s"
+CleanupInvitationsJob:
+  description: "Discard old unaccepted invitations and reset the per-user daily invitation limit"
+  queue: maintenance
+  every:
+    - "1d"
+    - :first_in: "10m"
