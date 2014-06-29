@@ -16,8 +16,7 @@
 
     <li>
       <%
-         url_en = url_for({locale: 'en'}.
-                              merge( (invitation_token.present?) ? {invitation_token: invitation_token} : {}))
+         url_en = url_for UriHelpers.params_keep_invitation_token(params, locale: 'en')
       %>
       <%= link_to url_en do %>
         <%= image_tag asset_path('flags/us.png'), class: 'locale-flag' %>
@@ -27,8 +26,7 @@
 
     <li>
       <%
-         url_es = url_for({locale: 'es'}.
-                              merge( (invitation_token.present?) ? {invitation_token: invitation_token} : {}))
+         url_es = url_for UriHelpers.params_keep_invitation_token(params, locale: 'es')
       %>
       <%= link_to url_es do %>
         <%= image_tag asset_path('flags/es.png'), class: 'locale-flag' %>

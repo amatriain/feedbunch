@@ -25,9 +25,7 @@
        # invitation_token is in the params; this is necessary for the links in the locale dropdown to also have
        # the invitation_token, which means that after an error POSTing the user can switch locales and the
        # form will stil work.
-       invitation_token = params[:invitation_token]
-       form_url = invitation_path( {locale: I18n.locale}.
-           merge( (invitation_token.present?) ? {invitation_token: invitation_token} : {}))
+       form_url = invitation_path UriHelpers.params_keep_invitation_token(params)
     %>
 
     <%= simple_form_for resource, :as => resource_name,
