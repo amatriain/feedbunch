@@ -116,7 +116,7 @@ describe 'authentication', type: :feature do
 
       it 'allows password reset' do
         fill_in 'Email', with: @user.email
-        click_on 'Send password reset email'
+        click_on 'Reset password'
 
         # test that a confirmation email is sent
         email_change_link = mail_should_be_sent path: edit_user_password_path, to: @user.email
@@ -146,7 +146,7 @@ describe 'authentication', type: :feature do
 
       it 'does not allow password change if both fields do not match' do
         fill_in 'Email', with: @user.email
-        click_on 'Send password reset email'
+        click_on 'Reset password'
 
         # test that a confirmation email is sent
         email_change_link = mail_should_be_sent path: edit_user_password_path, to: @user.email
@@ -176,7 +176,7 @@ describe 'authentication', type: :feature do
 
       it 'does not send password change email to an unregistered address' do
         fill_in 'Email', with: 'unregistered_email@test.com'
-        click_on 'Send password reset email'
+        click_on 'Reset password'
 
         # test that a confirmation email is not sent
         mail_should_not_be_sent
@@ -205,7 +205,7 @@ describe 'authentication', type: :feature do
         # Ask for resend of confirmation email
         visit new_user_confirmation_path
         fill_in 'Email', with: new_email
-        click_on 'Confirm email address'
+        click_on 'Confirm email'
 
         # Check that confirmation email is sent
         confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
@@ -241,7 +241,7 @@ describe 'authentication', type: :feature do
         # Ask for resend of confirmation email
         visit new_user_confirmation_path
         fill_in 'Email', with: new_email
-        click_on 'Confirm email address'
+        click_on 'Confirm email'
 
         # Check that no email is sent
         mail_should_not_be_sent
@@ -254,7 +254,7 @@ describe 'authentication', type: :feature do
         # Ask for resend of confirmation email
         visit new_user_confirmation_path
         fill_in 'Email', with: unregistered_email
-        click_on 'Confirm email address'
+        click_on 'Confirm email'
 
         # Check that no email is sent
         mail_should_not_be_sent
@@ -305,7 +305,7 @@ describe 'authentication', type: :feature do
         # Ask for an unlock email to be sent again
         visit new_user_unlock_path
         fill_in 'Email', with: @user.email
-        click_on 'Send unlock email'
+        click_on 'Unlock account'
 
         # Check that unlock email is sent
         unlock_link = mail_should_be_sent path: unlock_account_path, to: @user.email
@@ -319,7 +319,7 @@ describe 'authentication', type: :feature do
         # Ask for an unlock email to be sent
         visit new_user_unlock_path
         fill_in 'Email', with: @user.email
-        click_on 'Send unlock email'
+        click_on 'Unlock account'
 
         # Check that unlock email is not sent
         mail_should_not_be_sent
@@ -329,7 +329,7 @@ describe 'authentication', type: :feature do
         # Ask for an unlock email to be sent
         visit new_user_unlock_path
         fill_in 'Email', with: 'unregistered@test.com'
-        click_on 'Send unlock email'
+        click_on 'Unlock account'
 
         # Check that unlock email is not sent
         mail_should_not_be_sent
