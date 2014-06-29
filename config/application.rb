@@ -84,5 +84,8 @@ module Feedbunch
 
     # Admin email
     config.admin_email = 'admin@feedbunch.com'
+
+    # Interval after which an unaccepted invitation will be discarded
+    config.discard_unaccepted_invitations_after = 1.month
   end
 end
