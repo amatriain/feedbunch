@@ -2,16 +2,17 @@
   <%= t 'devise.invitations.edit.header' %>
 <% end %>
 
-<div class="alert alert-success">
+<div id="accept-invitation-message" class="alert alert-success">
   <div class="row">
-    <div class="col-xs-3 col-sm-2">
+    <div class="col-xs-3 col-sm-2 text-center">
       <i class="fa fa-thumbs-o-up fa-4x"></i>
     </div>
 
     <div class="col-xs-9 col-sm-10">
-      <p><%= t 'devise.invitations.edit.instructions' %></p>
+      <p><%= t 'devise.invitations.edit.instructions_1' %></p>
     </div>
   </div>
+  <p><%= t 'devise.invitations.edit.instructions_2' %></p>
 </div>
 
 <div class="row">
