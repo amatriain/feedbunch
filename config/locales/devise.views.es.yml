@@ -13,7 +13,7 @@ es:
       unlock: "Desbloquear cuenta"
       sign_in_with: "Acceder con %{provider}"
       remember_me: "Recuérdame"
-      resend_confirmation: "Confirmar dirección de email"
+      resend_confirmation: "Confirmar email"
       send_password_reset: "Cambiar contraseña"
       send_unlock: "Desbloquear cuenta"
       edit_account: "Mi cuenta"

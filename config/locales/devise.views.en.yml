@@ -13,7 +13,7 @@ en:
       unlock: "Unlock account"
       sign_in_with: "Sign in with %{provider}"
       remember_me: "Remember me"
-      resend_confirmation: "Confirm email address"
+      resend_confirmation: "Confirm email"
       send_password_reset: "Reset password"
       send_unlock: "Unlock account"
       edit_account: "My account"
