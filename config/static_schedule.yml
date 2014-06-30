@@ -16,3 +16,9 @@ CleanupInvitationsJob:
   every:
     - "1d"
     - :first_in: "10m"
+CleanupSignupsJob:
+  description: "Discard old signed up but unconfirmed users"
+  queue: maintenance
+  every:
+    - "1d"
+    - :first_in: "10m"
