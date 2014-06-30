@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140622185745) do
+ActiveRecord::Schema.define(version: 20140630105721) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -201,6 +201,7 @@ ActiveRecord::Schema.define(version: 20140622185745) do
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
   add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["invitation_token", "invitation_accepted_at", "invitation_sent_at"], name: "index_users_on_invitation_fields"
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count"
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id"
