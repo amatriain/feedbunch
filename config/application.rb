@@ -87,5 +87,8 @@ module Feedbunch
 
     # Interval after which an unaccepted invitation will be discarded
     config.discard_unaccepted_invitations_after = 1.month
+
+    # Interval after which an unconfirmed signup will be discarded
+    config.discard_unconfirmed_signups_after = 1.month
   end
 end
