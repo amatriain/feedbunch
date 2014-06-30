@@ -146,8 +146,14 @@ describe CleanupInvitationsJob do
     end
 
     it 'does not destroy users who signed up instead of being invited' do
-      new_user = FactoryGirl.create :user, created_at:  @time_invitations_old + 1.day
-      old_user = FactoryGirl.create :user, created_at:  @time_invitations_old - 1.day
+      time_new_signup = @time_invitations_old + 1.day
+      new_user = FactoryGirl.create :user, created_at:  time_new_signup,
+                                    confirmed_at: time_new_signup,
+                                    confirmation_sent_at: time_new_signup
+      time_old_signup = @time_invitations_old - 1.day
+      old_user = FactoryGirl.create :user, created_at:  time_old_signup,
+                                    confirmed_at: time_old_signup,
+                                    confirmation_sent_at: time_old_signup
 
       expect(User.exists? new_user.id).to be true
       expect(User.exists? old_user.id).to be true
@@ -159,12 +165,14 @@ describe CleanupInvitationsJob do
     end
 
     it 'does not destroy users who signed up but did not confirm their email address' do
-      new_user = FactoryGirl.create :user, created_at:  @time_invitations_old + 1.day,
+      time_new_signup = @time_invitations_old + 1.day
+      new_user = FactoryGirl.create :user, created_at:  time_new_signup,
                                     confirmed_at: nil,
-                                    confirmation_sent_at: @time_invitations_old + 1.day
-      old_user = FactoryGirl.create :user, created_at:  @time_invitations_old - 1.day,
+                                    confirmation_sent_at: time_new_signup
+      time_old_signup = @time_invitations_old - 1.day
+      old_user = FactoryGirl.create :user, created_at:  time_old_signup,
                                     confirmed_at: nil,
-                                    confirmation_sent_at: @time_invitations_old - 1.day
+                                    confirmation_sent_at: time_old_signup
 
       expect(User.exists? new_user.id).to be true
       expect(User.exists? old_user.id).to be true
