@@ -157,6 +157,23 @@ describe CleanupInvitationsJob do
       expect(User.exists? new_user.id).to be true
       expect(User.exists? old_user.id).to be true
     end
+
+    it 'does not destroy users who signed up but did not confirm their email address' do
+      new_user = FactoryGirl.create :user, created_at:  @time_invitations_old + 1.day,
+                                    confirmed_at: nil,
+                                    confirmation_sent_at: @time_invitations_old + 1.day
+      old_user = FactoryGirl.create :user, created_at:  @time_invitations_old - 1.day,
+                                    confirmed_at: nil,
+                                    confirmation_sent_at: @time_invitations_old - 1.day
+
+      expect(User.exists? new_user.id).to be true
+      expect(User.exists? old_user.id).to be true
+
+      CleanupInvitationsJob.perform
+
+      expect(User.exists? new_user.id).to be true
+      expect(User.exists? old_user.id).to be true
+    end
   end
 
 end
