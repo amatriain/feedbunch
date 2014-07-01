@@ -53,7 +53,7 @@ class ScheduleManager
 
   def self.schedule_feed_updates(feed_id)
     delay = Random.rand 61
-    Rails.logger.info "Scheduling updates of feed #{feed_id} every hour, starting #{delay} minutes from now at #{Time.now + delay.minutes}"
+    Rails.logger.info "Scheduling updates of feed #{feed_id} every hour, starting #{delay} minutes from now at #{Time.zone.now + delay.minutes}"
     set_or_update_schedule feed_id, 1.hour, delay.minutes
   end
 

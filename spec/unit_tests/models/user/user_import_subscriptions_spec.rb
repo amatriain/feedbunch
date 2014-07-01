@@ -16,7 +16,7 @@ describe User, type: :model do
       allow(Feedbunch::Application.config.uploads_manager).to receive :delete
 
       timestamp = 1371146348
-      allow(Time).to receive(:now).and_return Time.at(timestamp)
+      allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return Time.zone.at(timestamp)
       @filename = "feedbunch_import_#{timestamp}.opml"
     end
 

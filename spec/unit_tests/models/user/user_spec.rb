@@ -6,7 +6,7 @@ describe User, type: :model do
   end
 
   context 'validations' do
-    it 'does now allow empty emails' do
+    it 'does not allow empty emails' do
       user = FactoryGirl.build :user, email: nil
       expect(user).not_to be_valid
     end

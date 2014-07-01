@@ -10,7 +10,7 @@ FactoryGirl.define do
     name {generate :user_name_sequence}
     password {generate :user_password_sequence}
     remember_me true
-    confirmed_at Time.now
+    confirmed_at Time.zone.now
     admin false
     locale 'en'
     timezone 'UTC'
