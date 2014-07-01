@@ -1,7 +1,9 @@
 @media (max-width: $screen-sm-min) {
   #landing-page {
+    padding-top: 15px;
+    text-align: center;
+
     #registration-links {
-      text-align: center;
 
       #sign_up_button {
         display: block;
@@ -11,12 +13,30 @@
         display: block;
       }
     }
+
+    .jumbotron {
+      padding: {
+        left: 1px;
+        right: 1px;
+      }
+
+      .page-header {
+        margin: {
+          left: 15px;
+          right: 15px;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: $screen-sm-min) {
+  #landing-page {
+    padding-top: 50px;
   }
 }
 
 #landing-page {
-  padding-top: 50px;
-
   .page-header {
     img {
       margin-right: 10px;

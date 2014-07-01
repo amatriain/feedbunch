@@ -1,7 +1,18 @@
+@media (max-width: $screen-sm-min) {
+  .locale-dropdown {
+    margin-top: 15px;
+  }
+}
+
+@media (min-width: $screen-sm-min) {
+  .locale-dropdown {
+    margin-top: 25px;
+  }
+}
+
 .locale-dropdown {
   float: right;
   margin: {
-    top: 25px;
     right: 45px;
   }
 }
