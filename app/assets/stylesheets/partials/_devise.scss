@@ -4,14 +4,49 @@
 
 @media (max-width: $screen-sm-min) {
   #devise-view {
+    padding-top: 15px;
+    text-align: center;
+
     .branding {
       display: none;
+    }
+
+    .jumbotron {
+
+      padding: {
+        left: 1px;
+        right: 1px;
+      }
+
+      .page-header {
+        margin-bottom: 0;
+      }
+
+      hr {
+        margin: {
+          top: 0;
+          bottom: 15px;
+        }
+      }
+
+      form {
+        margin: {
+          left: -15px;
+          right: -15px;
+        }
+      }
     }
   }
 }
 
+@media (min-width: $screen-sm-min) {
+  #devise-view {
+    padding-top: 50px;
+  }
+}
+
+
 #devise-view {
-  padding-top: 50px;
 
   .page-header {
 
