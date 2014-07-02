@@ -265,9 +265,58 @@ describe 'unread entries count', type: :feature do
       end
     end
 
-    context 'clicking on All Subscriptions link for feeds not in a folder' do
+    context 'clicking on All Subscriptions link for all subscribed feeds' do
 
-      it 'updates unread counts'
+      before :each do
+        # Remove @feed1 from its folders for this test context.
+        @user.move_feed_to_folder @feed1, folder: 'none'
+      end
+
+      it 'updates unread counts', js: true do
+        read_folder 'all'
+        unread_feed_entries_should_eq @feed1, 3, @user
+        unread_feed_entries_should_eq @feed2, 1, @user
+        unread_folder_entries_should_eq 'all', 4
+        unread_folder_entries_should_eq @folder1, 1
+
+        # Add 1 entry to @feed1 and another entry to @feed2
+        entry1_4 = FactoryGirl.build :entry, feed_id: @feed1.id
+        @feed1.entries << entry1_4
+        feed_subscription_1 = FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first
+        feed_subscription_1.update unread_entries: (feed_subscription_1.unread_entries + 1)
+        entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
+        @feed2.entries << entry2_2
+        feed_subscription_2= FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first
+        feed_subscription_2.update unread_entries: (feed_subscription_2.unread_entries + 1)
+
+        read_folder 'all'
+        unread_feed_entries_should_eq @feed1, 4, @user
+        unread_feed_entries_should_eq @feed2, 2, @user
+        unread_folder_entries_should_eq 'all', 6
+        unread_folder_entries_should_eq @folder1, 2
+
+        # Mark @feed1 entries as read
+        EntryState.where(user_id: @user.id, entry_id: [@entry1_1.id, @entry1_2.id, @entry1_3.id, entry1_4.id]).
+          each {|es| es.update read: true}
+        FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first.update unread_entries: 0
+
+        read_folder 'all'
+        unread_feed_entries_should_eq @feed1, 0, @user
+        unread_feed_entries_should_eq @feed2, 2, @user
+        unread_folder_entries_should_eq 'all', 2
+        unread_folder_entries_should_eq @folder1, 2
+
+        # Mark @feed2 entries as read
+        EntryState.where(user_id: @user.id, entry_id: [@entry2_1.id, entry2_2.id]).
+          each {|es| es.update read: true}
+        FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first.update unread_entries: 0
+
+        read_folder 'all'
+        unread_feed_entries_should_eq @feed1, 0, @user
+        unread_feed_entries_should_eq @feed2, 0, @user
+        unread_folder_entries_should_eq 'all', 0
+        unread_folder_entries_should_eq @folder1, 0
+      end
     end
   end
 
