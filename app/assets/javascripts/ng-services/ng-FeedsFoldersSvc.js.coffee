@@ -105,7 +105,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   # PRIVATE FUNCTION: Load feeds inside a single folder. Receives its id as argument.
   #--------------------------------------------
   load_folder_feeds = (id)->
-    # If this feed is already being loaded, do nothing
+    # If feeds in this folder are already being loaded, do nothing
     $rootScope.loading_single_folder_feeds ||= {}
     return if $rootScope.loading_single_folder_feeds[id]
 
