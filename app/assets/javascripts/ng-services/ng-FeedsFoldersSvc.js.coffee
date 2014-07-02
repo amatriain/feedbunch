@@ -117,7 +117,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       delete $rootScope.loading_single_folder_feeds[folder.id]
       # Update unread counts with the received feeds. Set the unread counter for any feed in the folder but
       # not in the received JSON to zero.
-      update_folder_feeds folder, data
+      update_folder_feeds folder, data.slice()
     .error (data, status)->
       delete $rootScope.loading_single_folder_feeds[folder.id]
       if status==404
