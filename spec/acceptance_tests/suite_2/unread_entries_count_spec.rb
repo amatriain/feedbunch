@@ -312,10 +312,7 @@ describe 'unread entries count', type: :feature do
         FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first.update unread_entries: 0
 
         read_folder 'all'
-        unread_feed_entries_should_eq @feed1, 0, @user
-        unread_feed_entries_should_eq @feed2, 0, @user
         unread_folder_entries_should_eq 'all', 0
-        unread_folder_entries_should_eq @folder1, 0
       end
     end
   end

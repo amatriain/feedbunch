@@ -42,9 +42,15 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     .error (data, status)->
       feedsPaginationSvc.set_busy false
       if status == 404
-        # there are no more feeds to retrieve
+        # if a 404 is returned for the first page, there are no feeds at all. Set all unread counts to zero.
+        if page == 1
+          if $rootScope.feeds && $rootScope.feeds?.length > 0
+            for feed in $rootScope.feeds
+              feed.unread_entries = 0
+        # If a 404 is returned in a page >1, there are no more feeds and this is the last page.
+        else
+          feedsPaginationSvc.pagination_finished()
         $rootScope.feeds_loaded = true
-        feedsPaginationSvc.pagination_finished()
         favicoSvc.update_unread_badge()
       else if status!=0
         timerFlagSvc.start 'error_loading_feeds'
