@@ -102,25 +102,30 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       timerFlagSvc.start 'error_loading_folders' if status!=0
 
   #--------------------------------------------
-  # PRIVATE FUNCTION: Load feeds inside a single folder. Receives its id as argument.
+  # PRIVATE FUNCTION: Load feeds inside a single folder. Receives the folder as argument.
   #--------------------------------------------
-  load_folder_feeds = (id)->
+  load_folder_feeds = (folder)->
     # If feeds in this folder are already being loaded, do nothing
     $rootScope.loading_single_folder_feeds ||= {}
-    return if $rootScope.loading_single_folder_feeds[id]
+    return if $rootScope.loading_single_folder_feeds[folder.id]
 
-    $rootScope.loading_single_folder_feeds[id] = true
+    $rootScope.loading_single_folder_feeds[folder.id] = true
 
     now = new Date()
-    $http.get("/api/folders/#{id}/feeds.json?include_read=#{$rootScope.show_read}&time=#{now.getTime()}")
+    $http.get("/api/folders/#{folder.id}/feeds.json?include_read=#{$rootScope.show_read}&time=#{now.getTime()}")
     .success (data)->
-      delete $rootScope.loading_single_folder_feeds[id]
-      if data? && data?.length > 0
-        for feed in data
-          add_feed feed
+      delete $rootScope.loading_single_folder_feeds[folder.id]
+      # Update unread counts with the received feeds. Set the unread counter for any feed in the folder but
+      # not in the received JSON to zero.
+      update_folder_feeds folder, data
     .error (data, status)->
-      delete $rootScope.loading_single_folder_feeds[id]
-      timerFlagSvc.start 'error_loading_folders' if status!=0
+      delete $rootScope.loading_single_folder_feeds[folder.id]
+      if status==404
+        # If the server returns a 404, there are no feeds to return; set unread count to zero for all feeds in
+        # the folder.
+        update_folder_feeds folder, null
+      else if status != 0
+        timerFlagSvc.start 'error_loading_folders'
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds and folders.
@@ -134,7 +139,8 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   #
   # If the feeds array is empty, create it anew, ensuring angularjs ng-repeat is triggered.
   #
-  # If the feed is already in the feeds array, its unread_entries attribute is updated instead of pushing it in the array again.
+  # If the feed is already in the feeds array, its unread_entries attribute is updated instead of
+  # pushing it in the array again.
   #---------------------------------------------
   add_feed = (feed)->
     if !$rootScope.feeds || $rootScope.feeds?.length == 0
@@ -145,6 +151,27 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         feed_old.unread_entries = feed.unread_entries
       else
         $rootScope.feeds.push feed
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Update the feeds and their unread counts, for feeds in a folder.
+  #
+  # Receives as arguments the folder and an array of feeds.
+  #
+  # Operations in the scope:
+  # The unread_count for each feed passed in the array is updated with the value passed in the array.
+  # Those feeds in the folder which are not present in the passed array will have their unread_count set to zero.
+  #
+  # NOTE.- If a null is passed in the feeds argument, all feeds in the folder will have their unread counts set to zero.
+  #---------------------------------------------
+  update_folder_feeds = (folder, feeds)->
+    # Set unread count for all feeds in the folder to zero, then set the actual received value for each feed.
+    # Those feeds not present in the received JSON will be set to zero.
+    feeds_in_folder = findSvc.find_folder_feeds folder
+    for feed in feeds_in_folder
+      feed.unread_entries = 0
+    if feeds? && feeds?.length > 0
+      for feed in feeds
+        add_feed feed
 
   service =
 
@@ -219,7 +246,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         load_feeds()
       # If any other folder is passed, load feeds in that folder only (not paginated)
       else
-        load_folder_feeds folder.id
+        load_folder_feeds folder
 
     #---------------------------------------------
     # Push a feed in the feeds array. If the feeds array is empty, create it anew,
