@@ -99,6 +99,9 @@ end
 # If the folder does not exist, the test will immediately fail.
 
 def read_folder(folder)
+  # The spinners in the sidebar should be hidden, to indicate that feeds and folders have finished loading
+  expect(page).not_to have_css '#sidebar i.fa-spinner.fa-spin', visible: true
+
   open_folder folder if folder != 'all'
   folder_id = (folder == 'all')? 'none' : folder.id
   within "#folders-list #folder-#{folder_id}" do
