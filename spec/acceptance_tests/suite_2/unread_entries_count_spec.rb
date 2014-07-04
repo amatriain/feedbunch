@@ -269,7 +269,7 @@ describe 'unread entries count', type: :feature do
 
       before :each do
         # Remove @feed1 from its folders for this test context.
-        @user.move_feed_to_folder @feed1, folder: 'none'
+        remove_feed_from_folder @feed1, @user
       end
 
       it 'updates unread counts', js: true do
