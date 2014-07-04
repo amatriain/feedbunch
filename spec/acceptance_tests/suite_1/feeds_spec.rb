@@ -46,14 +46,16 @@ describe 'feeds', type: :feature do
     end
 
     it 'shows feeds in the sidebar', js: true do
-      within "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false do
-        expect(page).to have_text @feed1.title, visible: false
+      open_folder @folder1
+
+      within "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']" do
+        expect(page).to have_text @feed1.title
       end
-      within "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false do
-        expect(page).to have_text @feed2.title, visible: false
+      within "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']" do
+        expect(page).to have_text @feed2.title
       end
-      within "#sidebar #folder-none a[data-sidebar-feed][data-feed-id='#{@feed3.id}']", visible: false do
-        expect(page).to have_text @feed3.title, visible: false
+      within "#sidebar #folder-none a[data-sidebar-feed][data-feed-id='#{@feed3.id}']" do
+        expect(page).to have_text @feed3.title
       end
     end
 
