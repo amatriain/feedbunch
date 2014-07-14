@@ -73,6 +73,7 @@ class SubscribeUserJob
     # Set job state to "SUCCESS" and save the id of the actually subscribed feed
     job_state.update state: SubscribeJobState::SUCCESS, feed_id: feed.id if job_state.present?
   rescue RestClient::Exception,
+      RestClient::RequestTimeout,
       SocketError,
       Errno::ETIMEDOUT,
       Errno::ECONNREFUSED,

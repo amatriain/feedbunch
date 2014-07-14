@@ -179,7 +179,7 @@ describe ScheduledUpdateFeedJob do
     end
 
     it 'increments the fetch interval if the feed server connection times out' do
-      allow(FeedClient).to receive(:fetch).and_raise Errno::ETIMEDOUT.new('Connection timed out')
+      allow(FeedClient).to receive(:fetch).and_raise RestClient::RequestTimeout.new
 
       expect(Resque).to receive :set_schedule do |name, config|
         expect(name).to eq "update_feed_#{@feed.id}"

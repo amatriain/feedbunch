@@ -61,6 +61,7 @@ class RefreshFeedJob
     feed.update available: true if !feed.available
 
   rescue RestClient::Exception,
+      RestClient::RequestTimeout,
       SocketError,
       Errno::ETIMEDOUT,
       Errno::ECONNREFUSED,

@@ -56,6 +56,7 @@ class ScheduledUpdateFeedJob
     OldEntriesCleaner.cleanup feed
 
   rescue RestClient::Exception,
+      RestClient::RequestTimeout,
       SocketError,
       Errno::ETIMEDOUT,
       Errno::ECONNREFUSED,
