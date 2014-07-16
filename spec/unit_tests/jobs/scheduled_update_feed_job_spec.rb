@@ -114,13 +114,13 @@ describe ScheduledUpdateFeedJob do
         expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
         expect(config[:persist]).to be true
         expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '900s'
-        expect(config[:every][1]).to eq ({first_in: 900.seconds})
+        expect(config[:every][0]).to eq '600s'
+        expect(config[:every][1]).to eq ({first_in: 600.seconds})
       end
 
-      @feed.update fetch_interval_secs: 15.minutes
+      @feed.update fetch_interval_secs: 10.minutes
       ScheduledUpdateFeedJob.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 15.minutes
+      expect(@feed.reload.fetch_interval_secs).to eq 10.minutes
     end
 
     it 'does not set a fetch interval greater than the configured maximum' do
@@ -131,13 +131,13 @@ describe ScheduledUpdateFeedJob do
         expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
         expect(config[:persist]).to be true
         expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '43200s'
-        expect(config[:every][1]).to eq ({first_in: 12.hours})
+        expect(config[:every][0]).to eq '21600s'
+        expect(config[:every][1]).to eq ({first_in: 6.hours})
       end
 
-      @feed.update fetch_interval_secs: 12.hours
+      @feed.update fetch_interval_secs: 6.hours
       ScheduledUpdateFeedJob.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 12.hours
+      expect(@feed.reload.fetch_interval_secs).to eq 6.hours
     end
 
   end
