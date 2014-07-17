@@ -153,13 +153,15 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
   # Set the currently selected folder
   #--------------------------------------------
   $scope.set_current_folder = (folder)->
-    currentFolderSvc.set folder
-    readSvc.read_entries_page()
-    feedsFoldersSvc.load_folder_feeds folder
-    menuCollapseSvc.close()
-    $timeout ->
-      sidebarVisibleSvc.set false
-    , 300
+    # If feeds are still loading and no feed has been received yet, do nothing.
+    if $rootScope.feeds_loaded || ( $rootScope.feeds && $rootScope.feeds?.length > 0 )
+      currentFolderSvc.set folder
+      readSvc.read_entries_page()
+      feedsFoldersSvc.load_folder_feeds folder
+      menuCollapseSvc.close()
+      $timeout ->
+        sidebarVisibleSvc.set false
+      , 300
     return
 
   #--------------------------------------------
