@@ -153,8 +153,8 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
   # Set the currently selected folder
   #--------------------------------------------
   $scope.set_current_folder = (folder)->
-    # If feeds are still loading and no feed has been received yet, do nothing.
-    if $rootScope.feeds_loaded || ( $rootScope.feeds && $rootScope.feeds?.length > 0 )
+    # If the "all subscriptions" link is not enabled, do nothing.
+    if $scope.all_subscriptions_enabled()
       currentFolderSvc.set folder
       readSvc.read_entries_page()
       feedsFoldersSvc.load_folder_feeds folder
@@ -386,6 +386,19 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
   $scope.feed_in_folder = (folder_id)->
     return (feed)->
       return folder_id == feed.folder_id
+
+  #--------------------------------------------
+  # Function to return true if the "All subscriptions" link at the top of the sidebar should be enabled,
+  # false otherwise.
+  #
+  # If all feeds have finished loading or at least one feed has already been received, returns true.
+  # Otherwise returns false.
+  #--------------------------------------------
+  $scope.all_subscriptions_enabled = ->
+    if $rootScope.feeds_loaded || ( $rootScope.feeds && $rootScope.feeds?.length > 0 )
+      return true
+    else
+      return false
 
   #--------------------------------------------
   # Function to filter folders which should be visible. Returns a function that returns true if the passed folder
