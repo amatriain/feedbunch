@@ -1,5 +1,5 @@
 <li id="all-feeds"
-    ng-class="{active: current_folder.id=='all'}">
+    ng-class="{active: current_folder.id=='all', disabled: !all_subscriptions_enabled()}">
   <a data-sidebar-feed
      data-feed-id="all"
      ng-click="set_current_folder('all')">
