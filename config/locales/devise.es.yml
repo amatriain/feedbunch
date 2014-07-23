@@ -50,7 +50,7 @@ es:
         subject: "Cambio de contraseña en Feedbunch"
         header: "Se ha solicitado un cambio de contraseña"
         hello: "Hola, %{name}"
-        change: "Si deseas cambiar tu contraseña en Feedbunch, haz click en este enlace:"
+        change: "Si deseas cambiar tu contraseña en Feedbunch, haz click en este botón:"
         change_link: "Cambiar mi contraseña"
         note_1_html: "Has recibido este email porque alguien ha solicitado un cambio de la contraseña de la cuenta %{name} en %{link}."
         note_2_html: "Si no solicitaste un cambio de contraseña en %{link} por favor ignora este email."

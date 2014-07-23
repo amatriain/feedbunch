@@ -52,7 +52,7 @@ en:
         subject: "Reset Feedbunch password"
         header: "A password reset has been requested"
         hello: "Hello, %{name}."
-        change: "If you want to reset your Feedbunch password, click on this link:"
+        change: "If you want to reset your Feedbunch password, click on this button:"
         change_link: "Reset my password"
         note_1_html: "You are receiving this email because somebody has requested a reset of the password for account %{name} at %{link}."
         note_2_html: "If you didn't request a password reset at %{link} please ignore this email."
