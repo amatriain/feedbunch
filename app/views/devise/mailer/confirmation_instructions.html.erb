@@ -4,28 +4,11 @@
 
 <p>
   <h2>
-    <%
-      button_style = <<STYLE
-        background-image: linear-gradient(to bottom, #428bca 0px, #2d6ca2 100%);
-        background-repeat: repeat-x;
-        border-color: #2b669a;
-        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 1px 1px rgba(0, 0, 0, 0.075);
-        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-        border-radius: 6px;
-        padding: 10px 16px;
-        background-color:#428bca;
-        color: #fff;
-        cursor: pointer;
-        display: inline-block;
-        text-decoration: none;
-        vertical-align: middle;
-STYLE
-    %>
 
     <%=
         link_to t('devise.mailer.confirmation_instructions.confirm_link'),
                 confirmation_url(:confirmation_token => @token, locale: I18n.locale),
-                style: button_style
+                style: MailerButtonStyler.button_style
     %>
   </h2>
 </p>
