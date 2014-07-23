@@ -59,7 +59,7 @@ es:
         header: "Tu cuenta en Feedbunch ha sido bloqueada"
         hello: "Hola, %{name}."
         locked: "Tu cuenta ha sido bloqueada debido a un número excesivo de intentos de acceso fallidos."
-        unlock: "Haz click en este enlace para desbloquear tu cuenta:"
+        unlock: "Haz click en este botón para desbloquear tu cuenta:"
         unlock_link: "Desbloquear mi cuenta"
         note_1_html: "Has recibido este email porque tu cuenta %{name} en %{link} ha sido bloqueada."
         note_2_html: "No podrás utilizar tu cuenta en %{link} hasta que sea desbloqueada siguiendo estas instrucciones."

@@ -6,7 +6,15 @@
 
 <p><%= t 'devise.mailer.unlock_instructions.unlock' %></p>
 
-<p><h2><%= link_to t('devise.mailer.unlock_instructions.unlock_link'), unlock_account_url(:unlock_token => @token, locale: I18n.locale) %></h2></p>
+<p>
+  <h2>
+    <%=
+        link_to t('devise.mailer.unlock_instructions.unlock_link'),
+                unlock_account_url(:unlock_token => @token, locale: I18n.locale),
+                style: MailerButtonStyler.button_style
+    %>
+  </h2>
+</p>
 
 <% link_feedbunch = link_to 'Feedbunch.com', root_url(locale: I18n.locale) %>
 

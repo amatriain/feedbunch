@@ -61,7 +61,7 @@ en:
         header: "Your Feedbunch account has been locked"
         hello: "Hello, %{name}."
         locked: "Your account has been locked due to an excessive number of unsuccessful sign in attempts."
-        unlock: "Click on this link to unlock your account:"
+        unlock: "Click on this button to unlock your account:"
         unlock_link: "Unlock my account"
         note_1_html: "You are receiving this email because your account %{name} at %{link} has been locked."
         note_2_html: "You won't be able to use your account at %{link} until it is unlocked following these instructions."
