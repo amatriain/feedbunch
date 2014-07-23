@@ -61,9 +61,9 @@ end
 def open_folder(folder)
   expect(page).to have_css "#folders-list #folder-#{folder.id}"
   # Open folder only if it is closed
-  if !page.has_css? "#folders-list #feeds-#{folder.id}.in"
+  if !page.has_css? "#folders-list #feeds-#{folder.id}", visible: true
     find("a#open-folder-#{folder.id}").click
-    expect(page).to have_css "#folders-list #feeds-#{folder.id}.in"
+    expect(page).to have_css "#folders-list #feeds-#{folder.id}", visible: true
   end
 end
 
