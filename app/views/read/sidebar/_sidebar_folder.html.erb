@@ -1,6 +1,6 @@
 <div ng-repeat="folder in folders | filter:show_folder(folder) | orderBy:'title'"
      id="folder-{{folder.id}}"
-     class="folder-panel panel panel-default"
+     class="folder-panel"
      data-folder-id="{{folder.id}}">
 
   <%# Link to open the folder and close the folder %>
@@ -28,9 +28,9 @@
 
   </a>
 
-  <div id="feeds-{{folder.id}}" class="panel-collapse collapse"
-       ng-class="{'in':current_open_folder.id==folder.id}">
-    <div class="panel-body">
+  <div id="feeds-{{folder.id}}"
+       ng-show="current_open_folder.id==folder.id">
+    <div class="folder-content">
 
       <%# Content of the folder %>
       <ul class="nav nav-pills nav-stacked">
