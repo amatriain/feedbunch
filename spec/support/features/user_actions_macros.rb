@@ -164,9 +164,9 @@ def close_entry(entry)
   expect(page).to have_css "#feed-entries #entry-#{entry.id}"
 
   # Close entry only if it is open
-  if page.has_css? "#feed-entries #entry-#{entry.id}-summary.in"
+  if page.has_css? "#feed-entries #entry-#{entry.id}-summary", visible: true
     find("#feed-entries [data-entry-id='#{entry.id}']").click
-    expect(page).not_to have_css "#feed-entries #entry-#{entry.id}-summary.in"
+    expect(page).not_to have_css "#feed-entries #entry-#{entry.id}-summary", visible: true
   end
 end
 
