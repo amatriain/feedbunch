@@ -44,7 +44,7 @@ en:
       confirmation_instructions:
         subject: "Feedbunch signup confirmation"
         header: "Welcome to Feedbunch, %{name} !"
-        confirmation: "Before you can use Feedbunch you have to confirm your account clicking on this link:"
+        confirmation: "Before you can use Feedbunch you have to confirm your account clicking on this button:"
         confirm_link: "Confirm my account"
         note_1_html: "You are receiving this email because somebody has attempted to register an account at %{link} using the email address %{name}."
         note_2_html: "If you didn't try to sign up at %{link} please ignore this email."
