@@ -57,7 +57,7 @@ describe 'folders and feeds', type: :feature do
         expect(page).to have_css "a#open-folder-#{@folder1.id}"
 
         # Folder should be open (class "in" present)
-        expect(page).to have_css "#feeds-#{@folder1.id}.in"
+        expect(page).to have_css "#feeds-#{@folder1.id}", visible: true
 
         # Should have inside only those feeds associated to the folder
         within "#feeds-#{@folder1.id}" do

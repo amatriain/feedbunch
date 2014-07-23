@@ -192,7 +192,7 @@ end
 
 def folder_should_be_open(folder)
   expect(page).to have_css "#sidebar #folders-list #folder-#{folder.id}"
-  expect(page).to have_css "#sidebar #folders-list #feeds-#{folder.id}.in"
+  expect(page).to have_css "#sidebar #folders-list #feeds-#{folder.id}", visible: true
 end
 
 ##
