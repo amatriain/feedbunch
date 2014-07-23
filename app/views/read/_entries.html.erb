@@ -9,8 +9,7 @@
   </div>
 </div>
 
-<div class="panel-group"
-     id="feed-entries"
+<div id="feed-entries"
      ng-hide="error_no_entries"
      infinite-scroll="read_entries_page()"
      infinite-scroll-disabled="loading_entries_busy"
@@ -19,7 +18,7 @@
 
   <div ng-repeat="entry in entries"
        id="entry-{{entry.id}}"
-       class="panel panel-default entry">
+       class="entry">
 
     <a id="entry-{{entry.id}}-anchor" class="entry-anchor"></a>
 
@@ -49,11 +48,10 @@
     </a>
 
     <%# Entry summary, initially collapsed %>
-    <div class="panel-collapse collapse"
-         ng-class="{'in':is_open(entry)}"
-         id="entry-{{entry.id}}-summary"
+    <div id="entry-{{entry.id}}-summary"
+         ng-show="is_open(entry)"
          ng-mouseenter="tooltips_entry(entry)">
-      <div class="panel-body entry-panel">
+      <div class="entry-panel">
 
         <%= render 'read/entries_toolbar' %>
 
