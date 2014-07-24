@@ -95,8 +95,77 @@
       }
     }
 
-    [data-folder-id] .folder-content {
-      padding: 8px;
+    /* Animations when opening/closing sidebar folders */
+    [data-folder-id] {
+      .folder-content {
+        -webkit-transition-property:opacity, line-height, padding-top, padding-bottom;
+        -webkit-transition-duration: 0.15s;
+        -webkit-transition-timing-function: linear;
+        transition-property:opacity, line-height, padding-top, padding-bottom;
+        transition-duration: 0.15s;
+        transition-timing-function: linear;
+        opacity: 1;
+        padding: 8px;
+
+        a[data-sidebar-feed] {
+          -webkit-transition-property:padding-top, padding-bottom;
+          -webkit-transition-duration: 0.15s;
+          -webkit-transition-timing-function: linear;
+          transition-property:padding-top, padding-bottom;
+          transition-duration: 0.15s;
+          transition-timing-function: linear;
+        }
+
+        .feed-icon {
+          -webkit-transition-property:margin-top;
+          -webkit-transition-duration: 0.15s;
+          -webkit-transition-timing-function: linear;
+          transition-property:margin-top;
+          transition-duration: 0.15s;
+          transition-timing-function: linear;
+        }
+
+        .badge {
+          -webkit-transition-property:padding-top, padding-bottom;
+          -webkit-transition-duration: 0.15s;
+          -webkit-transition-timing-function: linear;
+          transition-property:padding-top, padding-bottom;
+          transition-duration: 0.15s;
+          transition-timing-function: linear;
+        }
+      }
+
+      .folder-content.ng-hide-add,
+      .folder-content.ng-hide-remove {
+        display:block!important
+      }
+
+      .folder-content.ng-hide {
+        opacity: 0;
+        line-height:0px;
+        padding: {
+          top: 0;
+          bottom: 0;
+        }
+
+        a[data-sidebar-feed] {
+          padding: {
+            top: 0;
+            bottom: 0;
+          }
+        }
+
+        .feed-icon {
+          margin-top: 0;
+        }
+
+        .badge {
+          padding: {
+            top: 0;
+            bottom: 0;
+          }
+        }
+      }
     }
 
     a[data-sidebar-feed] {
