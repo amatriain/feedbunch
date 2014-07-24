@@ -112,6 +112,7 @@
         transition-duration: 0.15s;
         transition-timing-function: linear;
         opacity: 1;
+        line-height:normal;
         padding: 8px;
 
         a[data-sidebar-feed] {
@@ -144,7 +145,7 @@
 
       .folder-content.ng-hide {
         opacity: 0;
-        line-height:0px;
+        line-height:0em;
         padding: {
           top: 0;
           bottom: 0;
