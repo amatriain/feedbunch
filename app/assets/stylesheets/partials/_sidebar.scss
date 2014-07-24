@@ -96,6 +96,13 @@
     }
 
     /* Animations when opening/closing sidebar folders */
+
+    /* This rule makes the folder visible during the animation, overriding the usual display:none from ng-hide */
+    .folder-content.ng-hide-add,
+    .folder-content.ng-hide-remove {
+      display:block!important
+    }
+
     [data-folder-id] {
       .folder-content {
         -webkit-transition-property:opacity, line-height, padding-top, padding-bottom;
@@ -133,11 +140,6 @@
           transition-duration: 0.15s;
           transition-timing-function: linear;
         }
-      }
-
-      .folder-content.ng-hide-add,
-      .folder-content.ng-hide-remove {
-        display:block!important
       }
 
       .folder-content.ng-hide {
