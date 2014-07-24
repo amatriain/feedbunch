@@ -202,9 +202,22 @@
       }
     }
 
+    /* Animation when opening/closing sidebar folders (the folder arrow rotates 90 degrees) */
     .folder-arrow {
+      -webkit-transition-property:-webkit-transform;
+      -webkit-transition-duration: 0.15s;
+      -webkit-transition-timing-function: linear;
+      transition-property:transform;
+      transition-duration: 0.15s;
+      transition-timing-function: linear;
       margin-top: 4px;
       width: 13px;
+    }
+
+    .folder-arrow.open-folder-arrow{
+      margin-top: 3px;
+      -webkit-transform:rotate(90deg);
+      transform:  rotate(90deg);
     }
 
     .folder-unread-badge {

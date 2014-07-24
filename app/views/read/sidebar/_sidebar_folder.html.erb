@@ -20,7 +20,7 @@
       </div>
 
       <div class="col-xs-3 col-md-4 pull-right col-badge">
-        <i class="hidden-sm folder-arrow pull-right fa" ng-class="{'fa-chevron-down':current_open_folder.id==folder.id, 'fa-chevron-right': current_open_folder.id!=folder.id}"></i>
+        <i class="hidden-sm folder-arrow pull-right fa fa-chevron-right" ng-class="{'open-folder-arrow':current_open_folder.id==folder.id}"></i>
         <span class="folder-unread-badge badge pull-right">{{folder_unread_entries(folder) | numberBadgeFltr}}</span>
       </div>
 
