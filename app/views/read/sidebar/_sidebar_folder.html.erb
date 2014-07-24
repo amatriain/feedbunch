@@ -28,25 +28,23 @@
 
   </a>
 
+  <%# Content of the folder, initially hidden %>
   <div id="feeds-{{folder.id}}"
+       class="folder-content"
        ng-show="current_open_folder.id==folder.id">
-    <div class="folder-content">
 
-      <%# Content of the folder %>
-      <ul class="nav nav-pills nav-stacked">
+    <ul class="nav nav-pills nav-stacked">
 
-        <%= render 'read/sidebar/sidebar_folder_read_all' %>
+      <%= render 'read/sidebar/sidebar_folder_read_all' %>
 
-        <%= render 'read/sidebar/sidebar_folder_feed' %>
+      <%= render 'read/sidebar/sidebar_folder_feed' %>
 
-      </ul>
+    </ul>
 
-      <%# Animated spinner while feeds are loading %>
-      <div class="sidebar-spinner" ng-show="!feeds_loaded">
-        <i class="fa fa-spinner fa-spin"></i>
-      </div>
-
+    <%# Animated spinner while feeds are loading %>
+    <div class="sidebar-spinner" ng-show="!feeds_loaded">
+      <i class="fa fa-spinner fa-spin"></i>
     </div>
-  </div>
 
+  </div>
 </div>
