@@ -107,33 +107,6 @@
         transition-timing-function: linear;
         overflow:  hidden;
         display: none;
-
-        a[data-sidebar-feed] {
-          -webkit-transition-property:padding-top, padding-bottom;
-          -webkit-transition-duration: 0.15s;
-          -webkit-transition-timing-function: linear;
-          transition-property:padding-top, padding-bottom;
-          transition-duration: 0.15s;
-          transition-timing-function: linear;
-        }
-
-        .feed-icon {
-          -webkit-transition-property:margin-top;
-          -webkit-transition-duration: 0.15s;
-          -webkit-transition-timing-function: linear;
-          transition-property:margin-top;
-          transition-duration: 0.15s;
-          transition-timing-function: linear;
-        }
-
-        .badge {
-          -webkit-transition-property:padding-top, padding-bottom;
-          -webkit-transition-duration: 0.15s;
-          -webkit-transition-timing-function: linear;
-          transition-property:padding-top, padding-bottom;
-          transition-duration: 0.15s;
-          transition-timing-function: linear;
-        }
       }
 
       .folder-content.open-folder {
@@ -152,24 +125,6 @@
         padding: {
           top: 0;
           bottom: 0;
-        }
-
-        a[data-sidebar-feed] {
-          padding: {
-            top: 0;
-            bottom: 0;
-          }
-        }
-
-        .feed-icon {
-          margin-top: 0;
-        }
-
-        .badge {
-          padding: {
-            top: 0;
-            bottom: 0;
-          }
         }
       }
     }
