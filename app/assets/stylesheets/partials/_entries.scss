@@ -89,15 +89,6 @@
       background-color: #E8E8E8;
     }
 
-    .entry-lead {
-      margin-bottom: 5px;
-    }
-
-    .entry-additional-info {
-      margin-bottom: 10px;
-      font-style: italic;
-    }
-
     .entry-feed-title,
     .entry-title,
     .entry-published{
@@ -114,20 +105,6 @@
       padding-right: 2px;
     }
 
-    .entry-toolbar {
-      margin-bottom: 20px;
-
-      .btn {
-        margin: {
-          right: 10px;
-          left: 0;
-          top: 0;
-          bottom: 0;
-        }
-        width: 105px;
-      }
-    }
-
     a.entry-anchor {
       visibility: hidden;
       display:block;
@@ -140,8 +117,30 @@
     .entry-panel {
       padding: 15px;
 
-      .entry-content {
+      .entry-toolbar {
+        margin-bottom: 20px;
 
+        .btn {
+          margin: {
+            right: 10px;
+            left: 0;
+            top: 0;
+            bottom: 0;
+          }
+          width: 105px;
+        }
+      }
+
+      .entry-lead {
+        margin-bottom: 5px;
+      }
+
+      .entry-additional-info {
+        margin-bottom: 10px;
+        font-style: italic;
+      }
+
+      .entry-content {
         img.loaded {
           vertical-align: baseline;
           max-width: 100%;
