@@ -121,14 +121,15 @@
     }
 
     .entry-panel {
-      //-webkit-transition-property:height, padding-top, padding-bottom;
-      //-webkit-transition-duration: 020s;
-      //-webkit-transition-timing-function: linear;
-      //transition-property:height, padding-top, padding-bottom;
-      //transition-duration: 020s;
-      //transition-timing-function: linear;
+      -webkit-transition-property: height, padding-top, padding-bottom;
+      -webkit-transition-duration: 0.15s;
+      -webkit-transition-timing-function: linear;
+      transition-property: height, padding-top, padding-bottom;
+      transition-duration: 0.15s;
+      transition-timing-function: linear;
       height: fit-content;
       padding: 15px;
+      overflow: hidden;
 
       .entry-toolbar {
         margin-bottom: 20px;
