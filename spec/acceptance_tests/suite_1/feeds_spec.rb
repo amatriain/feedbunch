@@ -232,9 +232,11 @@ describe 'feeds', type: :feature do
 
       it 'shows a link to read entries in all subscriptions', js: true do
         expect(page).to have_css "#sidebar a[data-sidebar-feed][data-feed-id='all']"
+        # Wait for the "all subscriptions" link to become enabled
+        expect(page).not_to have_css "#sidebar #all-feeds.disabled a[data-sidebar-feed][data-feed-id='all']"
 
         # Click on link to read all feeds
-        find("#sidebar a[data-sidebar-feed][data-feed-id='all']").click
+        find("#sidebar #folder-none a[data-sidebar-feed][data-feed-id='all']").click
 
         expect(page).to have_content @entry1_1.title
         expect(page).to have_content @entry1_2.title

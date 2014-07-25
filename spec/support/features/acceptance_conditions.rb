@@ -191,14 +191,12 @@ end
 # Test that the passed folder is open in the sidebar
 
 def folder_should_be_open(folder)
-  expect(page).to have_css "#sidebar #folders-list #folder-#{folder.id}"
-  expect(page).to have_css "#sidebar #folders-list #feeds-#{folder.id}", visible: true
+  expect(page).to have_css "#sidebar #folders-list #folder-#{folder.id} #feeds-#{folder.id}.open-folder"
 end
 
 ##
 # Test that the passed folder is closed in the sidebar
 
 def folder_should_be_closed(folder)
-  expect(page).to have_css "#sidebar #folders-list #folder-#{folder.id}"
-  expect(page).not_to have_css "#sidebar #folders-list #feeds-#{folder.id}", visible: true
+  expect(page).to have_css "#sidebar #folders-list #folder-#{folder.id} #feeds-#{folder.id}.closed-folder"
 end
