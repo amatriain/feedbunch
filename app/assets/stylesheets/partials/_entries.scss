@@ -114,7 +114,33 @@
       margin: 0;
     }
 
+    /* Animations when opening/closing entries */
+
+    .entry-panel.ng-hide-add,
+    .entry-panel.ng-hide-remove {
+      display:block!important;
+    }
+
+    .entry-panel.ng-hide {
+      opacity: 0;
+      height: 0;
+      line-height:0em;
+      padding: {
+        top: 0;
+        bottom: 0;
+      }
+    }
+
     .entry-panel {
+      -webkit-transition-property:opacity, height, line-height, padding-top, padding-bottom;
+      -webkit-transition-duration: 0.15s;
+      -webkit-transition-timing-function: linear;
+      transition-property:opacity, height, line-height, padding-top, padding-bottom;
+      transition-duration: 0.15s;
+      transition-timing-function: linear;
+      opacity: 1;
+      height: fit-content;
+      line-height:normal;
       padding: 15px;
 
       .entry-toolbar {
