@@ -97,23 +97,16 @@
 
     /* Animations when opening/closing sidebar folders */
 
-    /* This rule makes the folder visible during the animation, overriding the usual display:none from ng-hide */
-    .folder-content.ng-hide-add,
-    .folder-content.ng-hide-remove {
-      display:block!important
-    }
-
     [data-folder-id] {
       .folder-content {
-        -webkit-transition-property:opacity, line-height, padding-top, padding-bottom;
+        -webkit-transition-property:opacity, height, line-height, padding-top, padding-bottom;
         -webkit-transition-duration: 0.15s;
         -webkit-transition-timing-function: linear;
-        transition-property:opacity, line-height, padding-top, padding-bottom;
+        transition-property:opacity, height, line-height, padding-top, padding-bottom;
         transition-duration: 0.15s;
         transition-timing-function: linear;
-        opacity: 1;
-        line-height:normal;
-        padding: 8px;
+        overflow:  hidden;
+        display: none;
 
         a[data-sidebar-feed] {
           -webkit-transition-property:padding-top, padding-bottom;
@@ -143,8 +136,18 @@
         }
       }
 
-      .folder-content.ng-hide {
+      .folder-content.open-folder {
+        display: block;
+        opacity: 1;
+        height: fit-content;
+        line-height:normal;
+        padding: 8px;
+      }
+
+      .folder-content.closed-folder {
+        display: block;
         opacity: 0;
+        height: 0;
         line-height:0em;
         padding: {
           top: 0;
@@ -207,10 +210,10 @@
 
     /* Animation when opening/closing sidebar folders (the folder arrow rotates 90 degrees) */
     .folder-arrow {
-      -webkit-transition-property:-webkit-transform;
+      -webkit-transition-property:-webkit-transform, margin-top;
       -webkit-transition-duration: 0.15s;
       -webkit-transition-timing-function: linear;
-      transition-property:transform;
+      transition-property:transform, margin-top;
       transition-duration: 0.15s;
       transition-timing-function: linear;
       margin-top: 4px;
