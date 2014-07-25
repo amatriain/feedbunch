@@ -49,37 +49,36 @@
 
     <%# Entry summary, initially collapsed %>
     <div id="entry-{{entry.id}}-summary"
+         class="entry-panel"
          ng-show="is_open(entry)"
          ng-mouseenter="tooltips_entry(entry)">
-      <div class="entry-panel">
 
-        <%= render 'read/entries_toolbar' %>
+      <%= render 'read/entries_toolbar' %>
 
-        <div class="lead entry-lead">
-          <a href="{{entry.url}}"
-             target="_blank"
-             data-toggle="tooltip" data-placement="top"
-             title="<%= t 'read.entries.title_tooltip' %>"
-             ng-bind-html="entry.title">
+      <div class="lead entry-lead">
+        <a href="{{entry.url}}"
+           target="_blank"
+           data-toggle="tooltip" data-placement="top"
+           title="<%= t 'read.entries.title_tooltip' %>"
+           ng-bind-html="entry.title">
+        </a>
+      </div>
+      <div class="entry-additional-info">
+        <p>
+          <a href="#"
+             ng-click="set_current_entry_feed(entry)"
+             data-toggle="tooltip" data-placement="bottom"
+             title="<%= t 'read.entries.feed_tooltip' %>"
+             ng-bind-html="entry_feed_title(entry)">
           </a>
-        </div>
-        <div class="entry-additional-info">
-          <p>
-            <a href="#"
-               ng-click="set_current_entry_feed(entry)"
-               data-toggle="tooltip" data-placement="bottom"
-               title="<%= t 'read.entries.feed_tooltip' %>"
-               ng-bind-html="entry_feed_title(entry)">
-            </a>
-          </p>
-        </div>
+        </p>
+      </div>
 
-        <hr>
+      <hr>
 
-        <p class="hidden">{{entry.guid}}</p>
-        <div class="entry-content">
-          <p ng-bind-html="trustedEntryContent(entry)"></p>
-        </div>
+      <p class="hidden">{{entry.guid}}</p>
+      <div class="entry-content">
+        <p ng-bind-html="trustedEntryContent(entry)"></p>
       </div>
     </div>
   </div>
