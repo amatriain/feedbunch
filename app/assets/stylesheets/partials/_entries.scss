@@ -33,8 +33,7 @@
 /* For screens wider than 992px, Bootstrap v3 "md" (medium) breakpoint. */
 /* I.e. for md- and lg- screens, not for xs- and sm- screens */
 @media (min-width: $screen-md-min) {
-  .entry-content,
-  .entry-panel{
+  .entry-content{
     padding: 20px;
   }
 }
@@ -138,25 +137,29 @@
       margin: 0;
     }
 
-    .entry-content {
+    .entry-panel {
+      padding: 15px;
 
-      img.loaded {
-        vertical-align: baseline;
-        max-width: 100%;
-      }
+      .entry-content {
 
-      img.large-img{
-        margin: {
-          top: 1em;
-          bottom: 1em;
+        img.loaded {
+          vertical-align: baseline;
+          max-width: 100%;
         }
-      }
 
-      img.small-img,
-      img[src='/images/Ajax-loader.gif']{
-        margin: {
-          left: 3px;
-          right: 3px;
+        img.large-img{
+          margin: {
+            top: 1em;
+            bottom: 1em;
+          }
+        }
+
+        img.small-img,
+        img[src='/images/Ajax-loader.gif']{
+          margin: {
+            left: 3px;
+            right: 3px;
+          }
         }
       }
     }
