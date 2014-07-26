@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'openEntrySvc',
-['$rootScope', '$location', '$timeout',
-($rootScope, $location, $timeout)->
+['$rootScope', '$location', '$timeout', 'scrollSvc',
+($rootScope, $location, $timeout, scrollSvc)->
 
   #---------------------------------------------
   # Set an entry as open
@@ -17,15 +17,7 @@ angular.module('feedbunch').service 'openEntrySvc',
     else
       $rootScope.open_entries = [entry]
 
-    # Scroll so that the entry link is at the top of the viewport, for maximum visibility of
-    # the entry body.
-    # We introduce a small delay before scrolling to give angularjs time to close any other entries, so that
-    # the entry top has its final position after any entry closing animations.
-    target = $("#entry-#{entry.id}")
-    $timeout ->
-      $('html,body').animate {scrollTop: target.offset().top - 85}, 200
-    , 150
-
+    scrollSvc.scrollToEntry entry
 
   #---------------------------------------------
   # Set an entry as closed
