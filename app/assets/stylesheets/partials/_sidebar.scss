@@ -99,12 +99,14 @@
 
     [data-folder-id] {
       .folder-content {
-        -webkit-transition-property:opacity, height, line-height, padding-top, padding-bottom;
+        -webkit-transition-property:opacity, height, -webkit-transform, padding-top, padding-bottom;
         -webkit-transition-duration: 0.20s;
         -webkit-transition-timing-function: linear;
-        transition-property:opacity, height, line-height, padding-top, padding-bottom;
+        -webkit-transform-origin: top;
+        transition-property:opacity, height, transform, padding-top, padding-bottom;
         transition-duration: 0.20s;
         transition-timing-function: linear;
+        transform-origin: top;
         overflow:  hidden;
         display: none;
       }
@@ -113,7 +115,8 @@
         display: block;
         opacity: 1;
         height: fit-content;
-        line-height:normal;
+        -webkit-transform:scaleY(1);
+        transform: scaleY(1);
         padding: 8px;
       }
 
@@ -121,7 +124,8 @@
         display: block;
         opacity: 0;
         height: 0;
-        line-height:0em;
+        -webkit-transform:scaleY(0);
+        transform: scaleY(0);
         padding: {
           top: 0;
           bottom: 0;
