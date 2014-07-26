@@ -62,7 +62,7 @@ describe 'feed entries', type: :feature do
     it 'opens title link in a new tab', js: true do
       read_entry @entry1
 
-      within "#entry-#{@entry1.id}-summary .entry-panel .lead" do
+      within "#entry-#{@entry1.id}-summary.entry-panel .lead" do
         expect(page).to have_css "a[target='_blank'][href='#{@entry1.url}']"
       end
     end
@@ -286,7 +286,7 @@ describe 'feed entries', type: :feature do
 
       it 'displays feed title above entry content', js: true do
         read_entry @entry1
-        within "#entry-#{@entry1.id}-summary .entry-panel .entry-additional-info" do
+        within "#entry-#{@entry1.id}-summary.entry-panel .entry-additional-info" do
           expect(page).to have_text @feed1.title
         end
       end
@@ -300,7 +300,7 @@ describe 'feed entries', type: :feature do
 
         read_entry @entry1
         entry_should_be_marked_read @entry1
-        find("#entry-#{@entry1.id}-summary .entry-panel .entry-additional-info a").click
+        find("#entry-#{@entry1.id}-summary.entry-panel .entry-additional-info a").click
 
         # @feed1 should be selected for reading
         feed_should_be_selected @feed1
