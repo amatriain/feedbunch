@@ -133,6 +133,26 @@
       }
     }
 
+    /* Feed insertions/removals in the sidebar are animated */
+
+    .sidebar-feed {
+      -webkit-transition-property:opacity;
+      -webkit-transition-duration: 0.15s;
+      -webkit-transition-timing-function: linear;
+      transition-property:opacity;
+      transition-duration: 0.15s;
+      transition-timing-function: linear;
+    }
+
+    .sidebar-feed.ng-leave {
+      opacity: 1;
+    }
+
+    .sidebar-feed.ng-move,
+    .sidebar-feed.ng-enter {
+      opacity: 0;
+    }
+
     a[data-sidebar-feed] {
       padding: {
         left: 0;

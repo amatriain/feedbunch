@@ -1,4 +1,5 @@
-<li ng-repeat="feed in feeds | filter:feed_in_folder(folder.id) | orderBy:'title'"
+<li class="sidebar-feed"
+    ng-repeat="feed in feeds | filter:feed_in_folder(folder.id) | orderBy:'title'"
     ng-class="{active: current_feed.id==feed.id}">
   <a data-sidebar-feed
      data-feed-id="{{feed.id}}"
@@ -19,6 +20,5 @@
         <span class="badge">{{feed.unread_entries | numberBadgeFltr}}</span>
       </div>
     </div>
-
   </a>
 </li>
