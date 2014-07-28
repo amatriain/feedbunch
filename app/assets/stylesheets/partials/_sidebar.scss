@@ -142,6 +142,7 @@
       transition-property:opacity;
       transition-duration: 0.15s;
       transition-timing-function: linear;
+      opacity: 1;
     }
 
     .sidebar-feed.ng-leave {
@@ -232,11 +233,29 @@
       background-color: #E8E8E8;
     }
 
+    /* Animate folders entering/leaving the sidebar */
+
     .folder-panel{
+      -webkit-transition-property:opacity;
+      -webkit-transition-duration: 0.15s;
+      -webkit-transition-timing-function: linear;
+      transition-property:opacity;
+      transition-duration: 0.15s;
+      transition-timing-function: linear;
       margin: {
         top: -1px;
         bottom: -1px;
       }
+      opacity: 1;
+    }
+
+    .folder-panel.ng-leave {
+      opacity: 1;
+    }
+
+    .folder-panel.ng-move,
+    .folder-panel.ng-enter {
+      opacity: 0;
     }
 
     .sidebar-feed-title,
