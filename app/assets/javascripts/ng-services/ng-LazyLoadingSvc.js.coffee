@@ -19,12 +19,12 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
     else
       # If data-src is not blank, lazy-load the image
       img.removeAttr('data-src')
-      loaded_img = img.clone().addClass('hidden').removeAttr('src').insertAfter(img)
+      loaded_img = img.clone().addClass('loading').removeAttr('src').insertAfter(img)
       loaded_img.on 'error', ->
         img.addClass 'hidden'
       .on 'load', ->
         img.addClass 'hidden'
-        loaded_img.addClass('loaded').removeClass('hidden')
+        loaded_img.removeClass('loading').addClass('loaded')
         # center and add display-block to images if wider than 40% of the entries div
         img_width = 100 * loaded_img.width() / $('#feed-entries').width()
         if img_width > 40
