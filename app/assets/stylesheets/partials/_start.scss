@@ -7,3 +7,23 @@ img.application-main-icon {
   vertical-align: middle;
   margin-top: 1em;
 }
+
+#subscription-stats {
+  -webkit-transition-property:opacity;
+  -webkit-transition-duration: 0.20s;
+  -webkit-transition-timing-function: linear;
+  transition-property:opacity;
+  transition-duration: 0.20s;
+  transition-timing-function: linear;
+  opacity: 1;
+  height: auto;
+}
+
+#subscription-stats.ng-hide-add,
+#subscription-stats.ng-hide-remove {
+  display:block!important;
+}
+
+#subscription-stats.ng-hide {
+  opacity: 0;
+}
