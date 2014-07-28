@@ -7,6 +7,30 @@
   background-color: #FFFFFF;
 }
 
+/* In smartphones the sidebar visibility can be toggled. The hiding/showing is animated. */
+
+@media (max-width: $screen-sm-min) {
+
+  #sidebar-column {
+    -webkit-transition-property:-webkit-transform;
+    -webkit-transition-duration: 0.3s;
+    -webkit-transition-timing-function: linear;
+    transition-property:transform;
+    transition-duration: 0.3s;
+    transition-timing-function: linear;
+    z-index: 1;
+  }
+
+  #sidebar-column.sidebar-hidden {
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+  }
+
+  #entries-column {
+    z-index: 0;
+  }
+}
+
 /* Large, easily clickable feeds and folders in smartphones */
 @media (max-width: $screen-md-min) {
 
