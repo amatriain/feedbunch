@@ -17,8 +17,5 @@ sidebarVisibleSvc, jobStateSvc)->
     entriesPaginationSvc.set_busy false
     menuCollapseSvc.close()
     jobStateSvc.load_data()
-    $timeout ->
-      sidebarVisibleSvc.set false
-    , 300
-
+    sidebarVisibleSvc.set false
 ]

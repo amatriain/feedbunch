@@ -144,9 +144,7 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
       readSvc.read_entries_page()
       feedsFoldersSvc.load_feed feed_id
       menuCollapseSvc.close()
-      $timeout ->
-        sidebarVisibleSvc.set false
-      , 300
+      sidebarVisibleSvc.set false
     return
 
   #--------------------------------------------
@@ -159,9 +157,7 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
       readSvc.read_entries_page()
       feedsFoldersSvc.load_folder_feeds folder
       menuCollapseSvc.close()
-      $timeout ->
-        sidebarVisibleSvc.set false
-      , 300
+      sidebarVisibleSvc.set false
     return
 
   #--------------------------------------------
