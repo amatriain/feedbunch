@@ -330,7 +330,6 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
   # Accepts as argument the boolean value to which the flag will be set.
   #--------------------------------------------
   $scope.set_sidebar_visible = (visible)->
-    alert visible
     sidebarVisibleSvc.set visible
     menuCollapseSvc.close()
     return
