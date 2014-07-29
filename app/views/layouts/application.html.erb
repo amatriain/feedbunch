@@ -7,7 +7,9 @@
   <% if user_signed_in? %>
     class="navbar-visible"
   <% end %>
-    ng-controller="FeedbunchCtrl">
+    ng-controller="FeedbunchCtrl"
+    ng-swipe-left="set_sidebar_visible(false)"
+    ng-swipe-right="set_sidebar_visible(true)">
 
 <%= render 'layouts/navbar' %>
 

@@ -19,7 +19,9 @@
     <%= render 'read/sidebar/sidebar' %>
   </div>
 
-  <div id="entries-column" class="col-xs-12 col-sm-9 pull-right" ng-cloak>
+  <div id="entries-column"
+       class="col-xs-12 col-sm-9 pull-right"
+       ng-cloak>
 
     <div ng-show="current_feed==null && current_folder==null && !loading_entries_busy">
       <%= render 'start' %>

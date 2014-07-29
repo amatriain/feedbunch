@@ -315,11 +315,23 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
     unreadCountSvc.total_unread_entries()
 
   #--------------------------------------------
-  # Toggle a boolean in the root scope that indicates if the sidebar with feeds/folders is
+  # Toggle a boolean flag in the root scope that indicates if the sidebar with feeds/folders is
   # visible (true) or the entries list is visible (false).
+  # Every time this function is invoked the boolean flag is inverted (true <--> false).
   #--------------------------------------------
   $scope.toggle_sidebar_visible = ->
     sidebarVisibleSvc.toggle()
+    menuCollapseSvc.close()
+    return
+
+  #--------------------------------------------
+  # Set a boolean flag in the root scope that indicates if the sidebar with feeds/folders is
+  # visible (true) or the entries list is visible (false).
+  # Accepts as argument the boolean value to which the flag will be set.
+  #--------------------------------------------
+  $scope.set_sidebar_visible = (visible)->
+    alert visible
+    sidebarVisibleSvc.set visible
     menuCollapseSvc.close()
     return
 
