@@ -28,6 +28,9 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
   # Initialize footer tooltips
   tooltipSvc.footer_tooltips()
 
+  # Initialize tooltip on cookies warning "accept" button
+  tooltipSvc.cookies_warning_tooltips()
+
   # Initialize import alert tooltips
   tooltipSvc.import_state_tooltips()
 

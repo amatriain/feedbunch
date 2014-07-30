@@ -9,6 +9,14 @@ angular.module('feedbunch').service 'tooltipSvc',
   md_min_media_query = 'screen and (min-width: 992px)'
 
   #---------------------------------------------
+  # Enable tooltip on cookies warning "accept" button
+  #---------------------------------------------
+  cookies_warning_tooltips: ->
+    # Do not enable tooltips in smartphone and tablet-sized screens
+    enquire.register md_min_media_query, ->
+      $("#cookie-notice .close[data-toggle='tooltip']").tooltip()
+
+  #---------------------------------------------
   # Enable tooltips on some entry buttons and links
   #---------------------------------------------
   entry_tooltips: (entry)->

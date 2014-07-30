@@ -11,4 +11,7 @@ angular.module('feedbunch').controller 'PagesCtrl',
 
   # Initialize footer tooltips
   tooltipSvc.footer_tooltips()
+
+  # Initialize tooltip on cookies warning "accept" button
+  tooltipSvc.cookies_warning_tooltips()
 ]

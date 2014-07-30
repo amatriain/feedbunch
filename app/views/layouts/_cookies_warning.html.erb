@@ -1,7 +1,12 @@
 <%# Alert about cookie use, to comply with EU law %>
 <% unless cookies[:accepted_cookies] == 'true' %>
   <div id="cookie-notice" class="alert alert-info alert-dismissible fade in text-center bottom-alert">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <p><%= t 'layouts.cookies' %></p>
+    <button type="button"
+            class="close"
+            data-dismiss="alert"
+            title="<%= t 'layouts.cookies.accept' %>"
+            data-toggle="tooltip"
+            data-placement="top">&times;</button>
+    <p><%= t 'layouts.cookies.message' %></p>
   </div>
 <% end %>

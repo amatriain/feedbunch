@@ -22,6 +22,9 @@ angular.module('feedbunch').controller 'DeviseCtrl',
   # Initialize footer tooltips
   tooltipSvc.footer_tooltips()
 
+  # Initialize tooltip on cookies warning "accept" button
+  tooltipSvc.cookies_warning_tooltips()
+
   #--------------------------------------------
   # When clicking on the top-left navbar button (only visible in smartphone-sized viewports),
   # go to the read view, with the sidebar visible by default
