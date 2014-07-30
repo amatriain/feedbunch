@@ -10,6 +10,7 @@ es:
       sign_in: "Entra en tu cuenta"
   layouts:
     noscript: "Tu navegador no soporta JavaScript. Feedbunch necesita JavaScript para funcionar correctamente."
+    cookies: "Este sitio web necesita cookies para funcionar correctamente. Si sigues usandolo, asumiremos que estás de acuerdo en recibir todas las cookies de este sitio web."
     navbar:
       show_read_button_tooltip: "Mostrar todos los feeds y entradas, incluyendo aquellos marcados como leídos"
       show_read_button: "Mostrar leídos"

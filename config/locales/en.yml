@@ -31,6 +31,7 @@ en:
       sign_in: "Sign in"
   layouts:
     noscript: "Your browser does not support JavaScript. Feedbunch needs JavaScript to work correctly."
+    cookies: "This website needs cookies to work correctly. If you continue using it, we'll assume that you agree to receive all cookies from this website."
     navbar:
       show_read_button_tooltip: "Show all feeds and entries, including those marked as read"
       show_read_button: "Show read"
