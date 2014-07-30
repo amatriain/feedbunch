@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').controller 'DeviseCtrl',
-['$scope', '$window', 'timerFlagSvc', 'sidebarVisibleSvc', 'tooltipSvc', 'invitationsSvc',
-($scope, $window, timerFlagSvc, sidebarVisibleSvc, tooltipSvc, invitationsSvc)->
+['$scope', '$window', 'timerFlagSvc', 'sidebarVisibleSvc', 'tooltipSvc', 'invitationsSvc', 'cookiesSvc',
+($scope, $window, timerFlagSvc, sidebarVisibleSvc, tooltipSvc, invitationsSvc, cookiesSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -48,5 +48,12 @@ angular.module('feedbunch').controller 'DeviseCtrl',
   #--------------------------------------------
   $scope.reset_flag = (flag)->
     timerFlagSvc.reset flag
+    return
+
+  #--------------------------------------------
+  # Set a cookie that indicates that the user has accepted cookie use (to comply with EU law).
+  #--------------------------------------------
+  $scope.accept_cookies = ->
+    cookiesSvc.accept_cookies()
     return
 ]

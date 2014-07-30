@@ -6,11 +6,11 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'exportStateSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
-'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc',
+'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
-tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
+tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -335,6 +335,13 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
   $scope.set_sidebar_visible = (visible)->
     sidebarVisibleSvc.set visible
     menuCollapseSvc.close()
+    return
+
+  #--------------------------------------------
+  # Set a cookie that indicates that the user has accepted cookie use (to comply with EU law).
+  #--------------------------------------------
+  $scope.accept_cookies = ->
+    cookiesSvc.accept_cookies()
     return
 
   #--------------------------------------------
