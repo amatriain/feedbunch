@@ -141,8 +141,8 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
     if feed?
       currentFeedSvc.set feed
       tooltipSvc.feed_title_tooltip()
-      readSvc.read_entries_page()
       feedsFoldersSvc.load_feed feed_id
+      readSvc.read_entries_page()
       menuCollapseSvc.close()
       sidebarVisibleSvc.set false
     return
@@ -154,8 +154,8 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc)->
     # If the "all subscriptions" link is not enabled, do nothing.
     if $scope.all_subscriptions_enabled()
       currentFolderSvc.set folder
-      readSvc.read_entries_page()
       feedsFoldersSvc.load_folder_feeds folder
+      readSvc.read_entries_page()
       menuCollapseSvc.close()
       sidebarVisibleSvc.set false
     return
