@@ -3,8 +3,13 @@
   z-index: 2000;
   width: 100%;
   top:0;
+  margin-bottom: 0px;
+}
 
-  .alert {
-    margin-bottom: 0px;
-  }
+.bottom-alert{
+  position:fixed;
+  z-index: 2000;
+  width: 100%;
+  bottom:0;
+  margin-bottom: 0px;
 }
