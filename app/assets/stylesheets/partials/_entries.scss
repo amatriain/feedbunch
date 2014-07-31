@@ -122,10 +122,10 @@
 
     .entry-panel {
       -webkit-transition-property: height, padding-top, padding-bottom;
-      -webkit-transition-duration: 0.20s;
+      -webkit-transition-duration: 0.30s;
       -webkit-transition-timing-function: linear;
       transition-property: height, padding-top, padding-bottom;
-      transition-duration: 0.20s;
+      transition-duration: 0.30s;
       transition-timing-function: linear;
       height: fit-content;
       padding: 15px;
@@ -159,10 +159,10 @@
 
         img {
           -webkit-transition-property:opacity;
-          -webkit-transition-duration: 0.20s;
+          -webkit-transition-duration: 0.30s;
           -webkit-transition-timing-function: linear;
           transition-property:opacity;
-          transition-duration: 0.20s;
+          transition-duration: 0.30s;
           transition-timing-function: linear;
           vertical-align: baseline;
           max-width: 100%;

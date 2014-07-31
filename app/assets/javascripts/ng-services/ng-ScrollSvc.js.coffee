@@ -20,7 +20,7 @@ angular.module('feedbunch').service 'scrollSvc',
     # We leave an offset so that part of the entry above is still visible under the navbar.
     topOffset = 100
     $timeout ->
-      $('html,body').animate {scrollTop: target.offset().top - topOffset}, 200
-    , 150
+      $('html,body').animate {scrollTop: target.offset().top - topOffset}, 300
+    , 300
 
 ]
