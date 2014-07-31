@@ -3,13 +3,13 @@
 ########################################################
 
 angular.module('feedbunch').service 'cookiesSvc',
-['$cookies', ($cookies)->
+['$window', ($window)->
 
   #---------------------------------------------
   # Set an "accepted_cookies" cookie with value "true". This will make the cookies warning
   # (to comply with EU law) not to appear again.
   #---------------------------------------------
   accept_cookies: ->
-    $cookies.accepted_cookies = 'true'
+    $window.document.cookie = 'accepted_cookies=true'
 
 ]
