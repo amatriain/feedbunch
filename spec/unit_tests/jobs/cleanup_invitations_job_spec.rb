@@ -186,7 +186,7 @@ discard_unaccepted_invitations_after = Feedbunch::Application.config.discard_una
     end
   end
 
-  context 'reset daily invitations limit' do
+  context 'set daily invitations limit' do
 
     before :each do
       @daily_invitations_limit = Feedbunch::Application.config.daily_invitations_limit
