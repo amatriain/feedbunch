@@ -10,6 +10,6 @@ angular.module('feedbunch').service 'cookiesSvc',
   # (to comply with EU law) not to appear again.
   #---------------------------------------------
   accept_cookies: ->
-    $window.document.cookie = 'accepted_cookies=true'
+    $window.document.cookie = 'accepted_cookies=true; Path=/; Expires=Fri, 31 Dec 9999 23:59:59 GMT'
 
 ]
