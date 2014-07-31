@@ -42,6 +42,7 @@ context.instance_eval  do
     row :invitation_accepted_at
     row :invitation_limit
     row :invitations_count
+    row :invitations_count_reset_at
   end
 
   br
