@@ -15,6 +15,16 @@ describe User, type: :model do
 
   context 'user invitations' do
 
+    it 'defaults to the currently configured daily limit' do
+      limit = Feedbunch::Application.config.daily_invitations_limit
+
+      user = FactoryGirl.create :user
+      expect(user.invitation_limit).to eq limit
+
+      user2 = FactoryGirl.create :user, invitation_limit: nil
+      expect(user2.invitation_limit).to eq limit
+    end
+
     it 'returns user who invited a given user' do
       expect(@invited_user.invited_by).to eq @user
     end

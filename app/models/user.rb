@@ -304,6 +304,11 @@ class User < ActiveRecord::Base
     if self.name.blank?
       self.name = self.email
     end
+
+    # By default each user has the daily invitations limit set in application.rb
+    if self.invitation_limit.blank?
+      self.invitation_limit = Feedbunch::Application.config.daily_invitations_limit
+    end
   end
 
   ##
