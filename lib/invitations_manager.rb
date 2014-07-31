@@ -25,4 +25,16 @@ class InvitationsManager
 
     old_unaccepted_invitations.destroy_all
   end
+
+  ##
+  # Set the daily invitations limit for all users to the value configured in application.rb, in the
+  # daily_invitations_limit config option.
+
+  def self.update_daily_limit
+    limit = Feedbunch::Application.config.daily_invitations_limit
+    Rails.logger.info "Setting the daily invitations limit for all users to #{limit}"
+    users = User.where 'invitation_limit != ? or invitation_limit is null', limit
+    Rails.logger.debug "A total of #{users.length} users have an invitation limit that needs updating"
+    users.each {|u| u.update invitation_limit: limit}
+  end
 end

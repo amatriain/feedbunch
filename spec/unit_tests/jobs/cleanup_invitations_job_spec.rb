@@ -8,18 +8,20 @@ describe CleanupInvitationsJob do
     # During the tests, Time.zone.now will always return "2001-01-01 10:00:00"
     @time_now = Time.zone.parse('2000-01-01 10:00:00')
     allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return @time_now
-
-    discard_unaccepted_invitations_after = Feedbunch::Application.config.discard_unaccepted_invitations_after
-    # Unaccepted invitations sent before this time are considered "old" and will be destroyed.
-    @time_invitations_old = @time_now - discard_unaccepted_invitations_after
-
-    @friend_email_1 = 'some_friend_1@email.com'
-    @friend_email_2 = 'some_friend_2@email.com'
-    @friend_name_1 = 'some friend_1'
-    @friend_name_2 = 'some friend_2'
   end
 
   context 'discard old unaccepted invitations' do
+
+    before :each do
+discard_unaccepted_invitations_after = Feedbunch::Application.config.discard_unaccepted_invitations_after
+      # Unaccepted invitations sent before this time are considered "old" and will be destroyed.
+      @time_invitations_old = @time_now - discard_unaccepted_invitations_after
+
+      @friend_email_1 = 'some_friend_1@email.com'
+      @friend_email_2 = 'some_friend_2@email.com'
+      @friend_name_1 = 'some friend_1'
+      @friend_name_2 = 'some friend_2'
+    end
 
     it 'destroys old unaccepted invitations' do
       invitation_params_1 = {email: @friend_email_1,
@@ -181,6 +183,29 @@ describe CleanupInvitationsJob do
 
       expect(User.exists? new_user.id).to be true
       expect(User.exists? old_user.id).to be true
+    end
+  end
+
+  context 'reset daily invitations limit' do
+
+    before :each do
+      @daily_invitations_limit = Feedbunch::Application.config.daily_invitations_limit
+    end
+
+    it 'sets invitation limit for users that do not have it' do
+      @user.update invitation_limit: nil
+
+      CleanupInvitationsJob.perform
+
+      expect(@user.reload.invitation_limit).to eq @daily_invitations_limit
+    end
+
+    it 'sets invitation limit for users that have the wrong limit' do
+      @user.update invitation_limit: @daily_invitations_limit - 1
+
+      CleanupInvitationsJob.perform
+
+      expect(@user.reload.invitation_limit).to eq @daily_invitations_limit
     end
   end
 
