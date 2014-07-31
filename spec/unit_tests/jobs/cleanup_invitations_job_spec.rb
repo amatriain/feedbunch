@@ -13,7 +13,7 @@ describe CleanupInvitationsJob do
   context 'discard old unaccepted invitations' do
 
     before :each do
-discard_unaccepted_invitations_after = Feedbunch::Application.config.discard_unaccepted_invitations_after
+      discard_unaccepted_invitations_after = Feedbunch::Application.config.discard_unaccepted_invitations_after
       # Unaccepted invitations sent before this time are considered "old" and will be destroyed.
       @time_invitations_old = @time_now - discard_unaccepted_invitations_after
 
