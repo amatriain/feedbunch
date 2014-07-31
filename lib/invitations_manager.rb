@@ -37,4 +37,25 @@ class InvitationsManager
     Rails.logger.debug "A total of #{users.length} users have an invitation limit that needs updating"
     users.each {|u| u.update invitation_limit: limit}
   end
+
+  ##
+  # Reset to zero the invitations_count attribute for users that:
+  # - have a current invitations count greater than zero
+  # - more than one day has passed since their count was reset, as indicated by the
+  # invitations_count_reset_at attribute
+  #
+  # Users who have their invitations_count set to zero, also have their invitations_count_reset_at
+  # attribute set to the current date-time. This makes it possible to select only users that had their
+  # last invitations_count reset more than one day ago.
+  #
+  # This method is intended to be invoked daily from a scheduled job. It basically resets to zero the
+  # invitations count for each user daily.
+
+  def self.reset_invitations_count
+    last_reset_at = Time.zone.now - 1.day
+    Rails.logger.info "Resetting users daily invitations count to zero. Ignoring users who had it reset later than #{last_reset_at}"
+    users = User.where 'invitations_count > 0 and (invitations_count_reset_at <= ? or invitations_count_reset_at is null)', last_reset_at
+    Rails.logger.debug "Resetting invitations count for #{users.length} users"
+    users.each {|u| u.update invitations_count: 0, invitations_count_reset_at: Time.zone.now}
+  end
 end

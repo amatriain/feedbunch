@@ -209,4 +209,61 @@ describe CleanupInvitationsJob do
     end
   end
 
+  context 'reset daily invitations count' do
+
+    it 'resets the invitation count of a user if more than one day has passed since last reset' do
+      @user.update invitations_count: 5, invitations_count_reset_at: @time_now - 2.days
+
+      CleanupInvitationsJob.perform
+
+      @user.reload
+      expect(@user.invitations_count).to eq 0
+      expect(@user.invitations_count_reset_at).to eq @time_now
+    end
+
+    it 'resets the invitation count of a user if exactly one day has passed since last reset' do
+      @user.update invitations_count: 5, invitations_count_reset_at: @time_now - 1.day
+
+      CleanupInvitationsJob.perform
+
+      @user.reload
+      expect(@user.invitations_count).to eq 0
+      expect(@user.invitations_count_reset_at).to eq @time_now
+    end
+
+    it 'resets the invitation count of a user that has never had his counter reset' do
+      @user.update invitations_count: 5, invitations_count_reset_at: nil
+
+      CleanupInvitationsJob.perform
+
+      @user.reload
+      expect(@user.invitations_count).to eq 0
+      expect(@user.invitations_count_reset_at).to eq @time_now
+    end
+
+    it 'does not reset the invitation count of a user if less than one day has passed since last reset' do
+      last_reset_at = @time_now - 1.hour
+      count = 5
+      @user.update invitations_count: count, invitations_count_reset_at: last_reset_at
+
+      CleanupInvitationsJob.perform
+
+      @user.reload
+      expect(@user.invitations_count).to eq count
+      expect(@user.invitations_count_reset_at).to eq last_reset_at
+    end
+
+    it 'does not reset the invitation count of a user whose current invitations count is zero' do
+      last_reset_at = @time_now - 2.days
+      @user.update invitations_count: 0, invitations_count_reset_at: last_reset_at
+
+      CleanupInvitationsJob.perform
+
+      @user.reload
+      expect(@user.invitations_count).to eq 0
+      expect(@user.invitations_count_reset_at).to eq last_reset_at
+    end
+
+  end
+
 end
