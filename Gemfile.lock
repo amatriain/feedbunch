@@ -139,7 +139,7 @@ GEM
     high_voltage (2.2.1)
     highline (1.6.21)
     hike (1.2.3)
-    http_accept_language (2.0.1)
+    http_accept_language (2.0.2)
     i18n (0.6.11)
     inherited_resources (1.4.1)
       has_scope (~> 0.6.0.rc)
