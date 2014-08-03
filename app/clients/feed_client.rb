@@ -69,9 +69,6 @@ class FeedClient
   # If the feed is successfully fetched and parsed, returns nil.
 
   def self.fetch_valid_feed(feed, perform_autodiscovery)
-    # User-agent used by feedbunch when fetching feeds
-    headers[:user_agent] = Feedbunch::Application.config.user_agent
-
     if perform_autodiscovery
       Rails.logger.info "Performing autodiscovery on feed #{feed.id} - URL #{feed.url} without HTTP caching"
       url = feed.url
@@ -82,6 +79,9 @@ class FeedClient
       # Calculate HTTP headers to be used for fetching
       headers = HTTPCaching.headers feed
     end
+
+    # User-agent used by feedbunch when fetching feeds
+    headers[:user_agent] = Feedbunch::Application.config.user_agent
 
     # GET the feed
     Rails.logger.info "Fetching from URL #{url}"
