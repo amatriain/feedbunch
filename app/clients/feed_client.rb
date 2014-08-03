@@ -35,7 +35,7 @@ class FeedClient
   # Returns feed instance if fetch is successful, raises an error otherwise.
 
   def self.fetch(feed, perform_autodiscovery=false)
-    http_response = fetch_valid_feed feed
+    http_response = fetch_valid_feed feed, perform_autodiscovery
 
     if http_response.present?
       feed = handle_html_response feed, http_response, perform_autodiscovery
@@ -50,7 +50,15 @@ class FeedClient
   # Fetch a feed, parse it and save received entries in the database.
   # This method assumes that the document at feed.fetch_url is a valid feed.
   #
-  # Receives as argument the feed instance to be fetched.
+  # Receives as argument the feed instance to be fetched and a boolean indicating whether to perform feed autodiscovery
+  # if necessary.
+  #
+  # If the perform_autodiscovery argument is true, the url attribute of the feed is used for the HTTP GET (it is the
+  # attribute most likely to lead to a webpage) and no HTTP caching headers are sent (we want to get the most up to date
+  # version of the page, in case autodiscovery data has changed).
+  #
+  # If the perform_autodiscovery argument is false the fetch_url attribute of the feed is used for the HTTP GET, and
+  # HTTP caching headers (if-none-match, if-modified-since) will be used if possible.
   #
   # If there's a problem downloading from feed.fetch_url, raises an error.
   #
@@ -60,16 +68,24 @@ class FeedClient
   #
   # If the feed is successfully fetched and parsed, returns nil.
 
-  def self.fetch_valid_feed(feed)
-    # Calculate HTTP headers to be used for fetching
-    headers = HTTPCaching.headers feed
-
+  def self.fetch_valid_feed(feed, perform_autodiscovery)
     # User-agent used by feedbunch when fetching feeds
     headers[:user_agent] = Feedbunch::Application.config.user_agent
 
+    if perform_autodiscovery
+      Rails.logger.info "Performing autodiscovery on feed #{feed.id} - URL #{feed.url} without HTTP caching"
+      url = feed.url
+      headers = {}
+    else
+      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} without autodiscovery, using HTTP caching if possible"
+      url = feed.fetch_url
+      # Calculate HTTP headers to be used for fetching
+      headers = HTTPCaching.headers feed
+    end
+
     # GET the feed
-    Rails.logger.info "Fetching from URL #{feed.fetch_url}"
-    feed_response = RestClient.get feed.fetch_url, headers
+    Rails.logger.info "Fetching from URL #{url}"
+    feed_response = RestClient.get url, headers
 
     # Specify encoding ISO-8859-1 if necessary
     if feed_response.try(:encoding)==Encoding::UTF_8 && !feed_response.try(:valid_encoding?)
