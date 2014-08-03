@@ -82,6 +82,13 @@ describe Feed, type: :model do
       feed.save!
       expect(feed.available).to be true
     end
+
+    it 'uses the fetch_url as default for the url attribute if no url is specified' do
+      fetch_url = 'http://some.fetch.url.com/'
+      feed = FactoryGirl.build :feed, fetch_url: fetch_url, url: nil
+      feed.save!
+      expect(feed.url).to eq fetch_url
+    end
   end
 
   context 'sanitization' do

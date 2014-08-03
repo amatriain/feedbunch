@@ -204,6 +204,7 @@ class Feed < ActiveRecord::Base
   # - available defaults to true
 
   def default_values
+    self.url = self.fetch_url if self.url.blank?
     self.fetch_interval_secs = 3600 if self.fetch_interval_secs.blank?
     self.available = true if self.available.nil?
   end
