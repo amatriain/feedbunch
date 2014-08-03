@@ -141,6 +141,151 @@ describe ScheduledUpdateFeedJob do
 
   end
 
+  context 'feed fetch_url is failing' do
+
+    context 'new fetch_url successfully autodiscovered from website' do
+
+      before :each do
+        @new_fetch_url = 'http://new.fetch.url.com/'
+        @new_feed_title = 'new feed title'
+
+        @entry = FactoryGirl.build :entry
+        @entry.title = 'Silence'
+        @entry.url = 'http://xkcd.com/1199/'
+        @entry.summary = %{All music is just performances of 4'33" in studios where another band happened to be playing at the time.}
+        @entry.published = 'Mon, 15 Apr 2013 04:00:00 -0000'
+        @entry.guid = 'http://xkcd.com/1199/'
+
+        @webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="feed" href="#{@new_fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+        allow(@webpage_html).to receive(:headers).and_return({})
+
+        @feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>#{@new_feed_title}</title>
+  <link href="#{@feed.url}" rel="alternate" />
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+  <entry>
+    <title>#{@entry.title}</title>
+    <link href="#{@entry.url}" rel="alternate" />
+    <updated>#{@entry.published}</updated>
+    <id>#{@entry.guid}</id>
+    <summary type="html">#{@entry.summary}</summary>
+  </entry>
+</feed>
+FEED_XML
+        allow(@feed_xml).to receive(:headers).and_return({})
+
+        # The feed fetch_url is no longer valid. The feed url is still valid, and the new fetch_url can be obtained
+        # from the HTML via autodiscovery.
+        allow(RestClient).to receive :get do |url|
+          if url == @feed.fetch_url
+            raise RestClient::RequestTimeout.new
+          elsif url == @feed.url
+            @webpage_html
+          elsif url == @new_fetch_url
+            @feed_xml
+          else
+            raise StandardError.new
+          end
+        end
+      end
+
+      it 'performs autodiscovery on the feed URL' do
+        expect(@feed.fetch_url).not_to eq @new_fetch_url
+        ScheduledUpdateFeedJob.perform @feed.id
+        expect(@feed.reload.fetch_url).to eq @new_fetch_url
+        expect(@feed.title).to eq @new_feed_title
+      end
+
+      it 'fetches feed from new fetch URL' do
+        expect(@feed.entries.count).to eq 0
+        ScheduledUpdateFeedJob.perform @feed.id
+        expect(@feed.entries.count).to eq 1
+        expect(@feed.entries.first.title).to eq @entry.title
+        expect(@feed.entries.first.url).to eq @entry.url
+        expect(@feed.entries.first.guid).to eq @entry.guid
+      end
+
+      it 'marks feed as not failing' do
+        date = Time.zone.parse '2000-01-01'
+        @feed.update failing_since: date
+
+        expect(@feed.failing_since).to eq date
+        ScheduledUpdateFeedJob.perform @feed.id
+        expect(@feed.reload.failing_since).to be_nil
+      end
+    end
+
+    context 'feed autodiscovery fails' do
+
+      before :each do
+        @webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="feed" href="#{@feed.url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+        allow(@webpage_html).to receive(:headers).and_return({})
+
+        # The feed fetch_url is no longer valid. The feed url is still valid, but attempting to audiscover just
+        # returns the failing fetch_url again
+        allow(RestClient).to receive :get do |url|
+          if url == @feed.fetch_url
+            raise RestClient::RequestTimeout.new
+          elsif url == @feed.url
+            @webpage_html
+          else
+            raise StandardError.new
+          end
+        end
+
+        # Stub Time.zone.now so that it returns a fixed date
+        @time_now = Time.zone.parse '2000-01-01 01:00:00'
+        allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return @time_now
+      end
+
+      it 'marks feed as failing' do
+        expect(@feed.failing_since).to be_nil
+        ScheduledUpdateFeedJob.perform @feed.id
+        expect(@feed.reload.failing_since).to eq @time_now
+      end
+
+      it 'does not change fetch_url attribute' do
+        fetch_url = @feed.fetch_url
+        ScheduledUpdateFeedJob.perform @feed.id
+        expect(@feed.reload.fetch_url).to eq fetch_url
+      end
+
+      it 'does not fetch new entries' do
+        entry = FactoryGirl.build :entry, feed_id: @feed.id
+        @feed.entries << entry
+
+        expect(@feed.entries.count).to eq 1
+        ScheduledUpdateFeedJob.perform @feed.id
+        expect(@feed.reload.entries.count).to eq 1
+        expect(@feed.entries.first).to eq entry
+      end
+    end
+
+  end
+
   context 'error handling' do
 
     it 'increments the fetch interval if the feed server returns an HTTP error status' do

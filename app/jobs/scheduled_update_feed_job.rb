@@ -44,8 +44,26 @@ class ScheduledUpdateFeedJob
     entries_before = feed.entries.count
     entries_after = 0
 
-    # Fetch feed
-    FeedClient.fetch feed
+    begin
+      # Fetch feed
+      FeedClient.fetch feed
+    rescue RestClient::Exception,
+      RestClient::RequestTimeout,
+      SocketError,
+      Errno::ETIMEDOUT,
+      Errno::ECONNREFUSED,
+      Errno::EHOSTUNREACH,
+      EmptyResponseError,
+      FeedAutodiscoveryError,
+      FeedFetchError => e
+
+      # If fetching from fetch_url fails, try to perform autodiscovery (download the HTML document at feed.url and
+      # attempt to get a <link> element pointing to a feed from its <head>; this should be the current fetch_url).
+      # This is intended for the case in which the owner of a feed changes its URL (e.g. migrating from a custom solution
+      # to feedburner) but the website itself is still available at the old URL. This happens often. Feedbunch attempts
+      # to autocorrect the situation, as long as autodiscovery is enabled.
+      FeedClient.fetch feed, true
+    end
 
     entries_after = feed.entries.count
 
