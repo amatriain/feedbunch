@@ -5,12 +5,11 @@ class FeedAutodiscovery
   ##
   # Try to perform feed autodiscovery on an HTTP response, with the assumption that it's an HTML document.
   #
-  # If successful, save the new feed in the database and return it. At this point:
-  # - there are no entries in the database for the feed.
-  # - the feed fetch_url and title fields both have the same value, the URL retrieved from the HTML.
-  # - the feed has no url.
+  # If successful, save the new feed in the database and return it.
   #
-  # It's the responsability of the calling function to fetch the feed afterwards, to populate entries, title, URL etc.
+  # This method just updates the fetch_url of the feed with the one autodiscovered from the HTML, it doesn't
+  # retrieve entries nor do any other changes. It's the responsability of the invoking code to fetch the feed
+  # afterwards, populate entries, title, URL etc.
   #
   # Receives as arguments the feed object to be associated with the discovered feed, and the response with the HTML document.
   #
