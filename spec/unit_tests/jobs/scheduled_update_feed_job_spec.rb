@@ -4,7 +4,6 @@ describe ScheduledUpdateFeedJob do
 
   before :each do
     @feed = FactoryGirl.create :feed
-    allow(FeedClient).to receive :fetch
   end
 
   it 'updates feed when the job runs' do
