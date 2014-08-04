@@ -15,6 +15,8 @@ angular.module('feedbunch').service 'openEntrySvc',
       $rootScope.open_entries.push entry
     # Otherwise there is at most a single open entry.
     else
+      for e in $rootScope.open_entries
+        animationsSvc.close_entry e
       $rootScope.open_entries = [entry]
 
     animationsSvc.open_entry entry
