@@ -216,12 +216,6 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc)->
     return
 
   #--------------------------------------------
-  # Function to decide if an entry should be displayed as open (return true) or closed (return false).
-  #--------------------------------------------
-  $scope.is_open = (entry)->
-    openEntrySvc.is_open entry
-
-  #--------------------------------------------
   # Mark all entries as read
   #--------------------------------------------
   $scope.mark_all_read = ->

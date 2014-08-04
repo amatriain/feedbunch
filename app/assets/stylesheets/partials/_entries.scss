@@ -105,30 +105,14 @@
       padding-right: 2px;
     }
 
-    /* Animations when opening/closing entries */
-
-    .entry-panel.ng-hide-add,
-    .entry-panel.ng-hide-remove {
-      display:block!important;
-    }
-
-    .entry-panel.ng-hide {
-      height: 0;
+    .entry-panel {
       padding: {
         top: 0;
         bottom: 0;
+        left: 15px;
+        right: 15px;
       }
-    }
-
-    .entry-panel {
-      -webkit-transition-property: height, padding-top, padding-bottom;
-      -webkit-transition-duration: 0.30s;
-      -webkit-transition-timing-function: linear;
-      transition-property: height, padding-top, padding-bottom;
-      transition-duration: 0.30s;
-      transition-timing-function: linear;
-      height: fit-content;
-      padding: 15px;
+      height: 0;
       overflow: hidden;
 
       .entry-toolbar {
@@ -159,10 +143,10 @@
 
         img {
           -webkit-transition-property:opacity;
-          -webkit-transition-duration: 0.5s;
+          -webkit-transition-duration: 0.4s;
           -webkit-transition-timing-function: linear;
           transition-property:opacity;
-          transition-duration: 0.5s;
+          transition-duration: 0.4s;
           transition-timing-function: linear;
           vertical-align: baseline;
           max-width: 100%;

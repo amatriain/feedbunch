@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'openEntrySvc',
-['$rootScope', '$location', '$timeout', 'scrollSvc',
-($rootScope, $location, $timeout, scrollSvc)->
+['$rootScope', '$location', '$timeout', 'scrollSvc', 'animationsSvc',
+($rootScope, $location, $timeout, scrollSvc, animationsSvc)->
 
   #---------------------------------------------
   # Set an entry as open
@@ -17,14 +17,16 @@ angular.module('feedbunch').service 'openEntrySvc',
     else
       $rootScope.open_entries = [entry]
 
+    animationsSvc.open_entry entry
     scrollSvc.scrollToEntry entry
-
+    
   #---------------------------------------------
   # Set an entry as closed
   #---------------------------------------------
   close: (entry)->
     index = $rootScope.open_entries.indexOf entry
     $rootScope.open_entries.splice index, 1 if index != -1
+    animationsSvc.close_entry entry
 
   #---------------------------------------------
   # Reset the entries open/close state. If the user has selected the "open all entries" option for

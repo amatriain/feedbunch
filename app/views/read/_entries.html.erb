@@ -48,7 +48,6 @@
     <%# Entry summary, initially collapsed %>
     <div id="entry-{{entry.id}}-summary"
          class="entry-panel"
-         ng-show="is_open(entry)"
          ng-mouseenter="tooltips_entry(entry)">
 
       <%= render 'read/entries_toolbar' %>
@@ -72,7 +71,7 @@
         </p>
       </div>
 
-      <hr>
+      <hr class="entry-content-separator">
 
       <p class="hidden">{{entry.guid}}</p>
       <div class="entry-content">
