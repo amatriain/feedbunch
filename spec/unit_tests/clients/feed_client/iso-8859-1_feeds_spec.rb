@@ -289,7 +289,7 @@ FEED_XML
       allow(RestClient).to receive :get do |url|
         if url==feed_url
           feed_xml
-        elsif url==new_feed.fetch_url
+        elsif url==new_feed.url
           webpage_html
         end
       end
@@ -300,8 +300,9 @@ FEED_XML
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
+      old_feed.reload
       expect(old_feed.entries.count).to eq 1
-      expect(old_feed.entries.where(guid: @entry1.guid)).to be_present
+      expect(old_feed.entries.first.guid).to eq @entry1.guid
       expect(Feed.exists?(new_feed)).to be false
     end
 
@@ -324,7 +325,7 @@ FEED_XML
 WEBPAGE_HTML
       allow(webpage_html).to receive(:headers).and_return({})
 
-      webpage_url = @feed.fetch_url
+      webpage_url = @feed.url
       # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
       allow(RestClient).to receive :get do |url|
         if url==webpage_url

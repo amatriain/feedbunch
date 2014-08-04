@@ -535,7 +535,7 @@ FEED_XML
       allow(RestClient).to receive(:get) do |url|
         if url==feed_url
           feed_xml
-        elsif url==new_feed.fetch_url
+        elsif url==new_feed.url
           webpage_html
         end
       end
@@ -570,7 +570,7 @@ FEED_XML
 WEBPAGE_HTML
       allow(webpage_html).to receive(:headers).and_return({})
 
-      webpage_url = @feed.fetch_url
+      webpage_url = @feed.url
       # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
       allow(RestClient).to receive(:get) do |url|
         if url==webpage_url
