@@ -192,8 +192,8 @@ class Feed < ActiveRecord::Base
   # - sanitize values, removing script tags from entry bodies etc.
 
   def fix_attributes
-    default_values
     fix_encoding
+    default_values
     sanitize_attributes
     fix_urls
   end
