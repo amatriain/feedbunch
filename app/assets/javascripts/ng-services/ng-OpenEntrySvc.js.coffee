@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'openEntrySvc',
-['$rootScope', '$location', '$timeout', 'scrollSvc', 'animationsSvc',
-($rootScope, $location, $timeout, scrollSvc, animationsSvc)->
+['$rootScope', '$timeout', 'scrollSvc', 'animationsSvc',
+($rootScope, $timeout, scrollSvc, animationsSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Set an entry as closed.
@@ -41,12 +41,12 @@ angular.module('feedbunch').service 'openEntrySvc',
     close: close
 
     #---------------------------------------------
-    # Reset the entries open/close state. If the user has selected the "open all entries" option for
-    # his profile, all entries will be open. Otherwise no entry will be open
+    # Clear the list of currently open entries. This method does not perform any closing animation;
+    # it is assumed that the invoking code will also clear the list of loaded entries, so animations do
+    # not make sense.
     #---------------------------------------------
     reset: ->
       $rootScope.open_entries = []
-      $location.hash('')
 
     #---------------------------------------------
     # Return true if the passed entry is open, false otherwise
