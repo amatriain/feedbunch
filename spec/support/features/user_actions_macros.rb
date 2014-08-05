@@ -149,9 +149,9 @@ def open_entry(entry)
   expect(page).to have_css "#feed-entries #entry-#{entry.id}"
 
   # Open entry only if it is closed
-  if !page.has_css? "#feed-entries #entry-#{entry.id}-summary", visible: true
+  if !page.has_css? "#feed-entries #entry-#{entry.id}-summary.entry_open"
     find("#feed-entries [data-entry-id='#{entry.id}']").click
-    expect(page).to have_css "#feed-entries #entry-#{entry.id}-summary", visible: true
+    entry_should_be_open entry
   end
 end
 
@@ -164,9 +164,9 @@ def close_entry(entry)
   expect(page).to have_css "#feed-entries #entry-#{entry.id}"
 
   # Close entry only if it is open
-  if page.has_css? "#feed-entries #entry-#{entry.id}-summary", visible: true
+  if page.has_css? "#feed-entries #entry-#{entry.id}-summary.entry_open"
     find("#feed-entries [data-entry-id='#{entry.id}']").click
-    expect(page).not_to have_css "#feed-entries #entry-#{entry.id}-summary", visible: true
+    entry_should_be_closed entry
   end
 end
 

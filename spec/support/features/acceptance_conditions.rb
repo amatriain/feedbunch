@@ -168,15 +168,15 @@ end
 # Test that the passed entry is open.
 
 def entry_should_be_open(entry)
-  expect(page).to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary", visible: true
+  expect(page).to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.entry_open"
 end
 
 ##
 # Test that the passed entry is open.
 
 def entry_should_be_closed(entry)
-  expect(page).to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary", visible: false
-  expect(page).not_to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary", visible: true
+  expect(page).to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary"
+  expect(page).not_to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.entry_open"
   expect(page).not_to have_text entry.summary
 end
 
