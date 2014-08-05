@@ -216,6 +216,12 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc)->
     return
 
   #--------------------------------------------
+  # Function to decide if an entry is open by default or not.
+  #--------------------------------------------
+  $scope.entry_initially_open = (entry)->
+    return $rootScope.open_all_entries
+
+  #--------------------------------------------
   # Mark all entries as read
   #--------------------------------------------
   $scope.mark_all_read = ->

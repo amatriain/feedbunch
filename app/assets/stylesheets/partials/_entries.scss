@@ -105,6 +105,14 @@
       padding-right: 2px;
     }
 
+    .entry-panel.entry_initially_open {
+      padding: {
+        top: 15px;
+        bottom: 15px;
+      }
+      height: auto;
+    }
+
     .entry-panel {
       padding: {
         top: 0;

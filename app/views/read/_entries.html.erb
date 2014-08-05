@@ -48,6 +48,7 @@
     <%# Entry summary, initially collapsed %>
     <div id="entry-{{entry.id}}-summary"
          class="entry-panel"
+         ng-class="{entry_initially_open: entry_initially_open()}"
          ng-mouseenter="tooltips_entry(entry)">
 
       <%= render 'read/entries_toolbar' %>
