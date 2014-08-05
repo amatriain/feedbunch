@@ -185,7 +185,7 @@ describe 'feed entries', type: :feature do
       expect(page).not_to have_css "div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']"
     end
 
-    it 'hides Unead button for unread entries', js: true do
+    it 'hides Unread button for unread entries', js: true do
       read_entry @entry1
       entry_should_be_marked_read @entry1
       find("div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']").click
