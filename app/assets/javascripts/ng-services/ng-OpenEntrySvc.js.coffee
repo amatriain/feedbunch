@@ -63,11 +63,12 @@ angular.module('feedbunch').service 'openEntrySvc',
     # Receives as argument an array of entries
     #---------------------------------------------
     add_entries: (entries)->
-      if $rootScope.open_all_entries
-        if $rootScope.open_entries?.length > 0
-          $rootScope.open_entries = $rootScope.open_entries.concat entries
-        else
-          $rootScope.open_entries = entries
+      if entries? && entries?.length > 0
+        if $rootScope.open_all_entries
+          if $rootScope.open_entries?.length > 0
+            $rootScope.open_entries = $rootScope.open_entries.concat entries
+          else
+            $rootScope.open_entries = entries
 
   return service
 ]
