@@ -34,10 +34,14 @@ angular.module('feedbunch').service 'animationsSvc',
       $("#entry-#{entry.id}-summary").css('height', 'auto')
       height_auto = $("#entry-#{entry.id}-summary").outerHeight()
       # Set height back to 0px and animate the transition to its final height
+      # After finishing opening animation, scroll to show as much of the entry content as possible.
+      # We leave an offset so that part of the entry above is still visible under the navbar.
+      topOffset = -120
       $("#entry-#{entry.id}-summary")
         .css('height', '0')
-        .velocity properties: {height: height_auto, 'padding-top': 15, 'padding-bottom': 15},
-          options: {duration: 300, easing: 'swing', complete: add_open_class}
+        .velocity(properties: {height: height_auto, 'padding-top': 15, 'padding-bottom': 15},
+          options: {duration: 300, easing: 'swing', complete: add_open_class})
+        .velocity 'scroll', {offset: topOffset, duration: 300}
 
     #---------------------------------------------
     # Animate closing an entry, by transitioning its height from its current value to zero
