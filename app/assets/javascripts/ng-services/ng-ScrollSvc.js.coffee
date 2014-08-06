@@ -18,7 +18,7 @@ angular.module('feedbunch').service 'scrollSvc',
     # the entry top has its final position after any entry closing animations.
     target = $("#entry-#{entry.id}")
     # We leave an offset so that part of the entry above is still visible under the navbar.
-    topOffset = 100
+    topOffset = 80
     $timeout ->
       $('html,body').animate {scrollTop: target.offset().top - topOffset}, 300
     , 350
