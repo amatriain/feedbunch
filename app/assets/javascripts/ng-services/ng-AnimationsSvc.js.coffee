@@ -13,7 +13,7 @@ angular.module('feedbunch').service 'animationsSvc',
   # This way if images in the entry are lazy-loaded after the open animation is finished,
   # the entry height will adjust instantaneously.
   #--------------------------------------------
-  add_open_class = ->
+  add_entry_open_class = ->
     $(this).addClass('entry_open').css 'height', 'auto'
 
   #--------------------------------------------
@@ -21,7 +21,7 @@ angular.module('feedbunch').service 'animationsSvc',
   # This way if images in the entry are lazy-loaded after the open animation is finished,
   # the entry height will adjust instantaneously.
   #--------------------------------------------
-  remove_open_class = ->
+  remove_entry_open_class = ->
     $(this).removeClass 'entry_open'
 
   service =
@@ -39,8 +39,8 @@ angular.module('feedbunch').service 'animationsSvc',
       topOffset = -120
       $("#entry-#{entry.id}-summary")
         .css('height', '0')
-        .velocity(properties: {height: height_auto, 'padding-top': 15, 'padding-bottom': 15},
-          options: {duration: 300, easing: 'swing', complete: add_open_class})
+        .velocity({height: height_auto, 'padding-top': 15, 'padding-bottom': 15},
+          {duration: 300, easing: 'swing', complete: add_entry_open_class})
         .velocity 'scroll', {offset: topOffset, duration: 300}
 
     #---------------------------------------------
@@ -48,8 +48,8 @@ angular.module('feedbunch').service 'animationsSvc',
     #---------------------------------------------
     close_entry: (entry)->
       $("#entry-#{entry.id}-summary")
-        .velocity properties: {height: 0, 'padding-top': 0, 'padding-bottom': 0},
-          options: {duration: 300, easing: 'swing', complete: remove_open_class}
+        .velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
+          {duration: 300, easing: 'swing', complete: remove_entry_open_class}
 
   return service
 ]
