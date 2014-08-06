@@ -36,14 +36,16 @@ angular.module('feedbunch').service 'animationsSvc',
       # Set height back to 0px and animate the transition to its final height
       $("#entry-#{entry.id}-summary")
         .css('height', '0')
-        .velocity {height: height_auto, 'padding-top': 15, 'padding-bottom': 15}, 300, 'swing', add_open_class
+        .velocity properties: {height: height_auto, 'padding-top': 15, 'padding-bottom': 15},
+          options: {duration: 300, easing: 'swing', complete: add_open_class}
 
     #---------------------------------------------
     # Animate closing an entry, by transitioning its height from its current value to zero
     #---------------------------------------------
     close_entry: (entry)->
       $("#entry-#{entry.id}-summary")
-        .velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0}, 300, 'swing', remove_open_class
+        .velocity properties: {height: 0, 'padding-top': 0, 'padding-bottom': 0},
+          options: {duration: 300, easing: 'swing', complete: remove_open_class}
 
   return service
 ]
