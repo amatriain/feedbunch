@@ -1,7 +1,10 @@
 <% if !user_signed_in? %>
 
-<div class="dropdown locale-dropdown">
-  <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+<div id="switch-locale-dropdown"
+     class="dropdown locale-dropdown">
+  <a id="switch-locale"
+     class="btn btn-default dropdown-toggle"
+     ng-click="toggle_locale_menu()">
     <% if I18n.locale == :en %>
       <%= image_tag asset_path('flags/us.png'), class: 'locale-flag' %>
       English <i class="fa fa-fw fa-caret-down"></i>
@@ -10,7 +13,7 @@
       Español <i class="fa fa-fw fa-caret-down"></i>
     <% end %>
   </a>
-  <ul class="dropdown-menu text-left" role="menu" aria-labelledby="dropdownMenu">
+  <ul class="dropdown-menu text-left">
 
     <% invitation_token = params[:invitation_token] %>
 

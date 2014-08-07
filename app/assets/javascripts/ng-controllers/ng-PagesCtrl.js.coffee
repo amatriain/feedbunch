@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').controller 'PagesCtrl',
-['$scope', 'timerFlagSvc', 'tooltipSvc', 'cookiesSvc',
-($scope, timerFlagSvc, tooltipSvc, cookiesSvc)->
+['$scope', 'timerFlagSvc', 'tooltipSvc', 'cookiesSvc', 'animationsSvc',
+($scope, timerFlagSvc, tooltipSvc, cookiesSvc, animationsSvc)->
 
   # If there is a rails alert, show it and close it after 5 seconds
   timerFlagSvc.start 'error_rails'
@@ -14,6 +14,13 @@ angular.module('feedbunch').controller 'PagesCtrl',
 
   # Initialize tooltip on cookies warning "accept" button
   tooltipSvc.cookies_warning_tooltips()
+
+  #--------------------------------------------
+  # Toggle (open/close) the switch locale menu with an animation
+  #--------------------------------------------
+  $scope.toggle_locale_menu = ->
+    animationsSvc.toggle_locale_menu()
+    return
 
   #--------------------------------------------
   # Set a cookie that indicates that the user has accepted cookie use (to comply with EU law).

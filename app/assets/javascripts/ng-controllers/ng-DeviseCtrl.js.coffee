@@ -52,6 +52,13 @@ animationsSvc)->
     return
 
   #--------------------------------------------
+  # Toggle (open/close) the switch locale menu with an animation
+  #--------------------------------------------
+  $scope.toggle_locale_menu = ->
+    animationsSvc.toggle_locale_menu()
+    return
+
+  #--------------------------------------------
   # Set a boolean flag in the root scope as false. The flag name must be passed as a string.
   # This is used to hide alerts when clicking on their X button.
   #--------------------------------------------

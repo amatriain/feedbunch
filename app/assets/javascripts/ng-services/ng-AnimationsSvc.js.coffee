@@ -159,5 +159,19 @@ angular.module('feedbunch').service 'animationsSvc',
       else
         open_menu menu_wrapper, menu_link, event_namespace
 
+    #---------------------------------------------
+    # Animate toggling (open/close) the folders management menu.
+    # Receives the entry as argument.
+    #---------------------------------------------
+    toggle_locale_menu: ->
+      menu_wrapper = $('#switch-locale-dropdown')
+      menu_link = $('#switch-locale')
+      event_namespace = 'click.outside_locale_menu'
+
+      if menu_wrapper.hasClass 'open'
+        close_menu menu_wrapper, menu_link, event_namespace
+      else
+        open_menu menu_wrapper, menu_link, event_namespace
+
   return service
 ]
