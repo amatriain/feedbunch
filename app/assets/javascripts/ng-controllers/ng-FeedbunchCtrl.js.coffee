@@ -6,11 +6,11 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'exportStateSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
-'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc',
+'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
-tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc)->
+tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -382,6 +382,13 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc)->
   #--------------------------------------------
   $scope.hide_subscribe_job_alert = (job_state)->
     jobStateSvc.hide_subscribe_job_alert(job_state)
+    return
+
+  #--------------------------------------------
+  # Toggle (open/close) a dropdown menu with an animation. Receives as argument the click event.
+  #--------------------------------------------
+  $scope.toggle_menu = (event)->
+    animationsSvc.toggle_menu event
     return
 
   #--------------------------------------------

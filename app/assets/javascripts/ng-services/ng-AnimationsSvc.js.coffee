@@ -24,6 +24,33 @@ angular.module('feedbunch').service 'animationsSvc',
   remove_entry_open_class = ->
     $(this).removeClass 'entry_open'
 
+  #--------------------------------------------
+  # PRIVATE FUNCTION - Open a dropdown menu. Receives the menu link as argument.
+  #--------------------------------------------
+  open_menu = (menu_link)->
+    menu_link.parent().addClass 'open'
+    menu = menu_link.siblings '.dropdown-menu'
+    # Make menu height 'auto' temporarily to measure its final height
+    padding_top = 5
+    padding_bottom = 5
+    menu.css('height', 'auto')
+    height_auto = menu.outerHeight() + padding_top + padding_bottom
+    # Set height back to 0px and animate the transition to its final height
+    menu
+      .css('height', '0')
+      .velocity {height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
+        {duration: 200, easing: 'swing'}
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION - Close a dropdown menu. Receives the menu link as argument.
+  #--------------------------------------------
+  close_menu = (menu_link)->
+    menu_link.parent().removeClass 'open'
+    menu = menu_link.siblings '.dropdown-menu'
+    # Set height back to 0px and animate the transition to its final height
+    menu.velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
+      {duration: 200, easing: 'swing'}
+
   service =
 
     #---------------------------------------------
@@ -50,6 +77,16 @@ angular.module('feedbunch').service 'animationsSvc',
       $("#entry-#{entry.id}-summary")
         .velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
           {duration: 300, easing: 'swing', complete: remove_entry_open_class}
+
+    #---------------------------------------------
+    # Animate opening a dropdown menu. Receives the click event as argument.
+    #---------------------------------------------
+    toggle_menu: (event)->
+      menu_link = $(event.target)
+      if menu_link.parent().hasClass 'open'
+        close_menu menu_link
+      else
+        open_menu menu_link
 
   return service
 ]
