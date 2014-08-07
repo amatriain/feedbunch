@@ -30,16 +30,26 @@ angular.module('feedbunch').service 'animationsSvc',
   open_menu = (menu_link)->
     menu_link.parent().addClass 'open'
     menu = menu_link.siblings '.dropdown-menu'
+
     # Make menu height 'auto' temporarily to measure its final height
     padding_top = 5
     padding_bottom = 5
     menu.css('height', 'auto')
     height_auto = menu.outerHeight() + padding_top + padding_bottom
+
     # Set height back to 0px and animate the transition to its final height
     menu
       .css('height', '0')
       .velocity {height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
         {duration: 200, easing: 'swing'}
+
+    # If user clicks anywhere outside the menu, close it
+    $(document).on 'click', (event)->
+      menu_parent = $(event.target).closest '.dropdown'
+      if  menu_parent.length <= 0 || (menu_parent.length > 0 && !menu_parent.is menu_link.parent())
+        close_menu menu_link
+      return true
+
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Close a dropdown menu. Receives the menu link as argument.
@@ -47,6 +57,7 @@ angular.module('feedbunch').service 'animationsSvc',
   close_menu = (menu_link)->
     menu_link.parent().removeClass 'open'
     menu = menu_link.siblings '.dropdown-menu'
+
     # Set height back to 0px and animate the transition to its final height
     menu.velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
       {duration: 200, easing: 'swing'}
@@ -58,11 +69,13 @@ angular.module('feedbunch').service 'animationsSvc',
     #---------------------------------------------
     open_entry: (entry)->
       entry_summary = $("#entry-#{entry.id}-summary")
+
       # Temporarily make entry content visible (height > 0) to measure its height
       padding_top = 15
       padding_bottom = 15
       entry_summary.css('height', 'auto')
       height_auto = entry_summary.outerHeight() + padding_top + padding_bottom
+
       # Set height back to 0px and animate the transition to its final height
       # After finishing opening animation, scroll to show as much of the entry content as possible.
       # We leave an offset so that part of the entry above is still visible under the navbar.

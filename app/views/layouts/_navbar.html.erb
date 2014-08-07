@@ -62,6 +62,7 @@
         </li>
 
         <li id="feed-dropdown"
+            class="dropdown"
             ng-show="show_feed_buttons"
             data-toggle="tooltip" data-placement="right"
             title="<%= t 'layouts.navbar.feed_menu_button_tooltip' %>">
@@ -110,13 +111,13 @@
         </li>
 
         <li id="folder-management-dropdown"
+            class="dropdown"
             ng-show="current_feed"
             data-toggle="tooltip" data-placement="right"
             title="<%= t 'layouts.navbar.folder_button_tooltip' %>">
 
           <a id="folder-management"
-                  class="dropdown-toggle"
-                  data-toggle="dropdown">
+                  class="dropdown-toggle">
             <i class="fa fa-folder-open fa-fw"></i> <%= t 'layouts.navbar.folder_button' %>
             <i class="fa fa-caret-down fa-fw"></i>
           </a>
@@ -161,8 +162,10 @@
 
         <ul class="nav navbar-nav navbar-right">
 
-          <li id="user-dropdown" class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <li id="user-dropdown"
+              class="dropdown">
+            <a href="#"
+               class="dropdown-toggle">
               <i class="fa fa-user fa-fw"></i>
               <span id="user-name"><%= current_user.name %></span>
               <i class="fa fa-caret-down fa-fw"></i>
