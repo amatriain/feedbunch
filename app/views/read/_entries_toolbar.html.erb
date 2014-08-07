@@ -16,16 +16,18 @@
     <i class="fa fa-fw fa-check-square"></i>&nbsp;<%= t 'read.entries.mark_read' %>
   </a>
 
-  <div class="btn-group dropdown">
+  <div id="entry-{{entry.id}}-social-menu" class="btn-group dropdown">
 
-    <a class="btn btn-default btn-sm dropdown-toggle"
+    <a id="entry-{{entry.id}}-social"
+       class="btn btn-default btn-sm dropdown-toggle"
+       ng-click="toggle_entry_social_menu(entry)"
        data-share-entry-dropdown
        data-placement="top"
        title="<%= t 'read.entries.share_tooltip' %>">
       <i class="fa fa-fw fa-share-alt"></i> <%= t 'read.entries.share' %>  <i class="fa fa-fw fa-caret-down"></i>
     </a>
 
-    <ul class="dropdown-menu" role="menu">
+    <ul class="dropdown-menu">
 
       <li>
         <a href="https://twitter.com/intent/tweet?url={{entry.url}}&via=feedbunch&text={{entry.title}}"

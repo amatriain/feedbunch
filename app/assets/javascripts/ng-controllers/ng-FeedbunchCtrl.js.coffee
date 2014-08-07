@@ -406,6 +406,14 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animations
     return
 
   #--------------------------------------------
+  # Toggle (open/close) an entry social sharing menu with an animation.
+  # Receives as argument the entry.
+  #--------------------------------------------
+  $scope.toggle_entry_social_menu = (entry)->
+    animationsSvc.toggle_entry_social_menu entry
+    return
+
+  #--------------------------------------------
   # Return a feed title, given its id.
   #--------------------------------------------
   $scope.feed_title = (feed_id)->
