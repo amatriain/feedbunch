@@ -4,7 +4,9 @@
 
 angular.module('feedbunch').controller 'DeviseCtrl',
 ['$scope', '$window', 'timerFlagSvc', 'sidebarVisibleSvc', 'tooltipSvc', 'invitationsSvc', 'cookiesSvc',
-($scope, $window, timerFlagSvc, sidebarVisibleSvc, tooltipSvc, invitationsSvc, cookiesSvc)->
+'animationsSvc',
+($scope, $window, timerFlagSvc, sidebarVisibleSvc, tooltipSvc, invitationsSvc, cookiesSvc,
+animationsSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -40,6 +42,13 @@ angular.module('feedbunch').controller 'DeviseCtrl',
     $("#invite-friend-popup").modal 'hide'
     invitationsSvc.send_invitation $scope.invitation_email
     $scope.invitation_email = null
+    return
+
+  #--------------------------------------------
+  # Toggle (open/close) user menu with an animation
+  #--------------------------------------------
+  $scope.toggle_user_menu = ->
+    animationsSvc.toggle_user_menu()
     return
 
   #--------------------------------------------
