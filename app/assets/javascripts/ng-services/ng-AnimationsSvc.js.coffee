@@ -57,16 +57,19 @@ angular.module('feedbunch').service 'animationsSvc',
     # Animate opening an entry, by transitioning its height from zero to its final value.
     #---------------------------------------------
     open_entry: (entry)->
+      entry_summary = $("#entry-#{entry.id}-summary")
       # Temporarily make entry content visible (height > 0) to measure its height
-      $("#entry-#{entry.id}-summary").css('height', 'auto')
-      height_auto = $("#entry-#{entry.id}-summary").outerHeight()
+      padding_top = 15
+      padding_bottom = 15
+      entry_summary.css('height', 'auto')
+      height_auto = entry_summary.outerHeight() + padding_top + padding_bottom
       # Set height back to 0px and animate the transition to its final height
       # After finishing opening animation, scroll to show as much of the entry content as possible.
       # We leave an offset so that part of the entry above is still visible under the navbar.
       topOffset = -120
-      $("#entry-#{entry.id}-summary")
+      entry_summary
         .css('height', '0')
-        .velocity({height: height_auto, 'padding-top': 15, 'padding-bottom': 15},
+        .velocity({height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
           {duration: 300, easing: 'swing', complete: add_entry_open_class})
         .velocity 'scroll', {offset: topOffset, duration: 300}
 
