@@ -25,10 +25,15 @@ angular.module('feedbunch').service 'animationsSvc',
     $(this).removeClass 'entry_open'
 
   #--------------------------------------------
-  # PRIVATE FUNCTION - Open a dropdown menu. Receives the menu link as argument.
+  # PRIVATE FUNCTION - Open a dropdown menu.
+  # Receives as arguments:
+  # - jquery object of the menu wrapper (normally a li with class .dropdown)
+  # - jquery object of the link that toggles the menu
+  # - namespace to apply to the event handler that will be created to close the menu if user clicks outside it.
+  # It should be a namespaced "click" event, like "click.mynamespace"
   #--------------------------------------------
-  open_menu = (menu_link)->
-    menu_link.parent().addClass 'open'
+  open_menu = (menu_wrapper, menu_link, event_namespace)->
+    menu_wrapper.addClass 'open'
     menu = menu_link.siblings '.dropdown-menu'
 
     # Make menu height 'auto' temporarily to measure its final height
@@ -43,24 +48,31 @@ angular.module('feedbunch').service 'animationsSvc',
       .velocity {height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
         {duration: 200, easing: 'swing'}
 
-    # If user clicks anywhere outside the menu, close it
-    $(document).on 'click', (event)->
-      menu_parent = $(event.target).closest '.dropdown'
-      if  menu_parent.length <= 0 || (menu_parent.length > 0 && !menu_parent.is menu_link.parent())
-        close_menu menu_link
+    # If user clicks anywhere outside the menu link, close it
+    $(document).on event_namespace, (event)->
+      if $(event.target).closest(menu_link).length == 0
+        close_menu menu_wrapper, menu_link, event_namespace
       return true
 
-
   #--------------------------------------------
-  # PRIVATE FUNCTION - Close a dropdown menu. Receives the menu link as argument.
+  # PRIVATE FUNCTION - Close a dropdown menu.
+  # Receives as arguments:
+  # - jquery object of the menu wrapper (normally a li with class .dropdown)
+  # - jquery object of the link that toggles the menu
+  # - namespace to apply to the event handler that will be created to close the menu if user clicks outside it.
+  # It should be a namespaced "click" event, like "click.mynamespace"
   #--------------------------------------------
-  close_menu = (menu_link)->
-    menu_link.parent().removeClass 'open'
+  close_menu = (menu_wrapper, menu_link, event_namespace)->
+    menu_wrapper.removeClass 'open'
     menu = menu_link.siblings '.dropdown-menu'
 
     # Set height back to 0px and animate the transition to its final height
     menu.velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
       {duration: 200, easing: 'swing'}
+
+    # Remove the handler that closes the menu if user clicks outside it.
+    # It is no longer necessary now that menu is closed, and having too many handlers hurts performance
+    $(document).off event_namespace
 
   service =
 
@@ -95,14 +107,43 @@ angular.module('feedbunch').service 'animationsSvc',
           {duration: 300, easing: 'swing', complete: remove_entry_open_class}
 
     #---------------------------------------------
-    # Animate opening a dropdown menu. Receives the click event as argument.
+    # Animate toggling (open/close) the feeds management menu
     #---------------------------------------------
-    toggle_menu: (event)->
-      menu_link = $(event.target)
-      if menu_link.parent().hasClass 'open'
-        close_menu menu_link
+    toggle_feeds_menu: ->
+      menu_wrapper = $('#feed-dropdown')
+      menu_link = $('#feeds-management')
+      event_namespace = 'click.outside_feeds_menu'
+
+      if menu_wrapper.hasClass 'open'
+        close_menu menu_wrapper, menu_link, event_namespace
       else
-        open_menu menu_link
+        open_menu menu_wrapper, menu_link, event_namespace
+
+    #---------------------------------------------
+    # Animate toggling (open/close) the folders management menu
+    #---------------------------------------------
+    toggle_folders_menu: ->
+      menu_wrapper = $('#folder-management-dropdown')
+      menu_link = $('#folder-management')
+      event_namespace = 'click.outside_folders_menu'
+
+      if menu_wrapper.hasClass 'open'
+        close_menu menu_wrapper, menu_link, event_namespace
+      else
+        open_menu menu_wrapper, menu_link, event_namespace
+
+    #---------------------------------------------
+    # Animate toggling (open/close) the folders management menu
+    #---------------------------------------------
+    toggle_user_menu: ->
+      menu_wrapper = $('#user-dropdown')
+      menu_link = $('#user-management')
+      event_namespace = 'click.outside_user_menu'
+
+      if menu_wrapper.hasClass 'open'
+        close_menu menu_wrapper, menu_link, event_namespace
+      else
+        open_menu menu_wrapper, menu_link, event_namespace
 
   return service
 ]

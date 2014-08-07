@@ -385,10 +385,24 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animations
     return
 
   #--------------------------------------------
-  # Toggle (open/close) a dropdown menu with an animation. Receives as argument the click event.
+  # Toggle (open/close) feeds management menu with an animation
   #--------------------------------------------
-  $scope.toggle_menu = (event)->
-    animationsSvc.toggle_menu event
+  $scope.toggle_feeds_menu = ->
+    animationsSvc.toggle_feeds_menu()
+    return
+
+  #--------------------------------------------
+  # Toggle (open/close) folders management menu with an animation
+  #--------------------------------------------
+  $scope.toggle_folders_menu = ->
+    animationsSvc.toggle_folders_menu()
+    return
+
+  #--------------------------------------------
+  # Toggle (open/close) user menu with an animation
+  #--------------------------------------------
+  $scope.toggle_user_menu = ->
+    animationsSvc.toggle_user_menu()
     return
 
   #--------------------------------------------

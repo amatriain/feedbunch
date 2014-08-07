@@ -69,7 +69,7 @@
 
           <a id="feeds-management"
              class="dropdown-toggle"
-             ng-click="toggle_menu($event)">
+             ng-click="toggle_feeds_menu()">
             <i class="fa fa-rss fa-fw"></i> <%= t 'layouts.navbar.feed_menu_button' %>
             <i class="fa fa-caret-down fa-fw"></i>
           </a>
@@ -117,7 +117,8 @@
             title="<%= t 'layouts.navbar.folder_button_tooltip' %>">
 
           <a id="folder-management"
-                  class="dropdown-toggle">
+                  class="dropdown-toggle"
+                  ng-click="toggle_folders_menu()">
             <i class="fa fa-folder-open fa-fw"></i> <%= t 'layouts.navbar.folder_button' %>
             <i class="fa fa-caret-down fa-fw"></i>
           </a>
@@ -164,8 +165,9 @@
 
           <li id="user-dropdown"
               class="dropdown">
-            <a href="#"
-               class="dropdown-toggle">
+            <a id="user-management"
+               class="dropdown-toggle"
+               ng-click="toggle_user_menu()">
               <i class="fa fa-user fa-fw"></i>
               <span id="user-name"><%= current_user.name %></span>
               <i class="fa fa-caret-down fa-fw"></i>
