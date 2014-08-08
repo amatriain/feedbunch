@@ -190,6 +190,11 @@ angular.module('feedbunch').service 'animationsSvc',
       img.velocity( {opacity: 1}, {duration: 400, easing: 'linear'})
         .removeClass 'loading'
 
+    #---------------------------------------------
+    # Animate showing subscription stats in the start page.
+    #---------------------------------------------
+    show_stats: ->
+      $('#subscription-stats').velocity {opacity: 1}, {duration: 300, easing: 'swing'}
 
   return service
 ]

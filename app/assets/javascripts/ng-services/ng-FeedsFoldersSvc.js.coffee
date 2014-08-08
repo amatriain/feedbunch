@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
 ['$rootScope', '$http', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
-'feedsPaginationSvc', 'cleanupSvc', 'favicoSvc',
+'feedsPaginationSvc', 'cleanupSvc', 'favicoSvc', 'animationsSvc',
 ($rootScope, $http, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
- feedsPaginationSvc, cleanupSvc, favicoSvc)->
+ feedsPaginationSvc, cleanupSvc, favicoSvc, animationsSvc)->
 
   # Maximum number of feeds in each page.
   # This MUST match the feeds page size set in the server!
@@ -36,6 +36,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         $rootScope.feeds_loaded = true
         feedsPaginationSvc.pagination_finished()
         favicoSvc.update_unread_badge()
+        animationsSvc.show_stats()
       else
         # There is probably at least one more page of feeds available
         load_feeds page
@@ -52,6 +53,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
           feedsPaginationSvc.pagination_finished()
         $rootScope.feeds_loaded = true
         favicoSvc.update_unread_badge()
+        animationsSvc.show_stats()
       else if status!=0
         timerFlagSvc.start 'error_loading_feeds'
 
