@@ -3,7 +3,7 @@
 ########################################################
 
 angular.module('feedbunch').service 'lazyLoadingSvc',
-['$rootScope', ($rootScope)->
+['$rootScope', 'animationsSvc', ($rootScope, animationsSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Lazy load a single image. Receives as argument the jQuery object wrapping the img.
@@ -24,13 +24,7 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
         img.addClass 'hidden'
       .on 'load', ->
         img.addClass 'hidden'
-        loaded_img.removeClass('loading').addClass('loaded')
-        # center and add display-block to images if wider than 40% of the entries div
-        img_width = 100 * loaded_img.width() / $('#feed-entries').width()
-        if img_width > 40
-          loaded_img.addClass('center-block').addClass('large-img')
-        else
-          loaded_img.addClass('small-img')
+        animationsSvc.show_image loaded_img
       loaded_img.attr('src', data_src)
 
   service =

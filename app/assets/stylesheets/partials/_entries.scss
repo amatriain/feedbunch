@@ -150,12 +150,6 @@
         /* When images are lazy-loaded, animate their apparition */
 
         img {
-          -webkit-transition-property:opacity;
-          -webkit-transition-duration: 0.4s;
-          -webkit-transition-timing-function: linear;
-          transition-property:opacity;
-          transition-duration: 0.4s;
-          transition-timing-function: linear;
           vertical-align: baseline;
           max-width: 100%;
         }
@@ -164,11 +158,6 @@
           opacity: 0;
           height: 0;
           visibility: none;
-        }
-
-        img.loaded {
-          opacity: 1;
-          height: auto;
         }
 
         img.large-img{

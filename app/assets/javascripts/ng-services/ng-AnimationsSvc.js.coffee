@@ -170,5 +170,26 @@ angular.module('feedbunch').service 'animationsSvc',
       else
         open_menu menu_wrapper, menu_link, event_namespace
 
+    #---------------------------------------------
+    # Animate showing an image in an entry by increasing its opacity from 0 to 1.
+    # Receives the jquery object for the image as argument.
+    #---------------------------------------------
+    show_image: (img)->
+      # Give the image height and visibility, to measure its width.
+      # It's not yet visible in the page because it has opacity 0
+      img.css height: 'auto', visibility: 'visible'
+
+      # center and add display-block to images if wider than 40% of the entries div
+      img_width = 100 * img.width() / $('#feed-entries').width()
+      if img_width > 40
+        img.addClass('center-block').addClass('large-img')
+      else
+        img.addClass('small-img')
+
+      # Animate increasing the opacity to 1 (this is what makes the user see the image appear)
+      img.velocity( {opacity: 1}, {duration: 400, easing: 'linear'})
+        .removeClass 'loading'
+
+
   return service
 ]
