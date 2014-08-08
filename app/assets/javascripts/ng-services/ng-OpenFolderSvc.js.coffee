@@ -3,13 +3,14 @@
 ########################################################
 
 angular.module('feedbunch').service 'openFolderSvc',
-['$rootScope', '$timeout', ($rootScope, $timeout)->
+['$rootScope', 'animationsSvc', ($rootScope, animationsSvc)->
 
   #---------------------------------------------
   # Set the currently open folder in the root scope.
   #---------------------------------------------
   set: (folder)->
     $rootScope.current_open_folder = folder
+    animationsSvc.open_folder folder
 
   #---------------------------------------------
   # Unset the currently open folder in the root scope
