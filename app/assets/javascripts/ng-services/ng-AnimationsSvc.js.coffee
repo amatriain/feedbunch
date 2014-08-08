@@ -23,6 +23,15 @@ angular.module('feedbunch').service 'animationsSvc',
     $(this).removeClass 'entry_open'
 
   #--------------------------------------------
+  # PRIVATE FUNCTION - Add a CSS class that identifies folder as open.
+  # Also set explictly height to 'auto' (setting the CSS class alone does not override the explicitly set
+  # height otherwise).
+  # This way if feeds are added or removed from the folder, the folder height will adjust instantaneously.
+  #--------------------------------------------
+  add_folder_open_class = ->
+    $(this).removeClass('closed-folder').addClass('open-folder').css 'height', 'auto'
+
+  #--------------------------------------------
   # PRIVATE FUNCTION - Open a dropdown menu.
   # Receives as arguments:
   # - jquery object of the menu wrapper (normally a li or div with class .dropdown)
@@ -103,6 +112,24 @@ angular.module('feedbunch').service 'animationsSvc',
       $("#entry-#{entry.id}-summary")
         .velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
           {duration: 300, easing: 'swing', complete: remove_entry_open_class}
+
+    #---------------------------------------------
+    # Animate opening a folder, by transitioning its height from zero to its final value.
+    #---------------------------------------------
+    open_folder: (folder)->
+      folder_content = $("#feeds-#{folder.id}.folder-content")
+
+      # Temporarily make folder content visible (height > 0) to measure its height
+      folder_content.css('height', 'auto')
+      padding_top = 8
+      padding_bottom = 8
+      height_auto = folder_content.outerHeight() + padding_top + padding_bottom
+
+      # Set height back to 0px and animate the transition to its final height
+      folder_content
+      .css('height', '0')
+      .velocity({height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
+        {duration: 300, easing: 'swing', complete: add_folder_open_class})
 
     #---------------------------------------------
     # Animate toggling (open/close) the feeds management menu

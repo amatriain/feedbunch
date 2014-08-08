@@ -123,37 +123,16 @@
 
     [data-folder-id] {
       .folder-content {
-        -webkit-transition-property:opacity, height, -webkit-transform, padding-top, padding-bottom;
-        -webkit-transition-duration: 0.20s;
-        -webkit-transition-timing-function: linear;
-        -webkit-transform-origin: top;
-        transition-property:opacity, height, transform, padding-top, padding-bottom;
-        transition-duration: 0.20s;
-        transition-timing-function: linear;
-        transform-origin: top;
+        height: 0;
         overflow:  hidden;
-        display: none;
+        padding: {
+          left: 8px;
+          right: 8px;
+        }
       }
 
       .folder-content.open-folder {
-        display: block;
-        opacity: 1;
-        height: fit-content;
-        -webkit-transform:scaleY(1);
-        transform: scaleY(1);
-        padding: 8px;
-      }
-
-      .folder-content.closed-folder {
-        display: block;
-        opacity: 0;
-        height: 0;
-        -webkit-transform:scaleY(0);
-        transform: scaleY(0);
-        padding: {
-          top: 0;
-          bottom: 0;
-        }
+        height: auto;
       }
     }
 
