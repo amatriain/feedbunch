@@ -7,7 +7,7 @@ angular.module('feedbunch').service 'animationsSvc',
 ($rootScope)->
 
   #--------------------------------------------
-  # PRIVATE FUNCTION - Add a CSS class that sets identifies entry as open, for testing.
+  # PRIVATE FUNCTION - Add a CSS class that identifies entry as open, for testing.
   # Also set explictly height to 'auto' (setting the CSS class alone does not override the explicitly set
   # height otherwise).
   # This way if images in the entry are lazy-loaded after the open animation is finished,
@@ -17,9 +17,7 @@ angular.module('feedbunch').service 'animationsSvc',
     $(this).addClass('entry_open').css 'height', 'auto'
 
   #--------------------------------------------
-  # PRIVATE FUNCTION - Add a CSS class that sets entry height to 'auto'.
-  # This way if images in the entry are lazy-loaded after the open animation is finished,
-  # the entry height will adjust instantaneously.
+  # PRIVATE FUNCTION - Remove the CSS class that identifies entry as open.
   #--------------------------------------------
   remove_entry_open_class = ->
     $(this).removeClass 'entry_open'
@@ -27,7 +25,7 @@ angular.module('feedbunch').service 'animationsSvc',
   #--------------------------------------------
   # PRIVATE FUNCTION - Open a dropdown menu.
   # Receives as arguments:
-  # - jquery object of the menu wrapper (normally a li with class .dropdown)
+  # - jquery object of the menu wrapper (normally a li or div with class .dropdown)
   # - jquery object of the link that toggles the menu
   # - namespace to apply to the event handler that will be created to close the menu if user clicks outside it.
   # It should be a namespaced "click" event, like "click.mynamespace"
@@ -59,7 +57,7 @@ angular.module('feedbunch').service 'animationsSvc',
   # Receives as arguments:
   # - jquery object of the menu wrapper (normally a li with class .dropdown)
   # - jquery object of the link that toggles the menu
-  # - namespace to apply to the event handler that will be created to close the menu if user clicks outside it.
+  # - namespace to apply to the event handler that was created to close the menu if user clicks outside it.
   # It should be a namespaced "click" event, like "click.mynamespace"
   #--------------------------------------------
   close_menu = (menu_wrapper, menu_link, event_namespace)->
@@ -133,7 +131,7 @@ angular.module('feedbunch').service 'animationsSvc',
         open_menu menu_wrapper, menu_link, event_namespace
 
     #---------------------------------------------
-    # Animate toggling (open/close) the folders management menu
+    # Animate toggling (open/close) the user menu
     #---------------------------------------------
     toggle_user_menu: ->
       menu_wrapper = $('#user-dropdown')
@@ -146,7 +144,7 @@ angular.module('feedbunch').service 'animationsSvc',
         open_menu menu_wrapper, menu_link, event_namespace
 
     #---------------------------------------------
-    # Animate toggling (open/close) the folders management menu.
+    # Animate toggling (open/close) an entry social sharing menu.
     # Receives the entry as argument.
     #---------------------------------------------
     toggle_entry_social_menu: (entry)->
@@ -160,8 +158,7 @@ angular.module('feedbunch').service 'animationsSvc',
         open_menu menu_wrapper, menu_link, event_namespace
 
     #---------------------------------------------
-    # Animate toggling (open/close) the folders management menu.
-    # Receives the entry as argument.
+    # Animate toggling (open/close) the switch locale menu.
     #---------------------------------------------
     toggle_locale_menu: ->
       menu_wrapper = $('#switch-locale-dropdown')
