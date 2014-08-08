@@ -29,13 +29,13 @@ angular.module('feedbunch').service 'animationsSvc',
   # This way if feeds are added or removed from the folder, the folder height will adjust instantaneously.
   #--------------------------------------------
   add_folder_open_class = ->
-    $(this).removeClass('closed-folder').addClass('open-folder').css 'height', 'auto'
+    $(this).addClass('open-folder').css 'height', 'auto'
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Remove the CSS class that identifies folder as open.
   #--------------------------------------------
   remove_folder_open_class = ->
-    $(this).removeClass('open-folder').addClass 'closed-folder'
+    $(this).removeClass 'open-folder'
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Open a dropdown menu.
