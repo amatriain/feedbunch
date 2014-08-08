@@ -9,11 +9,12 @@ angular.module('feedbunch').service 'openFolderSvc',
   # Set the currently open folder in the root scope.
   #---------------------------------------------
   set: (folder)->
-    animationsSvc.open_folder folder
-    # When opening a folder, close any other open folder
-    if $rootScope.current_open_folder?
-      animationsSvc.close_folder $rootScope.current_open_folder
-    $rootScope.current_open_folder = folder
+    if folder != $rootScope.current_open_folder
+      animationsSvc.open_folder folder
+      # When opening a folder, close any other open folder
+      if $rootScope.current_open_folder?
+        animationsSvc.close_folder $rootScope.current_open_folder
+      $rootScope.current_open_folder = folder
 
   #---------------------------------------------
   # Unset the currently open folder in the root scope
