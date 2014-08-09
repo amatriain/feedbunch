@@ -139,7 +139,7 @@ angular.module('feedbunch').service 'animationsSvc',
 
       # Rotate folder arrow 90 degrees clockwise (pointing down)
       $("#open-folder-#{folder.id} .folder-arrow")
-        .velocity {rotateZ:  '90deg', 'margin-top': 3},
+        .velocity {rotateZ:  '90deg'},
           {duration: 300, easing: 'swing'}
 
     #---------------------------------------------
@@ -152,7 +152,7 @@ angular.module('feedbunch').service 'animationsSvc',
 
       # Rotate folder arrow 90 degrees counter-clockwise (pointing right)
       $("#open-folder-#{folder.id} .folder-arrow")
-        .velocity {rotateZ:  '0deg', 'margin-top': 4},
+        .velocity {rotateZ:  '0deg'},
           {duration: 300, easing: 'swing'}
 
     #---------------------------------------------
