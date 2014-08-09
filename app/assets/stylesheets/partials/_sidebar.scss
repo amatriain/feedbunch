@@ -131,6 +131,10 @@
 
       .folder-content.open-folder {
         height: auto;
+        padding: {
+          top: 8px;
+          bottom: 8px;
+        }
       }
     }
 
