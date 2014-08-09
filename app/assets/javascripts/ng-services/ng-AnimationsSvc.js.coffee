@@ -134,8 +134,13 @@ angular.module('feedbunch').service 'animationsSvc',
       # Set height back to 0px and animate the transition to its final height
       folder_content
       .css('height', '0')
-      .velocity({height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
-        {duration: 300, easing: 'swing', complete: add_folder_open_class})
+      .velocity {height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
+        {duration: 300, easing: 'swing', complete: add_folder_open_class}
+
+      # Rotate folder arrow 90 degrees clockwise (pointing down)
+      $("#open-folder-#{folder.id} .folder-arrow")
+        .velocity {rotateZ:  '90deg', 'margin-top': 3},
+          {duration: 300, easing: 'swing'}
 
     #---------------------------------------------
     # Animate closing a folder, by transitioning its height from its current value to zero
@@ -144,6 +149,11 @@ angular.module('feedbunch').service 'animationsSvc',
       $("#feeds-#{folder.id}.folder-content")
       .velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
         {duration: 300, easing: 'swing', complete: remove_folder_open_class}
+
+      # Rotate folder arrow 90 degrees counter-clockwise (pointing right)
+      $("#open-folder-#{folder.id} .folder-arrow")
+        .velocity {rotateZ:  '0deg', 'margin-top': 4},
+          {duration: 300, easing: 'swing'}
 
     #---------------------------------------------
     # Animate toggling (open/close) the feeds management menu
