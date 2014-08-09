@@ -10,9 +10,9 @@ angular.module('feedbunch').service 'openEntrySvc',
   # PRIVATE FUNCTION - Set an entry as closed.
   #--------------------------------------------
   close = (entry)->
+    animationsSvc.close_entry entry
     index = $rootScope.open_entries.indexOf entry
     $rootScope.open_entries.splice index, 1 if index != -1
-    animationsSvc.close_entry entry
 
   service =
 
@@ -20,6 +20,8 @@ angular.module('feedbunch').service 'openEntrySvc',
     # Set an entry as open
     #---------------------------------------------
     open: (entry)->
+      animationsSvc.open_entry entry
+
       # Close any other open entry, unless the user has selected the "open all entries by default" config option
       if $rootScope.open_entries && !$rootScope.open_all_entries
         for e in $rootScope.open_entries
@@ -31,8 +33,6 @@ angular.module('feedbunch').service 'openEntrySvc',
       # Otherwise there is at most a single open entry.
       else
         $rootScope.open_entries = [entry]
-
-      animationsSvc.open_entry entry
 
     #---------------------------------------------
     # Set an entry as closed
