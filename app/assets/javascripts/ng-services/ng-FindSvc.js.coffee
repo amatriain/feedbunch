@@ -6,7 +6,9 @@ angular.module('feedbunch').service 'findSvc',
 ['$rootScope', '$filter', ($rootScope, $filter)->
 
   #---------------------------------------------
-  # Find a feed given its id
+  # Find a feed given its id.
+  # If a list of feeds is passed, search in the list. Otherwise, search in the list
+  # of feeds stored in the root scope.
   #---------------------------------------------
   find_feed: (id, list = $rootScope.feeds)->
     if list
@@ -20,16 +22,18 @@ angular.module('feedbunch').service 'findSvc',
       return null
 
   #---------------------------------------------
-  # Find a folder given its id
+  # Find a folder given its id.
+  # If a list of folders is passed, search in the list. Otherwise, search in the list
+  # of folders stored in the root scope
   #---------------------------------------------
-  find_folder: (id)->
-    if $rootScope.folders
+  find_folder: (id, list = $rootScope.folders)->
+    if list
       if id == 'none'
         return null
       else if id == "all"
         return {id: "all"}
       else
-        folders = $filter('filter') $rootScope.folders, (folder)->
+        folders = $filter('filter') list, (folder)->
           return folder.id == id
         if folders?.length > 0
           return folders[0]
