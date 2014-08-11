@@ -104,7 +104,20 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     $http.get("/api/folders.json?time=#{now.getTime()}")
     .success (data)->
       reset_timer()
-      $rootScope.folders = data.slice()
+
+      # Remove folders no longer existing in the server
+      if $rootScope.folders? && $rootScope.folders?.length > 0
+        for folder in $rootScope.folders
+          existing_folder = findSvc.find_folder folder.id, data
+          if !existing_folder?
+            index = $rootScope.folders.indexOf folder
+            $rootScope.folders.splice index, 1
+
+      # Add new folders
+      if data? && data.length? > 0
+        for folder in data
+          add_folder folder
+
       $rootScope.folders_loaded = true
     .error (data, status)->
       timerFlagSvc.start 'error_loading_folders' if status!=0
@@ -145,7 +158,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   #---------------------------------------------
   # PRIVATE FUNCTION: Push a feed in the feeds array if it isn't already present there.
   #
-  # If the feeds array is empty, create it anew, ensuring angularjs ng-repeat is triggered.
+  # If the feeds array has not been created in the root scope, create it.
   #
   # If the feed is already in the feeds array, its unread_entries attribute is updated instead of
   # pushing it in the array again.
@@ -159,6 +172,20 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         feed_old.unread_entries = feed.unread_entries
       else
         $rootScope.feeds.push feed
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Push a folder in the folders array if it isn't already present there.
+  #
+  # If the folders array has not been created in the root scope, create it.
+  #
+  # If the folder is already in the folders array, it is ignored
+  #---------------------------------------------
+  add_folder = (folder)->
+    if !$rootScope.folders || $rootScope.folders?.length == 0
+      $rootScope.folders = [folder]
+    else
+      old_folder = findSvc.find_folder folder.id
+      $rootScope.folders.push folder if !old_folder?
 
   #---------------------------------------------
   # PRIVATE FUNCTION: Update the feeds and their unread counts, for feeds in a folder.
