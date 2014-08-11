@@ -193,10 +193,14 @@
       }
     }
 
-    /* Animation when opening/closing sidebar folders (the folder arrow rotates 90 degrees) */
     .folder-arrow {
       margin-top: 4px;
       width: 13px;
+    }
+
+    .folder-arrow.down-arrow {
+      -webkit-transform: rotateZ(90deg);
+      transform: rotateZ(90deg);
     }
 
     .folder-unread-badge {
