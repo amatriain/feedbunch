@@ -271,9 +271,8 @@ angular.module('feedbunch').service 'animationsSvc',
     #---------------------------------------------
     highlight_read_all_button: ->
       $('#read-all-button')
-        .velocity({backgroundColor: '#e7e7e7', color: '#555', borderColor: '#428bca'},
-          {duration: 300, easing: 'swing'})
-        .velocity('reverse', {duration: 300, easing: 'swing'})
+        .velocity({backgroundColor: '#e7e7e7'}, {duration: 300, easing: 'swing'})
+        .velocity({backgroundColorAlpha: 0}, {duration: 300, easing: 'swing'})
 
   return service
 ]
