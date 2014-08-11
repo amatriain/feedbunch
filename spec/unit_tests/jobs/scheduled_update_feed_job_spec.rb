@@ -305,6 +305,23 @@ WEBPAGE_HTML
       expect(@feed.reload.fetch_interval_secs).to eq 3960
     end
 
+    it 'increments the fetch interval if the request times out' do
+      allow(FeedClient).to receive(:fetch).and_raise RestClient::RequestTimeout.new
+
+      expect(Resque).to receive :set_schedule do |name, config|
+        expect(name).to eq "update_feed_#{@feed.id}"
+        expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
+        expect(config[:persist]).to be true
+        expect(config[:args]).to eq @feed.id
+        expect(config[:every][0]).to eq '3960s'
+        expect(config[:every][1]).to eq ({first_in: 3960})
+      end
+
+      expect(@feed.fetch_interval_secs).to eq 3600
+      ScheduledUpdateFeedJob.perform @feed.id
+      expect(@feed.reload.fetch_interval_secs).to eq 3960
+    end
+
     it 'increments the fetch interval if the feed server FQDN cannot be resolved' do
       allow(FeedClient).to receive(:fetch).and_raise SocketError.new('getaddrinfo: Name or service not known')
 
@@ -323,7 +340,7 @@ WEBPAGE_HTML
     end
 
     it 'increments the fetch interval if the feed server connection times out' do
-      allow(FeedClient).to receive(:fetch).and_raise RestClient::RequestTimeout.new
+      allow(FeedClient).to receive(:fetch).and_raise Errno::ETIMEDOUT.new
 
       expect(Resque).to receive :set_schedule do |name, config|
         expect(name).to eq "update_feed_#{@feed.id}"
@@ -341,6 +358,40 @@ WEBPAGE_HTML
 
     it 'increments the fetch interval if the server refuses the connection' do
       allow(FeedClient).to receive(:fetch).and_raise Errno::ECONNREFUSED.new('Connection refused - connect(2) for "feed.com" port 80')
+
+      expect(Resque).to receive :set_schedule do |name, config|
+        expect(name).to eq "update_feed_#{@feed.id}"
+        expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
+        expect(config[:persist]).to be true
+        expect(config[:args]).to eq @feed.id
+        expect(config[:every][0]).to eq '3960s'
+        expect(config[:every][1]).to eq ({first_in: 3960})
+      end
+
+      expect(@feed.fetch_interval_secs).to eq 3600
+      ScheduledUpdateFeedJob.perform @feed.id
+      expect(@feed.reload.fetch_interval_secs).to eq 3960
+    end
+
+    it 'increments the fetch interval if the server is unreachable' do
+      allow(FeedClient).to receive(:fetch).and_raise Errno::EHOSTUNREACH
+
+      expect(Resque).to receive :set_schedule do |name, config|
+        expect(name).to eq "update_feed_#{@feed.id}"
+        expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
+        expect(config[:persist]).to be true
+        expect(config[:args]).to eq @feed.id
+        expect(config[:every][0]).to eq '3960s'
+        expect(config[:every][1]).to eq ({first_in: 3960})
+      end
+
+      expect(@feed.fetch_interval_secs).to eq 3600
+      ScheduledUpdateFeedJob.perform @feed.id
+      expect(@feed.reload.fetch_interval_secs).to eq 3960
+    end
+
+    it 'increments the fetch interval if the server resets the connection' do
+      allow(FeedClient).to receive(:fetch).and_raise Errno::ECONNRESET
 
       expect(Resque).to receive :set_schedule do |name, config|
         expect(name).to eq "update_feed_#{@feed.id}"

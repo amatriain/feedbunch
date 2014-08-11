@@ -53,6 +53,7 @@ class ScheduledUpdateFeedJob
       Errno::ETIMEDOUT,
       Errno::ECONNREFUSED,
       Errno::EHOSTUNREACH,
+      Errno::ECONNRESET,
       EmptyResponseError,
       FeedAutodiscoveryError,
       FeedFetchError => e
@@ -79,6 +80,7 @@ class ScheduledUpdateFeedJob
       Errno::ETIMEDOUT,
       Errno::ECONNREFUSED,
       Errno::EHOSTUNREACH,
+      Errno::ECONNRESET,
       EmptyResponseError,
       FeedAutodiscoveryError,
       FeedFetchError => e
