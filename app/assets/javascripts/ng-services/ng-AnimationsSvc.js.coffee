@@ -266,5 +266,14 @@ angular.module('feedbunch').service 'animationsSvc',
     show_stats: ->
       $('#subscription-stats').velocity {opacity: 1}, {duration: 300, easing: 'swing'}
 
+    #---------------------------------------------
+    # Temporarily higlight the "Read all" navbar button when clicked.
+    #---------------------------------------------
+    highlight_read_all_button: ->
+      $('#read-all-button')
+        .velocity({backgroundColor: '#e7e7e7', color: '#555', borderColor: '#428bca'},
+          {duration: 300, easing: 'swing'})
+        .velocity('reverse', {duration: 300, easing: 'swing'})
+
   return service
 ]
