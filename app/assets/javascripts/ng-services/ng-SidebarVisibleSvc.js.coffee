@@ -6,15 +6,17 @@
 ########################################################
 
 angular.module('feedbunch').service 'sidebarVisibleSvc',
-['$rootScope', ($rootScope)->
+['$rootScope', 'animationsSvc', ($rootScope, animationsSvc)->
 
   #--------------------------------------------
   # Toggle visibility of the sidebar.
   #--------------------------------------------
   toggle: ->
-    if $rootScope.sidebar_visible?
+    if $rootScope.sidebar_visible
+      animationsSvc.hide_sidebar()
       $rootScope.sidebar_visible = !$rootScope.sidebar_visible
     else
+      animationsSvc.show_sidebar()
       $rootScope.sidebar_visible = true
 
   #--------------------------------------------
@@ -23,5 +25,10 @@ angular.module('feedbunch').service 'sidebarVisibleSvc',
   # (if true) or hidden (if false).
   #--------------------------------------------
   set: (visible)->
-    $rootScope.sidebar_visible = visible if $.type(visible)=='boolean'
+    if $.type(visible)=='boolean'
+      $rootScope.sidebar_visible = visible
+      if visible
+        animationsSvc.show_sidebar()
+      else
+        animationsSvc.hide_sidebar()
 ]

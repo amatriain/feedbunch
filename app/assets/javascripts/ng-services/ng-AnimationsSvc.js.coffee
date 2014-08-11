@@ -87,7 +87,26 @@ angular.module('feedbunch').service 'animationsSvc',
     # It is no longer necessary now that menu is closed, and having too many handlers hurts performance
     $(document).off event_namespace
 
+  #--------------------------------------------
+  # Media query to hide sidebar only in smartphone screens
+  #--------------------------------------------
+  sm_max_media_query = 'screen and (max-width: 768px)'
+
   service =
+
+    #---------------------------------------------
+    # Animate hiding the sidebar if the screens is smartphone-sized.
+    #---------------------------------------------
+    hide_sidebar: ->
+      enquire.register sm_max_media_query, ->
+        $('#sidebar-column').velocity {translateX: '-100%'}, {duration: 300, easing: 'swing'}
+
+    #---------------------------------------------
+    # Animate showing the sidebar if the screens is smartphone-sized.
+    #---------------------------------------------
+    show_sidebar: ->
+      enquire.register sm_max_media_query, ->
+        $('#sidebar-column').velocity {translateX: '0'}, {duration: 300, easing: 'swing'}
 
     #---------------------------------------------
     # Animate opening an entry, by transitioning its height from zero to its final value.
