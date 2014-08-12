@@ -1,0 +1,7 @@
+<li ng-show="show_feed_buttons && (current_feed || current_folder)"
+    data-toggle="tooltip" data-placement="right"
+    title="<%= t 'layouts.navbar.read_all_button_tooltip' %>">
+  <a id="read-all-button" ng-click="mark_all_read()">
+    <i class="fa fa-check-square-o fa-fw"></i> <%= t 'layouts.navbar.read_all_button' %>
+  </a>
+</li>

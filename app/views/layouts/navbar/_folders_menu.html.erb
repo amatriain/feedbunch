@@ -1,0 +1,46 @@
+<li id="folder-management-dropdown"
+    class="dropdown"
+    ng-show="current_feed"
+    data-toggle="tooltip" data-placement="right"
+    title="<%= t 'layouts.navbar.folder_button_tooltip' %>">
+
+  <a id="folder-management"
+     class="dropdown-toggle"
+     ng-click="toggle_folders_menu()">
+    <i class="fa fa-folder-open fa-fw"></i> <%= t 'layouts.navbar.folder_button' %>
+    <i class="fa fa-caret-down fa-fw"></i>
+  </a>
+
+  <ul id="folder-dropdown-content" class="dropdown-menu text-left">
+
+    <li ng-repeat="folder in folders | orderBy:'title'">
+      <a data-folder-id="{{folder.id}}"
+         ng-click="move_to_folder(folder)">
+        <i class="fa fa-check fa-fw" ng-show="get_current_feed().folder_id==folder.id"></i>
+        <i class="fa fa-fw" ng-hide="get_current_feed().folder_id==folder.id"></i>
+        <span class="dropdown-folder-title">{{folder.title}}</span>
+      </a>
+    </li>
+
+    <li class="divider" ng-show="folders.length > 0"></li>
+
+    <li>
+      <a data-folder-id="new"
+         data-toggle="modal"
+         data-target="#new-folder-popup">
+        <i class="fa fa-plus fa-fw text-muted"></i>
+        <span class="dropdown-folder-title"><%= t 'layouts.navbar.folder_new' %></span>
+      </a>
+    </li>
+
+    <li>
+      <a data-folder-id="none"
+         ng-click="remove_from_folder()">
+        <i class="fa fa-ban fa-fw text-muted" ng-hide="get_current_feed().folder_id=='none'"></i>
+        <i class="fa fa-check fa-fw" ng-show="get_current_feed().folder_id=='none'"></i>
+        <span class="dropdown-folder-title"><%= t 'layouts.navbar.folder_none' %></span>
+      </a>
+    </li>
+
+  </ul>
+</li>

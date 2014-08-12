@@ -1,0 +1,17 @@
+<li ng-show="show_feed_buttons && !show_read"
+    data-toggle="tooltip" data-placement="right"
+    title="<%= t 'layouts.navbar.show_read_button_tooltip' %>">
+  <a id="show-read"
+     ng-click="show_read_feeds_entries()">
+    <i class="fa fa-eye fa-fw"></i> <%= t 'layouts.navbar.show_read_button' %>
+  </a>
+</li>
+
+<li ng-show="show_feed_buttons && show_read"
+    data-toggle="tooltip" data-placement="right"
+    title="<%= t 'layouts.navbar.hide_read_button_tooltip' %>">
+  <a id="hide-read"
+     ng-click="hide_read_feeds_entries()">
+    <i class="fa fa-eye-slash fa-fw"></i> <%= t 'layouts.navbar.hide_read_button' %>
+  </a>
+</li>

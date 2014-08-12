@@ -1,0 +1,40 @@
+<li id="feed-dropdown"
+    class="dropdown"
+    ng-show="show_feed_buttons"
+    data-toggle="tooltip" data-placement="right"
+    title="<%= t 'layouts.navbar.feed_menu_button_tooltip' %>">
+
+  <a id="feeds-management"
+     class="dropdown-toggle"
+     ng-click="toggle_feeds_menu()">
+    <i class="fa fa-rss fa-fw"></i> <%= t 'layouts.navbar.feed_menu_button' %>
+    <i class="fa fa-caret-down fa-fw"></i>
+  </a>
+
+  <ul class="dropdown-menu text-left">
+
+    <li>
+      <a id="add-subscription"
+         data-target="#subscribe-feed-popup"
+         data-toggle="modal">
+        <i class="fa fa-plus fa-fw"></i> <%= t 'layouts.navbar.subscribe_button' %>
+      </a>
+    </li>
+
+    <li ng-show="current_feed">
+      <a id="refresh-feed"
+         ng-click="refresh_feed()">
+        <i class="fa fa-repeat fa-fw"></i> <%= t 'layouts.navbar.refresh_button' %>
+      </a>
+    </li>
+
+    <li ng-show="current_feed">
+      <a id="unsubscribe-feed"
+         data-toggle="modal"
+         data-target="#unsubscribe-feed-popup">
+        <i class="fa fa-times fa-fw"></i> <%= t 'layouts.navbar.unsubscribe_button' %>
+      </a>
+    </li>
+
+  </ul>
+</li>

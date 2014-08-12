@@ -1,0 +1,38 @@
+<% if user_signed_in? %>
+
+  <div class="navbar navbar-default navbar-fixed-top">
+
+    <div class="navbar-header">
+
+      <%= render 'layouts/navbar/xs_menu_button' %>
+
+      <%= render 'layouts/navbar/xs_sidebar_toggle_button' %>
+
+      <%= link_to read_path, class: 'navbar-brand', id: 'feedbunch-brand' do %>
+        <%= image_tag asset_path('feed18x18.png'), alt: 'feedbunch' %>
+        Feedbunch
+      <% end %>
+
+    </div>
+
+    <div class="collapse navbar-collapse">
+
+      <ul class="nav navbar-nav" ng-cloak>
+
+        <%= render 'layouts/navbar/show_hide_read_button' %>
+
+        <%= render 'layouts/navbar/feeds_menu' %>
+
+        <%= render 'layouts/navbar/read_all_button' %>
+
+        <%= render 'layouts/navbar/folders_menu' %>
+
+      </ul>
+
+      <%= render 'layouts/navbar/user_menu' %>
+
+    </div>
+
+  </div>
+
+<% end %>
