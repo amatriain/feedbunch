@@ -128,7 +128,7 @@ angular.module('feedbunch').service 'animationsSvc',
         .css('height', '0')
         .velocity({height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
           {duration: 300, easing: 'swing', complete: add_entry_open_class})
-        .velocity 'scroll', {offset: topOffset, duration: 300}
+        .velocity 'scroll', {offset: topOffset, duration: 250, delay: 50}
 
     #---------------------------------------------
     # Animate closing an entry, by transitioning its height from its current value to zero
