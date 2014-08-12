@@ -79,11 +79,15 @@ body.navbar-visible{
 
   #user-dropdown {
 
-    #user-name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      vertical-align: middle;
-      white-space: nowrap;
+    #user-management {
+      padding-bottom: 14px;
+
+      #user-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
     }
   }
 
