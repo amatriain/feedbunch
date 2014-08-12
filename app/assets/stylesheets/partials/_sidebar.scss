@@ -5,12 +5,21 @@
   top:50px;
   bottom:0;
   background-color: #FFFFFF;
-  z-index: 1;
 }
 
-#entries-column {
-  z-index: 0;
+/* In smartphones the sidebar hides the entries below, unless moved out of the viewport */
+
+@media (max-width: $screen-sm-min) {
+  #sidebar-column {
+    z-index: 1;
+  }
+
+  #entries-column {
+    z-index: 0;
+  }
 }
+
+
 
 /* Large, easily clickable feeds and folders in smartphones */
 @media (max-width: $screen-md-min) {
