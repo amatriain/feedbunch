@@ -215,6 +215,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     # all entries (whether they are read or unread) to be shown.
     #---------------------------------------------
     show_read: ->
+      animationsSvc.highlight_hide_read_button()
       $rootScope.show_read = true
       entriesPaginationSvc.reset_entries()
       $rootScope.feeds_loaded = false
@@ -226,6 +227,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     # unread entries to be shown.
     #---------------------------------------------
     hide_read: ->
+      animationsSvc.highlight_show_read_button()
       $rootScope.show_read = false
       entriesPaginationSvc.reset_entries()
       $rootScope.feeds_loaded = false
