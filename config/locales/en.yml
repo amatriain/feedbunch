@@ -28,7 +28,7 @@ en:
       tagline: "An open-source feed reader"
       sign_up: "Sign up"
       or: "or"
-      sign_in: "Sign in"
+      sign_in: "Log in"
   layouts:
     noscript: "Your browser does not support JavaScript. This website needs JavaScript to work correctly."
     cookies:

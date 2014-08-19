@@ -11,7 +11,7 @@ es:
       forgot_password: "Cambiar contraseña"
       new_confirmation: "Volver a confirmar dirección de email"
       unlock: "Desbloquear cuenta"
-      sign_in_with: "Acceder con %{provider}"
+      sign_in_with: "Entrar con %{provider}"
       remember_me: "Recuérdame"
       resend_confirmation: "Confirmar email"
       send_password_reset: "Cambiar contraseña"

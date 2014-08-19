@@ -1,8 +1,8 @@
 en:
   devise:
     views:
-      sign_in: "Sign in"
-      sign_in_link: "Sign in"
+      sign_in: "Log in"
+      sign_in_link: "Log in"
       sign_up_link: "Create new account"
       sign_up_disabled_1: "Feedbunch is still in closed beta."
       sign_up_disabled_2: "If you want to join the beta please write an email to admin@feedbunch.com"
@@ -11,7 +11,7 @@ en:
       forgot_password: "Reset password"
       new_confirmation: "Confirm email address again"
       unlock: "Unlock account"
-      sign_in_with: "Sign in with %{provider}"
+      sign_in_with: "Log in with %{provider}"
       remember_me: "Remember me"
       resend_confirmation: "Confirm email"
       send_password_reset: "Reset password"
