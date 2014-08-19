@@ -346,7 +346,6 @@ DEPENDENCIES
   rspec-rails
   rubyzip
   sass-rails (~> 4.0.2)
-  sax-machine
   simple_form
   spring
   sqlite3

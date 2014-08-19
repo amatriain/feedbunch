@@ -42,7 +42,6 @@ gem 'kaminari'
 
 # RSS/Atom parser
 gem 'feedjira'
-gem 'sax-machine'
 
 # HTTP client
 gem 'rest-client'
