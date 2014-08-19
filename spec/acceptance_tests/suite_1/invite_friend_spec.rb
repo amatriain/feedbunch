@@ -137,7 +137,7 @@ describe 'invite friend', type: :feature do
       sign_up @friend_email, friend_password
 
       friend = User.find_by_email @friend_email
-      # Give value to password (instance attribute) so that user can sign in
+      # Give value to password (instance attribute) so that user can Log in
       friend.password = friend_password
       login_user_for_feature friend
       user_should_be_logged_in
@@ -250,11 +250,11 @@ describe 'invite friend', type: :feature do
       expect(page).to have_text 'The invitation token provided is not valid'
     end
 
-    it 'cannot sign in before accepting invitation', js: true do
+    it 'cannot log in before accepting invitation', js: true do
       visit new_user_session_path
       fill_in 'Email', with: @friend_email
       fill_in 'Password', with: @password
-      click_on 'Sign in'
+      click_on 'Log in'
 
       user_should_not_be_logged_in
     end
@@ -274,7 +274,7 @@ describe 'invite friend', type: :feature do
       visit new_user_session_path
       fill_in 'Email', with: @friend_email
       fill_in 'Password', with: @password
-      click_on 'Sign in'
+      click_on 'Log in'
 
       user_should_be_logged_in
     end
@@ -308,7 +308,7 @@ describe 'invite friend', type: :feature do
       visit new_user_session_path
       fill_in 'Email', with: @friend_email
       fill_in 'Password', with: @password
-      click_on 'Sign in'
+      click_on 'Log in'
 
       user_should_be_logged_in
     end

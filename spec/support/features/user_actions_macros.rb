@@ -7,7 +7,7 @@ def login_user_for_feature(user)
   visit new_user_session_path
   fill_in 'Email', with: user.email
   fill_in 'Password', with: user.password
-  click_on 'Sign in'
+  click_on 'Log in'
   user_should_be_logged_in
 end
 
@@ -51,7 +51,7 @@ def failed_login_user_for_feature(username, password)
   visit new_user_session_path
   fill_in 'Email', with: username
   fill_in 'Password', with: password
-  click_on 'Sign in'
+  click_on 'Log in'
   user_should_not_be_logged_in
 end
 

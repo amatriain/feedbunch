@@ -16,7 +16,7 @@ describe 'automatically closing notices and alerts', type: :feature do
     visit new_user_session_path
     fill_in 'Email', with: @user.email
     fill_in 'Password', with: 'wrong password'
-    click_on 'Sign in'
+    click_on 'Log in'
 
     expect(page).to have_css 'div#alert'
     sleep 5

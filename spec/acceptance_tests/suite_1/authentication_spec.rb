@@ -18,7 +18,7 @@ describe 'authentication', type: :feature do
     it 'shows a link to the app in the main page' do
       visit '/'
       within "a#sign_in[href*=\"#{read_path}\"]" do
-        expect(page).to have_content 'Sign in'
+        expect(page).to have_content 'Log in'
       end
     end
 
@@ -36,7 +36,7 @@ describe 'authentication', type: :feature do
       visit new_user_session_path
       fill_in 'Email', with: @user.email
       fill_in 'Password', with: 'wrong password!!!'
-      click_on 'Sign in'
+      click_on 'Log in'
       expect(current_path).to eq new_user_session_path
     end
 
@@ -358,7 +358,7 @@ describe 'authentication', type: :feature do
       page.driver.browser.clear_cookies
       go_to_start_page
 
-      expect(page).to have_text 'Sign in'
+      expect(page).to have_text 'Log in'
       expect(current_path).to eq new_user_session_path
     end
 
@@ -571,7 +571,7 @@ describe 'authentication', type: :feature do
         visit new_user_session_path
         fill_in 'Email', with: @user.email
         fill_in 'Password', with: @user.password
-        click_on 'Sign in'
+        click_on 'Log in'
         expect(page).to have_text 'Invalid email or password'
       end
 
