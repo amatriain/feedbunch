@@ -8,7 +8,6 @@
 }
 
 /* In smartphones the sidebar hides the entries below, unless moved out of the viewport */
-
 @media (max-width: $screen-sm-min) {
   #sidebar-column {
     z-index: 1;
@@ -19,7 +18,22 @@
   }
 }
 
+/* In screens bigger than a smartphone the sidebar and entries list are always visible */
+@media (min-width: $screen-sm-min) {
+  #sidebar-column {
+    z-index: auto;
+  }
 
+  /* Override via CSS the style="transform: translateX(-100%)" attribute that may have been added to the sidebar
+  via javascript */
+  #sidebar-column[style] {
+    transform: translateX(0%) !important;
+  }
+
+  #entries-column {
+    z-index: auto;
+  }
+}
 
 /* Large, easily clickable feeds and folders in smartphones */
 @media (max-width: $screen-md-min) {
