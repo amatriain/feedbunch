@@ -5,10 +5,10 @@
 angular.module('feedbunch').service 'readSvc',
 ['$rootScope', '$http', '$q', '$timeout', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc', 'lazyLoadingSvc', 'startPageSvc',
-'findSvc',
+'findSvc', 'changeUnreadCountSvc',
 ($rootScope, $http, $q, $timeout, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
 entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc, startPageSvc,
-findSvc)->
+findSvc, changeUnreadCountSvc)->
 
   # Maximum number of entries in each page.
   # This MUST match the entries page size set in the server!
@@ -98,9 +98,9 @@ findSvc)->
   correct_feed_unread_counts = (feed)->
     entries = findSvc.find_feed_unread_entries feed
     if entries
-      feed.unread_entries = entries.length
+      changeUnreadCountSvc.set_feed_count feed, entries.length
     else
-      feed.unread_entries = 0
+      changeUnreadCountSvc.set_feed_count feed, 0
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load entries in the folder passed as argument.
