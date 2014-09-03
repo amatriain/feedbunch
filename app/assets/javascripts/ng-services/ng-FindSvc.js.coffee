@@ -60,12 +60,26 @@ angular.module('feedbunch').service 'findSvc',
       return null
 
   #---------------------------------------------
-  # Find entries in a feed given the feed
+  # Find all entries in a feed given the feed (both read and unread)
   #---------------------------------------------
   find_feed_entries: (feed)->
     if $rootScope.entries
       entries =  $filter('filter') $rootScope.entries, (entry)->
         return entry.feed_id == feed.id
+      if entries?.length > 0
+        return entries
+      else
+        return null
+    else
+      return null
+
+  #---------------------------------------------
+  # Find unread entries in a feed given the feed
+  #---------------------------------------------
+  find_feed_unread_entries: (feed)->
+    if $rootScope.entries
+      entries =  $filter('filter') $rootScope.entries, (entry)->
+        return (entry.feed_id == feed.id && entry.read == false)
       if entries?.length > 0
         return entries
       else

@@ -66,7 +66,9 @@ findSvc)->
         , 250
 
       # If less than a full page of entries is received, this is the last page of entries available.
-      entriesPaginationSvc.set_more_entries_available false if data.length < entries_page_size
+      if data.length < entries_page_size
+        entriesPaginationSvc.set_more_entries_available false
+        correct_feed_unread_counts feed
 
       if entriesPaginationSvc.is_first_page()
         # After loading the first page of entries, load a second one to ensure the list is fully populated
@@ -80,12 +82,25 @@ findSvc)->
         if status == 404
           # there are no more entries to retrieve
           entriesPaginationSvc.set_more_entries_available false
+          correct_feed_unread_counts feed
+
           if entriesPaginationSvc.is_first_page()
             entriesPaginationSvc.set_error_no_entries true
             feed.unread_entries = 0
         else
           currentFeedSvc.unset()
           timerFlagSvc.start 'error_loading_entries'
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: After all entries in a feed have been received, set the unread count for the feed
+  # to the number of unread entries actually present.
+  #--------------------------------------------
+  correct_feed_unread_counts = (feed)->
+    entries = findSvc.find_feed_unread_entries feed
+    if entries
+      feed.unread_entries = entries.length
+    else
+      feed.unread_entries = 0
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load entries in the folder passed as argument.
@@ -148,11 +163,9 @@ findSvc)->
   #--------------------------------------------
   correct_folder_unread_counts = (folder)->
     feeds = findSvc.find_folder_feeds folder
-    if feeds? && feeds?.length > 0
+    if feeds && feeds?.length > 0
       for f in feeds
-        entries = findSvc.find_feed_entries f
-        if !entries || entries?.length == 0
-          f.unread_entries = 0
+        correct_feed_unread_counts f
 
   service =
 
