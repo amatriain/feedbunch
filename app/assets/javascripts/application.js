@@ -21,3 +21,4 @@
 //= require ../../../vendor/assets/javascripts/withinViewport
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport
 //= require ../../../vendor/assets/javascripts/enquire.min
+//= require ../../../vendor/assets/javascripts/hopscotch.min
