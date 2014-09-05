@@ -503,3 +503,14 @@ def sign_up(email, password)
   # Follow confirmation link received by email, user should be able to log in afterwards
   visit confirmation_url
 end
+
+##
+# Close an application tour window, if visible
+
+def close_tour
+  # Close tour only if it is visible
+  if page.has_css? 'div.hopscotch-bubble'
+    find('div.hopscotch-bubble a.hopscotch-bubble-close').click
+    tour_should_not_be_visible
+  end
+end

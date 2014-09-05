@@ -201,3 +201,17 @@ def folder_should_be_closed(folder)
   expect(page).to have_css "#sidebar #folders-list #folder-#{folder.id} #feeds-#{folder.id}"
   expect(page).not_to have_css "#sidebar #folders-list #folder-#{folder.id} #feeds-#{folder.id}.open-folder"
 end
+
+##
+# Test that the application tour is visible.
+
+def tour_should_be_visible
+  expect(page).to have_css 'div.hopscotch-bubble'
+end
+
+##
+# Test that the application tour is not visible.
+
+def tour_should_not_be_visible
+  expect(page).not_to have_css 'div.hopscotch-bubble'
+end
