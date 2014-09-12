@@ -16,6 +16,7 @@ FactoryGirl.define do
     timezone 'UTC'
     quick_reading false
     open_all_entries false
+    show_main_tour false
 
     factory :user_unconfirmed do
       confirmed_at nil

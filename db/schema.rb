@@ -44,8 +44,8 @@ ActiveRecord::Schema.define(version: 20140912123232) do
     t.datetime "published",                   null: false
     t.text     "guid",                        null: false
     t.integer  "feed_id",                     null: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "entries", ["feed_id"], name: "index_entries_on_feed_id"
@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(version: 20140912123232) do
     t.boolean  "read",       default: false, null: false
     t.integer  "user_id",                    null: false
     t.integer  "entry_id",                   null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "entry_states", ["entry_id", "user_id"], name: "index_entry_states_on_entry_id_user_id"
@@ -69,8 +69,8 @@ ActiveRecord::Schema.define(version: 20140912123232) do
     t.integer  "user_id",                    null: false
     t.integer  "feed_id",                    null: false
     t.integer  "unread_entries", default: 0, null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "feed_subscriptions", ["feed_id", "user_id"], name: "index_feed_subscriptions_on_feed_id_user_id"
@@ -81,8 +81,8 @@ ActiveRecord::Schema.define(version: 20140912123232) do
   create_table "feeds", force: true do |t|
     t.text     "title",                              null: false
     t.text     "url"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "fetch_url",                          null: false
     t.text     "etag"
     t.text     "last_modified"
@@ -108,8 +108,8 @@ ActiveRecord::Schema.define(version: 20140912123232) do
   create_table "folders", force: true do |t|
     t.integer  "user_id",    null: false
     t.text     "title",      null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "folders", ["user_id", "title"], name: "index_folders_on_user_id_title"
@@ -132,8 +132,8 @@ ActiveRecord::Schema.define(version: 20140912123232) do
     t.text     "state",                          null: false
     t.integer  "total_feeds",     default: 0,    null: false
     t.integer  "processed_feeds", default: 0,    null: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "show_alert",      default: true, null: false
   end
 
@@ -180,8 +180,8 @@ ActiveRecord::Schema.define(version: 20140912123232) do
     t.integer  "failed_attempts",              default: 0
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "admin",                        default: false, null: false
     t.text     "locale",                                       null: false
     t.text     "timezone",                                     null: false
