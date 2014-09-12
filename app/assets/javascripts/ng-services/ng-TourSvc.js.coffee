@@ -10,16 +10,21 @@ angular.module('feedbunch').service 'tourSvc',
   #---------------------------------------------
   show_main_tour: ->
     tour =
-      id: 'hello-hopscotch',
+      id: 'main-tour',
       showCloseButton: true,
       showPrevButton: true,
       showNextButton: true,
       steps: [
         {
-          title: 'My header',
-          content: 'This is the header of my page',
-          target: '#subscription-stats',
-          placement: 'left'
+          title: 'Sidebar',
+          target: '#all-feeds',
+          placement: 'right',
+          content: '<p>You will see your subscribed feeds here.</p>' +
+                    '<ul>' +
+                    '<li>Click on a feed to see its entries.</li>' +
+                    '<li>Click on <strong><em>All subscriptions</em></strong> to see entries from all feeds.</li>' +
+                    '<li>Click on <strong><em>Start</em></strong> to see the start page again.</li>' +
+                    '</ul>'
         },
         {
           title: 'My content',
