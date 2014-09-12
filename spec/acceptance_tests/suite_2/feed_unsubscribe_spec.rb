@@ -198,7 +198,7 @@ describe 'unsubscribe from feed', type: :feature do
 
     unsubscribe_feed @feed1, @user
 
-    expect(page).to have_text 'To read a feed, click on its title in the sidebar.'
+    expect(page).to have_css '#subscription-stats'
     expect(page).not_to have_text 'Currently refreshing feed'
     expect(page).not_to have_content @feed1.title
   end
@@ -215,7 +215,7 @@ describe 'unsubscribe from feed', type: :feature do
 
     unsubscribe_feed @feed1, @user
 
-    expect(page).to have_text 'To read a feed, click on its title in the sidebar.'
+    expect(page).to have_css '#subscription-stats'
     expect(page).not_to have_text 'Successfully added subscription to feed'
     expect(page).not_to have_content @feed1.title
   end

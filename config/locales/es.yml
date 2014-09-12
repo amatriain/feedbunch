@@ -64,7 +64,6 @@ es:
     start:
       welcome: "Bienvenido a Feedbunch"
       stats: "Suscrito a %{feeds} feeds con %{entries} entradas sin leer."
-      help: "Para leer un feed, haz click en su título en la barra lateral."
     entries:
       no_entries: "No hay entradas"
       mark_unread_tooltip: "Marcar esta entrada como no leída"
