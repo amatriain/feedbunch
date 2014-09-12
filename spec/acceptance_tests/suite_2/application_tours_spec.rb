@@ -16,9 +16,7 @@ describe 'application tours', type: :feature do
       end
 
       it 'shows the tour', js: true do
-        within 'div.hopscotch-bubble' do
-          page.should have_text 'My header'
-        end
+        tour_should_be_visible 'Sidebar'
       end
 
       it 'does not show the tour after finishing it'

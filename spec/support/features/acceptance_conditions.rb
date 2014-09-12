@@ -204,9 +204,15 @@ end
 
 ##
 # Test that the application tour is visible.
+# Optionally accepts the title the tour bubble should have.
 
-def tour_should_be_visible
+def tour_should_be_visible(title=nil)
   expect(page).to have_css 'div.hopscotch-bubble'
+  if title.present?
+    within 'div.hopscotch-bubble .hopscotch-title' do
+      expect(page).to have_text title
+    end
+  end
 end
 
 ##
