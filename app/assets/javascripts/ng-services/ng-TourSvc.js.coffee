@@ -16,6 +16,13 @@ angular.module('feedbunch').service 'tourSvc',
       showNextButton: true,
       steps: [
         {
+          title: 'Start',
+          target: '#subscription-stats',
+          placement: 'bottom',
+          content: '<p>This is the start page.</p>' +
+                    '<p>You can find your usage stats here. Notifications are also shown in this page.</p>'
+        },
+        {
           title: 'Sidebar',
           target: '#all-feeds',
           placement: 'right',
@@ -25,12 +32,6 @@ angular.module('feedbunch').service 'tourSvc',
                     '<li>Click on <strong><em>All subscriptions</em></strong> to see entries from all feeds.</li>' +
                     '<li>Click on <strong><em>Start</em></strong> to see the start page again.</li>' +
                     '</ul>'
-        },
-        {
-          title: 'My content',
-          content: 'Here is where I put my content',
-          target: '#start-info img.application-main-icon',
-          placement: 'bottom'
         }
       ]
 

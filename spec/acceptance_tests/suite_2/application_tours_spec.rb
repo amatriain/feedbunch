@@ -16,7 +16,7 @@ describe 'application tours', type: :feature do
       end
 
       it 'shows the tour', js: true do
-        tour_should_be_visible 'Sidebar'
+        tour_should_be_visible 'Start'
       end
 
       it 'does not show the tour after finishing it'
