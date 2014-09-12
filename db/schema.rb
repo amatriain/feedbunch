@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140731200038) do
+ActiveRecord::Schema.define(version: 20140912123232) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -198,6 +198,7 @@ ActiveRecord::Schema.define(version: 20140731200038) do
     t.integer  "invitations_count",            default: 0
     t.string   "unencrypted_invitation_token"
     t.datetime "invitations_count_reset_at"
+    t.boolean  "show_main_tour",               default: true,  null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

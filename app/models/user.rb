@@ -50,6 +50,8 @@ require 'subscriptions_manager'
 # as soon as they are scrolled by) or not. False by default.
 # - open_all_entries: boolean indicating whether the user wants to see all entries open by default when they are loaded.
 # False by default.
+# - show_main_tour: boolean indicating whether the main app tour should be shown when the user enters the application. True
+# by default
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -92,6 +94,7 @@ class User < ActiveRecord::Base
   validates :timezone, presence: true
   validates :quick_reading, inclusion: {in: [true, false]}
   validates :open_all_entries, inclusion: {in: [true, false]}
+  validates :show_main_tour, inclusion: {in: [true, false]}
 
   before_save :before_save_user
   before_validation :default_values
@@ -272,7 +275,10 @@ class User < ActiveRecord::Base
   # - locale: 'en'
   # - timezone: 'UTC'
   # - quick_reading: false
+  # - open_all_entries: false
+  # - show_main_tour: true
   # - name: defaults to the value of the "email" attribute
+  # - invitation_limit: the value configured in Feedbunch::Application.config.daily_invitations_limit (in config/application.rb)
 
   def default_values
     # Convert the symbols for the available locales to strings, to be able to compare with the user locale
@@ -299,6 +305,11 @@ class User < ActiveRecord::Base
     if self.open_all_entries == nil
       self.open_all_entries = false
       Rails.logger.info "User #{self.email} has unsupported open_all_entries #{self.open_all_entries}. Defaulting to open_all_entries 'false' instead"
+    end
+
+    if self.show_main_tour == nil
+      self.show_main_tour = true
+      Rails.logger.info "User #{self.email} has unsupported show_main_tour #{self.show_main_tour}. Defaulting to show_main_tour 'true' instead"
     end
 
     if self.name.blank?
