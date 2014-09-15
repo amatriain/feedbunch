@@ -189,6 +189,9 @@ en:
         step4:
           title: 'Feeds menu'
           content_html: '<p>From this menu you can:</p><ul><li>Subscribe to new feeds.</li><li>Unsubscribe from feeds.</li><li>Refresh feeds.</li></ul>'
+        step5:
+          title: 'User menu'
+          content_html: '<p>From this menu you can access your profile settings and log out.</p>'
   error_pages:
     error_404:
       title: "Page not found."

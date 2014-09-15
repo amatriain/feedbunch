@@ -168,6 +168,9 @@ es:
         step4:
           title: 'Menú Feeds'
           content_html: '<p>Desde este menú puedes:</p><ul><li>Suscribirte a nuevos feeds.</li><li>Anular suscripciones.</li><li>Refrescar feeds.</li></ul>'
+        step5:
+          title: 'Menú de usuario'
+          content_html: '<p>Desde este menú puedes acceder a la configuración de tu perfil y cerrar tu sesión.</p>'
   error_pages:
     error_404:
       title: "Página no encontrada."
