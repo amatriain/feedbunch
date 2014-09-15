@@ -185,7 +185,7 @@ en:
           content_html: '<p>You will see your subscribed feeds here.</p><ul><li>Click on a feed to see its entries.</li><li>Click on <strong><em>All subscriptions</em></strong> to see entries from all feeds.</li><li>Click on <strong><em>Start</em></strong> to see the start page again.</li></ul>'
         step3:
           title: 'Show/Hide read entries'
-          content_html: '<p>Only unread entries are shown by default.</p><p>Clicking here you can show read entries and hide them again.</p>'
+          content_html: '<p>Only unread entries are shown by default.</p><p>Clicking here you can show read entries or hide them again.</p>'
         step4:
           title: 'Feeds menu'
           content_html: '<p>From this menu you can:</p><ul><li>Subscribe to new feeds.</li><li>Unsubscribe from feeds.</li><li>Refresh feeds.</li></ul>'

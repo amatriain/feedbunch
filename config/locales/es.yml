@@ -164,7 +164,7 @@ es:
           content_html: '<p>Aquí puedes ver los feeds a los que estás suscrito.</p><ul><li>Haz click en un feed para ver sus entradas.</li><li>Haz click en <strong><em>Todas las suscripciones</em></strong> para ver entradas de todos los feeds.</li><li>Haz click en <strong><em>Inicio</em></strong> para ver de nuevo la página de inicio.</li></ul>'
         step3:
           title: 'Mostrar/ocultar entradas leídas'
-          content_html: '<p>Por defecto sólo se muestran entradas aún sin leer.</p><p>Haciendo click aquí puedes mostrar entradas ya leídas y ocultarlas de nuevo.</p>'
+          content_html: '<p>Por defecto sólo se muestran entradas aún sin leer.</p><p>Haciendo click aquí puedes mostrar entradas ya leídas u ocultarlas de nuevo.</p>'
         step4:
           title: 'Menú Feeds'
           content_html: '<p>Desde este menú puedes:</p><ul><li>Suscribirte a nuevos feeds.</li><li>Anular suscripciones.</li><li>Refrescar feeds.</li></ul>'
