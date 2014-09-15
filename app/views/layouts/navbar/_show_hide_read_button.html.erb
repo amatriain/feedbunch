@@ -1,4 +1,5 @@
 <li ng-show="show_feed_buttons && !show_read"
+    data-show-hide-button
     data-toggle="tooltip" data-placement="right"
     title="<%= t 'layouts.navbar.show_read_button_tooltip' %>">
   <a id="show-read"
@@ -8,6 +9,7 @@
 </li>
 
 <li ng-show="show_feed_buttons && show_read"
+    data-show-hide-button
     data-toggle="tooltip" data-placement="right"
     title="<%= t 'layouts.navbar.hide_read_button_tooltip' %>">
   <a id="hide-read"
