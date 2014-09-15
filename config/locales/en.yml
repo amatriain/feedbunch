@@ -171,6 +171,18 @@ en:
         error: "Unable to add subscription to feed:"
         running: "Currently adding subscription to feed:"
         success: "Successfully added subscription to feed:"
+    tours:
+      main:
+        nextBtn: 'Next'
+        prevBtn: 'Back'
+        doneBtn: 'Done'
+        closeTooltip: 'Close'
+        step1:
+          title: 'Start'
+          content_html: '<p>This is the start page.</p><p>You can find your usage stats here. Notifications are also shown in this page.</p>'
+        step2:
+          title: 'Sidebar'
+          content_html: '<p>You will see your subscribed feeds here.</p><ul><li>Click on a feed to see its entries.</li><li>Click on <strong><em>All subscriptions</em></strong> to see entries from all feeds.</li><li>Click on <strong><em>Start</em></strong> to see the start page again.</li></ul>'
   error_pages:
     error_404:
       title: "Page not found."

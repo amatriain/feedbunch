@@ -150,6 +150,18 @@ es:
         error: "No se ha podido añadir suscripción al feed:"
         running: "Se está añadiendo suscripción al feed:"
         success: "Añadida con éxito suscripción al feed:"
+    tours:
+      main:
+        nextBtn: 'Siguiente'
+        prevBtn: 'Volver'
+        doneBtn: 'Terminar'
+        closeTooltip: 'Cerrar'
+        step1:
+          title: 'Inicio'
+          content_html: '<p>Esta es la página de inicio.</p><p>Aquí puedes ver tus estadísticas de uso. En esta página también se muestran diversas notificaciones.</p>'
+        step2:
+          title: 'Barra lateral'
+          content_html: '<p>Aquí puedes ver los feeds a los que estás suscrito.</p><ul><li>Haz click en un feed para ver sus entradas.</li><li>Haz click en <strong><em>Todas las suscripciones</em></strong> para ver entradas de todos los feeds.</li><li>Haz click en <strong><em>Inicio</em></strong> para ver de nuevo la página de inicio.</li></ul>'
   error_pages:
     error_404:
       title: "Página no encontrada."
