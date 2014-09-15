@@ -165,6 +165,9 @@ es:
         step3:
           title: 'Mostrar/ocultar entradas leídas'
           content_html: '<p>Por defecto sólo se muestran entradas aún sin leer.</p><p>Haciendo click aquí puedes mostrar entradas ya leídas y ocultarlas de nuevo.</p>'
+        step4:
+          title: 'Menú Feeds'
+          content_html: '<p>Desde este menú puedes:</p><ul><li>Suscribirte a nuevos feeds.</li><li>Anular suscripciones.</li><li>Refrescar feeds.</li></ul>'
   error_pages:
     error_404:
       title: "Página no encontrada."

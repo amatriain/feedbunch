@@ -186,6 +186,9 @@ en:
         step3:
           title: 'Show/Hide read entries'
           content_html: '<p>Only unread entries are shown by default.</p><p>Clicking here you can show read entries and hide them again.</p>'
+        step4:
+          title: 'Feeds menu'
+          content_html: '<p>From this menu you can:</p><ul><li>Subscribe to new feeds.</li><li>Unsubscribe from feeds.</li><li>Refresh feeds.</li></ul>'
   error_pages:
     error_404:
       title: "Page not found."
