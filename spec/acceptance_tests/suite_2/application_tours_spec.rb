@@ -19,7 +19,7 @@ describe 'application tours', type: :feature do
         tour_should_be_visible 'Start'
       end
 
-      it 'does not show the tour after finishing it', js: true do
+      it 'does not show the tour after completing it', js: true do
         while page.has_css? '.hopscotch-next'
           find('.hopscotch-next').click
         end
@@ -31,7 +31,13 @@ describe 'application tours', type: :feature do
         tour_should_not_be_visible
       end
 
-      it 'does not show the tour after forcibly closing it'
+      it 'does not show the tour after closing it'
+
+      it 'shows an alert if it cannot load the tour from the server'
+
+      it 'shows an alert if an error happens when telling the server that the tour completed'
+
+      it 'shows an alert if an error happens when telling the server that the tour has been closed'
 
     end
 

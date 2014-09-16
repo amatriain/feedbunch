@@ -94,6 +94,8 @@ es:
       problem_loading_job_states: "Ha habido un problema con el servidor."
       success_refresh_feed: "Feed actualizado con éxito."
       problem_refreshing: "Ha habido un error actualizando un feed."
+      problem_loading_tour: "Ha habido un problema con el servidor."
+      problem_change_show_tour: "Ha habido un problema con el servidor."
       opml_import:
         finish_success: "Tus suscripciones a feeds han sido importadas con éxito."
         finish_error: "Ha habido un error intentando importar tus suscripciones a feeds."

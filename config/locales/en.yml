@@ -115,6 +115,8 @@ en:
       problem_loading_job_states: "There has been a problem with the server."
       success_refresh_feed: "Feed refreshed successfully."
       problem_refreshing: "There has been an error refreshing a feed."
+      problem_loading_tour: "There has been a problem with the server."
+      problem_change_show_tour: "There has been a problem with the server."
       opml_import:
         finish_success: "Your feed subscriptions have been successfully imported."
         finish_error: "There has been an error trying to import your feed subscriptions."
