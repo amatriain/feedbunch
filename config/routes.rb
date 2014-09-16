@@ -82,7 +82,7 @@ Feedbunch::Application.routes.draw do
     match '/opml_exports/download' => 'opml_exports#download', via: [:get], as: 'opml_exports_download'
 
     # Resourceful routes for user config
-    resource :user_config, only: [:show]
+    resource :user_config, only: [:show, :update]
 
     # Resourceful routes for user data
     resource :user_data, only: [:show]
