@@ -514,3 +514,16 @@ def close_tour
     tour_should_not_be_visible
   end
 end
+
+##
+# Go through all steps of a hopscotch tour till it's finished
+
+def complete_tour
+  # Complete tour only if it is visible
+  if page.has_css? 'div.hopscotch-bubble'
+    while page.has_css? 'div.hopscotch-bubble .hopscotch-next'
+      find('div.hopscotch-bubble .hopscotch-next').click
+    end
+  end
+  tour_should_not_be_visible
+end

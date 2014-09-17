@@ -20,10 +20,8 @@ describe 'application tours', type: :feature do
       end
 
       it 'does not show the tour after completing it', js: true do
-        while page.has_css? '.hopscotch-next'
-          find('.hopscotch-next').click
-        end
-        tour_should_not_be_visible
+        tour_should_be_visible
+        complete_tour
 
         visit read_path
         # wait for client code to initialize
