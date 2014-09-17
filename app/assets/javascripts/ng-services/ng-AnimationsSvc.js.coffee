@@ -90,7 +90,7 @@ angular.module('feedbunch').service 'animationsSvc',
   #--------------------------------------------
   # Media query to hide sidebar only in smartphone screens
   #--------------------------------------------
-  sm_max_media_query = 'screen and (max-width: 768px)'
+  xs_max_media_query = 'screen and (max-width: 768px)'
 
   service =
 
@@ -98,14 +98,14 @@ angular.module('feedbunch').service 'animationsSvc',
     # Animate hiding the sidebar if the screens is smartphone-sized.
     #---------------------------------------------
     hide_sidebar: ->
-      enquire.register sm_max_media_query, ->
+      enquire.register xs_max_media_query, ->
         $('#sidebar-column').velocity {translateX: '-100%'}, {duration: 300, easing: 'swing'}
 
     #---------------------------------------------
     # Animate showing the sidebar if the screens is smartphone-sized.
     #---------------------------------------------
     show_sidebar: ->
-      enquire.register sm_max_media_query, ->
+      enquire.register xs_max_media_query, ->
         $('#sidebar-column').velocity {translateX: '0'}, {duration: 300, easing: 'swing'}
 
     #---------------------------------------------
