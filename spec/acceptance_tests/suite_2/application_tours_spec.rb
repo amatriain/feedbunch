@@ -33,8 +33,7 @@ describe 'application tours', type: :feature do
 
       it 'does not show the tour after closing it', js: true do
         tour_should_be_visible
-        find('.hopscotch-close').click
-        tour_should_not_be_visible
+        close_tour
 
         visit read_path
         # wait for client code to initialize
