@@ -31,7 +31,16 @@ describe 'application tours', type: :feature do
         tour_should_not_be_visible
       end
 
-      it 'does not show the tour after closing it'
+      it 'does not show the tour after closing it', js: true do
+        tour_should_be_visible
+        find('.hopscotch-close').click
+        tour_should_not_be_visible
+
+        visit read_path
+        # wait for client code to initialize
+        sleep 1
+        tour_should_not_be_visible
+      end
 
       it 'shows an alert if it cannot load the tour from the server'
 
