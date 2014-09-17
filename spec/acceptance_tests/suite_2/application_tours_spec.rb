@@ -42,9 +42,23 @@ describe 'application tours', type: :feature do
         tour_should_not_be_visible
       end
 
-      it 'shows an alert if it cannot load the tour from the server'
+      it 'shows an alert if it cannot load the tour from the server', js: true do
+        allow_any_instance_of(Api::TourI18nsController).to receive(:render).and_raise StandardError.new
 
-      it 'shows an alert if an error happens when telling the server that the tour completed'
+        visit read_path
+        should_show_alert 'problem-loading-tour'
+      end
+
+      it 'shows an alert if an error happens when telling the server that the tour completed', js: true do
+        pending
+        allow_any_instance_of(User).to receive(:update).and_raise ActiveRecord::RecordNotFound.new
+
+        while page.has_css? '.hopscotch-next'
+          find('.hopscotch-next').click
+        end
+        tour_should_not_be_visible
+        should_show_alert 'problem-show-tour-change'
+      end
 
       it 'shows an alert if an error happens when telling the server that the tour has been closed'
 
