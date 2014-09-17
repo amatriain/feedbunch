@@ -6,6 +6,11 @@ angular.module('feedbunch').service 'tourSvc',
 ['$http', 'timerFlagSvc', ($http, timerFlagSvc)->
 
   #--------------------------------------------
+  # Media query to show the main app tour only in screens bigger than a smartphone
+  #--------------------------------------------
+  sm_min_media_query = 'screen and (min-width: 768px)'
+
+  #--------------------------------------------
   # PRIVATE FUNCTION: Update show_main_tour flag for the current user with the passed value.
   #--------------------------------------------
   set_show_main_tour = (show_tour_str)->
@@ -28,21 +33,23 @@ angular.module('feedbunch').service 'tourSvc',
     # Show the main application tour.
     #---------------------------------------------
     show_main_tour: ->
-      now = new Date()
-      $http.get("/api/tour_i18n.json?time=#{now.getTime()}")
-      .success (data)->
-        tour =
-          id: 'main-tour',
-          showCloseButton: true,
-          showPrevButton: true,
-          showNextButton: true,
-          onEnd: dont_show_main_tour,
-          onClose: dont_show_main_tour,
-          i18n: data['i18n'],
-          steps: data['steps']
-        hopscotch.startTour tour
-      .error (data, status)->
-        timerFlagSvc.start 'error_loading_tour' if status!=0
+      # The main tour is only shown in screens bigger than a smartphone
+      enquire.register sm_min_media_query, ->
+        now = new Date()
+        $http.get("/api/tour_i18n.json?time=#{now.getTime()}")
+        .success (data)->
+          tour =
+            id: 'main-tour',
+            showCloseButton: true,
+            showPrevButton: true,
+            showNextButton: true,
+            onEnd: dont_show_main_tour,
+            onClose: dont_show_main_tour,
+            i18n: data['i18n'],
+            steps: data['steps']
+          hopscotch.startTour tour
+        .error (data, status)->
+          timerFlagSvc.start 'error_loading_tour' if status!=0
 
   return service
 
