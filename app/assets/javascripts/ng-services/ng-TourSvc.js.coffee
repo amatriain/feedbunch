@@ -26,7 +26,7 @@ angular.module('feedbunch').service 'tourSvc',
           showCloseButton: true,
           showPrevButton: true,
           showNextButton: true,
-          i18n: data['i18n']
+          i18n: data['i18n'],
           steps: data['steps']
         hopscotch.startTour tour
       .error (data, status)->
