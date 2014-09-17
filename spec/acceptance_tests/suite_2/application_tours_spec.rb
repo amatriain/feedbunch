@@ -43,7 +43,14 @@ describe 'application tours', type: :feature do
 
     context 'returning users' do
 
-      it 'does not show the tour'
+      before :each do
+        @user.update show_main_tour: false
+        login_user_for_feature @user
+      end
+
+      it 'does not show the tour', js: true do
+        tour_should_not_be_visible
+      end
 
       it 'starts the tour again'
     end
