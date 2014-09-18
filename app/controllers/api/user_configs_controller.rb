@@ -23,11 +23,7 @@ class Api::UserConfigsController < ApplicationController
     show_main_tour = param_str_to_boolean :show_main_tour, config_params
     show_mobile_tour = param_str_to_boolean :show_mobile_tour, config_params
 
-    if !show_main_tour.nil?
-      Rails.logger.info "Updating config for user #{current_user.email} - #{current_user.name}. Setting show_main_tour to #{show_main_tour}"
-      current_user.update show_main_tour: show_main_tour
-    end
-
+    current_user.update_config show_main_tour: show_main_tour, show_mobile_tour: show_mobile_tour
     head :ok
   rescue => e
     handle_error e
