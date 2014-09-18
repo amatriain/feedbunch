@@ -202,6 +202,15 @@ en:
         step1:
           title: 'Feeds list'
           content_html: '<p>You will see your subscribed feeds here.</p><ul><li>Click on a feed to see its entries.</li><li>Click on <strong><em>All subscriptions</em></strong> to see entries from all feeds.</li><li>Click on <strong><em>Start</em></strong> to see the start page again.</li></ul>'
+        step2:
+          title: 'Menu button'
+          content_html: '<p>This button opens the application menu.</p><p>You can use it to subscribe to new feeds, remove subscriptions, manage your profile...</p>'
+        step3:
+          title: 'Show feeds/entries'
+          content_html: '<p>Clicking this button you can switch between the feeds list and the entries list.</p>'
+        step4:
+          title: 'Swipe'
+          content_html: '<p><i class=\"fa fa-2x fa-hand-o-left\"></i>&nbsp;Swipe left to hide the feeds list.</p><p><i class=\"fa fa-2x fa-hand-o-right\"></i>&nbsp;Swipe right to show the feeds list.</p>'
   error_pages:
     error_404:
       title: "Page not found."

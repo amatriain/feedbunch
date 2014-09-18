@@ -181,6 +181,15 @@ es:
         step1:
           title: 'Lista de feeds'
           content_html: '<p>Aquí puedes ver los feeds a los que estás suscrito.</p><ul><li>Haz click en un feed para ver sus entradas.</li><li>Haz click en <strong><em>Todas las suscripciones</em></strong> para ver entradas de todos los feeds.</li><li>Haz click en <strong><em>Inicio</em></strong> para ver de nuevo la página de inicio.</li></ul>'
+        step2:
+          title: 'Botón menú'
+          content_html: '<p>Este botón abre el menú de la aplicación.</p><p>Puedes usarlo para suscribirte a nuevos feeds, anular suscripciones, gestionar tu perfil...</p>'
+        step3:
+          title: 'Mostrar feeds/entradas'
+          content_html: '<p>Con este botón puedes cambiar entre ver la lista de feeds o ver las entradas.</p>'
+        step4:
+          title: 'Desliza tu dedo'
+          content_html: '<p><i class=\"fa fa-2x fa-hand-o-left\"></i>&nbsp;Desliza tu dedo a la izquierda para ocultar la lista de feeds.</p><p><i class=\"fa fa-2x fa-hand-o-right\"></i>&nbsp;Desliza a la derecha para mostrar la lista de feeds.</p>'
   error_pages:
     error_404:
       title: "Página no encontrada."
