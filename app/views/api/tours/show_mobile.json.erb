@@ -1,16 +1,18 @@
 {
   "i18n": {
-    "nextBtn": "<%= t 'read.tours.main.nextBtn' %>",
-    "prevBtn": "<%= t 'read.tours.main.prevBtn' %>",
-    "doneBtn": "<%= t 'read.tours.main.doneBtn' %>",
-    "closeTooltip": "<%= t 'read.tours.main.closeTooltip' %>"
+    "nextBtn": "<%= t 'read.tours.mobile.nextBtn' %>",
+    "prevBtn": "<%= t 'read.tours.mobile.prevBtn' %>",
+    "doneBtn": "<%= t 'read.tours.mobile.doneBtn' %>",
+    "closeTooltip": "<%= t 'read.tours.mobile.closeTooltip' %>"
   },
   "steps": [
     {
-      "target": "#subscription-stats",
+      "target": "#start-page",
       "placement": "bottom",
-      "title": "<%= t 'read.tours.main.step1.title' %>",
-      "content": "<%= t 'read.tours.main.step1.content_html' %>"
+      "zindex": 1,
+      "fixedElement": true,
+      "title": "<%= t 'read.tours.mobile.step1.title' %>",
+      "content": "<%= t 'read.tours.mobile.step1.content_html' %>"
     }
   ]
 }
