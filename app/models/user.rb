@@ -300,32 +300,35 @@ class User < ActiveRecord::Base
     end
 
     if self.quick_reading == nil
-      self.quick_reading = false
       Rails.logger.info "User #{self.email} has unsupported quick_reading #{self.quick_reading}. Defaulting to quick_reading 'false' instead"
+      self.quick_reading = false
     end
 
     if self.open_all_entries == nil
-      self.open_all_entries = false
       Rails.logger.info "User #{self.email} has unsupported open_all_entries #{self.open_all_entries}. Defaulting to open_all_entries 'false' instead"
+      self.open_all_entries = false
     end
 
     if self.show_main_tour == nil
-      self.show_main_tour = true
       Rails.logger.info "User #{self.email} has unsupported show_main_tour #{self.show_main_tour}. Defaulting to show_main_tour 'true' instead"
+      self.show_main_tour = true
     end
 
     if self.show_mobile_tour == nil
-      self.show_mobile_tour = true
       Rails.logger.info "User #{self.email} has unsupported show_mobile_tour #{self.show_mobile_tour}. Defaulting to show_mobile_tour 'true' instead"
+      self.show_mobile_tour = true
     end
 
     if self.name.blank?
+      Rails.logger.info "User #{self.email} has no name set. Using the email by default."
       self.name = self.email
     end
 
     # By default each user has the daily invitations limit set in application.rb
     if self.invitation_limit.blank?
-      self.invitation_limit = Feedbunch::Application.config.daily_invitations_limit
+      limit = Feedbunch::Application.config.daily_invitations_limit
+      Rails.logger.info "User #{self.email} has no invitatino limit set. Using #{limit} by default."
+      self.invitation_limit = limit
     end
   end
 
