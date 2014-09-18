@@ -22,16 +22,30 @@ describe Api::UserConfigsController, type: :controller do
       expect(response).to be_success
     end
 
-    it 'updates user config' do
-      @user.update show_main_tour: true
-      patch :update, {user_config: {show_main_tour: 'false'}}
-      expect(@user.reload.show_main_tour).to be false
+    context 'show_main_tour flag' do
+
+      it 'updates flag' do
+        @user.update show_main_tour: true
+        patch :update, {user_config: {show_main_tour: 'false'}}
+        expect(@user.reload.show_main_tour).to be false
+      end
+
+      it 'does not update flag if a wrong param value is passed' do
+        @user.update show_main_tour: true
+        patch :update, {user_config: {show_main_tour: 'not_a_boolean'}}
+        expect(@user.reload.show_main_tour).to be true
+      end
     end
 
-    it 'does not update user config if a wrong param value is passed' do
-      @user.update show_main_tour: true
-      patch :update, {user_config: {show_main_tour: 'not_a_boolean'}}
-      expect(@user.reload.show_main_tour).to be true
+    context 'show_mobile_tour flag' do
+
+      it 'updates flag' do
+        @user.update show_mobile_tour: true
+        patch :update, {user_config: {show_mobile_tour: 'false'}}
+        expect(@user.reload.show_mobile_tour).to be false
+      end
+
+      it 'does not update flag if a wrong param value is passed'
     end
   end
 
