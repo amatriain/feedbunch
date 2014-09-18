@@ -90,4 +90,26 @@ class ApplicationController < ActionController::Base
   def set_csrf_cookie_for_angularjs
     cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
   end
+
+  ##
+  # Convert a string parameter to boolean. The value of the param must be "true" or "false", otherwise an error is raised.
+  # Receives as arguments:
+  # - a symbol indicating the parameter to convert
+  # - the params object, sanitized by the strong parameters function if necessary (if it's going to be used for a DB update or insert)
+
+  def param_str_to_boolean(param_sym, params)
+    param_str = params[param_sym]
+    param = nil
+
+    if param_str == 'true'
+      param = true
+    elsif param_str == 'false'
+      param = false
+    elsif !param_str.nil?
+      Rails.logger.warn "Unexpected value received for #{param_sym}: #{param_str}"
+      raise ActionController::ParameterMissing.new 'show_main_tour'
+    end
+
+    return param
+  end
 end

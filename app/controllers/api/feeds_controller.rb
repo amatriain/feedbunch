@@ -16,11 +16,7 @@ class Api::FeedsController < ApplicationController
   # feeds with unread entries (if false).
 
   def index
-    if params[:include_read]=='true'
-      include_read = true
-    else
-      include_read = false
-    end
+    include_read = param_str_to_boolean :include_read, params
 
     if params[:folder_id].present?
       @folder = current_user.folders.find params[:folder_id]

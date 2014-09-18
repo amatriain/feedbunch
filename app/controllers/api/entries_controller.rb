@@ -11,23 +11,9 @@ class Api::EntriesController < ApplicationController
   # Set an entry state for the current user as read or unread
 
   def update
-    if entry_params[:whole_feed]=='true'
-      whole_feed = true
-    else
-      whole_feed = false
-    end
-
-    if entry_params[:whole_folder]=='true'
-      whole_folder = true
-    else
-      whole_folder = false
-    end
-
-    if entry_params[:all_entries]=='true'
-      all_entries = true
-    else
-      all_entries = false
-    end
+    whole_feed = param_str_to_boolean :whole_feed, entry_params
+    whole_folder = param_str_to_boolean :whole_folder, entry_params
+    all_entries = param_str_to_boolean :all_entries, entry_params
 
     @entry = current_user.entries.find entry_params[:id]
     current_user.change_entries_state @entry,
@@ -51,11 +37,7 @@ class Api::EntriesController < ApplicationController
   # user will be returned.
 
   def index
-    if params[:include_read]=='true'
-      include_read = true
-    else
-      include_read = false
-    end
+    include_read = param_str_to_boolean :include_read, params
 
     if params[:feed_id].present?
       # Request is for feed entries
