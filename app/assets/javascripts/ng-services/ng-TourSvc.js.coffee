@@ -11,22 +11,12 @@ angular.module('feedbunch').service 'tourSvc',
   sm_min_media_query = 'screen and (min-width: 768px)'
 
   #--------------------------------------------
-  # PRIVATE FUNCTION: Update show_main_tour flag for the current user with the passed value.
-  #--------------------------------------------
-  set_show_main_tour = (show_tour_str)->
-    if show_tour_str
-      show_tour = 'true'
-    else
-      show_tour = 'false'
-    $http.put("/api/user_config.json", user_config: {show_main_tour: show_tour})
-    .error (data, status)->
-      timerFlagSvc.start 'error_changing_show_tour' if status!=0
-
-  #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_main_tour flag for the current user.
   #--------------------------------------------
   dont_show_main_tour = ->
-    set_show_main_tour false
+    $http.put("/api/user_config.json", user_config: {show_main_tour: 'false'})
+    .error (data, status)->
+      timerFlagSvc.start 'error_changing_show_tour' if status!=0
 
   service =
     #---------------------------------------------
