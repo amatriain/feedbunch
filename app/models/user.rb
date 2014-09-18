@@ -52,6 +52,8 @@ require 'subscriptions_manager'
 # False by default.
 # - show_main_tour: boolean indicating whether the main app tour should be shown when the user enters the application. True
 # by default
+# - show_mobile_tour: boolean indicating whether the mobile app tour should be shown when the user enters the application.
+# True by default.
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -310,6 +312,11 @@ class User < ActiveRecord::Base
     if self.show_main_tour == nil
       self.show_main_tour = true
       Rails.logger.info "User #{self.email} has unsupported show_main_tour #{self.show_main_tour}. Defaulting to show_main_tour 'true' instead"
+    end
+
+    if self.show_mobile_tour == nil
+      self.show_mobile_tour = true
+      Rails.logger.info "User #{self.email} has unsupported show_mobile_tour #{self.show_mobile_tour}. Defaulting to show_mobile_tour 'true' instead"
     end
 
     if self.name.blank?
