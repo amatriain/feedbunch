@@ -26,7 +26,7 @@ angular.module('feedbunch').service 'tourSvc',
       # The main tour is only shown in screens bigger than a smartphone
       enquire.register sm_min_media_query, ->
         now = new Date()
-        $http.get("/api/tour_i18n.json?time=#{now.getTime()}")
+        $http.get("/api/tours/main.json?time=#{now.getTime()}")
         .success (data)->
           tour =
             id: 'main-tour',

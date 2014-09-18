@@ -94,7 +94,7 @@ Feedbunch::Application.routes.draw do
     resources :subscribe_job_states, only: [:index, :show, :destroy]
 
     # Resourceful routes for application tours i18n strings.
-    resource :tour_i18n, only: [:show]
+    match '/tours/main' => 'tours#show_main', via: [:get], as: 'tours_show_main'
 
   end
 
