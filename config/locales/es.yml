@@ -189,7 +189,7 @@ es:
           content_html: '<p>Con este botón puedes cambiar entre ver la lista de feeds o ver las entradas.</p>'
         step4:
           title: 'Desliza tu dedo'
-          content_html: '<p><i class=\"fa fa-2x fa-hand-o-left\"></i>&nbsp;Desliza tu dedo a la izquierda para ocultar la lista de feeds.</p><p><i class=\"fa fa-2x fa-hand-o-right\"></i>&nbsp;Desliza a la derecha para mostrar la lista de feeds.</p>'
+          content_html: '<p>Puedes deslizar tu dedo en vez de pulsar el botón para ver la lista de feeds o las entradas:</p><p><i class=\"fa fa-2x fa-hand-o-left\"></i>&nbsp;Desliza tu dedo a la izquierda para ocultar la lista de feeds.</p><p><i class=\"fa fa-2x fa-hand-o-right\"></i>&nbsp;Desliza a la derecha para mostrar la lista de feeds.</p>'
   error_pages:
     error_404:
       title: "Página no encontrada."

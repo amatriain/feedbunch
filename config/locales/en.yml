@@ -210,7 +210,7 @@ en:
           content_html: '<p>Clicking this button you can switch between the feeds list and the entries list.</p>'
         step4:
           title: 'Swipe'
-          content_html: '<p><i class=\"fa fa-2x fa-hand-o-left\"></i>&nbsp;Swipe left to hide the feeds list.</p><p><i class=\"fa fa-2x fa-hand-o-right\"></i>&nbsp;Swipe right to show the feeds list.</p>'
+          content_html: '<p>You can swipe instead of using the button to show feeds or entries:</p><p><i class=\"fa fa-2x fa-hand-o-left\"></i>&nbsp;Swipe left to hide the feeds list.</p><p><i class=\"fa fa-2x fa-hand-o-right\"></i>&nbsp;Swipe right to show the feeds list.</p>'
   error_pages:
     error_404:
       title: "Page not found."
