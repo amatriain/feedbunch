@@ -64,7 +64,7 @@ angular.module('feedbunch').service 'tourSvc',
         $http.get("/api/tours/mobile.json?time=#{now.getTime()}")
         .success (data)->
           tour =
-            id: 'main-tour',
+            id: 'mobile-tour',
             showCloseButton: true,
             showPrevButton: true,
             showNextButton: true,
