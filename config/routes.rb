@@ -95,6 +95,7 @@ Feedbunch::Application.routes.draw do
 
     # Resourceful routes for application tours i18n strings.
     match '/tours/main' => 'tours#show_main', via: [:get], as: 'tours_show_main'
+    match '/tours/mobile' => 'tours#show_mobile', via: [:get], as: 'tours_show_mobile'
 
   end
 

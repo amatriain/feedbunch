@@ -15,4 +15,12 @@ describe Api::ToursController, type: :controller do
     end
   end
 
+  context 'GET show_mobile' do
+
+    it 'returns success' do
+      get :show_mobile, format: :json
+      expect(response).to be_success
+    end
+  end
+
 end
