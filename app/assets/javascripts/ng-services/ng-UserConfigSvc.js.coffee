@@ -16,6 +16,7 @@ angular.module('feedbunch').service 'userConfigSvc',
       $rootScope.open_all_entries = data["open_all_entries"]
       $rootScope.quick_reading = data["quick_reading"]
       $rootScope.show_main_tour = data["show_main_tour"]
+      $rootScope.show_mobile_tour = data["show_mobile_tour"]
 
       # Start running Quick Reading mode, if the user has selected it.
       quickReadingSvc.start() if $rootScope.quick_reading
@@ -25,6 +26,9 @@ angular.module('feedbunch').service 'userConfigSvc',
 
       # Show the main application tour, if the show_main_tour flag is true
       tourSvc.show_main_tour() if $rootScope.show_main_tour
+
+      # Show the mobile application tour, if the show_mobile_tour flag is true
+      tourSvc.show_mobile_tour() if $rootScope.show_mobile_tour
     .error (data, status)->
       timerFlagSvc.start 'error_loading_user_config' if status!=0
 ]
