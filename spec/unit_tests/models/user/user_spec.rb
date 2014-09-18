@@ -306,4 +306,14 @@ describe User, type: :model do
     end
   end
 
+  context 'show mobile app tour by default' do
+
+    it 'gives a default value of true' do
+      user = FactoryGirl.build :user, show_mobile_tour: nil
+      user.save!
+      expect(user.show_mobile_tour).not_to be_nil
+      expect(user.show_mobile_tour).to be true
+    end
+  end
+
 end
