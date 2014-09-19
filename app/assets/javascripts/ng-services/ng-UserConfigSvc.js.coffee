@@ -17,6 +17,7 @@ angular.module('feedbunch').service 'userConfigSvc',
       $rootScope.quick_reading = data["quick_reading"]
       $rootScope.show_main_tour = data["show_main_tour"]
       $rootScope.show_mobile_tour = data["show_mobile_tour"]
+      $rootScope.show_read_all_tour = data["show_read_all_tour"]
 
       # Start running Quick Reading mode, if the user has selected it.
       quickReadingSvc.start() if $rootScope.quick_reading
