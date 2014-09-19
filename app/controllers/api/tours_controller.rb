@@ -24,4 +24,13 @@ class Api::ToursController < ApplicationController
   rescue => e
     handle_error e
   end
+
+  ##
+  # Return JSON object with i18n strings for the feed application tour.
+
+  def show_feed
+    render 'show_feed'
+  rescue => e
+    handle_error e
+  end
 end
