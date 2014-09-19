@@ -3,7 +3,7 @@
 ########################################################
 
 angular.module('feedbunch').service 'tourSvc',
-['$http', 'timerFlagSvc', ($http, timerFlagSvc)->
+['$rootScope', '$http', 'timerFlagSvc', ($rootScope, $http, timerFlagSvc)->
 
   #--------------------------------------------
   # Media query to show the main app tour only in screens bigger than a smartphone
@@ -19,6 +19,7 @@ angular.module('feedbunch').service 'tourSvc',
   # PRIVATE FUNCTION: set to false the show_main_tour flag for the current user.
   #--------------------------------------------
   dont_show_main_tour = ->
+    $rootScope.show_main_tour = false
     $http.put("/api/user_config.json", user_config: {show_main_tour: 'false'})
     .error (data, status)->
       timerFlagSvc.start 'error_changing_show_tour' if status!=0
@@ -27,6 +28,7 @@ angular.module('feedbunch').service 'tourSvc',
   # PRIVATE FUNCTION: set to false the show_mobile_tour flag for the current user.
   #--------------------------------------------
   dont_show_mobile_tour = ->
+    $rootScope.show_mobile_tour = false
     $http.put("/api/user_config.json", user_config: {show_mobile_tour: 'false'})
     .error (data, status)->
       timerFlagSvc.start 'error_changing_show_tour' if status!=0
