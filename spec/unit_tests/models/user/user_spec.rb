@@ -316,13 +316,13 @@ describe User, type: :model do
     end
   end
 
-  context 'show Read All app tour by default' do
+  context 'show feed app tour by default' do
 
     it 'gives a default value of true' do
-      user = FactoryGirl.build :user, show_read_all_tour: nil
+      user = FactoryGirl.build :user, show_feed_tour: nil
       user.save!
-      expect(user.show_read_all_tour).not_to be_nil
-      expect(user.show_read_all_tour).to be true
+      expect(user.show_feed_tour).not_to be_nil
+      expect(user.show_feed_tour).to be true
     end
   end
 

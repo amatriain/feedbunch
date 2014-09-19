@@ -54,7 +54,7 @@ require 'subscriptions_manager'
 # by default
 # - show_mobile_tour: boolean indicating whether the mobile app tour should be shown when the user enters the application.
 # True by default.
-# - show_read_all_tour: boolean indicating whether the "read all" tour should be shown. True by default.
+# - show_feed_tour: boolean indicating whether the feed tour should be shown. True by default.
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -254,14 +254,14 @@ class User < ActiveRecord::Base
   # Receives as optional named arguments the supported config values that can be set:
   # - show_main_tour (boolean): whether to show the main application tour
   # - show_mobile_tour (boolean): whether to show the mobile application tour
-  # - show_read_all_tour (boolean): whether to show the Read All application tour
+  # - show_feed_tour (boolean): whether to show the feed application tour
 
-  def update_config(show_main_tour: nil, show_mobile_tour: nil, show_read_all_tour: nil)
+  def update_config(show_main_tour: nil, show_mobile_tour: nil, show_feed_tour: nil)
     new_config = {}
     new_config[:show_main_tour] = show_main_tour if !show_main_tour.nil?
     new_config[:show_mobile_tour] = show_mobile_tour if !show_mobile_tour.nil?
-    new_config[:show_read_all_tour] = show_read_all_tour if !show_read_all_tour.nil?
-    Rails.logger.info "Updating user #{self.id} - #{self.email} with show_main_tour #{show_main_tour}, show_mobile_tour #{show_mobile_tour}, show_read_all_tour #{show_read_all_tour}"
+    new_config[:show_feed_tour] = show_feed_tour if !show_feed_tour.nil?
+    Rails.logger.info "Updating user #{self.id} - #{self.email} with show_main_tour #{show_main_tour}, show_mobile_tour #{show_mobile_tour}, show_feed_tour #{show_feed_tour}"
     self.update new_config if new_config.length > 0
   end
 
@@ -336,9 +336,9 @@ class User < ActiveRecord::Base
       self.show_mobile_tour = true
     end
 
-    if self.show_read_all_tour == nil
-      Rails.logger.info "User #{self.email} has unsupported show_read_all_tour #{self.show_read_all_tour}. Defaulting to show_read_all_tour 'true' instead"
-      self.show_read_all_tour = true
+    if self.show_feed_tour == nil
+      Rails.logger.info "User #{self.email} has unsupported show_feed_tour #{self.show_feed_tour}. Defaulting to show_feed_tour 'true' instead"
+      self.show_feed_tour = true
     end
 
     if self.name.blank?
