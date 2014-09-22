@@ -55,6 +55,7 @@ require 'subscriptions_manager'
 # - show_mobile_tour: boolean indicating whether the mobile app tour should be shown when the user enters the application.
 # True by default.
 # - show_feed_tour: boolean indicating whether the feed tour should be shown. True by default.
+# - show_entry_tour: boolean indicating whether the entry tour should be shown. True by default.
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -295,7 +296,7 @@ class User < ActiveRecord::Base
   # - timezone: 'UTC'
   # - quick_reading: false
   # - open_all_entries: false
-  # - show_main_tour: true
+  # - show_main_tour, show_mobile_tour, show_feed_tour: show_entry_tour: true
   # - name: defaults to the value of the "email" attribute
   # - invitation_limit: the value configured in Feedbunch::Application.config.daily_invitations_limit (in config/application.rb)
 
@@ -339,6 +340,11 @@ class User < ActiveRecord::Base
     if self.show_feed_tour == nil
       Rails.logger.info "User #{self.email} has unsupported show_feed_tour #{self.show_feed_tour}. Defaulting to show_feed_tour 'true' instead"
       self.show_feed_tour = true
+    end
+
+    if self.show_entry_tour == nil
+      Rails.logger.info "User #{self.email} has unsupported show_entry_tour #{self.show_entry_tour}. Defaulting to show_entry_tour 'true' instead"
+      self.show_entry_tour = true
     end
 
     if self.name.blank?

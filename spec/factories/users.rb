@@ -19,6 +19,7 @@ FactoryGirl.define do
     show_main_tour false
     show_mobile_tour false
     show_feed_tour false
+    show_entry_tour false
 
     factory :user_unconfirmed do
       confirmed_at nil
