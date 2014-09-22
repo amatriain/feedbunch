@@ -204,6 +204,17 @@ es:
         step3:
           title: 'Carpetas'
           content_html: 'Puedes organizar tus feeds en carpetas usando este menú.'
+      entry:
+        nextBtn: 'Siguiente'
+        prevBtn: 'Volver'
+        doneBtn: 'Terminar'
+        closeTooltip: 'Cerrar'
+        step1:
+          title: ''
+          content_html: ''
+        step2:
+          title: ''
+          content_html: ''
   error_pages:
     error_404:
       title: "Página no encontrada."

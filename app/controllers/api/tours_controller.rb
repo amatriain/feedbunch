@@ -33,4 +33,13 @@ class Api::ToursController < ApplicationController
   rescue => e
     handle_error e
   end
+
+  ##
+  # Return JSON object with i18n strings for the entry application tour.
+
+  def show_entry
+    render 'show_entry'
+  rescue => e
+    handle_error e
+  end
 end

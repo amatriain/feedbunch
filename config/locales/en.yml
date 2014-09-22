@@ -225,6 +225,17 @@ en:
         step3:
           title: 'Folders'
           content_html: 'You can organize your feeds into folders using this menu.'
+      entry:
+        nextBtn: 'Next'
+        prevBtn: 'Back'
+        doneBtn: 'Done'
+        closeTooltip: 'Close'
+        step1:
+          title: ''
+          content_html: ''
+        step2:
+          title: ''
+          content_html: ''
   error_pages:
     error_404:
       title: "Page not found."
