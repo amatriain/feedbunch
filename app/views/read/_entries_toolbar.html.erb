@@ -1,6 +1,7 @@
 <div class="entry-toolbar btn-group">
 
   <a class="btn btn-default btn-sm"
+     data-change-entry-state-button
      data-toggle="tooltip" data-placement="top"
      ng-click="unread_entry(entry)"
      ng-show="entry.read"
@@ -9,6 +10,7 @@
   </a>
 
   <a class="btn btn-default btn-sm"
+     data-change-entry-state-button
      data-toggle="tooltip" data-placement="top"
      ng-click="read_entry(entry)"
      ng-show="!entry.read"
@@ -16,7 +18,9 @@
     <i class="fa fa-fw fa-check-square"></i>&nbsp;<%= t 'read.entries.mark_read' %>
   </a>
 
-  <div id="entry-{{entry.id}}-social-menu" class="btn-group dropdown">
+  <div id="entry-{{entry.id}}-social-menu"
+       data-entry-social-menu
+       class="btn-group dropdown">
 
     <a id="entry-{{entry.id}}-social"
        class="btn btn-default btn-sm dropdown-toggle"

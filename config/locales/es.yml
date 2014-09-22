@@ -215,6 +215,9 @@ es:
         step2:
           title: ''
           content_html: ''
+        step3:
+          title: ''
+          content_html: ''
   error_pages:
     error_404:
       title: "Página no encontrada."
