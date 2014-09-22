@@ -7,10 +7,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
+'tourSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
-tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc)->
+tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
+tourSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -148,6 +150,7 @@ tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animations
       readSvc.read_entries_page()
       menuCollapseSvc.close()
       sidebarVisibleSvc.set false
+      tourSvc.show_feed_tour() if $rootScope.show_feed_tour
     return
 
   #--------------------------------------------

@@ -217,11 +217,14 @@ en:
         doneBtn: 'Done'
         closeTooltip: 'Close'
         step1:
-          title: ''
-          content_html: ''
+          title: 'Entries list'
+          content_html: '<p>This is the list of entries from a feed.</p><p>Click on an entry to open it.</p><p>Click on the feed name to open the website in a new tab.</p>'
         step2:
-          title: ''
-          content_html: ''
+          title: 'Read all entries'
+          content_html: '<p>Clicking here will mark all entries in the list as read.</p><p>Only unread entries are shown by default.</p>'
+        step3:
+          title: 'Folders'
+          content_html: 'You can organize your feeds into folders using this menu.'
   error_pages:
     error_404:
       title: "Page not found."

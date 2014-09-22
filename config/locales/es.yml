@@ -196,11 +196,14 @@ es:
         doneBtn: 'Terminar'
         closeTooltip: 'Cerrar'
         step1:
-          title: ''
-          content_html: ''
+          title: 'Lista de entradas'
+          content_html: '<p>Esta es la lista de entradas de un feed.</p><p>Haz click en una entrada para abrirla.</p><p>Haz click en el nombre del feed para abrir la página web en una pestaña nueva.</p>'
         step2:
-          title: ''
-          content_html: ''
+          title: 'Leer todos'
+          content_html: '<p>Si haces click aquí, todas las entradas de la lista se marcarán como leídas.</p><p>Por defecto sólo se muestran entradas sin leer.</p>'
+        step3:
+          title: 'Carpetas'
+          content_html: 'Puedes organizar tus feeds en carpetas usando este menú.'
   error_pages:
     error_404:
       title: "Página no encontrada."

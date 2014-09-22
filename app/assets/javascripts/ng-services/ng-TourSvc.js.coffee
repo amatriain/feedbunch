@@ -33,6 +33,15 @@ angular.module('feedbunch').service 'tourSvc',
     .error (data, status)->
       timerFlagSvc.start 'error_changing_show_tour' if status!=0
 
+  #--------------------------------------------
+  # PRIVATE FUNCTION: set to false the show_feed_tour flag for the current user.
+  #--------------------------------------------
+  dont_show_feed_tour = ->
+    $rootScope.show_feed_tour = false
+    $http.put("/api/user_config.json", user_config: {show_feed_tour: 'false'})
+    .error (data, status)->
+      timerFlagSvc.start 'error_changing_show_tour' if status!=0
+
   service =
     #---------------------------------------------
     # Show the main application tour.
@@ -72,6 +81,28 @@ angular.module('feedbunch').service 'tourSvc',
             showNextButton: true,
             onEnd: dont_show_mobile_tour,
             onClose: dont_show_mobile_tour,
+            i18n: data['i18n'],
+            steps: data['steps']
+          hopscotch.startTour tour
+        .error (data, status)->
+          timerFlagSvc.start 'error_loading_tour' if status!=0
+
+    #---------------------------------------------
+    # Show the main application tour.
+    #---------------------------------------------
+    show_feed_tour: ->
+      # The feed tour is only shown in screens bigger than a smartphone
+      enquire.register sm_min_media_query, ->
+        now = new Date()
+        $http.get("/api/tours/feed.json?time=#{now.getTime()}")
+        .success (data)->
+          tour =
+            id: 'feed-tour',
+            showCloseButton: true,
+            showPrevButton: true,
+            showNextButton: true,
+            onEnd: dont_show_feed_tour,
+            onClose: dont_show_feed_tour,
             i18n: data['i18n'],
             steps: data['steps']
           hopscotch.startTour tour

@@ -7,16 +7,22 @@
   },
   "steps": [
     {
-      "target": "#read-all-button-wrapper:not([class='ng-hide'])",
+      "target": "#feed-title:not([class='ng-hide'])",
       "placement": "bottom",
       "title": "<%= t 'read.tours.feed.step1.title' %>",
       "content": "<%= t 'read.tours.feed.step1.content_html' %>"
     },
     {
-      "target": "#folder-management-dropdown:not([class='ng-hide'])",
-      "placement": "right",
+      "target": "#read-all-button-wrapper:not([class='ng-hide'])",
+      "placement": "bottom",
       "title": "<%= t 'read.tours.feed.step2.title' %>",
       "content": "<%= t 'read.tours.feed.step2.content_html' %>"
+    },
+    {
+      "target": "#folder-management-dropdown:not([class='ng-hide'])",
+      "placement": "bottom",
+      "title": "<%= t 'read.tours.feed.step3.title' %>",
+      "content": "<%= t 'read.tours.feed.step3.content_html' %>"
     }
   ]
 }
