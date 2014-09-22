@@ -6,7 +6,8 @@ describe Api::UserConfigsController, type: :controller do
     @user = FactoryGirl.create :user,
                                show_main_tour: true,
                                show_mobile_tour: true,
-                               show_feed_tour: true
+                               show_feed_tour: true,
+                               show_entry_tour: true
     login_user_for_unit @user
   end
 
@@ -23,7 +24,8 @@ describe Api::UserConfigsController, type: :controller do
     it 'returns success' do
       patch :update, {user_config: {show_main_tour: 'false',
                                     show_mobile_tour: 'false',
-                                    show_feed_tour: 'false'}}
+                                    show_feed_tour: 'false',
+                                    show_entry_tour: 'false'}}
       expect(response).to be_success
     end
 
@@ -32,11 +34,13 @@ describe Api::UserConfigsController, type: :controller do
       it 'updates all config flags' do
         patch :update, {user_config: {show_main_tour: 'false',
                                       show_mobile_tour: 'false',
-                                      show_feed_tour: 'false'}}
+                                      show_feed_tour: 'false',
+                                      show_entry_tour: 'false'}}
         @user.reload
         expect(@user.show_main_tour).to be false
         expect(@user.show_mobile_tour).to be false
         expect(@user.show_feed_tour).to be false
+        expect(@user.show_entry_tour).to be false
       end
     end
 
@@ -48,6 +52,7 @@ describe Api::UserConfigsController, type: :controller do
         expect(@user.show_main_tour).to be false
         expect(@user.show_mobile_tour).to be true
         expect(@user.show_feed_tour).to be true
+        expect(@user.show_entry_tour).to be true
       end
 
       it 'does not update flag if a wrong param value is passed' do
@@ -56,6 +61,7 @@ describe Api::UserConfigsController, type: :controller do
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
         expect(@user.show_feed_tour).to be true
+        expect(@user.show_entry_tour).to be true
       end
     end
 
@@ -67,6 +73,7 @@ describe Api::UserConfigsController, type: :controller do
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be false
         expect(@user.show_feed_tour).to be true
+        expect(@user.show_entry_tour).to be true
       end
 
       it 'does not update flag if a wrong param value is passed' do
@@ -75,6 +82,7 @@ describe Api::UserConfigsController, type: :controller do
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
         expect(@user.show_feed_tour).to be true
+        expect(@user.show_entry_tour).to be true
       end
     end
 
@@ -86,6 +94,7 @@ describe Api::UserConfigsController, type: :controller do
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
         expect(@user.show_feed_tour).to be false
+        expect(@user.show_entry_tour).to be true
       end
 
       it 'does not update flag if a wrong param value is passed' do
@@ -94,6 +103,28 @@ describe Api::UserConfigsController, type: :controller do
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
         expect(@user.show_feed_tour).to be true
+        expect(@user.show_entry_tour).to be true
+      end
+    end
+
+    context 'show_entry_tour flag' do
+
+      it 'updates flag' do
+        patch :update, {user_config: {show_entry_tour: 'false'}}
+        @user.reload
+        expect(@user.show_main_tour).to be true
+        expect(@user.show_mobile_tour).to be true
+        expect(@user.show_feed_tour).to be true
+        expect(@user.show_entry_tour).to be false
+      end
+
+      it 'does not update flag if a wrong param value is passed' do
+        patch :update, {user_config: {show_entry_tour: 'not_a_boolean'}}
+        @user.reload
+        expect(@user.show_main_tour).to be true
+        expect(@user.show_mobile_tour).to be true
+        expect(@user.show_feed_tour).to be true
+        expect(@user.show_entry_tour).to be true
       end
     end
   end
