@@ -256,13 +256,17 @@ class User < ActiveRecord::Base
   # - show_main_tour (boolean): whether to show the main application tour
   # - show_mobile_tour (boolean): whether to show the mobile application tour
   # - show_feed_tour (boolean): whether to show the feed application tour
+  # - show_entry_tour (boolean): whether to show the entry application tour
 
-  def update_config(show_main_tour: nil, show_mobile_tour: nil, show_feed_tour: nil)
+  def update_config(show_main_tour: nil, show_mobile_tour: nil, show_feed_tour: nil, show_entry_tour: nil)
     new_config = {}
     new_config[:show_main_tour] = show_main_tour if !show_main_tour.nil?
     new_config[:show_mobile_tour] = show_mobile_tour if !show_mobile_tour.nil?
     new_config[:show_feed_tour] = show_feed_tour if !show_feed_tour.nil?
-    Rails.logger.info "Updating user #{self.id} - #{self.email} with show_main_tour #{show_main_tour}, show_mobile_tour #{show_mobile_tour}, show_feed_tour #{show_feed_tour}"
+    new_config[:show_entry_tour] = show_entry_tour if !show_entry_tour.nil?
+    Rails.logger.info "Updating user #{self.id} - #{self.email} with show_main_tour #{show_main_tour}, " +
+                          "show_mobile_tour #{show_mobile_tour}, show_feed_tour #{show_feed_tour}, " +
+                          "show_entry_tour #{show_entry_tour}"
     self.update new_config if new_config.length > 0
   end
 
