@@ -152,6 +152,8 @@ angular.module('feedbunch').service 'tourSvc',
           show_mobile_tour: 'true',
           show_feed_tour: 'true',
           show_entry_tour: 'true'
+      .success (data)->
+        timerFlagSvc.start 'success_reset_tours'
       .error (data, status)->
         timerFlagSvc.start 'error_changing_show_tour' if status!=0
 

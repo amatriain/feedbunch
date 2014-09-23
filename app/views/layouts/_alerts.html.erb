@@ -23,3 +23,10 @@
   <button type="button" class="close" ng-click="reset_flag('error_changing_show_tour')">&times;</button>
   <p><%= t 'layouts.alerts.problem_change_show_tour' %></p>
 </div>
+
+<%# Alert displayed when tours are reset successfully %>
+<div id="success-reset-tours" class="alert alert-success" ng-show="success_reset_tours">
+  <button type="button" class="close" ng-click="reset_flag('success_reset_tours')">&times;</button>
+  <p><%= t 'layouts.alerts.success_reset_tours' %></p>
+</div>
+
