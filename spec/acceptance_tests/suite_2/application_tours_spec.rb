@@ -189,10 +189,19 @@ describe 'application tours', type: :feature do
       tour_should_not_be_visible
     end
 
-    it 'shows main tour again'
+    context 'reset tours' do
 
-    it 'shows feed tour again'
+      it 'shows alert after resetting tours'
 
-    it 'shows entry tour again'
+      it 'shows an alert if an error is raised resetting tours'
+
+      it 'shows main tour again'
+
+      it 'shows feed tour again'
+
+      it 'shows entry tour again'
+
+    end
+
   end
 end

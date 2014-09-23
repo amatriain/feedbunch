@@ -56,6 +56,9 @@ es:
         help_2: "El fichero OPML opcionalmente puede estar comprimido en formato ZIP."
         close: "Cancelar"
         submit: "Enviar fichero"
+    alerts:
+      problem_loading_tour: "Ha habido un problema con el servidor."
+      problem_change_show_tour: "Ha habido un problema con el servidor."
   read:
     index:
       feed_tooltip: "Abrir página web en una pestaña nueva"
@@ -94,8 +97,6 @@ es:
       problem_loading_job_states: "Ha habido un problema con el servidor."
       success_refresh_feed: "Feed actualizado con éxito."
       problem_refreshing: "Ha habido un error actualizando un feed."
-      problem_loading_tour: "Ha habido un problema con el servidor."
-      problem_change_show_tour: "Ha habido un problema con el servidor."
       opml_import:
         finish_success: "Tus suscripciones a feeds han sido importadas con éxito."
         finish_error: "Ha habido un error intentando importar tus suscripciones a feeds."

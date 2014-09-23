@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').controller 'DeviseCtrl',
 ['$scope', '$window', 'timerFlagSvc', 'sidebarVisibleSvc', 'tooltipSvc', 'invitationsSvc', 'cookiesSvc',
-'animationsSvc',
+'animationsSvc', 'tourSvc',
 ($scope, $window, timerFlagSvc, sidebarVisibleSvc, tooltipSvc, invitationsSvc, cookiesSvc,
-animationsSvc)->
+animationsSvc, tourSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -71,5 +71,12 @@ animationsSvc)->
   #--------------------------------------------
   $scope.accept_cookies = ->
     cookiesSvc.accept_cookies()
+    return
+
+  #--------------------------------------------
+  # Reset all application tours, so that they are shown again from the beginning.
+  #--------------------------------------------
+  $scope.reset_tours = ->
+    tourSvc.reset_tours()
     return
 ]

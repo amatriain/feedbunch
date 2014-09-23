@@ -97,7 +97,7 @@ angular.module('feedbunch').service 'tourSvc',
           timerFlagSvc.start 'error_loading_tour' if status!=0
 
     #---------------------------------------------
-    # Show the main application tour.
+    # Show the feed application tour.
     #---------------------------------------------
     show_feed_tour: ->
       # The feed tour is only shown in screens bigger than a smartphone
@@ -119,7 +119,7 @@ angular.module('feedbunch').service 'tourSvc',
           timerFlagSvc.start 'error_loading_tour' if status!=0
 
     #---------------------------------------------
-    # Show the main application tour.
+    # Show the entry application tour.
     #---------------------------------------------
     show_entry_tour: ->
       now = new Date()
@@ -137,6 +137,23 @@ angular.module('feedbunch').service 'tourSvc',
         hopscotch.startTour tour
       .error (data, status)->
         timerFlagSvc.start 'error_loading_tour' if status!=0
+
+    #---------------------------------------------
+    # Reset all application tours, so that they are shown again from the beginning.
+    #---------------------------------------------
+    reset_tours: ->
+      $rootScope.show_main_tour = true
+      $rootScope.show_mobile_tour = true
+      $rootScope.show_feed_tour = true
+      $rootScope.show_entry_tour = true
+      $http.put "/api/user_config.json",
+        user_config:
+          show_main_tour: 'true',
+          show_mobile_tour: 'true',
+          show_feed_tour: 'true',
+          show_entry_tour: 'true'
+      .error (data, status)->
+        timerFlagSvc.start 'error_changing_show_tour' if status!=0
 
   return service
 
