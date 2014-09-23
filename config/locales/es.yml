@@ -210,14 +210,14 @@ es:
         doneBtn: 'Terminar'
         closeTooltip: 'Cerrar'
         step1:
-          title: ''
-          content_html: ''
+          title: 'Entradas'
+          content_html: '<p>Este es el contenido de una entrada.</p><p>Algunos feeds publican sólo un resumen del contenido original en sus entradas; puedes hacer click en el título de la entrada para abrir la página web original.</p>'
         step2:
-          title: ''
-          content_html: ''
+          title: 'Entradas leídas/sin leer'
+          content_html: 'Con este botón puedes cambiar la entrada de leída a sin leer, y viceversa.'
         step3:
-          title: ''
-          content_html: ''
+          title: 'Compartir en redes sociales'
+          content_html: 'Desde este menú puedes compartir la entrada en tus redes sociales.'
   error_pages:
     error_404:
       title: "Página no encontrada."

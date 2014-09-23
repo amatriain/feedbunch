@@ -231,14 +231,14 @@ en:
         doneBtn: 'Done'
         closeTooltip: 'Close'
         step1:
-          title: ''
-          content_html: ''
+          title: 'Entries'
+          content_html: '<p>This is the content of an entry.</p><p>Some feeds only publish a summary of the original content in their entries; you can click on the entry title to open the original web page.</p>'
         step2:
-          title: ''
-          content_html: ''
+          title: 'Read/Unread entries'
+          content_html: 'With this button you can change the entry from read to unread, and vice versa.'
         step3:
-          title: ''
-          content_html: ''
+          title: 'Share in social networks'
+          content_html: 'From this menu you can share the entry in your social networks.'
   error_pages:
     error_404:
       title: "Page not found."
