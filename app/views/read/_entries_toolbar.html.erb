@@ -1,8 +1,9 @@
 <div class="entry-toolbar btn-group">
 
   <a class="btn btn-default btn-sm"
-     data-change-entry-state-button
-     data-toggle="tooltip" data-placement="top"
+     ng-class="{entry_open_state_btn: is_entry_open(entry)}"
+     data-toggle="tooltip"
+     data-placement="top"
      ng-click="unread_entry(entry)"
      ng-show="entry.read"
      title="<%= t 'read.entries.mark_unread_tooltip' %>">
@@ -10,7 +11,7 @@
   </a>
 
   <a class="btn btn-default btn-sm"
-     data-change-entry-state-button
+     ng-class="{entry_open_state_btn: is_entry_open(entry)}"
      data-toggle="tooltip" data-placement="top"
      ng-click="read_entry(entry)"
      ng-show="!entry.read"
@@ -19,7 +20,7 @@
   </a>
 
   <div id="entry-{{entry.id}}-social-menu"
-       data-entry-social-menu
+       ng-class="{entry_open_social: is_entry_open(entry)}"
        class="btn-group dropdown">
 
     <a id="entry-{{entry.id}}-social"

@@ -198,6 +198,12 @@ tourSvc)->
     return
 
   #--------------------------------------------
+  # Return true if the passed entry is open, false otherwise
+  #--------------------------------------------
+  $scope.is_entry_open = (entry)->
+    return openEntrySvc.is_open entry
+
+  #--------------------------------------------
   # Enable tooltips for an entry.
   #--------------------------------------------
   $scope.tooltips_entry = (entry)->

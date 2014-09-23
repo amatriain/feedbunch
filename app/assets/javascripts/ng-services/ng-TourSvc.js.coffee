@@ -42,6 +42,15 @@ angular.module('feedbunch').service 'tourSvc',
     .error (data, status)->
       timerFlagSvc.start 'error_changing_show_tour' if status!=0
 
+  #--------------------------------------------
+  # PRIVATE FUNCTION: set to false the show_entry_tour flag for the current user.
+  #--------------------------------------------
+  dont_show_entry_tour = ->
+    $rootScope.show_entry_tour = false
+    $http.put("/api/user_config.json", user_config: {show_entry_tour: 'false'})
+    .error (data, status)->
+      timerFlagSvc.start 'error_changing_show_tour' if status!=0
+
   service =
     #---------------------------------------------
     # Show the main application tour.
@@ -108,6 +117,26 @@ angular.module('feedbunch').service 'tourSvc',
           hopscotch.startTour tour
         .error (data, status)->
           timerFlagSvc.start 'error_loading_tour' if status!=0
+
+    #---------------------------------------------
+    # Show the main application tour.
+    #---------------------------------------------
+    show_entry_tour: ->
+      now = new Date()
+      $http.get("/api/tours/entry.json?time=#{now.getTime()}")
+      .success (data)->
+        tour =
+          id: 'entry-tour',
+          showCloseButton: true,
+          showPrevButton: true,
+          showNextButton: true,
+          onEnd: dont_show_entry_tour,
+          onClose: dont_show_entry_tour,
+          i18n: data['i18n'],
+          steps: data['steps']
+        hopscotch.startTour tour
+      .error (data, status)->
+        timerFlagSvc.start 'error_loading_tour' if status!=0
 
   return service
 

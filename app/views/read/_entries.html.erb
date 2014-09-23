@@ -53,7 +53,8 @@
 
       <%= render 'read/entries_toolbar' %>
 
-      <div class="lead entry-lead">
+      <div class="lead entry-lead"
+           ng-class="{entry_open_lead: is_entry_open(entry)}">
         <a href="{{entry.url}}"
            target="_blank"
            data-toggle="tooltip" data-placement="top"
