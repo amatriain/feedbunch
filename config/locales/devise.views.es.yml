@@ -41,3 +41,6 @@ es:
         text: "Puedes enviar a un amigo una invitación para entrar en Feedbunch."
         close: "Cancelar"
         submit: "Enviar invitación"
+      reset_tours:
+        title: "Reiniciar tutorial"
+        text: "Puedes reiniciar el tutorial de la aplicación. Se mostrará de nuevo desde el principio."

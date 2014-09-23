@@ -160,7 +160,32 @@
 <div class="row">
 
   <div class="col-xs-12 col-sm-6 col-md-5 col-md-offset-1">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <span class="lead"><%= t 'devise.views.reset_tours.title' %></span>
+      </div>
+      <div class="row">
+        <div class="panel-body col-xs-12 col-sm-10 col-sm-offset-1">
 
+          <p>
+            <%= t 'devise.views.reset_tours.text' %>
+          </p>
+          <p>
+            <a id="send-invitation-button"
+               class="btn btn-primary"
+               ng-click="">
+
+              <i class="fa fa-graduation-cap"></i>
+
+              <%= t 'devise.views.reset_tours.title' %>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-5">
     <%# TODO when invite feature is opened to everyone, remove this if %>
     <% if current_user.admin %>
 
@@ -191,10 +216,12 @@
       </div>
 
     <% end %>
-
   </div>
+</div>
 
-  <div class="col-xs-12 col-sm-6 col-md-5">
+<div class="row">
+
+  <div class="col-xs-12 col-sm-6 col-md-5 col-md-offset-1">
     <div class="panel panel-danger">
       <div class="panel-heading">
         <span class="lead"><%= t 'devise.views.delete_account.title' %></span>
@@ -214,6 +241,6 @@
         </div>
       </div>
     </div>
-
   </div>
+
 </div>

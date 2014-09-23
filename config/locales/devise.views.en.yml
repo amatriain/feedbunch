@@ -41,4 +41,7 @@ en:
         text: "You can send a friend an invitation to join Feedbunch."
         close: "Cancel"
         submit: "Send invitation"
+      reset_tours:
+        title: "Reset tutorial"
+        text: "You can reset the application tutorial. It will be shown again from the beginning."
 
