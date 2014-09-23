@@ -527,3 +527,12 @@ def complete_tour
   end
   tour_should_not_be_visible
 end
+
+##
+# Reset all application tours, so that they are shown again from the beginning
+
+def reset_tours
+  visit edit_user_registration_path
+  find('#reset-tours-button').click
+  should_show_alert 'success-reset-tours'
+end

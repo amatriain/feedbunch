@@ -191,15 +191,39 @@ describe 'application tours', type: :feature do
 
     context 'reset tours' do
 
-      it 'shows alert after resetting tours'
+      it 'shows alert after resetting tours', js: true do
+        visit edit_user_registration_path
+        find('#reset-tours-button').click
+        should_show_alert 'success-reset-tours'
+      end
 
-      it 'shows an alert if an error is raised resetting tours'
+      it 'shows an alert if an error is raised resetting tours', js: true do
+        allow_any_instance_of(User).to receive(:update_config).and_raise StandardError.new
 
-      it 'shows main tour again'
+        visit edit_user_registration_path
+        find('#reset-tours-button').click
+        should_show_alert 'problem-show-tour-change'
+      end
 
-      it 'shows feed tour again'
+      it 'shows all tours again', js: true do
+        reset_tours
+        visit read_path
 
-      it 'shows entry tour again'
+        # Show main tour
+        tour_should_be_visible 'Start'
+
+        close_tour
+
+        # Show feed tour
+        read_feed @feed1, @user
+        tour_should_be_visible 'Entries list'
+
+        close_tour
+
+        # Show entry tour
+        open_entry @entry1
+        tour_should_be_visible 'Entries'
+      end
 
     end
 
