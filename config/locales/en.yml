@@ -80,7 +80,7 @@ en:
     alerts:
       problem_loading_tour: "There has been a problem with the server."
       problem_change_show_tour: "There has been a problem with the server."
-      success_reset_tours: "Tutorial reset"
+      success_reset_tours: "Tutorial will be shown again from the beginning"
   read:
     index:
       feed_tooltip: "Open web page in a new tab"

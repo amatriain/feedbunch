@@ -59,7 +59,7 @@ es:
     alerts:
       problem_loading_tour: "Ha habido un problema con el servidor."
       problem_change_show_tour: "Ha habido un problema con el servidor."
-      success_reset_tours: "Tutorial reiniciado"
+      success_reset_tours: "Se mostrará de nuevo el tutorial desde el principio"
   read:
     index:
       feed_tooltip: "Abrir página web en una pestaña nueva"
