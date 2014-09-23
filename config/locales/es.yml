@@ -16,7 +16,7 @@ es:
     navbar:
       show_read_button_tooltip: "Mostrar todos los feeds y entradas, incluyendo aquellos marcados como leídos"
       show_read_button: "Mostrar leídos"
-      hide_read_button_tooltip: "Mostrar sólo feeds y entradas marcados como no leídos"
+      hide_read_button_tooltip: "Mostrar sólo feeds y entradas marcados como sin leer"
       hide_read_button: "Ocultar leídos"
       feed_menu_button_tooltip: "Administrar suscripciones a feeds"
       feed_menu_button: "Feeds"
@@ -66,8 +66,8 @@ es:
       stats: "Suscrito a %{feeds} feeds con %{entries} entradas sin leer."
     entries:
       no_entries: "No hay entradas"
-      mark_unread_tooltip: "Marcar esta entrada como no leída"
-      mark_unread: "No leído"
+      mark_unread_tooltip: "Marcar esta entrada como sin leer"
+      mark_unread: "Sin leer"
       mark_read_tooltip: "Marcar esta entrada como leída"
       mark_read: "Leído"
       share: "Compartir"
