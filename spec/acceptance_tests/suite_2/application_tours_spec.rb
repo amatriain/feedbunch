@@ -98,6 +98,68 @@ describe 'application tours', type: :feature do
     end
   end
 
+  context 'entry application tour' do
+
+    before :each do
+      @user.update show_entry_tour: true
+
+      @feed1 = FactoryGirl.create :feed
+
+      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @entry3 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @feed1.entries << @entry1 << @entry2 << @entry3
+
+      @user.subscribe @feed1.fetch_url
+
+      login_user_for_feature @user
+    end
+
+    it 'shows the tour when opening an entry', js: true do
+      read_feed @feed1, @user
+      open_entry @entry1
+      tour_should_be_visible 'Entries'
+    end
+
+    it 'does not show the tour after completing it', js: true do
+      read_feed @feed1, @user
+      open_entry @entry1
+      tour_should_be_visible
+      complete_tour
+
+      # Open a second entry without reloading the page
+      open_entry @entry2
+      tour_should_not_be_visible
+
+      # Reload the page and click on a feed
+      visit read_path
+      read_feed @feed1, @user
+      open_entry @entry3
+      # wait for client code to initialize
+      sleep 1
+      tour_should_not_be_visible
+    end
+
+    it 'does not show the tour after closing it', js: true do
+      read_feed @feed1, @user
+      open_entry @entry1
+      tour_should_be_visible
+      close_tour
+
+      # Open a second entry without reloading the page
+      open_entry @entry2
+      tour_should_not_be_visible
+
+      # Reload the page and click on a feed
+      visit read_path
+      read_feed @feed1, @user
+      open_entry @entry3
+      # wait for client code to initialize
+      sleep 1
+      tour_should_not_be_visible
+    end
+  end
+
   context 'returning users' do
 
     before :each do
@@ -121,8 +183,16 @@ describe 'application tours', type: :feature do
       tour_should_not_be_visible
     end
 
+    it 'does not show the entry tour', js: true do
+      read_feed @feed1, @user
+      open_entry @entry1
+      tour_should_not_be_visible
+    end
+
     it 'shows main tour again'
 
     it 'shows feed tour again'
+
+    it 'shows entry tour again'
   end
 end
