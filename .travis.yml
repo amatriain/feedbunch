@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-  - "ruby-2.1.2"
+  - "ruby-2.1.3"
 script:
   - "bundle exec brakeman -z"
   - "bundle exec rake db:migrate"
