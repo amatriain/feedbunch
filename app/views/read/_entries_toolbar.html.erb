@@ -1,23 +1,24 @@
-<div class="entry-toolbar btn-group">
+<div class="entry-toolbar btn-toolbar">
 
-  <a class="btn btn-default btn-sm"
-     ng-class="{entry_open_state_btn: is_entry_open(entry)}"
-     data-toggle="tooltip"
-     data-placement="top"
-     ng-click="unread_entry(entry)"
-     ng-show="entry.read"
-     title="<%= t 'read.entries.mark_unread_tooltip' %>">
-    <i class="fa fa-fw fa-square"></i>&nbsp;<%= t 'read.entries.mark_unread' %>
-  </a>
+  <div class="btn-group"
+       ng-class="{entry_open_state_btn: is_entry_open(entry)}">
+    <a class="btn btn-default btn-sm"
+       data-toggle="tooltip"
+       data-placement="top"
+       ng-click="unread_entry(entry)"
+       ng-show="entry.read"
+       title="<%= t 'read.entries.mark_unread_tooltip' %>">
+      <i class="fa fa-fw fa-square"></i>&nbsp;<%= t 'read.entries.mark_unread' %>
+    </a>
 
-  <a class="btn btn-default btn-sm"
-     ng-class="{entry_open_state_btn: is_entry_open(entry)}"
-     data-toggle="tooltip" data-placement="top"
-     ng-click="read_entry(entry)"
-     ng-show="!entry.read"
-     title="<%= t 'read.entries.mark_read_tooltip' %>">
-    <i class="fa fa-fw fa-check-square"></i>&nbsp;<%= t 'read.entries.mark_read' %>
-  </a>
+    <a class="btn btn-default btn-sm"
+       data-toggle="tooltip" data-placement="top"
+       ng-click="read_entry(entry)"
+       ng-show="!entry.read"
+       title="<%= t 'read.entries.mark_read_tooltip' %>">
+      <i class="fa fa-fw fa-check-square"></i>&nbsp;<%= t 'read.entries.mark_read' %>
+    </a>
+  </div>
 
   <div id="entry-{{entry.id}}-social-menu"
        ng-class="{entry_open_social: is_entry_open(entry)}"
