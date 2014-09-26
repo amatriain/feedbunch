@@ -1,21 +1,22 @@
-<button type="button"
-        id="toggle-sidebar-visible"
-        class="navbar-toggle navbar-toggle-right"
-        data-show-hide-sidebar
-        ng-click="toggle_sidebar_visible()"
-        ng-show="sidebar_visible"
-        ng-cloak>
-  <i class="fa fa-rss fa-lg"></i>
-  <small><i class="fa fa-chevron-right"></i></small>
-</button>
+<div class="btn-group pull-right show-hide-sidebar-buttons">
 
-<button type="button"
-        id="toggle-sidebar-hidden"
-        class="navbar-toggle navbar-toggle-right"
-        data-show-hide-sidebar
-        ng-click="toggle_sidebar_visible()"
-        ng-hide="sidebar_visible"
-        ng-cloak>
-  <small><i class="fa fa-chevron-left"></i></small>
-  <i class="fa fa-folder-open fa-lg"></i>
-</button>
+  <button type="button"
+          id="toggle-sidebar-visible"
+          class="navbar-toggle navbar-toggle-right"
+          ng-click="toggle_sidebar_visible()"
+          ng-show="sidebar_visible"
+          ng-cloak>
+    <i class="fa fa-rss fa-lg"></i>
+    <small><i class="fa fa-chevron-right"></i></small>
+  </button>
+
+  <button type="button"
+          id="toggle-sidebar-hidden"
+          class="navbar-toggle navbar-toggle-right"
+          ng-click="toggle_sidebar_visible()"
+          ng-hide="sidebar_visible"
+          ng-cloak>
+    <small><i class="fa fa-chevron-left"></i></small>
+    <i class="fa fa-folder-open fa-lg"></i>
+  </button>
+</div>
