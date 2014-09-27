@@ -31,7 +31,7 @@ angular.module('feedbunch').service 'tooltipSvc',
   navbar_tooltips: ->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $(".navbar .nav.navbar-nav li[data-toggle='tooltip']").tooltip()
+      $(".navbar .nav.navbar-nav [data-toggle='tooltip']").tooltip()
 
   #---------------------------------------------
   # Enable tooltips on import state alert "close" button
