@@ -30,8 +30,9 @@
     <div ng-show="current_feed || current_folder">
       <div id="feed-title">
         <strong class="lead">
+
           <div ng-show="current_feed">
-            <a class="feed-title-link"
+            <a class="feed-title-text"
                data-toggle="tooltip"
                data-placement="top"
                title="<%= t 'read.index.feed_tooltip' %>"
@@ -40,8 +41,17 @@
                target="_blank">
             </a>
           </div>
-          <span ng-show="current_folder && current_folder.id!='all'">{{current_folder.title}}</span>
-          <span ng-show="current_folder && current_folder.id=='all'"><%= t 'read.index.all_entries' %></span>
+
+          <span class="feed-title-text"
+                ng-show="current_folder && current_folder.id!='all'">
+            {{current_folder.title}}
+          </span>
+
+          <span class="feed-title-text"
+                ng-show="current_folder && current_folder.id=='all'">
+            <%= t 'read.index.all_entries' %>
+          </span>
+          
         </strong>
       </div>
       <hr id="feed-title-hr">
