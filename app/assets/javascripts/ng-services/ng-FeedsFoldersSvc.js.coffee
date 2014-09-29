@@ -75,6 +75,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     .success (data)->
       delete $rootScope.loading_single_feed[id]
       add_feed data
+      favicoSvc.update_unread_badge()
     .error (data, status)->
       delete $rootScope.loading_single_feed[id]
       timerFlagSvc.start 'error_loading_feeds' if status!=0

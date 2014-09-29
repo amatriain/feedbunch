@@ -111,7 +111,6 @@ angular.module('feedbunch').service 'jobStateSvc',
             job.feed_id = data.feed_id
             # Update the total subscribed feeds count
             userDataSvc.load_data()
-            favicoSvc.update_unread_badge()
         .error (data, state)->
           # if HTTP call has been prematurely cancelled, do nothing
           timerFlagSvc.start 'error_subscribing' if state!=0 && state!=404
