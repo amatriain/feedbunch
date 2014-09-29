@@ -31,7 +31,9 @@
       <div id="feed-title">
         <strong class="lead">
           <div ng-show="current_feed">
-            <a data-toggle="tooltip" data-placement="top"
+            <a class="feed-title-link"
+               data-toggle="tooltip"
+               data-placement="top"
                title="<%= t 'read.index.feed_tooltip' %>"
                ng-bind-html="current_feed.title"
                href="{{current_feed.url}}"
