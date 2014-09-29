@@ -27,18 +27,17 @@ angular.module('feedbunch').service 'findSvc',
   # of folders stored in the root scope
   #---------------------------------------------
   find_folder: (id, list = $rootScope.folders)->
-    if list
-      if id == 'none'
-        return null
-      else if id == "all"
-        return {id: "all"}
+    if id == 'none'
+      return null
+    else if id == "all"
+      return {id: "all"}
+    else if list
+      folders = $filter('filter') list, (folder)->
+        return folder.id == id
+      if folders?.length > 0
+        return folders[0]
       else
-        folders = $filter('filter') list, (folder)->
-          return folder.id == id
-        if folders?.length > 0
-          return folders[0]
-        else
-          return null
+        return null
     else
       return null
 

@@ -42,7 +42,6 @@ describe 'feeds', type: :feature do
       @folder1.feeds << @feed1 << @feed2
 
       login_user_for_feature @user
-      visit read_path
     end
 
     it 'shows feeds in the sidebar', js: true do
@@ -244,6 +243,35 @@ describe 'feeds', type: :feature do
         expect(page).to have_content @entry2_2.title
         expect(page).to have_content @entry3_1.title
         expect(page).to have_content @entry3_2.title
+      end
+
+      # Regression test
+      it 'shows a link to read all entries even if the user has no folders', js: true do
+        logout_user
+
+        user = FactoryGirl.create :user
+        feed1 = FactoryGirl.create :feed
+        feed2 = FactoryGirl.create :feed
+
+        entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+        entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
+        feed1.entries << entry1
+        feed2.entries << entry2
+
+        user.subscribe feed1.fetch_url
+        user.subscribe feed2.fetch_url
+
+        login_user_for_feature user
+
+        expect(page).to have_css "#sidebar a[data-sidebar-feed][data-feed-id='all']"
+        # Wait for the "all subscriptions" link to become enabled
+        expect(page).not_to have_css "#sidebar #all-feeds.disabled a[data-sidebar-feed][data-feed-id='all']"
+
+        # Click on link to read all feeds
+        find("#sidebar #folder-none a[data-sidebar-feed][data-feed-id='all']").click
+
+        expect(page).to have_content entry1.title
+        expect(page).to have_content entry2.title
       end
 
       it 'shows a link to read all entries for all subscriptions in a folder if it has several feeds', js: true do
