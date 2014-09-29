@@ -3,7 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'tourSvc',
-['$rootScope', '$http', 'timerFlagSvc', ($rootScope, $http, timerFlagSvc)->
+['$rootScope', '$http', '$timeout', 'timerFlagSvc',
+($rootScope, $http, $timeout, timerFlagSvc)->
 
   #--------------------------------------------
   # Media query to show the main app tour only in screens bigger than a smartphone
@@ -134,7 +135,12 @@ angular.module('feedbunch').service 'tourSvc',
           onClose: dont_show_entry_tour,
           i18n: data['i18n'],
           steps: data['steps']
-        hopscotch.startTour tour
+        # Show entry tour after a 600ms delay, to give entry open/autoscroll
+        # animation time to finish.
+        $timeout ->
+          hopscotch.startTour tour
+        , 600
+
       .error (data, status)->
         timerFlagSvc.start 'error_loading_tour' if status!=0
 
