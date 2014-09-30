@@ -22,3 +22,4 @@
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport
 //= require ../../../vendor/assets/javascripts/enquire.min
 //= require ../../../vendor/assets/javascripts/hopscotch.min
+//= require ../../../vendor/assets/javascripts/bootlint-0.3.0
