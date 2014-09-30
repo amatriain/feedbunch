@@ -1,3 +1,5 @@
+<%= render 'layouts/cookies_warning' %>
+
 <% if  notice.present? %>
   <div id="notice" class="alert alert-warning fade in" ng-show="error_rails">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -29,4 +31,3 @@
   <button type="button" class="close" ng-click="reset_flag('success_reset_tours')">&times;</button>
   <p><%= t 'layouts.alerts.success_reset_tours' %></p>
 </div>
-

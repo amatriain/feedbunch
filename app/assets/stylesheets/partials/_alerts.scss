@@ -3,7 +3,6 @@
   z-index: 2000;
   width: 100%;
   top:0;
-  margin-bottom: 0px;
 }
 
 .bottom-alert{
@@ -11,7 +10,11 @@
   z-index: 2000;
   width: 100%;
   bottom:0;
-  margin-bottom: 0px;
+
+  .alert {
+    margin: 0px;
+    width: 100%;
+  }
 }
 
 #cookie-notice {
