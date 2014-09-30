@@ -90,16 +90,14 @@
     <div class="row">
       <div class="col-xs-12 col-md-9 alert alert-warning" ng-show="import_state=='NONE'">
 
-        <div class="row">
-          <button type="button"
-                  class="close"
-                  ng-click="hide_import_alert()"
-                  title="<%= t 'read.job_states.dismiss' %>"
-                  data-toggle="tooltip"
-                  data-placement="top">
-            &times;
-          </button>
-        </div>
+        <button type="button"
+                class="close"
+                ng-click="hide_import_alert()"
+                title="<%= t 'read.job_states.dismiss' %>"
+                data-toggle="tooltip"
+                data-placement="top">
+          &times;
+        </button>
 
         <div class="row">
           <div class="col-xs-3 col-sm-2">
