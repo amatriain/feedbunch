@@ -80,31 +80,33 @@
       <div class="panel-heading">
         <span class="lead"><%= t 'devise.views.import_subscriptions' %></span>
       </div>
-      <div class="row">
-        <div class="panel-body col-xs-12 col-sm-10 col-sm-offset-1">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-10 col-sm-offset-1 panel-content">
 
-          <% if current_user.opml_import_job_state.state == OpmlImportJobState::RUNNING %>
+            <% if current_user.opml_import_job_state.state == OpmlImportJobState::RUNNING %>
 
-            <p><%= t 'devise.views.import_subscriptions_running' %></p>
+              <p><%= t 'devise.views.import_subscriptions_running' %></p>
 
-          <% else %>
+            <% else %>
 
-            <p>
-              <%= t 'devise.views.import_subscriptions_text' %>
-            </p>
-            <p>
-              <a id="opml-import-button"
-                 class="btn btn-primary"
-                 data-toggle="modal"
-                 data-target="#opml-import-popup">
+              <p>
+                <%= t 'devise.views.import_subscriptions_text' %>
+              </p>
+              <p>
+                <a id="opml-import-button"
+                   class="btn btn-primary"
+                   data-toggle="modal"
+                   data-target="#opml-import-popup">
 
-                <i class="fa fa-magic"></i>
+                  <i class="fa fa-magic"></i>
 
-                <%= t 'devise.views.import_subscriptions' %>
-              </a>
-            </p>
+                  <%= t 'devise.views.import_subscriptions' %>
+                </a>
+              </p>
 
-          <% end %>
+            <% end %>
+          </div>
 
         </div>
       </div>
@@ -116,40 +118,43 @@
       <div class="panel-heading">
         <span class="lead"><%= t 'devise.views.export_subscriptions' %></span>
       </div>
-      <div class="row">
-        <div class="panel-body col-xs-12 col-sm-10 col-sm-offset-1">
-          <p><%= t 'devise.views.export_subscriptions_text' %></p>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-10 col-sm-offset-1 panel-content">
 
-          <% if current_user.opml_export_job_state.state == OpmlExportJobState::SUCCESS %>
-            <%
-               # In the unlikely case the export_date field is set to NULL, use updated_at instead (guaranteed to have a
-               # value set by ActiveRecord)
-               if current_user.opml_export_job_state.export_date.present?
-                 export_date = current_user.opml_export_job_state.export_date
-               else
-                 export_date = current_user.opml_export_job_state.updated_at
-               end
-            %>
-            <hr>
-            <p><%= t 'devise.views.export_success', export_date: l(export_date.to_date, format: :long) %></p>
-            <p>
-              <%= link_to api_opml_exports_download_path,
-                          class: 'alert-link',
-                          id: 'download-opml-export' do %>
-                <%= t 'devise.views.export_download_1' %>
-              <% end %>
-              <%= t 'devise.views.export_download_2' %>
-            </p>
-          <% end %>
+            <p><%= t 'devise.views.export_subscriptions_text' %></p>
 
-          <p>
-            <%= link_to api_opml_exports_path(locale: I18n.locale),
-                        :method => :post,
-                        class: 'btn btn-primary' do %>
-              <i class="fa fa-share-square-o"></i>
-              <%= t('devise.views.export_subscriptions') %>
+            <% if current_user.opml_export_job_state.state == OpmlExportJobState::SUCCESS %>
+              <%
+                 # In the unlikely case the export_date field is set to NULL, use updated_at instead (guaranteed to have a
+                 # value set by ActiveRecord)
+                 if current_user.opml_export_job_state.export_date.present?
+                   export_date = current_user.opml_export_job_state.export_date
+                 else
+                   export_date = current_user.opml_export_job_state.updated_at
+                 end
+              %>
+              <hr>
+              <p><%= t 'devise.views.export_success', export_date: l(export_date.to_date, format: :long) %></p>
+              <p>
+                <%= link_to api_opml_exports_download_path,
+                            class: 'alert-link',
+                            id: 'download-opml-export' do %>
+                  <%= t 'devise.views.export_download_1' %>
+                <% end %>
+                <%= t 'devise.views.export_download_2' %>
+              </p>
             <% end %>
-          </p>
+
+            <p>
+              <%= link_to api_opml_exports_path(locale: I18n.locale),
+                          :method => :post,
+                          class: 'btn btn-primary' do %>
+                <i class="fa fa-share-square-o"></i>
+                <%= t('devise.views.export_subscriptions') %>
+              <% end %>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -164,22 +169,24 @@
       <div class="panel-heading">
         <span class="lead"><%= t 'devise.views.reset_tours.title' %></span>
       </div>
-      <div class="row">
-        <div class="panel-body col-xs-12 col-sm-10 col-sm-offset-1">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-10 col-sm-offset-1 panel-content">
 
-          <p>
-            <%= t 'devise.views.reset_tours.text' %>
-          </p>
-          <p>
-            <a id="reset-tours-button"
-               class="btn btn-primary"
-               ng-click="reset_tours()">
+            <p>
+              <%= t 'devise.views.reset_tours.text' %>
+            </p>
+            <p>
+              <a id="reset-tours-button"
+                 class="btn btn-primary"
+                 ng-click="reset_tours()">
 
-              <i class="fa fa-graduation-cap"></i>
+                <i class="fa fa-graduation-cap"></i>
 
-              <%= t 'devise.views.reset_tours.title' %>
-            </a>
-          </p>
+                <%= t 'devise.views.reset_tours.title' %>
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -193,24 +200,25 @@
         <div class="panel-heading">
           <span class="lead"><%= t 'devise.views.invite_friend.title' %></span>
         </div>
-        <div class="row">
-          <div class="panel-body col-xs-12 col-sm-10 col-sm-offset-1">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-1 panel-content">
 
-            <p>
-              <%= t 'devise.views.invite_friend.text' %>
-            </p>
-            <p>
-              <a id="send-invitation-button"
-                 class="btn btn-success"
-                 data-toggle="modal"
-                 data-target="#invite-friend-popup">
+              <p>
+                <%= t 'devise.views.invite_friend.text' %>
+              </p>
+              <p>
+                <a id="send-invitation-button"
+                   class="btn btn-success"
+                   data-toggle="modal"
+                   data-target="#invite-friend-popup">
 
-                <i class="fa fa-child"></i>
+                  <i class="fa fa-child"></i>
 
-                <%= t 'devise.views.invite_friend.title' %>
-              </a>
-            </p>
-
+                  <%= t 'devise.views.invite_friend.title' %>
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -226,18 +234,20 @@
       <div class="panel-heading">
         <span class="lead"><%= t 'devise.views.delete_account.title' %></span>
       </div>
-      <div class="row">
-        <div class="panel-body col-xs-12 col-sm-10 col-sm-offset-1">
-          <p><%= t 'devise.views.delete_account.text' %></p>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-10 col-sm-offset-1 panel-content">
 
-          <a id="profile-cancel-button"
-             class="btn btn-danger"
-             data-toggle="modal"
-             data-target="#profile-delete-popup">
-            <i class="fa fa-trash-o"></i>
-            <%= t('devise.views.delete_account.title') %>
-          </a>
+            <p><%= t 'devise.views.delete_account.text' %></p>
 
+            <a id="profile-cancel-button"
+               class="btn btn-danger"
+               data-toggle="modal"
+               data-target="#profile-delete-popup">
+              <i class="fa fa-trash-o"></i>
+              <%= t('devise.views.delete_account.title') %>
+            </a>
+          </div>
         </div>
       </div>
     </div>
