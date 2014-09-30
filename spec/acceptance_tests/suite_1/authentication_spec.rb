@@ -396,6 +396,11 @@ describe 'authentication', type: :feature do
       expect(current_path).to eq edit_user_registration_path
     end
 
+    it 'does not show link to read view in user dropdown if user is already in read view' do
+      expect(current_path).to eq read_path
+      expect(page).to_not have_css 'div.navbar ul li a#read_feeds'
+    end
+
     context 'edit profile' do
 
       before :each do
@@ -409,6 +414,13 @@ describe 'authentication', type: :feature do
       it 'shows link to go to feeds list' do
         expect(page).to have_css 'a#return'
         find('a#return').click
+        expect(current_path).to eq read_path
+      end
+
+      it 'shows link to read view in user dropdown' do
+        expect(page).to have_css 'div.navbar ul li a#read_feeds'
+        open_user_menu
+        find('a#read_feeds').click
         expect(current_path).to eq read_path
       end
 

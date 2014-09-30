@@ -31,12 +31,14 @@
           </li>
         <% end %>
 
-        <li>
-          <%=  link_to read_path, id: 'read_feeds' do %>
-            <i class="fa fa-rss fa-fw"></i>
-            <%= t 'layouts.navbar.read_feeds' %>
-          <% end %>
-        </li>
+        <% if !current_page? '/read' %>
+          <li>
+            <%=  link_to read_path, id: 'read_feeds' do %>
+              <i class="fa fa-rss fa-fw"></i>
+              <%= t 'layouts.navbar.read_feeds' %>
+            <% end %>
+          </li>
+        <% end %>
 
         <li>
           <%=  link_to edit_user_registration_path, id: 'my_account' do %>
