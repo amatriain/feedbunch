@@ -11,20 +11,24 @@
 
 <%= render 'layouts/navbar/navbar' %>
 
-<div class="row bottom-alert">
-  <div class="col-md-12 text-center" ng-cloak>
+<div class="container-fluid">
 
-    <%= render 'layouts/alerts' %>
-    <%= render 'devise/alerts' %>
+  <div class="row bottom-alert">
+    <div class="col-md-12 text-center" ng-cloak>
 
+      <%= render 'layouts/alerts' %>
+      <%= render 'devise/alerts' %>
+
+    </div>
   </div>
+
+  <%= render 'layouts/popups/import_subscriptions_form' %>
+  <%= render 'devise/popups/profile_delete_form' %>
+  <%= render 'devise/popups/invite_friend_form' %>
+
+  <%= yield %>
+
 </div>
-
-<%= render 'layouts/popups/import_subscriptions_form' %>
-<%= render 'devise/popups/profile_delete_form' %>
-<%= render 'devise/popups/invite_friend_form' %>
-
-<%= yield %>
 
 <%= render 'layouts/footer_js' %>
 

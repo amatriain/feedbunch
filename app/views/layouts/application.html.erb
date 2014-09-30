@@ -11,13 +11,17 @@
     ng-swipe-left="set_sidebar_visible(false)"
     ng-swipe-right="set_sidebar_visible(true)">
 
-<%= render 'layouts/navbar/navbar' %>
+<div class="container-fluid">
 
-<%= render 'layouts/popups/import_subscriptions_form' %>
+  <%= render 'layouts/navbar/navbar' %>
 
-<%= yield %>
+  <%= render 'layouts/popups/import_subscriptions_form' %>
 
-<%= render 'layouts/footer_js' %>
+  <%= yield %>
+
+  <%= render 'layouts/footer_js' %>
+
+</div>
 
 </body>
 </html>

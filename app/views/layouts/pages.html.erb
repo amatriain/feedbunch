@@ -11,15 +11,18 @@
 
 <%= render 'layouts/navbar/navbar' %>
 
-<div class="row bottom-alert text-center" ng-cloak>
-  <div class="col-xs-12">
+<div class="container-fluid">
+  <div class="row bottom-alert text-center" ng-cloak>
+    <div class="col-xs-12">
 
-    <%= render 'layouts/alerts' %>
+      <%= render 'layouts/alerts' %>
 
+    </div>
   </div>
-</div>
 
-<%= render 'layouts/popups/import_subscriptions_form' %>
+  <%= render 'layouts/popups/import_subscriptions_form' %>
+
+</div>
 
 <%= yield %>
 
