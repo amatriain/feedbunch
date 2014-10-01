@@ -43,6 +43,10 @@ context.instance_eval  do
     row :invitation_limit
     row :invitations_count
     row :invitations_count_reset_at
+    row :show_main_tour
+    row :show_mobile_tour
+    row :show_feed_tour
+    row :show_entry_tour
   end
 
   br
