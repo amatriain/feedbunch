@@ -1,3 +1,6 @@
+# Record deployments in NewRelic
+require 'new_relic/recipes'
+
 # Load DSL and Setup Up Stages
 require 'capistrano/setup'
 

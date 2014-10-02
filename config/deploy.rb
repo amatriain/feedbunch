@@ -146,4 +146,7 @@ namespace :deploy do
 
   # clean up old releases on each deploy, keep only 5 most recent releases
   after 'deploy:restart', 'deploy:cleanup'
+
+  # record deployments in NewRelic
+  after 'deploy:updated', 'newrelic:notice_deployment'
 end
