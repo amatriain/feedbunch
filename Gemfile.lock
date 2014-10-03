@@ -313,7 +313,7 @@ PLATFORMS
 DEPENDENCIES
   activeadmin!
   addressable
-  aws-sdk
+  aws-sdk (< 2.0)
   brakeman
   cancancan
   capistrano-rails

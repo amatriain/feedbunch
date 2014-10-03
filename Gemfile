@@ -116,7 +116,7 @@ group :staging, :production do
   gem 'pg'
 
   # Access Amazon AWS programattically
-  gem 'aws-sdk'
+  gem 'aws-sdk', '< 2.0'
 
   # Analytics
   gem 'newrelic_rpm'
