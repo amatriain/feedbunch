@@ -53,6 +53,8 @@ gem 'addressable'
 gem 'nokogiri'
 
 # Background jobs
+gem 'sidekiq'
+# Remove resque gems after migration to Sidekiq
 gem 'resque'
 gem 'resque-scheduler'
 
