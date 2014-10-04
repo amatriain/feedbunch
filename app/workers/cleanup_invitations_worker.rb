@@ -8,6 +8,9 @@ require 'invitations_manager'
 class CleanupInvitationsWorker
   include Sidekiq::Worker
 
+  # This worker runs periodically. Do not retry.
+  sidekiq_options retry: false
+
   ##
   # Clean up invitation data in the db:
   # - old unaccepted invitations are removed from the db. The interval after which invitations are discarded
