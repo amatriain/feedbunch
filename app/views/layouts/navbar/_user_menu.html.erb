@@ -31,6 +31,14 @@
           </li>
         <% end %>
 
+        <%# TODO add cancancan filtering to sidekiq web ui %>
+        <li>
+          <%= link_to sidekiq_web_path, target: '_blank' do %>
+            <i class="fa fa-code-fork fa-fw"></i>
+            <%= t 'layouts.navbar.background_jobs' %>
+          <% end %>
+        </li>
+
         <% if !current_page? '/read' %>
           <li>
             <%=  link_to read_path, id: 'read_feeds' do %>
