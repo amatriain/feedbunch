@@ -103,13 +103,17 @@ Feedbunch::Application.routes.draw do
 
   end
 
+  # TODO remove this route after migration from Resque to Sidekiq is completed
   # Resque-web is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/
   constraints CanAccessResque do
     # Resque web interface will be accessible in the /resque path
     mount Resque::Server.new, at: 'resque'
   end
 
-  mount Sidekiq::Web => '/sidekiq'
+  # Restrict access to Sidekiq web ui to admin users only
+  constraints CanAccessSidekiq do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   # ActiveAdmin is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/
   constraints CanAccessActiveAdmin do
