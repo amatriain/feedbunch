@@ -1,0 +1,4 @@
+:queues:
+  - [subscriptions, 10]
+  - [update_feeds, 2]
+  - maintenance

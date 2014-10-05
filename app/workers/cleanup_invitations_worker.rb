@@ -9,7 +9,7 @@ class CleanupInvitationsWorker
   include Sidekiq::Worker
 
   # This worker runs periodically. Do not retry.
-  sidekiq_options retry: false
+  sidekiq_options retry: false, queue: :maintenance
 
   ##
   # Clean up invitation data in the db:
