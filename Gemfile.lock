@@ -355,6 +355,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.2)
   sidekiq
   simple_form
+  sinatra (>= 1.3.0)
   spring
   sqlite3
   uglifier

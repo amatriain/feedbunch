@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Feedbunch::Application.routes.draw do
 
   # Custom dynamic error pages
@@ -106,6 +108,8 @@ Feedbunch::Application.routes.draw do
     # Resque web interface will be accessible in the /resque path
     mount Resque::Server.new, at: 'resque'
   end
+
+  mount Sidekiq::Web => '/sidekiq'
 
   # ActiveAdmin is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/
   constraints CanAccessActiveAdmin do
