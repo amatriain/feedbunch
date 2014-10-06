@@ -22,7 +22,7 @@ class OPMLExporter
     # but I think it's better if something this important is as explicit as possible.
     user.opml_export_job_state.destroy
     user.create_opml_export_job_state state: OpmlExportJobState::RUNNING
-    Resque.enqueue ExportSubscriptionsJob, user.id
+    ExportSubscriptionsWorker.perform_async user.id
     return nil
   rescue => e
     Rails.logger.error "Error trying to export subscriptions in OPML format for user #{user.id} - #{user.email}"
