@@ -161,22 +161,19 @@ class SubscribeUserWorker
       working_class = work['payload']['class']
       if working_class == 'ImportSubscriptionsWorker'
         return false if work['payload']['args'][1] == user.id
-      elsif working_class == 'SubscribeUserJob'
+      elsif working_class == 'SubscribeUserWorker'
         args = work['payload']['args']
         return false if args[0] == user.id && (args[1] != feed_url || args[2] != folder_id) && args[3] == true
       end
     end
 
-    # If a SubscribeUserJob is enqueued, import process is not finished
-    peek_start = 0
-    job = Resque.peek 'subscriptions', peek_start
-    while job.present?
-      if job['class'] == 'SubscribeUserJob'
-        args = job['args']
+    # If a SubscribeUserWorker is enqueued, import process is not finished
+    queue = Sidekiq::Queue.new 'interactive'
+    queue.each do |job|
+      if job.klass == 'SubscribeUserWorker'
+        args = job.args
         return false if args[0] == user.id && (args[1] != feed_url || args[2] != folder_id) && args[3] == true
       end
-      peek_start += 1
-      job = Resque.peek 'subscriptions', peek_start
     end
 
     # If no jobs related to the import are running or queued, the import process has finished
