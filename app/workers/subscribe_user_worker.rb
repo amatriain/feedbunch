@@ -6,7 +6,7 @@
 class SubscribeUserWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: :subscriptions
+  sidekiq_options queue: :interactive
 
   ##
   # Subscribe a user to a feed and optionally put the feed in a folder

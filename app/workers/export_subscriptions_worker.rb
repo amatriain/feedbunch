@@ -8,7 +8,7 @@ require 'opml_exporter'
 class ExportSubscriptionsWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: :subscriptions
+  sidekiq_options queue: :interactive
 
   ##
   # Export an OPML file with subscriptions for a user. It will be saved in permanent storage (Amazon S3 or similar).

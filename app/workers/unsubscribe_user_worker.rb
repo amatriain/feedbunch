@@ -6,7 +6,7 @@
 class UnsubscribeUserWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: :subscriptions
+  sidekiq_options queue: :interactive
 
   ##
   # Unsubscribe a user from a feed

@@ -7,7 +7,7 @@
 class ImportSubscriptionsWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: :subscriptions
+  sidekiq_options queue: :interactive
 
   ##
   # Import an OPML file with subscriptions for a user, and then deletes it.
