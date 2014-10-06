@@ -98,5 +98,8 @@ RSpec.configure do |config|
 
     # Clear the email delivery queue before each test.
     ActionMailer::Base.deliveries.clear
+
+    # Clear Sidekiq job queues before each test
+    Sidekiq::Worker.clear_all
   end
 end
