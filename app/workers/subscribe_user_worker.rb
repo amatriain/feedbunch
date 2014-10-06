@@ -155,13 +155,14 @@ class SubscribeUserWorker
       return true
     end
 
-    # If a ImportSubscriptionJob or another SubscribeUserJob for the user is still running, import process is not finished
-    Resque.working.each do |w|
-      working_class = w.job['payload']['class']
-      if working_class == 'ImportSubscriptionsJob'
-        return false if w.job['payload']['args'][1] == user.id
+    # If a ImportSubscriptionWorker or another SubscribeUserWorker for the user is still running, import process is not finished
+    workers = Sidekiq::Workers.new
+    workers.each do |process_id, thread_id, work|
+      working_class = work['payload']['class']
+      if working_class == 'ImportSubscriptionsWorker'
+        return false if work['payload']['args'][1] == user.id
       elsif working_class == 'SubscribeUserJob'
-        args = w.job['payload']['args']
+        args = work['payload']['args']
         return false if args[0] == user.id && (args[1] != feed_url || args[2] != folder_id) && args[3] == true
       end
     end
@@ -181,4 +182,5 @@ class SubscribeUserWorker
     # If no jobs related to the import are running or queued, the import process has finished
     return true
   end
+
 end
