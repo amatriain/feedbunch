@@ -68,8 +68,15 @@ describe FeedbunchAuth::RegistrationsController, type: :controller do
     end
 
     it 'locks user and enqueues job to destroy it' do
-      expect(Resque).to receive(:enqueue).with DestroyUserJob, @user.id
+      expect(DestroyUserWorker.jobs.size).to eq 0
+
       delete :destroy, delete_user_registration: {password: @user.password}
+
+      expect(DestroyUserWorker.jobs.size).to eq 1
+      job = DestroyUserWorker.jobs.first
+      expect(job['class']).to eq 'DestroyUserWorker'
+      expect(job['args']).to eq [@user.id]
+
       expect(@user.reload.access_locked?).to be true
     end
 

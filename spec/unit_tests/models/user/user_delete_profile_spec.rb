@@ -8,11 +8,14 @@ describe User, type: :model do
   context 'delete user profile' do
 
     it 'enqueues a job to destroy the user' do
-      expect(Resque).to receive(:enqueue) do |job_class, user_id|
-        expect(job_class).to eq DestroyUserJob
-        expect(user_id).to eq @user.id
-      end
+      expect(DestroyUserWorker.jobs.size).to eq 0
+
       @user.delete_profile
+
+      expect(DestroyUserWorker.jobs.size).to eq 1
+      job = DestroyUserWorker.jobs.first
+      expect(job['class']).to eq 'DestroyUserWorker'
+      expect(job['args']).to eq [@user.id]
     end
 
     it 'locks user account immediately' do

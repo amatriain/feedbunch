@@ -569,11 +569,17 @@ describe 'authentication', type: :feature do
       end
 
       it 'enqueues job to delete account if correct password is submitted', js: true do
-        expect(Resque).to receive(:enqueue).with DestroyUserJob, @user.id
+        expect(DestroyUserWorker.jobs.size).to eq 0
+
         fill_in 'Password', with: @user.password
         page.find('#profile-delete-submit').click
         expect(current_path).to eq root_path
         expect(page).to have_text 'Your account was successfully deleted'
+
+        expect(DestroyUserWorker.jobs.size).to eq 1
+        job = DestroyUserWorker.jobs.first
+        expect(job['class']).to eq 'DestroyUserWorker'
+        expect(job['args']).to eq [@user.id]
       end
 
       it 'prevents user from logging in again', js: true do

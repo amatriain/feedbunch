@@ -247,7 +247,7 @@ class User < ActiveRecord::Base
   # the user.
   def delete_profile
     self.lock_access! send_instructions: false
-    Resque.enqueue DestroyUserJob, self.id
+    DestroyUserWorker.perform_async self.id
   end
 
   ##
