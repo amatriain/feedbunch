@@ -46,6 +46,8 @@ class OPMLExporter
   def self.export(user)
     # Compose the OPML file (actually XML)
     feeds_outside_folders = user.folder_feeds Folder::NO_FOLDER, include_read: true
+    # Sort feeds by title, mainly for easier testing
+    feeds_outside_folders.sort_by!{|a| a.title}
     builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
       xml.opml(version: '1.0') {
         xml.head {
@@ -62,7 +64,7 @@ class OPMLExporter
           # folders
           user.folders.order(:title).each do |folder|
             xml.outline(title: folder.title, text: folder.title) {
-              user.folder_feeds(folder, include_read: true).each do |feed|
+              user.folder_feeds(folder, include_read: true).order(:title).each do |feed|
                 xml.outline type: 'rss', title: feed.title, text: feed.title, xmlUrl: feed.fetch_url, htmlUrl: feed.url
               end
             }
