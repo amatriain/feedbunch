@@ -128,9 +128,21 @@ describe User, type: :model do
         end
 
         it 'enqueues job to update the unread count for the feed' do
-          expect(Resque).to receive(:enqueue).with UpdateFeedUnreadCountJob, @feed.id, @user.id
+          expect(UpdateFeedUnreadCountWorker.jobs.size).to eq 0
 
           @user.change_entries_state @entry3, 'read', whole_feed: true
+
+          expect(UpdateFeedUnreadCountWorker.jobs.size).to eq 1
+          job = UpdateFeedUnreadCountWorker.jobs.first
+          expect(job['class']).to eq 'UpdateFeedUnreadCountWorker'
+
+          args = job['args']
+
+          # Check the arguments passed to the job
+          feed_id = args[0]
+          expect(feed_id).to eq @feed.id
+          user_id = args[1]
+          expect(user_id).to eq @user.id
         end
       end
 
@@ -231,10 +243,29 @@ describe User, type: :model do
         end
 
         it 'enqueues job to update the unread count for all feeds in the folder' do
-          expect(Resque).to receive(:enqueue).with UpdateFeedUnreadCountJob, @feed.id, @user.id
-          expect(Resque).to receive(:enqueue).with UpdateFeedUnreadCountJob, @feed2.id, @user.id
+          expect(UpdateFeedUnreadCountWorker.jobs.size).to eq 0
 
           @user.change_entries_state @entry5, 'read', whole_folder: true
+
+          expect(UpdateFeedUnreadCountWorker.jobs.size).to eq 2
+
+          job1 = UpdateFeedUnreadCountWorker.jobs[0]
+          expect(job1['class']).to eq 'UpdateFeedUnreadCountWorker'
+          args1 = job1['args']
+          # Check the arguments passed to the job
+          feed_id1 = args1[0]
+          expect(feed_id1).to eq @feed.id
+          user_id1 = args1[1]
+          expect(user_id1).to eq @user.id
+
+          job2 = UpdateFeedUnreadCountWorker.jobs[1]
+          expect(job2['class']).to eq 'UpdateFeedUnreadCountWorker'
+          args2 = job2['args']
+          # Check the arguments passed to the job
+          feed_id2 = args2[0]
+          expect(feed_id2).to eq @feed2.id
+          user_id2 = args2[1]
+          expect(user_id2).to eq @user.id
         end
       end
 
@@ -306,10 +337,29 @@ describe User, type: :model do
         end
 
         it 'enqueues job to update the unread count for all feeds' do
-          expect(Resque).to receive(:enqueue).with UpdateFeedUnreadCountJob, @feed.id, @user.id
-          expect(Resque).to receive(:enqueue).with UpdateFeedUnreadCountJob, @feed2.id, @user.id
+          expect(UpdateFeedUnreadCountWorker.jobs.size).to eq 0
 
           @user.change_entries_state @entry5, 'read', all_entries: true
+
+          expect(UpdateFeedUnreadCountWorker.jobs.size).to eq 2
+
+          job1 = UpdateFeedUnreadCountWorker.jobs[0]
+          expect(job1['class']).to eq 'UpdateFeedUnreadCountWorker'
+          args1 = job1['args']
+          # Check the arguments passed to the job
+          feed_id1 = args1[0]
+          expect(feed_id1).to eq @feed2.id
+          user_id1 = args1[1]
+          expect(user_id1).to eq @user.id
+
+          job2 = UpdateFeedUnreadCountWorker.jobs[1]
+          expect(job2['class']).to eq 'UpdateFeedUnreadCountWorker'
+          args2 = job2['args']
+          # Check the arguments passed to the job
+          feed_id2 = args2[0]
+          expect(feed_id2).to eq @feed.id
+          user_id2 = args2[1]
+          expect(user_id2).to eq @user.id
         end
 
       end
