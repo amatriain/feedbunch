@@ -29,7 +29,7 @@ class URLSubscriber
 
     job_state = user.subscribe_job_states.create fetch_url: url
     Rails.logger.info "Enqueuing subscribe_user_job_state #{job_state.id} for user #{user.id} - #{user.email}"
-    Resque.enqueue SubscribeUserJob, user.id, url, nil, false, job_state.id
+    SubscribeUserWorker.perform_async user.id, url, nil, false, job_state.id
     return job_state
   end
 
