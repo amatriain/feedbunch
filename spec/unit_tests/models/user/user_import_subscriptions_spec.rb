@@ -51,8 +51,14 @@ describe User, type: :model do
       end
 
       it 'enqueues job to process the file' do
-        expect(Resque).to receive(:enqueue).once.with ImportSubscriptionsJob, @filename, @user.id
+        expect(ImportSubscriptionsWorker.jobs.size).to eq 0
+
         @user.import_subscriptions @data_file
+
+        expect(ImportSubscriptionsWorker.jobs.size).to eq 1
+        job = ImportSubscriptionsWorker.jobs.first
+        expect(job['class']).to eq 'ImportSubscriptionsWorker'
+        expect(job['args']).to eq [@filename, @user.id]
       end
     end
 
@@ -69,8 +75,14 @@ describe User, type: :model do
       end
 
       it 'enqueues job to process the file' do
-        expect(Resque).to receive(:enqueue).once.with ImportSubscriptionsJob, @filename, @user.id
+        expect(ImportSubscriptionsWorker.jobs.size).to eq 0
+
         @user.import_subscriptions @data_file
+
+        expect(ImportSubscriptionsWorker.jobs.size).to eq 1
+        job = ImportSubscriptionsWorker.jobs.first
+        expect(job['class']).to eq 'ImportSubscriptionsWorker'
+        expect(job['args']).to eq [@filename, @user.id]
       end
     end
 
@@ -86,8 +98,14 @@ describe User, type: :model do
       end
 
       it 'enqueues job to process the file' do
-        expect(Resque).to receive(:enqueue).once.with ImportSubscriptionsJob, @filename, @user.id
+        expect(ImportSubscriptionsWorker.jobs.size).to eq 0
+
         @user.import_subscriptions @data_file
+
+        expect(ImportSubscriptionsWorker.jobs.size).to eq 1
+        job = ImportSubscriptionsWorker.jobs.first
+        expect(job['class']).to eq 'ImportSubscriptionsWorker'
+        expect(job['args']).to eq [@filename, @user.id]
       end
     end
 
@@ -103,8 +121,14 @@ describe User, type: :model do
       end
 
       it 'enqueues job to process the file' do
-        expect(Resque).to receive(:enqueue).once.with ImportSubscriptionsJob, @filename, @user.id
+        expect(ImportSubscriptionsWorker.jobs.size).to eq 0
+
         @user.import_subscriptions @data_file
+
+        expect(ImportSubscriptionsWorker.jobs.size).to eq 1
+        job = ImportSubscriptionsWorker.jobs.first
+        expect(job['class']).to eq 'ImportSubscriptionsWorker'
+        expect(job['args']).to eq [@filename, @user.id]
       end
     end
   end

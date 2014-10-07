@@ -32,7 +32,7 @@ class OPMLImporter
     Feedbunch::Application.config.uploads_manager.save user, FOLDER, filename, subscription_data
 
     Rails.logger.info "Enqueuing Import Subscriptions Job for user #{user.id} - #{user.email}, OPML file #{filename}"
-    Resque.enqueue ImportSubscriptionsJob, filename, user.id
+    ImportSubscriptionsWorker.perform_async filename, user.id
   rescue => e
     Rails.logger.error "Error trying to read OPML data from file uploaded by user #{user.id} - #{user.email}"
     Rails.logger.error e.message
