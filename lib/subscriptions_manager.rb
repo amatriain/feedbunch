@@ -48,7 +48,7 @@ class SubscriptionsManager
     check_user_subscribed feed, user
 
     Rails.logger.info "Enqueuing unsubscribe job for user #{user.id} - #{user.email}, feed #{feed.id} - #{feed.fetch_url}"
-    Resque.enqueue UnsubscribeUserJob, user.id, feed.id
+    UnsubscribeUserWorker.perform_async user.id, feed.id
 
     return nil
   end

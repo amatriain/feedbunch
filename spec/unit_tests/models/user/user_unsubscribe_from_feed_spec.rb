@@ -10,12 +10,21 @@ describe User, type: :model do
   context 'enqueue a job to unsubscribe from a feed' do
 
     it 'enqueues a job to unsubscribe from a feed' do
-      expect(Resque).to receive(:enqueue) do |job_class, user_id, feed_id|
-        expect(job_class).to eq UnsubscribeUserJob
-        expect(user_id).to eq @user.id
-        expect(feed_id).to eq @feed.id
-      end
+      expect(UnsubscribeUserWorker.jobs.size).to eq 0
+
       @user.enqueue_unsubscribe_job @feed
+
+      expect(UnsubscribeUserWorker.jobs.size).to eq 1
+      job = UnsubscribeUserWorker.jobs.first
+      expect(job['class']).to eq 'UnsubscribeUserWorker'
+
+      args = job['args']
+
+      # Check the arguments passed to the job
+      user_id = args[0]
+      expect(user_id).to eq @user.id
+      fetch_id = args[1]
+      expect(fetch_id).to eq @feed.id
     end
 
     it 'does not enqueue job if the user is not subscribed to the feed' do
