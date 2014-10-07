@@ -9,19 +9,32 @@ describe User, type: :model do
   context 'enqueue a job to subscribe to a feed' do
 
     it 'enqueues a job to subscribe to the feed' do
-      expect(Resque).to receive(:enqueue) do |job_class, user_id, fetch_url, folder_id, running_opml_import, job_id|
-        expect(job_class).to eq SubscribeUserJob
-        expect(user_id).to eq @user.id
-        expect(fetch_url).to eq @feed.fetch_url
-        expect(folder_id).to be_nil
-        expect(running_opml_import).to be false
-        job_state = SubscribeJobState.find job_id
-        expect(job_state.user_id).to eq @user.id
-        expect(job_state.fetch_url).to eq @feed.fetch_url
-        expect(job_state.state).to eq SubscribeJobState::RUNNING
-      end
+      expect(SubscribeUserWorker.jobs.size).to eq 0
 
       @user.enqueue_subscribe_job @feed.fetch_url
+
+      expect(SubscribeUserWorker.jobs.size).to eq 1
+      job = SubscribeUserWorker.jobs.first
+      expect(job['class']).to eq 'SubscribeUserWorker'
+
+      args = job['args']
+
+      # Check the arguments passed to the job
+      user_id = args[0]
+      expect(user_id).to eq @user.id
+      fetch_url = args[1]
+      expect(fetch_url).to eq @feed.fetch_url
+      folder_id = args[2]
+      expect(folder_id).to be_nil
+      running_opml_import = args[3]
+      expect(running_opml_import).to be false
+
+      # Check that the job state instance passed to the job is correct
+      job_state_id = args[4]
+      job_state = SubscribeJobState.find job_state_id
+      expect(job_state.user_id).to eq @user.id
+      expect(job_state.fetch_url).to eq @feed.fetch_url
+      expect(job_state.state).to eq SubscribeJobState::RUNNING
     end
 
     it 'creates a subscribe_job_state with state RUNNING' do

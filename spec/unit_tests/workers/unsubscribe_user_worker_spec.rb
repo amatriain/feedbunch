@@ -28,6 +28,9 @@ describe UnsubscribeUserWorker do
     end
 
     it 'does nothing if the feed is not subscribed by the user' do
+      # TODO rework this test. it should test unsubscribing, but it seems to be trying to subscribe the user
+      pending
+
       folder = FactoryGirl.create :folder
       expect(@user).not_to receive :subscribe
       SubscribeUserJob.perform @user.id, @feed.fetch_url, folder.id, false, nil
