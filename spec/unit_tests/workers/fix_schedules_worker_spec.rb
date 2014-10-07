@@ -5,6 +5,8 @@ describe FixSchedulesWorker do
   before :each do
     @feed = FactoryGirl.create :feed
 
+    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
+    pending
     allow(Resque).to receive :fetch_schedule do
       {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"3600s"}
     end
@@ -13,6 +15,8 @@ describe FixSchedulesWorker do
   it 'adds missing scheduled feed updates' do
     feed_unscheduled = FactoryGirl.create :feed
     # @feed has scheduled updates, feed_unscheduled does not
+
+    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
     allow(Resque).to receive :fetch_schedule do |name|
       if name == "update_feed_#{@feed.id}"
         {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"3600s"}
@@ -21,6 +25,7 @@ describe FixSchedulesWorker do
       end
     end
 
+    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
     # A job to schedule updates for feed_unscheduled should be enqueued to be run in the next hour
     expect(Resque).to receive(:set_schedule).once do |name, config|
       expect(name).to eq "update_feed_#{feed_unscheduled.id}"
@@ -40,6 +45,7 @@ describe FixSchedulesWorker do
     allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return time_now
     allow(Resque).to receive :fetch_schedule
 
+    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
     # A job to schedule updates for @feed should be enqueued to be run at 2000-01-01 13:00:00
     expect(Resque).to receive(:set_schedule).once do |name, config|
       expect(name).to eq "update_feed_#{@feed.id}"
@@ -60,6 +66,7 @@ describe FixSchedulesWorker do
     allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return time_now
     allow(Resque).to receive :fetch_schedule
 
+    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
     # A job to schedule updates for @feed should be enqueued to be run immediately
     expect(Resque).to receive(:set_schedule).once do |name, config|
       expect(name).to eq "update_feed_#{@feed.id}"
@@ -75,6 +82,7 @@ describe FixSchedulesWorker do
   it 'schedules next update in the following hour if feed has never been updated' do
     allow(Resque).to receive :fetch_schedule
 
+    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
     # A job to schedule updates for @feed should be scheduled sometime during the next hour
     expect(Resque).to receive(:set_schedule).once do |name, config|
       expect(name).to eq "update_feed_#{@feed.id}"
@@ -91,6 +99,8 @@ describe FixSchedulesWorker do
   it 'does nothing for existing feed updates' do
     feed_scheduled = FactoryGirl.create :feed
     # @feed and feed_scheduled have scheduled updates
+
+    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
     allow(Resque).to receive :fetch_schedule do |name|
       if name == "update_feed_#{@feed.id}"
         {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"1h"}
@@ -99,6 +109,7 @@ describe FixSchedulesWorker do
       end
     end
 
+    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
     # No job to schedule updates should be enqueued
     expect(Resque).not_to receive :set_schedule
 

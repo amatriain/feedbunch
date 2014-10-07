@@ -116,6 +116,9 @@ class ScheduleManager
   # - first_in_seconds (optional): how many seconds from now will the first update run.
 
   def self.set_or_update_schedule(feed_id, every_seconds, first_in_seconds = nil)
+    # TODO totally rewrite this using a different solution that works with Sidekiq.
+    # We are no longer using Resque-scheduler.
+
     name = "update_feed_#{feed_id}"
     config = {}
     config[:persist] = true
