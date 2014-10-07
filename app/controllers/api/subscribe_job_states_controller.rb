@@ -1,5 +1,5 @@
 ##
-# Controller to query the state of SubscribeUserJob instances enqued for the user.
+# Controller to query the state of SubscribeUserWorker instances enqued for the user.
 
 class Api::SubscribeJobStatesController < ApplicationController
 

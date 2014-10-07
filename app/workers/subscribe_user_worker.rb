@@ -32,7 +32,7 @@ class SubscribeUserWorker
         job_state = SubscribeJobState.find job_state_id
         # Check that the subscribe_job_state is in state "RUNNING"
         if job_state.state != SubscribeJobState::RUNNING
-          Rails.logger.warn "Processing SubscribeUserJob for subscribe_job_state_id #{job_state_id}, it should be in state RUNNING but it is in state #{job_state.state}. Aborting."
+          Rails.logger.warn "Processing SubscribeUserWorker for subscribe_job_state_id #{job_state_id}, it should be in state RUNNING but it is in state #{job_state.state}. Aborting."
           return
         end
       end
