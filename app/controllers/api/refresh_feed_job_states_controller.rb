@@ -1,5 +1,5 @@
 ##
-# Controller to query the state of RefreshFeedJob instances enqued for the user.
+# Controller to query the state of RefreshFeedWorker instances enqued for the user.
 
 class Api::RefreshFeedJobStatesController < ApplicationController
 
