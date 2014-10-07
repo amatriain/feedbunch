@@ -21,11 +21,11 @@ class RefreshFeedWorker
       job_state = RefreshFeedJobState.find refresh_feed_job_state_id
       # Check that the refresh_job_state is in state "RUNNING"
       if job_state.state != RefreshFeedJobState::RUNNING
-        Rails.logger.warn "Processing RefreshFeedJob for refresh_feed_job_state #{job_state.id}, it should be in state RUNNING but it is in state #{job_state.state}. Aborting."
+        Rails.logger.warn "Processing RefreshFeedWorker for refresh_feed_job_state #{job_state.id}, it should be in state RUNNING but it is in state #{job_state.state}. Aborting."
         return
       end
     else
-      Rails.logger.warn "Processing RefreshFeedJob for refresh_feed_job_state #{refresh_feed_job_state_id} but that state does not exist in the database. Updating feed but job state will not be updated."
+      Rails.logger.warn "Processing RefreshFeedWorker for refresh_feed_job_state #{refresh_feed_job_state_id} but that state does not exist in the database. Updating feed but job state will not be updated."
     end
 
     # Check that user actually exists
