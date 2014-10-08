@@ -6,8 +6,12 @@ Feedbunch::Application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
-  # Do not eager load code on boot.
-  config.eager_load = false
+  #  Eager load code on boot. This eager loads most of Rails and
+  # your application in memory. This is necessary so that Sidetiq
+  # is aware of all worker classes and can display them in the web UI.
+  # See: https://github.com/tobiassvn/sidetiq/wiki/Known-Issues
+  # Rake tasks automatically ignore this option for performance.
+  config.eager_load = true
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
