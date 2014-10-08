@@ -147,6 +147,7 @@ GEM
     hike (1.2.3)
     http_accept_language (2.0.2)
     i18n (0.6.11)
+    ice_cube (0.11.1)
     inherited_resources (1.4.1)
       has_scope (~> 0.6.0.rc)
       responders (~> 1.0.0.rc)
@@ -265,6 +266,10 @@ GEM
       json
       redis (>= 3.0.6)
       redis-namespace (>= 1.3.1)
+    sidetiq (0.6.3)
+      celluloid (>= 0.14.1)
+      ice_cube (= 0.11.1)
+      sidekiq (>= 3.0.0)
     simple_form (3.0.2)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
@@ -354,6 +359,7 @@ DEPENDENCIES
   rubyzip
   sass-rails (~> 4.0.2)
   sidekiq
+  sidetiq
   simple_form
   sinatra (>= 1.3.0)
   spring
