@@ -20,7 +20,6 @@ end
 # running the full Rails app
 if resque_env=='background'
   require "#{rails_root}/app/jobs/scheduled_update_feed_job"
-  require "#{rails_root}/app/jobs/subscribe_user_job"
 end
 
 # If you want to be able to dynamically change the schedule,
