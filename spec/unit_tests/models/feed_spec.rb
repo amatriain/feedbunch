@@ -397,7 +397,7 @@ describe Feed, type: :model do
 
       pending
 
-      expect(ScheduledUpdateFeedJob).not_to receive :schedule_feed_updates
+      expect(ScheduledUpdateFeedJob).not_to receive :schedule_first_update
       @feed.title = 'another title'
       @feed.save
     end

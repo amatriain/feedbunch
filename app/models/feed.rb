@@ -63,7 +63,7 @@ class Feed < ActiveRecord::Base
 
   before_validation :fix_attributes
 
-  after_create :schedule_updates
+  after_create :schedule_update
   after_destroy :unschedule_updates
   before_save :unschedule_unavailable
 
@@ -156,8 +156,8 @@ class Feed < ActiveRecord::Base
   ##
   # After saving a new feed in the database, a scheduled job will be created to update it periodically
 
-  def schedule_updates
-    ScheduleManager.schedule_feed_updates self.id
+  def schedule_update
+    ScheduleManager.schedule_first_update self.id
   end
 
   ##

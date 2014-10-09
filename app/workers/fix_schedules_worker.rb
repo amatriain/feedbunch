@@ -27,6 +27,6 @@ class FixSchedulesWorker
   # This method is intended to be invoked from Sidekiq, which means it is performed in the background.
 
   def perform
-    ScheduleManager.fix_update_schedules
+    ScheduleManager.fix_scheduled_updates
   end
 end

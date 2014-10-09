@@ -4,23 +4,23 @@
 class ScheduleManager
 
   ##
-  # For each available feed in the database, ensure that there is a scheduled update for the feed.
+  # For each available feed in the database, ensure that the next update of the feed is scheduled
   #
   # If a feed is found with no scheduled update, one is added.
   #
   # After invoking this method all available feeds are guaranteed to have their next update scheduled.
 
-  def self.fix_update_schedules
-    Rails.logger.debug 'Fixing feed update schedules'
+  def self.fix_scheduled_updates
+    Rails.logger.debug 'Fixing scheduled feed updates'
     feeds_unscheduled = []
 
     Feed.where(available: true).each do |feed|
       # get update schedule for the feed
-      schedule = Resque.fetch_schedule "update_feed_#{feed.id}"
-      Rails.logger.debug "Update schedule for feed #{feed.id}  #{feed.title}: #{schedule}"
+      schedule_present = feed_schedule_present? feed
+      Rails.logger.debug "Update schedule for feed #{feed.id}  #{feed.title} present?: #{schedule_present}"
 
       # if a feed has no update schedule, add it to the array of feeds to be fixed
-      if schedule.nil?
+      if !schedule_present
         Rails.logger.warn "Missing schedule for feed #{feed.id} - #{feed.title}"
         feeds_unscheduled << feed
       end
@@ -35,31 +35,33 @@ class ScheduleManager
   end
 
   ##
-  # Schedule updating of a feed using Resque-scheduler.
-  # Receives as argument the id of the feed which update is to be scheduled.
+  # Schedule the first update of a feed.
+  # Receives as argument the id of the feed for which its first update will be scheduled.
   #
-  # There can only be one scheduled job for updates of a given feed. If there is a scheduled update
-  # job for a feed and this method is invoked with the id of that feed, the old schedule is updated.
-  #
-  # Scheduled jobs are named "update_feed_[feed_id]", they can be monitored using the Resque web console.
-  #
-  # The first run of a job is scheduled to happen a random amount of minutes, between 0 and 60, after this
-  # method is invoked. After that the job is run every hour. This is done so that feed updates are more or less
+  # The update is scheduled to run in a random amount of minutes, between 0 and 60, after this
+  # method is invoked. This is done so that feed updates are more or less
   # evenly, or at least randomly, spaced in time. This way the server load from the updates is spaced over
   # time, to affect user experience as little as possible.
+  #
+  # After each update, the worker schedules the next update of the feed. The worker tries to adapt
+  # the scheduling to the rate at which new entries appear in the feed.
 
-  def self.schedule_feed_updates(feed_id)
+  def self.schedule_first_update(feed_id)
     delay = Random.rand 61
     Rails.logger.info "Scheduling updates of feed #{feed_id} every hour, starting #{delay} minutes from now at #{Time.zone.now + delay.minutes}"
-    set_or_update_schedule feed_id, 1.hour, delay.minutes
+    set_scheduled_update feed_id, 1.hour, delay.minutes
   end
 
   ##
-  # Unschedule (this is, remove from scheduling) the update feed job for the passed feed.
-  # Receives as argument the id of the feed which update is to be unscheduled.
+  # Unschedule (this is, remove from scheduling) the next update of the passed feed.
+  # Receives as argument the id of the feed; scheduled updates for other feeds are unaffected.
   #
-  # After invoking this method, an update job for this feed will never be enqueued again (at least while
-  # schedule_feed_updates is not invoked again for this feed).
+  # Normally when this method is invoked the feed is also marked as unavailable.
+  # After invoking this method, if the feed is marked as unavailable, it won't be updated again.
+  # However if it's marked as available the next time FixSchedulesWorker runs (normally daily),
+  # periodic updates will start running again. Because of this, if we really want a feed to
+  # stop updating it's not enough to invoke this method, the "available" flag of the feed
+  # must be set to false as well.
 
   def self.unschedule_feed_updates(feed_id)
     Rails.logger.info "Unscheduling updates of feed #{feed_id}"
@@ -81,7 +83,7 @@ class ScheduleManager
     feed.update fetch_interval_secs: new_interval
 
     # Actually decrement the update interval in Resque
-    set_or_update_schedule feed.id, feed.fetch_interval_secs, feed.fetch_interval_secs
+    set_scheduled_update feed.id, feed.fetch_interval_secs, feed.fetch_interval_secs
   end
 
   ##
@@ -99,7 +101,7 @@ class ScheduleManager
     feed.update fetch_interval_secs: new_interval
 
     # Actually increment the update interval in Resque
-    set_or_update_schedule feed.id, feed.fetch_interval_secs, feed.fetch_interval_secs
+    set_scheduled_update feed.id, feed.fetch_interval_secs, feed.fetch_interval_secs
   end
 
   private
@@ -112,7 +114,7 @@ class ScheduleManager
   # - every_seconds: interval, in seconds, between updates
   # - first_in_seconds (optional): how many seconds from now will the first update run.
 
-  def self.set_or_update_schedule(feed_id, every_seconds, first_in_seconds = nil)
+  def self.set_scheduled_update(feed_id, every_seconds, first_in_seconds = nil)
     # TODO totally rewrite this using a different solution that works with Sidekiq.
     # We are no longer using Resque-scheduler.
 
@@ -158,9 +160,39 @@ class ScheduleManager
       end
     end
 
-    set_or_update_schedule feed.id, feed.fetch_interval_secs, first_in
+    set_scheduled_update feed.id, feed.fetch_interval_secs, first_in
   end
 
+  ##
+  # Check if the passed feed's scheduled updates have been set.
+  #
+  # To check if the feed updates have been scheduled, the following Sidekiq queues are checked:
+  # - The named "update_feeds" queue. The worker will be found there when its scheduled run time comes, until
+  # a Sidekiq thread is free to process it.
+  # - The queue with jobs scheduled to run in the future
+  # - The queue of jobs that have failed (an error has raised during processing) and are scheduled to be retried in
+  # the future
+  # - The currently running jobs
+  #
+  # If a ScheduledFeedUpdateWorker is found in any of these queues with the id of the passed feed as argument,
+  # a boolean true is returned. Otherwise false is returned.
+
+  def self.feed_schedule_present?(feed)
+    queued = feed_update_queued? feed
+    scheduled = feed_update_scheduled? feed
+    retrying = feed_update_retrying? feed
+    running = feed_update_running? feed
+
+    present = (queued || scheduled || retrying || running)
+
+    if present
+      Rails.logger.info "Feed #{feed.id} - #{feed.title} update worker is present"
+    else
+      Rails.logger.info "Feed #{feed.id} - #{feed.title} update worker is not present"
+    end
+
+    return present
+  end
 
   ##
   # Check if a scheduled update for the passed feed is already in the 'update_feeds' queue waiting
@@ -171,6 +203,13 @@ class ScheduleManager
   def self.feed_update_queued?(feed)
     queue = Sidekiq::Queue.new 'update_feeds'
     queued = queue.any? {|job| job.klass == 'ScheduledUpdateFeedWorker'  && job.args[0] == feed.id}
+
+    if queued
+      Rails.logger.info "Feed #{feed.id} - #{feed.title} update worker queued for immediate processing"
+    else
+      Rails.logger.info "Feed #{feed.id} - #{feed.title} update worker not queued for immediate processing"
+    end
+
     return queued
   end
 
@@ -182,6 +221,13 @@ class ScheduleManager
   def self.feed_update_scheduled?(feed)
     scheduledSet = Sidekiq::ScheduledSet.new
     scheduled = scheduledSet.any? {|job| job.klass == 'ScheduledUpdateFeedWorker'  && job.args[0] == feed.id}
+
+    if scheduled
+      Rails.logger.info "Feed #{feed.id} - #{feed.title} update worker scheduled"
+    else
+      Rails.logger.info "Feed #{feed.id} - #{feed.title} update worker not scheduled"
+    end
+
     return scheduled
   end
 
@@ -193,6 +239,13 @@ class ScheduleManager
   def self.feed_update_retrying?(feed)
     retrySet = Sidekiq::RetrySet.new
     retrying = retrySet.any? {|job| job.klass == 'ScheduledUpdateFeedWorker'  && job.args[0] == feed.id}
+
+    if retrying
+      Rails.logger.info "Feed #{feed.id} - #{feed.title} update worker scheduled for retrying"
+    else
+      Rails.logger.info "Feed #{feed.id} - #{feed.title} update worker not scheduled for retrying"
+    end
+
     return retrying
   end
 
@@ -206,6 +259,13 @@ class ScheduleManager
     running = workers.any? do |process_id, thread_id, work|
       work['payload']['class'] == 'ScheduledUpdateFeedWorker' && work['payload']['args'][0] == feed.id
     end
+
+    if running
+      Rails.logger.info "Feed #{feed.id} - #{feed.title} update worker currently running"
+    else
+      Rails.logger.info "Feed #{feed.id} - #{feed.title} update worker currently not running"
+    end
+
     return running
   end
 end
