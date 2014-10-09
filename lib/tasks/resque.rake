@@ -18,7 +18,6 @@ namespace :resque do
     require "#{rails_root}/app/jobs/import_subscriptions_job"
     require "#{rails_root}/app/jobs/scheduled_update_feed_job"
     require "#{rails_root}/app/jobs/subscribe_user_job"
-    require "#{rails_root}/app/jobs/unsubscribe_user_job"
 
     # If you want to be able to dynamically change the schedule,
     # uncomment this line.  A dynamic schedule can be updated via the
