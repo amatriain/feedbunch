@@ -7,9 +7,14 @@
 
 class DestroyOldJobStatesWorker
   include Sidekiq::Worker
+  include Sidetiq::Schedulable
 
   # This worker runs periodically. Do not retry.
   sidekiq_options retry: false, queue: :maintenance
+  # Run daily at 4 AM. Missed runs are executed immediately
+  recurrence backfill: true do
+    daily.hour_of_day 4
+  end
 
   ##
   # Destroy instances of RefreshFeedJobState and SubscribeJobState older than 24 hours.
