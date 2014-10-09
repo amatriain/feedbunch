@@ -10,9 +10,3 @@ DestroyOldJobStatesJob:
   every:
     - "1h"
     - :first_in: "10s"
-CleanupSignupsJob:
-  description: "Discard old signed up but unconfirmed users"
-  queue: maintenance
-  every:
-    - "1d"
-    - :first_in: "10m"
