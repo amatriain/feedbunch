@@ -15,7 +15,6 @@ namespace :resque do
 
     # In background servers we must require each job class individually, because we're not
     # running the full Rails app
-    require "#{rails_root}/app/jobs/fix_schedules_job"
     require "#{rails_root}/app/jobs/import_subscriptions_job"
     require "#{rails_root}/app/jobs/refresh_feed_job"
     require "#{rails_root}/app/jobs/scheduled_update_feed_job"
@@ -31,11 +30,6 @@ namespace :resque do
     # Note: This feature is only available in >=2.0.0.
     # IMPORTANT: this line MUST BE ABOVE the "Resque.schedule = YAML.load_file..." line.
     Resque::Scheduler.dynamic = true
-
-    # Load static schedule (only in background servers).
-    # The schedule doesn't need to be stored in a YAML, it just needs to
-    # be a hash.  YAML is usually the easiest.
-    Resque.schedule = YAML.load_file File.join(rails_root.to_s, 'config', 'static_schedule.yml')
 
     Resque.before_fork do |job|
       # Reconnect to the DB before running each job. Otherwise we get errors if the DB
