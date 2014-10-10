@@ -49,7 +49,7 @@ class ScheduleManager
   def self.schedule_first_update(feed_id)
     delay = Random.rand 61
     Rails.logger.info "Scheduling updates of feed #{feed_id} every hour, starting #{delay} minutes from now at #{Time.zone.now + delay.minutes}"
-    set_scheduled_update feed_id, delay.minutes
+    set_scheduled_update feed_id, delay.minutes, remove_other_schedules: false
   end
 
   ##
@@ -67,17 +67,17 @@ class ScheduleManager
     Rails.logger.info "Unscheduling updates of feed #{feed_id}"
 
     queue = Sidekiq::Queue.new 'update_feeds'
-    queue_jobs = queue.select {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed.id}
+    queue_jobs = queue.select {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed_id}
     Rails.logger.info "Feed #{feed_id} update found in 'update_feeds' queue #{queue_jobs.size} times, deleting" if queue_jobs.size > 0
     queue_jobs.each {|job| job.delete}
 
     scheduled_set = Sidekiq::ScheduledSet.new
-    scheduled_job = scheduled_set.select {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed.id}
+    scheduled_job = scheduled_set.select {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed_id}
     Rails.logger.info "Feed #{feed_id} update scheduled #{queue_jobs.size} times, deleting" if scheduled_job.size > 0
     scheduled_job.each {|job| job.delete}
 
     retrying = Sidekiq::RetrySet.new
-    retrying_job = retrying.select {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed.id}
+    retrying_job = retrying.select {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed_id}
     Rails.logger.info "Feed #{feed_id} update marked for retrying #{retrying_job.size} times, deleting" if retrying_job.size > 0
     retrying_job.each {|job| job.delete}
   end
@@ -123,17 +123,23 @@ class ScheduleManager
   ##
   # Set a scheduled update for a feed.
   #
-  # If the feed already has a scheduled update, it is unscheduled first. This guarantees that each feed
+  # Optionally if the feed already has a scheduled update,
+  # it is unscheduled. This guarantees that each feed
   # has at most one update scheduled in the future.
   #
   # Receives as arguments:
   # - ID of the feed that will be updated
   # - in_seconds: number of seconds until the update runs
+  # - optionally, a boolean that indicates whether to remove other scheduled updates set for the feed.
+  # If we are sure that no other updates are scheduled, a false should be passed to this argument
+  # for performance reasons. True by default.
 
-  def self.set_scheduled_update(feed_id, in_seconds)
-    Rails.logger.info "Checking if feed #{feed_id} has an update already scheduled"
-    scheduled = feed_schedule_present? feed_id
-    unschedule_feed_updates feed_id if scheduled
+  def self.set_scheduled_update(feed_id, in_seconds, remove_other_schedules: true)
+    if remove_other_schedules
+      Rails.logger.info "Checking if feed #{feed_id} has an update already scheduled"
+      scheduled = feed_schedule_present? feed_id
+      unschedule_feed_updates feed_id if scheduled
+    end
 
     Rails.logger.info "Setting scheduled update of feed #{feed_id} in #{in_seconds} seconds"
     ScheduledUpdateFeedWorker.perform_in in_seconds.seconds, feed_id

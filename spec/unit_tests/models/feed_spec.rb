@@ -389,8 +389,25 @@ describe Feed, type: :model do
       @feed.save
     end
 
-    it 'unschedules updates for a feed when it is destroyed' do
-      expect(Resque).to receive(:remove_schedule).with "update_feed_#{@feed.id}"
+    it 'unschedules updates for a feed when destroying it' do
+      job = double 'job', klass: 'ScheduledUpdateFeedWorker', args: [@feed.id]
+      allow(Sidekiq::ScheduledSet).to receive(:new).and_return [job]
+      expect(job).to receive(:delete).once
+      @feed.destroy
+    end
+
+    it 'does not unschedule updates for other feeds when destroying a feed' do
+      feed2 = FactoryGirl.create :feed
+      job = double 'job', klass: 'ScheduledUpdateFeedWorker', args: [feed2.id]
+      allow(Sidekiq::ScheduledSet).to receive(:new).and_return [job]
+      expect(job).not_to receive :delete
+      @feed.destroy
+    end
+
+    it 'does not unschedule other jobs when destroying a feed' do
+      job = double 'job', klass: 'AnotherWorker', args: [@feed.id]
+      allow(Sidekiq::ScheduledSet).to receive(:new).and_return [job]
+      expect(job).not_to receive :delete
       @feed.destroy
     end
 

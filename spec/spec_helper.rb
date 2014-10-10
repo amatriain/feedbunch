@@ -107,7 +107,5 @@ RSpec.configure do |config|
 
     # Clear the email delivery queue before each test.
     ActionMailer::Base.deliveries.clear
-
-
   end
 end
