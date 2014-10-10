@@ -374,18 +374,10 @@ describe Feed, type: :model do
   context 'scheduled updates' do
 
     it 'schedules updates for a feed when it is created' do
-      # TODO rework this test after migrating from Resque-scheduler to a
-      # system compatible with Sidekiq
-
-      pending
-
       feed = FactoryGirl.build :feed
-      expect(Resque).to receive(:set_schedule).once do |name, config|
-        expect(name).to eq "update_feed_#{feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
-        expect(config[:args]).to eq feed.id
-        expect(config[:every][0]).to eq '3600s'
-        expect(config[:every][1][:first_in]).to be_between 0.minutes, 60.minutes
+      expect(ScheduledUpdateFeedWorker).to receive(:perform_in).once do |seconds, feed_id|
+        expect(seconds).to be_between 0.minutes, 60.minutes
+        expect(feed_id).to eq feed.id
       end
       feed.save
     end

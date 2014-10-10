@@ -90,6 +90,15 @@ RSpec.configure do |config|
     # ensure no attempt to connect to Redis is done
     Sidekiq::Testing.fake!
 
+    # Clear Sidekiq job queues before each test
+    Sidekiq::Worker.clear_all
+
+    # Querying Sidekiq's queues does not attempt to connect to Redis
+    allow(Sidekiq::Queue).to receive(:new).and_return []
+    allow(Sidekiq::ScheduledSet).to receive(:new).and_return []
+    allow(Sidekiq::RetrySet).to receive(:new).and_return []
+    allow(Sidekiq::Workers).to receive(:new).and_return []
+
     # TODO remove these after migration from Resque to Sidekiq is complete
     allow(Resque).to receive(:set_schedule)
     allow(Resque).to receive(:remove_schedule)
@@ -99,7 +108,6 @@ RSpec.configure do |config|
     # Clear the email delivery queue before each test.
     ActionMailer::Base.deliveries.clear
 
-    # Clear Sidekiq job queues before each test
-    Sidekiq::Worker.clear_all
+
   end
 end
