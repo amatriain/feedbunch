@@ -412,18 +412,24 @@ describe Feed, type: :model do
     end
 
     it 'unschedules updates for a feed when it is marked as unavailable' do
-      expect(Resque).to receive(:remove_schedule).with "update_feed_#{@feed.id}"
+      job = double 'job', klass: 'ScheduledUpdateFeedWorker', args: [@feed.id]
+      allow(Sidekiq::ScheduledSet).to receive(:new).and_return [job]
+      expect(job).to receive(:delete).once
       @feed.update available: false
     end
 
     it 'does not unschedule updates for a feed when it is marked as available' do
       @feed.update_column :available, false
-      expect(Resque).not_to receive :remove_schedule
+      job = double 'job', klass: 'ScheduledUpdateFeedWorker', args: [@feed.id]
+      allow(Sidekiq::ScheduledSet).to receive(:new).and_return [job]
+      expect(job).not_to receive :delete
       @feed.update available: true
     end
 
     it 'does not unschedule updates for a feed when the available attribute is not changed' do
-      expect(Resque).not_to receive :remove_schedule
+      job = double 'job', klass: 'ScheduledUpdateFeedWorker', args: [@feed.id]
+      allow(Sidekiq::ScheduledSet).to receive(:new).and_return [job]
+      expect(job).not_to receive :delete
       @feed.update title: 'some other title'
     end
   end
