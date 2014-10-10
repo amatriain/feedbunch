@@ -383,13 +383,8 @@ describe Feed, type: :model do
     end
 
     it 'does not change scheduling when saving an already existing feed' do
-      # TODO rework this. The schedule_feed_updated method does not exist in
-      # ScheduledUpdateFeedJob (nor ScheduledUpdateFeedWorker). Probably schedules can be directly
-      # queried through an API
-
-      pending
-
-      expect(ScheduledUpdateFeedJob).not_to receive :schedule_first_update
+      expect(ScheduledUpdateFeedWorker).not_to receive :perform_in
+      expect(ScheduledUpdateFeedWorker).not_to receive :perform_at
       @feed.title = 'another title'
       @feed.save
     end
