@@ -373,7 +373,7 @@ describe Feed, type: :model do
 
   context 'scheduled updates' do
 
-    it 'schedules updates for a feed when it is created' do
+    it 'schedules next update for a feed when it is created' do
       feed = FactoryGirl.build :feed
       expect(ScheduledUpdateFeedWorker).to receive(:perform_in).once do |seconds, feed_id|
         expect(seconds).to be_between 0.minutes, 60.minutes
