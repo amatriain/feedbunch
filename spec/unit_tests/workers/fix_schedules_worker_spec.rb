@@ -24,45 +24,44 @@ describe FixSchedulesWorker do
   end
 
   it 'schedules next update when it should have been scheduled' do
-    @feed.update last_fetched: Time.zone.parse('2000-01-01 01:00:00')
-    @feed.update fetch_interval_secs: 12.hours
+    last_update = Time.zone.parse '3000-01-01 01:00:00'
+    @feed.update last_fetched: last_update
+    interval = 12.hours
+    @feed.update fetch_interval_secs: interval
+    # No scheduled update set for @feed
+    allow(Sidekiq::ScheduledSet).to receive(:new).and_return []
 
-    time_now = Time.zone.parse('2000-01-01 10:00:00')
-    allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return time_now
-    allow(Resque).to receive :fetch_schedule
-
-    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
-    # A job to schedule updates for @feed should be enqueued to be run at 2000-01-01 13:00:00
-    expect(Resque).to receive(:set_schedule).once do |name, config|
-      expect(name).to eq "update_feed_#{@feed.id}"
-      expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
-      expect(config[:args]).to eq @feed.id
-      expect(config[:every][0]).to eq "#{12.hours}s"
-      expect(config[:every][1][:first_in]).to eq 3.hours
+    expect(ScheduledUpdateFeedWorker).to receive(:perform_at).once do |perform_time, feed_id|
+      # Scheduled time should be 12 hours after last update
+      expect(perform_time).to eq last_update + interval
+      expect(feed_id).to eq @feed.id
     end
 
     FixSchedulesWorker.new.perform
   end
 
   it 'immediately schedules next update if the next update should have been scheduled in the past' do
-    @feed.update last_fetched: Time.zone.parse('2000-01-01 01:00:00')
-    @feed.update fetch_interval_secs: 12.hours
+    pending
 
-    time_now = Time.zone.parse('2000-01-02 01:00:00')
-    allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return time_now
-    allow(Resque).to receive :fetch_schedule
+    last_update = Time.zone.parse '1990-01-01 01:00:00'
+    @feed.update last_fetched: last_update
+    interval = 12.hours
+    @feed.update fetch_interval_secs: interval
+    # No scheduled update set for @feed
+    allow(Sidekiq::ScheduledSet).to receive(:new).and_return []
+    # Clear any possible enqueued jobs
+    ScheduledUpdateFeedWorker.jobs.clear
 
-    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
-    # A job to schedule updates for @feed should be enqueued to be run immediately
-    expect(Resque).to receive(:set_schedule).once do |name, config|
-      expect(name).to eq "update_feed_#{@feed.id}"
-      expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
-      expect(config[:args]).to eq @feed.id
-      expect(config[:every][0]).to eq "#{12.hours}s"
-      expect(config[:every][1][:first_in]).to be_between 0.minutes, 15.minutes
+    expect(ScheduledUpdateFeedWorker.jobs.size).to eq 0
+    expect(ScheduledUpdateFeedWorker).to receive(:perform_at).once do |perform_time, feed_id|
+      # Scheduled time should be 12 hours after last update
+      expect(perform_time).to eq last_update + interval
+      expect(feed_id).to eq @feed.id
     end
 
     FixSchedulesWorker.new.perform
+
+    expect(ScheduledUpdateFeedWorker.jobs.size).to eq 1
   end
 
   it 'schedules next update in the following hour if feed has never been updated' do
