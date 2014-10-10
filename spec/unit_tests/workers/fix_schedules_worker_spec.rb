@@ -5,33 +5,19 @@ describe FixSchedulesWorker do
   before :each do
     @feed = FactoryGirl.create :feed
 
-    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
-    pending
-    allow(Resque).to receive :fetch_schedule do
-      {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"3600s"}
-    end
+    # @feed has a scheduled update
+    @job = double 'job', klass: 'ScheduledUpdateFeedWorker', args: [@feed.id]
+    allow(Sidekiq::ScheduledSet).to receive(:new).and_return [@job]
   end
 
   it 'adds missing scheduled feed updates' do
     feed_unscheduled = FactoryGirl.create :feed
-    # @feed has scheduled updates, feed_unscheduled does not
+    # @feed has a scheduled update, feed_unscheduled does not
 
-    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
-    allow(Resque).to receive :fetch_schedule do |name|
-      if name == "update_feed_#{@feed.id}"
-        {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"3600s"}
-      else
-        nil
-      end
-    end
-
-    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
-    # A job to schedule updates for feed_unscheduled should be enqueued to be run in the next hour
-    expect(Resque).to receive(:set_schedule).once do |name, config|
-      expect(name).to eq "update_feed_#{feed_unscheduled.id}"
-      expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
-      expect(config[:args]).to eq feed_unscheduled.id
-      expect(config[:every][0]).to eq '3600s'
+    expect(ScheduledUpdateFeedWorker).to receive(:perform_at).once do |perform_time, feed_id|
+      # Scheduled time should be in the next hour
+      expect(perform_time - Time.zone.now).to be_between 0.minutes, 60.minutes
+      expect(feed_id).to eq feed_unscheduled.id
     end
 
     FixSchedulesWorker.new.perform

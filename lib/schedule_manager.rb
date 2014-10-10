@@ -165,7 +165,7 @@ class ScheduleManager
 
     # Schedule update. If the scheduled time is in the past (i.e. the feed should have been updated
     # in the past but it wasn't for some reason), Sidekiq will enqueue the job immediately.
-    ScheduledUpdateFeedWorker.perform_at perform_at
+    ScheduledUpdateFeedWorker.perform_at perform_at, feed.id
   end
 
   ##
