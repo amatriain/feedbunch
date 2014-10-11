@@ -40,30 +40,6 @@ describe FixSchedulesWorker do
     FixSchedulesWorker.new.perform
   end
 
-  it 'immediately schedules next update if the next update should have been scheduled in the past' do
-    pending
-
-    last_update = Time.zone.parse '1990-01-01 01:00:00'
-    @feed.update last_fetched: last_update
-    interval = 12.hours
-    @feed.update fetch_interval_secs: interval
-    # No scheduled update set for @feed
-    allow(Sidekiq::ScheduledSet).to receive(:new).and_return []
-    # Clear any possible enqueued jobs
-    ScheduledUpdateFeedWorker.jobs.clear
-
-    expect(ScheduledUpdateFeedWorker.jobs.size).to eq 0
-    expect(ScheduledUpdateFeedWorker).to receive(:perform_at).once do |perform_time, feed_id|
-      # Scheduled time should be 12 hours after last update
-      expect(perform_time).to eq last_update + interval
-      expect(feed_id).to eq @feed.id
-    end
-
-    FixSchedulesWorker.new.perform
-
-    expect(ScheduledUpdateFeedWorker.jobs.size).to eq 1
-  end
-
   it 'schedules next update in the following hour if feed has never been updated' do
     allow(Resque).to receive :fetch_schedule
 
