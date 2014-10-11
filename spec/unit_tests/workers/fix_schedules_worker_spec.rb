@@ -41,47 +41,33 @@ describe FixSchedulesWorker do
   end
 
   it 'schedules next update in the following hour if feed has never been updated' do
-    allow(Resque).to receive :fetch_schedule
+    @feed.update last_fetched: nil
+    # No scheduled update set for @feed
+    allow(Sidekiq::ScheduledSet).to receive(:new).and_return []
 
-    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
-    # A job to schedule updates for @feed should be scheduled sometime during the next hour
-    expect(Resque).to receive(:set_schedule).once do |name, config|
-      expect(name).to eq "update_feed_#{@feed.id}"
-      expect(config[:class]).to eq 'ScheduledUpdateFeedJob'
-      expect(config[:args]).to eq @feed.id
-      expect(config[:every][0]).to eq "#{1.hour}s"
-      expect(config[:every][1][:first_in]).to be_between 0.minutes, 60.minutes
+    expect(ScheduledUpdateFeedWorker).to receive(:perform_at).once do |perform_time, feed_id|
+      # Scheduled time should be in the next hour
+      expect(perform_time).to be_between Time.zone.now, Time.zone.now + 1.hour
+      expect(feed_id).to eq @feed.id
     end
 
-    expect(@feed.last_fetched).to be_nil
     FixSchedulesWorker.new.perform
   end
 
   it 'does nothing for existing feed updates' do
-    feed_scheduled = FactoryGirl.create :feed
-    # @feed and feed_scheduled have scheduled updates
-
-    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
-    allow(Resque).to receive :fetch_schedule do |name|
-      if name == "update_feed_#{@feed.id}"
-        {"class"=>"ScheduledUpdateFeedJob", "args"=>@feed.id, "every"=>"1h"}
-      elsif name == "update_feed_#{feed_scheduled.id}"
-        {"class"=>"ScheduledUpdateFeedJob", "args"=>feed_scheduled.id, "every"=>"1h"}
-      end
-    end
-
-    # TODO rework this after migrating from resque-scheduler to a system that supports Sidekiq
-    # No job to schedule updates should be enqueued
-    expect(Resque).not_to receive :set_schedule
-
+    expect(ScheduledUpdateFeedWorker).not_to receive :perform_at
+    expect(ScheduledUpdateFeedWorker).not_to receive :perform_in
+    expect(@job).not_to receive :delete
     FixSchedulesWorker.new.perform
   end
 
   it 'does not add a schedule for an unavailable feed' do
+    # No scheduled update set for @feed
+    allow(Sidekiq::ScheduledSet).to receive(:new).and_return []
     @feed.update available: false
-    allow(Resque).to receive :fetch_schedule
 
-    expect(Resque).not_to receive :set_schedule
+    expect(ScheduledUpdateFeedWorker).not_to receive :perform_at
+    expect(ScheduledUpdateFeedWorker).not_to receive :perform_in
 
     FixSchedulesWorker.new.perform
   end
