@@ -109,8 +109,8 @@ class SubscribeUserWorker
   # URL of the feed just subscribed, and the ID of the folder into which the feed as been moved.
 
   def update_import_state(user, feed_url, folder_id)
-    user.opml_import_job_state.processed_feeds += 1
-    user.opml_import_job_state.save
+    processed_feeds = user.opml_import_job_state.processed_feeds + 1
+    user.opml_import_job_state.update processed_feeds: processed_feeds
     if import_finished? user, feed_url, folder_id
       user.opml_import_job_state.state = OpmlImportJobState::SUCCESS
       user.opml_import_job_state.save
