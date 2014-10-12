@@ -116,8 +116,21 @@ describe SubscribeUserWorker do
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::SUCCESS
     end
 
+    it 'leaves data import as RUNNING if the ImportSubscriptionsWorker instance is still running' do
+      # The main import job is still running
+      work2 = {'payload' => {'class' => 'ImportSubscriptionsWorker', 'args' => ['some_filename.opml', @user.id]}}
+      job2 = ['some_process_id', 'some_thread_id', work2]
+      allow(Sidekiq::Workers).to receive(:new).and_return [@job_running, job2]
+
+      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
+
+      @user.reload
+      expect(@user.opml_import_job_state.processed_feeds).to eq 6
+      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
+    end
+
     it 'leaves data import as RUNNING if more SubscribeUserWorker instances are running' do
-      # Another job is running for the same user as part of an OPML import
+      # Another subscribe job is running for the same user as part of an OPML import
       work2 = {'payload' => {'class' => 'SubscribeUserWorker', 'args' => [@user.id, 'http://another.url', @folder.id, true]}}
       job2 = ['some_process_id', 'some_thread_id', work2]
       allow(Sidekiq::Workers).to receive(:new).and_return [@job_running, job2]
