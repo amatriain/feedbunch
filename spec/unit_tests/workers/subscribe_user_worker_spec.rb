@@ -73,20 +73,12 @@ describe SubscribeUserWorker do
                                        total_feeds: 10, processed_feeds: 5
       @user.opml_import_job_state = @opml_import_job_state
 
-      # Resque informs there is one more instance of SubscribeUserWorker enqueued.
-      enqueued_job = {'class' => 'SubscribeUserWorker', 'args' => [@user.id, 'http://some.url.com', nil, true]}
-      allow(Resque).to receive(:peek) do |queue, start|
-        if start == 0
-          enqueued_job
-        else
-          nil
-        end
-      end
+      # Sidekiq informs there is only one running SubscribeUserWorker running.
+      work = {'payload' => {'class' => 'SubscribeUserWorker', 'args' => [@user.id, @feed.fetch_url, @folder.id, true]}}
+      @job_running = ['some_process_id', 'some_thread_id', work]
+      allow(Sidekiq::Workers).to receive(:new).and_return [@job_running]
 
-      # Resque always informs there is only one running SubscribeUserWorker running.
-      this_job = {'payload' => {'class' => 'SubscribeUserWorker', 'args' => [@user.id, @feed.fetch_url, @folder.id, true]}}
-      @this_working_mock = double 'Working', job: this_job
-      allow(Resque).to receive(:working).and_return [@this_working_mock]
+      # Sidekiq informs there are no SubscribeUserWorker instances enqueued, scheduled or marked for retrying, see spec_helper.rb
     end
 
     it 'does nothing if the user does not have a running data import' do
@@ -125,36 +117,35 @@ describe SubscribeUserWorker do
     end
 
     it 'leaves data import as RUNNING if more SubscribeUserWorker instances are running' do
-      another_job = {'payload' => {'class' => 'SubscribeUserWorker', 'args' => [@user.id, 'http://another.url', @folder.id, true]}}
-      another_working_mock = double 'Working', job: another_job
-      allow(Resque).to receive(:working).and_return [@this_working_mock, another_working_mock]
+      # Another job is running for the same user as part of an OPML import
+      work2 = {'payload' => {'class' => 'SubscribeUserWorker', 'args' => [@user.id, 'http://another.url', @folder.id, true]}}
+      job2 = ['some_process_id', 'some_thread_id', work2]
+      allow(Sidekiq::Workers).to receive(:new).and_return [@job_running, job2]
+
       SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
+
       @user.reload
       expect(@user.opml_import_job_state.processed_feeds).to eq 6
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
     end
 
     it 'sets data import state to SUCCESS if this is the only SubscribeUserWorker running and no other is enqueued' do
-      allow(Resque).to receive(:peek).and_return nil
       SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
+
       @user.reload
       expect(@user.opml_import_job_state.processed_feeds).to eq 6
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::SUCCESS
     end
 
     it 'leaves data import as RUNNING if more SubscribeUserWorker instances are enqueued' do
+      job_enqueued = double 'job', klass: 'SubscribeUserWorker', args: [@user.id, 'http://some.url.com', nil, true]
+      allow(Sidekiq::Queue).to receive(:new).and_return [job_enqueued]
+
       SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
+
       @user.reload
       expect(@user.opml_import_job_state.processed_feeds).to eq 6
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
-    end
-
-    it 'sets data import state to SUCCESS if no import-related jobs are running or enqueued' do
-      allow(Resque).to receive(:peek).and_return nil
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 6
-      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::SUCCESS
     end
 
     it 'sends an email if all feeds have been processed' do
