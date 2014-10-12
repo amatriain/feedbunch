@@ -142,7 +142,7 @@ class SubscribeUserWorker
   end
 
   ##
-  # Check if the OPML import process has finished (all enqueued jobs have finished running).
+  # Check if the OPML import process has finished.
   #
   # Receives as argument the user whose import process is to be checked, the URL of
   # the feed just subscribed, and the ID of the folder into which it's been moved.
@@ -155,29 +155,85 @@ class SubscribeUserWorker
       return true
     end
 
-    # If a ImportSubscriptionWorker or another SubscribeUserWorker for the user is still running, import process is not finished
+    # If other jobs part of the same OPML import are still running, import process is not finished
+    if other_jobs_running? user, feed_url, folder_id
+      return false
+    # If a SubscribeUserWorker is enqueued, import process is not finished
+    elsif other_jobs_enqueued? user, feed_url, folder_id
+      return false
+    # If no jobs related to the import are running or queued, the import process has finished
+    else
+      return true
+    end
+  end
+
+  ##
+  # Check if other jobs part of an OPML import for the passed user are currently running, besides
+  # this one.
+  #
+  # Receives as arguments: user who is running the OPML import, URL of the feed being subscribed by this job,
+  # ID of the destination folder for this job.
+  #
+  # Other jobs part of the same OPML import should be instances of ImportSubscriptionsWorker (the main import job)
+  # or SubscribeUserWorker (the subscribe jobs launched by the main import job), and they should share arguments.
+  #
+  # Returns true if other jobs part of the same OPML import are still running, false otherwise.
+
+  def other_jobs_running?(user, feed_url, folder_id)
+    other_jobs_running = false
+
     workers = Sidekiq::Workers.new
     workers.each do |process_id, thread_id, work|
       working_class = work['payload']['class']
       if working_class == 'ImportSubscriptionsWorker'
-        return false if work['payload']['args'][1] == user.id
+        # As soon as a single job matching the conditions is found, we can return "true", no need
+        # to keep looking at the rest of jobs
+        if work['payload']['args'][1] == user.id
+          other_jobs_running = true
+          break
+        end
       elsif working_class == 'SubscribeUserWorker'
         args = work['payload']['args']
-        return false if args[0] == user.id && (args[1] != feed_url || args[2] != folder_id) && args[3] == true
+        # As soon as a single job matching the conditions is found, we can return "true", no need
+        # to keep looking at the rest of jobs
+        if args[0] == user.id && (args[1] != feed_url || args[2] != folder_id) && args[3] == true
+          other_jobs_running = true
+          break
+        end
       end
     end
 
-    # If a SubscribeUserWorker is enqueued, import process is not finished
+    return other_jobs_running
+  end
+
+  ##
+  # Check if other jobs part of an OPML import for the passed user are currently enqueued.
+  #
+  # Receives as arguments: user who is running the OPML import, URL of the feed being subscribed by this job,
+  # ID of the destination folder for this job.
+  #
+  # Other jobs part of the same OPML import should be instances of SubscribeUserWorker (the subscribe jobs
+  # launched by the main import job), and they should share arguments.
+  #
+  # Returns true if other jobs part of the same OPML import are enqueued, false otherwise.
+
+  def other_jobs_enqueued?(user, feed_url, folder_id)
+    other_jobs_enqueued = false
+
     queue = Sidekiq::Queue.new 'interactive'
     queue.each do |job|
       if job.klass == 'SubscribeUserWorker'
         args = job.args
-        return false if args[0] == user.id && (args[1] != feed_url || args[2] != folder_id) && args[3] == true
+        # As soon as a single job matching the conditions is found, we can return "true", no need
+        # to keep looking at the rest of jobs
+        if args[0] == user.id && (args[1] != feed_url || args[2] != folder_id) && args[3] == true
+          other_jobs_enqueued = true
+          break
+        end
       end
     end
 
-    # If no jobs related to the import are running or queued, the import process has finished
-    return true
+    return other_jobs_enqueued
   end
 
 end
