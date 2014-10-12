@@ -151,7 +151,7 @@ class SubscribeUserWorker
 
   def import_finished?(user, feed_url, folder_id)
     # If the number of processed feeds equals the total number of feeds in the OPML, import is finished
-    if user.opml_import_job_state.processed_feeds == user.opml_import_job_state.total_feeds
+    if user.opml_import_job_state.processed_feeds >= user.opml_import_job_state.total_feeds
       return true
     end
 
