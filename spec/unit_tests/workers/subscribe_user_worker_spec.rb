@@ -72,13 +72,6 @@ describe SubscribeUserWorker do
       @opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
                                        total_feeds: 10, processed_feeds: 5
       @user.opml_import_job_state = @opml_import_job_state
-
-      # Sidekiq informs there is only one running SubscribeUserWorker running.
-      work = {'payload' => {'class' => 'SubscribeUserWorker', 'args' => [@user.id, @feed.fetch_url, @folder.id, true]}}
-      @job_running = ['some_process_id', 'some_thread_id', work]
-      allow(Sidekiq::Workers).to receive(:new).and_return [@job_running]
-
-      # Sidekiq informs there are no SubscribeUserWorker instances enqueued, scheduled or marked for retrying, see spec_helper.rb
     end
 
     it 'does nothing if the user does not have a running data import' do
@@ -106,6 +99,7 @@ describe SubscribeUserWorker do
       SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
       expect(@user.opml_import_job_state.processed_feeds).to eq 6
+      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
     end
 
     it 'sets data import state to SUCCESS if all feeds have been processed' do
@@ -114,51 +108,6 @@ describe SubscribeUserWorker do
       @user.reload
       expect(@user.opml_import_job_state.processed_feeds).to eq 10
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::SUCCESS
-    end
-
-    it 'leaves data import as RUNNING if the ImportSubscriptionsWorker instance is still running' do
-      # The main import job is still running
-      work2 = {'payload' => {'class' => 'ImportSubscriptionsWorker', 'args' => ['some_filename.opml', @user.id]}}
-      job2 = ['some_process_id', 'some_thread_id', work2]
-      allow(Sidekiq::Workers).to receive(:new).and_return [@job_running, job2]
-
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 6
-      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
-    end
-
-    it 'leaves data import as RUNNING if more SubscribeUserWorker instances are running' do
-      # Another subscribe job is running for the same user as part of an OPML import
-      work2 = {'payload' => {'class' => 'SubscribeUserWorker', 'args' => [@user.id, 'http://another.url', @folder.id, true]}}
-      job2 = ['some_process_id', 'some_thread_id', work2]
-      allow(Sidekiq::Workers).to receive(:new).and_return [@job_running, job2]
-
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 6
-      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
-    end
-
-    it 'sets data import state to SUCCESS if this is the only SubscribeUserWorker running and no other is enqueued' do
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 6
-      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::SUCCESS
-    end
-
-    it 'leaves data import as RUNNING if more SubscribeUserWorker instances are enqueued' do
-      job_enqueued = double 'job', klass: 'SubscribeUserWorker', args: [@user.id, 'http://some.url.com', nil, true]
-      allow(Sidekiq::Queue).to receive(:new).and_return [job_enqueued]
-
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 6
-      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
     end
 
     it 'sends an email if all feeds have been processed' do
