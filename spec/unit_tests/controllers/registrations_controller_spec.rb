@@ -81,8 +81,9 @@ describe FeedbunchAuth::RegistrationsController, type: :controller do
     end
 
     it 'does not lock user nor enqueue job if wrong password is submitted' do
-      expect(Resque).not_to receive :enqueue
+      expect(DestroyUserWorker.jobs.size).to eq 0
       delete :destroy, delete_user_registration: {password: 'wrong_password'}
+      expect(DestroyUserWorker.jobs.size).to eq 0
       expect(@user.reload.access_locked?).to be false
     end
 
