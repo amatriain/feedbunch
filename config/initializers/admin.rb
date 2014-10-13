@@ -3,16 +3,6 @@
 #
 # For details see: http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/
 
-# TODO delete this class after migration from Resque to Sidekiq is completed
-
-class CanAccessResque
-  def self.matches?(request)
-    current_user = request.env['warden'].user
-    return false if current_user.blank?
-    Ability.new(current_user).can? :manage, Resque
-  end
-end
-
 ##
 # Class to restrict access to Sidekiq web ui to admin users.
 #

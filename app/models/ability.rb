@@ -31,9 +31,6 @@ class Ability
 
     user ||= User.new
     if user.admin
-      # TODO remove Resque permission after migration from Resque to Sidekiq is completed
-      can :manage, Resque
-
       can :manage, Sidekiq
       can :manage, ActiveAdmin
     end

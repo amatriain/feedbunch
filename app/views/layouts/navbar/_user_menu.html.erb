@@ -22,16 +22,6 @@
           </li>
         <% end %>
 
-        <%# TODO Remove this link when migration from Resque to Sidekiq is finished %>
-        <% if can? :manage, Resque %>
-          <li>
-            <%= link_to '/resque', target: '_blank' do %>
-              <i class="fa fa-code-fork fa-fw"></i>
-              <%= t 'layouts.navbar.background_jobs' %>
-            <% end %>
-          </li>
-        <% end %>
-
         <% if can? :manage, Sidekiq %>
           <li>
             <%= link_to sidekiq_web_path, target: '_blank' do %>

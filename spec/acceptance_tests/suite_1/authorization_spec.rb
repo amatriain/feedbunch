@@ -7,30 +7,6 @@ describe 'authorization', type: :feature do
     @admin_user = FactoryGirl.create :user_admin
   end
 
-  # TODO delete this context after migration from Resque to Sidekiq is completed
-  context 'Resque access' do
-
-    it 'shows Resque link to admin users' do
-      login_user_for_feature @admin_user
-      visit read_path
-
-      expect(page).to have_css 'a[href="/resque"]'
-    end
-
-    it 'does not show Resque link to non-admin users' do
-      login_user_for_feature @normal_user
-      visit read_path
-
-      expect(page).not_to have_css 'a[href="/resque"]'
-    end
-
-    it 'does not allow access to Resque to non-admin users' do
-      login_user_for_feature @normal_user
-      expect {visit '/resque'}.to raise_error ActionController::RoutingError
-    end
-
-  end
-
   context 'Sidekiq access' do
 
     it 'shows Sidekiq link to admin users' do
