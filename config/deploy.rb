@@ -53,12 +53,12 @@ set :repo_url,  'git://github.com/amatriain/feedbunch.git'
 set :branch, 'master'
 
 #############################################################
-#	God (manages Redis, Resque)
+#	God (manages Redis)
 #############################################################
 
 namespace :feedbunch_god do
 
-  desc 'Start God and God-managed tasks: Redis, Resque'
+  desc 'Start God and God-managed tasks'
   task :start do
     on roles :background do
       within current_path do
@@ -70,7 +70,7 @@ namespace :feedbunch_god do
     end
   end
 
-  desc 'Stop God and God-managed tasks: Redis, Resque'
+  desc 'Stop God and God-managed tasks'
   task :stop do
     on roles :background do
       within current_path do
@@ -86,31 +86,10 @@ namespace :feedbunch_god do
     end
   end
 
-  desc 'Restart God and God-managed tasks: Redis, Resque'
+  desc 'Restart God and God-managed tasks'
   task :restart_all do
     invoke 'feedbunch_god:stop'
     invoke 'feedbunch_god:start'
-  end
-
-  desc 'Restart only Resque watches (resque-worker, resque-scheduler)'
-  task :restart_resque do
-    on roles :background do
-      within current_path do
-        with resque_env: 'background' do
-          # terminate the god process without terminating any god-watched processes
-          begin
-            execute :god, 'quit'
-          rescue => e
-            puts "Error quitting God: #{e.to_s}"
-          end
-          # start again the god process
-          execute :god, '-c', File.join(current_path,'config','background_jobs.god'),
-                  '--log', File.join(shared_path, 'log', 'god.log')
-          # restart only watches in resque-group group
-          execute :god, 'restart', 'resque-group'
-        end
-      end
-    end
   end
 end
 
@@ -138,7 +117,6 @@ namespace :deploy do
         execute :touch, 'restart.txt'
       end
     end
-    invoke 'feedbunch_god:restart_resque'
   end
 
   # after deploying, restart the Passenger app
