@@ -99,12 +99,6 @@ RSpec.configure do |config|
     allow(Sidekiq::RetrySet).to receive(:new).and_return []
     allow(Sidekiq::Workers).to receive(:new).and_return []
 
-    # TODO remove these after migration from Resque to Sidekiq is complete
-    allow(Resque).to receive(:set_schedule)
-    allow(Resque).to receive(:remove_schedule)
-    allow(Resque).to receive(:enqueue)
-    allow(Resque).to receive(:enqueue_in)
-
     # Clear the email delivery queue before each test.
     ActionMailer::Base.deliveries.clear
   end

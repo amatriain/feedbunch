@@ -55,9 +55,6 @@ gem 'nokogiri'
 # Background jobs
 gem 'sidekiq'
 gem 'sidetiq'
-# TODO Remove resque gems after migration to Sidekiq
-gem 'resque'
-gem 'resque-scheduler'
 
 # Sinatra required for the Sidekiq web ui
 gem 'sinatra', '>= 1.3.0', :require => nil
