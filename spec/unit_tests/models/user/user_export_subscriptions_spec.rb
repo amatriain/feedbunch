@@ -40,9 +40,8 @@ describe User, type: :model do
     end
 
     it 'sets opml_import_job_state state as ERROR if an error is raised' do
-      allow(Resque).to receive(:enqueue).and_raise StandardError.new
+      allow(ExportSubscriptionsWorker).to receive(:perform_async).and_raise StandardError.new
       expect{@user.export_subscriptions}.to raise_error StandardError
-
       expect(@user.opml_export_job_state.state).to eq OpmlExportJobState::ERROR
     end
 
