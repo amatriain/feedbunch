@@ -53,10 +53,11 @@ describe User, type: :model do
     allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date_refresh
 
     expect(RefreshFeedJobState.count).to eq 0
-    expect(Resque).not_to receive :enqueue
+    expect(RefreshFeedWorker.jobs.size).to eq 0
 
     @user.refresh_feed @feed
 
+    expect(RefreshFeedWorker.jobs.size).to eq 0
     expect(RefreshFeedJobState.count).to eq 1
     job_state = RefreshFeedJobState.first
     expect(job_state.user_id).to eq @user.id
