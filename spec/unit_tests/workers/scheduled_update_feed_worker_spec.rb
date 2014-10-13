@@ -31,18 +31,18 @@ describe ScheduledUpdateFeedWorker do
     expect(user.feed_unread_count(@feed)).to eq 1
   end
 
-  it 'unschedules updates if the feed has been deleted' do
+  it 'does not schedule next update if the feed has been deleted' do
     @feed.destroy
-    expect(Resque).to receive(:remove_schedule).with "update_feed_#{@feed.id}"
-    expect(FeedClient).not_to receive :fetch
+    expect(ScheduledUpdateFeedWorker).not_to receive :perform_in
+    expect(ScheduledUpdateFeedWorker).not_to receive :perform_at
 
     ScheduledUpdateFeedWorker.new.perform @feed.id
   end
 
-  it 'unschedules updates if the feed has been marked as unavailable' do
+  it 'does not schedule next update if the feed has been marked as unavailable' do
     @feed.update available: false
-    expect(Resque).to receive(:remove_schedule).with "update_feed_#{@feed.id}"
-    expect(FeedClient).not_to receive :fetch
+    expect(ScheduledUpdateFeedWorker).not_to receive :perform_in
+    expect(ScheduledUpdateFeedWorker).not_to receive :perform_at
 
     ScheduledUpdateFeedWorker.new.perform @feed.id
   end
@@ -71,13 +71,9 @@ describe ScheduledUpdateFeedWorker do
         @feed.entries << entry
       end
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3240s'
-        expect(config[:every][1]).to eq ({first_in: 3240})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3240
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.reload.fetch_interval_secs).to eq 3600
@@ -88,13 +84,9 @@ describe ScheduledUpdateFeedWorker do
     it 'increments a 10% the fetch interval if no new entries are fetched' do
       allow(FeedClient).to receive(:fetch)
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.reload.fetch_interval_secs).to eq 3600
@@ -108,13 +100,9 @@ describe ScheduledUpdateFeedWorker do
         @feed.entries << entry
       end
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '600s'
-        expect(config[:every][1]).to eq ({first_in: 600.seconds})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 600
+        expect(feed_id).to eq @feed.id
       end
 
       @feed.update fetch_interval_secs: 10.minutes
@@ -125,13 +113,9 @@ describe ScheduledUpdateFeedWorker do
     it 'does not set a fetch interval greater than the configured maximum' do
       allow(FeedClient).to receive(:fetch)
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '21600s'
-        expect(config[:every][1]).to eq ({first_in: 6.hours})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 21600
+        expect(feed_id).to eq @feed.id
       end
 
       @feed.update fetch_interval_secs: 6.hours
@@ -291,13 +275,9 @@ WEBPAGE_HTML
     it 'increments the fetch interval if the feed server returns an HTTP error status' do
       allow(FeedClient).to receive(:fetch).and_raise RestClient::Exception.new
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
@@ -308,13 +288,9 @@ WEBPAGE_HTML
     it 'increments the fetch interval if the request times out' do
       allow(FeedClient).to receive(:fetch).and_raise RestClient::RequestTimeout.new
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
@@ -325,13 +301,9 @@ WEBPAGE_HTML
     it 'increments the fetch interval if the feed server FQDN cannot be resolved' do
       allow(FeedClient).to receive(:fetch).and_raise SocketError.new('getaddrinfo: Name or service not known')
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
@@ -342,13 +314,9 @@ WEBPAGE_HTML
     it 'increments the fetch interval if the feed server connection times out' do
       allow(FeedClient).to receive(:fetch).and_raise Errno::ETIMEDOUT.new
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
@@ -359,13 +327,9 @@ WEBPAGE_HTML
     it 'increments the fetch interval if the server refuses the connection' do
       allow(FeedClient).to receive(:fetch).and_raise Errno::ECONNREFUSED.new('Connection refused - connect(2) for "feed.com" port 80')
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
@@ -376,13 +340,9 @@ WEBPAGE_HTML
     it 'increments the fetch interval if the server is unreachable' do
       allow(FeedClient).to receive(:fetch).and_raise Errno::EHOSTUNREACH
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
@@ -393,13 +353,9 @@ WEBPAGE_HTML
     it 'increments the fetch interval if the server resets the connection' do
       allow(FeedClient).to receive(:fetch).and_raise Errno::ECONNRESET
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
@@ -410,13 +366,9 @@ WEBPAGE_HTML
     it 'increments the fetch interval if the feed server response is empty' do
       allow(FeedClient).to receive(:fetch).and_raise EmptyResponseError.new
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
@@ -427,13 +379,9 @@ WEBPAGE_HTML
     it 'increments the fetch interval if there is a problem trying to do a feed autodiscovery' do
       allow(FeedClient).to receive(:fetch).and_raise FeedAutodiscoveryError.new
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
@@ -444,13 +392,9 @@ WEBPAGE_HTML
     it 'increments the fetch interval if there is a problem trying to fetch a valid feed xml' do
       allow(FeedClient).to receive(:fetch).and_raise FeedFetchError.new
 
-      expect(Resque).to receive :set_schedule do |name, config|
-        expect(name).to eq "update_feed_#{@feed.id}"
-        expect(config[:class]).to eq 'ScheduledUpdateFeedWorker'
-        expect(config[:persist]).to be true
-        expect(config[:args]).to eq @feed.id
-        expect(config[:every][0]).to eq '3960s'
-        expect(config[:every][1]).to eq ({first_in: 3960})
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to eq 3960
+        expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
@@ -505,13 +449,14 @@ WEBPAGE_HTML
       expect(@feed.reload.available).to be false
     end
 
-    it 'unschedules updates for a feed when it has been failing longer than a week' do
+    it 'does not schedule next update for a feed that has been failing longer than a week' do
       allow(FeedClient).to receive(:fetch).and_raise RestClient::Exception.new
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
       @feed.update failing_since: date - (1.week + 1.day)
 
-      expect(Resque).to receive(:remove_schedule).with "update_feed_#{@feed.id}"
+      expect(ScheduledUpdateFeedWorker).not_to receive :perform_in
+      expect(ScheduledUpdateFeedWorker).not_to receive :perform_at
 
       ScheduledUpdateFeedWorker.new.perform @feed.id
     end
