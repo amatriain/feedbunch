@@ -93,7 +93,7 @@ class SubscribeUserWorker
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
     job_state.update state: SubscribeJobState::ERROR if job_state.present?
-    # The job has failed. Re-raise the exception so that Resque takes care of it
+    # The job has failed. Re-raise the exception so that Sidekiq takes care of it
     raise e
   ensure
     # Once finished, mark import state as SUCCESS if requested.

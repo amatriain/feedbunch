@@ -2,7 +2,7 @@ require 'schedule_manager'
 
 ##
 # Background job to fix the schedule for feed updates. Any missing
-# schedule will be added to resque-schedule.
+# schedule will be added to Sidekiq.
 #
 # This serves as safeguard against schedules getting lost for any reason.
 #
@@ -22,7 +22,7 @@ class FixSchedulesWorker
   ##
   # Fix feed update schedules. Any feed which does not have scheduled updates
   # will be detected, and the missing scheduled update for the feed will be
-  # added to resque-schedule.
+  # added to Sidekiq.
   #
   # This method is intended to be invoked from Sidekiq, which means it is performed in the background.
 

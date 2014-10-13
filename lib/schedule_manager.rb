@@ -96,7 +96,7 @@ class ScheduleManager
     Rails.logger.debug "Decrementing update interval of feed #{feed.id} - #{feed.title} to #{new_interval} seconds"
     feed.update fetch_interval_secs: new_interval
 
-    # Actually decrement the update interval in Resque
+    # Actually decrement the update interval
     set_scheduled_update feed.id, feed.fetch_interval_secs
   end
 
@@ -114,7 +114,7 @@ class ScheduleManager
     Rails.logger.debug "Incrementing update interval of feed #{feed.id} - #{feed.title} to #{new_interval} seconds"
     feed.update fetch_interval_secs: new_interval
 
-    # Actually increment the update interval in Resque
+    # Actually increment the update interval
     set_scheduled_update feed.id, feed.fetch_interval_secs
   end
 

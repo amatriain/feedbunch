@@ -44,7 +44,7 @@ class ImportSubscriptionsWorker
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
     import_state_error user
-    # Re-raise the exception so that Resque takes care of it
+    # Re-raise the exception so that Sidekiq takes care of it
     raise e
   ensure
     Feedbunch::Application.config.uploads_manager.delete user, OPMLImporter::FOLDER, filename

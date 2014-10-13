@@ -57,7 +57,7 @@ class ExportSubscriptionsWorker
     # Update job state
     user.opml_export_job_state.update state: OpmlExportJobState::ERROR if user.present?
 
-    # Re-raise the exception so that Resque takes care of it
+    # Re-raise the exception so that Sidekiq takes care of it
     raise e
   end
 

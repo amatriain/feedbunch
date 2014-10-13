@@ -62,10 +62,9 @@ namespace :feedbunch_god do
   task :start do
     on roles :background do
       within current_path do
-        with resque_env: 'background' do
-          execute :god, '-c', File.join(current_path,'config','background_jobs.god'),
-                  '--log', File.join(shared_path, 'log', 'god.log')
-        end
+        execute :god, '-c', File.join(current_path,'config','background_jobs.god'),
+                '--log', File.join(shared_path, 'log', 'god.log')
+
       end
     end
   end

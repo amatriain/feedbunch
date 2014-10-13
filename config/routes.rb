@@ -109,7 +109,7 @@ Feedbunch::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  # ActiveAdmin is only accessible for admins, see http://simple10.com/resque-admin-in-rails-3-routes-with-cancan/
+  # ActiveAdmin is only accessible for admins
   constraints CanAccessActiveAdmin do
     # ActiveAdmin will be accessible in the /admin path
     ActiveAdmin.routes self

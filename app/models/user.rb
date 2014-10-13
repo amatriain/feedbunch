@@ -42,7 +42,7 @@ require 'subscriptions_manager'
 # Also, the User model has the following attributes:
 #
 # - admin: Boolean that indicates whether the user is an administrator. This attribute is used to restrict access to certain
-# functionality, like Resque administration.
+# functionality, like ActiveAdmin and Sidekiq administration.
 # - name: text with the username, to be displayed in the app. Usernames are unique. Defaults to the value of the "email" attribute.
 # - locale: locale (en, es etc) in which the user wants to see the application. By default "en".
 # - timezone: name of the timezone (Europe/Madrid, UTC etc) to which the user wants to see times localized. By default "UTC".
