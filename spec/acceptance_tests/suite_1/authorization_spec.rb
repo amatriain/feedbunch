@@ -44,10 +44,10 @@ describe 'authorization', type: :feature do
       login_user_for_feature @normal_user
       visit read_path
 
-      expect(page).not_to have_css 'a[href="/sidekiq"]'
+      expect(page).not_to have_css 'a[href^="/sidekiq"]'
     end
 
-    it 'does not allow access to Resque to non-admin users' do
+    it 'does not allow access to Sidekiq to non-admin users' do
       login_user_for_feature @normal_user
       expect {visit '/sidekiq'}.to raise_error ActionController::RoutingError
     end
