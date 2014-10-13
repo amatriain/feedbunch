@@ -102,6 +102,16 @@ describe SubscribeUserWorker do
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
     end
 
+    it 'updates number of processed feeds in the running import if an error is raised' do
+      allow_any_instance_of(User).to receive(:subscribe).and_raise StandardError.new
+
+      expect{SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil}.to raise_error(StandardError)
+
+      @user.reload
+      expect(@user.opml_import_job_state.processed_feeds).to eq 6
+      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
+    end
+
     it 'sets data import state to SUCCESS if all feeds have been processed' do
       @user.opml_import_job_state.update processed_feeds: 9
       SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
