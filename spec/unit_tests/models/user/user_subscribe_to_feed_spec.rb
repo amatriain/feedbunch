@@ -51,8 +51,10 @@ describe User, type: :model do
 
     it 'does not enqueue job if the user is already subscribed to the feed' do
       @user.subscribe @feed.fetch_url
-      expect(Resque).not_to receive :enqueue
+
+      expect(SubscribeUserWorker.jobs.size).to eq 0
       @user.enqueue_subscribe_job @feed.fetch_url
+      expect(SubscribeUserWorker.jobs.size).to eq 0
     end
 
     it 'sets subscribe_job_state to state SUCCESS if the user is already subscribed to the feed' do
