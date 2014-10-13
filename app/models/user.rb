@@ -359,7 +359,7 @@ class User < ActiveRecord::Base
     # By default each user has the daily invitations limit set in application.rb
     if self.invitation_limit.blank?
       limit = Feedbunch::Application.config.daily_invitations_limit
-      Rails.logger.info "User #{self.email} has no invitatino limit set. Using #{limit} by default."
+      Rails.logger.info "User #{self.email} has no invitation limit set. Using #{limit} by default."
       self.invitation_limit = limit
     end
   end
