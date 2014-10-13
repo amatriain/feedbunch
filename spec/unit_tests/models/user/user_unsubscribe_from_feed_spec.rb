@@ -29,8 +29,9 @@ describe User, type: :model do
 
     it 'does not enqueue job if the user is not subscribed to the feed' do
       feed = FactoryGirl.create :feed
-      expect(Resque).not_to receive :enqueue
+      expect(UnsubscribeUserWorker.jobs.size).to eq 0
       expect {@user.enqueue_unsubscribe_job feed}.to raise_error NotSubscribedError
+      expect(UnsubscribeUserWorker.jobs.size).to eq 0
     end
   end
 
