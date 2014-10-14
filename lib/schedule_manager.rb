@@ -73,7 +73,7 @@ class ScheduleManager
 
     scheduled_set = Sidekiq::ScheduledSet.new
     scheduled_job = scheduled_set.select {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed_id}
-    Rails.logger.info "Feed #{feed_id} update scheduled #{queue_jobs.size} times, deleting" if scheduled_job.size > 0
+    Rails.logger.info "Feed #{feed_id} update scheduled #{scheduled_job.size} times, deleting" if scheduled_job.size > 0
     scheduled_job.each {|job| job.delete}
 
     retrying = Sidekiq::RetrySet.new
