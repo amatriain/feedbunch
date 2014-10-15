@@ -18,7 +18,7 @@ set :rvm_user_path, '~/.rvm'
 
 set :format, :pretty
 set :log_level, :debug
-SSHKit.config.command_map[:god] = "#{fetch :rvm_user_path}/bin/rvm #{fetch :rvm_ruby_version} do bundle exec god"
+SSHKit.config.command_map[:redis] = 'sudo service redis'
 SSHKit.config.command_map[:sidekiq] = 'sudo service sidekiq'
 
 #############################################################
@@ -54,42 +54,29 @@ set :repo_url,  'git://github.com/amatriain/feedbunch.git'
 set :branch, 'master'
 
 #############################################################
-#	God (manages Redis)
+#	Redis
 #############################################################
 
-namespace :feedbunch_god do
+namespace :redis do
 
-  desc 'Start God and God-managed tasks'
+  desc 'Start Redis'
   task :start do
     on roles :background do
-      within current_path do
-        execute :god, '-c', File.join(current_path,'config','background_jobs.god'),
-                '--log', File.join(shared_path, 'log', 'god.log')
-
-      end
+      execute :redis, 'start'
     end
   end
 
-  desc 'Stop God and God-managed tasks'
+  desc 'Stop Redis'
   task :stop do
     on roles :background do
-      within current_path do
-        # We run a "true" shell command after issuing a "god terminate" command because otherwise if
-        # God were not running before this, we would get a return value of false which
-        # Capistrano would intepret as an error and the deployment would be rolled back
-        begin
-          execute :god, 'terminate', ';true'
-        rescue => e
-          puts "Error terminating God: #{e.to_s}"
-        end
-      end
+      execute :redis, 'stop'
     end
   end
 
-  desc 'Restart God and God-managed tasks'
-  task :restart_all do
-    invoke 'feedbunch_god:stop'
-    invoke 'feedbunch_god:start'
+  desc 'Restart Redis'
+  task :restart do
+    invoke 'redis:stop'
+    invoke 'redis:start'
   end
 end
 
@@ -130,13 +117,13 @@ namespace :deploy do
 
   desc 'Start the application'
   task :start do
-    invoke 'feedbunch_god:start'
+    invoke 'redis:start'
     invoke 'sidekiq:start'
   end
 
   desc 'Stop the application'
   task :stop do
-    invoke 'feedbunch_god:stop'
+    invoke 'redis:stop'
     invoke 'sidekiq:stop'
   end
 
