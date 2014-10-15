@@ -19,6 +19,7 @@ set :rvm_user_path, '~/.rvm'
 set :format, :pretty
 set :log_level, :debug
 SSHKit.config.command_map[:god] = "#{fetch :rvm_user_path}/bin/rvm #{fetch :rvm_ruby_version} do bundle exec god"
+SSHKit.config.command_map[:sidekiq] = 'sudo service sidekiq'
 
 #############################################################
 #	Servers
@@ -93,6 +94,35 @@ namespace :feedbunch_god do
 end
 
 #############################################################
+#	Sidekiq
+#############################################################
+
+namespace :sidekiq do
+
+  desc 'Start Sidekiq'
+  task :start do
+    on roles :background do
+      execute :sidekiq, 'start'
+    end
+  end
+
+  desc 'Stop Sidekiq'
+  task :stop do
+    on roles :background do
+      execute :sidekiq, 'stop'
+    end
+  end
+
+  desc 'Restart Sidekiq'
+  task :stop do
+    on roles :background do
+      execute :sidekiq, 'restart'
+    end
+  end
+
+end
+
+#############################################################
 #	Deployment start/stop/restart hooks
 #############################################################
 
@@ -101,11 +131,13 @@ namespace :deploy do
   desc 'Start the application'
   task :start do
     invoke 'feedbunch_god:start'
+    invoke 'sidekiq:start'
   end
 
   desc 'Stop the application'
   task :stop do
     invoke 'feedbunch_god:stop'
+    invoke 'sidekiq:stop'
   end
 
   desc 'Restart the application'
@@ -116,6 +148,7 @@ namespace :deploy do
         execute :touch, 'restart.txt'
       end
     end
+    invoke 'sidekiq:restart'
   end
 
   # after deploying, restart the Passenger app
