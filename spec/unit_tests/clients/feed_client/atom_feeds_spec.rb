@@ -447,6 +447,74 @@ WEBPAGE_HTML
       expect(feed.fetch_url).to eq feed_fetch_url
     end
 
+    it 'uses http:// for autodiscovered protocol relative URL' do
+      feed_fetch_url_relative = '//webpage.com/feed'
+      feed_fetch_url_absolute = 'http://webpage.com/feed'
+      feed_url = 'http://webpage.com'
+      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{feed_fetch_url_relative}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      allow(webpage_html).to receive(:headers).and_return({})
+
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      allow(RestClient).to receive :get do |url|
+        if url==feed_fetch_url_absolute
+          raise RestClient::NotModified.new
+        else
+          webpage_html
+        end
+      end
+
+      expect(feed.fetch_url).not_to eq feed_fetch_url_absolute
+      FeedClient.fetch feed, true
+      feed.reload
+      expect(feed.fetch_url).to eq feed_fetch_url_absolute
+    end
+
+    it 'uses https:// for autodiscovered protocol relative URL' do
+      feed_fetch_url_relative = '//webpage.com/feed'
+      feed_fetch_url_absolute = 'https://webpage.com/feed'
+      feed_url = 'https://webpage.com'
+      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/atom+xml" href="#{feed_fetch_url_relative}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      allow(webpage_html).to receive(:headers).and_return({})
+
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      allow(RestClient).to receive :get do |url|
+        if url==feed_fetch_url_absolute
+          raise RestClient::NotModified.new
+        else
+          webpage_html
+        end
+      end
+
+      expect(feed.fetch_url).not_to eq feed_fetch_url_absolute
+      FeedClient.fetch feed, true
+      feed.reload
+      expect(feed.fetch_url).to eq feed_fetch_url_absolute
+    end
+
     it 'fetches feed' do
       feed_url = 'http://webpage.com/feed'
       webpage_html = <<WEBPAGE_HTML
