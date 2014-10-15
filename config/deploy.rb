@@ -114,7 +114,7 @@ namespace :sidekiq do
   end
 
   desc 'Restart Sidekiq'
-  task :stop do
+  task :restart do
     on roles :background do
       execute :sidekiq, 'restart'
     end
