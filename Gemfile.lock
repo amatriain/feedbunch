@@ -136,7 +136,6 @@ GEM
       sax-machine (~> 1.0)
     formtastic (2.3.0.rc3)
       actionpack (>= 3.0)
-    god (0.13.4)
     haml (4.0.5)
       tilt
     has_scope (0.6.0.rc)
@@ -326,7 +325,6 @@ DEPENDENCIES
   devise_invitable
   factory_girl_rails
   feedjira
-  god
   high_voltage
   http_accept_language
   jquery-rails

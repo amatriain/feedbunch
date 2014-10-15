@@ -59,9 +59,6 @@ gem 'sidetiq'
 # Sinatra required for the Sidekiq web ui
 gem 'sinatra', '>= 1.3.0', :require => nil
 
-# Process monitoring
-gem 'god'
-
 # Authorization management
 gem 'cancancan'
 
