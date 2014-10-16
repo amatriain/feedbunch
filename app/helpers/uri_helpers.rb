@@ -41,7 +41,7 @@ module UriHelpers
   # Optionally a locale can also be passed; if so, the locale param will also be in the params array returned.
   #
   # This helper is used in places in which a link href may have the invitation_token and locale parameters,
-  # or they me be absent from the URL instead of present but with a blank value. E.g.: locale switch links in
+  # or they may be absent from the URL instead of present but with a blank value. E.g.: locale switch links in
   # devise views must have the invitation_token param to be valid, but only in the accept invitation view; in
   # the rest of views the locale links must not have this param.
 
