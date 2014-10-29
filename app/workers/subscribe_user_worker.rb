@@ -112,8 +112,7 @@ class SubscribeUserWorker
     processed_feeds = user.opml_import_job_state.processed_feeds + 1
     user.opml_import_job_state.update processed_feeds: processed_feeds
     if import_finished? user, feed_url, folder_id
-      user.opml_import_job_state.state = OpmlImportJobState::SUCCESS
-      user.opml_import_job_state.save
+      user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
       Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
       OpmlImportMailer.import_finished_success_email(user).deliver
     end
