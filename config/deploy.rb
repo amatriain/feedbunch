@@ -17,15 +17,14 @@ set :rvm_user_path, '~/.rvm'
 #############################################################
 
 set :format, :pretty
-set :log_level, :warn
+set :log_level, :info
 
 # pumactl is not in the default list of executables to be prefixed
 # with 'bundle exec' by the capistrano-bundler gem.
-set :bundle_bins, fetch(:bundle_bins, []).push 'pumactl'
+set :bundle_bins, fetch(:bundle_bins, []).push('pumactl')
 
 # Map new commands we need during deployment
 SSHKit.config.command_map[:puma] = 'sudo service feedbunch-puma'
-SSHKit.config.command_map[:pumactl] = "pumactl -F config/puma/#{stage}.rb"
 SSHKit.config.command_map[:redis] = 'sudo service redis'
 SSHKit.config.command_map[:sidekiq] = 'sudo service sidekiq'
 
@@ -84,7 +83,9 @@ namespace :puma do
   desc 'Restart Puma with phased-restart. If there have been changes in the DB schema you MUST issue a stop+start manually.'
   task :restart do
     on roles :app do
-      execute :pumactl, 'phased-restart'
+      within release_path do
+        execute :pumactl, 'phased-restart'
+      end
     end
   end
 

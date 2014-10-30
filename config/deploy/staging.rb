@@ -18,7 +18,7 @@ set :stage, :staging
 #server 'example.com', user: 'deploy', roles: %w{web app}, my_property: :my_value
 
 server 'staging.feedbunch.com', user: 'feedbunch', roles: %w{app web}, primary: true
-server 'background.staging.feedbunch.com', user: 'feedbunch', roles: %w{app background db}
+server 'background.staging.feedbunch.com', user: 'feedbunch', roles: %w{background db}
 
 # you can set custom ssh options
 # it's possible to pass any option but you need to keep in mind that net/ssh understand limited list of options
@@ -48,3 +48,6 @@ set :ssh_options, {
 
 fetch(:default_env).merge!(rails_env: :staging)
 fetch(:default_env).merge!(rack_env: :staging)
+
+# Map new commands we need during deployment
+SSHKit.config.command_map[:pumactl] = "pumactl -F config/puma/staging.rb"
