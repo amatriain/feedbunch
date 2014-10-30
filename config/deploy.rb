@@ -17,7 +17,7 @@ set :rvm_user_path, '~/.rvm'
 #############################################################
 
 set :format, :pretty
-set :log_level, :debug
+set :log_level, :warn
 SSHKit.config.command_map[:redis] = 'sudo service redis'
 SSHKit.config.command_map[:sidekiq] = 'sudo service sidekiq'
 
