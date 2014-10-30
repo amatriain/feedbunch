@@ -19,14 +19,15 @@ set :rvm_user_path, '~/.rvm'
 set :format, :pretty
 set :log_level, :info
 
-# pumactl is not in the default list of executables to be prefixed
-# with 'bundle exec' by the capistrano-bundler gem.
-set :bundle_bins, fetch(:bundle_bins, []).push('pumactl')
-
 # Map new commands we need during deployment
 SSHKit.config.command_map[:puma] = 'sudo service feedbunch-puma'
 SSHKit.config.command_map[:redis] = 'sudo service redis'
 SSHKit.config.command_map[:sidekiq] = 'sudo service sidekiq'
+
+# Lazily evaluate :stage variable. It is given value in the stage files, which are ran after this one. This means
+# that the value of :stage cannot be directly fetched in this file, but it can be lazily evaluated so that
+# the value is retrieved after the stage file has run (and so the variable has value).
+set :stage, proc{fetch :stage}
 
 #############################################################
 #	Servers
@@ -84,7 +85,7 @@ namespace :puma do
   task :restart do
     on roles :app do
       within release_path do
-        execute :pumactl, 'phased-restart'
+        execute :bundle, :exec, :pumactl, "-F config/puma/#{fetch :stage}.rb", 'phased-restart'
       end
     end
   end
