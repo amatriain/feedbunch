@@ -47,3 +47,4 @@ set :ssh_options, {
 }
 
 fetch(:default_env).merge!(rails_env: :production)
+fetch(:default_env).merge!(rack_env: :production)

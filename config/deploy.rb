@@ -18,6 +18,14 @@ set :rvm_user_path, '~/.rvm'
 
 set :format, :pretty
 set :log_level, :warn
+
+# pumactl is not in the default list of executables to be prefixed
+# with 'bundle exec' by the capistrano-bundler gem.
+set :bundle_bins, fetch(:bundle_bins, []).push 'pumactl'
+
+# Map new commands we need during deployment
+SSHKit.config.command_map[:puma] = 'sudo service feedbunch-puma'
+SSHKit.config.command_map[:pumactl] = "pumactl -F config/puma/#{stage}.rb"
 SSHKit.config.command_map[:redis] = 'sudo service redis'
 SSHKit.config.command_map[:sidekiq] = 'sudo service sidekiq'
 
@@ -52,6 +60,35 @@ set :linked_dirs, %w{
 set :scm, :git
 set :repo_url,  'git://github.com/amatriain/feedbunch.git'
 set :branch, 'master'
+
+#############################################################
+#	Puma
+#############################################################
+
+namespace :puma do
+
+  desc 'Start Puma'
+  task :start do
+    on roles :app do
+      execute :puma, 'start'
+    end
+  end
+
+  desc 'Stop Puma'
+  task :stop do
+    on roles :app do
+      execute :puma, 'stop'
+    end
+  end
+
+  desc 'Restart Puma with phased-restart. If there have been changes in the DB schema you MUST issue a stop+start manually.'
+  task :restart do
+    on roles :app do
+      execute :pumactl, 'phased-restart'
+    end
+  end
+
+end
 
 #############################################################
 #	Redis
@@ -117,28 +154,27 @@ namespace :deploy do
 
   desc 'Start the application'
   task :start do
+    invoke 'puma:start'
     invoke 'redis:start'
     invoke 'sidekiq:start'
   end
 
   desc 'Stop the application'
   task :stop do
+    invoke 'puma:stop'
     invoke 'redis:stop'
     invoke 'sidekiq:stop'
   end
 
   desc 'Restart the application'
   task :restart do
-    on roles :web do
-      within File.join(current_path,'tmp') do
-        # Tell passenger to restart the app
-        execute :touch, 'restart.txt'
-      end
+    on roles :app do
+      invoke 'puma:restart'
     end
     invoke 'sidekiq:restart'
   end
 
-  # after deploying, restart the Passenger app
+  # after deploying, restart the app
   after 'deploy:publishing', 'deploy:restart'
 
   # clean up old releases on each deploy, keep only 5 most recent releases
