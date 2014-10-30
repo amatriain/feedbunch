@@ -62,7 +62,7 @@ gem 'activeadmin', github: 'gregbell/active_admin'
 group :development do
   # Automate deployments
   gem 'capistrano-rails', require: false
-  gem 'rvm1-capistrano3', require: false
+  gem 'capistrano-rvm', require: false
   # App preloader to speed up tests, new in Rails 4.1.0
   gem 'spring'
 end
