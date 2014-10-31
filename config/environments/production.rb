@@ -96,11 +96,6 @@ Feedbunch::Application.configure do
       enable_starttls_auto: true
   }
 
-  # Use SSL for Devise views
-  config.to_prepare { Devise::SessionsController.force_ssl }
-  config.to_prepare { Devise::RegistrationsController.force_ssl }
-  config.to_prepare { Devise::PasswordsController.force_ssl }
-
   # Upload files to Amazon S3
   Feedbunch::Application.config.uploads_manager = S3Client
 
