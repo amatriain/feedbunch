@@ -17,12 +17,14 @@
 //= require_tree ./ng-filters
 //= require_tree ./ng-services
 //= require_tree ./misc
-//= require ../../../vendor/assets/javascripts/ng-infinite-scroll.min
-//= require ../../../vendor/assets/javascripts/withinViewport
-//= require ../../../vendor/assets/javascripts/jquery.withinViewport
-//= require ../../../vendor/assets/javascripts/enquire.min
-//= require ../../../vendor/assets/javascripts/hopscotch.min
 
 // Bootlint is a static html analyzer to help following Bootstrap's best practices
 // It should NEVER be required in production, it will be selectively enabled for testing.
 // require ../../../vendor/assets/javascripts/bootlint-0.3.0
+
+//= require ../../../vendor/assets/javascripts/enquire.min
+//= require ../../../vendor/assets/javascripts/favico-0.3.5.min
+//= require ../../../vendor/assets/javascripts/hopscotch.min
+//= require ../../../vendor/assets/javascripts/jquery.withinViewport
+//= require ../../../vendor/assets/javascripts/ng-infinite-scroll.min
+//= require ../../../vendor/assets/javascripts/withinViewport
