@@ -81,8 +81,15 @@ namespace :puma do
     end
   end
 
-  desc 'Restart Puma with phased-restart. If there have been changes in the DB schema you MUST issue a stop+start manually.'
+  desc 'Restart Puma'
   task :restart do
+    on roles :app do
+      execute :puma, 'restart'
+    end
+  end
+
+  desc 'Restart Puma with phased-restart. If there have been changes in the DB schema you MUST issue a stop+start manually.'
+  task :phased_restart do
     on roles :app do
       within release_path do
         execute :bundle, :exec, :pumactl, "-F config/puma/#{fetch :stage}.rb", 'phased-restart'
@@ -170,9 +177,7 @@ namespace :deploy do
 
   desc 'Restart the application'
   task :restart do
-    on roles :app do
-      invoke 'puma:restart'
-    end
+    invoke 'puma:phased_restart'
     invoke 'sidekiq:restart'
   end
 
