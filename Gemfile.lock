@@ -210,9 +210,9 @@ GEM
       activesupport (>= 3.0)
       i18n
       polyamorous (~> 1.0.0)
-    redis (3.0.7)
-    redis-namespace (1.4.1)
-      redis (~> 3.0.4)
+    redis (3.1.0)
+    redis-namespace (1.5.1)
+      redis (~> 3.0, >= 3.0.4)
     responders (1.0.0)
       railties (>= 3.2, < 5)
     rest-client (1.7.2)
