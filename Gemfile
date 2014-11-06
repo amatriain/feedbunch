@@ -103,6 +103,9 @@ group :staging, :production do
   # PostgreSQL database for staging and production
   gem 'pg'
 
+  # Use Redis for Rails caching
+  gem 'redis-rails'
+
   # Access Amazon AWS programattically
   gem 'aws-sdk', '< 2.0'
 
