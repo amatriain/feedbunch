@@ -19,14 +19,40 @@ class Api::FeedsController < ApplicationController
     include_read = param_str_to_boolean :include_read, params
 
     if params[:folder_id].present?
+      # Retrieve subscribed feeds in the passed folder
       @folder = current_user.folders.find params[:folder_id]
       @feeds = current_user.folder_feeds @folder, include_read: include_read
     else
+      # Retrieve subscribed feeds regardless of folder
+      @folder = nil
       @feeds = current_user.subscribed_feeds include_read: include_read, page: params[:page]
     end
 
     if @feeds.present?
-      render 'index', locals: {user: current_user, feeds: @feeds}
+      # Compose an array; each element is a hash containing the data necessary to render a feed in the JSON response
+      @feeds_data = []
+      @feeds.each do |feed|
+        begin
+          if @folder.nil?
+            # If we're retrieving feeds regardless of folder, we have to find out in which folder is each feed, if any.
+            folder_id = feed.user_folder(current_user).try(:id) || 'none'
+          else
+            # If we're retrieving feeds in a folder, we already know that all feeds are in this folder
+            folder_id = @folder.id
+          end
+
+          unread_count = current_user.feed_unread_count feed
+
+          data = {feed: feed, folder_id: folder_id, unread_count: unread_count}
+          @feeds_data << data
+        rescue NotSubscribedError => e
+          # If the feed in the current iteration is no longer subscribed (e.g. because of an asynchrously running worker that has
+          # unsubscribed it), just ignore it and continue with the next iteration
+          Rails.logger.warn "Listing subscribed feeds for user #{current_user.id} - #{current_user.email}, feed #{feed.id} is no longer subscribed, ignoring it"
+        end
+      end
+
+      render 'index', locals: {feeds_data: @feeds_data}
     else
       Rails.logger.info "User #{current_user.id} - #{current_user.email} has no feeds to return, returning a 404"
       head status: 404
@@ -44,7 +70,9 @@ class Api::FeedsController < ApplicationController
     @feed = current_user.feeds.find params[:id]
 
     if @feed.present?
-      render 'show', locals: {feed: @feed, user: current_user}
+      @folder_id = @feed.user_folder(current_user).try(:id) || 'none'
+      @unread_count = current_user.feed_unread_count @feed
+      render 'show', locals: {feed: @feed, folder_id: @folder_id, unread_count: @unread_count}
     else
       Rails.logger.info "Feed #{params[:id]} not found, returning a 404"
       head status: 404
