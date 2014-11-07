@@ -164,7 +164,7 @@ class SubscriptionsManager
 
   def self.check_user_subscribed (feed, user)
     if !user_subscribed? feed, user
-      Rails.logger.warn "User #{user.id} - #{user.id} tried to change unread entries count for feed #{feed.id} - #{feed.fetch_url} to which he is not subscribed"
+      Rails.logger.warn "User #{user.id} - #{user.id} is not subscribed to feed #{feed.id} - #{feed.fetch_url} but is attempting to do something with it"
       raise NotSubscribedError.new
     end
     return nil
