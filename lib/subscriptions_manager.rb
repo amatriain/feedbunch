@@ -69,12 +69,12 @@ class SubscriptionsManager
   # - user for whom the unread entries count is to be retrieved
   #
   # Returns a positive (or zero) integer with the count.
-  # If the user is not actually subscribed to the feed, a NotSubscribedError is raised.
+  # If the user is not actually subscribed to the feed, the method returns zero.
 
   def self.feed_unread_count(feed, user)
     if !user_subscribed? feed, user
-      Rails.logger.warn "User #{user.id} - #{user.id} tried to retrieve unread count from feed #{feed.id} - #{feed.fetch_url} but he is not subscribed"
-      raise NotSubscribedError.new
+      Rails.logger.warn "User #{user.id} - #{user.id} tried to retrieve unread count from feed #{feed.id} - #{feed.fetch_url} but he is not subscribed. Returning zero instead"
+      return 0
     end
 
     feed_subscription = user.feed_subscriptions.where(feed_id: feed.id).first
