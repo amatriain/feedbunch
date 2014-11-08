@@ -1,10 +1,10 @@
 # Redis server location
 Sidekiq.configure_server do |config|
-  config.redis = { url: Rails.application.secrets.redis_background }
+  config.redis = { url: Rails.application.secrets.redis_sidekiq_background }
 end
 
 Sidekiq.configure_client do |config|
-  config.redis = { url: Rails.application.secrets.redis_web }
+  config.redis = { url: Rails.application.secrets.redis_sidekiq_web }
 end
 
 # Show error backtraces

@@ -21,7 +21,7 @@ set :log_level, :info
 
 # Map new commands we need during deployment
 SSHKit.config.command_map[:puma] = 'sudo service feedbunch-puma'
-SSHKit.config.command_map[:redis] = 'sudo service redis'
+SSHKit.config.command_map[:redis_sidekiq] = 'sudo service redis-sidekiq'
 SSHKit.config.command_map[:sidekiq] = 'sudo service sidekiq'
 
 # Lazily evaluate :stage variable. It is given value in the stage files, which are ran after this one. This means
@@ -39,7 +39,7 @@ set :linked_files, %w{
                       config/database.yml
                       config/secrets.yml
                       config/newrelic.yml
-                      redis/redis.conf
+                      redis-sidekiq/redis.conf
                   }
 set :linked_dirs, %w{
                       bin
@@ -100,29 +100,29 @@ namespace :puma do
 end
 
 #############################################################
-#	Redis
+#	Redis backend for Sidekiq
 #############################################################
 
-namespace :redis do
+namespace :redis_sidekiq do
 
-  desc 'Start Redis'
+  desc 'Start Redis backend for Sidekiq'
   task :start do
     on roles :background do
-      execute :redis, 'start'
+      execute :redis_sidekiq, 'start'
     end
   end
 
-  desc 'Stop Redis'
+  desc 'Stop Redis backend for Sidekiq'
   task :stop do
     on roles :background do
-      execute :redis, 'stop'
+      execute :redis_sidekiq, 'stop'
     end
   end
 
-  desc 'Restart Redis'
+  desc 'Restart Redis backend for Sidekiq'
   task :restart do
-    invoke 'redis:stop'
-    invoke 'redis:start'
+    invoke 'redis_sidekiq:stop'
+    invoke 'redis_sidekiq:start'
   end
 end
 
@@ -164,14 +164,14 @@ namespace :deploy do
   desc 'Start the application'
   task :start do
     invoke 'puma:start'
-    invoke 'redis:start'
+    invoke 'redis_sidekiq:start'
     invoke 'sidekiq:start'
   end
 
   desc 'Stop the application'
   task :stop do
     invoke 'puma:stop'
-    invoke 'redis:stop'
+    invoke 'redis_sidekiq:stop'
     invoke 'sidekiq:stop'
   end
 
