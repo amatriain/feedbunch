@@ -13,6 +13,9 @@ gem 'jquery-rails'
 # Serve the app with Puma
 gem 'puma'
 
+# Use Redis for Rails caching
+gem 'redis-rails'
+
 # To more easily serve static pages
 gem 'high_voltage'
 
@@ -102,9 +105,6 @@ end
 group :staging, :production do
   # PostgreSQL database for staging and production
   gem 'pg'
-
-  # Use Redis for Rails caching
-  gem 'redis-rails'
 
   # Access Amazon AWS programattically
   gem 'aws-sdk', '< 2.0'
