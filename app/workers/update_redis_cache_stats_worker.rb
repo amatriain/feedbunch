@@ -1,3 +1,5 @@
+require 'redmon'
+
 ##
 # Background worker to update stats for the Redis instance serving as Rails cache backend.
 # Stats are then visualized with Redmon, accessible at the /redmon path.
