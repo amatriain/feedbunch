@@ -21,6 +21,7 @@ set :log_level, :info
 
 # Map new commands we need during deployment
 SSHKit.config.command_map[:puma] = 'sudo service feedbunch-puma'
+SSHKit.config.command_map[:redis_cache] = 'sudo service redis-cache'
 SSHKit.config.command_map[:redis_sidekiq] = 'sudo service redis-sidekiq'
 SSHKit.config.command_map[:sidekiq] = 'sudo service sidekiq'
 
@@ -39,6 +40,7 @@ set :linked_files, %w{
                       config/database.yml
                       config/secrets.yml
                       config/newrelic.yml
+                      redis-cache/redis.conf
                       redis-sidekiq/redis.conf
                   }
 set :linked_dirs, %w{
@@ -97,6 +99,33 @@ namespace :puma do
     end
   end
 
+end
+
+#############################################################
+#	Redis backend for Rails cache
+#############################################################
+
+namespace :redis_cache do
+
+  desc 'Start Redis backend for Rails cache'
+  task :start do
+    on roles :background do
+      execute :redis_cache, 'start'
+    end
+  end
+
+  desc 'Stop Redis backend for Rails cache'
+  task :stop do
+    on roles :background do
+      execute :redis_cache, 'stop'
+    end
+  end
+
+  desc 'Restart Redis backend for Rails cache'
+  task :restart do
+    invoke 'redis_cache:stop'
+    invoke 'redis_cache:start'
+  end
 end
 
 #############################################################
@@ -164,6 +193,7 @@ namespace :deploy do
   desc 'Start the application'
   task :start do
     invoke 'puma:start'
+    invoke 'redis_cache:start'
     invoke 'redis_sidekiq:start'
     invoke 'sidekiq:start'
   end
@@ -171,6 +201,7 @@ namespace :deploy do
   desc 'Stop the application'
   task :stop do
     invoke 'puma:stop'
+    invoke 'redis_cache:stop'
     invoke 'redis_sidekiq:stop'
     invoke 'sidekiq:stop'
   end

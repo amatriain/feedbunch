@@ -21,6 +21,8 @@ config/secrets.yml
 coverage/*
 redis-sidekiq/*.aof
 redis-sidekiq/*.rdb
+redis-cache/*.aof
+redis-cache/*.rdb
 opml_imports/*
 opml_exports/*
 .yardoc/*
