@@ -44,7 +44,7 @@ gem 'addressable'
 gem 'nokogiri'
 
 # Background jobs
-gem 'sidekiq'
+gem 'sidekiq', '>= 3.2.5'
 gem 'sidetiq'
 
 # Sinatra required for the Sidekiq web ui
