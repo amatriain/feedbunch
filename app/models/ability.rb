@@ -33,6 +33,7 @@ class Ability
     if user.admin
       can :manage, Sidekiq
       can :manage, ActiveAdmin
+      can :manage, Redmon
     end
   end
 end

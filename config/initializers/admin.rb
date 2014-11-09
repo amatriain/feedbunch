@@ -19,3 +19,14 @@ class CanAccessActiveAdmin
     Ability.new(current_user).can? :manage, ActiveAdmin
   end
 end
+
+##
+# Class to restrict access to Redmon to admin users.
+
+class CanAccessRedmon
+  def self.matches?(request)
+    current_user = request.env['warden'].user
+    return false if current_user.blank?
+    Ability.new(current_user).can? :manage, Redmon
+  end
+end

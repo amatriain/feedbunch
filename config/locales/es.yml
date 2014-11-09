@@ -31,6 +31,7 @@ es:
       folder_none: "Ninguna carpeta"
       logout: "Salir"
       admin: "Administración"
+      cache_stats: "Estadísticas cache de Rails"
       background_jobs: "Tareas en background"
       my_account: "Mi cuenta"
       read_feeds: "Leer feeds"

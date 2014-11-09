@@ -22,6 +22,15 @@
           </li>
         <% end %>
 
+        <% if can? :manage, Redmon %>
+          <li>
+            <%= link_to '/redmon', target: '_blank' do %>
+              <i class="fa fa-area-chart fa-fw"></i>
+              <%= t 'layouts.navbar.cache_stats' %>
+            <% end %>
+          </li>
+        <% end %>
+
         <% if can? :manage, Sidekiq %>
           <li>
             <%= link_to sidekiq_web_path, target: '_blank' do %>
