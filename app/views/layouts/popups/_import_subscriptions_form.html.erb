@@ -1,35 +1,39 @@
-<div id="opml-import-popup" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><%= t 'layouts.popups.import_subscriptions.title' %></h3>
-      </div>
-      <div class="modal-body">
-        <div class="alert alert-info">
-          <div class="row">
-            <div class="hidden-xs col-sm-2">
-              <i class="import-popup-info fa fa-info-circle fa-4x"></i>
-            </div>
-            <div class="col-xs-12 col-sm-10">
-              <p><%= t 'layouts.popups.import_subscriptions.help_1' %></p>
-              <p><%= t 'layouts.popups.import_subscriptions.help_2' %></p>
-            </div>
-          </div>
+<% cache "import_subscriptions_form-#{I18n.locale}" do %>
+
+  <div id="opml-import-popup" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3><%= t 'layouts.popups.import_subscriptions.title' %></h3>
         </div>
-        <hr>
-
-        <%= simple_form_for :opml_import, url: api_opml_imports_path, multipart: true,
-                            html: {:method => :post, id: 'form-opml-import'} do |f| %>
-          <%= f.input :file, as: :file, required: false %>
-          <div class="modal-footer">
-            <button id="opml-import-cancel" type="button" class="btn btn-default" data-dismiss="modal" ><%= t 'layouts.popups.import_subscriptions.close' %></button>
-            <button id="opml-import-submit" type="submit" class="btn btn-primary"><%= t 'layouts.popups.import_subscriptions.submit' %></button>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <div class="row">
+              <div class="hidden-xs col-sm-2">
+                <i class="import-popup-info fa fa-info-circle fa-4x"></i>
+              </div>
+              <div class="col-xs-12 col-sm-10">
+                <p><%= t 'layouts.popups.import_subscriptions.help_1' %></p>
+                <p><%= t 'layouts.popups.import_subscriptions.help_2' %></p>
+              </div>
+            </div>
           </div>
-        <% end %>
+          <hr>
+
+          <%= simple_form_for :opml_import, url: api_opml_imports_path, multipart: true,
+                              html: {:method => :post, id: 'form-opml-import'} do |f| %>
+            <%= f.input :file, as: :file, required: false %>
+            <div class="modal-footer">
+              <button id="opml-import-cancel" type="button" class="btn btn-default" data-dismiss="modal" ><%= t 'layouts.popups.import_subscriptions.close' %></button>
+              <button id="opml-import-submit" type="submit" class="btn btn-primary"><%= t 'layouts.popups.import_subscriptions.submit' %></button>
+            </div>
+          <% end %>
+
+        </div>
 
       </div>
-
     </div>
   </div>
-</div>
+
+<% end %>

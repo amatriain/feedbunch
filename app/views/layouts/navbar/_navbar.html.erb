@@ -1,3 +1,4 @@
+<% cache "navbar-#{I18n.locale}" do %>
 
   <div class="navbar navbar-default navbar-fixed-top">
 
@@ -28,8 +29,11 @@
 
       </ul>
 
+<% end %>
+
       <%= render 'layouts/navbar/user_menu' %>
 
     </div>
 
   </div>
+
