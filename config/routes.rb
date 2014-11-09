@@ -109,6 +109,9 @@ Feedbunch::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+  # TODO restrict access
+  mount Redmon::App => '/redmon'
+
   # ActiveAdmin is only accessible for admins
   constraints CanAccessActiveAdmin do
     # ActiveAdmin will be accessible in the /admin path

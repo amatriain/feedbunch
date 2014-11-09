@@ -50,6 +50,9 @@ gem 'sidetiq'
 # Sinatra required for the Sidekiq web ui
 gem 'sinatra', '>= 1.3.0', :require => nil
 
+# Web GUI for Redis instances
+gem 'redmon', require: false
+
 # Authorization management
 gem 'cancancan'
 
