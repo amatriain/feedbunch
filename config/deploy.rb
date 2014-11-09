@@ -126,6 +126,15 @@ namespace :redis_cache do
     invoke 'redis_cache:stop'
     invoke 'redis_cache:start'
   end
+
+  desc 'Clear the Rails cache, removing all saved data from Redis'
+  task :clear do
+    on roles :background do
+      within release_path do
+        execute :rake, 'rails_cache:clear'
+      end
+    end
+  end
 end
 
 #############################################################
