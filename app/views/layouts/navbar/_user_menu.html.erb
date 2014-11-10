@@ -1,6 +1,8 @@
 <%#= Cache different versions of the user menu for admin and non-admin users
- (admin users have more options available).%>
-<% cache "user_menu-#{current_user.admin ? 'admin':'noadmin'}-#{I18n.locale}" do %>
+ (admin users have more options available).
+ Also cache different versions for the read page (without "read feeds" option) and for other pages
+ (with "read feeds" menu option).%>
+<% cache "user_menu-#{current_user.admin ? 'admin':'noadmin'}-#{(current_page? '/read') ? 'read_page':'no_read_page'}-#{I18n.locale}" do %>
 
   <ul class="nav navbar-nav navbar-right">
 
