@@ -26,7 +26,7 @@ class Api::OpmlImportsController < ApplicationController
   end
 
   ##
-  # Upload a subscriptions data file (probably exported from Google Reader) and subscribe the current user
+  # Upload a subscriptions data file (probably exported from another feed reader) and subscribe the current user
   # to the feeds there.
 
   def create
