@@ -26,7 +26,8 @@
                               multipart: true,
                               authenticity_token: '',   # Rails unobtrusive-JS will set the correct value from the meta tag in head,
                                                         # this way this form can be cached and still send the correct token when POSTing.
-                              html: {:method => :post, id: 'form-opml-import'} do |f| %>
+                              html: {:method => :post,
+                                     id: 'form-opml-import'} do |f| %>
             <%= f.input :file, as: :file, required: false %>
             <div class="modal-footer">
               <button id="opml-import-cancel" type="button" class="btn btn-default" data-dismiss="modal" ><%= t 'layouts.popups.import_subscriptions.close' %></button>

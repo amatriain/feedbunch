@@ -1,35 +1,43 @@
-<div id="profile-delete-popup" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><%= t 'devise.views.delete_account.title' %></h3>
-      </div>
-      <div class="modal-body">
-        <div class="alert alert-danger">
-          <div class="row">
-            <div class="hidden-xs col-sm-2">
-              <i class="fa fa-trash-o fa-4x"></i>
-            </div>
-            <div class="col-xs-12 col-sm-10">
-              <p><%= t 'devise.views.delete_account.confirm' %></p>
-            </div>
-          </div>
+<% cache "profile_delete_form-#{I18n.locale}" do %>
+
+  <div id="profile-delete-popup" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3><%= t 'devise.views.delete_account.title' %></h3>
         </div>
-        <hr>
-
-        <%= simple_form_for :delete_user_registration, url: delete_user_registration_path,
-                            html: {:method => :delete, id: 'form-profile-cancel'} do |f| %>
-          <%= f.input :password, as: :password_icon,
-                    input_html: {autocomplete: 'off'}, required: true %>
-          <div class="modal-footer">
-            <button id="profile-delete-cancel" type="button" class="btn btn-default" data-dismiss="modal" ><%= t 'devise.views.delete_account.close' %></button>
-            <button id="profile-delete-submit" type="submit" class="btn btn-danger"><%= t 'devise.views.delete_account.submit' %></button>
+        <div class="modal-body">
+          <div class="alert alert-danger">
+            <div class="row">
+              <div class="hidden-xs col-sm-2">
+                <i class="fa fa-trash-o fa-4x"></i>
+              </div>
+              <div class="col-xs-12 col-sm-10">
+                <p><%= t 'devise.views.delete_account.confirm' %></p>
+              </div>
+            </div>
           </div>
-        <% end %>
+          <hr>
+
+          <%= simple_form_for :delete_user_registration,
+                              url: delete_user_registration_path,
+                              authenticity_token: '',   # Rails unobtrusive-JS will set the correct value from the meta tag in head,
+                                                        # this way this form can be cached and still send the correct token when POSTing.
+                              html: {:method => :delete,
+                                     id: 'form-profile-cancel'} do |f| %>
+            <%= f.input :password, as: :password_icon,
+                      input_html: {autocomplete: 'off'}, required: true %>
+            <div class="modal-footer">
+              <button id="profile-delete-cancel" type="button" class="btn btn-default" data-dismiss="modal" ><%= t 'devise.views.delete_account.close' %></button>
+              <button id="profile-delete-submit" type="submit" class="btn btn-danger"><%= t 'devise.views.delete_account.submit' %></button>
+            </div>
+          <% end %>
+
+        </div>
 
       </div>
-
     </div>
   </div>
-</div>
+
+<% end %>

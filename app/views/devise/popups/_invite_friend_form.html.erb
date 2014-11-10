@@ -1,36 +1,42 @@
-<div id="invite-friend-popup" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><%= t 'devise.views.invite_friend.title' %></h3>
-      </div>
-      <div class="modal-body">
-        <div class="alert alert-success">
-          <div class="row">
-            <div class="hidden-xs col-sm-2">
-              <i class="fa fa-child fa-4x"></i>
-            </div>
-            <div class="col-xs-12 col-sm-10">
-              <p><%= t 'devise.views.invite_friend.text' %></p>
-            </div>
-          </div>
+<% cache "invite_friend_form-#{I18n.locale}" do %>
+
+  <div id="invite-friend-popup" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3><%= t 'devise.views.invite_friend.title' %></h3>
         </div>
-        <hr>
-
-        <%= simple_form_for :user_invitation, url: '',
-                            html: {id: 'form-invite-friend',
-                            'ng-submit' => 'send_invitation()'} do |f| %>
-          <%= f.input :email, as: :email_icon, required: true, placeholder: t('simple_form.placeholders.user_invitation.email'),
-                      input_html: {'ng-model' => 'invitation_email'}%>
-          <div class="modal-footer">
-            <button id="invite-friend-cancel" type="button" class="btn btn-default" data-dismiss="modal" ><%= t 'devise.views.invite_friend.close' %></button>
-            <button id="invite-friend-submit" type="submit" class="btn btn-primary"><%= t 'devise.views.invite_friend.submit' %></button>
+        <div class="modal-body">
+          <div class="alert alert-success">
+            <div class="row">
+              <div class="hidden-xs col-sm-2">
+                <i class="fa fa-child fa-4x"></i>
+              </div>
+              <div class="col-xs-12 col-sm-10">
+                <p><%= t 'devise.views.invite_friend.text' %></p>
+              </div>
+            </div>
           </div>
-        <% end %>
+          <hr>
+
+          <%= simple_form_for :user_invitation,
+                              url: '',
+                              authenticity_token: false,   # authenticity token field not necessary for AJAX forms (it's sent via headers)
+                              html: {id: 'form-invite-friend',
+                                'ng-submit' => 'send_invitation()'} do |f| %>
+            <%= f.input :email, as: :email_icon, required: true, placeholder: t('simple_form.placeholders.user_invitation.email'),
+                        input_html: {'ng-model' => 'invitation_email'}%>
+            <div class="modal-footer">
+              <button id="invite-friend-cancel" type="button" class="btn btn-default" data-dismiss="modal" ><%= t 'devise.views.invite_friend.close' %></button>
+              <button id="invite-friend-submit" type="submit" class="btn btn-primary"><%= t 'devise.views.invite_friend.submit' %></button>
+            </div>
+          <% end %>
+
+        </div>
 
       </div>
-
     </div>
   </div>
-</div>
+
+<% end %>
