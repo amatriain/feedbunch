@@ -1,31 +1,37 @@
-<div id="subscribe-feed-popup" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><%= t 'read.popups.subscribe.title' %></h3>
-      </div>
-      <div class="modal-body">
+<% cache "subscribe_form-#{I18n.locale}" do %>
 
-        <%= simple_form_for :subscription, url: '',
-                            html: {id: 'form-subscription',
-                            'ng-submit' => 'subscribe()'} do |f| %>
-          <%= f.input :rss, as: :rss_icon, input_html: {'ng-model'=>'subscription_url'}, required: false %>
-          <div class="modal-footer">
-            <button type="button"
-                    class="btn btn-default"
-                    data-dismiss="modal" >
-              <%= t 'read.popups.subscribe.close' %>
-            </button>
-            <button type="submit"
-                    id="subscribe-submit"
-                    class="btn btn-primary">
-              <%= t 'read.popups.subscribe.submit' %>
-            </button>
-          </div>
-        <% end %>
+  <div id="subscribe-feed-popup" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3><%= t 'read.popups.subscribe.title' %></h3>
+        </div>
+        <div class="modal-body">
 
+          <%= simple_form_for :subscription,
+                              url: '',
+                              authenticity_token: false,   # authenticity token field not necessary for AJAX forms (it's sent via headers)
+                              html: {id: 'form-subscription',
+                                'ng-submit' => 'subscribe()'} do |f| %>
+            <%= f.input :rss, as: :rss_icon, input_html: {'ng-model'=>'subscription_url'}, required: false %>
+            <div class="modal-footer">
+              <button type="button"
+                      class="btn btn-default"
+                      data-dismiss="modal" >
+                <%= t 'read.popups.subscribe.close' %>
+              </button>
+              <button type="submit"
+                      id="subscribe-submit"
+                      class="btn btn-primary">
+                <%= t 'read.popups.subscribe.submit' %>
+              </button>
+            </div>
+          <% end %>
+
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+<% end %>

@@ -1,31 +1,37 @@
-<div id="new-folder-popup" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><%= t 'read.popups.new_folder.title' %></h3>
-      </div>
-      <div class="modal-body">
+<% cache "new_folder_form-#{I18n.locale}" do %>
 
-        <%= simple_form_for :new_folder, url: '',
-                            html: {id: 'form-new-folder',
-                            'ng-submit' => 'move_to_new_folder()'} do |f| %>
-          <%= f.input :title, as: :folder_icon, input_html: {'ng-model'=>'new_folder_title'}, required: false %>
-          <div class="modal-footer">
-            <button type="button"
-                    class="btn btn-default"
-                    data-dismiss="modal" >
-              <%= t 'read.popups.new_folder.close' %>
-            </button>
-            <button type="submit"
-                    id="new-folder-submit"
-                    class="btn btn-primary">
-              <%= t 'read.popups.new_folder.submit' %>
-            </button>
-          </div>
-        <% end %>
+  <div id="new-folder-popup" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3><%= t 'read.popups.new_folder.title' %></h3>
+        </div>
+        <div class="modal-body">
 
+          <%= simple_form_for :new_folder,
+                              url: '',
+                              authenticity_token: false,   # authenticity token field not necessary for AJAX forms (it's sent via headers)
+                              html: {id: 'form-new-folder',
+                                'ng-submit' => 'move_to_new_folder()'} do |f| %>
+            <%= f.input :title, as: :folder_icon, input_html: {'ng-model'=>'new_folder_title'}, required: false %>
+            <div class="modal-footer">
+              <button type="button"
+                      class="btn btn-default"
+                      data-dismiss="modal" >
+                <%= t 'read.popups.new_folder.close' %>
+              </button>
+              <button type="submit"
+                      id="new-folder-submit"
+                      class="btn btn-primary">
+                <%= t 'read.popups.new_folder.submit' %>
+              </button>
+            </div>
+          <% end %>
+
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+<% end %>
