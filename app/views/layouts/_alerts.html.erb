@@ -14,20 +14,24 @@
   </div>
 <% end %>
 
-<%# Alert displayed when there is a problem loading a tour's steps from the server %>
-<div id="problem-loading-tour" class="alert alert-danger" ng-show="error_loading_tour">
-  <button type="button" class="close" ng-click="reset_flag('error_loading_tour')">&times;</button>
-  <p><%= t 'layouts.alerts.problem_loading_tour' %></p>
-</div>
+<% cache "tour_alerts-#{I18n.locale}" do %>
 
-<%# Alert displayed when there is a problem changing a "show tour" flag for the current user %>
-<div id="problem-show-tour-change" class="alert alert-danger" ng-show="error_changing_show_tour">
-  <button type="button" class="close" ng-click="reset_flag('error_changing_show_tour')">&times;</button>
-  <p><%= t 'layouts.alerts.problem_change_show_tour' %></p>
-</div>
+  <%# Alert displayed when there is a problem loading a tour's steps from the server %>
+  <div id="problem-loading-tour" class="alert alert-danger" ng-show="error_loading_tour">
+    <button type="button" class="close" ng-click="reset_flag('error_loading_tour')">&times;</button>
+    <p><%= t 'layouts.alerts.problem_loading_tour' %></p>
+  </div>
 
-<%# Alert displayed when tours are reset successfully %>
-<div id="success-reset-tours" class="alert alert-success" ng-show="success_reset_tours">
-  <button type="button" class="close" ng-click="reset_flag('success_reset_tours')">&times;</button>
-  <p><%= t 'layouts.alerts.success_reset_tours' %></p>
-</div>
+  <%# Alert displayed when there is a problem changing a "show tour" flag for the current user %>
+  <div id="problem-show-tour-change" class="alert alert-danger" ng-show="error_changing_show_tour">
+    <button type="button" class="close" ng-click="reset_flag('error_changing_show_tour')">&times;</button>
+    <p><%= t 'layouts.alerts.problem_change_show_tour' %></p>
+  </div>
+
+  <%# Alert displayed when tours are reset successfully %>
+  <div id="success-reset-tours" class="alert alert-success" ng-show="success_reset_tours">
+    <button type="button" class="close" ng-click="reset_flag('success_reset_tours')">&times;</button>
+    <p><%= t 'layouts.alerts.success_reset_tours' %></p>
+  </div>
+
+<% end %>

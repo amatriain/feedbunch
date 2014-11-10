@@ -1,27 +1,29 @@
-<hr>
+<% cache "social_links-#{I18n.locale}" do %>
+  <hr>
 
-<div id="social-links">
+  <div id="social-links">
 
-  <a id="twitter-footer-link"
-     href="https://twitter.com/feedbunch"
-     target="_blank"
-     data-toggle="tooltip"
-     data-placement="top"
-     title="<%= t 'layouts.footer.twitter' %>">
-    <i class="fa fa-twitter fa-2x fa-fw"></i></a>
+    <a id="twitter-footer-link"
+       href="https://twitter.com/feedbunch"
+       target="_blank"
+       data-toggle="tooltip"
+       data-placement="top"
+       title="<%= t 'layouts.footer.twitter' %>">
+      <i class="fa fa-twitter fa-2x fa-fw"></i></a>
 
-  <a id="github-footer-link"
-     href="https://github.com/amatriain/feedbunch"
-     target="_blank"
-     data-toggle="tooltip"
-     data-placement="top"
-     title="<%= t 'layouts.footer.github' %>">
-    <i class="fa fa-github fa-2x fa-fw"></i></a>
+    <a id="github-footer-link"
+       href="https://github.com/amatriain/feedbunch"
+       target="_blank"
+       data-toggle="tooltip"
+       data-placement="top"
+       title="<%= t 'layouts.footer.github' %>">
+      <i class="fa fa-github fa-2x fa-fw"></i></a>
 
-  <%= mail_to Feedbunch::Application.config.admin_email, '@',
-             id: 'email-footer-link',
-             'data-toggle' => 'tooltip',
-             'data-placement' => 'top',
-             title: t('layouts.footer.email') %>
+    <%= mail_to Feedbunch::Application.config.admin_email, '@',
+               id: 'email-footer-link',
+               'data-toggle' => 'tooltip',
+               'data-placement' => 'top',
+               title: t('layouts.footer.email') %>
 
-</div>
+  </div>
+<% end %>

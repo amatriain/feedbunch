@@ -1,13 +1,15 @@
 <%# Alert about cookie use, to comply with EU law %>
 <% unless cookies[:accepted_cookies] == 'true' %>
-  <div id="cookie-notice" class="alert alert-info alert-dismissible fade in">
-    <button type="button"
-            class="close"
-            data-dismiss="alert"
-            ng-click="accept_cookies()"
-            title="<%= t 'layouts.cookies.accept' %>"
-            data-toggle="tooltip"
-            data-placement="top">&times;</button>
-    <p><%= t 'layouts.cookies.message' %></p>
-  </div>
+  <% cache do "cookies_warning-#{I18n.locale}" %>
+    <div id="cookie-notice" class="alert alert-info alert-dismissible fade in">
+      <button type="button"
+              class="close"
+              data-dismiss="alert"
+              ng-click="accept_cookies()"
+              title="<%= t 'layouts.cookies.accept' %>"
+              data-toggle="tooltip"
+              data-placement="top">&times;</button>
+      <p><%= t 'layouts.cookies.message' %></p>
+    </div>
+  <% end %>
 <% end %>
