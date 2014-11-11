@@ -1,21 +1,25 @@
-<div class="error-page container text-center">
+<% cache "error_404-#{I18n.locale}" do %>
 
-  <div class="alert alert-danger">
-    <h1><%= t 'error_pages.error_404.title' %></h1>
-    <p class="lead"><%= t 'error_pages.error_404.message' %></p>
-    <p><%= link_to t('error_pages.error_404.go_home'), root_path, class: 'alert-link' %></p>
+  <div class="error-page container text-center">
+
+    <div class="alert alert-danger">
+      <h1><%= t 'error_pages.error_404.title' %></h1>
+      <p class="lead"><%= t 'error_pages.error_404.message' %></p>
+      <p><%= link_to t('error_pages.error_404.go_home'), root_path, class: 'alert-link' %></p>
+    </div>
+
+    <%= link_to root_path, class: 'alert-link' do %>
+      <%= image_tag asset_path('404_number.jpg'), class: 'img-responsive img-thumbnail' %>
+    <% end %>
+
+    <p class="credit-line">
+      <%= link_to t('error_pages.error_404.img_credit'), 'http://flickr.com/photos/63930773@N06/7073212719', target: '_blank' %>
+      &nbsp;&copy;&nbsp;
+      <%= link_to 'vitalogia', 'http://www.flickr.com/people/63930773@N06', target: '_blank' %>
+      /
+      <%= link_to 'CC-BY-2.0', 'http://creativecommons.org/licenses/by/2.0/deed.en', target: '_blank' %>
+    </p>
+
   </div>
 
-  <%= link_to root_path, class: 'alert-link' do %>
-    <%= image_tag asset_path('404_number.jpg'), class: 'img-responsive img-thumbnail' %>
-  <% end %>
-
-  <p class="credit-line">
-    <%= link_to t('error_pages.error_404.img_credit'), 'http://flickr.com/photos/63930773@N06/7073212719', target: '_blank' %>
-    &nbsp;&copy;&nbsp;
-    <%= link_to 'vitalogia', 'http://www.flickr.com/people/63930773@N06', target: '_blank' %>
-    /
-    <%= link_to 'CC-BY-2.0', 'http://creativecommons.org/licenses/by/2.0/deed.en', target: '_blank' %>
-  </p>
-
-</div>
+<% end %>
