@@ -2,25 +2,31 @@
   <%= t 'devise.views.forgot_password' %>
 <% end %>
 
-<div class="row">
+<% cache "devise_passwords_new-#{I18n.locale}" do %>
 
-  <div class="col-xs-12 col-md-8">
-    <%= simple_form_for resource, :as => resource_name,
-                        :url => user_password_path(locale: I18n.locale),
-                        html: {:method => :post} do |f| %>
-      <%= f.input :email, as: :email_icon, autofocus:true %>
+  <div class="row">
 
-      <div class="form-group">
-        <div class="col-xs-12 col-sm-9 col-sm-offset-3">
-          <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
-            <i class="fa fa-share"></i> <%= t 'devise.views.send_password_reset' %>
-          <% end %>
+    <div class="col-xs-12 col-md-8">
+      <%= simple_form_for resource, :as => resource_name,
+                          :url => user_password_path(locale: I18n.locale),
+                          authenticity_token: '',   # Rails unobtrusive-JS will set the correct value from the meta tag in head,
+                                                    # this way this form can be cached and still send the correct token when POSTing.
+                          html: {:method => :post} do |f| %>
+        <%= f.input :email, as: :email_icon, autofocus:true %>
+
+        <div class="form-group">
+          <div class="col-xs-12 col-sm-9 col-sm-offset-3">
+            <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg' do %>
+              <i class="fa fa-share"></i> <%= t 'devise.views.send_password_reset' %>
+            <% end %>
+          </div>
         </div>
-      </div>
-    <% end %>
-  </div>
+      <% end %>
+    </div>
 
-  <div class="col-xs-12 col-md-4 col-sm-offset-3 col-md-offset-0">
-    <%= render 'devise/shared/links' %>
+<% end %>
+
+    <div class="col-xs-12 col-md-4 col-sm-offset-3 col-md-offset-0">
+      <%= render 'devise/shared/links' %>
+    </div>
   </div>
-</div>

@@ -1,29 +1,33 @@
-<ul class="fa-ul text-left">
+<% cache "devise_links-#{controller_name}-#{I18n.locale}" do %>
 
-<%- if controller_name != 'sessions' %>
-  <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.sign_in_link'), new_user_session_path(locale: I18n.locale) %></li>
-<% end -%>
+  <ul class="fa-ul text-left">
 
-<%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-  <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.sign_up_link'), new_user_registration_path(locale: I18n.locale) %></li>
-<% end -%>
-
-<%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
-  <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.forgot_password_link'), new_user_password_path(locale: I18n.locale) %></li>
-<% end -%>
-
-<%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
-  <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.new_confirmation'), new_user_confirmation_path(locale: I18n.locale) %></li>
-<% end -%>
-
-<%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
-  <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.unlock'), new_user_unlock_path(locale: I18n.locale) %></li>
-<% end -%>
-
-<%- if devise_mapping.omniauthable? %>
-  <%- resource_class.omniauth_providers.each do |provider| %>
-    <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.sign_in_with', provider: provider.to_s.titleize), omniauth_authorize_path(resource_name, provider, locale: I18n.locale) %></li>
+  <%- if controller_name != 'sessions' %>
+    <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.sign_in_link'), new_user_session_path(locale: I18n.locale) %></li>
   <% end -%>
-<% end -%>
 
-</ul>
+  <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+    <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.sign_up_link'), new_user_registration_path(locale: I18n.locale) %></li>
+  <% end -%>
+
+  <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
+    <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.forgot_password_link'), new_user_password_path(locale: I18n.locale) %></li>
+  <% end -%>
+
+  <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+    <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.new_confirmation'), new_user_confirmation_path(locale: I18n.locale) %></li>
+  <% end -%>
+
+  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+    <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.unlock'), new_user_unlock_path(locale: I18n.locale) %></li>
+  <% end -%>
+
+  <%- if devise_mapping.omniauthable? %>
+    <%- resource_class.omniauth_providers.each do |provider| %>
+      <li><i class="fa-li fa fa-angle-right "></i><%= link_to t('devise.views.sign_in_with', provider: provider.to_s.titleize), omniauth_authorize_path(resource_name, provider, locale: I18n.locale) %></li>
+    <% end -%>
+  <% end -%>
+
+  </ul>
+
+<% end %>
