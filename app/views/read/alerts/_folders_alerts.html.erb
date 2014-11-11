@@ -1,17 +1,21 @@
-<%# Alert displayed when there is a problem adding or removing a feed from a folder %>
-<div id="problem-folder-management" class="alert alert-danger" ng-show="error_managing_folders">
-  <button type="button" class="close" ng-click="reset_flag('error_managing_folders')">&times;</button>
-  <p><%= t 'read.alerts.problem_folder_management' %></p>
-</div>
+<% cache "folders_alerts-#{I18n.locale}" do %>
 
-<%# Alert displayed when there is a problem adding a feed to a new folder %>
-<div id="problem-new-folder" class="alert alert-danger" ng-show="error_creating_folder">
-  <button type="button" class="close" ng-click="reset_flag('error_creating_folder')">&times;</button>
-  <p><%= t 'read.alerts.problem_new_folder' %></p>
-</div>
+  <%# Alert displayed when there is a problem adding or removing a feed from a folder %>
+  <div id="problem-folder-management" class="alert alert-danger" ng-show="error_managing_folders">
+    <button type="button" class="close" ng-click="reset_flag('error_managing_folders')">&times;</button>
+    <p><%= t 'read.alerts.problem_folder_management' %></p>
+  </div>
 
-<%# Alert displayed when the user tries to create a folder with the same title of another of his folders %>
-<div id="folder-already-exists" class="alert alert-warning" ng-show="error_already_existing_folder">
-  <button type="button" class="close" ng-click="reset_flag('error_already_existing_folder')">&times;</button>
-  <p><%= t 'read.alerts.folder_already_exists' %></p>
-</div>
+  <%# Alert displayed when there is a problem adding a feed to a new folder %>
+  <div id="problem-new-folder" class="alert alert-danger" ng-show="error_creating_folder">
+    <button type="button" class="close" ng-click="reset_flag('error_creating_folder')">&times;</button>
+    <p><%= t 'read.alerts.problem_new_folder' %></p>
+  </div>
+
+  <%# Alert displayed when the user tries to create a folder with the same title of another of his folders %>
+  <div id="folder-already-exists" class="alert alert-warning" ng-show="error_already_existing_folder">
+    <button type="button" class="close" ng-click="reset_flag('error_already_existing_folder')">&times;</button>
+    <p><%= t 'read.alerts.folder_already_exists' %></p>
+  </div>
+
+<% end %>

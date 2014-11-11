@@ -1,5 +1,9 @@
-<%# Alert displayed when there is a problem loading the state of background jobs %>
-<div id="problem-loading-job-states" class="alert alert-danger" ng-show="error_loading_job_states">
-  <button type="button" class="close" ng-click="reset_flag('error_loading_job_states')">&times;</button>
-  <p><%= t 'read.alerts.problem_loading_job_states' %></p>
-</div>
+<% cache "jobs_state_alerts-#{I18n.locale}" do %>
+
+  <%# Alert displayed when there is a problem loading the state of background jobs %>
+  <div id="problem-loading-job-states" class="alert alert-danger" ng-show="error_loading_job_states">
+    <button type="button" class="close" ng-click="reset_flag('error_loading_job_states')">&times;</button>
+    <p><%= t 'read.alerts.problem_loading_job_states' %></p>
+  </div>
+
+<% end %>

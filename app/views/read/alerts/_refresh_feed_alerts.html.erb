@@ -1,11 +1,15 @@
-<%# Alert displayed when a feed finishes refreshing successfully %>
-<div id="success-refresh-feed" class="alert alert-success" ng-show="success_refresh_feed">
-  <button type="button" class="close" ng-click="reset_flag('success_refresh_feed')">&times;</button>
-  <p><%= t 'read.alerts.success_refresh_feed' %></p>
-</div>
+<% cache "refresh_feed_alerts-#{I18n.locale}" do %>
 
-<%# Alert displayed when there is a problem refreshing feeds %>
-<div id="problem-refreshing" class="alert alert-danger" ng-show="error_refreshing_feed">
-  <button type="button" class="close" ng-click="reset_flag('error_refreshing_feed')">&times;</button>
-  <p><%= t 'read.alerts.problem_refreshing' %></p>
-</div>
+  <%# Alert displayed when a feed finishes refreshing successfully %>
+  <div id="success-refresh-feed" class="alert alert-success" ng-show="success_refresh_feed">
+    <button type="button" class="close" ng-click="reset_flag('success_refresh_feed')">&times;</button>
+    <p><%= t 'read.alerts.success_refresh_feed' %></p>
+  </div>
+
+  <%# Alert displayed when there is a problem refreshing feeds %>
+  <div id="problem-refreshing" class="alert alert-danger" ng-show="error_refreshing_feed">
+    <button type="button" class="close" ng-click="reset_flag('error_refreshing_feed')">&times;</button>
+    <p><%= t 'read.alerts.problem_refreshing' %></p>
+  </div>
+
+<% end %>
