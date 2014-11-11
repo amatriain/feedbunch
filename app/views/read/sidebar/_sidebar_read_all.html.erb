@@ -1,25 +1,29 @@
-<li id="all-feeds"
-    ng-class="{active: current_folder.id=='all', disabled: !all_subscriptions_enabled()}">
-  <a data-sidebar-feed
-     data-feed-id="all"
-     ng-click="set_current_folder('all')">
+<% cache "sidebar_read_all-#{I18n.locale}" do %>
 
-    <div class="row">
+  <li id="all-feeds"
+      ng-class="{active: current_folder.id=='all', disabled: !all_subscriptions_enabled()}">
+    <a data-sidebar-feed
+       data-feed-id="all"
+       ng-click="set_current_folder('all')">
 
-      <div class="col-xs-1 hidden-sm col-icon">
-          <i class="feed-icon fa fa-rss"></i>
+      <div class="row">
+
+        <div class="col-xs-1 hidden-sm col-icon">
+            <i class="feed-icon fa fa-rss"></i>
+        </div>
+
+        <div class="col-xs-8 col-title">
+          <em><strong>
+            <span class="sidebar-feed-title"><%= t 'read.index.all_entries' %></span>
+          </strong></em>
+        </div>
+
+        <div class="col-xs-2 col-sm-3 col-md-2 pull-right col-badge">
+          <span class="badge">{{folder_unread_entries('all') | numberBadgeFltr}}</span>
+        </div>
       </div>
 
-      <div class="col-xs-8 col-title">
-        <em><strong>
-          <span class="sidebar-feed-title"><%= t 'read.index.all_entries' %></span>
-        </strong></em>
-      </div>
+    </a>
+  </li>
 
-      <div class="col-xs-2 col-sm-3 col-md-2 pull-right col-badge">
-        <span class="badge">{{folder_unread_entries('all') | numberBadgeFltr}}</span>
-      </div>
-    </div>
-
-  </a>
-</li>
+<% end %>
