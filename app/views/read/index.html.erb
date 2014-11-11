@@ -31,26 +31,30 @@
       <div id="feed-title">
         <strong class="lead">
 
-          <div ng-show="current_feed">
-            <a class="feed-title-text"
-               data-toggle="tooltip"
-               data-placement="top"
-               title="<%= t 'read.index.feed_tooltip' %>"
-               ng-bind-html="current_feed.title"
-               href="{{current_feed.url}}"
-               target="_blank">
-            </a>
-          </div>
+          <% cache "read_title-#{I18n.locale}" do %>
 
-          <span class="feed-title-text"
-                ng-show="current_folder && current_folder.id!='all'">
-            {{current_folder.title}}
-          </span>
+            <div ng-show="current_feed">
+              <a class="feed-title-text"
+                 data-toggle="tooltip"
+                 data-placement="top"
+                 title="<%= t 'read.index.feed_tooltip' %>"
+                 ng-bind-html="current_feed.title"
+                 href="{{current_feed.url}}"
+                 target="_blank">
+              </a>
+            </div>
 
-          <span class="feed-title-text"
-                ng-show="current_folder && current_folder.id=='all'">
-            <%= t 'read.index.all_entries' %>
-          </span>
+            <span class="feed-title-text"
+                  ng-show="current_folder && current_folder.id!='all'">
+              {{current_folder.title}}
+            </span>
+
+            <span class="feed-title-text"
+                  ng-show="current_folder && current_folder.id=='all'">
+              <%= t 'read.index.all_entries' %>
+            </span>
+
+          <% end %>
           
         </strong>
       </div>
@@ -60,16 +64,20 @@
 
     </div>
 
-    <div class="row">
-      <div id="loading" class="col-xs-12" ng-show="loading_entries_busy">
-        <div>
-          <%= t 'read.index.loading' %>
-        </div>
-        <div>
-          <i class="fa fa-spinner fa-spin"></i>
+    <% cache "read_loading-#{I18n.locale}" do %>
+
+      <div class="row">
+        <div id="loading" class="col-xs-12" ng-show="loading_entries_busy">
+          <div>
+            <%= t 'read.index.loading' %>
+          </div>
+          <div>
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
         </div>
       </div>
-    </div>
+
+    <% end %>
 
   </div>
 </div>

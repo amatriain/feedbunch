@@ -1,84 +1,88 @@
-<div class="row">
-  <div id="no-entries" class="col-xs-12" ng-show="error_no_entries">
-    <div>
-      <%= t 'read.entries.no_entries' %>
-    </div>
-    <div>
-      <i class="fa fa-times"></i>
+<% cache "entries-#{I18n.locale}" do %>
+
+  <div class="row">
+    <div id="no-entries" class="col-xs-12" ng-show="error_no_entries">
+      <div>
+        <%= t 'read.entries.no_entries' %>
+      </div>
+      <div>
+        <i class="fa fa-times"></i>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="feed-entries"
-     ng-hide="error_no_entries"
-     infinite-scroll="read_entries_page()"
-     infinite-scroll-disabled="loading_entries_busy"
-     infinite-scroll-distance="1"
-     infinite-scroll-immediate-check="true">
+  <div id="feed-entries"
+       ng-hide="error_no_entries"
+       infinite-scroll="read_entries_page()"
+       infinite-scroll-disabled="loading_entries_busy"
+       infinite-scroll-distance="1"
+       infinite-scroll-immediate-check="true">
 
-  <div ng-repeat="entry in entries"
-       id="entry-{{entry.id}}"
-       class="entry">
+    <div ng-repeat="entry in entries"
+         id="entry-{{entry.id}}"
+         class="entry">
 
-    <a data-entry-id="{{entry.id}}"
-       class="list-group-item open-entry-link"
-       ng-class="{'entry-read':entry.read && !entry.changing_state, 'entry-unread': !entry.read && !entry.changing_state, 'entry-becoming-read':entry.read && entry.changing_state, 'entry-becoming-unread':!entry.read && entry.changing_state}"
-       ng-click="toggle_open_entry(entry)">
+      <a data-entry-id="{{entry.id}}"
+         class="list-group-item open-entry-link"
+         ng-class="{'entry-read':entry.read && !entry.changing_state, 'entry-unread': !entry.read && !entry.changing_state, 'entry-becoming-read':entry.read && entry.changing_state, 'entry-becoming-unread':!entry.read && entry.changing_state}"
+         ng-click="toggle_open_entry(entry)">
 
-      <div class="row">
+        <div class="row">
 
-        <div class="hidden-xs hidden-sm col-md-2 entry-feed-column">
-          <em><span class="entry-feed-title" ng-bind-html="entry_feed_title(entry)"></span></em>
+          <div class="hidden-xs hidden-sm col-md-2 entry-feed-column">
+            <em><span class="entry-feed-title" ng-bind-html="entry_feed_title(entry)"></span></em>
+          </div>
+
+          <div class="col-xs-12 col-md-7 entry-title-column">
+            <strong><span class="entry-title" ng-bind-html="entry.title"></span></strong>
+          </div>
+
+          <div class="visible-xs visible-sm col-xs-8 entry-feed-column">
+            <em><span class="entry-feed-title" ng-bind-html="entry_feed_title(entry)"></span></em>
+          </div>
+
+          <div class="col-xs-4 col-md-3 entry-published-column">
+            <em><span class="entry-published pull-right">{{entry.published}}</span></em>
+          </div>
         </div>
+      </a>
 
-        <div class="col-xs-12 col-md-7 entry-title-column">
-          <strong><span class="entry-title" ng-bind-html="entry.title"></span></strong>
-        </div>
+      <%# Entry summary, initially collapsed %>
+      <div id="entry-{{entry.id}}-summary"
+           class="entry-panel"
+           ng-class="{entry_open: entry_initially_open()}"
+           ng-mouseenter="tooltips_entry(entry)">
 
-        <div class="visible-xs visible-sm col-xs-8 entry-feed-column">
-          <em><span class="entry-feed-title" ng-bind-html="entry_feed_title(entry)"></span></em>
-        </div>
+        <%= render 'read/entries_toolbar' %>
 
-        <div class="col-xs-4 col-md-3 entry-published-column">
-          <em><span class="entry-published pull-right">{{entry.published}}</span></em>
-        </div>
-      </div>
-    </a>
-
-    <%# Entry summary, initially collapsed %>
-    <div id="entry-{{entry.id}}-summary"
-         class="entry-panel"
-         ng-class="{entry_open: entry_initially_open()}"
-         ng-mouseenter="tooltips_entry(entry)">
-
-      <%= render 'read/entries_toolbar' %>
-
-      <div class="lead entry-lead"
-           ng-class="{entry_open_lead: is_entry_open(entry)}">
-        <a href="{{entry.url}}"
-           target="_blank"
-           data-toggle="tooltip" data-placement="top"
-           title="<%= t 'read.entries.title_tooltip' %>"
-           ng-bind-html="entry.title">
-        </a>
-      </div>
-      <div class="entry-additional-info">
-        <p>
-          <a href="#"
-             ng-click="set_current_entry_feed(entry)"
-             data-toggle="tooltip" data-placement="bottom"
-             title="<%= t 'read.entries.feed_tooltip' %>"
-             ng-bind-html="entry_feed_title(entry)">
+        <div class="lead entry-lead"
+             ng-class="{entry_open_lead: is_entry_open(entry)}">
+          <a href="{{entry.url}}"
+             target="_blank"
+             data-toggle="tooltip" data-placement="top"
+             title="<%= t 'read.entries.title_tooltip' %>"
+             ng-bind-html="entry.title">
           </a>
-        </p>
-      </div>
+        </div>
+        <div class="entry-additional-info">
+          <p>
+            <a href="#"
+               ng-click="set_current_entry_feed(entry)"
+               data-toggle="tooltip" data-placement="bottom"
+               title="<%= t 'read.entries.feed_tooltip' %>"
+               ng-bind-html="entry_feed_title(entry)">
+            </a>
+          </p>
+        </div>
 
-      <hr class="entry-content-separator">
+        <hr class="entry-content-separator">
 
-      <p class="hidden">{{entry.guid}}</p>
-      <div class="entry-content">
-        <p ng-bind-html="trustedEntryContent(entry)"></p>
+        <p class="hidden">{{entry.guid}}</p>
+        <div class="entry-content">
+          <p ng-bind-html="trustedEntryContent(entry)"></p>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+<% end %>
