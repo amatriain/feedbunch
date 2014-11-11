@@ -1,82 +1,86 @@
-<div id="refresh-state-alerts"
-     class="row"
-     ng-repeat="job_state in refresh_feed_job_states | orderBy:'-started_at'">
+<% cache "refresh_feed_job_states-#{I18n.locale}" do %>
 
-  <div id="refresh-state-{{job_state.id}}"
-       ng-mouseenter="tooltips_refresh_job_state(job_state)">
+  <div id="refresh-state-alerts"
+       class="row"
+       ng-repeat="job_state in refresh_feed_job_states | orderBy:'-started_at'">
 
-    <div class="col-xs-12 col-md-9 alert alert-danger" ng-show="job_state.state=='ERROR'">
+    <div id="refresh-state-{{job_state.id}}"
+         ng-mouseenter="tooltips_refresh_job_state(job_state)">
 
-      <button type="button"
-              class="close"
-              ng-click="hide_refresh_job_alert(job_state)"
-              title="<%= t 'read.job_states.dismiss' %>"
-              data-toggle="tooltip"
-              data-placement="top">
-        &times;
-      </button>
+      <div class="col-xs-12 col-md-9 alert alert-danger" ng-show="job_state.state=='ERROR'">
 
-      <div class="row">
-        <div class="col-xs-3 col-sm-2">
-          <i class="fa fa-refresh fa-4x"></i>
+        <button type="button"
+                class="close"
+                ng-click="hide_refresh_job_alert(job_state)"
+                title="<%= t 'read.job_states.dismiss' %>"
+                data-toggle="tooltip"
+                data-placement="top">
+          &times;
+        </button>
+
+        <div class="row">
+          <div class="col-xs-3 col-sm-2">
+            <i class="fa fa-refresh fa-4x"></i>
+          </div>
+
+          <div class="col-xs-9 col-sm-10">
+            <p><%= t 'read.job_states.refresh_feed.error' %></p>
+            <p><a class="job-feed-title alert-link" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
+          </div>
         </div>
 
-        <div class="col-xs-9 col-sm-10">
-          <p><%= t 'read.job_states.refresh_feed.error' %></p>
-          <p><a class="job-feed-title alert-link" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
-        </div>
       </div>
 
-    </div>
+      <div class="col-xs-12 col-md-9 alert alert-info" ng-show="job_state.state=='RUNNING'">
 
-    <div class="col-xs-12 col-md-9 alert alert-info" ng-show="job_state.state=='RUNNING'">
+        <button type="button"
+                class="close"
+                ng-click="hide_refresh_job_alert(job_state)"
+                title="<%= t 'read.job_states.dismiss' %>"
+                data-toggle="tooltip"
+                data-placement="top">
+          &times;
+        </button>
 
-      <button type="button"
-              class="close"
-              ng-click="hide_refresh_job_alert(job_state)"
-              title="<%= t 'read.job_states.dismiss' %>"
-              data-toggle="tooltip"
-              data-placement="top">
-        &times;
-      </button>
+        <div class="row">
+          <div class="col-xs-3 col-sm-2">
+            <i class="fa fa-refresh fa-spin fa-4x"></i>
+          </div>
 
-      <div class="row">
-        <div class="col-xs-3 col-sm-2">
-          <i class="fa fa-refresh fa-spin fa-4x"></i>
+          <div class="col-xs-9 col-sm-10">
+            <p><%= t 'read.job_states.refresh_feed.running' %></p>
+            <p><a class="job-feed-title alert-link" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
+          </div>
         </div>
 
-        <div class="col-xs-9 col-sm-10">
-          <p><%= t 'read.job_states.refresh_feed.running' %></p>
-          <p><a class="job-feed-title alert-link" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
-        </div>
       </div>
 
-    </div>
+      <div class="col-xs-12 col-md-9 alert alert-success" ng-show="job_state.state=='SUCCESS'">
 
-    <div class="col-xs-12 col-md-9 alert alert-success" ng-show="job_state.state=='SUCCESS'">
+        <button type="button"
+                class="close"
+                ng-click="hide_refresh_job_alert(job_state)"
+                title="<%= t 'read.job_states.dismiss' %>"
+                data-toggle="tooltip"
+                data-placement="top">
+          &times;
+        </button>
 
-      <button type="button"
-              class="close"
-              ng-click="hide_refresh_job_alert(job_state)"
-              title="<%= t 'read.job_states.dismiss' %>"
-              data-toggle="tooltip"
-              data-placement="top">
-        &times;
-      </button>
+        <div class="row">
+          <div class="col-xs-3 col-sm-2">
+            <i class="fa fa-refresh fa-4x"></i>
+          </div>
 
-      <div class="row">
-        <div class="col-xs-3 col-sm-2">
-          <i class="fa fa-refresh fa-4x"></i>
+          <div class="col-xs-9 col-sm-10">
+            <p><%= t 'read.job_states.refresh_feed.success' %></p>
+            <p><a class="job-feed-title alert-link" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
+          </div>
         </div>
 
-        <div class="col-xs-9 col-sm-10">
-          <p><%= t 'read.job_states.refresh_feed.success' %></p>
-          <p><a class="job-feed-title alert-link" ng-click="hide_refresh_job_alert(job_state);set_current_feed(job_state.feed_id)">{{feed_title(job_state.feed_id)}}</a></p>
-        </div>
       </div>
 
     </div>
 
   </div>
 
-</div>
+<% end %>
