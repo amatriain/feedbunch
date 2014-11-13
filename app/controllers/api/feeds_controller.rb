@@ -67,15 +67,20 @@ class Api::FeedsController < ApplicationController
   # If the requests asks for a feed the current user is not suscribed to, the response is a 404 error code (Not Found).
 
   def show
-    @feed = current_user.feeds.find params[:id]
+    @subscription = FeedSubscription.where(user_id: current_user.id, feed_id: params[:id]).first
 
-    if @feed.present?
-      @folder_id = @feed.user_folder(current_user).try(:id) || 'none'
-      @unread_count = current_user.feed_unread_count @feed
-      render 'show', locals: {feed: @feed, folder_id: @folder_id, unread_count: @unread_count}
-    else
-      Rails.logger.info "Feed #{params[:id]} not found, returning a 404"
-      head status: 404
+    # If feed subscription has not changed, return a 304
+    if stale? @subscription
+      @feed = current_user.feeds.find params[:id]
+
+      if @feed.present?
+        @folder_id = @feed.user_folder(current_user).try(:id) || 'none'
+        @unread_count = current_user.feed_unread_count @feed
+        render 'show', locals: {feed: @feed, folder_id: @folder_id, unread_count: @unread_count}
+      else
+        Rails.logger.info "Feed #{params[:id]} not found, returning a 404"
+        head status: 404
+      end
     end
   rescue => e
     handle_error e
