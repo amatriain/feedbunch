@@ -66,6 +66,7 @@ class Feed < ActiveRecord::Base
   after_create :schedule_update
   after_destroy :unschedule_updates
   before_save :unschedule_unavailable
+  after_save :touch_subscriptions
 
   ##
   # Find the folder to which a feed belongs, for a given user.
@@ -173,6 +174,18 @@ class Feed < ActiveRecord::Base
   def unschedule_unavailable
     if !self.available && self.available_changed?
       ScheduleManager.unschedule_feed_updates self.id
+    end
+  end
+
+  ##
+  # Touch (update the updated_at attribute) associated subscriptions if at least one of these attributes has changed:
+  # - title
+  # - url
+  # This is to invalidate the HTTP cache and force clients to download this feed again.
+
+  def touch_subscriptions
+    if title_changed? || url_changed?
+      feed_subscriptions.each {|s| s.touch}
     end
   end
 

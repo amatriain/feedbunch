@@ -3,7 +3,10 @@ require 'rails_helper'
 describe FeedSubscription, type: :model do
 
   before :each do
-    @feed_subscription = FactoryGirl.create :feed_subscription
+    @feed = FactoryGirl.create :feed
+    @user = FactoryGirl.create :user
+    @user.subscribe @feed.fetch_url
+    @feed_subscription = FeedSubscription.where(feed_id: @feed.id, user_id: @user.id).first
   end
 
   context 'validations' do
@@ -60,5 +63,23 @@ describe FeedSubscription, type: :model do
                                              user_id: feed_subscription.user_id
       expect(feed_subscription2).to be_valid
     end
+  end
+
+  context 'touched by changes in other models' do
+
+    it 'touches subscription when feed title changes' do
+      old_updated_at = @feed_subscription.updated_at
+      @feed.update title: 'another title'
+      expect(@feed_subscription.reload.updated_at).to be > old_updated_at
+    end
+
+    it 'touches subscription when feed URL changes'
+
+    it 'touches subscription when feed is removed from folder'
+
+    it 'touches subscription when feed is moved to folder'
+
+    it 'touches subscription when feed is moved to different folder'
+
   end
 end
