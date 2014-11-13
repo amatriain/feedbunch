@@ -24,7 +24,10 @@ class Folder < ActiveRecord::Base
 
   belongs_to :user
   validates :user_id, presence: true
-  has_and_belongs_to_many :feeds, -> {uniq}, before_add: :before_add_feed, after_remove: :after_remove_feed
+  has_and_belongs_to_many :feeds, -> {uniq},
+                          before_add: :before_add_feed,
+                          after_add: :after_add_feed,
+                          after_remove: :after_remove_feed
   has_many :entries, through: :feeds
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
@@ -52,25 +55,42 @@ class Folder < ActiveRecord::Base
   end
 
   ##
-  # Before adding a feed to a folder:
-  # - remove the feed from its old folder, if any.
-  # - increment the count of unread entries in the folder.
+  # Before adding a feed to a folder remove the feed from its old folder, if any.
 
   def before_add_feed(feed)
     feed.remove_from_folder self.user
   end
 
   ##
+  # After adding a feed to a folder, touch the FeedSubscription instance for the passed feed and the user that
+  # owns this folder, updating its updated_at attribute.
+
+  def after_add_feed(feed)
+    touch_subscription feed
+  end
+
+  ##
   # After removing a feed from a folder:
+  # - touch the FeedSubscription instance for the passed feed and the user that owns this folder,
+  # updating its updated_at attribute.
   # - delete the folder if it's now empty
-  # - otherwise, decrement the count of unread entries in the folder, by the count of unread entries
-  # in the feed being removed from the folder
-  #
-  # Remember that unread entries counts for feeds are relative to the user; this is, different users
-  # will likely have a different numer of unread entries in the same feed.
 
   def after_remove_feed(feed)
+    touch_subscription feed
     remove_empty_folders feed
+  end
+
+  ##
+  # Touch the FeedSubscription instance for the passed feed and the user that owns this folder,
+  # updating its updated_at attribute.
+  #
+  # Touching the FeedSubscription instance means that the HTTP cache for this feed in FeedsController#show will be invalidated,
+  # forcing the passed user to download fresh feed data after removing it from a folder.
+
+  def touch_subscription(feed)
+    subscription = FeedSubscription.where(feed_id: feed.id, user_id: user_id).first
+    Rails.logger.info "after removing feed from folder, touching feed subscription for feed #{feed.id} - #{feed.title}, user #{user_id} - #{user.email}"
+    subscription.touch
   end
 
   ##

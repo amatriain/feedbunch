@@ -67,19 +67,43 @@ describe FeedSubscription, type: :model do
 
   context 'touched by changes in other models' do
 
+    before :each do
+      # Reload feed so changes in associated subscriptions are loaded
+      @feed.reload
+    end
+
     it 'touches subscription when feed title changes' do
       old_updated_at = @feed_subscription.updated_at
       @feed.update title: 'another title'
       expect(@feed_subscription.reload.updated_at).to be > old_updated_at
     end
 
-    it 'touches subscription when feed URL changes'
+    it 'touches subscription when feed URL changes' do
+      old_updated_at = @feed_subscription.updated_at
+      @feed.update url: 'http://another.url.com'
+      expect(@feed_subscription.reload.updated_at).to be > old_updated_at
+    end
 
-    it 'touches subscription when feed is removed from folder'
+    context 'folders' do
 
-    it 'touches subscription when feed is moved to folder'
+      before :each do
+        @folder = FactoryGirl.build :folder, user_id: @user.id
+        @user.folders << @folder
+      end
 
-    it 'touches subscription when feed is moved to different folder'
+      it 'touches subscription when feed is removed from folder' do
+        @folder.feeds << @feed
+        old_updated_at = @feed_subscription.updated_at
+        @feed.remove_from_folder @user
+        expect(@feed_subscription.reload.updated_at).to be > old_updated_at
+      end
+
+      it 'touches subscription when feed is moved to a folder' do
+        old_updated_at = @feed_subscription.updated_at
+        @folder.feeds << @feed
+        expect(@feed_subscription.reload.updated_at).to be > old_updated_at
+      end
+    end
 
   end
 end
