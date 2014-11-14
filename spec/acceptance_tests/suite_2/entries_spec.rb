@@ -7,8 +7,6 @@ describe 'feed entries', type: :feature do
     @feed1 = FactoryGirl.create :feed
     @feed2 = FactoryGirl.create :feed
     @folder = FactoryGirl.build :folder, user_id: @user.id
-    @user.folders << @folder
-    @folder.feeds << @feed1 << @feed2
     login_user_for_feature @user
   end
 
@@ -20,11 +18,13 @@ describe 'feed entries', type: :feature do
       @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, summary: "<p>summary for @entry1</p><img id=\"entry-image-1\" src=\"#{@img_url_load}\" alt=\"some-image\"><img id=\"entry-image-2\" src=\"#{@img_url_fail}\" alt=\"some-image\">"
       @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1 << @entry2
-      @user.subscribe @feed1.fetch_url
-
       @entry3 = FactoryGirl.build :entry, feed_id: @feed2.id
       @feed2.entries << @entry3
+
+      @user.subscribe @feed1.fetch_url
       @user.subscribe @feed2.fetch_url
+      @user.folders << @folder
+      @folder.feeds << @feed1 << @feed2
 
       visit read_path
       read_feed @feed1, @user
@@ -369,6 +369,7 @@ describe 'feed entries', type: :feature do
       @feed2.entries << @entry2
       @user.subscribe @feed2.fetch_url
 
+      @user.folders << @folder
       @folder.feeds << @feed1 << @feed2
 
       visit read_path
