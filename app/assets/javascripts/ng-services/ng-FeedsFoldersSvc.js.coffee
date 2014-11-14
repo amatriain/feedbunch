@@ -70,8 +70,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     return if $rootScope.loading_single_feed[id]
 
     $rootScope.loading_single_feed[id] = true
-    now = new Date()
-    $http.get("/api/feeds/#{id}.json?time=#{now.getTime()}")
+    $http.get("/api/feeds/#{id}.json")
     .success (data)->
       delete $rootScope.loading_single_feed[id]
       add_feed data
