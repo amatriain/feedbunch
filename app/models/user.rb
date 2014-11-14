@@ -56,6 +56,14 @@ require 'subscriptions_manager'
 # True by default.
 # - show_feed_tour: boolean indicating whether the feed tour should be shown. True by default.
 # - show_entry_tour: boolean indicating whether the entry tour should be shown. True by default.
+# - subscriptions_updated_at: datetime indicating when were subscriptions updated for the last time. Events that
+# update this attribute are:
+#   - subscribing to a new feed
+#   - unsubscribing from a feed
+#   - changing the unread entries count for a feed
+#   - changing a feed title
+#   - changing a feed URL
+#   - moving a feed into or out of a folder
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -303,6 +311,7 @@ class User < ActiveRecord::Base
   # - show_main_tour, show_mobile_tour, show_feed_tour: show_entry_tour: true
   # - name: defaults to the value of the "email" attribute
   # - invitation_limit: the value configured in Feedbunch::Application.config.daily_invitations_limit (in config/application.rb)
+  # - subscriptions_updated_at: the current date/time
 
   def default_values
     # Convert the symbols for the available locales to strings, to be able to compare with the user locale
@@ -361,6 +370,11 @@ class User < ActiveRecord::Base
       limit = Feedbunch::Application.config.daily_invitations_limit
       Rails.logger.info "User #{self.email} has no invitation limit set. Using #{limit} by default."
       self.invitation_limit = limit
+    end
+
+    if self.subscriptions_updated_at == nil
+      Rails.logger.info "User #{self.email} has unsupported subscriptions_updated_at value, using current datetime by default"
+      self.subscriptions_updated_at = Time.zone.now
     end
   end
 

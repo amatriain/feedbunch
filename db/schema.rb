@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140922163545) do
+ActiveRecord::Schema.define(version: 20141114130217) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -202,6 +202,7 @@ ActiveRecord::Schema.define(version: 20140922163545) do
     t.boolean  "show_mobile_tour",             default: true,  null: false
     t.boolean  "show_feed_tour",               default: true,  null: false
     t.boolean  "show_entry_tour",              default: true,  null: false
+    t.datetime "subscriptions_updated_at",                     null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
