@@ -4,6 +4,7 @@ describe User, type: :model do
   before :each do
     @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
+    @user.subscribe @feed.fetch_url
     @entry1 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2000, 12, 31)
     @feed.entries << @entry1
   end
@@ -11,10 +12,6 @@ describe User, type: :model do
   context 'change entry state' do
 
     context 'single entry' do
-
-      before :each do
-        @user.subscribe @feed.fetch_url
-      end
 
       it 'marks entry as read' do
         expect(@entry1.read_by?(@user)).to be false
@@ -65,10 +62,6 @@ describe User, type: :model do
       end
 
       context 'from a single feed' do
-
-        before :each do
-          @user.subscribe @feed.fetch_url
-        end
 
         it 'marks several entries as read' do
           expect(@entry1.read_by?(@user)).to be false
@@ -157,8 +150,6 @@ describe User, type: :model do
           @folder = FactoryGirl.build :folder, user_id: @user.id
           @user.folders << @folder
           @folder.feeds << @feed << @feed2
-
-          @user.subscribe @feed.fetch_url
         end
 
         it 'marks several entries as read' do
@@ -280,8 +271,6 @@ describe User, type: :model do
           @folder = FactoryGirl.build :folder, user_id: @user.id
           @user.folders << @folder
           @folder.feeds << @feed
-
-          @user.subscribe @feed.fetch_url
         end
 
         it 'marks several entries as read' do
@@ -348,7 +337,7 @@ describe User, type: :model do
           args1 = job1['args']
           # Check the arguments passed to the job
           feed_id1 = args1[0]
-          expect(feed_id1).to eq @feed2.id
+          expect(feed_id1).to eq @feed.id
           user_id1 = args1[1]
           expect(user_id1).to eq @user.id
 
@@ -357,7 +346,7 @@ describe User, type: :model do
           args2 = job2['args']
           # Check the arguments passed to the job
           feed_id2 = args2[0]
-          expect(feed_id2).to eq @feed.id
+          expect(feed_id2).to eq @feed2.id
           user_id2 = args2[1]
           expect(user_id2).to eq @user.id
         end
