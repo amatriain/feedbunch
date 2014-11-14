@@ -37,18 +37,18 @@ class Api::FeedsController < ApplicationController
   def show
     @subscription = FeedSubscription.where(user_id: current_user.id, feed_id: params[:id]).first
 
-    # If feed subscription has not changed, return a 304
-    if stale? last_modified: @subscription.updated_at
-      @feed = current_user.feeds.find params[:id]
+    if @subscription.present?
+      # If feed subscription has not changed, return a 304
+      if stale? last_modified: @subscription.updated_at
+        @feed = current_user.feeds.find params[:id]
 
-      if @feed.present?
         @folder_id = @feed.user_folder(current_user).try(:id) || 'none'
         @unread_count = current_user.feed_unread_count @feed
         render 'show', locals: {feed: @feed, folder_id: @folder_id, unread_count: @unread_count}
-      else
-        Rails.logger.info "Feed #{params[:id]} not found, returning a 404"
-        head status: 404
       end
+    else
+      Rails.logger.info "User #{current_user.id} - #{current_user.email} has no feeds to return, returning a 404"
+      head status: 404
     end
   rescue => e
     handle_error e
