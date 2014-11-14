@@ -70,7 +70,7 @@ class Api::FeedsController < ApplicationController
     @subscription = FeedSubscription.where(user_id: current_user.id, feed_id: params[:id]).first
 
     # If feed subscription has not changed, return a 304
-    if stale? @subscription
+    if stale? last_modified: @subscription.updated_at
       @feed = current_user.feeds.find params[:id]
 
       if @feed.present?
