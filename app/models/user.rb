@@ -173,6 +173,7 @@ class User < ActiveRecord::Base
 
   def subscribe(url)
     URLSubscriber.subscribe url, self
+    touch_subscriptions
   end
 
   ##
@@ -194,6 +195,7 @@ class User < ActiveRecord::Base
 
   def unsubscribe(feed)
     SubscriptionsManager.remove_subscription feed, self
+    touch_subscriptions
   end
 
   ##
@@ -276,6 +278,13 @@ class User < ActiveRecord::Base
                           "show_mobile_tour #{show_mobile_tour}, show_feed_tour #{show_feed_tour}, " +
                           "show_entry_tour #{show_entry_tour}"
     self.update new_config if new_config.length > 0
+  end
+
+  ##
+  # Update the subscriptions_updated_at attribute with the current date/time
+
+  def touch_subscriptions
+    update subscriptions_updated_at: Time.zone.now
   end
 
   private
