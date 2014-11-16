@@ -15,22 +15,35 @@ describe User, type: :model do
       expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
     end
 
-    it 'when unsubscribed from a feed' do
-      feed = FactoryGirl.create :feed
-      @user.subscribe feed.fetch_url
-      old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
+    context 'changes to subscribed feeed' do
 
-      @user.unsubscribe feed
-      expect(@user.reload.subscriptions_updated_at).to be > old_subscriptions_updated_at
+      before :each do
+        @feed = FactoryGirl.create :feed
+        @user.subscribe @feed.fetch_url
+        @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
+      end
+
+      it 'when unsubscribed from a feed' do
+        @user.unsubscribe @feed
+        expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+      end
+
+      it 'when feed title changes' do
+        @feed.reload.update title: 'another title'
+        expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+      end
+
+      it 'when feed URL changes' do
+        @feed.reload.update url: 'http://another.url.com'
+        expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+      end
     end
-
-    it 'when feed title changes'
-
-    it 'when feed URL changes'
 
     context 'unread entries count' do
 
-      it 'when unread entries count for a feed is incremented'
+      it 'when unread entries count for a feed is incremented' do
+
+      end
 
       it 'when unread entries for a feed is decremented'
 

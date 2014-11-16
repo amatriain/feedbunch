@@ -181,11 +181,16 @@ class Feed < ActiveRecord::Base
   # Touch (update the updated_at attribute) associated subscriptions if at least one of these attributes has changed:
   # - title
   # - url
-  # This is to invalidate the HTTP cache and force clients to download this feed again.
+  # The subscriptions_updated_at of subscribed users is also updated to the current date and time
+  #
+  # This is meant to invalidate the HTTP cache and force clients to download this feed again.
 
   def touch_subscriptions
     if title_changed? || url_changed?
-      feed_subscriptions.each {|s| s.touch}
+      feed_subscriptions.each do |s|
+        s.touch
+        s.user.update subscriptions_updated_at: Time.zone.now
+      end
     end
   end
 
