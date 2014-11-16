@@ -170,10 +170,12 @@ class User < ActiveRecord::Base
 
   ##
   # Subscribe to a feed. See URLSubscriber#subscribe
+  # Returns the subscribed feed.
 
   def subscribe(url)
-    URLSubscriber.subscribe url, self
+    subscribed_feed = URLSubscriber.subscribe url, self
     touch_subscriptions
+    return subscribed_feed
   end
 
   ##
