@@ -1,5 +1,3 @@
-require 'subscriptions_manager'
-
 ##
 # Feed subscription model. Each instance of this class represents a subscription from a single user
 # to a single feed.
