@@ -24,8 +24,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     feedsPaginationSvc.set_busy true
 
     page += 1
-    now = new Date()
-    $http.get("/api/feeds.json?include_read=#{$rootScope.show_read}&page=#{page}&time=#{now.getTime()}")
+    $http.get("/api/feeds.json?include_read=#{$rootScope.show_read}&page=#{page}")
     .success (data)->
       feedsPaginationSvc.load_feeds_page page, data.slice()
       feedsPaginationSvc.set_busy false
