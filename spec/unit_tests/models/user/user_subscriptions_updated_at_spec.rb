@@ -41,30 +41,119 @@ describe User, type: :model do
       context 'unread entries count' do
 
         before :each do
-          # @entry1 = FactoryGirl.build :entry, feed_id: @feed.id
-          # @feed.entries << @entry1
-          # expect(@user.feed_unread_count @feed).to eq 1
-          # @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
+          @entry1 = FactoryGirl.build :entry, feed_id: @feed.id
+          @feed.entries << @entry1
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 1
+          @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
         end
 
-        it 'when unread entries count for a feed is incremented' do
-          pending 'work in progress'
+        it 'when adding a new entry' do
           entry2 = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry2
+          SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 2
           expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
         end
 
-        it 'when unread entries for a feed is decremented'
+        it 'when marking an entry as unread' do
+          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          @feed.entries << entry2
+          @user.change_entries_state entry2, 'read'
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 1
 
-        it 'when unread entries count for a feed is set to zero'
+          @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
+          @user.change_entries_state entry2, 'unread'
+          expect(@user.feed_unread_count @feed).to eq 2
+          expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+        end
+
+        it 'when deleting an entry' do
+          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          @feed.entries << entry2
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 2
+
+          @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
+          entry2.delete
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 1
+          expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+        end
+
+        it 'when marking an entry as read' do
+          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          @feed.entries << entry2
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 2
+
+          @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
+          @user.change_entries_state entry2, 'read'
+          expect(@user.feed_unread_count @feed).to eq 1
+          expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+        end
+
+        it 'when marking all entries as read' do
+          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          @feed.entries << entry2
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 2
+
+          @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
+          @user.change_entries_state entry2, 'read', all_entries: true
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 0
+          expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+        end
+
+        it 'when marking all entries in a feed as read' do
+          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          @feed.entries << entry2
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 2
+
+          @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
+          @user.change_entries_state entry2, 'read', whole_feed: true
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 0
+          expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+        end
+
+        it 'when marking all entries in a folder as read' do
+          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          @feed.entries << entry2
+          folder = FactoryGirl.build :folder, user_id: @user.id
+          @user.folders << folder
+          folder.feeds << @feed
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 2
+
+          @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
+          @user.change_entries_state entry2, 'read',whole_folder: true
+          SubscriptionsManager.recalculate_unread_count @feed, @user
+          expect(@user.feed_unread_count @feed).to eq 0
+          expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+        end
       end
 
       context 'folder changes' do
 
-        it 'when feed is moved into a folder'
+        it 'when feed is moved into a folder' do
+          folder = FactoryGirl.build :folder, user_id: @user.id
+          folder.feeds << @feed
+          expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+        end
 
-        it 'when feed is moved out of a folder'
+        it 'when feed is moved out of a folder' do
+          folder = FactoryGirl.build :folder, user_id: @user.id
+          @user.folders << folder
+          folder.feeds << @feed
+          @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
+
+          @feed.remove_from_folder @user
+          expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
+        end
       end
     end
 

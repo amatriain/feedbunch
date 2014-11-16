@@ -62,8 +62,7 @@ class Folder < ActiveRecord::Base
   end
 
   ##
-  # After adding a feed to a folder, touch the FeedSubscription instance for the passed feed and the user that
-  # owns this folder, updating its updated_at attribute.
+  # After adding a feed to a folder, update the date/time of change of subscriptions.
 
   def after_add_feed(feed)
     touch_subscription feed
@@ -78,19 +77,22 @@ class Folder < ActiveRecord::Base
   def after_remove_feed(feed)
     touch_subscription feed
     remove_empty_folders feed
+    touch_subscription feed
   end
 
   ##
-  # Touch the FeedSubscription instance for the passed feed and the user that owns this folder,
+  # Update the date/time of change of subscriptions:
+  # - update the subscriptions_updated_at attribute of the associated user with the current date/time
+  # - touch the FeedSubscription instance for the passed feed and the user that owns this folder,
   # updating its updated_at attribute.
   #
-  # Touching the FeedSubscription instance means that the HTTP cache for this feed in FeedsController#show will be invalidated,
-  # forcing the passed user to download fresh feed data after removing it from a folder.
+  # This will invalidate HTTP caches, forcing clients to download fresh data.
 
   def touch_subscription(feed)
     subscription = FeedSubscription.where(feed_id: feed.id, user_id: user_id).first
-    Rails.logger.info "after removing feed from folder, touching feed subscription for feed #{feed.id} - #{feed.title}, user #{user_id} - #{user.email}"
+    Rails.logger.info "touching feed subscription for feed #{feed.id} - #{feed.title}, user #{user_id} - #{user.email}"
     subscription.touch
+    user.touch_subscriptions
   end
 
   ##

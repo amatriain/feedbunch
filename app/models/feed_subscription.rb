@@ -30,6 +30,7 @@ class FeedSubscription < ActiveRecord::Base
 
   before_validation :default_values
   after_create :initial_unread_entries
+  after_save :touch_user_subscriptions
 
   private
 
@@ -45,5 +46,15 @@ class FeedSubscription < ActiveRecord::Base
 
   def initial_unread_entries
     update unread_entries: feed.entries.count
+  end
+
+  ##
+  # Update the subscriptions_updated_at attribute of the associated user if the unread_entries attribute
+  # has changed.
+  #
+  # This is meant to invalidate the HTTP cache and force clients to download this feed again.
+
+  def touch_user_subscriptions
+    user.touch_subscriptions if unread_entries_changed?
   end
 end
