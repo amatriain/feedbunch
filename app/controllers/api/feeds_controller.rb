@@ -116,9 +116,11 @@ class Api::FeedsController < ApplicationController
   # Index all subscribed feeds, regardless of folder
 
   def index_all
-    @folder = nil
-    @feeds = current_user.subscribed_feeds include_read: @include_read, page: params[:page]
-    index_feeds
+    if stale? last_modified: current_user.subscriptions_updated_at
+      @folder = nil
+      @feeds = current_user.subscribed_feeds include_read: @include_read, page: params[:page]
+      index_feeds
+    end
   end
 
   ##
