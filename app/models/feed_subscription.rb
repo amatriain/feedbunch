@@ -1,3 +1,5 @@
+require 'subscriptions_manager'
+
 ##
 # Feed subscription model. Each instance of this class represents a subscription from a single user
 # to a single feed.
@@ -29,6 +31,7 @@ class FeedSubscription < ActiveRecord::Base
   validates :unread_entries, presence: true, numericality: {only_integer: true, greater_than_or_equal_to: 0}
 
   before_validation :default_values
+  after_create :initial_unread_entries
 
   private
 
@@ -37,5 +40,12 @@ class FeedSubscription < ActiveRecord::Base
 
   def default_values
     self.unread_entries = 0 if self.unread_entries.blank? || self.unread_entries < 0
+  end
+
+  ##
+  # The initial value of the unread entries count is the number of entries
+
+  def initial_unread_entries
+    update unread_entries: feed.entries.count
   end
 end

@@ -17,7 +17,6 @@ class SubscriptionsManager
     Rails.logger.info "subscribing user #{user.id} - #{user.email} to feed #{feed.id} - #{feed.fetch_url}"
     feed_subscription = FeedSubscription.new feed_id: feed.id
     user.feed_subscriptions << feed_subscription
-    self.recalculate_unread_count feed, user
 
     return nil
   end
