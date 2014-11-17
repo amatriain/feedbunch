@@ -34,8 +34,9 @@ class Folder < ActiveRecord::Base
   validates :user_id, presence: true
   has_and_belongs_to_many :feeds, -> {uniq},
                           before_add: :before_add_feed,
-                          after_add: :after_add_feed,
-                          after_remove: :after_remove_feed
+                          after_add: :touch_subscription,
+                          before_remove: :touch_subscription,
+                          after_remove: :remove_empty_folders
   has_many :entries, through: :feeds
 
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
@@ -82,40 +83,14 @@ class Folder < ActiveRecord::Base
   end
 
   ##
-  # After adding a feed to a folder, update the date/time of change of subscriptions.
-
-  def after_add_feed(feed)
-    touch_subscription feed
-  end
-
-  ##
-  # After removing a feed from a folder:
-  # - touch the FeedSubscription instance for the passed feed and the user that owns this folder,
-  # updating its updated_at attribute.
-  # - delete the folder if it's now empty
-
-  def after_remove_feed(feed)
-    touch_subscription feed
-    remove_empty_folders feed
-  end
-
-  ##
-  # Update the date/time of change of subscriptions:
-  # - update the subscriptions_updated_at attribute of this folder with the current date/time
-  # - update the subscriptions_updated_at attribute of the associated user with the current date/time
-  # - touch the FeedSubscription instance for the passed feed and the user that owns this folder,
-  # updating its updated_at attribute.
+  # Update the date/time of change of subscriptions.
   #
   # This will invalidate HTTP caches, forcing clients to download fresh data.
 
   def touch_subscription(feed)
     subscription = FeedSubscription.where(feed_id: feed.id, user_id: user_id).first
     Rails.logger.info "touching feed subscription for feed #{feed.id} - #{feed.title}, user #{user_id} - #{user.email}"
-    subscription.touch
-    user.touch_subscriptions
-    now = Time.zone.now
-    Rails.logger.info "Updating subscriptions_updated_at attribute of folder #{id} - #{title} with current date/time: #{now}"
-    update subscriptions_updated_at: now
+    subscription.touch_subscriptions
   end
 
   ##

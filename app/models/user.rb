@@ -170,12 +170,9 @@ class User < ActiveRecord::Base
 
   ##
   # Subscribe to a feed. See URLSubscriber#subscribe
-  # Returns the subscribed feed.
 
   def subscribe(url)
     subscribed_feed = URLSubscriber.subscribe url, self
-    touch_subscriptions
-    return subscribed_feed
   end
 
   ##
@@ -197,7 +194,6 @@ class User < ActiveRecord::Base
 
   def unsubscribe(feed)
     SubscriptionsManager.remove_subscription feed, self
-    touch_subscriptions
   end
 
   ##
@@ -280,15 +276,6 @@ class User < ActiveRecord::Base
                           "show_mobile_tour #{show_mobile_tour}, show_feed_tour #{show_feed_tour}, " +
                           "show_entry_tour #{show_entry_tour}"
     self.update new_config if new_config.length > 0
-  end
-
-  ##
-  # Update the subscriptions_updated_at attribute with the current date/time
-
-  def touch_subscriptions
-    now = Time.zone.now
-    Rails.logger.info "Updating subscriptions_updated_at attribute of feed #{id} - #{email} with current date/time: #{now}"
-    update subscriptions_updated_at: now
   end
 
   private

@@ -188,8 +188,7 @@ class Feed < ActiveRecord::Base
   def touch_subscriptions
     if title_changed? || url_changed?
       feed_subscriptions.each do |s|
-        s.touch
-        s.user.update subscriptions_updated_at: Time.zone.now
+        s.touch_subscriptions
       end
     end
   end

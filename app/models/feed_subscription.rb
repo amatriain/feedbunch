@@ -29,8 +29,23 @@ class FeedSubscription < ActiveRecord::Base
   validates :unread_entries, presence: true, numericality: {only_integer: true, greater_than_or_equal_to: 0}
 
   before_validation :default_values
-  after_create :initial_unread_entries
-  after_save :touch_user_subscriptions
+  after_create :after_create
+  before_destroy :touch_subscriptions
+  after_save :after_save
+
+  ##
+  # Update the date in which subscriptions have been changed:
+  # - touch this FeedSubscription instance, updating its updated_at attribute
+  # - update the subscriptions_updated_at attribute of the associated user to the current date/time
+  # - update the subscriptions_updated_at attribute of the folder which contains the feed, if any, to the current date/time
+
+  def touch_subscriptions
+    Rails.logger.info "Touching subscription of user #{user_id} to feed #{feed_id}"
+    self.touch
+    user.update subscriptions_updated_at: Time.zone.now
+    folder = feed.user_folder user
+    folder.update subscriptions_updated_at: Time.zone.now if folder.present?
+  end
 
   private
 
@@ -42,6 +57,16 @@ class FeedSubscription < ActiveRecord::Base
   end
 
   ##
+  # After creating a new subscription:
+  # - set the initial unread entries count
+  # - update the date/time of change of subscriptions
+
+  def after_create
+    initial_unread_entries
+    touch_subscriptions
+  end
+
+  ##
   # The initial value of the unread entries count is the number of entries
 
   def initial_unread_entries
@@ -49,12 +74,9 @@ class FeedSubscription < ActiveRecord::Base
   end
 
   ##
-  # Update the subscriptions_updated_at attribute of the associated user if the unread_entries attribute
-  # has changed.
-  #
-  # This is meant to invalidate the HTTP cache and force clients to download this feed again.
+  # If the unread entries count has changed, touch subscriptions
 
-  def touch_user_subscriptions
-    user.touch_subscriptions if unread_entries_changed?
+  def after_save
+    touch_subscriptions if unread_entries_changed?
   end
 end
