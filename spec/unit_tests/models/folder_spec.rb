@@ -217,14 +217,90 @@ describe Folder, type: :model do
     end
   end
 
-  context 'default values' do
-    it 'defaults subscriptions_updated_at to the current date/time' do
+  context 'subscriptions_updated_at' do
+
+    it 'defaults to the current date/time' do
       now = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return now
       folder = FactoryGirl.build :folder, subscriptions_updated_at: nil
       @user.folders << folder
       expect(folder.reload.subscriptions_updated_at).to eq now
     end
+
+    context 'touches subscriptions' do
+
+      before :each do
+        @feed = FactoryGirl.create :feed
+        @user.subscribe @feed.fetch_url
+        @folder.feeds << @feed
+        @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
+      end
+
+      it 'when unsubscribed from a feed in the folder' do
+        # Move a second feed into the folder, so that it is not deleted when unsubscribing from @feed
+        feed = FactoryGirl.create :feed
+        @user.subscribe feed.fetch_url
+        @folder.feeds << feed
+        @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
+
+        @user.unsubscribe @feed
+        expect(@folder.reload.subscriptions_updated_at).to be >  @old_subscriptions_updated_at
+      end
+
+      it 'when the title of a feed in the folder changes'
+
+      it 'when the URL of a feed in the folder changes'
+
+      context 'unread entries count' do
+
+        it 'when adding a new entry to a feed in the folder'
+
+        it 'when marking an entry of a feed in the folder as unread'
+
+        it 'when deleting an entry from a feed in the folder'
+
+        it 'when marking an entry of a feed in the folder as read'
+
+        it 'when marking all entries in the folder as read'
+
+        it 'when marking all entries of a feed in the folder as read'
+
+      end
+
+      context 'moving feeds' do
+
+        it 'when feed is moved into the folder'
+
+        it 'when feed is moved out of the folder'
+
+      end
+
+    end
+
+    context 'does not touch subscriptions' do
+
+      it 'when unsubscribed from a feed not in the folder'
+
+      it 'when the title of a feed not in the folder changes'
+
+      it 'when the URL of a feed not in the folder changes'
+
+      context 'unread entries count' do
+
+        it 'when adding a new entry to a feed not in the folder'
+
+        it 'when marking an entry of a feed not in the folder as unread'
+
+        it 'when deleting an entry from a feed not in the folder'
+
+        it 'when marking an entry of a feed not in the folder as read'
+
+        it 'when marking all entries of a feed not in the folder as read'
+
+      end
+
+    end
+
   end
 
 end

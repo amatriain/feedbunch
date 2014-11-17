@@ -42,6 +42,15 @@ class Folder < ActiveRecord::Base
 
   before_validation :before_folder_validation
 
+  ##
+  # Update the subscriptions_updated_at attribute with the current date/time
+
+  def touch_subscriptions
+    now = Time.zone.now
+    Rails.logger.info "Updating subscriptions_updated_at attribute of folder #{id} - #{title} with current date/time: #{now}"
+    update subscriptions_updated_at: now
+  end
+
   private
 
   ##

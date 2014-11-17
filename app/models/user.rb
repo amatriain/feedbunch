@@ -198,6 +198,8 @@ class User < ActiveRecord::Base
   def unsubscribe(feed)
     SubscriptionsManager.remove_subscription feed, self
     touch_subscriptions
+    folder = feed.user_folder self
+    folder.touch_subscriptions if folder.present?
   end
 
   ##
