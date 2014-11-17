@@ -42,15 +42,6 @@ class Folder < ActiveRecord::Base
 
   before_validation :before_folder_validation
 
-  ##
-  # Update the subscriptions_updated_at attribute with the current date/time
-
-  def touch_subscriptions
-    now = Time.zone.now
-    Rails.logger.info "Updating subscriptions_updated_at attribute of folder #{id} - #{title} with current date/time: #{now}"
-    update subscriptions_updated_at: now
-  end
-
   private
 
   ##
@@ -106,11 +97,11 @@ class Folder < ActiveRecord::Base
   def after_remove_feed(feed)
     touch_subscription feed
     remove_empty_folders feed
-    touch_subscription feed
   end
 
   ##
   # Update the date/time of change of subscriptions:
+  # - update the subscriptions_updated_at attribute of this folder with the current date/time
   # - update the subscriptions_updated_at attribute of the associated user with the current date/time
   # - touch the FeedSubscription instance for the passed feed and the user that owns this folder,
   # updating its updated_at attribute.
@@ -122,6 +113,9 @@ class Folder < ActiveRecord::Base
     Rails.logger.info "touching feed subscription for feed #{feed.id} - #{feed.title}, user #{user_id} - #{user.email}"
     subscription.touch
     user.touch_subscriptions
+    now = Time.zone.now
+    Rails.logger.info "Updating subscriptions_updated_at attribute of folder #{id} - #{title} with current date/time: #{now}"
+    update subscriptions_updated_at: now
   end
 
   ##
