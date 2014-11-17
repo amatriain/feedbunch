@@ -14,6 +14,14 @@
 #
 # A given user cannot have two folders with the same title. Folders with the same title are allowed as long as they
 # belong to different users.
+#
+# The subscriptions_updated_at attribute indicates the date/time at which a feed in the folder was last changed.
+# Events that update this attribute are:
+#   - unsubscribing from a feed in the folder
+#   - changing the unread entries count for a feed in the folder
+#   - changing the title of a feed in the folder
+#   - changing the URL of a feed in the folder
+#   - moving a feed into or out of the folder
 
 class Folder < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
