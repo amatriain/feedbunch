@@ -50,6 +50,7 @@ class Folder < ActiveRecord::Base
 
   def before_folder_validation
     sanitize_attributes
+    default_values
   end
 
   ##
@@ -60,6 +61,17 @@ class Folder < ActiveRecord::Base
 
   def sanitize_attributes
     self.title = sanitize self.title
+  end
+
+  ##
+  # Give the following default values to the folder, in case no value or an invalid value is set:
+  # - subscriptions_updated_at: the current date/time
+
+  def default_values
+    if subscriptions_updated_at == nil
+      Rails.logger.info "Folder #{id} - #{title} has unsupported subscriptions_updated_at value, using current datetime by default"
+      self.subscriptions_updated_at = Time.zone.now
+    end
   end
 
   ##

@@ -217,4 +217,14 @@ describe Folder, type: :model do
     end
   end
 
+  context 'default values' do
+    it 'defaults subscriptions_updated_at to the current date/time' do
+      now = Time.zone.parse '2000-01-01'
+      allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return now
+      folder = FactoryGirl.build :folder, subscriptions_updated_at: nil
+      @user.folders << folder
+      expect(folder.reload.subscriptions_updated_at).to eq now
+    end
+  end
+
 end

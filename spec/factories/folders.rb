@@ -6,5 +6,6 @@ FactoryGirl.define do
   factory :folder do
     title {generate :folder_title_sequence}
     user
+    subscriptions_updated_at Time.zone.now
   end
 end
