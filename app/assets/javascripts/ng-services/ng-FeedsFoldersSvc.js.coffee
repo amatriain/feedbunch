@@ -131,8 +131,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
 
     $rootScope.loading_single_folder_feeds[folder.id] = true
 
-    now = new Date()
-    $http.get("/api/folders/#{folder.id}/feeds.json?include_read=#{$rootScope.show_read}&time=#{now.getTime()}")
+    $http.get("/api/folders/#{folder.id}/feeds.json?include_read=#{$rootScope.show_read}")
     .success (data)->
       delete $rootScope.loading_single_folder_feeds[folder.id]
       # Update unread counts with the received feeds. Set the unread counter for any feed in the folder but
