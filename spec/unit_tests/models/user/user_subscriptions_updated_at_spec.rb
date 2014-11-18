@@ -76,7 +76,7 @@ describe User, type: :model do
           expect(@user.feed_unread_count @feed).to eq 2
 
           @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
-          entry2.delete
+          entry2.destroy
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 1
           expect(@user.reload.subscriptions_updated_at).to be > @old_subscriptions_updated_at
