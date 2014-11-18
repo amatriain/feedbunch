@@ -108,8 +108,16 @@ class Api::FeedsController < ApplicationController
 
   def index_folder
     @folder = current_user.folders.find params[:folder_id]
-    @feeds = current_user.folder_feeds @folder, include_read: @include_read
-    index_feeds
+    if @folder.present?
+      if stale? last_modified: @folder.subscriptions_updated_at
+        @feeds = current_user.folder_feeds @folder, include_read: @include_read
+        index_feeds
+      end
+    else
+      Rails.logger.info "User #{current_user.id} - #{current_user.email} tried to index feeds in folder #{params[:folder_id]} which does not exist or he does not own"
+      head status: 404
+    end
+
   end
 
   ##
