@@ -20,8 +20,7 @@ angular.module('feedbunch').service 'exportStateSvc',
   # afterwards, then and only then will an alert be displayed.
   #---------------------------------------------
   load_export_state = (show_alerts=false)->
-    now = new Date()
-    $http.get("/api/opml_exports.json?time=#{now.getTime()}")
+    $http.get("/api/opml_exports.json")
     .success (data)->
       $rootScope.show_export_alert = data["show_alert"]
       $rootScope.export_date = data["export_date"]
