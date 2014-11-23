@@ -43,9 +43,8 @@ findSvc, changeUnreadCountSvc)->
     return if load_entries_setup() == false
 
     url = "/api/feeds/#{feed.id}/entries.json"
-    now = new Date()
     $rootScope.entries_http_canceler = $q.defer()
-    $http.get("#{url}?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}&time=#{now.getTime()}",
+    $http.get("#{url}?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}",
       {timeout: $rootScope.entries_http_canceler.promise})
     .success (data)->
       $rootScope.entries_http_canceler = null
@@ -109,9 +108,8 @@ findSvc, changeUnreadCountSvc)->
     return if load_entries_setup() == false
 
     url = "/api/folders/#{folder.id}/entries.json"
-    now = new Date()
     $rootScope.entries_http_canceler = $q.defer()
-    $http.get("#{url}?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}&time=#{now.getTime()}",
+    $http.get("#{url}?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}",
       {timeout: $rootScope.entries_http_canceler.promise})
     .success (data)->
       $rootScope.entries_http_canceler = null
