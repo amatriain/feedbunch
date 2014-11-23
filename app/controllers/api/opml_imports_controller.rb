@@ -19,8 +19,11 @@ class Api::OpmlImportsController < ApplicationController
       @opml_import_job_state = current_user.create_opml_import_job_state state: OpmlImportJobState::NONE
     end
 
-    Rails.logger.debug "OpmlImportJobState for user #{current_user.id} - #{current_user.email}: id #{@opml_import_job_state.try :id}, state #{@opml_import_job_state.try :state}"
-    render 'show', locals: {opml_import_job_state: @opml_import_job_state}
+    # If opml export state has not changed, return a 304
+    if stale? last_modified: @opml_import_job_state.updated_at
+      Rails.logger.debug "OpmlImportJobState for user #{current_user.id} - #{current_user.email}: id #{@opml_import_job_state.try :id}, state #{@opml_import_job_state.try :state}"
+      render 'show', locals: {opml_import_job_state: @opml_import_job_state}
+    end
   rescue => e
     handle_error e
   end
