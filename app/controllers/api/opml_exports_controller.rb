@@ -19,8 +19,11 @@ class Api::OpmlExportsController < ApplicationController
       @opml_export_job_state = current_user.create_opml_export_job_state state: OpmlExportJobState::NONE
     end
 
-    Rails.logger.debug "OpmlExportJobState for user #{current_user.id} - #{current_user.email}: id #{@opml_export_job_state.try :id}, state #{@opml_export_job_state.try :state}"
-    render 'show', locals: {opml_export_job_state: @opml_export_job_state}
+    # If feed subscriptions have not changed, return a 304
+    if stale? last_modified: @opml_export_job_state.updated_at
+      Rails.logger.debug "OpmlExportJobState for user #{current_user.id} - #{current_user.email}: id #{@opml_export_job_state.try :id}, state #{@opml_export_job_state.try :state}"
+      render 'show', locals: {opml_export_job_state: @opml_export_job_state}
+    end
   rescue => e
     handle_error e
   end
