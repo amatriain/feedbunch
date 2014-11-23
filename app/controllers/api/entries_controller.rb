@@ -66,7 +66,8 @@ class Api::EntriesController < ApplicationController
     if @subscription.present?
       # If feed subscription has not changed, return a 304
       if stale? last_modified: @subscription.updated_at
-        @entries = current_user.feed_entries @subscription.feed, include_read: @include_read, page: params[:page]
+        @feed = @subscription.feed
+        @entries = current_user.feed_entries @feed, include_read: @include_read, page: params[:page]
         index_entries
       end
     else
