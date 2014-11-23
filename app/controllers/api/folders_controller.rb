@@ -28,7 +28,10 @@ class Api::FoldersController < ApplicationController
     @folder = current_user.folders.find params[:id]
 
     if @folder.present?
-      render 'show', locals: {folder: @folder}
+      # If folder has not changed, return a 304
+      if stale? @folder
+        render 'show', locals: {folder: @folder}
+      end
     else
       Rails.logger.info "Folder #{params[:id]} not found, returning a 404"
       head status: 404
