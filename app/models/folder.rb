@@ -42,6 +42,8 @@ class Folder < ActiveRecord::Base
   validates :title, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
 
   before_validation :before_folder_validation
+  after_create :touch_folders
+  after_destroy :touch_folders
 
   private
 
@@ -52,6 +54,13 @@ class Folder < ActiveRecord::Base
   def before_folder_validation
     sanitize_attributes
     default_values
+  end
+
+  ##
+  # Update the folders_updated_at attribute of the User who owns this folder to the current date and time.
+
+  def touch_folders
+    user.update folders_updated_at: Time.zone.now
   end
 
   ##
