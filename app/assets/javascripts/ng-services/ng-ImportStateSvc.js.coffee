@@ -21,8 +21,7 @@ angular.module('feedbunch').service 'importStateSvc',
   # folders will be inserted in the model automatically.
   #---------------------------------------------
   load_import_state = (show_alerts=false)->
-    now = new Date()
-    $http.get("/api/opml_imports.json?time=#{now.getTime()}")
+    $http.get("/api/opml_imports.json")
     .success (data)->
       $rootScope.show_import_alert = data["show_alert"]
       $rootScope.import_state = data["state"]
