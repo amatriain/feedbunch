@@ -37,28 +37,18 @@ class Api::EntriesController < ApplicationController
   # user will be returned.
 
   def index
-    include_read = param_str_to_boolean :include_read, params
+    @include_read = param_str_to_boolean :include_read, params
 
     if params[:feed_id].present?
-      # Request is for feed entries
-      Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested entries for feed #{params[:feed_id]}, include_read: #{params[:include_read]}"
-      @feed = current_user.feeds.find params[:feed_id]
-      @entries = current_user.feed_entries @feed, include_read: include_read, page: params[:page]
+      index_feed
     elsif params[:folder_id].present?
-      # Request is for folder entries
-      Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested entries for folder #{params[:folder_id]}, include_read: #{params[:include_read]}"
       if params[:folder_id] == Folder::ALL_FOLDERS
-        @folder = Folder::ALL_FOLDERS
+        index_all
       else
-        @folder = current_user.folders.find params[:folder_id]
+        index_folder
       end
-      @entries = current_user.folder_entries @folder, include_read: include_read, page: params[:page]
-    end
-
-    if @entries.present?
-      render 'index', locals: {entries: @entries, user: current_user}
     else
-      Rails.logger.info "No entries found for feed_id #{params[:feed_id]} / folder_id #{params[:folder_id]}, returning a 404"
+      Rails.logger.info "User #{current_user.id} - #{current_user.email} requested entries without specifying a folder or feed id, returning a 404"
       head status: 404
     end
   rescue => e
@@ -66,6 +56,53 @@ class Api::EntriesController < ApplicationController
   end
 
   private
+
+  ##
+  # Index entries in a feed
+
+  def index_feed
+    Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested entries for feed #{params[:feed_id]}, include_read: #{params[:include_read]}"
+    @feed = current_user.feeds.find params[:feed_id]
+    @entries = current_user.feed_entries @feed, include_read: @include_read, page: params[:page]
+
+    index_entries
+  end
+
+  ##
+  # Index entries in a folder
+
+  def index_folder
+    Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested entries for folder #{params[:folder_id]}, include_read: #{params[:include_read]}"
+    @folder = current_user.folders.find params[:folder_id]
+    @entries = current_user.folder_entries @folder, include_read: @include_read, page: params[:page]
+
+    index_entries
+  end
+
+  ##
+  # Index all entries
+
+  def index_all
+    Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested all entries, include_read: #{params[:include_read]}"
+    @folder = Folder::ALL_FOLDERS
+    @entries = current_user.folder_entries @folder, include_read: @include_read, page: params[:page]
+
+    index_entries
+  end
+
+  ##
+  # Index entries previously loaded in an instance variable.
+  # Uses an instance variable which must have been previously set:
+  # - @entries: entries to index
+
+  def index_entries
+    if @entries.present?
+      render 'index', locals: {entries: @entries, user: current_user}
+    else
+      Rails.logger.info "No entries found for feed_id #{params[:feed_id]} / folder_id #{params[:folder_id]}, returning a 404"
+      head status: 404
+    end
+  end
 
   def entry_params
     params.require(:entry).permit(:id, :state, :whole_feed, :whole_folder, :all_entries)
