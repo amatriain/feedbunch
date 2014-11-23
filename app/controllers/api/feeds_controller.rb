@@ -109,6 +109,7 @@ class Api::FeedsController < ApplicationController
   def index_folder
     @folder = current_user.folders.find params[:folder_id]
     if @folder.present?
+      # If feed subscriptions in the folder have not changed, return a 304
       if stale? last_modified: @folder.subscriptions_updated_at
         @feeds = current_user.folder_feeds @folder, include_read: @include_read
         index_feeds
@@ -124,6 +125,7 @@ class Api::FeedsController < ApplicationController
   # Index all subscribed feeds, regardless of folder
 
   def index_all
+    # If feed subscriptions have not changed, return a 304
     if stale? last_modified: current_user.subscriptions_updated_at
       @folder = nil
       @feeds = current_user.subscribed_feeds include_read: @include_read, page: params[:page]

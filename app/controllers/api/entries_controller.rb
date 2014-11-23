@@ -62,10 +62,17 @@ class Api::EntriesController < ApplicationController
 
   def index_feed
     Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested entries for feed #{params[:feed_id]}, include_read: #{params[:include_read]}"
-    @feed = current_user.feeds.find params[:feed_id]
-    @entries = current_user.feed_entries @feed, include_read: @include_read, page: params[:page]
-
-    index_entries
+    @subscription = FeedSubscription.where(user_id: current_user.id, feed_id: params[:feed_id]).first
+    if @subscription.present?
+      # If feed subscription has not changed, return a 304
+      if stale? last_modified: @subscription.updated_at
+        @entries = current_user.feed_entries @subscription.feed, include_read: @include_read, page: params[:page]
+        index_entries
+      end
+    else
+      Rails.logger.info "User #{current_user.id} - #{current_user.email} requested entries for feed #{params[:feed_id]} to which he is not subscribed, returning a 404"
+      head status: 404
+    end
   end
 
   ##
@@ -74,9 +81,11 @@ class Api::EntriesController < ApplicationController
   def index_folder
     Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested entries for folder #{params[:folder_id]}, include_read: #{params[:include_read]}"
     @folder = current_user.folders.find params[:folder_id]
-    @entries = current_user.folder_entries @folder, include_read: @include_read, page: params[:page]
-
-    index_entries
+    # If feed subscriptions in the folder have not changed, return a 304
+    if stale? last_modified: @folder.subscriptions_updated_at
+      @entries = current_user.folder_entries @folder, include_read: @include_read, page: params[:page]
+      index_entries
+    end
   end
 
   ##
@@ -84,10 +93,12 @@ class Api::EntriesController < ApplicationController
 
   def index_all
     Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested all entries, include_read: #{params[:include_read]}"
-    @folder = Folder::ALL_FOLDERS
-    @entries = current_user.folder_entries @folder, include_read: @include_read, page: params[:page]
-
-    index_entries
+    # If feed subscriptions have not changed, return a 304
+    if stale? last_modified: current_user.subscriptions_updated_at
+      @folder = Folder::ALL_FOLDERS
+      @entries = current_user.folder_entries @folder, include_read: @include_read, page: params[:page]
+      index_entries
+    end
   end
 
   ##
