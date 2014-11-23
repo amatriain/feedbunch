@@ -99,8 +99,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   # PRIVATE FUNCTION: Load folders.
   #--------------------------------------------
   load_folders = ->
-    now = new Date()
-    $http.get("/api/folders.json?time=#{now.getTime()}")
+    $http.get("/api/folders.json")
     .success (data)->
       reset_timer()
 
