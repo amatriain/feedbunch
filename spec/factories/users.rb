@@ -21,6 +21,7 @@ FactoryGirl.define do
     show_feed_tour false
     show_entry_tour false
     subscriptions_updated_at Time.zone.now
+    folders_updated_at Time.zone.now
 
     factory :user_unconfirmed do
       confirmed_at nil

@@ -64,6 +64,10 @@ require 'subscriptions_manager'
 #   - changing a feed title
 #   - changing a feed URL
 #   - moving a feed into or out of a folder
+# - folders_updated_at: datetime indicating when were folders updated for the last time. Events that
+# update this attribute are:
+#   - creating a folder
+#   - destroying a folder
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -375,6 +379,11 @@ class User < ActiveRecord::Base
     if self.subscriptions_updated_at == nil
       Rails.logger.info "User #{self.email} has unsupported subscriptions_updated_at value, using current datetime by default"
       self.subscriptions_updated_at = Time.zone.now
+    end
+
+    if self.folders_updated_at == nil
+      Rails.logger.info "User #{self.email} has unsupported folders_updated_at value, using current datetime by default"
+      self.folders_updated_at = Time.zone.now
     end
   end
 
