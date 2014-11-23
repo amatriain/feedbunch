@@ -29,7 +29,7 @@ class Api::FoldersController < ApplicationController
 
     if @folder.present?
       # If folder has not changed, return a 304
-      if stale? @folder
+      if stale? @folder, last_modified: @folder.updated_at
         render 'show', locals: {folder: @folder}
       end
     else
