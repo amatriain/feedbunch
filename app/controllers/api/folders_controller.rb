@@ -12,8 +12,11 @@ class Api::FoldersController < ApplicationController
   # Return JSON with the list of folders owned by the current user
 
   def index
-    @folders = current_user.folders
-    render 'index', locals: {user: current_user, folders: @folders}
+    # If folders have not changed, return a 304
+    if stale? last_modified: current_user.folders_updated_at
+      @folders = current_user.folders
+      render 'index', locals: {user: current_user, folders: @folders}
+    end
   rescue => e
     handle_error e
   end
