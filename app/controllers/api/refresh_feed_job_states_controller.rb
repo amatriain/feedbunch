@@ -11,12 +11,15 @@ class Api::RefreshFeedJobStatesController < ApplicationController
   # Return JSON indicating the state of the "refresh feed" processes initiated by the current user
 
   def index
-    if RefreshFeedJobState.exists? user_id: current_user.id
-      @job_states = RefreshFeedJobState.where user_id: current_user.id
-      Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_states.count} RefreshFeedJobState instances"
-      render 'index', locals: {job_states: @job_states}
-    else
-      head status: 404
+    # If refresh feed job states have not changed, return a 304
+    if stale? last_modified: current_user.refresh_feed_jobs_updated_at
+      if RefreshFeedJobState.exists? user_id: current_user.id
+        @job_states = RefreshFeedJobState.where user_id: current_user.id
+        Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_states.count} RefreshFeedJobState instances"
+        render 'index', locals: {job_states: @job_states}
+      else
+        head status: 404
+      end
     end
   rescue => e
     handle_error e
