@@ -1,44 +1,48 @@
-{
-  "i18n": {
-    "nextBtn": "<%= t 'read.tours.mobile.nextBtn' %>",
-    "doneBtn": "<%= t 'read.tours.mobile.doneBtn' %>",
-    "closeTooltip": "<%= t 'read.tours.mobile.closeTooltip' %>"
-  },
-  "steps": [
-    {
-      "target": "#start-page",
-      "placement": "bottom",
-      "zindex": 100,
-      "fixedElement": true,
-      "title": "<%= t 'read.tours.mobile.step1.title' %>",
-      "content": "<%= t 'read.tours.mobile.step1.content_html' %>"
+<% cache "mobile_tour-#{I18n.locale}" do %>
+
+  {
+    "i18n": {
+      "nextBtn": "<%= t 'read.tours.mobile.nextBtn' %>",
+      "doneBtn": "<%= t 'read.tours.mobile.doneBtn' %>",
+      "closeTooltip": "<%= t 'read.tours.mobile.closeTooltip' %>"
     },
-    {
-      "target": "#toggle-menu-collapse",
-      "placement": "bottom",
-      "zindex": 100,
-      "yOffset": 5,
-      "title": "<%= t 'read.tours.mobile.step2.title' %>",
-      "content": "<%= t 'read.tours.mobile.step2.content_html' %>"
-    },
-    {
-      "target": ".show-hide-sidebar-buttons",
-      "placement": "bottom",
-      "zindex": 100,
-      "arrowOffset": 260,
-      "xOffset": -260,
-      "yOffset": 5,
-      "title": "<%= t 'read.tours.mobile.step3.title' %>",
-      "content": "<%= t 'read.tours.mobile.step3.content_html' %>"
-    },
-    {
-      "target": "#feedbunch-brand",
-      "placement": "bottom",
-      "zindex": 100,
-      "xOffset": -50,
-      "yOffset": 100,
-      "title": "<%= t 'read.tours.mobile.step4.title' %>",
-      "content": "<%= t 'read.tours.mobile.step4.content_html' %>"
-    }
-  ]
-}
+    "steps": [
+      {
+        "target": "#start-page",
+        "placement": "bottom",
+        "zindex": 100,
+        "fixedElement": true,
+        "title": "<%= t 'read.tours.mobile.step1.title' %>",
+        "content": "<%= t 'read.tours.mobile.step1.content_html' %>"
+      },
+      {
+        "target": "#toggle-menu-collapse",
+        "placement": "bottom",
+        "zindex": 100,
+        "yOffset": 5,
+        "title": "<%= t 'read.tours.mobile.step2.title' %>",
+        "content": "<%= t 'read.tours.mobile.step2.content_html' %>"
+      },
+      {
+        "target": ".show-hide-sidebar-buttons",
+        "placement": "bottom",
+        "zindex": 100,
+        "arrowOffset": 260,
+        "xOffset": -260,
+        "yOffset": 5,
+        "title": "<%= t 'read.tours.mobile.step3.title' %>",
+        "content": "<%= t 'read.tours.mobile.step3.content_html' %>"
+      },
+      {
+        "target": "#feedbunch-brand",
+        "placement": "bottom",
+        "zindex": 100,
+        "xOffset": -50,
+        "yOffset": 100,
+        "title": "<%= t 'read.tours.mobile.step4.title' %>",
+        "content": "<%= t 'read.tours.mobile.step4.content_html' %>"
+      }
+    ]
+  }
+
+<% end %>

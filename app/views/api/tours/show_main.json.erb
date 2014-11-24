@@ -1,41 +1,45 @@
-{
-  "i18n": {
-    "nextBtn": "<%= t 'read.tours.main.nextBtn' %>",
-    "doneBtn": "<%= t 'read.tours.main.doneBtn' %>",
-    "closeTooltip": "<%= t 'read.tours.main.closeTooltip' %>"
-  },
-  "steps": [
-    {
-      "target": "#subscription-stats",
-      "placement": "bottom",
-      "title": "<%= t 'read.tours.main.step1.title' %>",
-      "content": "<%= t 'read.tours.main.step1.content_html' %>"
+<% cache "main_tour-#{I18n.locale}" do %>
+
+  {
+    "i18n": {
+      "nextBtn": "<%= t 'read.tours.main.nextBtn' %>",
+      "doneBtn": "<%= t 'read.tours.main.doneBtn' %>",
+      "closeTooltip": "<%= t 'read.tours.main.closeTooltip' %>"
     },
-    {
-      "target": "#all-feeds",
-      "placement": "right",
-      "title": "<%= t 'read.tours.main.step2.title' %>",
-      "content": "<%= t 'read.tours.main.step2.content_html' %>"
-    },
-    {
-      "target": "#show-hide-read-button",
-      "placement": "bottom",
-      "title": "<%= t 'read.tours.main.step3.title' %>",
-      "content": "<%= t 'read.tours.main.step3.content_html' %>"
-    },
-    {
-      "target": "#feeds-management",
-      "placement": "bottom",
-      "title": "<%= t 'read.tours.main.step4.title' %>",
-      "content": "<%= t 'read.tours.main.step4.content_html' %>"
-    },
-    {
-      "target": "#user-management",
-      "placement": "bottom",
-      "arrowOffset": 260,
-      "xOffset": -260,
-      "title": "<%= t 'read.tours.main.step5.title' %>",
-      "content": "<%= t 'read.tours.main.step5.content_html' %>"
-    }
-  ]
-}
+    "steps": [
+      {
+        "target": "#subscription-stats",
+        "placement": "bottom",
+        "title": "<%= t 'read.tours.main.step1.title' %>",
+        "content": "<%= t 'read.tours.main.step1.content_html' %>"
+      },
+      {
+        "target": "#all-feeds",
+        "placement": "right",
+        "title": "<%= t 'read.tours.main.step2.title' %>",
+        "content": "<%= t 'read.tours.main.step2.content_html' %>"
+      },
+      {
+        "target": "#show-hide-read-button",
+        "placement": "bottom",
+        "title": "<%= t 'read.tours.main.step3.title' %>",
+        "content": "<%= t 'read.tours.main.step3.content_html' %>"
+      },
+      {
+        "target": "#feeds-management",
+        "placement": "bottom",
+        "title": "<%= t 'read.tours.main.step4.title' %>",
+        "content": "<%= t 'read.tours.main.step4.content_html' %>"
+      },
+      {
+        "target": "#user-management",
+        "placement": "bottom",
+        "arrowOffset": 260,
+        "xOffset": -260,
+        "title": "<%= t 'read.tours.main.step5.title' %>",
+        "content": "<%= t 'read.tours.main.step5.content_html' %>"
+      }
+    ]
+  }
+
+<% end %>

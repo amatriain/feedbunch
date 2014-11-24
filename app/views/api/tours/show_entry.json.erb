@@ -1,29 +1,33 @@
-{
-  "i18n": {
-    "nextBtn": "<%= t 'read.tours.entry.nextBtn' %>",
-    "doneBtn": "<%= t 'read.tours.entry.doneBtn' %>",
-    "closeTooltip": "<%= t 'read.tours.entry.closeTooltip' %>"
-  },
-  "steps": [
-    {
-      "target": ".entry_open_lead",
-      "placement": "bottom",
-      "title": "<%= t 'read.tours.entry.step1.title' %>",
-      "content": "<%= t 'read.tours.entry.step1.content_html' %>"
+<% cache "entry_tour-#{I18n.locale}" do %>
+
+  {
+    "i18n": {
+      "nextBtn": "<%= t 'read.tours.entry.nextBtn' %>",
+      "doneBtn": "<%= t 'read.tours.entry.doneBtn' %>",
+      "closeTooltip": "<%= t 'read.tours.entry.closeTooltip' %>"
     },
-    {
-      "target": ".entry_open_state_btn",
-      "placement": "bottom",
-      "title": "<%= t 'read.tours.entry.step2.title' %>",
-      "content": "<%= t 'read.tours.entry.step2.content_html' %>"
-    },
-    {
-      "target": ".entry_open_social",
-      "placement": "bottom",
-      "arrowOffset": 110,
-      "xOffset": -110,
-      "title": "<%= t 'read.tours.entry.step3.title' %>",
-      "content": "<%= t 'read.tours.entry.step3.content_html' %>"
-    }
-  ]
-}
+    "steps": [
+      {
+        "target": ".entry_open_lead",
+        "placement": "bottom",
+        "title": "<%= t 'read.tours.entry.step1.title' %>",
+        "content": "<%= t 'read.tours.entry.step1.content_html' %>"
+      },
+      {
+        "target": ".entry_open_state_btn",
+        "placement": "bottom",
+        "title": "<%= t 'read.tours.entry.step2.title' %>",
+        "content": "<%= t 'read.tours.entry.step2.content_html' %>"
+      },
+      {
+        "target": ".entry_open_social",
+        "placement": "bottom",
+        "arrowOffset": 110,
+        "xOffset": -110,
+        "title": "<%= t 'read.tours.entry.step3.title' %>",
+        "content": "<%= t 'read.tours.entry.step3.content_html' %>"
+      }
+    ]
+  }
+
+<% end %>
