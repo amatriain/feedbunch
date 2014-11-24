@@ -63,8 +63,7 @@ angular.module('feedbunch').service 'jobStateSvc',
   # PRIVATE FUNCTION: load list of subscribe job states via AJAX
   #---------------------------------------------
   load_subscribe_job_states = ->
-    now = new Date()
-    $http.get("/api/subscribe_job_states.json?time=#{now.getTime()}")
+    $http.get("/api/subscribe_job_states.json")
     .success (data)->
       $rootScope.subscribe_job_states = data.slice()
       for job_state in data
@@ -93,8 +92,7 @@ angular.module('feedbunch').service 'jobStateSvc',
       timer = $timeout ->
         # Remove this timer from the list so that another update can be scheduled for 5 seconds in the future
         delete $rootScope.subscribe_job_state_timers[job_id]
-        now = new Date()
-        $http.get("/api/subscribe_job_states/#{job_id}.json?time=#{now.getTime()}")
+        $http.get("/api/subscribe_job_states/#{job_id}.json")
         .success (data)->
           # Update the current state of the job in the root scope
           job = findSvc.find_subscribe_job job_id
