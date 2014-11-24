@@ -27,7 +27,10 @@ class Api::SubscribeJobStatesController < ApplicationController
 
   def show
     @job_state = current_user.find_subscribe_job_state params[:id]
-    render 'show', locals: {job_state: @job_state}
+    # If job state has not changed, return a 304
+    if stale? last_modified: @job_state.updated_at
+      render 'show', locals: {job_state: @job_state}
+    end
   rescue => e
     handle_error e
   end
