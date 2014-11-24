@@ -10,8 +10,7 @@ angular.module('feedbunch').service 'jobStateSvc',
   # PRIVATE FUNCTION: load list of refresh feed job states via AJAX
   #---------------------------------------------
   load_refresh_feed_job_states = ->
-    now = new Date()
-    $http.get("/api/refresh_feed_job_states.json?time=#{now.getTime()}")
+    $http.get("/api/refresh_feed_job_states.json")
     .success (data)->
       $rootScope.refresh_feed_job_states = data.slice()
       for job_state in data
