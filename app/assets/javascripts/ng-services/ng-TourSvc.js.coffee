@@ -59,8 +59,7 @@ angular.module('feedbunch').service 'tourSvc',
     show_main_tour: ->
       # The main tour is only shown in screens bigger than a smartphone
       enquire.register sm_min_media_query, ->
-        now = new Date()
-        $http.get("/api/tours/main.json?time=#{now.getTime()}")
+        $http.get("/api/tours/main.json")
         .success (data)->
           tour =
             id: 'main-tour',
@@ -81,8 +80,7 @@ angular.module('feedbunch').service 'tourSvc',
     show_mobile_tour: ->
       # The mobile tour is only shown in smartphone-sized screens
       enquire.register xs_max_media_query, ->
-        now = new Date()
-        $http.get("/api/tours/mobile.json?time=#{now.getTime()}")
+        $http.get("/api/tours/mobile.json")
         .success (data)->
           tour =
             id: 'mobile-tour',
@@ -103,8 +101,7 @@ angular.module('feedbunch').service 'tourSvc',
     show_feed_tour: ->
       # The feed tour is only shown in screens bigger than a smartphone
       enquire.register sm_min_media_query, ->
-        now = new Date()
-        $http.get("/api/tours/feed.json?time=#{now.getTime()}")
+        $http.get("/api/tours/feed.json")
         .success (data)->
           tour =
             id: 'feed-tour',
@@ -123,8 +120,7 @@ angular.module('feedbunch').service 'tourSvc',
     # Show the entry application tour.
     #---------------------------------------------
     show_entry_tour: ->
-      now = new Date()
-      $http.get("/api/tours/entry.json?time=#{now.getTime()}")
+      $http.get("/api/tours/entry.json")
       .success (data)->
         tour =
           id: 'entry-tour',
