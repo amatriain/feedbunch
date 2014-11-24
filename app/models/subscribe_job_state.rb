@@ -27,8 +27,17 @@ class SubscribeJobState < ActiveRecord::Base
   validates :fetch_url, presence: true
 
   before_validation :default_values
+  after_save :touch_subscribe_job_states
+  after_destroy :touch_subscribe_job_states
 
   private
+
+  ##
+  # Update the refresh_feed_jobs_updated_at attribute of the associated user with the current datetime.
+
+  def touch_subscribe_job_states
+    user.update subscribe_jobs_updated_at: Time.zone.now
+  end
 
   ##
   # By default, a SubscribeJobState is in the "RUNNING" state unless specified otherwise.
