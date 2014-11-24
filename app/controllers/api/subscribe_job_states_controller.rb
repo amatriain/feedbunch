@@ -11,12 +11,15 @@ class Api::SubscribeJobStatesController < ApplicationController
   # Return JSON indicating the state of the subscribe jobs initiated by the current user
 
   def index
-    if SubscribeJobState.exists? user_id: current_user.id
-      @job_states = SubscribeJobState.where user_id: current_user.id
-      Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_states.count} SubscribeJobState instances"
-      render 'index', locals: {job_states: @job_states}
-    else
-      head status: 404
+    # If subscribe job states have not changed, return a 304
+    if stale? last_modified: current_user.subscribe_jobs_updated_at
+      if SubscribeJobState.exists? user_id: current_user.id
+        @job_states = SubscribeJobState.where user_id: current_user.id
+        Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_states.count} SubscribeJobState instances"
+        render 'index', locals: {job_states: @job_states}
+      else
+        head status: 404
+      end
     end
   rescue => e
     handle_error e
