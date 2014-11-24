@@ -23,6 +23,7 @@ FactoryGirl.define do
     subscriptions_updated_at Time.zone.now
     folders_updated_at Time.zone.now
     refresh_feed_jobs_updated_at Time.zone.now
+    subscribe_jobs_updated_at Time.zone.now
 
     factory :user_unconfirmed do
       confirmed_at nil

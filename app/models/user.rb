@@ -73,6 +73,11 @@ require 'subscriptions_manager'
 #   - creating a refresh feed job state
 #   - destroying a refresh feed job state
 #   - updating a refresh feed job state
+# - subscribe_jobs_updated_at: datetime indicating when subscribe feed jobs for this user were updated for the
+# last time. Events that update this attribute are:
+#   - creating a subscribe feed job state
+#   - destroying a subscribe feed job state
+#   - updating a subscribe feed job state
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -394,6 +399,11 @@ class User < ActiveRecord::Base
     if self.refresh_feed_jobs_updated_at == nil
       Rails.logger.info "User #{self.email} has unsupported refresh_feed_jobs_updated_at value, using current datetime by default"
       self.refresh_feed_jobs_updated_at = Time.zone.now
+    end
+
+    if self.subscribe_jobs_updated_at == nil
+      Rails.logger.info "User #{self.email} has unsupported subscribe_jobs_updated_at value, using current datetime by default"
+      self.subscribe_jobs_updated_at = Time.zone.now
     end
   end
 
