@@ -24,8 +24,17 @@ class RefreshFeedJobState < ActiveRecord::Base
   validates :state, presence: true, inclusion: {in: [RUNNING, ERROR, SUCCESS]}
 
   before_validation :default_values
+  after_save :touch_refresh_feed_job_states
+  after_destroy :touch_refresh_feed_job_states
 
   private
+
+  ##
+  # Update the refresh_feed_jobs_updated_at attribute of the associated user with the current datetime.
+
+  def touch_refresh_feed_job_states
+    user.update refresh_feed_jobs_updated_at: Time.zone.now
+  end
 
   ##
   # By default, a RefreshFeedJobState is in the "RUNNING" state unless specified otherwise.
