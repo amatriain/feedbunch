@@ -68,6 +68,11 @@ require 'subscriptions_manager'
 # update this attribute are:
 #   - creating a folder
 #   - destroying a folder
+# - refresh_feed_jobs_updated_at: datetime indicating when refresh feed jobs for this user were updated for the
+# last time. Events that update this attribute are:
+#   - creating a refresh feed job state
+#   - destroying a refresh feed job state
+#   - updating a refresh feed job state
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -384,6 +389,11 @@ class User < ActiveRecord::Base
     if self.folders_updated_at == nil
       Rails.logger.info "User #{self.email} has unsupported folders_updated_at value, using current datetime by default"
       self.folders_updated_at = Time.zone.now
+    end
+
+    if self.refresh_feed_jobs_updated_at == nil
+      Rails.logger.info "User #{self.email} has unsupported refresh_feed_jobs_updated_at value, using current datetime by default"
+      self.refresh_feed_jobs_updated_at = Time.zone.now
     end
   end
 
