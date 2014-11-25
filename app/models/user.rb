@@ -78,6 +78,14 @@ require 'subscriptions_manager'
 #   - creating a subscribe feed job state
 #   - destroying a subscribe feed job state
 #   - updating a subscribe feed job state
+# - config_updated_at: datetime indicating when the config for this user was last updated. This attribute is
+# updated every time one of these attributes is changed:
+#   - quick_reading
+#   - open_all_entries
+#   - show_main_tour
+#   - show_mobile_tour
+#   - show_feed_tour
+#   - show_entry_tour
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -404,6 +412,11 @@ class User < ActiveRecord::Base
     if self.subscribe_jobs_updated_at == nil
       Rails.logger.info "User #{self.email} has unsupported subscribe_jobs_updated_at value, using current datetime by default"
       self.subscribe_jobs_updated_at = Time.zone.now
+    end
+
+    if self.config_updated_at == nil
+      Rails.logger.info "User #{self.email} has unsupported config_updated_at value, using current datetime by default"
+      self.config_updated_at = Time.zone.now
     end
   end
 
