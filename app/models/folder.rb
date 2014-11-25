@@ -99,7 +99,7 @@ class Folder < ActiveRecord::Base
   def touch_subscription(feed)
     subscription = FeedSubscription.where(feed_id: feed.id, user_id: user_id).first
     Rails.logger.info "touching feed subscription for feed #{feed.id} - #{feed.title}, user #{user_id} - #{user.email}"
-    subscription.touch_subscriptions
+    subscription.touch_subscriptions if subscription.present?
   end
 
   ##
