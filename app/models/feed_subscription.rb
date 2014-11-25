@@ -30,7 +30,7 @@ class FeedSubscription < ActiveRecord::Base
 
   before_validation :default_values
   after_create :after_create
-  before_destroy :touch_subscriptions
+  before_destroy :after_destroy
   after_save :after_save
 
   ##
@@ -60,10 +60,22 @@ class FeedSubscription < ActiveRecord::Base
   # After creating a new subscription:
   # - set the initial unread entries count
   # - update the date/time of change of subscriptions
+  # - update the date/time of change of user data
 
   def after_create
     initial_unread_entries
     touch_subscriptions
+    touch_user_data
+  end
+
+  ##
+  # After destroying a subscription:
+  # - update the date/time of change of subscriptions
+  # - update the date/time of change of user data
+
+  def after_destroy
+    touch_subscriptions
+    touch_user_data
   end
 
   ##
@@ -78,5 +90,12 @@ class FeedSubscription < ActiveRecord::Base
 
   def after_save
     touch_subscriptions if unread_entries_changed?
+  end
+
+  ##
+  # Update the user_data_updated_at attribute of the associated user with the current datetime.
+
+  def touch_user_data
+    user.update user_data_updated_at: Time.zone.now if user.present?
   end
 end
