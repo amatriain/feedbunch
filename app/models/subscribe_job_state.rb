@@ -36,7 +36,7 @@ class SubscribeJobState < ActiveRecord::Base
   # Update the refresh_feed_jobs_updated_at attribute of the associated user with the current datetime.
 
   def touch_subscribe_job_states
-    user.update subscribe_jobs_updated_at: Time.zone.now
+    user.update subscribe_jobs_updated_at: Time.zone.now if user.present?
   end
 
   ##

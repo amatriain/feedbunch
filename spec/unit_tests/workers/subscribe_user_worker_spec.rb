@@ -45,6 +45,15 @@ describe SubscribeUserWorker do
       SubscribeUserWorker.new.perform 1234567890, @feed.fetch_url, @folder.id, false, nil
     end
 
+    it 'destroys subscribe_job_state if the user does not exist' do
+      subscribe_job_state = FactoryGirl.create :subscribe_job_state, user_id: @user.id, fetch_url: @feed.fetch_url
+      @user.delete
+
+      expect(SubscribeJobState.count).to eq 1
+      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, false, subscribe_job_state.id
+      expect(SubscribeJobState.count).to eq 0
+    end
+
     it 'does nothing if the folder does not exist' do
       expect(@user).not_to receive :subscribe
       SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, 1234567890, false, nil
