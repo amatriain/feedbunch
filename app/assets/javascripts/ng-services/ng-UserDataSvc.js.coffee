@@ -10,8 +10,7 @@ angular.module('feedbunch').service 'userDataSvc',
   # Load user configuration data via AJAX into the root scope
   #---------------------------------------------
   load_data: ->
-    now = new Date()
-    $http.get("/api/user_data.json?time=#{now.getTime()}")
+    $http.get("/api/user_data.json")
     .success (data)->
       $rootScope.subscribed_feeds_count = data["subscribed_feeds_count"]
     .error (data, status)->
