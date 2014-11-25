@@ -6,7 +6,7 @@ describe User, type: :model do
     @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
     @user.subscribe @feed.fetch_url
-    @old_refresh_feed_jobs_updated_at = @user.refresh_feed_jobs_updated_at
+    @old_refresh_feed_jobs_updated_at = @user.reload.refresh_feed_jobs_updated_at
   end
 
   context 'touches refresh feed jobs' do

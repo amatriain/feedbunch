@@ -4,7 +4,7 @@ describe User, type: :model do
 
   before :each do
     @user = FactoryGirl.create :user
-    @old_subscriptions_updated_at = @user.subscriptions_updated_at
+    @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
   end
 
   context 'touches subscriptions' do

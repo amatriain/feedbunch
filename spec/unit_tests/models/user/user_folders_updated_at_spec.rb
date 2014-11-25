@@ -4,7 +4,7 @@ describe User, type: :model do
 
   before :each do
     @user = FactoryGirl.create :user
-    @old_folders_updated_at = @user.folders_updated_at
+    @old_folders_updated_at = @user.reload.folders_updated_at
   end
 
   context 'touches folders' do
