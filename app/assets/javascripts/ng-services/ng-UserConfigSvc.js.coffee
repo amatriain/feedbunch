@@ -10,8 +10,7 @@ angular.module('feedbunch').service 'userConfigSvc',
   # Load user configuration data via AJAX into the root scope
   #---------------------------------------------
   load_config: ->
-    now = new Date()
-    $http.get("/api/user_config.json?time=#{now.getTime()}")
+    $http.get("/api/user_config.json")
     .success (data)->
       $rootScope.open_all_entries = data["open_all_entries"]
       $rootScope.quick_reading = data["quick_reading"]
