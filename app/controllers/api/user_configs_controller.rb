@@ -11,7 +11,10 @@ class Api::UserConfigsController < ApplicationController
   # Return configuration options set by the user
 
   def show
-    render 'show', locals: {user: current_user}
+    # If config has not changed, return a 304
+    if stale? last_modified: current_user.config_updated_at
+      render 'show', locals: {user: current_user}
+    end
   rescue => e
     handle_error e
   end
