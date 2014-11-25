@@ -131,6 +131,7 @@ class User < ActiveRecord::Base
   validates :show_main_tour, inclusion: {in: [true, false]}
 
   before_save :before_save_user
+  after_save :after_save_user
   before_validation :default_values
 
   ##
@@ -321,6 +322,24 @@ class User < ActiveRecord::Base
     if self.opml_export_job_state.blank?
       self.create_opml_export_job_state state: OpmlExportJobState::NONE
       Rails.logger.debug "User #{self.email} has no OpmlExportJobState, creating one with state NONE"
+    end
+  end
+
+  ##
+  # Operations after saving a user in the db:
+  # - update the config_updated_at attribute to the current datetime if one of these attributes has changed value:
+  #   - quick_reading
+  #   - open_all_entries
+  #   - show_main_tour
+  #   - show_mobile_tour
+  #   - show_feed_tour
+  #   - show_entry_tour
+
+  def after_save_user
+    if quick_reading_changed? || open_all_entries_changed? ||
+        show_main_tour_changed? || show_mobile_tour_changed? ||
+        show_feed_tour_changed? || show_entry_tour_changed?
+      update_column :config_updated_at, Time.zone.now
     end
   end
 
