@@ -86,6 +86,10 @@ require 'subscriptions_manager'
 #   - show_mobile_tour
 #   - show_feed_tour
 #   - show_entry_tour
+# - user_data_updated_at: datetime indicating when user data for this user was last updated. This attribute is
+# updated every time one of these happens:
+#   - user subscribes to a new feed
+#   - user unsubscribes from a feed
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -436,6 +440,11 @@ class User < ActiveRecord::Base
     if self.config_updated_at == nil
       Rails.logger.info "User #{self.email} has unsupported config_updated_at value, using current datetime by default"
       self.config_updated_at = Time.zone.now
+    end
+
+    if self.user_data_updated_at == nil
+      Rails.logger.info "User #{self.email} has unsupported user_data_updated_at value, using current datetime by default"
+      self.user_data_updated_at = Time.zone.now
     end
   end
 

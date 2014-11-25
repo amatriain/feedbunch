@@ -401,4 +401,17 @@ describe User, type: :model do
     end
   end
 
+  context 'user_data_updated_at defaults' do
+
+    it 'defaults to current time' do
+      date = Time.zone.parse '2000-01-01'
+      allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
+
+      user = FactoryGirl.build :user, user_data_updated_at: nil
+      user.save!
+      expect(user.user_data_updated_at).not_to be_nil
+      expect(user.user_data_updated_at).to eq date
+    end
+  end
+
 end
