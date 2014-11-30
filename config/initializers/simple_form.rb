@@ -80,7 +80,7 @@ SimpleForm.setup do |config|
   config.label_class = 'col-xs-12 col-sm-3 control-label'
 
   # You can define the class to use on all forms. Default is simple_form.
-  config.form_class = 'form-horizontal'
+  config.default_form_class = 'form-horizontal'
 
   # You can define the class to use on all controls.
   config.input_class = 'form-control'
