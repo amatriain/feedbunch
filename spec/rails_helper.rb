@@ -73,6 +73,16 @@ RSpec.configure do |config|
   # For more about these helpers see Warden wiki: https://github.com/hassox/warden/wiki/Testing
   config.include Warden::Test::Helpers
 
+  # Blacklist external URLs that serve files unnecessary for testing (fonts, twitter API, etc) to speed up tests
+  config.before :each, js: true do
+    page.driver.browser.url_blacklist=%w(
+                                          http://platform.twitter.com
+                                          http://connect.facebook.net
+                                          http://cdn.jsdelivr.net/fastclick
+                                          http://maxcdn.bootstrapcdn.com/font-awesome
+                                        )
+  end
+
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
