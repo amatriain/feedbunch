@@ -12,7 +12,7 @@
 #   <% end %>
 
 class LocaleInput < SimpleForm::Inputs::Base
-  def input
+  def input(wrapper_options)
     "<span class=\"input-group-addon\"><i class=\"fa fa-fw fa-flag\"></i></span>#{@builder.input_field(attribute_name, collection: I18n.available_locales, label_method: lambda{|loc| locale_name loc}, selected: I18n.locale)}".html_safe
   end
 
