@@ -274,7 +274,7 @@ describe User, type: :model do
       expect(@user.feeds.where(fetch_url: feed.fetch_url).first).to eq feed
     end
 
-    it 'subscribes to a feed already in the database, given a website URL that through autodiscovery leads to its fetch_url', js: true do
+    it 'subscribes to a feed already in the database, given a website URL that through autodiscovery leads to its fetch_url' do
       # Fetching a feed returns an HTML document with feed autodiscovery
       webpage_url = 'http://www.some.webpage.url/'
       alternate_webpage_url = 'http://some.webpage.url/'
@@ -391,7 +391,7 @@ FEED_XML
       expect{@user.subscribe url_no_scheme}.to raise_error AlreadySubscribedError
     end
 
-    it 'raises an error if user tries to subscribe to a website URL that through autodiscovery leads to a subscribed feed', js: true do
+    it 'raises an error if user tries to subscribe to a website URL that through autodiscovery leads to a subscribed feed' do
       # Fetching a feed returns an HTML document with feed autodiscovery
       webpage_url = 'http://www.some.webpage.url/'
       alternate_webpage_url = 'http://some.webpage.url/'
@@ -539,7 +539,7 @@ FEED_XML
       expect(@user.feeds.where(fetch_url: feed_url).first.entries.where(title: entry_title2)).to be_present
     end
 
-    it 'subscribes to a feed not in the database, given the website URL', js: true do
+    it 'subscribes to a feed not in the database, given the website URL' do
       # Fetching a feed returns an HTML document with feed autodiscovery
       webpage_url = 'http://some.webpage.url/'
       fetch_url = 'http://some.webpage.url/feed.php'
@@ -593,7 +593,7 @@ FEED_XML
       expect(@user.feeds.where(url: webpage_url, fetch_url: fetch_url)).to be_present
     end
 
-    it 'subscribes to a feed not in the database, given the website URL without scheme', js: true do
+    it 'subscribes to a feed not in the database, given the website URL without scheme' do
       # Fetching a feed returns an HTML document with feed autodiscovery
       webpage_url = 'http://some.webpage.url/'
       url_no_schema = 'some.webpage.url/'
