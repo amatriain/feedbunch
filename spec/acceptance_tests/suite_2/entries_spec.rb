@@ -115,7 +115,7 @@ describe 'feed entries', type: :feature do
       @user.change_entries_state @entry1, 'read'
 
       visit read_path
-      page.driver.resize_window(800, 600)
+      current_window.resize_to(800, 600)
       read_folder 'all'
 
       expect(page).not_to have_content @entry1.title

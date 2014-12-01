@@ -19,7 +19,7 @@ describe 'quick reading mode', type: :feature do
 
       login_user_for_feature @user
 
-      page.driver.resize_window(800, 600)
+      current_window.resize_to(800, 600)
     end
 
     it 'does not enable quick reading mode by default', js: true do
