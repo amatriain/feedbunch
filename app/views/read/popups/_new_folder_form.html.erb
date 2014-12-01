@@ -13,7 +13,7 @@
                               url: '',
                               authenticity_token: false,   # authenticity token field not necessary for AJAX forms (it's sent via headers)
                               html: {id: 'form-new-folder',
-                                'ng-submit' => 'move_to_new_folder()'} do |f| %>
+                                'ng-submit' => 'move_to_new_folder($event)'} do |f| %>
             <%= f.input :title, as: :folder_icon, input_html: {'ng-model'=>'new_folder_title'}, required: false %>
             <div class="modal-footer">
               <button type="button"

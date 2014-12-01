@@ -38,10 +38,11 @@ animationsSvc, tourSvc)->
   #--------------------------------------------
   # Send a friend an invitation to join Feedbunch
   #--------------------------------------------
-  $scope.send_invitation = ->
+  $scope.send_invitation = (e)->
     $("#invite-friend-popup").modal 'hide'
     invitationsSvc.send_invitation $scope.invitation_email
     $scope.invitation_email = null
+    e.preventDefault()
     return
 
   #--------------------------------------------

@@ -81,10 +81,11 @@ tourSvc)->
   #--------------------------------------------
   # Subscribe to a feed
   #--------------------------------------------
-  $scope.subscribe = ->
+  $scope.subscribe = (e)->
     $("#subscribe-feed-popup").modal 'hide'
     subscriptionSvc.subscribe $scope.subscription_url
     $scope.subscription_url = null
+    e.preventDefault()
     return
 
   #--------------------------------------------
@@ -125,11 +126,12 @@ tourSvc)->
   #--------------------------------------------
   # Move a feed to a new folder
   #--------------------------------------------
-  $scope.move_to_new_folder = ()->
+  $scope.move_to_new_folder = (e)->
     $("#new-folder-popup").modal 'hide'
     folderSvc.move_to_new_folder $scope.new_folder_title
     $scope.new_folder_title = null
     menuCollapseSvc.close()
+    e.preventDefault()
     return
 
   #--------------------------------------------
