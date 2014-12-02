@@ -106,11 +106,11 @@ describe 'export subscriptions', type: :feature do
       close_export_alert
 
       # alert immediately disappears
-      expect(page).not_to have_content 'There\'s been an error trying to export your feed subscriptions'
+      expect(page).to have_no_content 'There\'s been an error trying to export your feed subscriptions'
       # alert is not displayed on page reload
       visit read_path
       expect(page).to have_css '#start-info #export-process-state.ng-hide', visible: false
-      expect(page).not_to have_content 'There\'s been an error trying to export your feed subscriptions'
+      expect(page).to have_no_content 'There\'s been an error trying to export your feed subscriptions'
     end
 
     it 'hides import data alert when the export finished successfully', js: true do
@@ -122,11 +122,11 @@ describe 'export subscriptions', type: :feature do
       close_export_alert
 
       # alert immediately disappears
-      expect(page).not_to have_content 'Your feed subscriptions have been successfully exported'
+      expect(page).to have_no_content 'Your feed subscriptions have been successfully exported'
       # alert is not displayed on page reload
       visit read_path
       expect(page).to have_css '#start-info #export-process-state.ng-hide', visible: false
-      expect(page).not_to have_content 'Your feed subscriptions have been successfully exported'
+      expect(page).to have_no_content 'Your feed subscriptions have been successfully exported'
     end
 
     it 'cannot hide export data alert while the export is running', js: true do

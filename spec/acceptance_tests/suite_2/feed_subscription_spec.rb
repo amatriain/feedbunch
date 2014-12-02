@@ -32,7 +32,7 @@ describe 'subscription to feeds', type: :feature do
     end
 
     it 'does not show feeds the user is not subscribed to' do
-      expect(page).not_to have_content @feed2.title
+      expect(page).to have_no_content @feed2.title
     end
   end
 

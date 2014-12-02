@@ -126,7 +126,7 @@ describe 'unsubscribe from feed', type: :feature do
 
     # Folder should be removed from the sidebar
     within '#sidebar #folders-list' do
-      expect(page).not_to have_content @folder.title
+      expect(page).to have_no_content @folder.title
     end
     expect(page).to have_no_css "#folders-list li[data-folder-id='#{@folder.id}']"
 
@@ -134,7 +134,7 @@ describe 'unsubscribe from feed', type: :feature do
     # Folder should be removed from the dropdown
     find('#folder-management').click
     within '#folder-management-dropdown ul.dropdown-menu' do
-      expect(page).not_to have_content @folder.title
+      expect(page).to have_no_content @folder.title
       expect(page).to have_no_css "a[data-folder-id='#{@folder.id}']"
     end
   end
@@ -149,7 +149,7 @@ describe 'unsubscribe from feed', type: :feature do
 
     # Folder should be removed from the sidebar (it has no unread entries)
     within '#sidebar #folders-list' do
-      expect(page).not_to have_content @folder.title
+      expect(page).to have_no_content @folder.title
     end
     expect(page).to have_no_css "#folders-list li[data-folder-id='#{@folder.id}']"
 
@@ -200,7 +200,7 @@ describe 'unsubscribe from feed', type: :feature do
 
     expect(page).to have_css '#subscription-stats'
     expect(page).to have_no_text 'Currently refreshing feed'
-    expect(page).not_to have_content @feed1.title
+    expect(page).to have_no_content @feed1.title
   end
 
   it 'removes subscribe job state alert for the unsubscribed feed', js: true do
@@ -217,7 +217,7 @@ describe 'unsubscribe from feed', type: :feature do
 
     expect(page).to have_css '#subscription-stats'
     expect(page).to have_no_text 'Successfully added subscription to feed'
-    expect(page).not_to have_content @feed1.title
+    expect(page).to have_no_content @feed1.title
   end
 
 end

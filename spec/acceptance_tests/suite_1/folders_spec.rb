@@ -32,7 +32,7 @@ describe 'folders and feeds', type: :feature do
 
   it 'shows only folders that belong to the user', js: true do
     expect(page).to have_content @folder1.title
-    expect(page).not_to have_content @folder3.title
+    expect(page).to have_no_content @folder3.title
   end
 
   it 'shows an alert if it cannot load folders', js: true do
@@ -78,7 +78,7 @@ describe 'folders and feeds', type: :feature do
 
     visit read_path
     # folder3 should be hidden
-    expect(page).not_to have_content folder3.title
+    expect(page).to have_no_content folder3.title
   end
 
   it 'shows folders without unread entries if a feed in the folder has a subscribe job state alert', js: true do
@@ -132,7 +132,7 @@ describe 'folders and feeds', type: :feature do
 
     hide_read
     # folder3 should disappear
-    expect(page).not_to have_content folder3.title
+    expect(page).to have_no_content folder3.title
   end
 
   context 'folder management' do
@@ -231,14 +231,14 @@ describe 'folders and feeds', type: :feature do
 
         # Folder should be removed from the sidebar
         within '#sidebar #folders-list' do
-          expect(page).not_to have_content @folder1.title
+          expect(page).to have_no_content @folder1.title
         end
         expect(page).to have_no_css "#folders-list li[data-folder-id='#{@folder1.id}']"
 
         # Folder should be removed from the dropdown
         open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
-          expect(page).not_to have_content @folder1.title
+          expect(page).to have_no_content @folder1.title
           expect(page).to have_no_css "a[data-folder-id='#{@folder1.id}']"
         end
       end
@@ -382,14 +382,14 @@ describe 'folders and feeds', type: :feature do
 
         # Folder should be removed from the sidebar
         within '#sidebar #folders-list' do
-          expect(page).not_to have_content @folder1.title
+          expect(page).to have_no_content @folder1.title
         end
         expect(page).to have_no_css "#folders-list li[data-folder-id='#{@folder1.id}']"
 
         # Folder should be removed from the dropdown
         open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
-          expect(page).not_to have_content @folder1.title
+          expect(page).to have_no_content @folder1.title
           expect(page).to have_no_css "a[data-folder-id='#{@folder1.id}']"
         end
       end

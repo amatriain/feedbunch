@@ -80,10 +80,10 @@ describe 'feeds', type: :feature do
       # Only entries for the clicked feed should appear
       expect(page).to have_content @entry3_1.title
       expect(page).to have_content @entry3_2.title
-      expect(page).not_to have_content @entry1_1.title
-      expect(page).not_to have_content @entry1_2.title
-      expect(page).not_to have_content @entry2_1.title
-      expect(page).not_to have_content @entry2_2.title
+      expect(page).to have_no_content @entry1_1.title
+      expect(page).to have_no_content @entry1_2.title
+      expect(page).to have_no_content @entry2_1.title
+      expect(page).to have_no_content @entry2_2.title
     end
 
     it 'shows entries for a feed in a user folder', js: true do
@@ -92,10 +92,10 @@ describe 'feeds', type: :feature do
       # Only entries for the clicked feed should appear
       expect(page).to have_content @entry1_1.title
       expect(page).to have_content @entry1_2.title
-      expect(page).not_to have_content @entry2_1.title
-      expect(page).not_to have_content @entry2_2.title
-      expect(page).not_to have_content @entry3_1.title
-      expect(page).not_to have_content @entry3_2.title
+      expect(page).to have_no_content @entry2_1.title
+      expect(page).to have_no_content @entry2_2.title
+      expect(page).to have_no_content @entry3_1.title
+      expect(page).to have_no_content @entry3_2.title
     end
 
     it 'shows entries without a published date', js: true do
@@ -289,8 +289,8 @@ describe 'feeds', type: :feature do
         expect(page).to have_content @entry1_2.title
         expect(page).to have_content @entry2_1.title
         expect(page).to have_content @entry2_2.title
-        expect(page).not_to have_content @entry3_1.title
-        expect(page).not_to have_content @entry3_2.title
+        expect(page).to have_no_content @entry3_1.title
+        expect(page).to have_no_content @entry3_2.title
       end
 
       it 'does not show link to read all subscriptions in a folder if it has only one feed', js: true do

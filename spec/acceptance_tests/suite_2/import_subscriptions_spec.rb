@@ -169,11 +169,11 @@ describe 'import subscriptions', type: :feature do
       close_import_alert
 
       # alert immediately disappears
-      expect(page).not_to have_content 'If you want to import your feed subscriptions from another feed aggregator'
+      expect(page).to have_no_content 'If you want to import your feed subscriptions from another feed aggregator'
       # alert is not displayed on page reload
       visit read_path
       expect(page).to have_css '#start-info #import-process-state.ng-hide', visible: false
-      expect(page).not_to have_content 'If you want to import your feed subscriptions from another feed aggregator'
+      expect(page).to have_no_content 'If you want to import your feed subscriptions from another feed aggregator'
     end
 
     it 'hides import data alert when the import finished with an error', js: true do
@@ -183,11 +183,11 @@ describe 'import subscriptions', type: :feature do
       close_import_alert
 
       # alert immediately disappears
-      expect(page).not_to have_content 'There\'s been an error trying to import your feed subscriptions'
+      expect(page).to have_no_content 'There\'s been an error trying to import your feed subscriptions'
       # alert is not displayed on page reload
       visit read_path
       expect(page).to have_css '#start-info #import-process-state.ng-hide', visible: false
-      expect(page).not_to have_content 'There\'s been an error trying to import your feed subscriptions'
+      expect(page).to have_no_content 'There\'s been an error trying to import your feed subscriptions'
     end
 
     it 'hides import data alert when the import finished successfully', js: true do
@@ -197,11 +197,11 @@ describe 'import subscriptions', type: :feature do
       close_import_alert
 
       # alert immediately disappears
-      expect(page).not_to have_content 'Your feed subscriptions have been successfully imported'
+      expect(page).to have_no_content 'Your feed subscriptions have been successfully imported'
       # alert is not displayed on page reload
       visit read_path
       expect(page).to have_css '#start-info #import-process-state.ng-hide', visible: false
-      expect(page).not_to have_content 'Your feed subscriptions have been successfully imported'
+      expect(page).to have_no_content 'Your feed subscriptions have been successfully imported'
     end
 
     it 'cannot hide import data alert while the import is running', js: true do
