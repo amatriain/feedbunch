@@ -49,10 +49,10 @@ describe 'refresh feeds', type: :feature do
     it 'dismisses alert permanently', js: true do
       refresh_feed
       close_refresh_feed_job_alert @job_state.reload.id
-      expect(page).not_to have_text 'Currently refreshing feed'
+      expect(page).to have_no_text 'Currently refreshing feed'
       # alert should not be present after reloading
       visit current_path
-      expect(page).not_to have_text 'Currently refreshing feed'
+      expect(page).to have_no_text 'Currently refreshing feed'
     end
 
     it 'opens feed entries when clicking on feed title', js: true do
@@ -77,10 +77,10 @@ describe 'refresh feeds', type: :feature do
       refresh_feed
       find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       go_to_start_page
-      expect(page).not_to have_text 'Currently refreshing feed'
+      expect(page).to have_no_text 'Currently refreshing feed'
       # alert should not be present after reloading page
       visit current_path
-      expect(page).not_to have_text 'Currently refreshing feed'
+      expect(page).to have_no_text 'Currently refreshing feed'
     end
 
     it 'loads feed even if it has no unread entries', js: true do
@@ -133,10 +133,10 @@ describe 'refresh feeds', type: :feature do
     it 'dismisses alert permanently', js: true do
       refresh_feed
       close_refresh_feed_job_alert @job_state.reload.id
-      expect(page).not_to have_text 'Feed refreshed successfully'
+      expect(page).to have_no_text 'Feed refreshed successfully'
       # alert should not be present after reloading
       visit current_path
-      expect(page).not_to have_text 'Feed refreshed successfully'
+      expect(page).to have_no_text 'Feed refreshed successfully'
     end
 
     it 'opens feed entries when clicking on feed title', js: true do
@@ -161,10 +161,10 @@ describe 'refresh feeds', type: :feature do
       refresh_feed
       find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       go_to_start_page
-      expect(page).not_to have_text 'Feed refreshed successfully'
+      expect(page).to have_no_text 'Feed refreshed successfully'
       # alert should not be present after reloading page
       visit current_path
-      expect(page).not_to have_text 'Feed refreshed successfully'
+      expect(page).to have_no_text 'Feed refreshed successfully'
     end
 
     it 'loads feed even if it has no unread entries', js: true do
@@ -220,10 +220,10 @@ describe 'refresh feeds', type: :feature do
     it 'dismisses alert permanently', js: true do
       refresh_feed
       close_refresh_feed_job_alert @job_state.reload.id
-      expect(page).not_to have_text 'There\'s been an error trying to refresh feed'
+      expect(page).to have_no_text 'There\'s been an error trying to refresh feed'
       # alert should not be present after reloading
       visit current_path
-      expect(page).not_to have_text 'There\'s been an error trying to refresh feed'
+      expect(page).to have_no_text 'There\'s been an error trying to refresh feed'
     end
 
     it 'opens feed entries when clicking on feed title', js: true do
@@ -248,10 +248,10 @@ describe 'refresh feeds', type: :feature do
       refresh_feed
       find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
       go_to_start_page
-      expect(page).not_to have_text 'There\'s been an error trying to refresh feed'
+      expect(page).to have_no_text 'There\'s been an error trying to refresh feed'
       # alert should not be present after reloading page
       visit current_path
-      expect(page).not_to have_text 'There\'s been an error trying to refresh feed'
+      expect(page).to have_no_text 'There\'s been an error trying to refresh feed'
     end
 
     it 'loads feed even if it has no unread entries', js: true do

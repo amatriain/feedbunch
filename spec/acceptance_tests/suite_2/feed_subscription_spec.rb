@@ -67,10 +67,10 @@ describe 'subscription to feeds', type: :feature do
       it 'dismisses alert permanently', js: true do
         subscribe_feed @feed2.fetch_url
         close_subscribe_job_alert @job_state.reload.id
-        expect(page).not_to have_text 'Currently adding subscription to feed'
+        expect(page).to have_no_text 'Currently adding subscription to feed'
         # alert should not be present after reloading
         visit current_path
-        expect(page).not_to have_text 'Currently adding subscription to feed'
+        expect(page).to have_no_text 'Currently adding subscription to feed'
       end
 
     end
@@ -108,10 +108,10 @@ describe 'subscription to feeds', type: :feature do
       it 'dismisses alert permanently', js: true do
         subscribe_feed @feed2.fetch_url
         close_subscribe_job_alert @job_state.reload.id
-        expect(page).not_to have_text 'Successfully added subscription to feed'
+        expect(page).to have_no_text 'Successfully added subscription to feed'
         # alert should not be present after reloading
         visit current_path
-        expect(page).not_to have_text 'Successfully added subscription to feed'
+        expect(page).to have_no_text 'Successfully added subscription to feed'
       end
 
       it 'opens feed entries when clicking on feed title', js: true do
@@ -138,12 +138,12 @@ describe 'subscription to feeds', type: :feature do
         subscribe_feed @feed2.fetch_url
         find("#subscribe-state-#{@job_state.reload.id} a.job-feed-title").click
         go_to_start_page
-        expect(page).not_to have_text 'Successfully added subscription to feed'
+        expect(page).to have_no_text 'Successfully added subscription to feed'
         # alert should not be present after logout and login
         logout_user
         login_user_for_feature @user
         go_to_start_page
-        expect(page).not_to have_text 'Successfully added subscription to feed'
+        expect(page).to have_no_text 'Successfully added subscription to feed'
       end
 
       it 'loads feed even if it has no unread entries', js: true do
@@ -195,10 +195,10 @@ describe 'subscription to feeds', type: :feature do
       it 'dismisses alert permanently', js: true do
         subscribe_feed @feed2.fetch_url
         close_subscribe_job_alert @job_state.reload.id
-        expect(page).not_to have_text 'Unable to add subscription to feed'
+        expect(page).to have_no_text 'Unable to add subscription to feed'
         # alert should not be present after reloading
         visit current_path
-        expect(page).not_to have_text 'Unable to add subscription to feed'
+        expect(page).to have_no_text 'Unable to add subscription to feed'
       end
 
     end
