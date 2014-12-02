@@ -96,7 +96,7 @@ describe 'export subscriptions', type: :feature do
     it 'does not show an alert in the start page when the user has never ran an OPML export', js: true do
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::NONE
       visit read_path
-      expect(page).not_to have_css '#export-process-state', visible: true
+      expect(page).to have_no_css '#export-process-state', visible: true
     end
 
     it 'hides export data alert when the export finished with an error', js: true do
@@ -133,7 +133,7 @@ describe 'export subscriptions', type: :feature do
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::RUNNING
       visit read_path
       expect(page).to have_content 'Your feed subscriptions are being exported'
-      expect(page).not_to have_css '#start-info #export-process-state button.close', visible: true
+      expect(page).to have_no_css '#start-info #export-process-state button.close', visible: true
     end
   end
 
@@ -179,21 +179,21 @@ describe 'export subscriptions', type: :feature do
     it 'does not show download link if job is not in state SUCCESS', js: true do
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::NONE
       visit read_path
-      expect(page).not_to have_css 'a#download-opml-export'
+      expect(page).to have_no_css 'a#download-opml-export'
       visit edit_user_registration_path
-      expect(page).not_to have_css 'a#download-opml-export'
+      expect(page).to have_no_css 'a#download-opml-export'
 
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::RUNNING
       visit read_path
-      expect(page).not_to have_css 'a#download-opml-export'
+      expect(page).to have_no_css 'a#download-opml-export'
       visit edit_user_registration_path
-      expect(page).not_to have_css 'a#download-opml-export'
+      expect(page).to have_no_css 'a#download-opml-export'
 
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::ERROR
       visit read_path
-      expect(page).not_to have_css 'a#download-opml-export'
+      expect(page).to have_no_css 'a#download-opml-export'
       visit edit_user_registration_path
-      expect(page).not_to have_css 'a#download-opml-export'
+      expect(page).to have_no_css 'a#download-opml-export'
     end
   end
 end

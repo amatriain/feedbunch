@@ -13,7 +13,7 @@ end
 # To see if the user is not logged in, we check the absence of a "Logout" link in the navbar.
 
 def user_should_not_be_logged_in
-  expect(page).not_to have_css 'div.navbar div.navbar-inner ul li a#sign_out'
+  expect(page).to have_no_css 'div.navbar div.navbar-inner ul li a#sign_out'
 end
 
 ##
@@ -123,14 +123,14 @@ def should_show_alert(alert_id)
 
   # It should close automatically after 5 seconds
   sleep 5
-  expect(page).not_to have_css "div##{alert_id}", visible: true
+  expect(page).to have_no_css "div##{alert_id}", visible: true
 end
 
 ##
 # Test that an alert with the passed id is hidden-
 
 def should_hide_alert(alert_id)
-  expect(page).not_to have_css "div##{alert_id}", visible: true
+  expect(page).to have_no_css "div##{alert_id}", visible: true
 end
 
 ##
@@ -147,7 +147,7 @@ end
 # Test that the passed entry is not visible.
 
 def entry_should_not_be_visible(entry)
-  expect(page).not_to have_css "#feed-entries #entry-#{entry.id}"
+  expect(page).to have_no_css "#feed-entries #entry-#{entry.id}"
 end
 
 ##
@@ -176,7 +176,7 @@ end
 
 def entry_should_be_closed(entry)
   expect(page).to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary"
-  expect(page).not_to have_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.entry_open"
+  expect(page).to have_no_css "div#entry-#{entry.id} div#entry-#{entry.id}-summary.entry_open"
   expect(page).not_to have_text entry.summary
 end
 
@@ -199,7 +199,7 @@ end
 
 def folder_should_be_closed(folder)
   expect(page).to have_css "#sidebar #folders-list #folder-#{folder.id} #feeds-#{folder.id}"
-  expect(page).not_to have_css "#sidebar #folders-list #folder-#{folder.id} #feeds-#{folder.id}.open-folder"
+  expect(page).to have_no_css "#sidebar #folders-list #folder-#{folder.id} #feeds-#{folder.id}.open-folder"
 end
 
 ##
@@ -219,5 +219,5 @@ end
 # Test that the application tour is not visible.
 
 def tour_should_not_be_visible
-  expect(page).not_to have_css 'div.hopscotch-bubble'
+  expect(page).to have_no_css 'div.hopscotch-bubble'
 end

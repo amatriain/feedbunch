@@ -20,7 +20,7 @@ describe 'authorization', type: :feature do
       login_user_for_feature @normal_user
       visit read_path
 
-      expect(page).not_to have_css 'a[href^="/redmon"]'
+      expect(page).to have_no_css 'a[href^="/redmon"]'
     end
 
     it 'allows access to Redmon to admin users' do
@@ -47,7 +47,7 @@ describe 'authorization', type: :feature do
       login_user_for_feature @normal_user
       visit read_path
 
-      expect(page).not_to have_css 'a[href^="/sidekiq"]'
+      expect(page).to have_no_css 'a[href^="/sidekiq"]'
     end
 
     it 'does not allow access to Sidekiq to non-admin users' do
@@ -70,7 +70,7 @@ describe 'authorization', type: :feature do
       login_user_for_feature @normal_user
       visit read_path
 
-      expect(page).not_to have_css 'a[href="/admin"]'
+      expect(page).to have_no_css 'a[href="/admin"]'
     end
 
     it 'allows access to ActiveAdmin to admin users' do

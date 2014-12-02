@@ -66,7 +66,7 @@ describe 'feeds', type: :feature do
 
     it 'hides Read All button until a feed is selected', js: true do
       visit read_path
-      expect(page).not_to have_css '#read-all-button', visible: true
+      expect(page).to have_no_css '#read-all-button', visible: true
     end
 
     it 'shows Read All button when a feed is selected', js: true do
@@ -114,7 +114,7 @@ describe 'feeds', type: :feature do
 
       read_feed @feed2, @user
       # @feed1 should disappear
-      expect(page).not_to have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+      expect(page).to have_no_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
       # @folder1 should not disappear
       expect(page).to have_css "#sidebar #folder-#{@folder1.id}", visible: false
 
@@ -125,10 +125,10 @@ describe 'feeds', type: :feature do
 
       read_feed @feed3, @user
       # @feed1 and @feed2 should disappear
-      expect(page).not_to have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
-      expect(page).not_to have_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
+      expect(page).to have_no_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+      expect(page).to have_no_css "#sidebar #folder-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}']", visible: false
       # @folder1 should  disappear
-      expect(page).not_to have_css "#sidebar #folder-#{@folder1.id}", visible: false
+      expect(page).to have_no_css "#sidebar #folder-#{@folder1.id}", visible: false
     end
 
     it 'does not hide feeds after reading all their entries and clicking on the same feed', js: true do
@@ -160,9 +160,9 @@ describe 'feeds', type: :feature do
 
       read_folder @folder1
       # @feed3 should disappear
-      expect(page).not_to have_css "#sidebar #folder-#{folder2.id} a[data-sidebar-feed][data-feed-id='#{@feed3.id}']", visible: false
+      expect(page).to have_no_css "#sidebar #folder-#{folder2.id} a[data-sidebar-feed][data-feed-id='#{@feed3.id}']", visible: false
       # folder2 should disappear
-      expect(page).not_to have_css "#sidebar #folder-#{folder2.id}", visible: false
+      expect(page).to have_no_css "#sidebar #folder-#{folder2.id}", visible: false
     end
 
     it 'does not hide feeds after reading all their entries and clicking on their folder', js: true do
@@ -186,7 +186,7 @@ describe 'feeds', type: :feature do
       visit read_path
 
       # Feed without unread entries is not visible by default
-      expect(page).not_to have_css "[data-sidebar-feed][data-feed-id='#{feed4.id}']", visible: false
+      expect(page).to have_no_css "[data-sidebar-feed][data-feed-id='#{feed4.id}']", visible: false
 
       # Click on "show read" button
       show_read
@@ -207,7 +207,7 @@ describe 'feeds', type: :feature do
 
       # Click on "hide read feeds" button
       hide_read
-      expect(page).not_to have_css "[data-sidebar-feed][data-feed-id='#{feed4.id}']", visible: false
+      expect(page).to have_no_css "[data-sidebar-feed][data-feed-id='#{feed4.id}']", visible: false
     end
 
     it 'shows an alert if there is a problem loading a feed', js: true do
@@ -232,7 +232,7 @@ describe 'feeds', type: :feature do
       it 'shows a link to read entries in all subscriptions', js: true do
         expect(page).to have_css "#sidebar a[data-sidebar-feed][data-feed-id='all']"
         # Wait for the "all subscriptions" link to become enabled
-        expect(page).not_to have_css "#sidebar #all-feeds.disabled a[data-sidebar-feed][data-feed-id='all']"
+        expect(page).to have_no_css "#sidebar #all-feeds.disabled a[data-sidebar-feed][data-feed-id='all']"
 
         # Click on link to read all feeds
         find("#sidebar #folder-none a[data-sidebar-feed][data-feed-id='all']").click
@@ -265,7 +265,7 @@ describe 'feeds', type: :feature do
 
         expect(page).to have_css "#sidebar a[data-sidebar-feed][data-feed-id='all']"
         # Wait for the "all subscriptions" link to become enabled
-        expect(page).not_to have_css "#sidebar #all-feeds.disabled a[data-sidebar-feed][data-feed-id='all']"
+        expect(page).to have_no_css "#sidebar #all-feeds.disabled a[data-sidebar-feed][data-feed-id='all']"
 
         # Click on link to read all feeds
         find("#sidebar #folder-none a[data-sidebar-feed][data-feed-id='all']").click
@@ -297,7 +297,7 @@ describe 'feeds', type: :feature do
         within "#sidebar #folder-#{@folder2.id}" do
           # Open folder
           find("a#open-folder-#{@folder2.id}").click
-          expect(page).not_to have_css "li#folder-#{@folder2.id}-all-feeds"
+          expect(page).to have_no_css "li#folder-#{@folder2.id}-all-feeds"
         end
       end
 
@@ -311,7 +311,7 @@ describe 'feeds', type: :feature do
         within "#sidebar #folder-#{@folder2.id}" do
           # Open folder
           find("a#open-folder-#{@folder2.id}").click
-          expect(page).not_to have_css "li#folder-#{@folder2.id}-all-feeds"
+          expect(page).to have_no_css "li#folder-#{@folder2.id}-all-feeds"
         end
       end
     end

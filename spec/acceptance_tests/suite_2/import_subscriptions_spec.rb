@@ -48,7 +48,7 @@ describe 'import subscriptions', type: :feature do
       opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING
       @user.opml_import_job_state = opml_import_job_state
       visit edit_user_registration_path
-      expect(page).not_to have_css 'a#opml-import-button', visible: true
+      expect(page).to have_no_css 'a#opml-import-button', visible: true
       expect(page).to have_text 'Your feed subscriptions are currently being imported'
     end
 
@@ -208,7 +208,7 @@ describe 'import subscriptions', type: :feature do
       @user.reload.opml_import_job_state.update state: OpmlImportJobState::RUNNING
       visit read_path
       expect(page).to have_content 'Your feed subscriptions are being imported'
-      expect(page).not_to have_css '#start-info #import-process-state button.close', visible: true
+      expect(page).to have_no_css '#start-info #import-process-state button.close', visible: true
     end
   end
 end

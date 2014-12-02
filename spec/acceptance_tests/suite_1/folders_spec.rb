@@ -44,7 +44,7 @@ describe 'folders and feeds', type: :feature do
   it 'shows a list with feeds which are not in any folder', js: true do
     # @feed1 is in a folder and should not be in the list. Only @feed2 should be there.
     expect(page).to have_css "#sidebar #folders-list #folder-none a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
-    expect(page).not_to have_css "#sidebar #folders-list #folder-none a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
+    expect(page).to have_no_css "#sidebar #folders-list #folder-none a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
   end
 
   it 'shows folders containing their respective feeds', js: true do
@@ -62,7 +62,7 @@ describe 'folders and feeds', type: :feature do
         # Should have inside only those feeds associated to the folder
         within "#feeds-#{@folder1.id}" do
           expect(page).to have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
-          expect(page).not_to have_css "a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
+          expect(page).to have_no_css "a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
         end
       end
     end
@@ -143,12 +143,12 @@ describe 'folders and feeds', type: :feature do
 
     it 'hides folder management button until a feed is selected', js: true do
       visit read_path
-      expect(page).not_to have_css '#folder-management', visible: true
+      expect(page).to have_no_css '#folder-management', visible: true
     end
 
     it 'shows folder management button when a feed is selected', js: true do
-      expect(page).not_to have_css '#folder-management.hidden', visible: false
-      expect(page).not_to have_css '#folder-management.disabled', visible: false
+      expect(page).to have_no_css '#folder-management.hidden', visible: false
+      expect(page).to have_no_css '#folder-management.disabled', visible: false
       expect(page).to have_css '#folder-management'
     end
 
@@ -162,8 +162,8 @@ describe 'folders and feeds', type: :feature do
       visit read_path
 
       read_folder @folder1
-      expect(page).not_to have_css '#folder-management', visible: true
-      expect(page).not_to have_css '#folder-management', visible: true
+      expect(page).to have_no_css '#folder-management', visible: true
+      expect(page).to have_no_css '#folder-management', visible: true
     end
 
     it 'drops down a list of all user folders', js: true do
@@ -187,7 +187,7 @@ describe 'folders and feeds', type: :feature do
       within '#folder-management-dropdown' do
         # tick should be only besides No Folder
         expect(page).to have_css 'a[data-folder-id="none"] > i.fa.fa-check'
-        expect(page).not_to have_css "li[data-folder-id='#{@folder1.id}'] a > i.fa.fa-check"
+        expect(page).to have_no_css "li[data-folder-id='#{@folder1.id}'] a > i.fa.fa-check"
       end
     end
 
@@ -195,7 +195,7 @@ describe 'folders and feeds', type: :feature do
       open_folder_dropdown
       within '#folder-management-dropdown' do
         # tick should be only besides @folder1
-        expect(page).not_to have_css 'li[data-folder-id="none"] a > i.fa.fa-check'
+        expect(page).to have_no_css 'li[data-folder-id="none"] a > i.fa.fa-check'
         expect(page).to have_css "a[data-folder-id='#{@folder1.id}'] > i.fa.fa-check"
       end
     end
@@ -223,7 +223,7 @@ describe 'folders and feeds', type: :feature do
         expect(page).to have_css "#folder-#{@folder2.id} #feeds-#{@folder2.id} a[data-feed-id='#{@feed1.id}'][data-folder-id='#{@folder2.id}']", visible: false
 
         # the feed should have disappeared from @folder1
-        expect(page).not_to have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-feed-id='#{@feed1.id}']", visible: false
+        expect(page).to have_no_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-feed-id='#{@feed1.id}']", visible: false
       end
 
       it 'removes folder if it has no more feeds', js: true do
@@ -233,13 +233,13 @@ describe 'folders and feeds', type: :feature do
         within '#sidebar #folders-list' do
           expect(page).not_to have_content @folder1.title
         end
-        expect(page).not_to have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
+        expect(page).to have_no_css "#folders-list li[data-folder-id='#{@folder1.id}']"
 
         # Folder should be removed from the dropdown
         open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           expect(page).not_to have_content @folder1.title
-          expect(page).not_to have_css "a[data-folder-id='#{@folder1.id}']"
+          expect(page).to have_no_css "a[data-folder-id='#{@folder1.id}']"
         end
       end
 
@@ -313,7 +313,7 @@ describe 'folders and feeds', type: :feature do
         expect(page).to have_css "#sidebar #folder-none a[data-feed-id='#{@feed1.id}'][data-folder-id='none']", visible: false
 
         # Feed should have disappeared from @folder1
-        expect(page).not_to have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-feed-id='#{@feed1.id}']", visible: false
+        expect(page).to have_no_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-feed-id='#{@feed1.id}']", visible: false
       end
 
       it 'does not remove the folder if there are other feeds inside it', js: true do
@@ -330,13 +330,13 @@ describe 'folders and feeds', type: :feature do
       it 'removes a folder from the sidebar when it has no feeds under it', js: true do
         remove_feed_from_folder @feed1, @user
 
-        expect(page).not_to have_css "#sidebar #folder-#{@folder1.id}"
+        expect(page).to have_no_css "#sidebar #folder-#{@folder1.id}"
       end
 
       it 'removes a folder from the dropdown when it has no feeds under it', js: true do
         remove_feed_from_folder @feed1, @user
 
-        expect(page).not_to have_css "#folder-management-dropdown a[data-folder-id='#{@folder1.id}']", visible: false
+        expect(page).to have_no_css "#folder-management-dropdown a[data-folder-id='#{@folder1.id}']", visible: false
       end
 
       it 'shows an alert when there is a problem removing a feed from a folder', js: true do
@@ -384,13 +384,13 @@ describe 'folders and feeds', type: :feature do
         within '#sidebar #folders-list' do
           expect(page).not_to have_content @folder1.title
         end
-        expect(page).not_to have_css "#folders-list li[data-folder-id='#{@folder1.id}']"
+        expect(page).to have_no_css "#folders-list li[data-folder-id='#{@folder1.id}']"
 
         # Folder should be removed from the dropdown
         open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
           expect(page).not_to have_content @folder1.title
-          expect(page).not_to have_css "a[data-folder-id='#{@folder1.id}']"
+          expect(page).to have_no_css "a[data-folder-id='#{@folder1.id}']"
         end
       end
 
@@ -436,7 +436,7 @@ describe 'folders and feeds', type: :feature do
 
         # @feed1 is no longer under @folder1
         within "#sidebar #folders-list #folder-#{@folder1.id}" do
-          expect(page).not_to have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
+          expect(page).to have_no_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']", visible: false
         end
       end
 

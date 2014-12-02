@@ -9,7 +9,7 @@ describe 'automatically closing notices and alerts', type: :feature do
     login_user_for_feature @user
     expect(page).to have_css 'div#notice'
     sleep 5
-    expect(page).not_to have_css 'div#notice'
+    expect(page).to have_no_css 'div#notice'
   end
 
   it 'closes rails alerts after 5 seconds', js: true do
@@ -20,7 +20,7 @@ describe 'automatically closing notices and alerts', type: :feature do
 
     expect(page).to have_css 'div#alert'
     sleep 5
-    expect(page).not_to have_css 'div#alert'
+    expect(page).to have_no_css 'div#alert'
   end
 
   # TODO uncomment this test when beta ends and signup is opened to everyone
@@ -34,7 +34,7 @@ describe 'automatically closing notices and alerts', type: :feature do
 
     expect(page).to have_css 'div#devise-error'
     sleep 5
-    expect(page).not_to have_css 'div#devise-error'
+    expect(page).to have_no_css 'div#devise-error'
   end
 =end
 end

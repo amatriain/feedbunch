@@ -85,7 +85,7 @@ def read_feed(feed, user)
   end
 
   # Ensure entries have finished loading
-  expect(page).not_to have_css 'div#loading'
+  expect(page).to have_no_css 'div#loading'
 end
 
 ##
@@ -100,7 +100,7 @@ end
 
 def read_folder(folder)
   # The spinners in the sidebar should be hidden, to indicate that feeds and folders have finished loading
-  expect(page).not_to have_css '#sidebar i.fa-spinner.fa-spin', visible: true
+  expect(page).to have_no_css '#sidebar i.fa-spinner.fa-spin', visible: true
 
   open_folder folder if folder != 'all'
   folder_id = (folder == 'all')? 'none' : folder.id
@@ -109,7 +109,7 @@ def read_folder(folder)
   end
 
   # Ensure entries have finished loading
-  expect(page).not_to have_css 'div#loading'
+  expect(page).to have_no_css 'div#loading'
 end
 
 ##
@@ -181,7 +181,7 @@ def open_entry_share_dropdown(entry)
   expect(page).to have_css "#entry-#{entry.id}-summary .entry-toolbar a[data-share-entry-dropdown]", visible: true
 
   #Only open dropdown if it's closed
-  expect(page).not_to have_css "#entry-#{entry.id}-summary .entry-toolbar div.open > a[data-share-entry-dropdown]"
+  expect(page).to have_no_css "#entry-#{entry.id}-summary .entry-toolbar div.open > a[data-share-entry-dropdown]"
 
   find("#entry-#{entry.id}-summary .entry-toolbar a[data-share-entry-dropdown]").click
   expect(page).to have_css "#entry-#{entry.id}-summary .entry-toolbar div.open > a[data-share-entry-dropdown]"
@@ -195,7 +195,7 @@ def refresh_feed
   expect(page).to have_css '#refresh-feed'
   find('#refresh-feed').click
   # Ensure entries have finished loading
-  expect(page).not_to have_css 'div#loading'
+  expect(page).to have_no_css 'div#loading'
 end
 
 ##
@@ -205,8 +205,8 @@ end
 
 def mark_all_as_read
   find('#read-all-button').click
-  expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
-  expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-becoming-read'
+  expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-unread'
+  expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-becoming-read'
 end
 
 ##
@@ -216,7 +216,7 @@ def show_read
   find('#show-read').click
 
   # Ensure entries have finished loading
-  expect(page).not_to have_css 'div#loading'
+  expect(page).to have_no_css 'div#loading'
 end
 
 ##
@@ -226,7 +226,7 @@ def hide_read
   find('#hide-read').click
 
   # Ensure entries have finished loading
-  expect(page).not_to have_css 'div#loading'
+  expect(page).to have_no_css 'div#loading'
 end
 
 ##
@@ -235,10 +235,10 @@ end
 def open_folder_dropdown
   # Only click on button if it's enabled
   expect(page).to have_css '#folder-management-dropdown #folder-management'
-  expect(page).not_to have_css '#folder-management-dropdown #folder-management.disabled'
+  expect(page).to have_no_css '#folder-management-dropdown #folder-management.disabled'
 
   #Only open dropdown if it's closed
-  expect(page).not_to have_css '#folder-management-dropdown.open'
+  expect(page).to have_no_css '#folder-management-dropdown.open'
 
   find('#folder-management').click
   expect(page).to have_css '#folder-management-dropdown.open'
@@ -289,7 +289,7 @@ def move_feed_to_folder(feed, folder, user)
   expect(page).to have_css "#folders-list #folder-#{folder.id} [data-sidebar-feed][data-feed-id='#{feed.id}']"
   within "#folder-management-dropdown ul.dropdown-menu a[data-folder-id='#{folder.id}']", visible: false do
     expect(page).to have_css 'i.fa.fa-check', visible: false
-    expect(page).not_to have_css 'i.fa.fa-check.hidden', visible: false
+    expect(page).to have_no_css 'i.fa.fa-check.hidden', visible: false
   end
 end
 
@@ -310,7 +310,7 @@ def remove_feed_from_folder(feed, user)
   end
 
   # Ensure feed has been removed from folder
-  expect(page).not_to have_css "#folders-list li#folder-#{folder_id} [data-sidebar-feed][data-feed-id='#{feed.id}']"
+  expect(page).to have_no_css "#folders-list li#folder-#{folder_id} [data-sidebar-feed][data-feed-id='#{feed.id}']"
 end
 
 ##
@@ -327,7 +327,7 @@ def subscribe_feed(url)
   end
 
   # Ensure entries have finished loading
-  expect(page).not_to have_css 'div#loading'
+  expect(page).to have_no_css 'div#loading'
 end
 
 ##
@@ -343,7 +343,7 @@ def unsubscribe_feed(feed, user)
   find('#unsubscribe-submit').click
 
   # Ensure popup has closed
-  expect(page).not_to have_css '#unsubscribe-feed-popup'
+  expect(page).to have_no_css '#unsubscribe-feed-popup'
 
   # Ensure user is shown the start page
   expect(page).to have_css '#sidebar li.active a#start-page'
@@ -445,7 +445,7 @@ def send_invitation(invited_email)
   expect(page).to have_css '#invite-friend-popup', visible: true
   fill_in 'user_invitation_email', with: invited_email
   click_on 'Send invitation'
-  expect(page).not_to have_css '#invite-friend-popup', visible: true
+  expect(page).to have_no_css '#invite-friend-popup', visible: true
 end
 
 ##

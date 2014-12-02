@@ -15,29 +15,29 @@ describe 'start page', type: :feature do
 
   it 'shows start page by default', js: true do
     expect(page).to have_css '#start-info'
-    expect(page).not_to have_css '#feed-entries', visible: true
+    expect(page).to have_no_css '#feed-entries', visible: true
   end
 
   it 'hides feed title and entries by default', js: true do
-    expect(page).not_to have_css '#feed-title', visible: true
-    expect(page).not_to have_css '#feed-entries', visible: true
+    expect(page).to have_no_css '#feed-title', visible: true
+    expect(page).to have_no_css '#feed-entries', visible: true
   end
 
   it 'hides Read All button by default', js: true do
-    expect(page).not_to have_css '#read-all-button', visible: true
+    expect(page).to have_no_css '#read-all-button', visible: true
   end
 
   it 'hides folder management button by default', js: true do
-    expect(page).not_to have_css '#folder-management', visible: true
+    expect(page).to have_no_css '#folder-management', visible: true
   end
 
   it 'hides start page when reading a feed', js: true do
     expect(page).to have_css '#start-info'
-    expect(page).not_to have_css '#feed-entries', visible: true
+    expect(page).to have_no_css '#feed-entries', visible: true
 
     read_feed @feed1, @user
 
-    expect(page).not_to have_css '#start-info', visible: true
+    expect(page).to have_no_css '#start-info', visible: true
     expect(page).to have_css '#feed-entries'
   end
 
@@ -51,16 +51,16 @@ describe 'start page', type: :feature do
 
     it 'shows start page', js: true do
       expect(page).to have_css '#start-info'
-      expect(page).not_to have_css '#feed-entries', visible: true
+      expect(page).to have_no_css '#feed-entries', visible: true
     end
 
     it 'hides feed title and entries', js: true do
-      expect(page).not_to have_css '#feed-title', visible: true
-      expect(page).not_to have_css '#feed-entries', visible: true
+      expect(page).to have_no_css '#feed-title', visible: true
+      expect(page).to have_no_css '#feed-entries', visible: true
     end
 
     it 'hides Read All button', js: true do
-      expect(page).not_to have_css '#read-all-button', visible: true
+      expect(page).to have_no_css '#read-all-button', visible: true
     end
 
   end

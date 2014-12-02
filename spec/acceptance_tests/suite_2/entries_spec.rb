@@ -161,28 +161,28 @@ describe 'feed entries', type: :feature do
     it 'marks all feed entries as read', js: true do
       mark_all_as_read
 
-      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-unread'
     end
 
     it 'marks all folder entries as read', js: true do
       read_folder @folder
       mark_all_as_read
 
-      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-unread'
     end
 
     it 'marks all entries as read', js: true do
       read_folder 'all'
       mark_all_as_read
 
-      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-unread'
     end
 
     it 'hides Read button for read entries', js: true do
       read_entry @entry1
       entry_should_be_marked_read @entry1
       expect(page).to have_css "div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']"
-      expect(page).not_to have_css "div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']"
+      expect(page).to have_no_css "div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']"
     end
 
     it 'hides Unread button for unread entries', js: true do
@@ -191,7 +191,7 @@ describe 'feed entries', type: :feature do
       find("div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']").click
       entry_should_be_marked_unread @entry1
 
-      expect(page).not_to have_css "div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']"
+      expect(page).to have_no_css "div[id='entry-#{@entry1.id}'] a[ng-click='unread_entry(entry)']"
       expect(page).to have_css "div[id='entry-#{@entry1.id}'] a[ng-click='read_entry(entry)']"
     end
 
@@ -465,7 +465,7 @@ describe 'feed entries', type: :feature do
     it 'marks all feed entries as read', js: true do
       mark_all_as_read
 
-      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-unread'
       unread_feed_entries_should_eq @feed1, 0, @user
     end
 
@@ -473,7 +473,7 @@ describe 'feed entries', type: :feature do
       read_folder @folder
       mark_all_as_read
 
-      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-unread'
       unread_folder_entries_should_eq @folder, 0
     end
 
@@ -481,7 +481,7 @@ describe 'feed entries', type: :feature do
       read_folder 'all'
       mark_all_as_read
 
-      expect(page).not_to have_css 'feed-entries a[data-entry-id].entry-unread'
+      expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-unread'
       unread_folder_entries_should_eq 'all', 0
     end
 

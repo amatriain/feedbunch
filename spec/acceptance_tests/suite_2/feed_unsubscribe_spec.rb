@@ -23,7 +23,7 @@ describe 'unsubscribe from feed', type: :feature do
   it 'hides unsubscribe button until a feed is selected', js: true do
     visit read_path
     open_feeds_menu
-    expect(page).not_to have_css '#unsubscribe-feed', visible: true
+    expect(page).to have_no_css '#unsubscribe-feed', visible: true
   end
 
   it 'shows unsubscribe button when a feed is selected', js: true do
@@ -49,7 +49,7 @@ describe 'unsubscribe from feed', type: :feature do
   it 'hides unsubscribe button when reading all feeds', js: true do
     read_folder 'all'
     open_feeds_menu
-    expect(page).not_to have_css '#unsubscribe-feed', visible: true
+    expect(page).to have_no_css '#unsubscribe-feed', visible: true
   end
 
   it 'hides unsubscribe button when reading a whole folder', js: true do
@@ -63,7 +63,7 @@ describe 'unsubscribe from feed', type: :feature do
 
     read_folder @folder
     open_feeds_menu
-    expect(page).not_to have_css '#unsubscribe-feed', visible: true
+    expect(page).to have_no_css '#unsubscribe-feed', visible: true
   end
 
   it 'shows a confirmation popup', js: true do
@@ -77,7 +77,7 @@ describe 'unsubscribe from feed', type: :feature do
     unsubscribe_feed @feed1, @user
 
     # Only @feed2 should be present, @feed1 has been unsubscribed
-    expect(page).not_to have_css "#sidebar li > a[data-feed-id='#{@feed1.id}']", visible: false
+    expect(page).to have_no_css "#sidebar li > a[data-feed-id='#{@feed1.id}']", visible: false
     expect(page).to have_css "#sidebar li > a[data-feed-id='#{@feed2.id}']", visible: false
   end
 
@@ -96,12 +96,12 @@ describe 'unsubscribe from feed', type: :feature do
     unsubscribe_feed @feed1, @user
 
     # Feed should disappear completely from the folder
-    expect(page).not_to have_css "#sidebar > li#folder-#{@folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
+    expect(page).to have_no_css "#sidebar > li#folder-#{@folder.id} li > a[data-feed-id='#{@feed1.id}']", visible: false
   end
 
   it 'shows start page after unsubscribing', js: true do
     read_feed @feed1, @user
-    expect(page).not_to have_css '#start-info', visible: true
+    expect(page).to have_no_css '#start-info', visible: true
 
     unsubscribe_feed @feed1, @user
 
@@ -128,14 +128,14 @@ describe 'unsubscribe from feed', type: :feature do
     within '#sidebar #folders-list' do
       expect(page).not_to have_content @folder.title
     end
-    expect(page).not_to have_css "#folders-list li[data-folder-id='#{@folder.id}']"
+    expect(page).to have_no_css "#folders-list li[data-folder-id='#{@folder.id}']"
 
     read_feed @feed2, @user
     # Folder should be removed from the dropdown
     find('#folder-management').click
     within '#folder-management-dropdown ul.dropdown-menu' do
       expect(page).not_to have_content @folder.title
-      expect(page).not_to have_css "a[data-folder-id='#{@folder.id}']"
+      expect(page).to have_no_css "a[data-folder-id='#{@folder.id}']"
     end
   end
 
@@ -151,7 +151,7 @@ describe 'unsubscribe from feed', type: :feature do
     within '#sidebar #folders-list' do
       expect(page).not_to have_content @folder.title
     end
-    expect(page).not_to have_css "#folders-list li[data-folder-id='#{@folder.id}']"
+    expect(page).to have_no_css "#folders-list li[data-folder-id='#{@folder.id}']"
 
     read_feed @feed2, @user
     # Folder should not be removed from the dropdown (all folders appear in the dropdown, regardless

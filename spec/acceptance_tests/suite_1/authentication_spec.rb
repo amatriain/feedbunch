@@ -42,7 +42,7 @@ describe 'authentication', type: :feature do
 
     it 'does not show navbar' do
       visit '/'
-      expect(page).not_to have_css 'div.navbar'
+      expect(page).to have_no_css 'div.navbar'
     end
 
     context 'sign up' do
@@ -363,11 +363,11 @@ describe 'authentication', type: :feature do
     end
 
     it 'does not show the login link in the main page' do
-      expect(page).not_to have_css "a#sign_in[href*=\"#{new_user_session_path}\"]"
+      expect(page).to have_no_css "a#sign_in[href*=\"#{new_user_session_path}\"]"
     end
 
     it 'does not show the signup link in the main page' do
-      expect(page).not_to have_css "a#sign_up[href*=\"#{new_user_registration_path}\"]"
+      expect(page).to have_no_css "a#sign_up[href*=\"#{new_user_registration_path}\"]"
     end
 
     it 'shows navbar' do

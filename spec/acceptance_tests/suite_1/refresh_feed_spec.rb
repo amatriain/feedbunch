@@ -22,7 +22,7 @@ describe 'refresh feeds', type: :feature do
   end
   
   it 'goes to start page after clicking on refresh', js: true do
-    expect(page).not_to have_css '#start-info'
+    expect(page).to have_no_css '#start-info'
     refresh_feed
     expect(page).to have_css '#start-info'
   end

@@ -18,7 +18,7 @@ describe 'invite friend', type: :feature do
     it 'non-admin users cannot send invitations', js: true do
       @user.update admin: false
       visit edit_user_registration_path
-      expect(page).not_to have_css '#send-invitation-button', visible: true
+      expect(page).to have_no_css '#send-invitation-button', visible: true
     end
 
 
