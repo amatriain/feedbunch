@@ -9,7 +9,7 @@ require 'rspec/rails'
 # For acceptance testing
 require 'capybara/rails'
 require 'capybara/rspec'
-require 'capybara-webkit'
+require 'capybara/poltergeist'
 require 'database_cleaner'
 require 'nokogiri'
 
@@ -61,8 +61,8 @@ RSpec.configure do |config|
   # To test controllers protected by Devise authentication
   config.include Devise::TestHelpers, :type => :controller
 
-  # Use capybara-webkit for javascript-enabled acceptance tests
-  Capybara.javascript_driver = :webkit
+  # Use capybara-poltergeist for javascript-enabled acceptance tests
+  Capybara.javascript_driver = :poltergeist
 
   # Make capybara wait for a long time for things to appear in the DOM,
   # in case there's a long-running AJAX call running which changes the DOM after a few seconds
@@ -73,14 +73,19 @@ RSpec.configure do |config|
   # For more about these helpers see Warden wiki: https://github.com/hassox/warden/wiki/Testing
   config.include Warden::Test::Helpers
 
+
   # Blacklist external URLs that serve files unnecessary for testing (fonts, twitter API, etc) to speed up tests
   config.before :each, js: true do
-    page.driver.browser.url_blacklist=%w(
-                                          http://platform.twitter.com
-                                          http://connect.facebook.net
-                                          http://cdn.jsdelivr.net/fastclick
-                                          http://maxcdn.bootstrapcdn.com/font-awesome
-                                        )
+    # TODO uncomment this when capybara-poltergeist implements it (currently awaiting a merge in a PR)
+    # page.driver.browser.url_blacklist=%w(
+    #                                       http://platform.twitter.com
+    #                                       http://connect.facebook.net
+    #                                       http://cdn.jsdelivr.net/fastclick
+    #                                       http://maxcdn.bootstrapcdn.com/font-awesome
+    #                                     )
+    Capybara.register_driver :poltergeist do |app|
+      Capybara::Poltergeist::Driver.new(app, js_errors: false)
+    end
   end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
