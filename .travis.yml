@@ -13,8 +13,6 @@ env:
     - TEST_SUITE=unit
     - TEST_SUITE=acceptance_1
     - TEST_SUITE=acceptance_2
-before_install:
-  - "gem install bundler"
 before_script:
   - "cp config/secrets_ci.yml config/secrets.yml"
   - "cp config/database.yml.ci config/database.yml"
