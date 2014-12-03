@@ -79,9 +79,7 @@ describe 'feed entries', type: :feature do
     end
 
     it 'by default only shows unread entries in a feed', js: true do
-      entry_state = EntryState.where(entry_id: @entry1.id, user_id: @user.id ).first
-      entry_state.read = true
-      entry_state.save!
+      @user.change_entries_state @entry1, 'read'
 
       read_feed @feed1, @user
 
@@ -92,9 +90,7 @@ describe 'feed entries', type: :feature do
     it 'by default only shows unread entries in a folder', js: true do
       # @feed1 and @feed2 are in a folder
       # @entry1 is read, @entry2 and @entry3 are unread
-      entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
-      entry_state1.read = true
-      entry_state1.save!
+      @user.change_entries_state @entry1, 'read'
 
       visit read_path
       read_folder @folder
@@ -219,8 +215,7 @@ describe 'feed entries', type: :feature do
     end
 
     it 'shows all entries in a feed, including read ones', js: true do
-      entry_state1 = EntryState.where(entry_id: @entry1.id, user_id: @user.id ).first
-      entry_state1.update read: true
+      @user.change_entries_state @entry1, 'read'
 
       visit read_path
       read_feed @feed1, @user
@@ -241,9 +236,8 @@ describe 'feed entries', type: :feature do
     end
 
     it 'shows all entries in a folder, including read ones', js: true do
-      entry_state1 = EntryState.where(entry_id: @entry1.id, user_id: @user.id ).first
-      entry_state1.read = true
-      entry_state1.save!
+      @user.change_entries_state @entry1, 'read'
+
       read_folder @folder
 
       # @entry1 is read, should not appear on the page
@@ -265,6 +259,10 @@ describe 'feed entries', type: :feature do
       today = Date.new 2000, 01, 01
       allow(Date).to receive(:today).and_return today
       @entry1.update published: Time.zone.parse('2000-07-07')
+      # touch subscription update datetime, to avoid the server sending an http 304
+      subscription = FeedSubscription.where(feed_id: @feed1.id, user_id: @user.id).first
+      subscription.touch_subscriptions
+
       read_feed @feed1, @user
       within "#entry-#{@entry1.id}" do
         expect(page).to have_text '07 Jul 00:00'
@@ -275,6 +273,10 @@ describe 'feed entries', type: :feature do
       today = Date.new 2000, 01, 01
       allow(Date).to receive(:today).and_return today
       @entry1.update published: Time.zone.parse('1999-07-07')
+      # touch subscription update datetime, to avoid the server sending an http 304
+      subscription = FeedSubscription.where(feed_id: @feed1.id, user_id: @user.id).first
+      subscription.touch_subscriptions
+
       read_feed @feed1, @user
       within "#entry-#{@entry1.id}" do
         expect(page).to have_text '07 Jul 1999'
@@ -334,6 +336,10 @@ describe 'feed entries', type: :feature do
       it 'displays images not prepared for lazy loading', js: true do
         # image in @entry1 is not prepared for lazy loading (no data-src attribute)
         @entry1.update_column :content, "<img id=\"entry-image\" src=\"#{@img_url}\" alt=\"some-image\">"
+        # touch subscription update datetime, to avoid the server sending an http 304
+        subscription = FeedSubscription.where(feed_id: @feed1.id, user_id: @user.id).first
+        subscription.touch_subscriptions
+        
         visit read_path
         read_feed @feed1, @user
 
