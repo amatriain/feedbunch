@@ -14,7 +14,7 @@ angular.module('feedbunch').service 'tooltipSvc',
   cookies_warning_tooltips: ->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#cookie-notice .close[data-toggle='tooltip']").tooltip()
+      $("#cookie-notice .close[data-toggle='tooltip']").tooltip(delay: {'show': 500})
 
   #---------------------------------------------
   # Enable tooltips on some entry buttons and links
@@ -22,8 +22,8 @@ angular.module('feedbunch').service 'tooltipSvc',
   entry_tooltips: (entry)->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#entry-#{entry.id} a[data-toggle='tooltip']").tooltip container: 'body'
-      $("#entry-#{entry.id} a[data-share-entry-dropdown]").tooltip container: 'body'
+      $("#entry-#{entry.id} a[data-toggle='tooltip']").tooltip(container: 'body', delay: {'show': 500})
+      $("#entry-#{entry.id} a[data-share-entry-dropdown]").tooltip(container: 'body', delay: {'show': 500})
 
   #---------------------------------------------
   # Enable tooltips on navbar buttons
@@ -31,7 +31,7 @@ angular.module('feedbunch').service 'tooltipSvc',
   navbar_tooltips: ->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $(".navbar .nav.navbar-nav [data-toggle='tooltip']").tooltip()
+      $(".navbar .nav.navbar-nav [data-toggle='tooltip']").tooltip(delay: {'show': 500})
 
   #---------------------------------------------
   # Enable tooltips on import state alert "close" button
@@ -39,7 +39,7 @@ angular.module('feedbunch').service 'tooltipSvc',
   import_state_tooltips: ->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#start-info #import-process-state button.close[data-toggle='tooltip']").tooltip()
+      $("#start-info #import-process-state button.close[data-toggle='tooltip']").tooltip(delay: {'show': 500})
 
   #---------------------------------------------
   # Enable tooltips on export state alert "close" button
@@ -47,7 +47,7 @@ angular.module('feedbunch').service 'tooltipSvc',
   export_state_tooltips: ->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#start-info #export-process-state button.close[data-toggle='tooltip']").tooltip()
+      $("#start-info #export-process-state button.close[data-toggle='tooltip']").tooltip(delay: {'show': 500})
 
   #---------------------------------------------
   # Enable tooltips on refresh feed job's state alert "close" button
@@ -55,7 +55,7 @@ angular.module('feedbunch').service 'tooltipSvc',
   refresh_job_state_tooltips: (job_state)->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#job-states #refresh-state-alerts #refresh-state-#{job_state.id} button.close[data-toggle='tooltip']").tooltip()
+      $("#job-states #refresh-state-alerts #refresh-state-#{job_state.id} button.close[data-toggle='tooltip']").tooltip(delay: {'show': 500})
 
   #---------------------------------------------
   # Enable tooltips on subscribe job's state alert "close" button
@@ -63,7 +63,7 @@ angular.module('feedbunch').service 'tooltipSvc',
   subscribe_job_state_tooltips: (job_state)->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#job-states #subscribe-state-alerts #subscribe-state-#{job_state.id} button.close[data-toggle='tooltip']").tooltip()
+      $("#job-states #subscribe-state-alerts #subscribe-state-#{job_state.id} button.close[data-toggle='tooltip']").tooltip(delay: {'show': 500})
 
   #---------------------------------------------
   # Enable tooltips on the feed title link
@@ -71,7 +71,7 @@ angular.module('feedbunch').service 'tooltipSvc',
   feed_title_tooltip: ->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#feed-title a[data-toggle='tooltip']").tooltip()
+      $("#feed-title a[data-toggle='tooltip']").tooltip(delay: {'show': 500})
 
   #---------------------------------------------
   # Enable tooltips on footer links
@@ -79,5 +79,5 @@ angular.module('feedbunch').service 'tooltipSvc',
   footer_tooltips: ->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
-      $("#social-links a[data-toggle='tooltip']").tooltip()
+      $("#social-links a[data-toggle='tooltip']").tooltip(delay: {'show': 500})
 ]
