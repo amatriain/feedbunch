@@ -139,7 +139,7 @@ end
 def entry_should_be_visible(entry)
   expect(page).to have_css "#feed-entries #entry-#{entry.id}"
   within "#feed-entries #entry-#{entry.id}" do
-    expect(page).to have_text entry.title, visible: true
+    expect(page).to have_text entry.title
   end
 end
 

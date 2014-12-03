@@ -35,18 +35,18 @@ describe 'feed entries', type: :feature do
 
       within '#feed-entries' do
         within "#entry-#{@entry1.id}" do
-          expect(page).to have_text @feed1.title, visible: true
-          expect(page).to have_text @entry1.title, visible: true
+          expect(page).to have_text @feed1.title
+          expect(page).to have_text @entry1.title
         end
 
         within "#entry-#{@entry2.id}" do
-          expect(page).to have_text @feed1.title, visible: true
-          expect(page).to have_text @entry2.title, visible: true
+          expect(page).to have_text @feed1.title
+          expect(page).to have_text @entry2.title
         end
 
         within "#entry-#{@entry3.id}" do
-          expect(page).to have_text @feed2.title, visible: true
-          expect(page).to have_text @entry3.title, visible: true
+          expect(page).to have_text @feed2.title
+          expect(page).to have_text @entry3.title
         end
       end
     end
@@ -220,8 +220,7 @@ describe 'feed entries', type: :feature do
 
     it 'shows all entries in a feed, including read ones', js: true do
       entry_state1 = EntryState.where(entry_id: @entry1.id, user_id: @user.id ).first
-      entry_state1.read = true
-      entry_state1.save!
+      entry_state1.update read: true
 
       visit read_path
       read_feed @feed1, @user
