@@ -125,15 +125,16 @@
       overflow: hidden;
 
       .entry-toolbar {
-        margin-bottom: 20px;
+        margin: {
+          bottom: 20px;
+          right: -5px;
+        }
+
+        .btn-group {
+          margin-right: 5px;
+        }
 
         .btn {
-          margin: {
-            right: 10px;
-            left: 0;
-            top: 0;
-            bottom: 0;
-          }
           width: 105px;
         }
       }
