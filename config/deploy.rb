@@ -53,6 +53,7 @@ set :linked_dirs, %w{
                       tmp/pids
                       tmp/sockets
                       vendor/bundle
+                      rack_cache
                   }
 
 #############################################################
