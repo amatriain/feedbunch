@@ -13,7 +13,5 @@ FactoryGirl.define do
     failing_since nil
     available true
     fetch_interval_secs 3600
-    etag nil
-    last_modified nil
   end
 end
