@@ -37,8 +37,6 @@ require 'schedule_manager'
 # - failing_since (if not null, feed updates have been failing since the datetime  value of this field)
 # - available (if false, the feed is permanently unavailable and updates are not scheduled for it)
 # - url (URL to which the user will be linked; usually the website that originated this feed)
-# - etag (etag http header received last time the feed was fetched, used for caching)
-# - last_modified (last-modified http header received last time the feed was fetched, user for caching)
 #
 # Title, fetch_url and url are sanitized (with ActionView::Helpers::SanitizeHelper) before validation; this is,
 # before saving/updating each instance in the database.

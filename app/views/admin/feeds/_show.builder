@@ -5,8 +5,6 @@ context.instance_eval  do
     row :available
     row :url
     row :fetch_url
-    row :etag
-    row :last_modified
     row :last_fetched
     row :fetch_interval_secs
     row :failing_since

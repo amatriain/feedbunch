@@ -10,7 +10,6 @@ class FeedParser
   #
   # If successful:
   # - saves in the database the title and URL for the feed.
-  # - saves in the database the etag and last-modified headers (to be used the next time the feed is fetched).
   # - saves the fetched feed entries in the database.
   #
   # Any errors raised are bubbled to be handled higher up the call chain. In particular, if the response being parsed
@@ -38,12 +37,6 @@ class FeedParser
     feed_title = (feed_parsed.title.present?)? feed_parsed.title : feed.title
     feed_url = (feed_parsed.url.present?)? feed_parsed.url : feed.url
     feed_attribs = {title: feed_title, url: feed_url}
-
-    # Save the etag and last_modified headers. If one of these headers is not present, save a null in the database.
-    if feed_response.headers.present?
-      Rails.logger.info "HTTP headers in the response from #{feed.fetch_url} - etag: #{feed_response.headers[:etag]} - last-modified: #{feed_response.headers[:last_modified]}"
-      feed_attribs.merge!({etag: feed_response.headers[:etag], last_modified: feed_response.headers[:last_modified]})
-    end
 
     Rails.logger.debug "Current feed attributes: #{feed.attributes}"
     Rails.logger.debug "Updating feed with attributes #{feed_attribs}"

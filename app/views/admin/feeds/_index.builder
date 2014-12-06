@@ -10,8 +10,6 @@ context.instance_eval  do
     column :last_fetched
     column :fetch_interval_secs
     column :failing_since
-    column :etag
-    column :last_modified
     column 'Entries' do |feed|
       feed.entries.count
     end
