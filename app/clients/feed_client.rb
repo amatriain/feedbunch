@@ -1,9 +1,10 @@
 require 'feedjira'
 require 'rest_client'
+require 'restclient/components'
+require 'rack/cache'
 require 'nokogiri'
 require 'uri'
 require 'feed_autodiscovery'
-require 'http_caching'
 require 'feed_parser'
 
 ##
@@ -21,11 +22,8 @@ class FeedClient
   # Optionally receives as argument a boolean that tells the method whether to perform feed autodiscovery. It
   # defaults to false.
   #
-  # The method tries to use the last received etag with the if-none-match header and the last received
-  # last-modified with the if-modified-since header to tell the server to send the feed only if it has new entries.
-  #
-  # If the last time the feed was fetched no etag and no last-modified headers were in the response, this method fetches
-  # the full feed without sending caching headers.
+  # HTTP caching is used as much as possible (i.e. caching headers are stored and sent so that data is actually sent
+  # only if the cached data is no longer valid).
   #
   # If the response to the GET is not a feed but an HTML document and the "perform_autodiscovery" argument is
   # true, it tries to autodiscover a feed from the HTML. If a feed is autodiscovered, it is immediately
@@ -72,20 +70,22 @@ class FeedClient
     if perform_autodiscovery
       Rails.logger.info "Performing autodiscovery on feed #{feed.id} - URL #{feed.url} without HTTP caching"
       url = feed.url
-      headers = {}
     else
       Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} without autodiscovery, using HTTP caching if possible"
       url = feed.fetch_url
-      # Calculate HTTP headers to be used for fetching
-      headers = HTTPCaching.headers feed
+      RestClient.enable Rack::Cache,
+                        verbose: true,
+                        metastore: "file:#{Rails.root.join('rack_cache', 'metastore').to_s}",
+                        entitystore: "file:#{Rails.root.join('rack_cache', 'entitystore').to_s}"
     end
 
     # User-agent used by feedbunch when fetching feeds
-    headers[:user_agent] = Feedbunch::Application.config.user_agent
+    user_agent = Feedbunch::Application.config.user_agent
 
     # GET the feed
     Rails.logger.info "Fetching from URL #{url}"
-    feed_response = RestClient.get url, headers
+
+    feed_response = RestClient.get url, user_agent: user_agent
 
     # Specify encoding ISO-8859-1 if necessary
     if feed_response.try(:encoding)==Encoding::UTF_8 && !feed_response.try(:valid_encoding?)

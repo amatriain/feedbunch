@@ -28,3 +28,5 @@ opml_exports/*
 .yardoc/*
 doc/
 config/newrelic.yml
+rack_cache/metastore/*/*
+rack_cache/entitystore/*/*
