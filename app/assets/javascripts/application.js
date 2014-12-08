@@ -22,7 +22,7 @@
 // It should NEVER be required in production, it will be selectively enabled for testing.
 // require ../../../vendor/assets/javascripts/bootlint-0.8.0
 
-//= require ../../../vendor/assets/javascripts/enquire-2.1.0.min
+//= require ../../../vendor/assets/javascripts/enquire-2.1.2.min
 //= require ../../../vendor/assets/javascripts/fastclick-1.0.3.min
 //= require ../../../vendor/assets/javascripts/favico-0.3.5.min
 //= require ../../../vendor/assets/javascripts/hopscotch.min
