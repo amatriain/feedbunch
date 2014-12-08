@@ -25,7 +25,7 @@
 //= require ../../../vendor/assets/javascripts/enquire-2.1.2.min
 //= require ../../../vendor/assets/javascripts/fastclick-1.0.3.min
 //= require ../../../vendor/assets/javascripts/favico-0.3.5.min
-//= require ../../../vendor/assets/javascripts/hopscotch.min
+//= require ../../../vendor/assets/javascripts/hopscotch-0.2.2.min
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport
 //= require ../../../vendor/assets/javascripts/ng-infinite-scroll.min
 //= require ../../../vendor/assets/javascripts/velocity-1.1.0.min
