@@ -29,4 +29,4 @@
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport
 //= require ../../../vendor/assets/javascripts/ng-infinite-scroll.min
 //= require ../../../vendor/assets/javascripts/velocity-1.1.0.min
-//= require ../../../vendor/assets/javascripts/withinViewport
+//= require ../../../vendor/assets/javascripts/withinViewport-0.2
