@@ -23,6 +23,7 @@
 // require ../../../vendor/assets/javascripts/bootlint-0.8.0
 
 //= require ../../../vendor/assets/javascripts/enquire.min
+//= require ../../../vendor/assets/javascripts/fastclick-1.0.3.min
 //= require ../../../vendor/assets/javascripts/favico-0.3.5.min
 //= require ../../../vendor/assets/javascripts/hopscotch.min
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport
