@@ -377,6 +377,8 @@ describe 'feed entries', type: :feature do
       @user.folders << @folder
       @folder.feeds << @feed1 << @feed2
 
+      # Use a relatively common window size
+      current_window.resize_to(1024, 768)
       visit read_path
       read_feed @feed1, @user
     end
