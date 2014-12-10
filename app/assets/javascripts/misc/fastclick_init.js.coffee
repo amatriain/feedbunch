@@ -3,5 +3,6 @@
 ########################################################
 
 $( ->
-  FastClick.attach document.body
+  attachFastClick = Origami.fastclick
+  attachFastClick document.body
 )
