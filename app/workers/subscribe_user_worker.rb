@@ -86,7 +86,7 @@ class SubscribeUserWorker
       FeedFetchError,
       OpmlImportError => e
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
-    Rails.logger.error "Error during subscribing user #{user.try :id} - #{user.try :email} to feed URL #{feed_url}, folder #{folder_id} - #{folder.try :title}"
+    Rails.logger.error "Error subscribing user #{user.try :id} - #{user.try :email} to feed URL #{feed_url}, folder #{folder_id} - #{folder.try :title}"
     Rails.logger.error e.message
     job_state.update state: SubscribeJobState::ERROR if job_state.present?
   rescue => e
