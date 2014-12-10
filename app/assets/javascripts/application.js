@@ -9,14 +9,6 @@
 //
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
-//
-//= require jquery_ujs
-//= require ng-modules/ng-app
-//= require_tree ./ng-modules
-//= require_tree ./ng-controllers
-//= require_tree ./ng-filters
-//= require_tree ./ng-services
-//= require_tree ./misc
 
 // Bootlint is a static html analyzer to help following Bootstrap's best practices
 // It should NEVER be required in production, it will be selectively enabled for testing.
@@ -30,3 +22,12 @@
 //= require ../../../vendor/assets/javascripts/ng-infinite-scroll-1.2.0.min
 //= require ../../../vendor/assets/javascripts/velocity-1.1.0.min
 //= require ../../../vendor/assets/javascripts/withinViewport-0.2
+
+//= require jquery_ujs
+//= require ng-modules/ng-app
+//= require_tree ./ng-modules
+//= require_tree ./ng-controllers
+//= require_tree ./ng-filters
+//= require_tree ./ng-services
+//= require_tree ./misc
+
