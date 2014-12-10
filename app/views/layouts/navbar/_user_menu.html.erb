@@ -1,20 +1,21 @@
+<ul class="nav navbar-nav navbar-right">
+
+  <li id="user-dropdown"
+      class="dropdown">
+    <a id="user-management"
+       class="dropdown-toggle"
+       ng-click="toggle_user_menu()">
+      <i class="fa fa-user fa-fw"></i>
+      <span id="user-name"><%= current_user.name %></span>
+      <i class="fa fa-caret-down fa-fw"></i>
+    </a>
+
 <%#= Cache different versions of the user menu for admin and non-admin users
  (admin users have more options available).
  Also cache different versions for the read page (without "read feeds" option) and for other pages
  (with "read feeds" menu option).%>
 <% cache "user_menu-#{current_user.admin ? 'admin':'noadmin'}-#{(current_page? '/read') ? 'read_page':'no_read_page'}-#{I18n.locale}" do %>
 
-  <ul class="nav navbar-nav navbar-right">
-
-    <li id="user-dropdown"
-        class="dropdown">
-      <a id="user-management"
-         class="dropdown-toggle"
-         ng-click="toggle_user_menu()">
-        <i class="fa fa-user fa-fw"></i>
-        <span id="user-name"><%= current_user.name %></span>
-        <i class="fa fa-caret-down fa-fw"></i>
-      </a>
       <ul class="dropdown-menu">
 
         <% if can? :manage, ActiveAdmin %>
