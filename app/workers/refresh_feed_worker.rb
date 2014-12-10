@@ -74,7 +74,6 @@ class RefreshFeedWorker
     # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
     Rails.logger.error "Error running refresh_feed_job_state #{refresh_feed_job_state_id} for feed #{feed.try :id}, user #{user.try :id}"
     Rails.logger.error e.message
-    Rails.logger.error e.backtrace
     job_state.update state: RefreshFeedJobState::ERROR if job_state.present?
   ensure
     if feed.present?
