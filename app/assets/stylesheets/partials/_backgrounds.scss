@@ -10,29 +10,25 @@ body{
 
 @media (max-width: $screen-sm-min) {
   .page-with-bg-image {
-    background: image-url('glasses_768x512.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background: image-url('glasses_768x512.jpg') no-repeat fixed center center / cover;
   }
 }
 
 @media (min-width: $screen-sm-min) and (max-width: $screen-md-min) {
   .page-with-bg-image {
-    background: image-url('glasses_992x661.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background: image-url('glasses_992x661.jpg') no-repeat fixed center center / cover;
   }
 }
 
 @media (min-width: $screen-md-min) and (max-width: $screen-lg-min) {
   .page-with-bg-image {
-    background: image-url('glasses_1200x800.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background: image-url('glasses_1200x800.jpg') no-repeat fixed center center / cover;
   }
 }
 
 @media (min-width: $screen-lg-min) {
   .page-with-bg-image {
-    background: image-url('glasses_1920x1280.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background: image-url('glasses_1920x1280.jpg') no-repeat fixed center center / cover;
   }
 }
 
