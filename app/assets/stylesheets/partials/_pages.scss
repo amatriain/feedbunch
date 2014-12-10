@@ -40,16 +40,19 @@
 }
 
 #landing-page {
-  opacity: 0.95;
 
-  .page-header {
-    img {
-      margin-right: 10px;
-      max-width: 20%;
-    }
+  .jumbotron {
+    background-color: rgba(238, 238, 238, 0.95);
+  
+    .page-header {
+      img {
+        margin-right: 10px;
+        max-width: 20%;
+      }
 
-    #registration-links {
-      padding-top: 20px;
+      #registration-links {
+        padding-top: 20px;
+      }
     }
   }
 }
