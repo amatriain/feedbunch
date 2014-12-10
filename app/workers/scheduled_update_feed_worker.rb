@@ -97,9 +97,8 @@ class ScheduledUpdateFeedWorker
       end
     end
 
-    Rails.logger.error "Error fetching feed #{feed_id} - #{feed.try :fetch_url}"
+    Rails.logger.error "Error during scheduled update of feed #{feed_id} - #{feed.try :fetch_url}"
     Rails.logger.error e.message
-    Rails.logger.error e.backtrace
   ensure
     if feed.present? && feed.try(:available)
       # Update timestamp of the last time the feed was fetched
