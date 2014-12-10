@@ -49,10 +49,14 @@
         margin-right: 10px;
         max-width: 20%;
       }
+    }
+  }
 
-      #registration-links {
-        padding-top: 20px;
-      }
+  #registration-links {
+    padding-top: 20px;
+
+    #sign_in {
+	  font-weight: bolder;
     }
   }
 }
