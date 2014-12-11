@@ -27,60 +27,108 @@ describe ImportSubscriptionsWorker do
     allow(Feedbunch::Application.config.uploads_manager).to receive :delete
   end
 
-  it 'updates the data import total number of feeds' do
-    ImportSubscriptionsWorker.new.perform @filename, @user.id
-    @user.reload
-    expect(@user.opml_import_job_state.total_feeds).to eq 4
+  context 'validations' do
+
+    it 'sets data import state to ERROR if the file does not exist' do
+      expect {ImportSubscriptionsWorker.new.perform 'not.a.real.file', @user.id}.to raise_error OpmlImportError
+      @user.reload
+      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
+    end
+
+    it 'sets data import state to ERROR if the file is not well formed XML' do
+      not_valid_xml_filename = File.join __dir__, '..', '..', 'attachments', 'not-well-formed-xml.opml'
+      file_contents = File.read not_valid_xml_filename
+      allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return file_contents
+      expect {ImportSubscriptionsWorker.new.perform not_valid_xml_filename, @user.id}.to raise_error Nokogiri::XML::SyntaxError
+      @user.reload
+      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
+    end
+
+    it 'sets data import state to ERROR if the file is not valid OPML' do
+      not_valid_opml_filename = File.join __dir__, '..', '..', 'attachments', 'not-valid-opml.opml'
+      file_contents = File.read not_valid_opml_filename
+      allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return file_contents
+      expect {ImportSubscriptionsWorker.new.perform not_valid_opml_filename, @user.id}.to raise_error OpmlImportError
+      @user.reload
+      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
+    end
+
+    it 'does nothing if the user does not exist' do
+      expect(Feedbunch::Application.config.uploads_manager).not_to receive :read
+      ImportSubscriptionsWorker.new.perform @filename, 1234567890
+    end
+
+    it 'does nothing if the user does not have a opml_import_job_state' do
+      @user.opml_import_job_state.destroy
+      expect(Feedbunch::Application.config.uploads_manager).not_to receive :read
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+    end
+
+    it 'does nothing if the opml_import_job_state for the user has state NONE' do
+      @user.opml_import_job_state.state = OpmlImportJobState::NONE
+      @user.opml_import_job_state.save
+      expect(Feedbunch::Application.config.uploads_manager).not_to receive :read
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+    end
+
+    it 'does nothing if the opml_import_job_state for the user has state ERROR' do
+      @user.opml_import_job_state.state = OpmlImportJobState::ERROR
+      @user.opml_import_job_state.save
+      expect(Feedbunch::Application.config.uploads_manager).not_to receive :read
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+    end
+
+    it 'does nothing if the opml_import_job_state for the user has state SUCCESS' do
+      @user.opml_import_job_state.state = OpmlImportJobState::SUCCESS
+      @user.opml_import_job_state.save
+      expect(Feedbunch::Application.config.uploads_manager).not_to receive :read
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+    end
   end
 
-  it 'sets data import state to ERROR if the file does not exist' do
-    expect {ImportSubscriptionsWorker.new.perform 'not.a.real.file', @user.id}.to raise_error OpmlImportError
-    @user.reload
-    expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
+  context 'OPML file management' do
+
+    it 'reads uploaded file' do
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:read).with @user, OPMLImporter::FOLDER, @filename
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+    end
+
+    it 'deletes file after finishing successfully' do
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user, OPMLImporter::FOLDER, @filename
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+    end
+
+    it 'deletes file after finishing with an error' do
+      allow_any_instance_of(User).to receive(:opml_import_job_state).and_raise StandardError.new
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user, OPMLImporter::FOLDER, @filename
+
+      expect {ImportSubscriptionsWorker.new.perform @filename, @user.id}.to raise_error StandardError
+    end
   end
 
-  it 'sets data import state to ERROR if the file is not well formed XML' do
-    not_valid_xml_filename = File.join __dir__, '..', '..', 'attachments', 'not-well-formed-xml.opml'
-    file_contents = File.read not_valid_xml_filename
-    allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return file_contents
-    expect {ImportSubscriptionsWorker.new.perform not_valid_xml_filename, @user.id}.to raise_error Nokogiri::XML::SyntaxError
-    @user.reload
-    expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
-  end
-
-  it 'sets data import state to ERROR if the file is not valid OPML' do
-    not_valid_opml_filename = File.join __dir__, '..', '..', 'attachments', 'not-valid-opml.opml'
-    file_contents = File.read not_valid_opml_filename
-    allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return file_contents
-    expect {ImportSubscriptionsWorker.new.perform not_valid_opml_filename, @user.id}.to raise_error OpmlImportError
-    @user.reload
-    expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
-  end
-
-  it 'sets data import state to ERROR if an error is raised' do
-    allow(OPMLImporter).to receive(:import).and_raise StandardError.new
-    expect {ImportSubscriptionsWorker.new.perform @filename, @user.id}.to raise_error
-    @user.reload
-    expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
-  end
-
-  it 'does nothing if the user does not exist' do
-    expect(Feedbunch::Application.config.uploads_manager).not_to receive :read
-    ImportSubscriptionsWorker.new.perform @filename, 1234567890
-  end
-
-  it 'reads uploaded file' do
-    expect(Feedbunch::Application.config.uploads_manager).to receive(:read).with @user, OPMLImporter::FOLDER, @filename
-    ImportSubscriptionsWorker.new.perform @filename, @user.id
-  end
-
-  context 'import feeds' do
+  context 'finishes successfully' do
 
     it 'sets data import state to SUCCESS after all feeds have been processed' do
       ImportSubscriptionsWorker.new.perform @filename, @user.id
       @user.reload
       expect(@user.opml_import_job_state.processed_feeds).to eq 4
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::SUCCESS
+    end
+
+    it 'updates the data import total number of feeds' do
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+      @user.reload
+      expect(@user.opml_import_job_state.total_feeds).to eq 4
+    end
+  end
+
+  context 'finishes with an error' do
+
+    it 'sets data import state to ERROR if an error is raised' do
+      allow(OPMLImporter).to receive(:import).and_raise StandardError.new
+      expect {ImportSubscriptionsWorker.new.perform @filename, @user.id}.to raise_error
+      @user.reload
+      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
     end
   end
 
@@ -119,59 +167,20 @@ describe ImportSubscriptionsWorker do
       folder_webcomics = @user.folders.where(title: 'Webcomics').first
       expect(folder_webcomics).to be_present
     end
-  end
 
-  it 'reuses folders already created by the user' do
-    folder_linux = FactoryGirl.build :folder, title: 'Linux', user_id: @user.id
-    @user.folders << folder_linux
-    ImportSubscriptionsWorker.new.perform @filename, @user.id
+    it 'reuses folders already created by the user' do
+      folder_linux = FactoryGirl.build :folder, title: 'Linux', user_id: @user.id
+      @user.folders << folder_linux
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
 
-    @user.reload
-    expect(@user.folders.count).to eq 2
+      @user.reload
+      expect(@user.folders.count).to eq 2
 
-    expect(@user.folders).to include folder_linux
+      expect(@user.folders).to include folder_linux
 
-    folder_webcomics = @user.folders.where(title: 'Webcomics').first
-    expect(folder_webcomics).to be_present
-  end
-
-  it 'does nothing if the user does not have a opml_import_job_state' do
-    @user.opml_import_job_state.destroy
-    expect(Feedbunch::Application.config.uploads_manager).not_to receive :read
-    ImportSubscriptionsWorker.new.perform @filename, @user.id
-  end
-
-  it 'does nothing if the opml_import_job_state for the user has state NONE' do
-    @user.opml_import_job_state.state = OpmlImportJobState::NONE
-    @user.opml_import_job_state.save
-    expect(Feedbunch::Application.config.uploads_manager).not_to receive :read
-    ImportSubscriptionsWorker.new.perform @filename, @user.id
-  end
-
-  it 'does nothing if the opml_import_job_state for the user has state ERROR' do
-    @user.opml_import_job_state.state = OpmlImportJobState::ERROR
-    @user.opml_import_job_state.save
-    expect(Feedbunch::Application.config.uploads_manager).not_to receive :read
-    ImportSubscriptionsWorker.new.perform @filename, @user.id
-  end
-
-  it 'does nothing if the opml_import_job_state for the user has state SUCCESS' do
-    @user.opml_import_job_state.state = OpmlImportJobState::SUCCESS
-    @user.opml_import_job_state.save
-    expect(Feedbunch::Application.config.uploads_manager).not_to receive :read
-    ImportSubscriptionsWorker.new.perform @filename, @user.id
-  end
-
-  it 'deletes file after finishing successfully' do
-    expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user, OPMLImporter::FOLDER, @filename
-    ImportSubscriptionsWorker.new.perform @filename, @user.id
-  end
-
-  it 'deletes file after finishing with an error' do
-    allow_any_instance_of(User).to receive(:opml_import_job_state).and_raise StandardError.new
-    expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user, OPMLImporter::FOLDER, @filename
-
-    expect {ImportSubscriptionsWorker.new.perform @filename, @user.id}.to raise_error StandardError
+      folder_webcomics = @user.folders.where(title: 'Webcomics').first
+      expect(folder_webcomics).to be_present
+    end
   end
 
   context 'email notifications' do
