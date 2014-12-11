@@ -32,6 +32,7 @@ class SubscribeUserWorker
       end
     else
       Rails.logger.error "Processing SubscribeUserWorker for subscribe_job_state_id #{job_state_id}, but no job state with that ID exists. Aborting."
+      return
     end
 
     # Check if the user actually exists
