@@ -38,7 +38,7 @@ class ImportSubscriptionsWorker
     end
 
     OPMLImporter.import filename, user
-    import_state_success user
+    import_success user
   rescue => e
     import_error user, e
   ensure
@@ -54,7 +54,7 @@ class ImportSubscriptionsWorker
   #
   # Receives as argument the user whose import process has failed.
 
-  def import_state_success(user)
+  def import_success(user)
     Rails.logger.info "OPML import for user #{user.id} - #{user.email} finished successfully. #{user.opml_import_job_state.total_feeds} feeds in OPML file, #{user.opml_import_job_state.processed_feeds} feeds imported"
 
     user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
