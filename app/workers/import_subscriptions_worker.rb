@@ -38,18 +38,9 @@ class ImportSubscriptionsWorker
     end
 
     OPMLImporter.import filename, user
-    Rails.logger.info "OPML import for user #{user.id} - #{user.email} finished successfully. #{user.opml_import_job_state.total_feeds} feeds in OPML file, #{user.opml_import_job_state.processed_feeds} feeds imported"
-    user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
-    Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
-    OpmlImportMailer.import_finished_success_email(user).deliver
+    import_state_success user
   rescue => e
-    # If an exception is raised, set the import process state to ERROR
-    Rails.logger.info "OPML import for user #{user.id} - #{user.email} finished with an error"
-    Rails.logger.error e.message
-    Rails.logger.error e.backtrace
-    import_state_error user
-    # Re-raise the exception so that Sidekiq takes care of it
-    raise e
+    import_error user, e
   ensure
     Feedbunch::Application.config.uploads_manager.delete user, OPMLImporter::FOLDER, filename
   end
@@ -57,17 +48,46 @@ class ImportSubscriptionsWorker
   private
 
   ##
-  # Sets the opml_import_job_state state for the user as ERROR.
-  # Creates a new opml_import_job_state if the user doesn't already have one.
+  # Operations performed when the import finishes successfully.
+  # Sets the opml_import_job_state state for the user as SUCCESS
+  # Sends a notification email to the user.
   #
   # Receives as argument the user whose import process has failed.
 
-  def import_state_error(user)
+  def import_state_success(user)
+    Rails.logger.info "OPML import for user #{user.id} - #{user.email} finished successfully. #{user.opml_import_job_state.total_feeds} feeds in OPML file, #{user.opml_import_job_state.processed_feeds} feeds imported"
+
+    user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
+
+    Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
+    OpmlImportMailer.import_finished_success_email(user).deliver
+  end
+
+  ##
+  # Operations performed when the import finishes with an error.
+  # Sets the opml_import_job_state state for the user as ERROR.
+  # Sends a notification email to the user.
+  #
+  # Receives as arguments:
+  # - the user whose import process has failed.
+  # - the error raised, if any
+
+  def import_error(user, error=nil)
+    # If an exception is raised, set the import process state to ERROR
+    Rails.logger.info "OPML import for user #{user.id} - #{user.email} finished with an error"
+    if error.present?
+      Rails.logger.error e.message
+      Rails.logger.error e.backtrace
+    end
+
     user.create_opml_import_job_state if user.opml_import_job_state.blank?
-    user.opml_import_job_state.state = OpmlImportJobState::ERROR
-    user.opml_import_job_state.save
+    user.opml_import_job_state.update state: OpmlImportJobState::ERROR
+
     Rails.logger.info "Sending data import error email to user #{user.id} - #{user.email}"
     OpmlImportMailer.import_finished_error_email(user).deliver
+
+    # Re-raise the exception so that Sidekiq takes care of it
+    raise error
   end
 
 end
