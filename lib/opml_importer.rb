@@ -196,7 +196,6 @@ class OPMLImporter
     Errno::ETIMEDOUT,
     Errno::ECONNREFUSED,
     Errno::EHOSTUNREACH,
-    AlreadySubscribedError,
     EmptyResponseError,
     FeedAutodiscoveryError,
     FeedFetchError,
@@ -204,6 +203,9 @@ class OPMLImporter
 
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
     Rails.logger.error "Controlled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{fetch_url}, folder #{folder.try :id} - #{folder.try :title}"
+    Rails.logger.error e.message
+  rescue AlreadySubscribedError => e
+    Rails.logger.error "During OPML import for user #{user.try :id} - #{user.try :email} found feed URL #{fetch_url}, folder #{folder.try :id} - #{folder.try :title} in OPML, but user is already subscribed to that feed. Ignoring it."
     Rails.logger.error e.message
   rescue => e
     # an uncontrolled error has happened. Log the full backtrace but do not re-raise, so that worker continues with next imported feed
