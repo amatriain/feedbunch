@@ -76,8 +76,8 @@ class ImportSubscriptionsWorker
     # If an exception is raised, set the import process state to ERROR
     Rails.logger.info "OPML import for user #{user.id} - #{user.email} finished with an error"
     if error.present?
-      Rails.logger.error e.message
-      Rails.logger.error e.backtrace
+      Rails.logger.error error.message
+      Rails.logger.error error.backtrace
     end
 
     user.create_opml_import_job_state if user.opml_import_job_state.blank?
