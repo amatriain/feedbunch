@@ -24,13 +24,9 @@ describe User, type: :model do
       expect(user_id).to eq @user.id
       fetch_url = args[1]
       expect(fetch_url).to eq @feed.fetch_url
-      folder_id = args[2]
-      expect(folder_id).to be_nil
-      running_opml_import = args[3]
-      expect(running_opml_import).to be false
 
       # Check that the job state instance passed to the job is correct
-      job_state_id = args[4]
+      job_state_id = args[2]
       job_state = SubscribeJobState.find job_state_id
       expect(job_state.user_id).to eq @user.id
       expect(job_state.fetch_url).to eq @feed.fetch_url
