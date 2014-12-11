@@ -83,20 +83,6 @@ describe SubscribeUserWorker do
       @user.opml_import_job_state = @opml_import_job_state
     end
 
-    it 'does nothing if the user does not have a running data import' do
-      @user.opml_import_job_state.update state: OpmlImportJobState::ERROR
-      expect(@user).not_to receive :subscribe
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-
-      @user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
-      expect(@user).not_to receive :subscribe
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-
-      @user.opml_import_job_state.destroy
-      expect(@user).not_to receive :subscribe
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-    end
-
     it 'updates number of processed feeds in the running import when subscribing user to existing feeds' do
       SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
       @user.reload
@@ -121,13 +107,7 @@ describe SubscribeUserWorker do
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
     end
 
-    it 'sets data import state to SUCCESS if all feeds have been processed' do
-      @user.opml_import_job_state.update processed_feeds: 9
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 10
-      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::SUCCESS
-    end
+
 
     it 'sends an email if all feeds have been processed' do
       # Remove emails stil in the mail queue

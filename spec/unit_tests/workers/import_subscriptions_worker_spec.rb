@@ -74,121 +74,14 @@ describe ImportSubscriptionsWorker do
     ImportSubscriptionsWorker.new.perform @filename, @user.id
   end
 
-  it 'enqueues jobs to subscribe the user to feeds' do
-    folder_linux = FactoryGirl.build :folder, user_id: @user.id, title: 'Linux'
-    folder_webcomics = FactoryGirl.build :folder, user_id: @user.id, title: 'Webcomics'
-    @user.folders << folder_linux << folder_webcomics
+  context 'import feeds' do
 
-    expect(SubscribeUserWorker.jobs.size).to eq 0
-
-    ImportSubscriptionsWorker.new.perform @filename, @user.id
-
-    expect(SubscribeUserWorker.jobs.size).to eq 4
-
-    job1 = SubscribeUserWorker.jobs[0]
-    expect(job1['class']).to eq 'SubscribeUserWorker'
-    args1 = job1['args']
-    # Check the arguments passed to the job
-    user_id1 = args1[0]
-    expect(user_id1).to eq @user.id
-    fetch_url1 = args1[1]
-    expect(fetch_url1).to eq 'http://brakemanscanner.org/atom.xml'
-    folder_id1 = args1[2]
-    expect(folder_id1).to be_nil
-    running_opml_import1 = args1[3]
-    expect(running_opml_import1).to be true
-    job_state_id1 = args1[4]
-    expect(job_state_id1).to be_nil
-
-    job2 = SubscribeUserWorker.jobs[1]
-    expect(job2['class']).to eq 'SubscribeUserWorker'
-    args2 = job2['args']
-    # Check the arguments passed to the job
-    user_id2 = args2[0]
-    expect(user_id2).to eq @user.id
-    fetch_url2 = args2[1]
-    expect(fetch_url2).to eq 'http://www.galactanet.com/feed.xml'
-    folder_id2 = args2[2]
-    expect(folder_id2).to be_nil
-    running_opml_import2 = args2[3]
-    expect(running_opml_import2).to be true
-    job_state_id2 = args2[4]
-    expect(job_state_id2).to be_nil
-
-    job3 = SubscribeUserWorker.jobs[2]
-    expect(job3['class']).to eq 'SubscribeUserWorker'
-    args3 = job3['args']
-    # Check the arguments passed to the job
-    user_id3 = args3[0]
-    expect(user_id3).to eq @user.id
-    fetch_url3 = args3[1]
-    expect(fetch_url3).to eq 'https://www.archlinux.org/feeds/news/'
-    folder_id3 = args3[2]
-    expect(folder_id3).to eq folder_linux.id
-    running_opml_import3 = args3[3]
-    expect(running_opml_import3).to be true
-    job_state_id3 = args3[4]
-    expect(job_state_id3).to be_nil
-
-    job4 = SubscribeUserWorker.jobs[3]
-    expect(job4['class']).to eq 'SubscribeUserWorker'
-    args4 = job4['args']
-    # Check the arguments passed to the job
-    user_id4 = args4[0]
-    expect(user_id4).to eq @user.id
-    fetch_url4 = args4[1]
-    expect(fetch_url4).to eq 'http://xkcd.com/rss.xml'
-    folder_id4 = args4[2]
-    expect(folder_id4).to eq folder_webcomics.id
-    running_opml_import4 = args4[3]
-    expect(running_opml_import4).to be true
-    job_state_id4 = args4[4]
-    expect(job_state_id4).to be_nil
-  end
-
-  it 'ignores feeds without xmlUrl attribute' do
-    filename = File.join __dir__, '..', '..', 'attachments', '1371324422-with-feed-without-attributes.opml'
-    file_contents = File.read filename
-    allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return file_contents
-
-    expect(SubscribeUserWorker.jobs.size).to eq 0
-
-    ImportSubscriptionsWorker.new.perform filename, @user.id
-
-    expect(SubscribeUserWorker.jobs.size).to eq 3
-
-    job1 = SubscribeUserWorker.jobs[0]
-    expect(job1['class']).to eq 'SubscribeUserWorker'
-    args1 = job1['args']
-    # Check the arguments passed to the job
-    user_id1 = args1[0]
-    expect(user_id1).to eq @user.id
-    running_opml_import1 = args1[3]
-    expect(running_opml_import1).to be true
-    job_state_id1 = args1[4]
-    expect(job_state_id1).to be_nil
-
-    job2 = SubscribeUserWorker.jobs[1]
-    expect(job2['class']).to eq 'SubscribeUserWorker'
-    args2 = job2['args']
-    # Check the arguments passed to the job
-    user_id2 = args2[0]
-    expect(user_id2).to eq @user.id
-    running_opml_import2 = args2[3]
-    expect(running_opml_import2).to be true
-    job_state_id2 = args2[4]
-    expect(job_state_id2).to be_nil
-
-    job3 = SubscribeUserWorker.jobs[2]
-    expect(job3['class']).to eq 'SubscribeUserWorker'
-    args3 = job3['args']
-    # Check the arguments passed to the job
-    user_id3 = args3[0]
-    expect(user_id3).to eq @user.id
-    running_opml_import3 = args3[3]
-    expect(running_opml_import3).to be true
-    job_state_id3 = args3[4]
-    expect(job_state_id3).to be_nil
+    it 'sets data import state to SUCCESS after all feeds have been processed' do
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+      @user.reload
+      expect(@user.opml_import_job_state.processed_feeds).to eq 4
+      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::SUCCESS
+    end
   end
 
   context 'folder structure' do

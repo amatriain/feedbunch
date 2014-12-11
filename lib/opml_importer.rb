@@ -176,7 +176,7 @@ class OPMLImporter
   end
 
   ##
-  # Import a feed, enqueing a job to subscribe the user to it.
+  # Import a feed, subscribing the user to it.
   #
   # Receives as arguments:
   # - the fetch_url of the feed
@@ -184,8 +184,36 @@ class OPMLImporter
   # - optionally, the folder in which the feed will be (defaults to none)
 
   def self.import_feed(fetch_url, user, folder=nil)
-    Rails.logger.info "As part of OPML import, enqueing job to subscribe user #{user.id} - #{user.email} to feed #{fetch_url}"
-    SubscribeUserWorker.perform_async user.id, fetch_url, folder.try(:id), true, nil
+    Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to feed #{fetch_url}"
+    feed = user.subscribe fetch_url
+    if folder.present? && feed.present?
+      Rails.logger.info "As part of OPML import, moving feed #{feed.id} - #{feed.title} to folder #{folder.title} owned by user #{user.id} - #{user.email}"
+      folder.feeds << feed
+    end
+  rescue RestClient::Exception,
+    RestClient::RequestTimeout,
+    SocketError,
+    Errno::ETIMEDOUT,
+    Errno::ECONNREFUSED,
+    Errno::EHOSTUNREACH,
+    AlreadySubscribedError,
+    EmptyResponseError,
+    FeedAutodiscoveryError,
+    FeedFetchError,
+    OpmlImportError => e
+
+    # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
+    Rails.logger.error "Controlled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{fetch_url}, folder #{folder_id} - #{folder.try :title}"
+    Rails.logger.error e.message
+  rescue => e
+    # an uncontrolled error has happened. Log the full backtrace but do not re-raise, so that worker continues with next imported feed
+    Rails.logger.error "Uncontrolled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{fetch_url}, folder #{folder_id} - #{folder.try :title}"
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+  ensure
+    Rails.logger.info "Incrementing processed feeds in OPML import for user #{user.id} - #{user.email} by 1"
+    processed_feeds = user.opml_import_job_state.processed_feeds + 1
+    user.opml_import_job_state.update processed_feeds: processed_feeds
   end
 
   ##
