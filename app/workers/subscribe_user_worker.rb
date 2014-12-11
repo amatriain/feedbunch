@@ -1,5 +1,5 @@
 ##
-# Background job to subscribe a user to a feed and, optionally, put the feed in a folder.
+# Background job to subscribe a user to a feed.
 #
 # This is a Sidekiq worker
 
@@ -9,12 +9,11 @@ class SubscribeUserWorker
   sidekiq_options queue: :interactive
 
   ##
-  # Subscribe a user to a feed and optionally put the feed in a folder
+  # Subscribe a user to a feed
   #
   # Receives as arguments:
   # - id of the user
   # - url of the feed
-  # - id of the folder. It must be owned by the user. If a nil is passed, ignore it
   # - id of the SubscribeJobState instance that reflects the state of the job
   #
   # The state field of the SubscribeJobState instance will be updated when
@@ -22,7 +21,7 @@ class SubscribeUserWorker
   #
   # This method is intended to be invoked from Sidekiq, which means it is performed in the background.
 
-  def perform(user_id, feed_url, folder_id, job_state_id)
+  def perform(user_id, feed_url, job_state_id)
     # Find the SubscribeJobState instance for this job, if it exists
     if SubscribeJobState.exists? job_state_id
       job_state = SubscribeJobState.find job_state_id
@@ -43,22 +42,8 @@ class SubscribeUserWorker
     end
     user = User.find user_id
 
-    # Check if the folder actually exists and is owned by the user
-    if folder_id.present?
-      if !Folder.exists? folder_id
-        Rails.logger.error "Trying to add subscription in non-existing folder @#{folder_id}, aborting job"
-        job_state.destroy if job_state.present?
-        return
-      end
-      folder = Folder.find folder_id
-      if !user.folders.include? folder
-        Rails.logger.error "Trying to add subscription in folder #{folder.id} - #{folder.title} which is not owned by user #{user.id} - #{user.email}, aborting job"
-        job_state.destroy if job_state.present?
-        return
-      end
-    end
-
-    feed = subscribe_feed feed_url, user, folder
+    Rails.logger.info "Subscribing user #{user.id} - #{user.email} to feed #{feed_url}"
+    feed = user.subscribe feed_url
 
     # Set job state to "SUCCESS" and save the id of the actually subscribed feed
     job_state.update state: SubscribeJobState::SUCCESS, feed_id: feed.id if job_state.present?
@@ -74,39 +59,16 @@ class SubscribeUserWorker
       FeedFetchError,
       OpmlImportError => e
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
-    Rails.logger.error "Error subscribing user #{user.try :id} - #{user.try :email} to feed URL #{feed_url}, folder #{folder_id} - #{folder.try :title}"
+    Rails.logger.error "Controlled error subscribing user #{user.try :id} - #{user.try :email} to feed URL #{feed_url}"
     Rails.logger.error e.message
     job_state.update state: SubscribeJobState::ERROR if job_state.present?
   rescue => e
+    Rails.logger.error "Uncontrolled error subscribing user #{user.try :id} - #{user.try :email} to feed URL #{feed_url}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
     job_state.update state: SubscribeJobState::ERROR if job_state.present?
     # The job has failed. Re-raise the exception so that Sidekiq takes care of it
     raise e
-  end
-
-  private
-
-  ##
-  # Subscribe a user to a feed.
-  #
-  # Receives as arguments:
-  # - the url of the feed
-  # - the user who requested the import (and who will be subscribed to the feed)
-  # - optionally, the folder in which the feed will be (defaults to none)
-  #
-  # If the feed already exists in the database, the user is subscribed to it.
-  #
-  # Returns the subscribed feed
-
-  def subscribe_feed(url, user, folder)
-    Rails.logger.info "Subscribing user #{user.id} - #{user.email} to feed #{url}"
-    feed = user.subscribe url
-    if folder.present? && feed.present?
-      Rails.logger.info "As part of subscription, moving feed #{feed.id} - #{feed.title} to folder #{folder.title} owned by user #{user.id} - #{user.email}"
-      folder.feeds << feed
-    end
-    return feed
   end
 
 end
