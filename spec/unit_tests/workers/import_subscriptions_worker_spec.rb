@@ -120,12 +120,21 @@ describe ImportSubscriptionsWorker do
       @user.reload
       expect(@user.opml_import_job_state.total_feeds).to eq 4
     end
+
+    it 'updates the data import number of processed feeds' do
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+      @user.reload
+      expect(@user.opml_import_job_state.processed_feeds).to eq 4
+    end
   end
 
   context 'finishes with an error' do
 
-    it 'sets data import state to ERROR if an error is raised' do
+    before :each do
       allow(OPMLImporter).to receive(:import).and_raise StandardError.new
+    end
+
+    it 'sets data import state to ERROR if an error is raised' do
       expect {ImportSubscriptionsWorker.new.perform @filename, @user.id}.to raise_error
       @user.reload
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
@@ -188,6 +197,11 @@ describe ImportSubscriptionsWorker do
     before :each do
       # Remove emails stil in the mail queue
       ActionMailer::Base.deliveries.clear
+    end
+
+    it 'sends an email if it finishes successfully' do
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+      mail_should_be_sent to: @user.email, text: 'Your feed subscriptions have been imported into Feedbunch'
     end
 
     it 'sends an email if it finishes with an error' do

@@ -79,12 +79,6 @@ describe SubscribeUserWorker do
       @user.opml_import_job_state = @opml_import_job_state
     end
 
-    it 'updates number of processed feeds in the running import when subscribing user to existing feeds' do
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 6
-    end
-
     it 'updates number of processed feeds in the running import if the user is already subscribed to the feed' do
       @user.subscribe @feed.fetch_url
       SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
@@ -101,16 +95,6 @@ describe SubscribeUserWorker do
       @user.reload
       expect(@user.opml_import_job_state.processed_feeds).to eq 6
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
-    end
-
-
-
-    it 'sends an email if all feeds have been processed' do
-      # Remove emails stil in the mail queue
-      ActionMailer::Base.deliveries.clear
-      @user.opml_import_job_state.update processed_feeds: 9
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-      mail_should_be_sent to: @user.email, text: 'Your feed subscriptions have been imported into Feedbunch'
     end
   end
 
