@@ -108,6 +108,15 @@ describe ImportSubscriptionsWorker do
 
   context 'finishes successfully' do
 
+    before :each do
+      allow_any_instance_of(User).to receive :subscribe do |user, fetch_url|
+        expect(user.id).to eq @user.id
+        feed = FactoryGirl.create :feed, fetch_url: fetch_url
+        subscription = FactoryGirl.create :feed_subscription, user_id: user.id, feed_id: feed.id
+        feed
+      end
+    end
+
     it 'sets data import state to SUCCESS after all feeds have been processed' do
       ImportSubscriptionsWorker.new.perform @filename, @user.id
       @user.reload
@@ -125,6 +134,38 @@ describe ImportSubscriptionsWorker do
       ImportSubscriptionsWorker.new.perform @filename, @user.id
       @user.reload
       expect(@user.opml_import_job_state.processed_feeds).to eq 4
+    end
+
+    it 'subscribes user to feeds in OPML' do
+      expect(@user.feeds.count).to eq 0
+
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+
+      expect(@user.reload.feeds.count).to eq 4
+      feed_url_1 = 'http://brakemanscanner.org/atom.xml'
+      feed_url_2 = 'http://www.galactanet.com/feed.xml'
+      feed_url_3 = 'https://www.archlinux.org/feeds/news/'
+      feed_url_4 = 'http://xkcd.com/rss.xml'
+      expect(@user.feeds.map {|f| f.fetch_url}).to contain_exactly feed_url_1, feed_url_2, feed_url_3, feed_url_4
+    end
+
+    it 'creates folders in OPML' do
+      expect(@user.folders.count).to eq 0
+
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+
+      expect(@user.reload.folders.count).to eq 2
+      folder_title_1 = 'Linux'
+      folder_title_2 = 'Webcomics'
+      expect(@user.folders.map {|f| f.title}).to contain_exactly folder_title_1, folder_title_2
+
+      folder_linux = @user.folders.find_by_title folder_title_1
+      expect(folder_linux.feeds.count).to eq 1
+      expect(folder_linux.feeds.first.fetch_url).to eq 'https://www.archlinux.org/feeds/news/'
+
+      folder_webcomics = @user.folders.find_by_title folder_title_2
+      expect(folder_webcomics.feeds.count).to eq 1
+      expect(folder_webcomics.feeds.first.fetch_url).to eq 'http://xkcd.com/rss.xml'
     end
   end
 

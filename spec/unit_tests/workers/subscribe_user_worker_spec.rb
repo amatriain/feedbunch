@@ -71,33 +71,6 @@ describe SubscribeUserWorker do
 
   end
 
-  context 'running an OPML import' do
-
-    before :each do
-      @opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
-                                       total_feeds: 10, processed_feeds: 5
-      @user.opml_import_job_state = @opml_import_job_state
-    end
-
-    it 'updates number of processed feeds in the running import if the user is already subscribed to the feed' do
-      @user.subscribe @feed.fetch_url
-      SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 6
-      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
-    end
-
-    it 'updates number of processed feeds in the running import if an error is raised' do
-      allow_any_instance_of(User).to receive(:subscribe).and_raise StandardError.new
-
-      expect{SubscribeUserWorker.new.perform @user.id, @feed.fetch_url, @folder.id, true, nil}.to raise_error(StandardError)
-
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 6
-      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::RUNNING
-    end
-  end
-
   context 'updates job state' do
 
     it 'sets state to SUCCESS if job finishes successfully' do
