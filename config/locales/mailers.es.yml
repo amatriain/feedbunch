@@ -2,15 +2,16 @@ es:
   opml_import_mailer:
     import_finished_success_email:
       subject: "Tus suscripciones han sido importadas en Feedbunch"
-      header: "Tus suscripciones han sido importadas en Feedbunch"
+      header_html: "Tus suscripciones han sido importadas en %{link}"
       body_1: "Buenas noticias, %{name}: hemos terminado de importar tus suscripciones en Feedbunch."
       body_2_html: "Ahora estás suscrito a %{count} feeds. Para leerlos, simplemente %{link}."
       app_link: "haz click aquí"
-      body_3: "Gracias por usar Feedbunch y que tengas un buen día!"
+      body_3: "No hemos podido suscribirte a los siguientes feeds:"
+      body_4: "Gracias por usar Feedbunch y que tengas un buen día!"
     import_finished_error_email:
       subject: "Ha habido un error importando tus suscripciones en Feedbunch"
-      header: "Ha habido un error importando tus suscripciones en Feedbunch"
-      body_1: "Lo sentimos %{name}, pero por desgracia no hemos podido importar tus suscripciones en Feedbunch."
+      header_html: "Ha habido un error importando tus suscripciones en %{link}"
+      body_1: "Lo sentimos %{name}, pero por desgracia no hemos podido importar todas tus suscripciones en Feedbunch."
       body_2_html: "Si estás seguro de que el fichero de suscripciones que enviaste a Feedbunch es correcto, puedes %{link}."
       try_again_link: "volverlo a intentar"
       body_3_html: "Actualmente estás suscrito a %{count} feeds; para leerlos, simplemente %{link}."

@@ -49,6 +49,14 @@ class OPMLImporter
   # - the user who is importing the file
   #
   # The file is retrieved using the currently configured uploads_manager (from the filesystem or from Amazon S3).
+  #
+  # Returns a hash with the following keys:
+  # - :success - array of hashes with the feeds successfully imported
+  # - :error - array of hashes with the feeds that couldn't be imported because of an error
+  #
+  # Each element of the above arrays is a hash with the following keys:
+  # - :title - title of the feed
+  # - :fetch_url - fetch_url of the feed
 
   def self.import(filename, user)
     # Open file and check if it actually exists
@@ -76,9 +84,12 @@ class OPMLImporter
     # Update total number of feeds, so user can see progress.
     user.opml_import_job_state.update total_feeds: total_feeds
 
+    # Hash for the results
+    results = {success: [], error: []}
+
     # Process feeds that are not in a folder
     docXml.xpath('/opml/body/outline[@type="rss" and @xmlUrl]').each do |feed_node|
-      self.import_feed feed_node['xmlUrl'], user
+      self.import_feed results, feed_node['xmlUrl'], user
     end
 
     # Process feeds in folders
@@ -88,10 +99,12 @@ class OPMLImporter
         folder_title = folder_node['title'] || folder_node['text']
         folder = self.import_folder folder_title, user
         folder_node.xpath('./outline[@type="rss" and @xmlUrl]').each do |feed_node|
-          self.import_feed feed_node['xmlUrl'], user, folder
+          self.import_feed results, feed_node['xmlUrl'], user, folder
         end
       end
     end
+
+    return results
   end
 
   private
@@ -179,17 +192,23 @@ class OPMLImporter
   # Import a feed, subscribing the user to it.
   #
   # Receives as arguments:
+  # - results hash (see documentation header for import function)
   # - the fetch_url of the feed
   # - the user who requested the import (and who will be subscribed to the feed)
   # - optionally, the folder in which the feed will be (defaults to none)
+  #
+  # The results hash is passed to succesive invocations of this function (one for each feed in the OPML), with the end
+  # result that all feeds in the OPML should be in the results, either under the :success or the :error key.
 
-  def self.import_feed(fetch_url, user, folder=nil)
+  def self.import_feed(results, fetch_url, user, folder=nil)
     Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to feed #{fetch_url}"
     feed = user.subscribe fetch_url
     if folder.present? && feed.present?
       Rails.logger.info "As part of OPML import, moving feed #{feed.id} - #{feed.title} to folder #{folder.title} owned by user #{user.id} - #{user.email}"
       folder.feeds << feed
     end
+
+    results[:success] << {title: feed.title, fetch_url: feed.fetch_url}
   rescue RestClient::Exception,
     RestClient::RequestTimeout,
     SocketError,
@@ -204,14 +223,21 @@ class OPMLImporter
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
     Rails.logger.error "Controlled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{fetch_url}, folder #{folder.try :id} - #{folder.try :title}"
     Rails.logger.error e.message
+
+    results[:error] << {title: feed.try(:title), fetch_url: feed.fetch_url} if feed.try(:fetch_url).present?
   rescue AlreadySubscribedError => e
     Rails.logger.error "During OPML import for user #{user.try :id} - #{user.try :email} found feed URL #{fetch_url}, folder #{folder.try :id} - #{folder.try :title} in OPML, but user is already subscribed to that feed. Ignoring it."
     Rails.logger.error e.message
+
+    # We consider an "already subscribed" result as success. The user is subscribed to the feed in the end, after all.
+    results[:success] << {title: feed.try(:title), fetch_url: feed.fetch_url} if feed.try(:fetch_url).present?
   rescue => e
     # an uncontrolled error has happened. Log the full backtrace but do not re-raise, so that worker continues with next imported feed
     Rails.logger.error "Uncontrolled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{fetch_url}, folder #{folder.try :id} - #{folder.try :title}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
+
+    results[:error] << {title: feed.try(:title), fetch_url: feed.fetch_url} if feed.try(:fetch_url).present?
   ensure
     Rails.logger.info "Incrementing processed feeds in OPML import for user #{user.id} - #{user.email} by 1"
     processed_feeds = user.opml_import_job_state.processed_feeds + 1

@@ -1,18 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-</head>
-<body>
-<h1><%= t 'opml_import_mailer.import_finished_success_email.header' %></h1>
-<p>
-  <%= t 'opml_import_mailer.import_finished_success_email.body_1', name: @user.name %>
-</p>
-<p>
-  <%= t 'opml_import_mailer.import_finished_success_email.body_2_html',
-        count: @user.feeds.count,
-        link: link_to(t('opml_import_mailer.import_finished_success_email.app_link'), @url) %>
-</p>
-<p><%= t 'opml_import_mailer.import_finished_success_email.body_3' %></p>
-</body>
+
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+
+  <body>
+    <h1><%= t 'opml_import_mailer.import_finished_success_email.header_html',
+                link: link_to('Feedbunch', @url)%></h1>
+
+    <p>
+      <%= t 'opml_import_mailer.import_finished_success_email.body_1', name: @user.name %>
+    </p>
+
+    <p>
+      <%= t 'opml_import_mailer.import_finished_success_email.body_2_html',
+            count: @user.feeds.count,
+            link: link_to(t('opml_import_mailer.import_finished_success_email.app_link'), @url) %>
+    </p>
+
+    <% if @results[:error].size > 0 %>
+      <p><%= t 'opml_import_mailer.import_finished_success_email.body_3' %></p>
+
+      <ul>
+        <% @results[:error].each do |r| %>
+          <li><%= r.title (r.fetch_url) %></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <p><%= t 'opml_import_mailer.import_finished_success_email.body_4' %></p>
+  </body>
 </html>

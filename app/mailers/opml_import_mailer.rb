@@ -4,7 +4,8 @@ class OpmlImportMailer < ActionMailer::Base
   ##
   # Send an email when the Import OPML background process is finished successfully
 
-  def import_finished_success_email(user)
+  def import_finished_success_email(results, user)
+    @results = results
     @user = user
     @url = read_url locale: user.locale
     I18n.with_locale user.locale do
@@ -15,7 +16,8 @@ class OpmlImportMailer < ActionMailer::Base
   ##
   # Send an email when the Import OPML background process is finished with an error
 
-  def import_finished_error_email(user)
+  def import_finished_error_email(results, user)
+    @results = results
     @user = user
     @url = read_url locale: user.locale
     I18n.with_locale user.locale do
