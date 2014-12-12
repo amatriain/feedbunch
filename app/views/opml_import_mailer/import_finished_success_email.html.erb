@@ -24,7 +24,7 @@
 
       <ul>
         <% @results[:error].each do |r| %>
-          <li><%= r.title (r.fetch_url) %></li>
+          <li><%= r %></li>
         <% end %>
       </ul>
     <% end %>

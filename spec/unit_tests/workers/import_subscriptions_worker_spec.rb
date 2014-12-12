@@ -245,6 +245,20 @@ describe ImportSubscriptionsWorker do
       mail_should_be_sent to: @user.email, text: 'Your feed subscriptions have been imported into'
     end
 
+    it 'sends an email with failed feeds if it finishes successfully' do
+      allow_any_instance_of(User).to receive :subscribe do |user, fetch_url|
+        expect(user.id).to eq @user.id
+        raise RestClient::Exception.new if fetch_url == 'http://xkcd.com/rss.xml'
+        feed = FactoryGirl.create :feed, fetch_url: fetch_url
+        subscription = FactoryGirl.create :feed_subscription, user_id: user.id, feed_id: feed.id
+        feed
+      end
+
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+
+      mail_should_be_sent to: @user.email, text: "We haven&#39;t been able to subscribe you to the following feeds"
+    end
+
     it 'sends an email if it finishes with an error' do
       not_valid_opml_filename = File.join __dir__, '..', '..', 'attachments', 'not-valid-opml.opml'
       file_contents = File.read not_valid_opml_filename
