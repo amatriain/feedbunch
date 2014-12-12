@@ -24,7 +24,10 @@ class OPMLImporter
 
   def self.enqueue_import_job(file, user)
     Rails.logger.info "User #{user.id} - #{user.email} requested import of a data file"
-    opml_import_job_state = user.create_opml_import_job_state state: OpmlImportJobState::RUNNING
+
+    user.create_opml_import_job_state if user.opml_import_job_state.blank?
+    opml_import_job_state = user.opml_import_job_state
+    opml_import_job_state.update state: OpmlImportJobState::RUNNING, total_feeds: 0, processed_feeds: 0, show_alert: true
 
     subscription_data = self.read_data_file file
 
