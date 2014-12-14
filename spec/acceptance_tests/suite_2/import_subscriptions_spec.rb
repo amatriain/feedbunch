@@ -149,6 +149,25 @@ describe 'import subscriptions', type: :feature do
       end
     end
 
+    it 'updates stats in start page when import finishes successfully', js: true do
+      feed1 = FactoryGirl.create :feed
+      entry1 = FactoryGirl.build :entry, feed_id: feed1.id
+      feed1.entries << entry1
+
+      feed2 = FactoryGirl.create :feed
+      entry2 = FactoryGirl.build :entry, feed_id: feed2.id
+      entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+      feed1.entries << entry2 << entry3
+
+      @user.subscribe feed1.fetch_url
+      @user.subscribe feed2.fetch_url
+
+      opml_import_job_state = @user.reload.opml_import_job_state
+      opml_import_job_state.update state: OpmlImportJobState::SUCCESS
+
+      expect(page).to have_content 'Subscribed to 3 feeds with 4 unread entries'
+    end
+
     it 'changes message when import finishes with an error', js: true do
       opml_import_job_state = @user.reload.opml_import_job_state
       opml_import_job_state.update state: OpmlImportJobState::ERROR

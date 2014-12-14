@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'importStateSvc',
-['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'timerFlagSvc',
-($rootScope, $http, $timeout, feedsFoldersSvc, timerFlagSvc)->
+['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'userDataSvc', 'timerFlagSvc',
+($rootScope, $http, $timeout, feedsFoldersSvc, userDataSvc, timerFlagSvc)->
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load import process state via AJAX
@@ -37,6 +37,7 @@ angular.module('feedbunch').service 'importStateSvc',
       else if data["state"] == "SUCCESS" && show_alerts
         # Automatically load new feeds and folders without needing a refresh
         feedsFoldersSvc.load_data()
+        userDataSvc.load_data()
         timerFlagSvc.start 'success_importing'
 
   service =
