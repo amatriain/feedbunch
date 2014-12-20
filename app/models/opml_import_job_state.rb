@@ -5,6 +5,9 @@
 # Each OpmlImportJobState belongs to a single user, and each user can have at most only one OpmlImportJobState (one-to-one relationship).
 # If a user imports data several times, each time the previous OpmlImportJobState is updated.
 #
+# Each OpmlImportJobState can have many OpmlImportFailures, and each OpmlImportFailure belongs to exactly one
+# OpmlImportJobState (one-to-many relationship).
+#
 # The OpmlImportJobState model has the following fields:
 # - state: mandatory text that indicates the current state of the import process. Supported values are
 # "NONE" (the default), "RUNNING", "SUCCESS" and "ERROR".
@@ -23,6 +26,8 @@ class OpmlImportJobState < ActiveRecord::Base
 
   belongs_to :user
   validates :user_id, presence: true
+
+  has_many :opml_import_failures, dependent: :destroy
 
   validates :state, presence: true, inclusion: {in: [NONE, RUNNING, ERROR, SUCCESS]}
   validates :total_feeds, presence: true
