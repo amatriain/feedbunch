@@ -24,23 +24,23 @@ class OPMLImporter
 
   def self.enqueue_import_job(file, user)
     Rails.logger.info "User #{user.id} - #{user.email} requested import of a data file"
-
-    user.create_opml_import_job_state if user.opml_import_job_state.blank?
-    opml_import_job_state = user.opml_import_job_state
-    opml_import_job_state.update state: OpmlImportJobState::RUNNING, total_feeds: 0, processed_feeds: 0, show_alert: true
+    # Destroy the current import job state for the user. This in turn triggers a deletion of any associated import failure data.
+    user.opml_import_job_state.try :destroy
+    user.create_opml_import_job_state state: OpmlImportJobState::RUNNING
 
     subscription_data = self.read_data_file file
-
     filename = "feedbunch_import_#{Time.zone.now.to_i}.opml"
     Feedbunch::Application.config.uploads_manager.save user, FOLDER, filename, subscription_data
 
     Rails.logger.info "Enqueuing Import Subscriptions Job for user #{user.id} - #{user.email}, OPML file #{filename}"
     ImportSubscriptionsWorker.perform_async filename, user.id
+    return nil
   rescue => e
     Rails.logger.error "Error trying to read OPML data from file uploaded by user #{user.id} - #{user.email}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    opml_import_job_state.update state: OpmlImportJobState::ERROR
+    user.opml_import_job_state.try :destroy
+    user.create_opml_import_job_state state: OpmlImportJobState::ERROR
     raise OpmlImportError.new
   end
 

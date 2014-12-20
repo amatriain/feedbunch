@@ -131,6 +131,42 @@ describe User, type: :model do
         expect(job['args']).to eq [@filename, @user.id]
       end
     end
+
+    context 'import failures' do
+
+      before :each do
+        @job_state = @user.opml_import_job_state
+        @import_failure_1 = FactoryGirl.build :opml_import_failure, opml_import_job_state_id: @job_state.id
+        @import_failure_2 = FactoryGirl.build :opml_import_failure, opml_import_job_state_id: @job_state.id
+        @job_state.opml_import_failures << @import_failure_1 << @import_failure_2
+      end
+
+      it 'destroys old import failures data when enqueuing job to process OPML file' do
+        expect(OpmlImportFailure.all.count).to eq 2
+        @user.import_subscriptions @data_file
+        expect(OpmlImportFailure.all.count).to eq 0
+      end
+
+      it 'destroys old import failures data when an error is raised' do
+        allow(Zip::File).to receive(:open).and_raise StandardError.new
+        expect(OpmlImportFailure.all.count).to eq 2
+
+        expect{@user.import_subscriptions @data_file}.to raise_error StandardError
+
+        expect(OpmlImportFailure.all.count).to eq 0
+      end
+
+      it 'does not destroy import failures data for other users' do
+        job_state_2 = FactoryGirl.create :opml_import_job_state
+        import_failure_3 = FactoryGirl.build :opml_import_failure, opml_import_job_state_id: job_state_2.id
+        import_failure_4 = FactoryGirl.build :opml_import_failure, opml_import_job_state_id: job_state_2.id
+        job_state_2.opml_import_failures << import_failure_3 << import_failure_4
+        expect(OpmlImportFailure.all.count).to eq 4
+        @user.import_subscriptions @data_file
+        expect(OpmlImportFailure.all.count).to eq 2
+        expect(OpmlImportFailure.all).to contain_exactly import_failure_3, import_failure_4
+      end
+    end
   end
 
   context 'change alert visibility' do
@@ -147,6 +183,5 @@ describe User, type: :model do
       expect(@user.reload.opml_import_job_state.show_alert).to be true
     end
   end
-
 
 end

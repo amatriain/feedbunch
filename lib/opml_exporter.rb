@@ -20,6 +20,7 @@ class OPMLExporter
     # Destroy the current export job state for the user. This in turn triggers a deletion of any old OPML file for the user.
     user.opml_export_job_state.try :destroy
     user.create_opml_export_job_state state: OpmlExportJobState::RUNNING
+
     ExportSubscriptionsWorker.perform_async user.id
     return nil
   rescue => e
