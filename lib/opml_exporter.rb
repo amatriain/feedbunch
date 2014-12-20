@@ -18,7 +18,7 @@ class OPMLExporter
   def self.enqueue_export_job(user)
     Rails.logger.info "Enqueuing export subscriptions job for user #{user.email} - #{user.name}"
     # Destroy the current export job state for the user. This in turn triggers a deletion of any old OPML file for the user.
-    user.opml_export_job_state.destroy if user.opml_export_job_state.present?
+    user.opml_export_job_state.try :destroy
     user.create_opml_export_job_state state: OpmlExportJobState::RUNNING
     ExportSubscriptionsWorker.perform_async user.id
     return nil
@@ -26,6 +26,7 @@ class OPMLExporter
     Rails.logger.error "Error trying to export subscriptions in OPML format for user #{user.id} - #{user.email}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
+    user.opml_export_job_state.try :destroy
     user.create_opml_export_job_state state: OpmlExportJobState::ERROR
     raise OpmlExportError.new
   end
