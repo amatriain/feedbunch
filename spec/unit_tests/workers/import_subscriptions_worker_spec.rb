@@ -233,6 +233,18 @@ describe ImportSubscriptionsWorker do
     end
   end
 
+  context 'failed URLs during import' do
+
+    before :each do
+      allow_any_instance_of(User).to receive :subscribe do |user, fetch_url|
+        expect(user.id).to eq @user.id
+        feed = FactoryGirl.create :feed, fetch_url: fetch_url
+        subscription = FactoryGirl.create :feed_subscription, user_id: user.id, feed_id: feed.id
+        feed
+      end
+    end
+  end
+
   context 'email notifications' do
 
     before :each do
