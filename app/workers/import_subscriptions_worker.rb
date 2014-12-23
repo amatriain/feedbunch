@@ -37,10 +37,10 @@ class ImportSubscriptionsWorker
       return
     end
 
-    results = OPMLImporter.import filename, user
-    import_success results, user
+    OPMLImporter.import filename, user
+    import_success user
   rescue => e
-    import_error results, user, e
+    import_error user, e
   ensure
     Feedbunch::Application.config.uploads_manager.delete user, OPMLImporter::FOLDER, filename
   end
@@ -54,23 +54,14 @@ class ImportSubscriptionsWorker
   #
   # Receives as argument:
   # - user whose import process has finished successfully
-  # - hash with the results of the import process
-  #
-  # The import results hash must have the following keys:
-  # - :success - array of hashes with the feeds successfully imported
-  # - :error - array of hashes with the feeds that couldn't be imported because of an error
-  #
-  # Each element of the above arrays must be a hash with the following keys:
-  # - :title - title of the feed
-  # - :fetch_url - fetch_url of the feed
 
-  def import_success(results, user)
+  def import_success(user)
     Rails.logger.info "OPML import for user #{user.id} - #{user.email} finished successfully. #{user.opml_import_job_state.total_feeds} feeds in OPML file, #{user.opml_import_job_state.processed_feeds} feeds imported"
 
     user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
 
     Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
-    OpmlImportMailer.import_finished_success_email(results, user).deliver
+    OpmlImportMailer.import_finished_success_email(user).deliver
   end
 
   ##
@@ -80,18 +71,9 @@ class ImportSubscriptionsWorker
   #
   # Receives as arguments:
   # - the user whose import process has failed
-  # - hash with the results of the import process
   # - the error raised, if any
-  #
-  # The import results hash must have the following keys:
-  # - :success - array of hashes with the feeds successfully imported
-  # - :error - array of hashes with the feeds that couldn't be imported because of an error
-  #
-  # Each element of the above arrays must be a hash with the following keys:
-  # - :title - title of the feed
-  # - :fetch_url - fetch_url of the feed
 
-  def import_error(results, user, error=nil)
+  def import_error(user, error=nil)
     # If an exception is raised, set the import process state to ERROR
     Rails.logger.info "OPML import for user #{user.id} - #{user.email} finished with an error"
     if error.present?
@@ -103,7 +85,7 @@ class ImportSubscriptionsWorker
     user.opml_import_job_state.update state: OpmlImportJobState::ERROR
 
     Rails.logger.info "Sending data import error email to user #{user.id} - #{user.email}"
-    OpmlImportMailer.import_finished_error_email(results, user).deliver
+    OpmlImportMailer.import_finished_error_email(user).deliver
 
     # Re-raise the exception so that Sidekiq takes care of it
     raise error

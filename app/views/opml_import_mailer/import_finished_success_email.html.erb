@@ -19,12 +19,14 @@
             link: link_to(t('opml_import_mailer.import_finished_success_email.app_link'), @url) %>
     </p>
 
-    <% if @results[:error].size > 0 %>
+    <% failures = @user.opml_import_job_state.opml_import_failures %>
+
+    <% if failures.size > 0 %>
       <p><%= t 'opml_import_mailer.import_finished_success_email.body_3' %></p>
 
       <ul>
-        <% @results[:error].each do |r| %>
-          <li><%= r %></li>
+        <% failures.each do |f| %>
+          <li><%= f.url %></li>
         <% end %>
       </ul>
     <% end %>

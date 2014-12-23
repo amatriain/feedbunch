@@ -238,10 +238,21 @@ describe ImportSubscriptionsWorker do
     before :each do
       allow_any_instance_of(User).to receive :subscribe do |user, fetch_url|
         expect(user.id).to eq @user.id
+        if fetch_url == 'http://xkcd.com/rss.xml' || fetch_url == 'http://brakemanscanner.org/atom.xml'
+          raise RestClient::Exception.new
+        end
         feed = FactoryGirl.create :feed, fetch_url: fetch_url
         subscription = FactoryGirl.create :feed_subscription, user_id: user.id, feed_id: feed.id
         feed
       end
+    end
+
+    it 'creates OpmlImportFailure instances for failed imports' do
+      expect(OpmlImportFailure.all.count).to eq 0
+      ImportSubscriptionsWorker.new.perform @filename, @user.id
+      expect(OpmlImportFailure.all.count).to eq 2
+      expect(OpmlImportFailure.all.map{|f| f.url}).to contain_exactly 'http://xkcd.com/rss.xml',
+                                                                  'http://brakemanscanner.org/atom.xml'
     end
   end
 
