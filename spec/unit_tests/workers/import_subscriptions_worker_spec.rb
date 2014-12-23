@@ -265,7 +265,7 @@ describe ImportSubscriptionsWorker do
 
     it 'sends an email if it finishes successfully' do
       ImportSubscriptionsWorker.new.perform @filename, @user.id
-      mail_should_be_sent to: @user.email, text: 'Your feed subscriptions have been imported into'
+      mail_should_be_sent 'Your feed subscriptions have been imported into', to: @user.email
     end
 
     it 'sends an email with failed feeds if it finishes successfully' do
@@ -279,7 +279,7 @@ describe ImportSubscriptionsWorker do
 
       ImportSubscriptionsWorker.new.perform @filename, @user.id
 
-      mail_should_be_sent to: @user.email, text: "We haven&#39;t been able to subscribe you to the following feeds"
+      mail_should_be_sent 'We haven&#39;t been able to subscribe you to the following feeds', to: @user.email
     end
 
     it 'sends an email if it finishes with an error' do
@@ -287,7 +287,7 @@ describe ImportSubscriptionsWorker do
       file_contents = File.read not_valid_opml_filename
       allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return file_contents
       expect {ImportSubscriptionsWorker.new.perform not_valid_opml_filename, @user.id}.to raise_error OpmlImportError
-      mail_should_be_sent to: @user.email, text: 'There has been an error importing your feed subscriptions into'
+      mail_should_be_sent 'There has been an error importing your feed subscriptions into', to: @user.email
     end
   end
 

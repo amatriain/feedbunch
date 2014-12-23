@@ -29,7 +29,7 @@ describe 'invite friend', type: :feature do
       should_show_alert 'success-invite-friend'
 
       # test that an invitation email is sent
-      mail_should_be_sent path: '/invitation', to: @friend_email, text: 'Someone has invited you'
+      mail_should_be_sent 'Someone has invited you', path: '/invitation', to: @friend_email
 
       # User should be created
       expect(User.exists? email: @friend_email).to be true
@@ -92,8 +92,9 @@ describe 'invite friend', type: :feature do
       should_show_alert 'success-invitation-resend'
 
       # test that an invitation email is sent
-      mail_should_be_sent path: '/invitation',
-                          to: @friend_email, text: 'Someone has invited you'
+      mail_should_be_sent 'Someone has invited you',
+                          path: '/invitation',
+                          to: @friend_email
 
       reinvited_user = User.find_by_email @friend_email
 
@@ -130,7 +131,7 @@ describe 'invite friend', type: :feature do
       # Friend is sent an invitation
       send_invitation @friend_email
       should_show_alert 'success-invite-friend'
-      mail_should_be_sent path: '/invitation', to: @friend_email, text: 'Someone has invited you'
+      mail_should_be_sent 'Someone has invited you', path: '/invitation', to: @friend_email
       logout_user
 
       friend_password = 'friend_password'
@@ -150,7 +151,7 @@ describe 'invite friend', type: :feature do
       # Friend is sent an invitation
       send_invitation @friend_email
       should_show_alert 'success-invite-friend'
-      accept_link = mail_should_be_sent path: '/invitation', to: @friend_email, text: 'Someone has invited you'
+      accept_link = mail_should_be_sent 'Someone has invited you', path: '/invitation', to: @friend_email
       logout_user
 
       # Friend signs up through the sign up view instead of clicking on the "accept invitation" link in the email
@@ -234,8 +235,9 @@ describe 'invite friend', type: :feature do
     before :each do
       send_invitation @friend_email
       logout_user
-      @accept_link = mail_should_be_sent path: '/invitation',
-                                         to: @friend_email, text: 'Someone has invited you'
+      @accept_link = mail_should_be_sent 'Someone has invited you',
+                                         path: '/invitation',
+                                         to: @friend_email
 
       # Build the correct URL that must be used in testing for accepting invitations
       @accept_url = get_accept_invitation_link_from_email @accept_link
@@ -287,8 +289,9 @@ describe 'invite friend', type: :feature do
       logout_user
 
       # Link in second invitation should be the same as in the first
-      resent_link = mail_should_be_sent path: '/invitation',
-                                        to: @friend_email, text: 'Someone has invited you'
+      resent_link = mail_should_be_sent 'Someone has invited you',
+                                        path: '/invitation',
+                                        to: @friend_email
       resent_accept_url = get_accept_invitation_link_from_email resent_link
 
       expect(resent_accept_url).to eq @accept_url

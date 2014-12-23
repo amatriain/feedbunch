@@ -38,17 +38,31 @@ def mail_should_be_sent(*text, path: nil, to: nil)
   href = nil
   # Test each part of a multipart email.
   if email.multipart?
-    email.parts.each do |part|
-      if path.present?
+    # A link to "path" must be found in at least one of the email parts
+    if path.present?
+      link_found = false
+      email.parts.each do |part|
         partBody = Nokogiri::HTML part.body.to_s
         link = partBody.at_css "a[href*=\"#{path}\"]"
-        expect(link.present?).to be true
-        href = link[:href]
+        if link.present?
+          link_found = true
+          href = link[:href]
+        end
       end
+      expect(link_found).to be true
+    end
 
-      if text.size > 0
-        body_s = part.body.to_s
-        text.each {|t| expect(body_s.include? t).to be true}
+    # Each string passed in "text" must be found in at least one of the email parts
+    if text.size > 0
+      text.each do |t|
+        text_found = false
+        email.parts.each do |part|
+          body_s = part.body.to_s
+          if body_s.include? t
+            text_found = true
+          end
+        end
+        expect(text_found).to be true
       end
     end
   else
