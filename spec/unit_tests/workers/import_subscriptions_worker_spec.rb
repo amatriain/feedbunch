@@ -279,7 +279,9 @@ describe ImportSubscriptionsWorker do
 
       ImportSubscriptionsWorker.new.perform @filename, @user.id
 
-      mail_should_be_sent 'We haven&#39;t been able to subscribe you to the following feeds', to: @user.email
+      mail_should_be_sent 'We haven&#39;t been able to subscribe you to the following feeds',
+                          'http://xkcd.com/rss.xml',
+                          to: @user.email
     end
 
     it 'sends an email if it finishes with an error' do
