@@ -69,7 +69,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
 
         expect(assigns(:invited_user).email).to eq @friend_email
         expect(assigns(:invited_user).name).to eq @friend_email
-        mail_should_be_sent path: '/invitation', to: @friend_email, text: 'Someone has invited you'
+        mail_should_be_sent 'Someone has invited you', path: '/invitation', to: @friend_email
 
         # Inviter's invitations count should increase by 1
         expect(@user.reload.invitations_count).to eq invitations_before + 1
@@ -123,9 +123,9 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
         # Invitation token should not change
         expect(@invited_user.reload.invitation_token).to eq @invitation_token
         # Invitation email should be sent again
-        mail_should_be_sent path: "/invitation?invitation_token=#{@unencrypted_invitation_token}",
-                            to: @friend_email,
-                            text: 'Someone has invited you'
+        mail_should_be_sent 'Someone has invited you',
+                            path: "/invitation?invitation_token=#{@unencrypted_invitation_token}",
+                            to: @friend_email
         # Inviter's invitations count should increase by 1
         expect(@user.reload.invitations_count).to eq invitations_before + 1
       end

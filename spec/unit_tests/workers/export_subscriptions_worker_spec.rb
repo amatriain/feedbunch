@@ -118,13 +118,13 @@ OPML_DOCUMENT
 
     it 'sends notification if finished successfully' do
       ExportSubscriptionsWorker.new.perform @user.id
-      mail_should_be_sent to: @user.email, text: 'Your feed subscriptions have been exported by Feedbunch'
+      mail_should_be_sent 'Your feed subscriptions have been exported by Feedbunch', to: @user.email
     end
 
     it 'sends notification if finished with an error' do
       allow(OPMLExporter).to receive(:export).and_raise StandardError.new
       expect {ExportSubscriptionsWorker.new.perform @user.id}.to raise_error
-      mail_should_be_sent to: @user.email, text: 'There has been an error exporting your feed subscriptions from Feedbunch'
+      mail_should_be_sent 'There has been an error exporting your feed subscriptions from Feedbunch', to: @user.email
     end
   end
 
