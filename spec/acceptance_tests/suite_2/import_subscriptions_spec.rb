@@ -123,6 +123,23 @@ describe 'import subscriptions', type: :feature do
       expect(page).to have_content 'Your feed subscriptions have been successfully imported'
     end
 
+    it 'shows URLs of failed feeds when import finishes successfully', js: true do
+      failed_url_1 = 'http://failed_url_1.com'
+      failed_url_2 = 'http://failed_url_2.com'
+      opml_import_job_state = @user.reload.opml_import_job_state
+      import_failure_1 = FactoryGirl.build :opml_import_failure,
+                                           opml_import_job_state_id: opml_import_job_state.id,
+                                           url: failed_url_1
+      import_failure_2 = FactoryGirl.build :opml_import_failure,
+                                           opml_import_job_state_id: opml_import_job_state.id,
+                                           url: failed_url_2
+      opml_import_job_state.opml_import_failures << import_failure_1 << import_failure_2
+
+      opml_import_job_state.update state: OpmlImportJobState::SUCCESS
+      expect(find '#import-process-state ul').to have_content failed_url_1
+      expect(find '#import-process-state ul').to have_content failed_url_2
+    end
+
     it 'shows alert when import finishes successfully', js: true do
       read_feed @feed, @user
       opml_import_job_state = @user.reload.opml_import_job_state

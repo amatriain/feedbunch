@@ -153,6 +153,7 @@ en:
         progress: "Subscriptions imported: {{import_processed}} of {{import_total}}"
         import_background: "You can close this page, the import process will not be affected."
         success: "Your feed subscriptions have been successfully imported."
+        failures: "We haven't been able to subscribe you to the following feeds:"
         retry_success_1: "Click here"
         retry_success_2: " to import more subscriptions."
         introduction: "If you want to import your feed subscriptions from another feed aggregator:"

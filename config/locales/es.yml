@@ -132,6 +132,7 @@ es:
         progress: "Suscripciones importadas: {{import_processed}} de {{import_total}}"
         import_background: "Puedes cerrar esta página, el proceso de importación no se verá afectado."
         success: "Tus suscripciones a feeds han sido importadas con éxito."
+        failures: "No hemos podido suscribirte a los siguientes feeds:"
         retry_success_1: "Haz click aquí"
         retry_success_2: " para importar más suscripciones."
         introduction: "Si quieres importar tus suscripciones a feeds desde otro agregador de feeds:"

@@ -34,11 +34,13 @@ angular.module('feedbunch').service 'importStateSvc',
         , 5000
       else if data["state"] == "ERROR" && show_alerts
         timerFlagSvc.start 'error_importing'
-      else if data["state"] == "SUCCESS" && show_alerts
-        # Automatically load new feeds and folders without needing a refresh
-        feedsFoldersSvc.load_data()
-        userDataSvc.load_data()
-        timerFlagSvc.start 'success_importing'
+      else if data["state"] == "SUCCESS"
+        $rootScope.import_failures = data["failures"]
+        if show_alerts
+          # Automatically load new feeds and folders without needing a refresh
+          feedsFoldersSvc.load_data()
+          userDataSvc.load_data()
+          timerFlagSvc.start 'success_importing'
 
   service =
 

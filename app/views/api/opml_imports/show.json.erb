@@ -1,6 +1,19 @@
 {
   "state": "<%= opml_import_job_state.state %>",
   "show_alert": <%= opml_import_job_state.show_alert %>
+
+<% if opml_import_job_state.state == OpmlImportJobState::SUCCESS %>
+,
+  "failures": [
+    <% opml_import_job_state.opml_import_failures.each do |f| %>
+      "<%= f.url %>"
+      <% if f != opml_import_job_state.opml_import_failures.last %>
+      ,
+      <% end %>
+    <% end %>
+  ]
+<% end %>
+
 <% if opml_import_job_state.state == OpmlImportJobState::RUNNING %>
 ,
   "import": {
