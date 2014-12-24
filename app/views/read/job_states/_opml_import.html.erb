@@ -83,7 +83,7 @@
 
               <p ng-show="import_failures.length > 0">
                 <%= t 'read.job_states.opml_import.failures' %>
-                <ul>
+                <ul id="import-failures">
                   <li ng-repeat="failure in import_failures">{{failure}}</li>
                 </ul>
               </p>
