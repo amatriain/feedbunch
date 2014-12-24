@@ -25,6 +25,14 @@ describe OpmlImportFailure, type: :model do
                                               opml_import_job_state_id: job_state_2.id
       expect(import_failure_dupe).to be_valid
     end
+
+    it 'strips url before saving' do
+      unstripped_url = "   http://feed.url.com\n"
+      stripped_url = "http://feed.url.com"
+      import_failure = FactoryGirl.create :opml_import_failure,
+                                         url: unstripped_url
+      expect(import_failure.reload.url).to eq stripped_url
+    end
   end
 
 end
