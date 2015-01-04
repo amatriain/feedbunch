@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 require 'sidetiq/web'
 
-Feedbunch::Application.routes.draw do
+Rails.application.routes.draw do
 
   # Custom dynamic error pages
   %w( 404 422 500 ).each do |code|

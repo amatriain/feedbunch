@@ -4,7 +4,7 @@ require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env)
+Bundler.require(*Rails.groups)
 
 ##
 # Main module of the Feedbunch application. Most classes will be namespaced inside
@@ -36,6 +36,9 @@ module Feedbunch
     # Fall back to the default locale ("en" if config.i18n.default_locale is not configured)
     # if the locale sent by the user does not exist
     config.i18n.fallbacks = true
+
+    # Do not swallow errors in after_commit/after_rollback callbacks.
+    config.active_record.raise_in_transactional_callbacks = true
 
     # Use Rack::Deflater middleware to compress server responses when the client supports it.
     config.middleware.use Rack::Deflater
