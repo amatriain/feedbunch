@@ -119,21 +119,21 @@ describe Entry, type: :model do
 
     it 'sanitizes title' do
       unsanitized_title = '<script>alert("pwned!");</script>title'
-      sanitized_title = 'title'
+      sanitized_title = 'alert("pwned!");title'
       entry = FactoryGirl.create :entry, title: unsanitized_title
       expect(entry.title).to eq sanitized_title
     end
 
     it 'sanitizes url' do
       unsanitized_url = 'http://xkcd.com<script>alert("pwned!");</script>'
-      sanitized_url = 'http://xkcd.com'
+      sanitized_url = 'http://xkcd.comalert(%22pwned!%22);'
       entry = FactoryGirl.create :entry, url: unsanitized_url
       expect(entry.url).to eq sanitized_url
     end
 
     it 'sanitizes author' do
       unsanitized_author = '<script>alert("pwned!");</script>author'
-      sanitized_author = 'author'
+      sanitized_author = 'alert("pwned!");author'
       entry = FactoryGirl.create :entry, author: unsanitized_author
       expect(entry.author).to eq sanitized_author
     end
@@ -154,7 +154,7 @@ describe Entry, type: :model do
 
     it 'sanitizes guid' do
       unsanitized_guid = '<script>alert("pwned!");</script>guid'
-      sanitized_guid = 'guid'
+      sanitized_guid = 'alert("pwned!");guid'
       entry = FactoryGirl.create :entry, guid: unsanitized_guid
       expect(entry.guid).to eq sanitized_guid
     end
