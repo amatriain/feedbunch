@@ -9,6 +9,7 @@ gem 'coffee-rails'
 gem 'uglifier'
 
 gem 'jquery-rails'
+gem 'web-console', '~> 2.0'
 
 # Serve the app with Puma
 gem 'puma'
