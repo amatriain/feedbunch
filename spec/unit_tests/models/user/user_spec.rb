@@ -272,12 +272,6 @@ describe User, type: :model do
       expect(user.quick_reading).not_to be_nil
       expect(user.quick_reading).to be false
     end
-
-    it 'defaults to false if the passed value is not supported' do
-      user = FactoryGirl.build :user, quick_reading: 'not-valid-boolean'
-      user.save!
-      expect(user.quick_reading).to be false
-    end
   end
 
   context 'open all entries by default' do
@@ -286,12 +280,6 @@ describe User, type: :model do
       user = FactoryGirl.build :user, open_all_entries: nil
       user.save!
       expect(user.open_all_entries).not_to be_nil
-      expect(user.open_all_entries).to be false
-    end
-
-    it 'defaults to false if the passed value is not supported' do
-      user = FactoryGirl.build :user, open_all_entries: 'not-valid-boolean'
-      user.save!
       expect(user.open_all_entries).to be false
     end
   end
