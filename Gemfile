@@ -9,7 +9,6 @@ gem 'coffee-rails'
 gem 'uglifier'
 
 gem 'jquery-rails'
-gem 'web-console', '~> 2.0'
 
 # Serve the app with Puma
 gem 'puma'
@@ -78,6 +77,8 @@ group :development do
   gem 'capistrano-rvm', require: false
   # App preloader to speed up tests, new in Rails 4.1.0
   gem 'spring'
+  # Irb-like console in error pages, new in Rails 4.2
+  gem 'web-console', '~> 2.0'
 end
 
 group :test, :development do
