@@ -2,4 +2,5 @@
 :queues:
   - [interactive, 10]
   - [update_feeds, 2]
+  - [mailers, 2]
   - maintenance

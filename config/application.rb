@@ -75,6 +75,9 @@ module Feedbunch
     # Use dynamic error pages
     config.exceptions_app = self.routes
 
+    # Use sidekiq as backend for ActiveJob jobs
+    config.active_job.queue_adapter = :sidekiq
+
     # Maximum and minimum interval between updates for each feed, regardless of how often new entries appear.
     config.max_update_interval = 6.hours
     config.min_update_interval = 10.minutes
