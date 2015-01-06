@@ -147,11 +147,11 @@ describe User, type: :model do
     end
 
     it 'deletes the old opml_import_job_state when adding a new one for a user' do
-      expect(OpmlImportJobState.exists?(@opml_import_job_state)).to be true
+      expect(OpmlImportJobState.exists? @opml_import_job_state.id).to be true
       opml_import_job_state2 = FactoryGirl.build :opml_import_job_state, user_id: @user.id
       @user.opml_import_job_state = opml_import_job_state2
 
-      expect(OpmlImportJobState.exists?(@opml_import_job_state)).to be false
+      expect(OpmlImportJobState.exists? @opml_import_job_state.id).to be false
     end
   end
 
@@ -169,11 +169,11 @@ describe User, type: :model do
     end
 
     it 'deletes the old opml_export_job_state when adding a new one for a user' do
-      expect(OpmlExportJobState.exists?(@opml_export_job_state)).to be true
+      expect(OpmlExportJobState.exists? @opml_export_job_state.id).to be true
       opml_export_job_state2 = FactoryGirl.build :opml_export_job_state, user_id: @user.id
       @user.opml_export_job_state = opml_export_job_state2
 
-      expect(OpmlExportJobState.exists?(@opml_export_job_state)).to be false
+      expect(OpmlExportJobState.exists? @opml_export_job_state.id).to be false
     end
   end
 

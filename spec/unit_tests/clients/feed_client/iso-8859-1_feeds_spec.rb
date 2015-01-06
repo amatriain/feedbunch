@@ -371,7 +371,7 @@ FEED_XML
       old_feed.reload
       expect(old_feed.entries.count).to eq 1
       expect(old_feed.entries.first.guid).to eq @entry1.guid
-      expect(Feed.exists?(new_feed)).to be false
+      expect(Feed.exists? new_feed.id).to be false
     end
 
     it 'uses first feed available for autodiscovery' do

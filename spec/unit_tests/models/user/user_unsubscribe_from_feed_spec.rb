@@ -37,9 +37,9 @@ describe User, type: :model do
 
   context 'unsubscribe from feed immediately' do
     it 'unsubscribes a user from a feed' do
-      expect(@user.feeds.exists?(@feed.id)).to be true
+      expect(@user.feeds.exists? @feed.id).to be true
       @user.unsubscribe @feed
-      expect(@user.feeds.exists?(@feed.id)).to be false
+      expect(@user.feeds.exists? @feed.id).to be false
     end
 
     it 'raises error if the user is not subscribed to the feed' do
@@ -56,21 +56,21 @@ describe User, type: :model do
       user2 = FactoryGirl.create :user
       user2.subscribe @feed.fetch_url
 
-      expect(@user.feeds.exists?(@feed.id)).to be true
-      expect(user2.feeds.exists?(@feed.id)).to be true
+      expect(@user.feeds.exists? @feed.id).to be true
+      expect(user2.feeds.exists? @feed.id).to be true
 
       @user.unsubscribe @feed
-      expect(Feed.exists?(@feed.id)).to be true
-      expect(@user.feeds.exists?(@feed.id)).to be false
-      expect(user2.feeds.exists?(@feed.id)).to be true
+      expect(Feed.exists? @feed.id).to be true
+      expect(@user.feeds.exists? @feed.id).to be false
+      expect(user2.feeds.exists? @feed.id).to be true
     end
 
     it 'completely deletes feed if there are no more users subscribed' do
-      expect(Feed.exists?(@feed.id)).to be true
+      expect(Feed.exists? @feed.id).to be true
 
       @user.unsubscribe @feed
 
-      expect(Feed.exists?(@feed.id)).to be false
+      expect(Feed.exists? @feed.id).to be false
     end
 
     it 'does not delete feed if there are more users subscribed' do
@@ -78,7 +78,7 @@ describe User, type: :model do
       user2.subscribe @feed.fetch_url
 
       @user.unsubscribe @feed
-      expect(Feed.exists?(@feed)).to be true
+      expect(Feed.exists? @feed.id).to be true
     end
   end
 

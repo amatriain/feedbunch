@@ -459,7 +459,7 @@ FEED_XML
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
       expect(old_feed.entries.count).to eq 1
       expect(old_feed.entries.where(guid: @entry1.guid)).to be_present
-      expect(Feed.exists?(new_feed)).to be false
+      expect(Feed.exists? new_feed.id).to be false
     end
 
     it 'uses first feed available for autodiscovery' do

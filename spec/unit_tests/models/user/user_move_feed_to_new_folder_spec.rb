@@ -42,7 +42,7 @@ describe User, type: :model do
       folder.feeds << @feed
 
       @user.move_feed_to_folder @feed, folder_title: @title
-      expect(Folder.exists?(folder)).to be false
+      expect(Folder.exists? folder.id).to be false
     end
 
     it 'does not delete old folder if it has more feeds' do
@@ -53,7 +53,7 @@ describe User, type: :model do
       folder.feeds << @feed << feed2
 
       @user.move_feed_to_folder @feed, folder_title: @title
-      expect(Folder.exists?(folder)).to be true
+      expect(Folder.exists? folder.id).to be true
     end
 
     it 'returns the new folder' do

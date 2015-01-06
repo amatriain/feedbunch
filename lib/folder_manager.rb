@@ -85,7 +85,7 @@ class FolderManager
   # Raises a NotSubscribedError if the user is not subscribed to the feed.
 
   def self.move_feed_to_folder(feed, user, folder: nil, folder_title: nil)
-    if !user.feeds.exists? feed
+    if !user.feeds.exists? feed.id
       Rails.logger.error "User #{user.id} - #{user.email} tried to change folder for feed #{feed.id} #{feed.fetch_url} to which he is not subscribed"
       raise NotSubscribedError.new
     end
