@@ -95,21 +95,21 @@ describe Feed, type: :model do
 
     it 'sanitizes title' do
       unsanitized_title = '<script>alert("pwned!");</script>title'
-      sanitized_title = 'title'
+      sanitized_title = 'alert("pwned!");title'
       feed = FactoryGirl.create :feed, title: unsanitized_title
       expect(feed.title).to eq sanitized_title
     end
 
     it 'sanitizes url' do
-      unsanitized_url = "http://xkcd.com<script>alert('pwned!');</script>"
-      sanitized_url = 'http://xkcd.com/'
+      unsanitized_url = 'http://xkcd.com<script>alert("pwned!");</script>'
+      sanitized_url = 'http://xkcd.comalert("pwned!");/'
       feed = FactoryGirl.create :feed, url: unsanitized_url
       expect(feed.url).to eq sanitized_url
     end
 
     it 'sanitizes fetch url' do
-      unsanitized_url = "http://xkcd.com<script>alert('pwned!');</script>"
-      sanitized_url = 'http://xkcd.com/'
+      unsanitized_url = 'http://xkcd.com<script>alert("pwned!");</script>'
+      sanitized_url = 'http://xkcd.comalert("pwned!");/'
       feed = FactoryGirl.create :feed, fetch_url: unsanitized_url
       expect(feed.fetch_url).to eq sanitized_url
     end
