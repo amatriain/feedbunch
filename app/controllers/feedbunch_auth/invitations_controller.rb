@@ -84,7 +84,7 @@ class FeedbunchAuth::InvitationsController < Devise::InvitationsController
 
   def resend_invitation_email(user)
     Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} is resending invitation to #{user.email} that was already invited on #{user.invitation_sent_at}"
-    Devise.mailer.invitation_instructions(user, user.unencrypted_invitation_token).deliver
+    Devise.mailer.invitation_instructions(user, user.unencrypted_invitation_token).deliver_later
     current_inviter.update invitations_count: (current_inviter.invitations_count + 1)
     return
   end

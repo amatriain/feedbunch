@@ -61,7 +61,7 @@ class ImportSubscriptionsWorker
     user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
 
     Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
-    OpmlImportMailer.import_finished_success_email(user).deliver
+    OpmlImportMailer.import_finished_success_email(user).deliver_later
   end
 
   ##
@@ -85,7 +85,7 @@ class ImportSubscriptionsWorker
     user.opml_import_job_state.update state: OpmlImportJobState::ERROR
 
     Rails.logger.info "Sending data import error email to user #{user.id} - #{user.email}"
-    OpmlImportMailer.import_finished_error_email(user).deliver
+    OpmlImportMailer.import_finished_error_email(user).deliver_later
 
     # Re-raise the exception so that Sidekiq takes care of it
     raise error
