@@ -424,6 +424,7 @@ DEPENDENCIES
   rails (~> 4.2.0)
   redis-rails
   redmon
+  responders
   rest-client
   rest-client-components
   rspec-rails
