@@ -87,6 +87,9 @@ Rails.application.configure do
   # Upload files to Amazon S3
   Feedbunch::Application.config.uploads_manager = S3Client
 
+  # Use sidekiq as backend for ActiveJob jobs
+  config.active_job.queue_adapter = :sidekiq
+
   # Log level
   config.log_level = :info
 end
