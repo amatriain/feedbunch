@@ -13,7 +13,7 @@ class Api::OpmlImportsController < ApplicationController
 
   def show
     if OpmlImportJobState.exists? user_id: current_user.id
-      @opml_import_job_state = OpmlImportJobState.where(user_id: current_user.id).first
+      @opml_import_job_state = OpmlImportJobState.find_by user_id: current_user.id
     else
       Rails.logger.warn "User #{current_user.id} - #{current_user.email} has no OpmlImportJobState, creating one with state NONE"
       @opml_import_job_state = current_user.create_opml_import_job_state state: OpmlImportJobState::NONE

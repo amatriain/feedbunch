@@ -56,7 +56,7 @@ describe 'unread entries count', type: :feature do
       unread_folder_entries_should_eq @folder1, 1
 
       # new folder should have the correct entry count
-      new_folder = Folder.where(user_id: @user.id, title: title).first
+      new_folder = Folder.find_by user_id: @user.id, title: title
       unread_folder_entries_should_eq new_folder, 3
     end
 
@@ -129,8 +129,8 @@ describe 'unread entries count', type: :feature do
 
       allow_any_instance_of(User).to receive :find_refresh_feed_job_state do |user|
         if user.id == @user.id
-          FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first.update unread_entries: 4
-          job_state = RefreshFeedJobState.where(user_id: user.id, feed_id: @feed1.id).first
+          FeedSubscription.find_by(user_id: @user.id, feed_id: @feed1.id).update unread_entries: 4
+          job_state = RefreshFeedJobState.find_by user_id: user.id, feed_id: @feed1.id
           job_state.update state: RefreshFeedJobState::SUCCESS
           job_state
         end
@@ -197,7 +197,7 @@ describe 'unread entries count', type: :feature do
     it 'does not show a negative unread count', js: true do
       # @feed2 has an erroneous unread_entries value of 0, but it actually has one unread entry
       @user.unsubscribe @feed1
-      FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first.update unread_entries: 0
+      FeedSubscription.find_by(user_id: @user.id, feed_id: @feed2.id).update unread_entries: 0
       visit read_path
       show_read
 
@@ -231,11 +231,11 @@ describe 'unread entries count', type: :feature do
         # Add 1 entry to @feed1 and another entry to @feed2
         entry1_4 = FactoryGirl.build :entry, feed_id: @feed1.id
         @feed1.entries << entry1_4
-        feed_subscription_1 = FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first
+        feed_subscription_1 = FeedSubscription.find_by user_id: @user.id, feed_id: @feed1.id
         feed_subscription_1.update unread_entries: (feed_subscription_1.unread_entries + 1)
         entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
         @feed2.entries << entry2_2
-        feed_subscription_2= FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first
+        feed_subscription_2= FeedSubscription.find_by user_id: @user.id, feed_id: @feed2.id
         feed_subscription_2.update unread_entries: (feed_subscription_2.unread_entries + 1)
 
         read_folder @folder1
@@ -246,7 +246,7 @@ describe 'unread entries count', type: :feature do
         # Mark @feed1 entries as read
         EntryState.where(user_id: @user.id, entry_id: [@entry1_1.id, @entry1_2.id, @entry1_3.id, entry1_4.id]).
                     each {|es| es.update read: true}
-        FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first.update unread_entries: 0
+        FeedSubscription.find_by(user_id: @user.id, feed_id: @feed1.id).update unread_entries: 0
 
         read_folder @folder1
         unread_feed_entries_should_eq @feed1, 0, @user
@@ -256,7 +256,7 @@ describe 'unread entries count', type: :feature do
         # Mark @feed2 entries as read
         EntryState.where(user_id: @user.id, entry_id: [@entry2_1.id, entry2_2.id]).
                     each {|es| es.update read: true}
-        FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first.update unread_entries: 0
+        FeedSubscription.find_by(user_id: @user.id, feed_id: @feed2.id).update unread_entries: 0
 
         read_folder @folder1
         unread_feed_entries_should_eq @feed1, 0, @user
@@ -282,11 +282,11 @@ describe 'unread entries count', type: :feature do
         # Add 1 entry to @feed1 and another entry to @feed2
         entry1_4 = FactoryGirl.build :entry, feed_id: @feed1.id
         @feed1.entries << entry1_4
-        feed_subscription_1 = FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first
+        feed_subscription_1 = FeedSubscription.find_by user_id: @user.id, feed_id: @feed1.id
         feed_subscription_1.update unread_entries: (feed_subscription_1.unread_entries + 1)
         entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
         @feed2.entries << entry2_2
-        feed_subscription_2= FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first
+        feed_subscription_2= FeedSubscription.find_by user_id: @user.id, feed_id: @feed2.id
         feed_subscription_2.update unread_entries: (feed_subscription_2.unread_entries + 1)
 
         read_folder 'all'
@@ -298,7 +298,7 @@ describe 'unread entries count', type: :feature do
         # Mark @feed1 entries as read
         EntryState.where(user_id: @user.id, entry_id: [@entry1_1.id, @entry1_2.id, @entry1_3.id, entry1_4.id]).
           each {|es| es.update read: true}
-        FeedSubscription.where(user_id: @user.id, feed_id: @feed1.id).first.update unread_entries: 0
+        FeedSubscription.find_by(user_id: @user.id, feed_id: @feed1.id).update unread_entries: 0
 
         read_folder 'all'
         unread_feed_entries_should_eq @feed1, 0, @user
@@ -309,7 +309,7 @@ describe 'unread entries count', type: :feature do
         # Mark @feed2 entries as read
         EntryState.where(user_id: @user.id, entry_id: [@entry2_1.id, entry2_2.id]).
           each {|es| es.update read: true}
-        FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first.update unread_entries: 0
+        FeedSubscription.find_by(user_id: @user.id, feed_id: @feed2.id).update unread_entries: 0
 
         read_folder 'all'
         unread_folder_entries_should_eq 'all', 0

@@ -238,7 +238,7 @@ class OPMLImporter
   # or it may be an already existing folder if he did.
 
   def self.import_folder(title, user)
-    folder = user.folders.where(title: title).first
+    folder = user.folders.find_by title: title
 
     if folder.blank?
       Rails.logger.info "User #{user.id} - #{user.email} imported new folder #{title}, creating it"

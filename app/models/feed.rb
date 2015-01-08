@@ -78,13 +78,7 @@ class Feed < ActiveRecord::Base
   # If a matching folder is found, it is returned. Otherwise nil is returned.
 
   def user_folder(user)
-    if self.folders.exists? user_id: user.id
-      folders = self.folders.where(user_id: user.id)
-      if folders.present?
-        folder = folders.first
-      end
-    end
-
+    folder = self.folders.find_by user_id: user.id
     return folder
   end
 
@@ -271,10 +265,10 @@ class Feed < ActiveRecord::Base
   def self.url_feed(url)
     if Feed.exists? fetch_url: url
       Rails.logger.info "Feed with fetch_url #{url} already exists in the database"
-      return Feed.where(fetch_url: url).first
+      return Feed.find_by fetch_url: url
     elsif Feed.exists? url: url
       Rails.logger.info "Feed with url #{url} already exists in the database"
-      return Feed.where(url: url).first
+      return Feed.find_by url: url
     else
       Rails.logger.info "Feed #{url} does not exist in the database"
       return nil

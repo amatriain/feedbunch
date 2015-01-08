@@ -35,7 +35,7 @@ class Api::FeedsController < ApplicationController
   # If the requests asks for a feed the current user is not suscribed to, the response is a 404 error code (Not Found).
 
   def show
-    @subscription = FeedSubscription.where(user_id: current_user.id, feed_id: params[:id]).first
+    @subscription = FeedSubscription.find_by user_id: current_user.id, feed_id: params[:id]
 
     if @subscription.present?
       # If feed subscription has not changed, return a 304

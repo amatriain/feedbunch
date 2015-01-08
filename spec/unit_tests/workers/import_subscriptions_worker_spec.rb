@@ -191,10 +191,10 @@ describe ImportSubscriptionsWorker do
       @user.reload
       expect(@user.folders.count).to eq 2
 
-      folder_linux = @user.folders.where(title: 'Linux').first
+      folder_linux = @user.folders.find_by title: 'Linux'
       expect(folder_linux).to be_present
 
-      folder_webcomics = @user.folders.where(title: 'Webcomics').first
+      folder_webcomics = @user.folders.find_by title: 'Webcomics'
       expect(folder_webcomics).to be_present
     end
 
@@ -211,10 +211,10 @@ describe ImportSubscriptionsWorker do
       @user.reload
       expect(@user.folders.count).to eq 2
 
-      folder_linux = @user.folders.where(title: 'Retro').first
+      folder_linux = @user.folders.find_by title: 'Retro'
       expect(folder_linux).to be_present
 
-      folder_webcomics = @user.folders.where(title: 'Webcomics').first
+      folder_webcomics = @user.folders.find_by title: 'Webcomics'
       expect(folder_webcomics).to be_present
     end
 
@@ -228,7 +228,7 @@ describe ImportSubscriptionsWorker do
 
       expect(@user.folders).to include folder_linux
 
-      folder_webcomics = @user.folders.where(title: 'Webcomics').first
+      folder_webcomics = @user.folders.find_by title: 'Webcomics'
       expect(folder_webcomics).to be_present
     end
   end

@@ -86,7 +86,7 @@ describe 'refresh feeds', type: :feature do
     it 'loads feed even if it has no unread entries', js: true do
       refresh_feed
       Entry.destroy_all
-      subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
+      subscription = FeedSubscription.find_by user_id: @user.id, feed_id: @feed.id
       subscription.update unread_entries: 0
 
       visit current_path
@@ -104,7 +104,7 @@ describe 'refresh feeds', type: :feature do
     before :each do
       allow_any_instance_of(User).to receive :find_refresh_feed_job_state do |user|
         if user.id == @user.id
-          feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: @feed.id).first
+          feed_subscription = FeedSubscription.find_by user_id: user.id, feed_id: @feed.id
           feed_subscription.update unread_entries: feed_subscription.unread_entries + 1
           @job_state.update state: RefreshFeedJobState::SUCCESS
           @job_state
@@ -170,7 +170,7 @@ describe 'refresh feeds', type: :feature do
     it 'loads feed even if it has no unread entries', js: true do
       refresh_feed
       Entry.destroy_all
-      subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
+      subscription = FeedSubscription.find_by user_id: @user.id, feed_id: @feed.id
       subscription.update unread_entries: 0
 
       visit current_path
@@ -257,7 +257,7 @@ describe 'refresh feeds', type: :feature do
     it 'loads feed even if it has no unread entries', js: true do
       refresh_feed
       Entry.destroy_all
-      subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first
+      subscription = FeedSubscription.find_by user_id: @user.id, feed_id: @feed.id
       subscription.update unread_entries: 0
 
       visit current_path

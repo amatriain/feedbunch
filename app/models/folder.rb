@@ -97,7 +97,7 @@ class Folder < ActiveRecord::Base
   # This will invalidate HTTP caches, forcing clients to download fresh data.
 
   def touch_subscription(feed)
-    subscription = FeedSubscription.where(feed_id: feed.id, user_id: user_id).first
+    subscription = FeedSubscription.find_by feed_id: feed.id, user_id: user_id
     Rails.logger.info "touching feed subscription for feed #{feed.id} - #{feed.title}, user #{user_id} - #{user.email}"
     subscription.touch_subscriptions if subscription.present?
   end

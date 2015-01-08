@@ -26,7 +26,7 @@ describe RefreshFeedWorker do
     user.subscribe @feed.fetch_url
 
     # @feed has an incorrect unread entry count of 10 for user
-    feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: @feed.id).first
+    feed_subscription = FeedSubscription.find_by user_id: user.id, feed_id: @feed.id
     feed_subscription.update unread_entries: 10
 
     RefreshFeedWorker.new.perform @refresh_feed_job_state.id, @feed.id, @user.id
@@ -81,14 +81,14 @@ describe RefreshFeedWorker do
 
 
     it 'does not update feed if the user is not subscribed' do
-      FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first.delete
+      FeedSubscription.find_by(user_id: @user.id, feed_id: @feed.id).delete
       expect(FeedClient).not_to receive :fetch
 
       RefreshFeedWorker.new.perform @refresh_feed_job_state.id, @feed.id, @user.id
     end
 
     it 'destroys refresh_feed_job_state if the user is not subscribed' do
-      FeedSubscription.where(user_id: @user.id, feed_id: @feed.id).first.delete
+      FeedSubscription.find_by(user_id: @user.id, feed_id: @feed.id).delete
       expect(FeedClient).not_to receive :fetch
 
       expect(RefreshFeedJobState.count).to eq 1

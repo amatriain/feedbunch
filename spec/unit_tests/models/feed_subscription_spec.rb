@@ -6,7 +6,7 @@ describe FeedSubscription, type: :model do
     @feed = FactoryGirl.create :feed
     @user = FactoryGirl.create :user
     @user.subscribe @feed.fetch_url
-    @feed_subscription = FeedSubscription.where(feed_id: @feed.id, user_id: @user.id).first
+    @feed_subscription = FeedSubscription.find_by feed_id: @feed.id, user_id: @user.id
   end
 
   context 'validations' do

@@ -13,7 +13,7 @@ class Api::OpmlExportsController < ApplicationController
 
   def show
     if OpmlExportJobState.exists? user_id: current_user.id
-      @opml_export_job_state = OpmlExportJobState.where(user_id: current_user.id).first
+      @opml_export_job_state = OpmlExportJobState.find_by user_id: current_user.id
     else
       Rails.logger.warn "User #{current_user.id} - #{current_user.email} has no OpmlExportJobState, creating one with state NONE"
       @opml_export_job_state = current_user.create_opml_export_job_state state: OpmlExportJobState::NONE

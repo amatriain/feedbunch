@@ -16,7 +16,7 @@ context.instance_eval  do
     column :quick_reading
     column :open_all_entries
     column 'Unread entries' do |user|
-      user.feed_subscriptions.where(feed_id: feed.id).first.unread_entries
+      user.feed_subscriptions.find_by(feed_id: feed.id).unread_entries
     end
     column do |user|
       link_to 'View', admin_user_path(user)

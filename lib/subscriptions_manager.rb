@@ -34,7 +34,7 @@ class SubscriptionsManager
       raise NotSubscribedError.new
     end
 
-    feed_subscription = FeedSubscription.where(feed_id: feed.id, user_id: user.id).first
+    feed_subscription = FeedSubscription.find_by feed_id: feed.id, user_id: user.id
     Rails.logger.info "unsubscribing user #{user.id} - #{user.email} from feed #{feed.id} - #{feed.fetch_url}"
     user.feed_subscriptions.delete feed_subscription
 
@@ -76,7 +76,7 @@ class SubscriptionsManager
       raise NotSubscribedError.new
     end
 
-    feed_subscription = user.feed_subscriptions.where(feed_id: feed.id).first
+    feed_subscription = user.feed_subscriptions.find_by feed_id: feed.id
     return feed_subscription.unread_entries
   end
 
@@ -96,7 +96,7 @@ class SubscriptionsManager
       raise NotSubscribedError.new
     end
 
-    feed_subscription = user.feed_subscriptions.where(feed_id: feed.id).first
+    feed_subscription = user.feed_subscriptions.find_by feed_id: feed.id
     Rails.logger.debug "Incrementing unread entries count for user #{user.id} - #{user.email}, feed #{feed.id} - #{feed.fetch_url}. Current: #{feed_subscription.unread_entries}, incremented by #{increment}"
     feed_subscription.unread_entries += increment
     feed_subscription.save!
@@ -139,7 +139,7 @@ class SubscriptionsManager
     count = EntryState.joins(entry: :feed).where(read: false, user: user, feeds: {id: feed.id}).count
     if user.feed_unread_count(feed) != count
       Rails.logger.debug "Unread entries count calculated: #{count}, current value #{user.feed_unread_count(feed)}. Updating DB record."
-      feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: feed.id).first
+      feed_subscription = FeedSubscription.find_by user_id: user.id, feed_id: feed.id
       feed_subscription.update unread_entries: count
     else
       Rails.logger.debug "Unread entries count calculated: #{count}, current value is correct. No need to update DB record."

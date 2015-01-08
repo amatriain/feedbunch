@@ -391,7 +391,7 @@ describe Entry, type: :model do
       entry = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry
 
-      entry_state = EntryState.where(user_id: user.id, entry_id: entry.id).first
+      entry_state = EntryState.find_by user_id: user.id, entry_id: entry.id
       entry_state.read = true
       entry_state.save
 
@@ -405,7 +405,7 @@ describe Entry, type: :model do
       entry = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry
 
-      entry_state = EntryState.where(user_id: user.id, entry_id: entry.id).first
+      entry_state = EntryState.find_by user_id: user.id, entry_id: entry.id
       entry_state.read = false
       entry_state.save
 

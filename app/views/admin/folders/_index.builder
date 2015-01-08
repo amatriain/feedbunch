@@ -7,7 +7,7 @@ context.instance_eval  do
       folder.feeds.count
     end
     column 'Unread entries' do |folder|
-      folder.feeds.to_a.sum {|feed| user.feed_subscriptions.where(feed_id: feed.id).first.unread_entries}
+      folder.feeds.to_a.sum {|feed| user.feed_subscriptions.find_by(feed_id: feed.id).unread_entries}
     end
     column do |folder|
       link_to 'View', "/admin/users/#{user.id}/folders/#{folder.id}"

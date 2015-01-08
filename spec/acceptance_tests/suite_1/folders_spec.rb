@@ -368,7 +368,7 @@ describe 'folders and feeds', type: :feature do
         move_feed_to_new_folder @feed1, title, @user
 
         # data-folder-id attribute should indicate that @feed1 is in the new folder
-        new_folder = Folder.where(user_id: @user.id, title: title).first
+        new_folder = Folder.find_by user_id: @user.id, title: title
         open_folder new_folder
         expect(page).to have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"
       end
@@ -444,7 +444,7 @@ describe 'folders and feeds', type: :feature do
         title = 'New folder'
         move_feed_to_new_folder @feed1, title, @user
 
-        new_folder = Folder.where(user_id: @user.id, title: title).first
+        new_folder = Folder.find_by user_id: @user.id, title: title
         open_folder new_folder
         within '#sidebar #folders-list' do
           # new folder should be in the sidebar
@@ -459,7 +459,7 @@ describe 'folders and feeds', type: :feature do
         title = 'New folder'
         move_feed_to_new_folder @feed1, title, @user
 
-        new_folder = Folder.where(user_id: @user.id, title: title).first
+        new_folder = Folder.find_by user_id: @user.id, title: title
         # Click on Folder button to open the dropdown
         open_folder_dropdown
         within '#folder-management-dropdown ul.dropdown-menu' do
@@ -473,7 +473,7 @@ describe 'folders and feeds', type: :feature do
         title = 'New folder'
         move_feed_to_new_folder @feed1, title, @user
 
-        new_folder = Folder.where(user_id: @user.id, title: title).first
+        new_folder = Folder.find_by user_id: @user.id, title: title
         # data-folder-id attribute should indicate that @feed1 is in the new folder
         open_folder new_folder
         expect(page).to have_css "#folder-#{new_folder.id} a[data-sidebar-feed][data-feed-id='#{@feed1.id}'][data-folder-id='#{new_folder.id}']"

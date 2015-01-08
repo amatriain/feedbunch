@@ -37,7 +37,7 @@ class EntryStateManager
 
     if !whole_feed && !whole_folder && !all_entries
       # Update a single entry
-      entry_state = EntryState.where(user_id: user.id, entry_id: entry.id).first
+      entry_state = EntryState.find_by user_id: user.id, entry_id: entry.id
       entry_state.update read: read
       # Update unread entries count for the feed
       if read

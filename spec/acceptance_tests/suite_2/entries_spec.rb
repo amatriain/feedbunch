@@ -260,7 +260,7 @@ describe 'feed entries', type: :feature do
       allow(Date).to receive(:today).and_return today
       @entry1.update published: Time.zone.parse('2000-07-07')
       # touch subscription update datetime, to avoid the server sending an http 304
-      subscription = FeedSubscription.where(feed_id: @feed1.id, user_id: @user.id).first
+      subscription = FeedSubscription.find_by feed_id: @feed1.id, user_id: @user.id
       subscription.touch_subscriptions
 
       read_feed @feed1, @user
@@ -274,7 +274,7 @@ describe 'feed entries', type: :feature do
       allow(Date).to receive(:today).and_return today
       @entry1.update published: Time.zone.parse('1999-07-07')
       # touch subscription update datetime, to avoid the server sending an http 304
-      subscription = FeedSubscription.where(feed_id: @feed1.id, user_id: @user.id).first
+      subscription = FeedSubscription.find_by feed_id: @feed1.id, user_id: @user.id
       subscription.touch_subscriptions
 
       read_feed @feed1, @user
@@ -337,7 +337,7 @@ describe 'feed entries', type: :feature do
         # image in @entry1 is not prepared for lazy loading (no data-src attribute)
         @entry1.update_column :content, "<img id=\"entry-image\" src=\"#{@img_url}\" alt=\"some-image\">"
         # touch subscription update datetime, to avoid the server sending an http 304
-        subscription = FeedSubscription.where(feed_id: @feed1.id, user_id: @user.id).first
+        subscription = FeedSubscription.find_by feed_id: @feed1.id, user_id: @user.id
         subscription.touch_subscriptions
         
         visit read_path

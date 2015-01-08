@@ -91,7 +91,7 @@ describe User, type: :model do
       result = @user.subscribe url
 
       expect(result).to be_present
-      feed = @user.feeds.where(fetch_url: 'http://'+url).first
+      feed = @user.feeds.find_by fetch_url: 'http://'+url
       expect(feed).to be_present
       expect(result).to eq feed
     end
@@ -106,7 +106,7 @@ describe User, type: :model do
       result = @user.subscribe url_feed
 
       expect(result).to be_present
-      feed = @user.feeds.where(fetch_url: url_http).first
+      feed = @user.feeds.find_by fetch_url: url_http
       expect(feed).to be_present
       expect(result).to eq feed
     end
@@ -121,7 +121,7 @@ describe User, type: :model do
       result = @user.subscribe url_feed
 
       expect(result).to be_present
-      feed = @user.feeds.where(fetch_url: url_http).first
+      feed = @user.feeds.find_by fetch_url: url_http
       expect(feed).to be_present
       expect(result).to eq feed
     end
@@ -213,7 +213,7 @@ describe User, type: :model do
 
       result = @user.subscribe @feed.fetch_url
       expect(result).to eq @feed
-      expect(@user.feeds.where(fetch_url: @feed.fetch_url).first).to eq @feed
+      expect(@user.feeds.find_by fetch_url: @feed.fetch_url).to eq @feed
     end
 
     it 'subscribes user to feed already in the database, given its fetch_url with added trailing slash' do
@@ -231,7 +231,7 @@ describe User, type: :model do
 
       result = @user.subscribe url_slash
       expect(result).to eq feed
-      expect(@user.feeds.where(fetch_url: feed.fetch_url).first).to eq feed
+      expect(@user.feeds.find_by fetch_url: feed.fetch_url).to eq feed
     end
 
     it 'subscribes user to feed already in the database, given its fetch_url missing a trailing slash' do
@@ -249,7 +249,7 @@ describe User, type: :model do
 
       result = @user.subscribe url_no_slash
       expect(result).to eq feed
-      expect(@user.feeds.where(fetch_url: feed.fetch_url).first).to eq feed
+      expect(@user.feeds.find_by fetch_url: feed.fetch_url).to eq feed
     end
 
     it 'subscribes user to feed already in the database, given its fetch_url without uri-scheme' do
@@ -267,7 +267,7 @@ describe User, type: :model do
 
       result = @user.subscribe url_no_scheme
       expect(result).to eq feed
-      expect(@user.feeds.where(fetch_url: feed.fetch_url).first).to eq feed
+      expect(@user.feeds.find_by fetch_url: feed.fetch_url).to eq feed
     end
 
     it 'subscribes to a feed already in the database, given a website URL that through autodiscovery leads to its fetch_url' do
@@ -456,7 +456,7 @@ FEED_XML
 
       result = @user.subscribe @feed.url
       expect(result).to eq @feed
-      expect(@user.feeds.where(url: @feed.url).first).to eq @feed
+      expect(@user.feeds.find_by url: @feed.url).to eq @feed
     end
 
     it 'subscribes user to feed already in the database, given its url with added trailing slash' do
@@ -474,7 +474,7 @@ FEED_XML
 
       result = @user.subscribe url_slash
       expect(result).to eq feed
-      expect(@user.feeds.where(url: feed.url).first).to eq feed
+      expect(@user.feeds.find_by url: feed.url).to eq feed
     end
 
     it 'subscribes user to feed already in the database, given its url missing a trailing slash' do
@@ -492,7 +492,7 @@ FEED_XML
 
       result = @user.subscribe url_no_slash
       expect(result).to eq feed
-      expect(@user.feeds.where(url: feed.url).first).to eq feed
+      expect(@user.feeds.find_by url: feed.url).to eq feed
     end
 
     it 'subscribes user to feed already in the database, given its url without uri-scheme' do
@@ -510,7 +510,7 @@ FEED_XML
 
       result = @user.subscribe url_no_scheme
       expect(result).to eq feed
-      expect(@user.feeds.where(url: feed.url).first).to eq feed
+      expect(@user.feeds.find_by url: feed.url).to eq feed
     end
 
     it 'adds new feed to the database and subscribes user to it' do
@@ -518,7 +518,7 @@ FEED_XML
       entry_title1 = 'an entry title'
       entry_title2 = 'another entry title'
       allow(FeedClient).to receive :fetch do
-        feed = Feed.where(fetch_url: feed_url).first
+        feed = Feed.find_by fetch_url: feed_url
         entry1 = FactoryGirl.build :entry, feed_id: feed.id, title: entry_title1
         entry2 = FactoryGirl.build :entry, feed_id: feed.id, title: entry_title2
         feed.entries << entry1 << entry2
@@ -530,9 +530,9 @@ FEED_XML
 
       @user.subscribe feed_url
       expect(@user.feeds.where(fetch_url: feed_url)).to be_present
-      expect(@user.feeds.where(fetch_url: feed_url).first.entries.count).to eq 2
-      expect(@user.feeds.where(fetch_url: feed_url).first.entries.where(title: entry_title1)).to be_present
-      expect(@user.feeds.where(fetch_url: feed_url).first.entries.where(title: entry_title2)).to be_present
+      expect(@user.feeds.find_by(fetch_url: feed_url).entries.count).to eq 2
+      expect(@user.feeds.find_by(fetch_url: feed_url).entries.where(title: entry_title1)).to be_present
+      expect(@user.feeds.find_by(fetch_url: feed_url).entries.where(title: entry_title2)).to be_present
     end
 
     it 'subscribes to a feed not in the database, given the website URL' do

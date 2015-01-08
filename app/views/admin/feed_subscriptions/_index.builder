@@ -21,7 +21,7 @@ context.instance_eval  do
       feed.entries.count
     end
     column 'Unread entries' do |feed|
-      user.feed_subscriptions.where(feed_id: feed.id).first.unread_entries
+      user.feed_subscriptions.find_by(feed_id: feed.id).unread_entries
     end
     column do |feed|
       link_to 'View', admin_feed_path(feed)

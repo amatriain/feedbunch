@@ -11,7 +11,7 @@ describe UpdateFeedUnreadCountWorker do
     @user.subscribe @feed.fetch_url
 
     # @feed has an incorrect unread entries count in the db (saved: 0, should be: 1)
-    FeedSubscription.where(feed_id: @feed.id, user_id: @user.id).first.update unread_entries: 0
+    FeedSubscription.find_by(feed_id: @feed.id, user_id: @user.id).update unread_entries: 0
   end
 
   it 'recalculates unread entries count in feed' do

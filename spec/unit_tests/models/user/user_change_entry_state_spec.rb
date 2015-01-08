@@ -21,7 +21,7 @@ describe User, type: :model do
       end
 
       it 'marks entry as unread' do
-        entry_state = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+        entry_state = EntryState.find_by user_id: @user.id, entry_id: @entry1.id
         entry_state.read = true
         entry_state.save
 
@@ -35,7 +35,7 @@ describe User, type: :model do
         @user.change_entries_state @entry1, 'somethingsomethingsomething'
         expect(@entry1.read_by?(@user)).to be false
 
-        entry_state = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+        entry_state = EntryState.find_by user_id: @user.id, entry_id: @entry1.id
         entry_state.read = true
         entry_state.save!
 
@@ -76,13 +76,13 @@ describe User, type: :model do
         end
 
         it 'marks several entries as unread' do
-          entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+          entry_state1 = EntryState.find_by user_id: @user.id, entry_id: @entry1.id
           entry_state1.read = true
           entry_state1.save!
-          entry_state2 = EntryState.where(user_id: @user.id, entry_id: @entry2.id).first
+          entry_state2 = EntryState.find_by user_id: @user.id, entry_id: @entry2.id
           entry_state2.read = true
           entry_state2.save!
-          entry_state3 = EntryState.where(user_id: @user.id, entry_id: @entry3.id).first
+          entry_state3 = EntryState.find_by user_id: @user.id, entry_id: @entry3.id
           entry_state3.read = true
           entry_state3.save!
 
@@ -169,19 +169,19 @@ describe User, type: :model do
         end
 
         it 'marks several entries as unread' do
-          entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+          entry_state1 = EntryState.find_by user_id: @user.id, entry_id: @entry1.id
           entry_state1.read = true
           entry_state1.save!
-          entry_state2 = EntryState.where(user_id: @user.id, entry_id: @entry2.id).first
+          entry_state2 = EntryState.find_by user_id: @user.id, entry_id: @entry2.id
           entry_state2.read = true
           entry_state2.save!
-          entry_state3 = EntryState.where(user_id: @user.id, entry_id: @entry3.id).first
+          entry_state3 = EntryState.find_by user_id: @user.id, entry_id: @entry3.id
           entry_state3.read = true
           entry_state3.save!
-          entry_state4 = EntryState.where(user_id: @user.id, entry_id: @entry4.id).first
+          entry_state4 = EntryState.find_by user_id: @user.id, entry_id: @entry4.id
           entry_state4.read = true
           entry_state4.save!
-          entry_state5 = EntryState.where(user_id: @user.id, entry_id: @entry5.id).first
+          entry_state5 = EntryState.find_by user_id: @user.id, entry_id: @entry5.id
           entry_state5.read = true
           entry_state5.save!
 
@@ -290,15 +290,15 @@ describe User, type: :model do
         end
 
         it 'marks several entries as unread' do
-          entry_state1 = EntryState.where(user_id: @user.id, entry_id: @entry1.id).first
+          entry_state1 = EntryState.find_by user_id: @user.id, entry_id: @entry1.id
           entry_state1.update read: true
-          entry_state2 = EntryState.where(user_id: @user.id, entry_id: @entry2.id).first
+          entry_state2 = EntryState.find_by user_id: @user.id, entry_id: @entry2.id
           entry_state2.update read: true
-          entry_state3 = EntryState.where(user_id: @user.id, entry_id: @entry3.id).first
+          entry_state3 = EntryState.find_by user_id: @user.id, entry_id: @entry3.id
           entry_state3.update read: true
-          entry_state4 = EntryState.where(user_id: @user.id, entry_id: @entry4.id).first
+          entry_state4 = EntryState.find_by user_id: @user.id, entry_id: @entry4.id
           entry_state4.update read: true
-          entry_state5 = EntryState.where(user_id: @user.id, entry_id: @entry5.id).first
+          entry_state5 = EntryState.find_by user_id: @user.id, entry_id: @entry5.id
           entry_state5.update read: true
 
           @user.change_entries_state @entry5, 'unread', all_entries: true

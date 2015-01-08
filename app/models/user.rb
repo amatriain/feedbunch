@@ -495,7 +495,7 @@ class User < ActiveRecord::Base
 
   def remove_entry_states(feed)
     feed.entries.each do |entry|
-      entry_state = EntryState.where(user_id: self.id, entry_id: entry.id).first
+      entry_state = EntryState.find_by user_id: self.id, entry_id: entry.id
       self.entry_states.delete entry_state
     end
   end

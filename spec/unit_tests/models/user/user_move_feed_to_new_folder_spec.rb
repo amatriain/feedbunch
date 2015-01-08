@@ -21,7 +21,7 @@ describe User, type: :model do
       @user.move_feed_to_folder @feed, folder_title: @title
       @user.reload
 
-      folder = @user.folders.where(title: @title).first
+      folder = @user.folders.find_by title: @title
       expect(folder.feeds.count).to eq 1
       expect(folder.feeds).to include @feed
     end

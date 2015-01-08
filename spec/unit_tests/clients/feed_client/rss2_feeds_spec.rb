@@ -96,7 +96,7 @@ FEED_XML
       FeedClient.fetch @feed
 
       # After fetching, entry should be unchanged
-      entry_after = Entry.where(guid: entry_before.guid, feed_id: entry_before.feed_id).first
+      entry_after = Entry.find_by guid: entry_before.guid, feed_id: entry_before.feed_id
       expect(entry_after.feed_id).to eq entry_before.feed_id
       expect(entry_after.title).to eq entry_before.title
       expect(entry_after.url).to eq entry_before.url
@@ -131,7 +131,7 @@ FEED_XML
       expect(entry.guid).to eq @entry1.guid
 
       # the fetched entry should be saved in the database as well
-      fetched_entry = Entry.where(guid: @entry1.guid, feed_id: @feed.id).first
+      fetched_entry = Entry.find_by guid: @entry1.guid, feed_id: @feed.id
       expect(fetched_entry.feed_id).to eq @feed.id
       expect(fetched_entry.title).to eq @entry1.title
       expect(fetched_entry.url).to eq @entry1.url

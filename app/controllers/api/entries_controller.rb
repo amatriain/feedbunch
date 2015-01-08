@@ -62,7 +62,7 @@ class Api::EntriesController < ApplicationController
 
   def index_feed
     Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested entries for feed #{params[:feed_id]}, include_read: #{params[:include_read]}"
-    @subscription = FeedSubscription.where(user_id: current_user.id, feed_id: params[:feed_id]).first
+    @subscription = FeedSubscription.find_by user_id: current_user.id, feed_id: params[:feed_id]
     if @subscription.present?
       # If feed subscription has not changed, return a 304
       if stale? last_modified: @subscription.updated_at

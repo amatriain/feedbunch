@@ -22,7 +22,7 @@ describe ScheduledUpdateFeedWorker do
     user.subscribe @feed.fetch_url
 
     # @feed has an incorrect unread entry count of 10 for user
-    feed_subscription = FeedSubscription.where(user_id: user.id, feed_id: @feed.id).first
+    feed_subscription = FeedSubscription.find_by user_id: user.id, feed_id: @feed.id
     feed_subscription.update unread_entries: 10
 
     ScheduledUpdateFeedWorker.new.perform @feed.id

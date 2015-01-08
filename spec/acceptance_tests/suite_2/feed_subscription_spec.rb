@@ -126,7 +126,7 @@ describe 'subscription to feeds', type: :feature do
         # Move feed to folder and reload page. Folder should be closed after reload
         folder_title = 'new folder'
         move_feed_to_new_folder @feed2, folder_title, @user
-        folder = @user.folders.where(title: folder_title).first
+        folder = @user.folders.find_by title: folder_title
         visit current_path
         folder_should_be_closed folder
 
@@ -150,7 +150,7 @@ describe 'subscription to feeds', type: :feature do
         subscribe_feed @feed2.fetch_url
         expect(page).to have_text 'Successfully added subscription to feed'
         Entry.destroy_all
-        subscription = FeedSubscription.where(user_id: @user.id, feed_id: @feed2.id).first
+        subscription = FeedSubscription.find_by user_id: @user.id, feed_id: @feed2.id
         subscription.update unread_entries: 0
 
         visit current_path
