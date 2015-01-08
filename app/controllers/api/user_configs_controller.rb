@@ -13,7 +13,8 @@ class Api::UserConfigsController < ApplicationController
   def show
     # If config has not changed, return a 304
     if stale? last_modified: current_user.config_updated_at
-      render 'show', locals: {user: current_user}
+      @user = current_user
+      respond_with current_user
     end
   rescue => e
     handle_error e

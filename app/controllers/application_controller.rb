@@ -67,6 +67,9 @@ class ApplicationController < ActionController::Base
     elsif error.is_a? OpmlImportError
       # If an error happens when importing subscription data, redirect to main application page
       redirect_to read_path
+    elsif error.is_a? ActionController::UnknownFormat
+      # If an unsupported format is requested (e.g. requesting HTML from an API controller) return 406
+      head status: 406
     else
       Rails.logger.error error.message
       Rails.logger.error error.backtrace

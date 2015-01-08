@@ -11,7 +11,7 @@ class ReadController < ApplicationController
   # return the main application page
 
   def index
-    render 'index'
+    respond_with
   rescue => e
     handle_error e
   end

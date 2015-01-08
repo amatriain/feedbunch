@@ -1,7 +1,7 @@
 [
-  <% feeds_data.each do |feed_data| %>
+  <% @feeds_data.each do |feed_data| %>
 <%= render partial: 'feed', locals: {feed: feed_data[:feed], folder_id: feed_data[:folder_id], unread_count: feed_data[:unread_count]} %>
-    <% if feed_data != feeds_data.last %>
+    <% if feed_data != @feeds_data.last %>
 ,
     <% end %>
   <% end %>

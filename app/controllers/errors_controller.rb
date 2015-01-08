@@ -2,12 +2,15 @@
 # Controller to render dynamic error pages
 
 class ErrorsController < ApplicationController
+  respond_to :html
 
   ##
   # Show an error page.
 
   def show
-    render status_code.to_s, status: status_code
+    respond_with do |format|
+      format.html {render status_code.to_s, status: status_code}
+    end
   end
 
   protected

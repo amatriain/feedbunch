@@ -5,8 +5,7 @@ class Api::FoldersController < ApplicationController
 
   before_filter :authenticate_user!
 
-  respond_to :html, only: [:show]
-  respond_to :json, except: [:show]
+  respond_to :json
 
   ##
   # Return JSON with the list of folders owned by the current user
@@ -15,7 +14,7 @@ class Api::FoldersController < ApplicationController
     # If folders have not changed, return a 304
     if stale? last_modified: current_user.folders_updated_at
       @folders = current_user.folders
-      render 'index', locals: {user: current_user, folders: @folders}
+      respond_with @folders
     end
   rescue => e
     handle_error e
@@ -33,7 +32,7 @@ class Api::FoldersController < ApplicationController
     if @folder.present?
       # If folder has not changed, return a 304
       if stale? @folder, last_modified: @folder.updated_at
-        render 'show', locals: {folder: @folder}
+        respond_with @folder
       end
     else
       Rails.logger.info "Folder #{params[:id]} not found, returning a 404"
@@ -68,7 +67,7 @@ class Api::FoldersController < ApplicationController
     @feed = current_user.feeds.find folder_params[:feed_id]
     @folder = current_user.move_feed_to_folder @feed, folder_title: folder_params[:title]
     if @folder.present?
-      render 'create', locals: {folder: @folder}
+      respond_with @folder
     else
       Rails.logger.error "Could not create folder #{folder_params[:title]} for user #{current_user.id}, returning a 404"
       head status: 404

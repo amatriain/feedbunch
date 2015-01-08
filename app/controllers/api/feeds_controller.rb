@@ -41,10 +41,9 @@ class Api::FeedsController < ApplicationController
       # If feed subscription has not changed, return a 304
       if stale? last_modified: @subscription.updated_at
         @feed = current_user.feeds.find params[:id]
-
         @folder_id = @feed.user_folder(current_user).try(:id) || 'none'
         @unread_count = current_user.feed_unread_count @feed
-        render 'show', locals: {feed: @feed, folder_id: @folder_id, unread_count: @unread_count}
+        respond_with @feed, @folder_id, @unread_count
       end
     else
       Rails.logger.info "User #{current_user.id} - #{current_user.email} has no feeds to return, returning a 404"
@@ -164,7 +163,7 @@ class Api::FeedsController < ApplicationController
         end
       end
 
-      render 'index', locals: {feeds_data: @feeds_data}
+      respond_with @feeds_data
     else
       Rails.logger.info "User #{current_user.id} - #{current_user.email} has no feeds to return, returning a 404"
       head status: 404

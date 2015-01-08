@@ -11,7 +11,7 @@ class Api::ToursController < ApplicationController
   # Return JSON object with i18n strings for the main application tour.
 
   def show_main
-    render 'show_main'
+    respond_with
   rescue => e
     handle_error e
   end
@@ -20,7 +20,7 @@ class Api::ToursController < ApplicationController
   # Return JSON object with i18n strings for the mobile application tour.
 
   def show_mobile
-    render 'show_mobile'
+    respond_with
   rescue => e
     handle_error e
   end
@@ -29,7 +29,7 @@ class Api::ToursController < ApplicationController
   # Return JSON object with i18n strings for the feed application tour.
 
   def show_feed
-    render 'show_feed'
+    respond_with
   rescue => e
     handle_error e
   end
@@ -38,7 +38,7 @@ class Api::ToursController < ApplicationController
   # Return JSON object with i18n strings for the entry application tour.
 
   def show_entry
-    render 'show_entry'
+    respond_with
   rescue => e
     handle_error e
   end

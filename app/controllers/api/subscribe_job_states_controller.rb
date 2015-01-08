@@ -16,7 +16,7 @@ class Api::SubscribeJobStatesController < ApplicationController
       if SubscribeJobState.exists? user_id: current_user.id
         @job_states = SubscribeJobState.where user_id: current_user.id
         Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_states.count} SubscribeJobState instances"
-        render 'index', locals: {job_states: @job_states}
+        respond_with @job_states
       else
         head status: 404
       end
@@ -32,7 +32,7 @@ class Api::SubscribeJobStatesController < ApplicationController
     @job_state = current_user.find_subscribe_job_state params[:id]
     # If job state has not changed, return a 304
     if stale? last_modified: @job_state.updated_at
-      render 'show', locals: {job_state: @job_state}
+      respond_with @job_state
     end
   rescue => e
     handle_error e
