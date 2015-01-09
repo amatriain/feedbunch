@@ -5,7 +5,7 @@ ruby '2.2.0'
 gem 'rails', '~> 4.2.0'
 
 gem 'responders'
-gem 'sass-rails', '~> 4.0.2'
+gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
 
