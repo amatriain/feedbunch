@@ -45,14 +45,14 @@ class ExportSubscriptionsWorker
                                       export_date: Time.zone.now
 
     # Send success notification email
-    OpmlExportMailer.export_finished_success_email(user, filename, opml).deliver_later
+    OpmlExportMailer.export_finished_success_email(user, filename, opml).deliver_now
   rescue => e
     # If an exception is raised, set the export process state to ERROR
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
 
     # Send error notification email
-    OpmlExportMailer.export_finished_error_email(user).deliver_later
+    OpmlExportMailer.export_finished_error_email(user).deliver_now
 
     # Update job state
     user.opml_export_job_state.update state: OpmlExportJobState::ERROR if user.present?
