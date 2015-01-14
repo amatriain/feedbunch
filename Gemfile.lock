@@ -424,6 +424,7 @@ DEPENDENCIES
   puma
   rack-cache
   rails (~> 4.2.0)
+  rails-deprecated_sanitizer
   redis-rails
   redmon
   responders

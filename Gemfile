@@ -4,6 +4,9 @@ ruby '2.2.0'
 
 gem 'rails', '~> 4.2.0'
 
+# Restore old sanitizer behavior. This gem won't be supported after Rails 5!!!
+gem 'rails-deprecated_sanitizer'
+
 gem 'responders'
 gem 'sass-rails'
 gem 'coffee-rails'
