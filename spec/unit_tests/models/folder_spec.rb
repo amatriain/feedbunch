@@ -211,7 +211,7 @@ describe Folder, type: :model do
   context 'sanitization' do
     it 'sanitizes title' do
       title_unsanitized = '<script>alert("pwned!");</script>folder_title'
-      title_sanitized = 'alert("pwned!");folder_title'
+      title_sanitized = 'folder_title'
       folder = FactoryGirl.create :folder, title: title_unsanitized
       expect(folder.title).to eq title_sanitized
     end
