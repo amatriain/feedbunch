@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/amatriain/rack-cache.git
+  revision: 39132629d7448b2b4a8d82352d0e29428352b566
+  branch: unparseable_expires
+  specs:
+    rack-cache (1.2)
+      rack (>= 0.4)
+
+GIT
   remote: git://github.com/gregbell/active_admin.git
   revision: 38bf0239a3f1eba20454748c9b1247200d7d52b3
   branch: rails-4-2
@@ -217,8 +225,6 @@ GEM
     puma (2.10.2)
       rack (>= 1.1, < 2.0)
     rack (1.6.0)
-    rack-cache (1.2)
-      rack (>= 0.4)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.2)
@@ -422,7 +428,7 @@ DEPENDENCIES
   nokogiri
   pg
   puma
-  rack-cache
+  rack-cache!
   rails (~> 4.2.0)
   rails-deprecated_sanitizer
   redis-rails

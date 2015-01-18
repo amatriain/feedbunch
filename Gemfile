@@ -43,7 +43,7 @@ gem 'rest-client'
 
 # HTTP client-side caching
 gem 'rest-client-components'
-gem 'rack-cache'
+gem 'rack-cache', github: 'amatriain/rack-cache', branch: 'unparseable_expires'
 
 # URI implementation with better support for RFC 3986, RFC 3987, and RFC 6570 (level 4)
 gem 'addressable'
