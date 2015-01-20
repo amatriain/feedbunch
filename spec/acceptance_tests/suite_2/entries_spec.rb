@@ -100,6 +100,21 @@ describe 'feed entries', type: :feature do
       expect(page).to have_content @entry3.title
     end
 
+    # Regression test for bug #560
+    it 'does not show entries for just unsubscribed feeds', js: true do
+      allow_any_instance_of(Entry).to receive(:read_by?) do |entry|
+        # An unsubscribe job is simultaneously running and entry states for @feed1 have just disappeared!
+        raise NotSubscribedError.new if entry.feed_id == @feed1.id
+        false
+      end
+
+      read_folder @folder
+      
+      expect(page).to have_no_content @entry1.title
+      expect(page).to have_no_content @entry2.title
+      expect(page).to have_content @entry3.title
+    end
+
     it 'by default only shows unread entries when reading all subscriptions', js: true do
       # @feed1 and @feed2 are in a folder, feed3 isn't in any folder
       feed3 = FactoryGirl.create :feed

@@ -1,7 +1,7 @@
 {
   "id": "<%= entry.id %>",
   "title": <%= entry.title.to_json.html_safe %>,
-  "read": <%= entry.read_by? user %>,
+  "read": <%= read %>,
 <% if entry.published.year == Date.today.year %>
   "published": "<%= l entry.published.in_time_zone(ActiveSupport::TimeZone[current_user.timezone]), format: :short %>",
 <% else %>

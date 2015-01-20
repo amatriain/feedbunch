@@ -1,8 +1,16 @@
 [
+<% first_entry = true %>
 <% @entries.each do |entry| %>
-<%= render partial: 'api/entries/entry', locals: {entry: entry, user: @user} %>
-  <% if entry != @entries.last %>
+  <% begin %>
+    <% read = entry.read_by? @user %>
+    <% if !first_entry %>
 ,
+    <% end %>
+    <%= render partial: 'api/entries/entry', locals: {entry: entry, read: read} %>
+    <% first_entry = false %>
+  <% rescue NotSubscribedError %>
+    <%# If the feed has just been unsubscribed, a NotSubscribedError will be raised. Ignore this entry and
+     continue with the next one%>
   <% end %>
 <% end %>
 ]
