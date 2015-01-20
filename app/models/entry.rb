@@ -58,10 +58,14 @@ class Entry < ActiveRecord::Base
   #
   # Receives as argument the user for which the read/unread state will be retrieved.
   #
-  # If the user is not actually subscribed to the feed, returns false.
+  # If the user is not actually subscribed to the feed, raises a NotSubscribedError.
 
   def read_by?(user)
     state = EntryState.find_by entry_id: self.id, user_id: user.id
+    if state.blank?
+      Rails.logger.warn "Tried to find out if user #{user.id} - #{user.email} has read entry #{self.id} from feed #{self.feed_id} to which he is not subscribed. Raising an error."
+      raise NotSubscribedError.new
+    end
     return state.read
   end
 
