@@ -4,7 +4,7 @@
 #
 # This is a Sidekiq worker
 
-class ImportSubscriptionsWorker
+class ImportOpmlWorker
   include Sidekiq::Worker
 
   sidekiq_options queue: :update_feeds
