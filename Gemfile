@@ -71,9 +71,7 @@ gem 'rubyzip'
 gem 'http_accept_language'
 
 # Administration interface
-gem 'activeadmin', github: 'gregbell/active_admin', branch: 'rails-4-2'
-# Temporary fix to make activeadmin work with rails 4.2
-gem 'inherited_resources', github: 'josevalim/inherited_resources', branch: 'rails-4-2'
+gem 'activeadmin', github: 'gregbell/active_admin'
 
 group :development do
   # Automate deployments
