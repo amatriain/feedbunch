@@ -18,79 +18,113 @@ class ImportSubscriptionWorker
   # - ID of the OpmlImportJobState instance. This object contains a reference to the user who is importing subscriptions,
   # so it's not necessary to pass the user ID as argument
   # - URL of the feed
-  # - Optionally folder to put the feed into. Defaults to nil (feed won't be in a folder)
+  # - Optionally ID of the folder to put the feed into. Defaults to nil (feed won't be in a folder)
   #
   # When the worker finishes, it increments by 1 the current number of processed feeds in the global OPML import job state.
   # This enables the user to the import progress.
   #
   # This method is intended to be invoked from Sidekiq-superworker, which means it is performed in the background.
 
-  def perform(opml_import_job_state_id, url, folder=nil)
-    # Check if the user actually exists
-    if !User.exists? user_id
-      Rails.logger.error "Trying to import OPML file #{filename} for non-existing user #{user_id}"
+  def perform(opml_import_job_state_id, url, folder_id=nil)
+    # Check if the opml import state actually exists
+    if !OpmlImportJobState.exists? opml_import_job_state_id
+      Rails.logger.error "Trying to perform ImportSubscriptionWorker as part of non-existing job state #{opml_import_job_state_id}. Aborting"
       return
     end
-    user = User.find user_id
+    opml_import_job_state = OpmlImportJobState.find opml_import_job_state_id
+    user = opml_import_job_state.user
 
-    # Check that user has a opml_import_job_state with state RUNNING
-    if user.opml_import_job_state.try(:state) != OpmlImportJobState::RUNNING
-      Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with state RUNNING, aborting OPML import"
+    # Check that opml_import_job_state has state RUNNING
+    if opml_import_job_state.state != OpmlImportJobState::RUNNING
+      Rails.logger.error "User #{user.id} - #{user.email} trying to perform ImportSubscriptionWorker as opml import with state #{opml_import_job_state.state} instead of RUNNING. Aborting"
       return
     end
 
-    OPMLImporter.import filename, user
-    import_success user
-  rescue => e
-    import_error user, e
+    feed = import_feed user, url
+
+    if folder_id.present? && feed.present?
+      move_feed_to_folder user, feed, folder_id
+    end
   ensure
-    Feedbunch::Application.config.uploads_manager.delete user, OPMLImporter::FOLDER, filename
+    # Only update total processed feeds count if job is in state RUNNING
+    if opml_import_job_state.present? && opml_import_job_state.try(:state) == OpmlImportJobState::RUNNING
+      Rails.logger.info "Incrementing processed feeds in OPML import for user #{user.try :id} - #{user.try :email} by 1"
+      processed_feeds = opml_import_job_state.reload.processed_feeds
+      opml_import_job_state.update processed_feeds: processed_feeds+1
+    end
   end
 
   private
 
   ##
-  # Operations performed when the import finishes successfully.
-  # Sets the opml_import_job_state state for the user as SUCCESS
-  # Sends a notification email to the user.
+  # Once the user is subscribed to the feed, move it to the passed folder.
   #
-  # Receives as argument:
-  # - user whose import process has finished successfully
+  # Receives as arguments:
+  # - user that is performing the import
+  # - feed that was just subscribed
+  # - ID of the folder to move it to
+  #
+  # If the folder does not exist or is owned by a different user, nothing is done.
 
-  def import_success(user)
-    Rails.logger.info "OPML import for user #{user.id} - #{user.email} finished successfully. #{user.opml_import_job_state.total_feeds} feeds in OPML file, #{user.opml_import_job_state.processed_feeds} feeds imported"
+  def move_feed_to_folder(user, feed, folder_id)
+    # Check if the passed folder exists
+    if !Folder.exists? folder_id
+      Rails.logger.warn "User #{user.id} - #{user.email} tried to put feed in non-existing folder #{folder_id} as part of opml import. Ignoring"
+      return
+    end
+    folder = Folder.find folder_id
 
-    user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
+    # Check if the folder is owned by the user doing the import
+    if folder.user != user
+      Rails.logger.warn "User #{user.id} - #{user.email} tried to put feed in folder #{folder_id} owned by another user as part of opml import. Ignoring"
+      return
+    end
 
-    Rails.logger.info "Sending data import success email to user #{user.id} - #{user.email}"
-    OpmlImportMailer.import_finished_success_email(user).deliver_now
+    user.move_feed_to_folder feed, folder: folder
   end
 
   ##
-  # Operations performed when the import finishes with an error.
-  # Sets the opml_import_job_state state for the user as ERROR.
-  # Sends a notification email to the user.
+  # Import a feed, subscribing the user to it.
   #
   # Receives as arguments:
-  # - the user whose import process has failed
-  # - the error raised, if any
+  # - the user performing the import
+  # - url of the feed
+  #
+  # Returns the subscribe feed if successful, raises an error otherwise.
 
-  def import_error(user, error=nil)
-    # If an exception is raised, set the import process state to ERROR
-    Rails.logger.info "OPML import for user #{user.id} - #{user.email} finished with an error"
-    if error.present?
-      Rails.logger.error error.message
-      Rails.logger.error error.backtrace
-    end
+  def import_feed(user, url)
+    Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to feed #{url}"
+    feed = user.subscribe url
+    return feed
+  rescue AlreadySubscribedError => e
+    Rails.logger.error "During OPML import for user #{user.try :id} - #{user.try :email} found feed URL #{url} in OPML, but user is already subscribed to that feed. Ignoring it."
+    Rails.logger.error e.message
+    return user.feeds.find_by_fetch_url url
+  rescue RestClient::Exception,
+    RestClient::RequestTimeout,
+    SocketError,
+    Errno::ETIMEDOUT,
+    Errno::ECONNREFUSED,
+    Errno::EHOSTUNREACH,
+    EmptyResponseError,
+    FeedAutodiscoveryError,
+    FeedFetchError,
+    OpmlImportError => e
 
-    user.create_opml_import_job_state if user.opml_import_job_state.blank?
-    user.opml_import_job_state.update state: OpmlImportJobState::ERROR
-
-    Rails.logger.info "Sending data import error email to user #{user.id} - #{user.email}"
-    OpmlImportMailer.import_finished_error_email(user).deliver_now
-
-    # Re-raise the exception so that Sidekiq takes care of it
-    raise error
+    # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
+    Rails.logger.error "Controlled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{url}"
+    Rails.logger.error e.message
+    failure = OpmlImportFailure.new url: url
+    user.opml_import_job_state.opml_import_failures << failure
+    return nil
+  rescue => e
+    # an uncontrolled error has happened. Log the full backtrace but do not re-raise, so that the batch continues with next imported feed
+    Rails.logger.error "Uncontrolled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{url}"
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    failure = OpmlImportFailure.new url: url
+    user.opml_import_job_state.opml_import_failures << failure
+    return nil
   end
 
 end
