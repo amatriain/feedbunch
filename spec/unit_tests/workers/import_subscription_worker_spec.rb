@@ -23,19 +23,19 @@ describe ImportSubscriptionWorker do
     end
 
     it 'does nothing if the opml_import_job_state has state NONE' do
-      @user.opml_import_job_state.update state: OpmlImportJobState::NONE
+      @opml_import_job_state.update state: OpmlImportJobState::NONE
       expect(URLSubscriber).not_to receive :subscribe
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
     end
 
     it 'does nothing if the opml_import_job_state has state ERROR' do
-      @user.opml_import_job_state.update state: OpmlImportJobState::ERROR
+      @opml_import_job_state.update state: OpmlImportJobState::ERROR
       expect(URLSubscriber).not_to receive :subscribe
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
     end
 
     it 'does nothing if the opml_import_job_state has state SUCCESS' do
-      @user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
+      @opml_import_job_state.update state: OpmlImportJobState::SUCCESS
       expect(URLSubscriber).not_to receive :subscribe
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
     end
@@ -82,21 +82,21 @@ describe ImportSubscriptionWorker do
     end
 
     it 'does not increment count if opml_import_job_state has state NONE' do
-      @user.opml_import_job_state.update state: OpmlImportJobState::NONE
+      @opml_import_job_state.update state: OpmlImportJobState::NONE
       expect(@opml_import_job_state.processed_feeds).to eq 0
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
       expect(@opml_import_job_state.reload.processed_feeds).to eq 0
     end
 
     it 'does not increment count if opml_import_job_state has state ERROR' do
-      @user.opml_import_job_state.update state: OpmlImportJobState::ERROR
+      @opml_import_job_state.update state: OpmlImportJobState::ERROR
       expect(@opml_import_job_state.processed_feeds).to eq 0
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
       expect(@opml_import_job_state.reload.processed_feeds).to eq 0
     end
 
     it 'does not increment count if opml_import_job_state has state SUCCESS' do
-      @user.opml_import_job_state.update state: OpmlImportJobState::SUCCESS
+      @opml_import_job_state.update state: OpmlImportJobState::SUCCESS
       expect(@opml_import_job_state.processed_feeds).to eq 0
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
       expect(@opml_import_job_state.reload.processed_feeds).to eq 0
