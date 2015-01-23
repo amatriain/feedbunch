@@ -4,7 +4,7 @@
 # This is a Sidekiq worker.
 #
 # This worker is not enqueued directly, but rather is part of a batch set of workers enqueued by the
-# sidekiq-superworker gem. It is always part of a global OPML import worker.
+# sidekiq-superworker gem. It is always part of a global OPML import process.
 
 class ImportSubscriptionWorker
   include Sidekiq::Worker
