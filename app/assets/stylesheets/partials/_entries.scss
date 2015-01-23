@@ -176,6 +176,11 @@
             right: 3px;
           }
         }
+
+        table {
+          table-layout: fixed;
+          width: 100%;
+        }
       }
     }
   }
