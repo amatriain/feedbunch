@@ -1,6 +1,7 @@
 ##
 # Background job to import an OPML data file with subscriptions data for a user.
-# It enqueues jobs to subscribe the user to each individual feed.
+# It enqueues a superworker (using the sidekiq-superworker gem) to import each feed in the data file in
+# batches of individual jobs.
 #
 # This is a Sidekiq worker
 
