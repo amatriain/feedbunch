@@ -4,4 +4,5 @@ Superworker.define :ImportSubscriptionsWorker, :opml_import_job_state_id, :urls,
   batch urls: :url, folder_ids: :folder_id do
     ImportSubscriptionWorker :opml_import_job_state_id, :url, :folder_id
   end
+  NotifyImportFinishedWorker :opml_import_job_state_id
 end
