@@ -36,7 +36,7 @@ class ImportSubscriptionWorker
 
     # Check that opml_import_job_state has state RUNNING
     if opml_import_job_state.state != OpmlImportJobState::RUNNING
-      Rails.logger.error "User #{user.id} - #{user.email} trying to perform ImportSubscriptionWorker as opml import with state #{opml_import_job_state.state} instead of RUNNING. Aborting"
+      Rails.logger.error "User #{user.id} - #{user.email} trying to perform ImportSubscriptionWorker as part of opml import with state #{opml_import_job_state.state} instead of RUNNING. Aborting"
       return
     end
 
