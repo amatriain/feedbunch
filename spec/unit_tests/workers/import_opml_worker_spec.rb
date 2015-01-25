@@ -25,6 +25,8 @@ describe ImportOpmlWorker do
     end
     allow(Feedbunch::Application.config.uploads_manager).to receive :save
     allow(Feedbunch::Application.config.uploads_manager).to receive :delete
+
+    allow(ImportSubscriptionsWorker).to receive :perform_async
   end
 
   context 'validations' do
@@ -108,45 +110,10 @@ describe ImportOpmlWorker do
 
   context 'finishes successfully' do
 
-    before :each do
-      allow_any_instance_of(User).to receive :subscribe do |user, fetch_url|
-        expect(user.id).to eq @user.id
-        feed = FactoryGirl.create :feed, fetch_url: fetch_url
-        subscription = FactoryGirl.create :feed_subscription, user_id: user.id, feed_id: feed.id
-        feed
-      end
-    end
-
-    it 'sets data import state to SUCCESS after all feeds have been processed' do
-      ImportOpmlWorker.new.perform @filename, @user.id
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 4
-      expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::SUCCESS
-    end
-
     it 'updates the data import total number of feeds' do
       ImportOpmlWorker.new.perform @filename, @user.id
       @user.reload
       expect(@user.opml_import_job_state.total_feeds).to eq 4
-    end
-
-    it 'updates the data import number of processed feeds' do
-      ImportOpmlWorker.new.perform @filename, @user.id
-      @user.reload
-      expect(@user.opml_import_job_state.processed_feeds).to eq 4
-    end
-
-    it 'subscribes user to feeds in OPML' do
-      expect(@user.feeds.count).to eq 0
-
-      ImportOpmlWorker.new.perform @filename, @user.id
-
-      expect(@user.reload.feeds.count).to eq 4
-      feed_url_1 = 'http://brakemanscanner.org/atom.xml'
-      feed_url_2 = 'http://www.galactanet.com/feed.xml'
-      feed_url_3 = 'https://www.archlinux.org/feeds/news/'
-      feed_url_4 = 'http://xkcd.com/rss.xml'
-      expect(@user.feeds.map {|f| f.fetch_url}).to contain_exactly feed_url_1, feed_url_2, feed_url_3, feed_url_4
     end
 
     it 'creates folders in OPML' do
@@ -158,27 +125,45 @@ describe ImportOpmlWorker do
       folder_title_1 = 'Linux'
       folder_title_2 = 'Webcomics'
       expect(@user.folders.map {|f| f.title}).to contain_exactly folder_title_1, folder_title_2
+    end
 
-      folder_linux = @user.folders.find_by_title folder_title_1
-      expect(folder_linux.feeds.count).to eq 1
-      expect(folder_linux.feeds.first.fetch_url).to eq 'https://www.archlinux.org/feeds/news/'
+    it 'enqueues superworker' do
+      expect(ImportSubscriptionsWorker).to receive(:perform_async) do |opml_import_job_state_id, urls, folder_ids|
+        expect(opml_import_job_state_id).to eq @opml_import_job_state.id
+        expect(urls).to eq %w(http://brakemanscanner.org/atom.xml http://www.galactanet.com/feed.xml
+                            https://www.archlinux.org/feeds/news/ http://xkcd.com/rss.xml)
+        expect(folder_ids.size).to eq 4
+        expect(folder_ids[0]).to be nil
+        expect(folder_ids[1]).to be nil
+        expect(Folder.find(folder_ids[2]).title).to eq 'Linux'
+        expect(Folder.find(folder_ids[3]).title).to eq 'Webcomics'
+      end
 
-      folder_webcomics = @user.folders.find_by_title folder_title_2
-      expect(folder_webcomics.feeds.count).to eq 1
-      expect(folder_webcomics.feeds.first.fetch_url).to eq 'http://xkcd.com/rss.xml'
+      ImportOpmlWorker.new.perform @filename, @user.id
     end
   end
 
   context 'finishes with an error' do
 
     before :each do
-      allow(OPMLImporter).to receive(:import).and_raise StandardError.new
+      allow(ImportSubscriptionsWorker).to receive(:perform_async).and_raise StandardError.new
     end
 
-    it 'sets data import state to ERROR if an error is raised' do
+    it 'sets data import state to ERROR' do
       expect {ImportOpmlWorker.new.perform @filename, @user.id}.to raise_error
       @user.reload
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
+    end
+
+    it 'sends notification email' do
+      # Remove emails stil in the mail queue
+      ActionMailer::Base.deliveries.clear
+
+      not_valid_opml_filename = File.join __dir__, '..', '..', 'attachments', 'not-valid-opml.opml'
+      file_contents = File.read not_valid_opml_filename
+      allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return file_contents
+      expect {ImportOpmlWorker.new.perform not_valid_opml_filename, @user.id}.to raise_error OpmlImportError
+      mail_should_be_sent 'There has been an error importing your feed subscriptions into', to: @user.email
     end
   end
 
@@ -230,66 +215,6 @@ describe ImportOpmlWorker do
 
       folder_webcomics = @user.folders.find_by title: 'Webcomics'
       expect(folder_webcomics).to be_present
-    end
-  end
-
-  context 'failed URLs during import' do
-
-    before :each do
-      allow_any_instance_of(User).to receive :subscribe do |user, fetch_url|
-        expect(user.id).to eq @user.id
-        if fetch_url == 'http://xkcd.com/rss.xml' || fetch_url == 'http://brakemanscanner.org/atom.xml'
-          raise RestClient::Exception.new
-        end
-        feed = FactoryGirl.create :feed, fetch_url: fetch_url
-        subscription = FactoryGirl.create :feed_subscription, user_id: user.id, feed_id: feed.id
-        feed
-      end
-    end
-
-    it 'creates OpmlImportFailure instances for failed imports' do
-      expect(OpmlImportFailure.all.count).to eq 0
-      ImportOpmlWorker.new.perform @filename, @user.id
-      expect(OpmlImportFailure.all.count).to eq 2
-      expect(OpmlImportFailure.all.map{|f| f.url}).to contain_exactly 'http://xkcd.com/rss.xml',
-                                                                  'http://brakemanscanner.org/atom.xml'
-    end
-  end
-
-  context 'email notifications' do
-
-    before :each do
-      # Remove emails stil in the mail queue
-      ActionMailer::Base.deliveries.clear
-    end
-
-    it 'sends an email if it finishes successfully' do
-      ImportOpmlWorker.new.perform @filename, @user.id
-      mail_should_be_sent 'Your feed subscriptions have been imported into', to: @user.email
-    end
-
-    it 'sends an email with failed feeds if it finishes successfully' do
-      allow_any_instance_of(User).to receive :subscribe do |user, fetch_url|
-        expect(user.id).to eq @user.id
-        raise RestClient::Exception.new if fetch_url == 'http://xkcd.com/rss.xml'
-        feed = FactoryGirl.create :feed, fetch_url: fetch_url
-        subscription = FactoryGirl.create :feed_subscription, user_id: user.id, feed_id: feed.id
-        feed
-      end
-
-      ImportOpmlWorker.new.perform @filename, @user.id
-
-      mail_should_be_sent 'We haven&#39;t been able to subscribe you to the following feeds',
-                          'http://xkcd.com/rss.xml',
-                          to: @user.email
-    end
-
-    it 'sends an email if it finishes with an error' do
-      not_valid_opml_filename = File.join __dir__, '..', '..', 'attachments', 'not-valid-opml.opml'
-      file_contents = File.read not_valid_opml_filename
-      allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return file_contents
-      expect {ImportOpmlWorker.new.perform not_valid_opml_filename, @user.id}.to raise_error OpmlImportError
-      mail_should_be_sent 'There has been an error importing your feed subscriptions into', to: @user.email
     end
   end
 
