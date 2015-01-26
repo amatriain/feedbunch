@@ -50,7 +50,8 @@ class ImportSubscriptionWorker
     if opml_import_job_state.present? && opml_import_job_state.try(:state) == OpmlImportJobState::RUNNING
       Rails.logger.info "Incrementing processed feeds in OPML import for user #{user.try :id} - #{user.try :email} by 1"
       processed_feeds = opml_import_job_state.reload.processed_feeds
-      opml_import_job_state.update processed_feeds: processed_feeds+1
+      # Increment the count of processed feeds up to the total number of feeds
+      opml_import_job_state.update processed_feeds: processed_feeds+1 if processed_feeds < opml_import_job_state.total_feeds
     end
   end
 

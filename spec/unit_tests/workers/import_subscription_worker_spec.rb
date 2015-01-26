@@ -5,7 +5,7 @@ describe ImportSubscriptionWorker do
   before :each do
     @user = FactoryGirl.create :user
     @opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
-                                     total_feeds: 0, processed_feeds: 0
+                                     total_feeds: 10, processed_feeds: 0
     @user.opml_import_job_state = @opml_import_job_state
 
     @url = 'http://some.feed.com/'
@@ -100,6 +100,12 @@ describe ImportSubscriptionWorker do
       expect(@opml_import_job_state.processed_feeds).to eq 0
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
       expect(@opml_import_job_state.reload.processed_feeds).to eq 0
+    end
+
+    it 'does not increment count if it is already at the total number of feeds' do
+      @opml_import_job_state.update processed_feeds: 10
+      ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
+      expect(@opml_import_job_state.reload.processed_feeds).to eq 10
     end
 
   end
