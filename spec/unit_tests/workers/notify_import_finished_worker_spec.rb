@@ -5,7 +5,7 @@ describe NotifyImportFinishedWorker do
   before :each do
     @user = FactoryGirl.create :user
     @opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
-                                     total_feeds: 0, processed_feeds: 0
+                                     total_feeds: 4, processed_feeds: 4
     @user.opml_import_job_state = @opml_import_job_state
 
     # Remove emails still in the mail queue
