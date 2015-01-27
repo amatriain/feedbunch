@@ -30,10 +30,11 @@ class RefreshFeedJobState < ActiveRecord::Base
   private
 
   ##
-  # Update the refresh_feed_jobs_updated_at attribute of the associated user with the current datetime.
+  # Update the refresh_feed_jobs_etag attribute of the associated user with the current datetime.
 
   def touch_refresh_feed_job_states
-    user.update refresh_feed_jobs_updated_at: Time.zone.now if user.present?
+    refresh_etag = OpenSSL::Digest::MD5.new.hexdigest Time.zone.now.to_f.to_s
+    user.update refresh_feed_jobs_etag: refresh_etag
   end
 
   ##

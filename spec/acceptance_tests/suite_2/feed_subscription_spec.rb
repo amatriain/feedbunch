@@ -149,6 +149,7 @@ describe 'subscription to feeds', type: :feature do
       it 'loads feed even if it has no unread entries', js: true do
         subscribe_feed @feed2.fetch_url
         expect(page).to have_text 'Successfully added subscription to feed'
+        unread_feed_entries_should_eq @feed2, 1, @user
         Entry.destroy_all
         subscription = FeedSubscription.find_by user_id: @user.id, feed_id: @feed2.id
         subscription.update unread_entries: 0

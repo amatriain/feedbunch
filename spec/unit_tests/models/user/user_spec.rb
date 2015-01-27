@@ -352,27 +352,29 @@ describe User, type: :model do
 
   context 'refresh_feed_jobs_updated_at defaults' do
 
-    it 'defaults to current time' do
+    it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
+      hash = OpenSSL::Digest::MD5.new.hexdigest date.to_f.to_s
 
-      user = FactoryGirl.build :user, refresh_feed_jobs_updated_at: nil
+      user = FactoryGirl.build :user, refresh_feed_jobs_etag: nil
       user.save!
-      expect(user.refresh_feed_jobs_updated_at).not_to be_nil
-      expect(user.refresh_feed_jobs_updated_at).to eq date
+      expect(user.refresh_feed_jobs_etag).not_to be_nil
+      expect(user.refresh_feed_jobs_etag).to eq hash
     end
   end
 
-  context 'subscribe_jobs_updated_at defaults' do
+  context 'subscribe_jobs_etag defaults' do
 
-    it 'defaults to current time' do
+    it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
+      hash = OpenSSL::Digest::MD5.new.hexdigest date.to_f.to_s
 
-      user = FactoryGirl.build :user, subscribe_jobs_updated_at: nil
+      user = FactoryGirl.build :user, subscribe_jobs_etag: nil
       user.save!
-      expect(user.subscribe_jobs_updated_at).not_to be_nil
-      expect(user.subscribe_jobs_updated_at).to eq date
+      expect(user.subscribe_jobs_etag).not_to be_nil
+      expect(user.subscribe_jobs_etag).to eq hash
     end
   end
 

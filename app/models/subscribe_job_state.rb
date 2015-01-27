@@ -33,10 +33,13 @@ class SubscribeJobState < ActiveRecord::Base
   private
 
   ##
-  # Update the refresh_feed_jobs_updated_at attribute of the associated user with the current datetime.
+  # Update the subscribe_jobs_etag attribute of the associated user with the current datetime.
 
   def touch_subscribe_job_states
-    user.update subscribe_jobs_updated_at: Time.zone.now if user.present?
+    if user.present?
+      subscribe_etag = OpenSSL::Digest::MD5.new.hexdigest Time.zone.now.to_f.to_s
+      user.update subscribe_jobs_etag: subscribe_etag
+    end
   end
 
   ##

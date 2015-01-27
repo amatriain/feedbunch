@@ -22,8 +22,8 @@ FactoryGirl.define do
     show_entry_tour false
     subscriptions_updated_at Time.zone.now
     folders_updated_at Time.zone.now
-    refresh_feed_jobs_updated_at Time.zone.now
-    subscribe_jobs_updated_at Time.zone.now
+    refresh_feed_jobs_etag OpenSSL::Digest::MD5.new.hexdigest Time.zone.now.to_f.to_s
+    subscribe_jobs_etag OpenSSL::Digest::MD5.new.hexdigest Time.zone.now.to_f.to_s
     config_updated_at Time.zone.now
 
     factory :user_unconfirmed do
