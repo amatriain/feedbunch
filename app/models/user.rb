@@ -68,13 +68,13 @@ require 'subscriptions_manager'
 # update this attribute are:
 #   - creating a folder
 #   - destroying a folder
-# - refresh_feed_jobs_updated_at: datetime indicating when refresh feed jobs for this user were updated for the
-# last time. Events that update this attribute are:
+# - refresh_feed_jobs_etag: text with the md5 hash of the time (in fractional seconds) that refresh feed jobs for this
+# user were updated for the last time. Events that update this attribute are:
 #   - creating a refresh feed job state
 #   - destroying a refresh feed job state
 #   - updating a refresh feed job state
-# - subscribe_jobs_updated_at: datetime indicating when subscribe feed jobs for this user were updated for the
-# last time. Events that update this attribute are:
+# - subscribe_jobs_etag: text with the md5 hash of the time (in fractional seconds) that subscribe feed jobs for this
+# user were updated for the last time. Events that update this attribute are:
 #   - creating a subscribe feed job state
 #   - destroying a subscribe feed job state
 #   - updating a subscribe feed job state
@@ -427,14 +427,16 @@ class User < ActiveRecord::Base
       self.folders_updated_at = Time.zone.now
     end
 
-    if self.refresh_feed_jobs_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported refresh_feed_jobs_updated_at value, using current datetime by default"
-      self.refresh_feed_jobs_updated_at = Time.zone.now
+    if self.refresh_feed_jobs_etag == nil
+      Rails.logger.info "User #{self.email} has unsupported refresh_feed_jobs_etag value, using md5 hash of current datetime by default"
+      now = Time.zone.now.to_f.to_s
+      self.refresh_feed_jobs_etag = OpenSSL::Digest::MD5.new.hexdigest now
     end
 
-    if self.subscribe_jobs_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported subscribe_jobs_updated_at value, using current datetime by default"
-      self.subscribe_jobs_updated_at = Time.zone.now
+    if self.subscribe_jobs_etag == nil
+      Rails.logger.info "User #{self.email} has unsupported subscribe_jobs_etag value, using md5 hash of current datetime by default"
+      now = Time.zone.now.to_f.to_s
+      self.subscribe_jobs_etag = OpenSSL::Digest::MD5.new.hexdigest now
     end
 
     if self.config_updated_at == nil

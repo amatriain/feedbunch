@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150108140208) do
+ActiveRecord::Schema.define(version: 20150127180808) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -216,10 +216,10 @@ ActiveRecord::Schema.define(version: 20150108140208) do
     t.boolean  "show_entry_tour",                          default: true,  null: false
     t.datetime "subscriptions_updated_at"
     t.datetime "folders_updated_at"
-    t.datetime "refresh_feed_jobs_updated_at"
-    t.datetime "subscribe_jobs_updated_at"
     t.datetime "config_updated_at"
     t.datetime "user_data_updated_at"
+    t.text     "subscribe_jobs_etag"
+    t.text     "refresh_feed_jobs_etag"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
