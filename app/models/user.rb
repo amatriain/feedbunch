@@ -6,6 +6,7 @@ require 'entries_pagination'
 require 'feeds_pagination'
 require 'opml_importer'
 require 'subscriptions_manager'
+require 'etag_calculator'
 
 ##
 # User model. Each instance of this class represents a single user that can log in to the application
@@ -429,14 +430,12 @@ class User < ActiveRecord::Base
 
     if self.refresh_feed_jobs_etag == nil
       Rails.logger.info "User #{self.email} has unsupported refresh_feed_jobs_etag value, using md5 hash of current datetime by default"
-      now = Time.zone.now.to_f.to_s
-      self.refresh_feed_jobs_etag = OpenSSL::Digest::MD5.new.hexdigest now
+      self.refresh_feed_jobs_etag = EtagCalculator.etag Time.zone.now
     end
 
     if self.subscribe_jobs_etag == nil
       Rails.logger.info "User #{self.email} has unsupported subscribe_jobs_etag value, using md5 hash of current datetime by default"
-      now = Time.zone.now.to_f.to_s
-      self.subscribe_jobs_etag = OpenSSL::Digest::MD5.new.hexdigest now
+      self.subscribe_jobs_etag = EtagCalculator.etag Time.zone.now
     end
 
     if self.config_updated_at == nil

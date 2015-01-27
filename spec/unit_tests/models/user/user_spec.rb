@@ -350,7 +350,7 @@ describe User, type: :model do
     end
   end
 
-  context 'refresh_feed_jobs_updated_at defaults' do
+  context 'refresh_feed_jobs_etag defaults' do
 
     it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'

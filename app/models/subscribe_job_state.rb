@@ -37,7 +37,7 @@ class SubscribeJobState < ActiveRecord::Base
 
   def touch_subscribe_job_states
     if user.present?
-      subscribe_etag = OpenSSL::Digest::MD5.new.hexdigest Time.zone.now.to_f.to_s
+      subscribe_etag = EtagCalculator.etag Time.zone.now
       user.update subscribe_jobs_etag: subscribe_etag
     end
   end
