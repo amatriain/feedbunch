@@ -65,7 +65,7 @@ class Api::EntriesController < ApplicationController
     @subscription = FeedSubscription.find_by user_id: current_user.id, feed_id: params[:feed_id]
     if @subscription.present?
       # If feed subscription has not changed, return a 304
-      if stale? last_modified: @subscription.updated_at
+      if stale? etag: EtagCalculator.etag(@subscription.updated_at)
         @feed = @subscription.feed
         @entries = current_user.feed_entries @feed, include_read: @include_read, page: params[:page]
         index_entries
