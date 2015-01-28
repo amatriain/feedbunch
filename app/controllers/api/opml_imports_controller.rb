@@ -20,7 +20,7 @@ class Api::OpmlImportsController < ApplicationController
     end
 
     # If opml export state has not changed, return a 304
-    if stale? last_modified: @opml_import_job_state.updated_at
+    if stale? etag: EtagCalculator.etag(@opml_import_job_state.updated_at)
       Rails.logger.debug "OpmlImportJobState for user #{current_user.id} - #{current_user.email}: id #{@opml_import_job_state.try :id}, state #{@opml_import_job_state.try :state}"
       respond_with @opml_import_job_state
     end
