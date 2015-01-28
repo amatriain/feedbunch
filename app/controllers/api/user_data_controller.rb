@@ -12,7 +12,7 @@ class Api::UserDataController < ApplicationController
 
   def show
     # If data has not changed, return a 304
-    if stale? last_modified: current_user.user_data_updated_at
+    if stale? etag: current_user.user_data_etag
       @user = current_user
       respond_with @user
     end

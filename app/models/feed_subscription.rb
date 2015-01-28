@@ -94,9 +94,9 @@ class FeedSubscription < ActiveRecord::Base
   end
 
   ##
-  # Update the user_data_updated_at attribute of the associated user with the current datetime.
+  # Update the user_data_etag attribute of the associated user with the current datetime.
 
   def touch_user_data
-    user.update user_data_updated_at: Time.zone.now if user.present?
+    user.update user_data_etag: EtagCalculator.etag(Time.zone.now) if user.present?
   end
 end
