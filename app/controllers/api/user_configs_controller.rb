@@ -12,7 +12,7 @@ class Api::UserConfigsController < ApplicationController
 
   def show
     # If config has not changed, return a 304
-    if stale? last_modified: current_user.config_updated_at
+    if stale? etag: current_user.config_etag
       @user = current_user
       respond_with current_user
     end

@@ -79,7 +79,7 @@ require 'etag_calculator'
 #   - creating a subscribe feed job state
 #   - destroying a subscribe feed job state
 #   - updating a subscribe feed job state
-# - config_updated_at: datetime indicating when the config for this user was last updated. This attribute is
+# - config_etag: text with md5 hash of the datetime when the config for this user was last updated. This attribute is
 # updated every time one of these attributes is changed:
 #   - quick_reading
 #   - open_all_entries
@@ -332,7 +332,7 @@ class User < ActiveRecord::Base
 
   ##
   # Operations after saving a user in the db:
-  # - update the config_updated_at attribute to the current datetime if one of these attributes has changed value:
+  # - update the config_etag attribute to the current datetime if one of these attributes has changed value:
   #   - quick_reading
   #   - open_all_entries
   #   - show_main_tour
@@ -344,7 +344,7 @@ class User < ActiveRecord::Base
     if quick_reading_changed? || open_all_entries_changed? ||
         show_main_tour_changed? || show_mobile_tour_changed? ||
         show_feed_tour_changed? || show_entry_tour_changed?
-      update_column :config_updated_at, Time.zone.now
+      update_column :config_etag, Time.zone.now
     end
   end
 
@@ -438,9 +438,9 @@ class User < ActiveRecord::Base
       self.subscribe_jobs_etag = EtagCalculator.etag Time.zone.now
     end
 
-    if self.config_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported config_updated_at value, using current datetime by default"
-      self.config_updated_at = Time.zone.now
+    if self.config_etag == nil
+      Rails.logger.info "User #{self.email} has unsupported config_etag value, using current datetime by default"
+      self.config_etag = Time.zone.now
     end
 
     if self.user_data_updated_at == nil
