@@ -31,7 +31,7 @@ class Api::RefreshFeedJobStatesController < ApplicationController
   def show
     @job_state = current_user.find_refresh_feed_job_state params[:id]
     # If job state has not changed, return a 304
-    if stale? last_modified: @job_state.updated_at
+    if stale? etag: EtagCalculator.etag(@job_state.updated_at)
       respond_with @job_state
     end
   rescue => e
