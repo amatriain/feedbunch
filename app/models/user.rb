@@ -65,7 +65,7 @@ require 'etag_calculator'
 #   - changing a feed title
 #   - changing a feed URL
 #   - moving a feed into or out of a folder
-# - folders_updated_at: datetime indicating when were folders updated for the last time. Events that
+# - folders_etag: text with the md5 hash of the time when were folders updated for the last time. Events that
 # update this attribute are:
 #   - creating a folder
 #   - destroying a folder
@@ -423,9 +423,9 @@ class User < ActiveRecord::Base
       self.subscriptions_etag = EtagCalculator.etag Time.zone.now
     end
 
-    if self.folders_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported folders_updated_at value, using current datetime by default"
-      self.folders_updated_at = Time.zone.now
+    if self.folders_etag == nil
+      Rails.logger.info "User #{self.email} has unsupported folders_etag value, using current datetime by default"
+      self.folders_etag = EtagCalculator.etag Time.zone.now
     end
 
     if self.refresh_feed_jobs_etag == nil
