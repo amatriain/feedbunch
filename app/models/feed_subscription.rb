@@ -36,15 +36,16 @@ class FeedSubscription < ActiveRecord::Base
   ##
   # Update the date in which subscriptions have been changed:
   # - touch this FeedSubscription instance, updating its updated_at attribute
-  # - update the subscriptions_updated_at attribute of the associated user to the current date/time
-  # - update the subscriptions_updated_at attribute of the folder which contains the feed, if any, to the current date/time
+  # - update the subscriptions_etag attribute of the associated user to the MD5 hash of the current date/time
+  # - update the subscriptions_etag attribute of the folder which contains the feed, if any, to the
+  # MD5 hash of the current date/time
 
   def touch_subscriptions
     Rails.logger.info "Touching subscription of user #{user_id} to feed #{feed_id}"
     self.touch if !destroyed?
-    user.update subscriptions_updated_at: Time.zone.now if user.present?
+    user.update subscriptions_etag: EtagCalculator.etag(Time.zone.now) if user.present?
     folder = feed.user_folder user
-    folder.update subscriptions_updated_at: Time.zone.now if folder.present?
+    folder.update subscriptions_etag: EtagCalculator.etag(Time.zone.now) if folder.present?
   end
 
   private

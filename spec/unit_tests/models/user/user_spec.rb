@@ -324,16 +324,16 @@ describe User, type: :model do
     end
   end
 
-  context 'subscriptions_updated_at defaults' do
+  context 'subscriptions_etag defaults' do
 
     it 'defaults to current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
-      user = FactoryGirl.build :user, subscriptions_updated_at: nil
+      user = FactoryGirl.build :user, subscriptions_etag: nil
       user.save!
-      expect(user.subscriptions_updated_at).not_to be_nil
-      expect(user.subscriptions_updated_at).to eq date
+      expect(user.subscriptions_etag).not_to be_nil
+      expect(user.subscriptions_etag).to eq EtagCalculator.etag(date)
     end
   end
 

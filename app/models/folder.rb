@@ -15,7 +15,7 @@
 # A given user cannot have two folders with the same title. Folders with the same title are allowed as long as they
 # belong to different users.
 #
-# The subscriptions_updated_at attribute indicates the date/time at which a feed in the folder was last changed.
+# The subscriptions_etag attribute is an MD5 hash of the date/time at which a feed in the folder was last changed.
 # Events that update this attribute are:
 #   - unsubscribing from a feed in the folder
 #   - changing the unread entries count for a feed in the folder
@@ -75,12 +75,12 @@ class Folder < ActiveRecord::Base
 
   ##
   # Give the following default values to the folder, in case no value or an invalid value is set:
-  # - subscriptions_updated_at: the current date/time
+  # - subscriptions_etag: MD5 hash of the current date/time
 
   def default_values
-    if subscriptions_updated_at == nil
-      Rails.logger.info "Folder #{id} - #{title} has unsupported subscriptions_updated_at value, using current datetime by default"
-      self.subscriptions_updated_at = Time.zone.now
+    if subscriptions_etag == nil
+      Rails.logger.info "Folder #{id} - #{title} has unsupported subscriptions_etag value, using current datetime by default"
+      self.subscriptions_etag = EtagCalculator.etag Time.zone.now
     end
   end
 

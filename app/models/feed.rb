@@ -173,7 +173,7 @@ class Feed < ActiveRecord::Base
   # Touch (update the updated_at attribute) associated subscriptions if at least one of these attributes has changed:
   # - title
   # - url
-  # The subscriptions_updated_at of subscribed users is also updated to the current date and time
+  # The subscriptions_etag of subscribed users is also updated to the current date and time
   #
   # This is meant to invalidate the HTTP cache and force clients to download this feed again.
 

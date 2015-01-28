@@ -83,7 +83,7 @@ class Api::EntriesController < ApplicationController
     Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested entries for folder #{params[:folder_id]}, include_read: #{params[:include_read]}"
     @folder = current_user.folders.find params[:folder_id]
     # If feed subscriptions in the folder have not changed, return a 304
-    if stale? last_modified: @folder.subscriptions_updated_at
+    if stale? etag: @folder.subscriptions_etag
       @entries = current_user.folder_entries @folder, include_read: @include_read, page: params[:page]
       index_entries
     end
@@ -95,7 +95,7 @@ class Api::EntriesController < ApplicationController
   def index_all
     Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested all entries, include_read: #{params[:include_read]}"
     # If feed subscriptions have not changed, return a 304
-    if stale? last_modified: current_user.subscriptions_updated_at
+    if stale? etag: current_user.subscriptions_etag
       @folder = Folder::ALL_FOLDERS
       @entries = current_user.folder_entries @folder, include_read: @include_read, page: params[:page]
       index_entries
