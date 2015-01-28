@@ -33,8 +33,10 @@ class RefreshFeedJobState < ActiveRecord::Base
   # Update the refresh_feed_jobs_etag attribute of the associated user with the current datetime.
 
   def touch_refresh_feed_job_states
-    refresh_etag = EtagCalculator.etag Time.zone.now
-    user.update refresh_feed_jobs_etag: refresh_etag
+    if user.present?
+      refresh_etag = EtagCalculator.etag Time.zone.now
+      user.update refresh_feed_jobs_etag: refresh_etag
+    end
   end
 
   ##
