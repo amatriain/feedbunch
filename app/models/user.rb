@@ -419,12 +419,12 @@ class User < ActiveRecord::Base
     end
 
     if self.subscriptions_etag == nil
-      Rails.logger.info "User #{self.email} has unsupported subscriptions_etag value, using hash of current datetime by default"
+      Rails.logger.info "User #{self.email} has unsupported subscriptions_etag value, using md5 hash of current datetime by default"
       self.subscriptions_etag = EtagCalculator.etag Time.zone.now
     end
 
     if self.folders_etag == nil
-      Rails.logger.info "User #{self.email} has unsupported folders_etag value, using current datetime by default"
+      Rails.logger.info "User #{self.email} has unsupported folders_etag value, using md5 hash of current datetime by default"
       self.folders_etag = EtagCalculator.etag Time.zone.now
     end
 
@@ -439,12 +439,12 @@ class User < ActiveRecord::Base
     end
 
     if self.config_etag == nil
-      Rails.logger.info "User #{self.email} has unsupported config_etag value, using current datetime by default"
-      self.config_etag = Time.zone.now
+      Rails.logger.info "User #{self.email} has unsupported config_etag value, using md5 hash of current datetime by default"
+      self.config_etag = EtagCalculator.etag Time.zone.now
     end
 
     if self.user_data_etag == nil
-      Rails.logger.info "User #{self.email} has unsupported user_data_etag value, using current datetime by default"
+      Rails.logger.info "User #{self.email} has unsupported user_data_etag value, using md5 hash of current datetime by default"
       self.user_data_etag = EtagCalculator.etag Time.zone.now
     end
   end

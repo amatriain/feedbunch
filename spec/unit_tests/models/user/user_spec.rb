@@ -373,14 +373,14 @@ describe User, type: :model do
 
       user = FactoryGirl.build :user, subscribe_jobs_etag: nil
       user.save!
-      expect(user.subscribe_jobs_etag).not_to be_nil
+      expect(user.reload.subscribe_jobs_etag).not_to be_nil
       expect(user.subscribe_jobs_etag).to eq hash
     end
   end
 
   context 'config_etag defaults' do
 
-    it 'defaults to current time' do
+    it 'defaults to hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
