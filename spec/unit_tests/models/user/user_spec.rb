@@ -237,13 +237,13 @@ describe User, type: :model do
     it 'gives a default english locale' do
       user = FactoryGirl.build :user, locale: nil
       user.save!
-      expect(user.locale).to eq 'en'
+      expect(user.reload.locale).to eq 'en'
     end
 
     it 'defaults to english if the passed locale is not supported' do
       user = FactoryGirl.build :user, locale: 'not-supported-locale'
       user.save!
-      expect(user.locale).to eq 'en'
+      expect(user.reload.locale).to eq 'en'
     end
 
   end
@@ -259,7 +259,7 @@ describe User, type: :model do
     it 'defaults to UTC if the passed timezone is not supported' do
       user = FactoryGirl.build :user, timezone: 'Amber/Castle Amber'
       user.save!
-      expect(user.timezone).to eq 'UTC'
+      expect(user.reload.timezone).to eq 'UTC'
     end
 
   end
@@ -269,7 +269,7 @@ describe User, type: :model do
     it 'gives a default value of false' do
       user = FactoryGirl.build :user, quick_reading: nil
       user.save!
-      expect(user.quick_reading).not_to be_nil
+      expect(user.reload.quick_reading).not_to be_nil
       expect(user.quick_reading).to be false
     end
   end
@@ -279,7 +279,7 @@ describe User, type: :model do
     it 'gives a default value of false' do
       user = FactoryGirl.build :user, open_all_entries: nil
       user.save!
-      expect(user.open_all_entries).not_to be_nil
+      expect(user.reload.open_all_entries).not_to be_nil
       expect(user.open_all_entries).to be false
     end
   end
@@ -289,7 +289,7 @@ describe User, type: :model do
     it 'gives a default value of true' do
       user = FactoryGirl.build :user, show_main_tour: nil
       user.save!
-      expect(user.show_main_tour).not_to be_nil
+      expect(user.reload.show_main_tour).not_to be_nil
       expect(user.show_main_tour).to be true
     end
   end
@@ -299,7 +299,7 @@ describe User, type: :model do
     it 'gives a default value of true' do
       user = FactoryGirl.build :user, show_mobile_tour: nil
       user.save!
-      expect(user.show_mobile_tour).not_to be_nil
+      expect(user.reload.show_mobile_tour).not_to be_nil
       expect(user.show_mobile_tour).to be true
     end
   end
@@ -309,7 +309,7 @@ describe User, type: :model do
     it 'gives a default value of true' do
       user = FactoryGirl.build :user, show_feed_tour: nil
       user.save!
-      expect(user.show_feed_tour).not_to be_nil
+      expect(user.reload.show_feed_tour).not_to be_nil
       expect(user.show_feed_tour).to be true
     end
   end
@@ -319,33 +319,33 @@ describe User, type: :model do
     it 'gives a default value of true' do
       user = FactoryGirl.build :user, show_entry_tour: nil
       user.save!
-      expect(user.show_entry_tour).not_to be_nil
+      expect(user.reload.show_entry_tour).not_to be_nil
       expect(user.show_entry_tour).to be true
     end
   end
 
   context 'subscriptions_etag defaults' do
 
-    it 'defaults to current time' do
+    it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
       user = FactoryGirl.build :user, subscriptions_etag: nil
       user.save!
-      expect(user.subscriptions_etag).not_to be_nil
+      expect(user.reload.subscriptions_etag).not_to be_nil
       expect(user.subscriptions_etag).to eq EtagCalculator.etag(date)
     end
   end
 
   context 'folders_etag defaults' do
 
-    it 'defaults to current time' do
+    it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
       user = FactoryGirl.build :user, folders_etag: nil
       user.save!
-      expect(user.folders_etag).not_to be_nil
+      expect(user.reload.folders_etag).not_to be_nil
       expect(user.folders_etag).to eq EtagCalculator.etag(date)
     end
   end
@@ -355,12 +355,11 @@ describe User, type: :model do
     it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
-      hash = OpenSSL::Digest::MD5.new.hexdigest date.to_f.to_s
 
       user = FactoryGirl.build :user, refresh_feed_jobs_etag: nil
       user.save!
-      expect(user.refresh_feed_jobs_etag).not_to be_nil
-      expect(user.refresh_feed_jobs_etag).to eq hash
+      expect(user.reload.refresh_feed_jobs_etag).not_to be_nil
+      expect(user.refresh_feed_jobs_etag).to eq EtagCalculator.etag(date)
     end
   end
 
@@ -369,37 +368,36 @@ describe User, type: :model do
     it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
-      hash = OpenSSL::Digest::MD5.new.hexdigest date.to_f.to_s
 
       user = FactoryGirl.build :user, subscribe_jobs_etag: nil
       user.save!
       expect(user.reload.subscribe_jobs_etag).not_to be_nil
-      expect(user.subscribe_jobs_etag).to eq hash
+      expect(user.subscribe_jobs_etag).to eq EtagCalculator.etag(date)
     end
   end
 
   context 'config_etag defaults' do
 
-    it 'defaults to hash of current time' do
+    it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
       user = FactoryGirl.build :user, config_etag: nil
       user.save!
-      expect(user.config_etag).not_to be_nil
+      expect(user.reload.config_etag).not_to be_nil
       expect(user.config_etag).to eq EtagCalculator.etag(date)
     end
   end
 
   context 'user_data_etag defaults' do
 
-    it 'defaults to current time' do
+    it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
       user = FactoryGirl.build :user, user_data_etag: nil
       user.save!
-      expect(user.user_data_etag).not_to be_nil
+      expect(user.reload.user_data_etag).not_to be_nil
       expect(user.user_data_etag).to eq EtagCalculator.etag(date)
     end
   end

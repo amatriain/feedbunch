@@ -344,7 +344,7 @@ class User < ActiveRecord::Base
     if quick_reading_changed? || open_all_entries_changed? ||
         show_main_tour_changed? || show_mobile_tour_changed? ||
         show_feed_tour_changed? || show_entry_tour_changed?
-      update_column :config_etag, Time.zone.now
+      update_column :config_etag, EtagCalculator.etag(Time.zone.now)
     end
   end
 
