@@ -39,7 +39,7 @@ class Api::FeedsController < ApplicationController
 
     if @subscription.present?
       # If feed subscription has not changed, return a 304
-      if stale? etag: EtagCalculator.etag(@subscription.updated_at)
+      if stale? etag: EtagCalculator.etag(@subscription.updated_at), last_modified: @subscription.updated_at
         @feed = current_user.feeds.find params[:id]
         @folder_id = @feed.user_folder(current_user).try(:id) || 'none'
         @unread_count = current_user.feed_unread_count @feed
@@ -109,7 +109,7 @@ class Api::FeedsController < ApplicationController
     @folder = current_user.folders.find params[:folder_id]
     if @folder.present?
       # If feed subscriptions in the folder have not changed, return a 304
-      if stale? etag: @folder.subscriptions_etag
+      if stale? etag: @folder.subscriptions_etag, last_modified: @folder.updated_at
         @feeds = current_user.folder_feeds @folder, include_read: @include_read
         index_feeds
       end
@@ -125,7 +125,7 @@ class Api::FeedsController < ApplicationController
 
   def index_all
     # If feed subscriptions have not changed, return a 304
-    if stale? etag: current_user.subscriptions_etag
+    if stale? etag: current_user.subscriptions_etag, last_modified: current_user.updated_at
       @folder = nil
       @feeds = current_user.subscribed_feeds include_read: @include_read, page: params[:page]
       index_feeds

@@ -12,7 +12,7 @@ class Api::FoldersController < ApplicationController
 
   def index
     # If folders have not changed, return a 304
-    if stale? etag: current_user.folders_etag
+    if stale? etag: current_user.folders_etag, last_modified: current_user.updated_at
       @folders = current_user.folders
       respond_with @folders
     end
@@ -31,7 +31,7 @@ class Api::FoldersController < ApplicationController
 
     if @folder.present?
       # If folder has not changed, return a 304
-      if stale? etag: EtagCalculator.etag(@folder.updated_at)
+      if stale? etag: EtagCalculator.etag(@folder.updated_at), last_modified: @folder.updated_at
         respond_with @folder
       end
     else
