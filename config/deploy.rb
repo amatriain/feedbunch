@@ -62,7 +62,8 @@ set :linked_dirs, %w{
 
 set :scm, :git
 set :repo_url,  'git://github.com/amatriain/feedbunch.git'
-set :branch, 'master'
+# Default is to deploy master, but it can be overriden with REVISION or BRANCH_NAME env variables
+set :branch, ENV['REVISION'] || ENV['BRANCH_NAME'] || 'master'
 
 #############################################################
 #	Puma
