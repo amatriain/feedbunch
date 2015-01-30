@@ -93,9 +93,9 @@ en:
     entries:
       no_entries: "No entries"
       mark_unread_tooltip: "Mark this entry as unread"
-      mark_unread: "Unread"
+      mark_unread: "Read"
       mark_read_tooltip: "Mark this entry as read"
-      mark_read: "Read"
+      mark_read: "Unread"
       share: "Share"
       share_tooltip: "Share this entry"
       share_twitter: "Twitter"

@@ -72,9 +72,9 @@ es:
     entries:
       no_entries: "No hay entradas"
       mark_unread_tooltip: "Marcar esta entrada como sin leer"
-      mark_unread: "Sin leer"
+      mark_unread: "Leído"
       mark_read_tooltip: "Marcar esta entrada como leída"
-      mark_read: "Leído"
+      mark_read: "Sin leer"
       share: "Compartir"
       share_tooltip: "Compartir esta entrada"
       share_twitter: "Twitter"
