@@ -73,14 +73,13 @@ RSpec.configure do |config|
   # For more about these helpers see Warden wiki: https://github.com/hassox/warden/wiki/Testing
   config.include Warden::Test::Helpers
 
-  # Blacklist external URLs that serve files unnecessary for testing (fonts, twitter API, etc) to speed up tests
+  # Block external URLs that serve files unnecessary for testing (fonts, twitter API, etc) to speed up tests.
+  # This is a whitelist approach: only calls to explicitly allowed hosts or URLs will go through.
   config.before :each, js: true do
-    page.driver.browser.url_blacklist=%w(
-                                          http://platform.twitter.com
-                                          http://connect.facebook.net
-                                          http://cdn.jsdelivr.net/fastclick
-                                          http://maxcdn.bootstrapcdn.com/font-awesome
-                                        )
+    page.driver.block_unknown_urls
+    page.driver.allow_url 'code.jquery.com'
+    page.driver.allow_url 'maxcdn.bootstrapcdn.com'
+    page.driver.allow_url 'ajax.googleapis.com'
   end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
