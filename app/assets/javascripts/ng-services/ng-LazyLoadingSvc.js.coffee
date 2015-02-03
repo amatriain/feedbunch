@@ -12,13 +12,12 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
   # - entry to which the image belongs
   #--------------------------------------------
   load_image = (img, entry=null)->
-    # Create a clone of the image, hide it and load the actual image there. If it loads successfully,
-    # hide the placeholder image and show the loaded image, otherwise hide both images.
+    # The actual URL of the image is in the data-src attribute
     data_src = img.attr 'data-src'
 
     if !data_src || data_src?.trim()?.length == 0
-      # If data-src is blank, just hide the spinner
-      img.addClass 'hidden'
+      # If data-src is blank, just hide the spinner placeholder
+      hide_placeholder_image img
     else
       # If data-src is not blank, lazy-load the image
       uri = new URI(data_src).normalize()
@@ -34,10 +33,12 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
       if !scheme
         uri.scheme 'https'
 
+      # Create a hidden clone of the image and load the actual image there. If it loads successfully,
+      # hide the placeholder image and show the loaded image, otherwise hide both images.
       img.removeAttr('data-src')
       loaded_img = img.clone().addClass('loading').removeAttr('src').insertAfter(img)
       loaded_img.on 'error', ->
-        # If https failed try with http, and the other way around
+        # If https failed try again with http, and vice versa
         if uri.scheme() == 'https'
           uri.scheme 'http'
         else
@@ -45,7 +46,7 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
 
         loaded_img.off 'error load'
         loaded_img.on 'error', ->
-          img.addClass 'hidden'
+          hide_placeholder_image img
         .on 'load', ->
           show_loaded_image img, loaded_img
         loaded_img.attr 'src', uri.toString()
@@ -60,8 +61,16 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
   # - jQuery object wrapping the loaded img
   #--------------------------------------------
   show_loaded_image = (placeholder_img, loaded_img) ->
-    placeholder_img.addClass 'hidden'
+    hide_placeholder_image placeholder_img
     animationsSvc.show_image loaded_img
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Hide the spinning placeholder of a loading image.
+  # Receives as argument:
+  # - jQuery object wrapping the placeholder img
+  #--------------------------------------------
+  hide_placeholder_image = (img) ->
+    img.addClass 'hidden'
 
   service =
 
