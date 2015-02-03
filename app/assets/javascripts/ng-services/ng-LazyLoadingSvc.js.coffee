@@ -51,7 +51,9 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
     #---------------------------------------------
     load_viewport_images: ->
       $('.entry .entry-content img[data-src]').withinViewportBottom({bottom: -600}).each ->
-        load_image $(this)
+        entry_id = $(this).closest('.entry').children('.open-entry-link').attr 'data-entry-id'
+        entry = findSvc.find_entry entry_id
+        load_image $(this), entry
 
   return service
 ]
