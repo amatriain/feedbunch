@@ -1,5 +1,11 @@
 <% cache "entries_alerts-#{I18n.locale}" do %>
 
+  <%# Notice displayed when multiple entries are successfully marked as read %>
+  <div id="mark-all-read-success" class="alert alert-success" ng-show="success_mark_all_read">
+    <button type="button" class="close" ng-click="reset_flag('success_mark_all_read')">&times;</button>
+    <p><%= t 'read.alerts.success_mark_all_read' %></p>
+  </div>
+
   <%# Alert displayed when there is a problem changing an entry's read/unread state %>
   <div id="problem-entry-state-change" class="alert alert-danger" ng-show="error_changing_entry_state">
     <button type="button" class="close" ng-click="reset_flag('error_changing_entry_state')">&times;</button>

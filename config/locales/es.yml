@@ -95,6 +95,7 @@ es:
       problem_folder_management: "Ha habido un problema gestionando las carpetas. Por favor inténtelo de nuevo más arde."
       problem_new_folder: "Ha habido un problema creando la nueva carpeta. Por favor inténtelo de nuevo más tarde."
       folder_already_exists: "Ya existe una carpeta con ese título. Por favor escoje otro título."
+      success_mark_all_read: "Todas las entradas marcadas como leídas"
       problem_entry_state: "Ha habido un problema con el servidor."
       problem_loading_job_states: "Ha habido un problema con el servidor."
       success_refresh_feed: "Feed actualizado con éxito."

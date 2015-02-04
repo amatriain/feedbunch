@@ -88,6 +88,7 @@ lazyLoadingSvc, tourSvc)->
 
       $http.put("/api/entries/update.json", entry: {id: first_entry.id, state: 'read', whole_feed: whole_feed, whole_folder: whole_folder, all_entries: all_entries})
       .success ->
+        timerFlagSvc.start 'success_mark_all_read'
         # after marking multiple entries as read, reset the timer that updates feeds every minute
         feedsFoldersSvc.reset_refresh_timer()
         for entry in $rootScope.entries

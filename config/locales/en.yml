@@ -116,6 +116,7 @@ en:
       problem_folder_management: "There has been a problem managing folders. Please try again later."
       problem_new_folder: "There has been a problem creating the new folder. Please try again later."
       folder_already_exists: "There is already a folder with that title. Please choose another title."
+      success_mark_all_read: "All entries marked as read"
       problem_entry_state: "There has been a problem with the server."
       problem_loading_job_states: "There has been a problem with the server."
       success_refresh_feed: "Feed refreshed successfully."

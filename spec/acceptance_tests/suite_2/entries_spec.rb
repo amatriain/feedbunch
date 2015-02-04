@@ -172,6 +172,7 @@ describe 'feed entries', type: :feature do
     it 'marks all feed entries as read', js: true do
       mark_all_as_read
 
+      should_show_alert 'mark-all-read-success'
       expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-unread'
     end
 
@@ -179,6 +180,7 @@ describe 'feed entries', type: :feature do
       read_folder @folder
       mark_all_as_read
 
+      should_show_alert 'mark-all-read-success'
       expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-unread'
     end
 
@@ -186,6 +188,7 @@ describe 'feed entries', type: :feature do
       read_folder 'all'
       mark_all_as_read
 
+      should_show_alert 'mark-all-read-success'
       expect(page).to have_no_css 'feed-entries a[data-entry-id].entry-unread'
     end
 
