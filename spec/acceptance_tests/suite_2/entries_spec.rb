@@ -14,7 +14,7 @@ describe 'feed entries', type: :feature do
 
     before :each do
       @img_url_load = '/images/Ajax-loader.gif'
-      @img_url_fail = 'http://not_valid_image.gif'
+      @img_url_fail = 'not_valid_image.gif'
       @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, summary: "<p>summary for @entry1</p><img id=\"entry-image-1\" src=\"#{@img_url_load}\" alt=\"some-image\"><img id=\"entry-image-2\" src=\"#{@img_url_fail}\" alt=\"some-image\">"
       @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1 << @entry2
@@ -339,13 +339,13 @@ describe 'feed entries', type: :feature do
 
       it 'shows a spinner instead of images before opening an entry', js: true do
         expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url_load}']", visible: false
-        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url_fail}']", visible: false
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src*='#{@img_url_fail}']", visible: false
       end
 
       it 'loads images when opening an entry', js: true do
         read_entry @entry1
         expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_load}']", visible: false
-        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_fail}']", visible: false
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src*='#{@img_url_fail}']", visible: false
       end
 
       it 'displays images not prepared for lazy loading', js: true do
