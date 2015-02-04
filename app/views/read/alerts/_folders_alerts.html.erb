@@ -1,5 +1,23 @@
 <% cache "folders_alerts-#{I18n.locale}" do %>
 
+  <%# Notice displayed when successfully moving a feed to an existing folder %>
+  <div id="move-to-folder-success" class="alert alert-success" ng-show="success_move_to_folder">
+    <button type="button" class="close" ng-click="reset_flag('success_move_to_folder')">&times;</button>
+    <p><%= t 'read.alerts.success_move_to_folder' %></p>
+  </div>
+
+  <%# Notice displayed when successfully removing a feed from a folder %>
+  <div id="remove-from-folder-success" class="alert alert-success" ng-show="success_remove_from_folder">
+    <button type="button" class="close" ng-click="reset_flag('success_remove_from_folder')">&times;</button>
+    <p><%= t 'read.alerts.success_remove_from_folder' %></p>
+  </div>
+
+  <%# Notice displayed when successfully moving a feed to a new folder %>
+  <div id="move-to-new-folder-success" class="alert alert-success" ng-show="success_move_to_new_folder">
+    <button type="button" class="close" ng-click="reset_flag('success_move_to_new_folder')">&times;</button>
+    <p><%= t 'read.alerts.success_move_to_new_folder' %></p>
+  </div>
+
   <%# Alert displayed when there is a problem adding or removing a feed from a folder %>
   <div id="problem-folder-management" class="alert alert-danger" ng-show="error_managing_folders">
     <button type="button" class="close" ng-click="reset_flag('error_managing_folders')">&times;</button>

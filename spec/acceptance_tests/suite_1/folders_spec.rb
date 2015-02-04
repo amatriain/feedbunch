@@ -205,6 +205,7 @@ describe 'folders and feeds', type: :feature do
       it 'adds a feed to an existing folder', js: true do
         move_feed_to_folder @feed2, @folder1, @user
 
+        should_show_alert 'move-to-folder-success'
         # the feed should be in the sidebar under the @folder1 folder
         expect(page).to have_css "#folder-#{@folder1.id} #feeds-#{@folder1.id} a[data-sidebar-feed][data-feed-id='#{@feed2.id}'][data-folder-id='#{@folder1.id}']", visible: false
       end
@@ -309,6 +310,7 @@ describe 'folders and feeds', type: :feature do
       it 'removes a feed from a folder', js: true do
         remove_feed_from_folder @feed1, @user
 
+        should_show_alert 'remove-from-folder-success'
         # Feed should be under the "All subscriptions" folder, without a data-folder-id attribute (because it doesn't belong to a folder)
         expect(page).to have_css "#sidebar #folder-none a[data-feed-id='#{@feed1.id}'][data-folder-id='none']", visible: false
 
@@ -367,6 +369,7 @@ describe 'folders and feeds', type: :feature do
         title = 'New folder'
         move_feed_to_new_folder @feed1, title, @user
 
+        should_show_alert 'move-to-new-folder-success'
         # data-folder-id attribute should indicate that @feed1 is in the new folder
         new_folder = Folder.find_by user_id: @user.id, title: title
         open_folder new_folder

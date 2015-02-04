@@ -18,6 +18,7 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
 
       $http.put('/api/folders/none.json', folder: {feed_id: current_feed.id})
       .success (data)->
+        timerFlagSvc.start 'success_remove_from_folder'
         feedsFoldersSvc.load_folders()
       .error (data, status)->
         timerFlagSvc.start 'error_managing_folders' if status!=0
@@ -34,6 +35,7 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
 
       $http.put("/api/folders/#{folder.id}.json", folder: {feed_id: current_feed.id})
       .success (data)->
+        timerFlagSvc.start 'success_move_to_folder'
         feedsFoldersSvc.load_folders()
       .error (data, status)->
         timerFlagSvc.start 'error_managing_folders' if status!=0
@@ -47,6 +49,7 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
     if title && current_feed
       $http.post("/api/folders.json", folder: {feed_id: current_feed.id, title: title})
       .success (data)->
+        timerFlagSvc.start 'success_move_to_new_folder'
         feedsFoldersSvc.add_folder data
         current_feed.folder_id = data.id
         feedsFoldersSvc.load_folders()
