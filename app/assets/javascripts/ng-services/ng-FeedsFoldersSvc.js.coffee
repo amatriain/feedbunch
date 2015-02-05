@@ -82,17 +82,17 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       timerFlagSvc.start 'error_loading_feeds' if status!=0
 
   #--------------------------------------------
-  # PRIVATE FUNCTION: Load feeds every minute.
+  # PRIVATE FUNCTION: Load feeds and folders every minute.
   #--------------------------------------------
-  refresh_feeds = ->
+  refresh_data = ->
     # if timestamp of last feed refresh is not yet set, set it as current time
     $rootScope.last_feed_refresh = Date.now() if !$rootScope.last_feed_refresh
 
     # Check every second if a minute has passed. Useful if timers stop running (e.g. browser is minimized in a phone)
     $timeout ->
       # load feeds every minute
-      load_feeds() if (Date.now() - $rootScope.last_feed_refresh) >= 60000
-      refresh_feeds()
+      load_data() if (Date.now() - $rootScope.last_feed_refresh) >= 60000
+      refresh_data()
     , 1000
 
   #--------------------------------------------
@@ -253,7 +253,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       $rootScope.show_read = false
       feedsPaginationSvc.set_busy false
       load_data()
-      refresh_feeds()
+      refresh_data()
       # When the page is retrieved from the bfcache, immediately refresh feeds
       $(window).on 'pageshow', ->
         load_feeds()
