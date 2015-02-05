@@ -23,9 +23,6 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     # Indicate that AJAX request/response cycle is busy so no more calls are done until finished
     feedsPaginationSvc.set_busy true
 
-    # Reset the 1-minute timer until the next feeds refresh
-    $rootScope.last_data_refresh = Date.now()
-
     page += 1
     $http.get("/api/feeds.json?include_read=#{$rootScope.show_read}&page=#{page}")
     .success (data)->
@@ -160,6 +157,8 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   # PRIVATE FUNCTION: Load feeds and folders.
   #--------------------------------------------
   load_data = ->
+    # Reset the 1-minute timer until the next data refresh
+    $rootScope.last_data_refresh = Date.now()
     load_feeds()
     load_folders()
 
