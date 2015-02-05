@@ -228,7 +228,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       entriesPaginationSvc.reset_entries()
       $rootScope.feeds_loaded = false
       feedsPaginationSvc.set_busy false
-      load_feeds()
+      load_data()
 
     #---------------------------------------------
     # Set to false a flag that makes only feeds with unread entries and
@@ -241,7 +241,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       $rootScope.feeds_loaded = false
       cleanupSvc.hide_read_feeds()
       feedsPaginationSvc.set_busy false
-      load_feeds()
+      load_data()
 
     #---------------------------------------------
     # Load feeds and folders via AJAX into the root scope.
@@ -291,7 +291,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     load_folder_feeds: (folder)->
       # If passed folder is "all", load all feeds in a paginated fashion.
       if folder=="all"
-        load_feeds()
+        load_data()
       # If any other folder is passed, load feeds in that folder only (not paginated)
       else
         load_folder_feeds folder
