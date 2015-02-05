@@ -217,6 +217,9 @@ en:
         step4:
           title: 'Swipe'
           content_html: '<p>You can swipe instead of using the button to show feeds or entries:</p><p><i class=\"fa fa-2x fa-hand-o-left\"></i>&nbsp;Swipe left to hide the feeds list.</p><p><i class=\"fa fa-2x fa-hand-o-right\"></i>&nbsp;Swipe right to show the feeds list.</p>'
+        step5:
+          title: 'Install to home screen'
+          content_html: '<p>You can install Feedbunch to your smartphone home screen using the browser menu.</p><p>Once installed Feedbunch will be displayed full screen and will generally be more usable.</p>'
       feed:
         nextBtn: 'Next'
         doneBtn: 'Done'
