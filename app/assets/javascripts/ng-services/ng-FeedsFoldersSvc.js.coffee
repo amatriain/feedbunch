@@ -254,6 +254,9 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       feedsPaginationSvc.set_busy false
       load_data()
       refresh_feeds()
+      # When the page is retrieved from the bfcache, immediately refresh feeds
+      $(window).on 'pageshow', ->
+        load_feeds()
 
     #---------------------------------------------
     # Reset the timer that refreshes feeds every minute.
