@@ -160,8 +160,8 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   # PRIVATE FUNCTION: Load feeds and folders.
   #--------------------------------------------
   load_data = ->
-    load_folders()
     load_feeds()
+    load_folders()
 
   #---------------------------------------------
   # PRIVATE FUNCTION: Push a feed in the feeds array if it isn't already present there.
