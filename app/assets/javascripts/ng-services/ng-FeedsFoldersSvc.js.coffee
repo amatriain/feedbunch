@@ -24,7 +24,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     feedsPaginationSvc.set_busy true
 
     # Reset the 1-minute timer until the next feeds refresh
-    reset_timer()
+    $rootScope.last_feed_refresh = Date.now()
 
     page += 1
     $http.get("/api/feeds.json?include_read=#{$rootScope.show_read}&page=#{page}")
