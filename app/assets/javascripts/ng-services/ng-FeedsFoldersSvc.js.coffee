@@ -24,7 +24,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     feedsPaginationSvc.set_busy true
 
     # Reset the 1-minute timer until the next feeds refresh
-    $rootScope.last_feed_refresh = Date.now()
+    $rootScope.last_data_refresh = Date.now()
 
     page += 1
     $http.get("/api/feeds.json?include_read=#{$rootScope.show_read}&page=#{page}")
@@ -86,12 +86,12 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   #--------------------------------------------
   refresh_data = ->
     # if timestamp of last feed refresh is not yet set, set it as current time
-    $rootScope.last_feed_refresh = Date.now() if !$rootScope.last_feed_refresh
+    $rootScope.last_data_refresh = Date.now() if !$rootScope.last_data_refresh
 
     # Check every second if a minute has passed. Useful if timers stop running (e.g. browser is minimized in a phone)
     $timeout ->
       # load feeds every minute
-      load_data() if (Date.now() - $rootScope.last_feed_refresh) >= 60000
+      load_data() if (Date.now() - $rootScope.last_data_refresh) >= 60000
       refresh_data()
     , 1000
 
@@ -101,10 +101,10 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
   #--------------------------------------------
   reset_timer = ->
     # if timestamp of last feed refresh is not yet set, set it as current time
-    if !$rootScope.last_feed_refresh
-      $rootScope.last_feed_refresh = Date.now()
+    if !$rootScope.last_data_refresh
+      $rootScope.last_data_refresh = Date.now()
     else
-      $rootScope.last_feed_refresh = Date.now() if (Date.now() - $rootScope.last_feed_refresh) < 90000
+      $rootScope.last_data_refresh = Date.now() if (Date.now() - $rootScope.last_data_refresh) < 90000
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load folders.
