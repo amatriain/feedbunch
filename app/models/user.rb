@@ -87,7 +87,7 @@ require 'etag_calculator'
 #   - show_mobile_tour
 #   - show_feed_tour
 #   - show_entry_tour
-# - user_data_etag: text with md5 hash of the datetime when user data for this user was last updated. This attribute is
+# - user_data_updated_at: datetime when user data for this user was last updated. This attribute is
 # updated every time one of these happens:
 #   - user subscribes to a new feed
 #   - user unsubscribes from a feed
@@ -443,9 +443,9 @@ class User < ActiveRecord::Base
       self.config_updated_at = Time.zone.now
     end
 
-    if self.user_data_etag == nil
-      Rails.logger.info "User #{self.email} has unsupported user_data_etag value, using md5 hash of current datetime by default"
-      self.user_data_etag = EtagCalculator.etag Time.zone.now
+    if self.user_data_updated_at == nil
+      Rails.logger.info "User #{self.email} has unsupported user_data_updated_at value, using md5 hash of current datetime by default"
+      self.user_data_updated_at = Time.zone.now
     end
   end
 
