@@ -217,14 +217,14 @@ describe Folder, type: :model do
     end
   end
 
-  context 'subscriptions_etag' do
+  context 'subscriptions_updated_at' do
 
     it 'defaults to the current date/time' do
       now = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return now
-      folder = FactoryGirl.build :folder, subscriptions_etag: nil
+      folder = FactoryGirl.build :folder, subscriptions_updated_at: nil
       @user.folders << folder
-      expect(folder.reload.subscriptions_etag).to eq EtagCalculator.etag(now)
+      expect(folder.reload.subscriptions_updated_at).to eq now
     end
 
     context 'touches subscriptions' do
@@ -233,7 +233,7 @@ describe Folder, type: :model do
         @feed = FactoryGirl.create :feed
         @user.subscribe @feed.fetch_url
         @folder.feeds << @feed
-        @old_subscriptions_etag = @folder.reload.subscriptions_etag
+        @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
       end
 
       it 'when unsubscribed from a feed in the folder' do
@@ -241,20 +241,20 @@ describe Folder, type: :model do
         feed = FactoryGirl.create :feed
         @user.subscribe feed.fetch_url
         @folder.feeds << feed
-        @old_subscriptions_etag = @folder.reload.subscriptions_etag
+        @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
         @user.unsubscribe @feed
-        expect(@folder.reload.subscriptions_etag).not_to eq  @old_subscriptions_etag
+        expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
       end
 
       it 'when the title of a feed in the folder changes' do
         @feed.reload.update title: 'another title'
-        expect(@folder.reload.subscriptions_etag).not_to eq  @old_subscriptions_etag
+        expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
       end
 
       it 'when the URL of a feed in the folder changes' do
         @feed.reload.update url: 'http://another.url.com'
-        expect(@folder.reload.subscriptions_etag).not_to eq  @old_subscriptions_etag
+        expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
       end
 
       context 'unread entries count' do
@@ -263,71 +263,71 @@ describe Folder, type: :model do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          expect(@folder.reload.subscriptions_etag).not_to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
         end
 
         it 'when marking an entry of a feed in the folder as unread' do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           @user.change_entries_state entry, 'read'
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           @user.change_entries_state entry, 'unread'
-          expect(@folder.reload.subscriptions_etag).not_to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
         end
 
         it 'when deleting an entry from a feed in the folder' do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           entry.destroy
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          expect(@folder.reload.subscriptions_etag).not_to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
         end
 
         it 'when marking an entry of a feed in the folder as read' do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           @user.change_entries_state entry, 'read'
-          expect(@folder.reload.subscriptions_etag).not_to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
         end
 
         it 'when marking all entries as read' do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           @user.change_entries_state entry, 'read', all_entries: true
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          expect(@folder.reload.subscriptions_etag).not_to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
         end
 
         it 'when marking all entries in the folder as read' do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           @user.change_entries_state entry, 'read', whole_folder: true
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          expect(@folder.reload.subscriptions_etag).not_to eq @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
 
         it 'when marking all entries of a feed in the folder as read' do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           @user.change_entries_state entry, 'read', whole_feed: true
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          expect(@folder.reload.subscriptions_etag).not_to eq @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
 
       end
@@ -337,10 +337,10 @@ describe Folder, type: :model do
         it 'when feed is moved into the folder' do
           feed = FactoryGirl.create :feed
           @user.subscribe feed.fetch_url
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           @folder.feeds << feed
-          expect(@folder.reload.subscriptions_etag).not_to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
         end
 
         it 'when feed is moved out of the folder' do
@@ -348,10 +348,10 @@ describe Folder, type: :model do
           feed = FactoryGirl.create :feed
           @user.subscribe feed.fetch_url
           @folder.feeds << feed
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           @user.move_feed_to_folder @feed, folder: Folder::NO_FOLDER
-          expect(@folder.reload.subscriptions_etag).not_to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
         end
 
       end
@@ -363,22 +363,22 @@ describe Folder, type: :model do
       before :each do
         @feed = FactoryGirl.create :feed
         @user.subscribe @feed.fetch_url
-        @old_subscriptions_etag = @folder.reload.subscriptions_etag
+        @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
       end
 
       it 'when unsubscribed from a feed not in the folder' do
         @user.unsubscribe @feed
-        expect(@folder.reload.subscriptions_etag).to eq  @old_subscriptions_etag
+        expect(@folder.reload.subscriptions_updated_at).to eq  @old_subscriptions_updated_at
       end
 
       it 'when the title of a feed not in the folder changes' do
         @feed.reload.update title: 'another title'
-        expect(@folder.reload.subscriptions_etag).to eq  @old_subscriptions_etag
+        expect(@folder.reload.subscriptions_updated_at).to eq  @old_subscriptions_updated_at
       end
 
       it 'when the URL of a feed not in the folder changes' do
         @feed.reload.update url: 'http://another.url.com'
-        expect(@folder.reload.subscriptions_etag).to eq  @old_subscriptions_etag
+        expect(@folder.reload.subscriptions_updated_at).to eq  @old_subscriptions_updated_at
       end
 
       context 'unread entries count' do
@@ -387,49 +387,49 @@ describe Folder, type: :model do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          expect(@folder.reload.subscriptions_etag).to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).to eq  @old_subscriptions_updated_at
         end
 
         it 'when marking an entry of a feed not in the folder as unread' do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           @user.change_entries_state entry, 'read'
-          subscriptions_etag = @folder.reload.subscriptions_etag
+          @subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           @user.change_entries_state entry, 'unread'
-          expect(@folder.reload.subscriptions_etag).to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).to eq  @old_subscriptions_updated_at
         end
 
         it 'when deleting an entry from a feed not in the folder' do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           entry.destroy
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          expect(@folder.reload.subscriptions_etag).to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).to eq  @old_subscriptions_updated_at
         end
 
         it 'when marking an entry of a feed not in the folder as read' do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           @user.change_entries_state entry, 'read'
-          expect(@folder.reload.subscriptions_etag).to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).to eq  @old_subscriptions_updated_at
         end
 
         it 'when marking all entries of a feed not in the folder as read' do
           entry = FactoryGirl.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          @old_subscriptions_etag = @folder.reload.subscriptions_etag
+          @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
           @user.change_entries_state entry, 'read', whole_feed: true
           SubscriptionsManager.recalculate_unread_count @feed, @user
-          expect(@folder.reload.subscriptions_etag).to eq  @old_subscriptions_etag
+          expect(@folder.reload.subscriptions_updated_at).to eq  @old_subscriptions_updated_at
         end
 
       end

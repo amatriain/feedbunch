@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150128221026) do
+ActiveRecord::Schema.define(version: 20150206140025) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -108,11 +108,11 @@ ActiveRecord::Schema.define(version: 20150128221026) do
   add_index "feeds_folders", ["folder_id"], name: "index_feeds_folders_on_folder_id"
 
   create_table "folders", force: :cascade do |t|
-    t.integer  "user_id",            null: false
-    t.text     "title",              null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.text     "subscriptions_etag"
+    t.integer  "user_id",                  null: false
+    t.text     "title",                    null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.datetime "subscriptions_updated_at"
   end
 
   add_index "folders", ["user_id", "title"], name: "index_folders_on_user_id_title"

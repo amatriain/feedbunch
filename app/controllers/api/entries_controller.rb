@@ -65,7 +65,8 @@ class Api::EntriesController < ApplicationController
     @subscription = FeedSubscription.find_by user_id: current_user.id, feed_id: params[:feed_id]
     if @subscription.present?
       # If feed subscription has not changed, return a 304
-      if stale? etag: EtagCalculator.etag(@subscription.updated_at), last_modified: @subscription.updated_at
+      if stale? etag: EtagCalculator.etag(@subscription.updated_at),
+                last_modified: @subscription.updated_at
         @feed = @subscription.feed
         @entries = current_user.feed_entries @feed, include_read: @include_read, page: params[:page]
         index_entries
@@ -83,7 +84,8 @@ class Api::EntriesController < ApplicationController
     Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested entries for folder #{params[:folder_id]}, include_read: #{params[:include_read]}"
     @folder = current_user.folders.find params[:folder_id]
     # If feed subscriptions in the folder have not changed, return a 304
-    if stale? etag: @folder.subscriptions_etag, last_modified: @folder.updated_at
+    if stale? etag: EtagCalculator.etag(@folder.subscriptions_updated_at),
+              last_modified: @folder.subscriptions_updated_at
       @entries = current_user.folder_entries @folder, include_read: @include_read, page: params[:page]
       index_entries
     end
@@ -95,7 +97,8 @@ class Api::EntriesController < ApplicationController
   def index_all
     Rails.logger.debug "User #{current_user.id} - #{current_user.email} requested all entries, include_read: #{params[:include_read]}"
     # If feed subscriptions have not changed, return a 304
-    if stale? etag: current_user.subscriptions_etag, last_modified: current_user.updated_at
+    if stale? etag: current_user.subscriptions_etag,
+              last_modified: current_user.updated_at
       @folder = Folder::ALL_FOLDERS
       @entries = current_user.folder_entries @folder, include_read: @include_read, page: params[:page]
       index_entries
