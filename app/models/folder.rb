@@ -60,7 +60,7 @@ class Folder < ActiveRecord::Base
   # Update the folders_etag attribute of the User who owns this folder to the current date and time.
 
   def touch_folders
-    user.update folders_etag: EtagCalculator.etag(Time.zone.now)
+    user.update folders_updated_at: Time.zone.now
   end
 
   ##
