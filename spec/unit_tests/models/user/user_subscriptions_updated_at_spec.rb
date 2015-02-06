@@ -12,7 +12,7 @@ describe User, type: :model do
     it 'when subscribed to a new feed' do
       feed = FactoryGirl.create :feed
       @user.subscribe feed.fetch_url
-      expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+      expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
     end
 
     context 'changes to subscribed feeed' do
@@ -25,17 +25,17 @@ describe User, type: :model do
 
       it 'when unsubscribed from a feed' do
         @user.unsubscribe @feed
-        expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+        expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
       end
 
       it 'when feed title changes' do
         @feed.reload.update title: 'another title'
-        expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+        expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
       end
 
       it 'when feed URL changes' do
         @feed.reload.update url: 'http://another.url.com'
-        expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+        expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
       end
 
       context 'unread entries count' do
@@ -53,7 +53,7 @@ describe User, type: :model do
           @feed.entries << entry2
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 2
-          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
 
         it 'when marking an entry as unread' do
@@ -66,7 +66,7 @@ describe User, type: :model do
           @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
           @user.change_entries_state entry2, 'unread'
           expect(@user.feed_unread_count @feed).to eq 2
-          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
 
         it 'when deleting an entry' do
@@ -79,7 +79,7 @@ describe User, type: :model do
           entry2.destroy
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 1
-          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
 
         it 'when marking an entry as read' do
@@ -91,7 +91,7 @@ describe User, type: :model do
           @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
           @user.change_entries_state entry2, 'read'
           expect(@user.feed_unread_count @feed).to eq 1
-          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
 
         it 'when marking all entries as read' do
@@ -104,7 +104,7 @@ describe User, type: :model do
           @user.change_entries_state entry2, 'read', all_entries: true
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 0
-          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
 
         it 'when marking all entries in a feed as read' do
@@ -117,7 +117,7 @@ describe User, type: :model do
           @user.change_entries_state entry2, 'read', whole_feed: true
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 0
-          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
 
         it 'when marking all entries in a folder as read' do
@@ -133,7 +133,7 @@ describe User, type: :model do
           @user.change_entries_state entry2, 'read',whole_folder: true
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 0
-          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
       end
 
@@ -142,7 +142,7 @@ describe User, type: :model do
         it 'when feed is moved into a folder' do
           folder = FactoryGirl.build :folder, user_id: @user.id
           folder.feeds << @feed
-          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
 
         it 'when feed is moved out of a folder' do
@@ -152,7 +152,7 @@ describe User, type: :model do
           @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
 
           @feed.remove_from_folder @user
-          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_etag
+          expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
       end
     end

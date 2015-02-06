@@ -324,81 +324,81 @@ describe User, type: :model do
     end
   end
 
-  context 'subscriptions_etag defaults' do
+  context 'subscriptions_updated_at defaults' do
 
     it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
-      user = FactoryGirl.build :user, subscriptions_etag: nil
+      user = FactoryGirl.build :user, subscriptions_updated_at: nil
       user.save!
-      expect(user.reload.subscriptions_etag).not_to be_nil
-      expect(user.subscriptions_etag).to eq EtagCalculator.etag(date)
+      expect(user.reload.subscriptions_updated_at).not_to be_nil
+      expect(user.subscriptions_updated_at).to eq date
     end
   end
 
-  context 'folders_etag defaults' do
+  context 'folders_updated_at defaults' do
 
     it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
-      user = FactoryGirl.build :user, folders_etag: nil
+      user = FactoryGirl.build :user, folders_updated_at: nil
       user.save!
-      expect(user.reload.folders_etag).not_to be_nil
-      expect(user.folders_etag).to eq EtagCalculator.etag(date)
+      expect(user.reload.folders_updated_at).not_to be_nil
+      expect(user.folders_updated_at).to eq date
     end
   end
 
-  context 'refresh_feed_jobs_etag defaults' do
+  context 'refresh_feed_jobs_updated_at defaults' do
 
     it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
-      user = FactoryGirl.build :user, refresh_feed_jobs_etag: nil
+      user = FactoryGirl.build :user, refresh_feed_jobs_updated_at: nil
       user.save!
-      expect(user.reload.refresh_feed_jobs_etag).not_to be_nil
-      expect(user.refresh_feed_jobs_etag).to eq EtagCalculator.etag(date)
+      expect(user.reload.refresh_feed_jobs_updated_at).not_to be_nil
+      expect(user.refresh_feed_jobs_updated_at).to eq date
     end
   end
 
-  context 'subscribe_jobs_etag defaults' do
+  context 'subscribe_jobs_updated_at defaults' do
 
     it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
-      user = FactoryGirl.build :user, subscribe_jobs_etag: nil
+      user = FactoryGirl.build :user, subscribe_jobs_updated_at: nil
       user.save!
-      expect(user.reload.subscribe_jobs_etag).not_to be_nil
-      expect(user.subscribe_jobs_etag).to eq EtagCalculator.etag(date)
+      expect(user.reload.subscribe_jobs_updated_at).not_to be_nil
+      expect(user.subscribe_jobs_updated_at).to eq date
     end
   end
 
-  context 'config_etag defaults' do
+  context 'config_updated_at defaults' do
 
     it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
-      user = FactoryGirl.build :user, config_etag: nil
+      user = FactoryGirl.build :user, config_updated_at: nil
       user.save!
-      expect(user.reload.config_etag).not_to be_nil
-      expect(user.config_etag).to eq EtagCalculator.etag(date)
+      expect(user.reload.config_updated_at).not_to be_nil
+      expect(user.config_updated_at).to eq date
     end
   end
 
-  context 'user_data_etag defaults' do
+  context 'user_data_updated_at defaults' do
 
     it 'defaults to md5 hash of current time' do
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
 
-      user = FactoryGirl.build :user, user_data_etag: nil
+      user = FactoryGirl.build :user, user_data_updated_at: nil
       user.save!
-      expect(user.reload.user_data_etag).not_to be_nil
-      expect(user.user_data_etag).to eq EtagCalculator.etag(date)
+      expect(user.reload.user_data_updated_at).not_to be_nil
+      expect(user.user_data_updated_at).to eq date
     end
   end
 
