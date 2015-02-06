@@ -419,32 +419,32 @@ class User < ActiveRecord::Base
     end
 
     if self.subscriptions_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported subscriptions_updated_at value, using md5 hash of current datetime by default"
+      Rails.logger.info "User #{self.email} has unsupported subscriptions_updated_at value, using current datetime by default"
       self.subscriptions_updated_at = Time.zone.now
     end
 
     if self.folders_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported folders_updated_at value, using md5 hash of current datetime by default"
+      Rails.logger.info "User #{self.email} has unsupported folders_updated_at value, using current datetime by default"
       self.folders_updated_at = Time.zone.now
     end
 
     if self.refresh_feed_jobs_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported refresh_feed_jobs_updated_at value, using md5 hash of current datetime by default"
+      Rails.logger.info "User #{self.email} has unsupported refresh_feed_jobs_updated_at value, using current datetime by default"
       self.refresh_feed_jobs_updated_at = Time.zone.now
     end
 
     if self.subscribe_jobs_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported subscribe_jobs_updated_at value, using md5 hash of current datetime by default"
+      Rails.logger.info "User #{self.email} has unsupported subscribe_jobs_updated_at value, using current datetime by default"
       self.subscribe_jobs_updated_at = Time.zone.now
     end
 
     if self.config_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported config_updated_at value, using md5 hash of current datetime by default"
+      Rails.logger.info "User #{self.email} has unsupported config_updated_at value, using current datetime by default"
       self.config_updated_at = Time.zone.now
     end
 
     if self.user_data_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported user_data_updated_at value, using md5 hash of current datetime by default"
+      Rails.logger.info "User #{self.email} has unsupported user_data_updated_at value, using current datetime by default"
       self.user_data_updated_at = Time.zone.now
     end
   end
