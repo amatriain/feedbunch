@@ -32,7 +32,8 @@ class Api::FoldersController < ApplicationController
 
     if @folder.present?
       # If folder has not changed, return a 304
-      if stale? etag: EtagCalculator.etag(@folder.updated_at), last_modified: @folder.updated_at
+      if stale? etag: EtagCalculator.etag(@folder.updated_at),
+                last_modified: @folder.updated_at
         respond_with @folder
       end
     else
