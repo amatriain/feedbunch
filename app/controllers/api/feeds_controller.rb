@@ -126,7 +126,8 @@ class Api::FeedsController < ApplicationController
 
   def index_all
     # If feed subscriptions have not changed, return a 304
-    if stale? etag: current_user.subscriptions_etag, last_modified: current_user.updated_at
+    if stale? etag: EtagCalculator.etag(current_user.subscriptions_updated_at),
+              last_modified: current_user.subscriptions_updated_at
       @folder = nil
       @feeds = current_user.subscribed_feeds include_read: @include_read, page: params[:page]
       index_feeds

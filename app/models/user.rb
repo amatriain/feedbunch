@@ -57,7 +57,7 @@ require 'etag_calculator'
 # True by default.
 # - show_feed_tour: boolean indicating whether the feed tour should be shown. True by default.
 # - show_entry_tour: boolean indicating whether the entry tour should be shown. True by default.
-# - subscriptions_etag: MD5 hash of the datetime when were subscriptions updated for the last time. Events that
+# - subscriptions_updated_at: datetime when subscriptions were updated for the last time. Events that
 # update this attribute are:
 #   - subscribing to a new feed
 #   - unsubscribing from a feed
@@ -357,7 +357,7 @@ class User < ActiveRecord::Base
   # - show_main_tour, show_mobile_tour, show_feed_tour: show_entry_tour: true
   # - name: defaults to the value of the "email" attribute
   # - invitation_limit: the value configured in Feedbunch::Application.config.daily_invitations_limit (in config/application.rb)
-  # - subscriptions_etag: MD5 hash of the current date/time
+  # - subscriptions_updated_at: current date/time
 
   def default_values
     # Convert the symbols for the available locales to strings, to be able to compare with the user locale
@@ -418,9 +418,9 @@ class User < ActiveRecord::Base
       self.invitation_limit = limit
     end
 
-    if self.subscriptions_etag == nil
-      Rails.logger.info "User #{self.email} has unsupported subscriptions_etag value, using md5 hash of current datetime by default"
-      self.subscriptions_etag = EtagCalculator.etag Time.zone.now
+    if self.subscriptions_updated_at == nil
+      Rails.logger.info "User #{self.email} has unsupported subscriptions_updated_at value, using md5 hash of current datetime by default"
+      self.subscriptions_updated_at = Time.zone.now
     end
 
     if self.folders_etag == nil

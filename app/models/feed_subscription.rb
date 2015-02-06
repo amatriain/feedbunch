@@ -43,7 +43,7 @@ class FeedSubscription < ActiveRecord::Base
   def touch_subscriptions
     Rails.logger.info "Touching subscription of user #{user_id} to feed #{feed_id}"
     self.touch if !destroyed?
-    user.update subscriptions_etag: EtagCalculator.etag(Time.zone.now) if user.present?
+    user.update subscriptions_updated_at: Time.zone.now if user.present?
     folder = feed.user_folder user
     folder.update subscriptions_updated_at: Time.zone.now if folder.present?
   end

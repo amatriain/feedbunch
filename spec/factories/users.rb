@@ -20,7 +20,7 @@ FactoryGirl.define do
     show_mobile_tour false
     show_feed_tour false
     show_entry_tour false
-    subscriptions_etag EtagCalculator.etag(Time.zone.now)
+    subscriptions_updated_at Time.zone.now
     folders_etag EtagCalculator.etag(Time.zone.now)
     refresh_feed_jobs_etag EtagCalculator.etag(Time.zone.now)
     subscribe_jobs_etag EtagCalculator.etag(Time.zone.now)
