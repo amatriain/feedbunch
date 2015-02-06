@@ -12,7 +12,8 @@ class Api::SubscribeJobStatesController < ApplicationController
 
   def index
     # If subscribe job states have not changed, return a 304
-    if stale? etag: current_user.subscribe_jobs_etag, last_modified: current_user.updated_at
+    if stale? etag: EtagCalculator.etag(current_user.subscribe_jobs_updated_at),
+              last_modified: current_user.subscribe_jobs_updated_at
       if SubscribeJobState.exists? user_id: current_user.id
         @job_states = SubscribeJobState.where user_id: current_user.id
         Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_states.count} SubscribeJobState instances"
@@ -31,7 +32,8 @@ class Api::SubscribeJobStatesController < ApplicationController
   def show
     @job_state = current_user.find_subscribe_job_state params[:id]
     # If job state has not changed, return a 304
-    if stale? etag: EtagCalculator.etag(@job_state.updated_at), last_modified: @job_state.updated_at
+    if stale? etag: EtagCalculator.etag(@job_state.updated_at),
+              last_modified: @job_state.updated_at
       respond_with @job_state
     end
   rescue => e

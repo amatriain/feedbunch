@@ -33,13 +33,10 @@ class SubscribeJobState < ActiveRecord::Base
   private
 
   ##
-  # Update the subscribe_jobs_etag attribute of the associated user with the current datetime.
+  # Update the subscribe_jobs_updated_at attribute of the associated user with the current datetime.
 
   def touch_subscribe_job_states
-    if user.present?
-      subscribe_etag = EtagCalculator.etag Time.zone.now
-      user.update subscribe_jobs_etag: subscribe_etag
-    end
+    user.update subscribe_jobs_updated_at: Time.zone.now if user.present?
   end
 
   ##
