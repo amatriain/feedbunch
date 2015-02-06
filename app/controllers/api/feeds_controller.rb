@@ -39,7 +39,8 @@ class Api::FeedsController < ApplicationController
 
     if @subscription.present?
       # If feed subscription has not changed, return a 304
-      if stale? etag: EtagCalculator.etag(@subscription.updated_at), last_modified: @subscription.updated_at
+      if stale? etag: EtagCalculator.etag(@subscription.updated_at),
+                last_modified: @subscription.updated_at
         @feed = current_user.feeds.find params[:id]
         @folder_id = @feed.user_folder(current_user).try(:id) || 'none'
         @unread_count = current_user.feed_unread_count @feed
