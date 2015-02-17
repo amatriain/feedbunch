@@ -119,4 +119,7 @@ Rails.application.routes.draw do
     # ActiveAdmin will be accessible in the /admin path
     ActiveAdmin.routes self
   end
+
+  # TODO restrict access to pghero interface
+  mount PgHero::Engine, at: 'pghero'
 end

@@ -74,6 +74,9 @@ gem 'http_accept_language'
 # Administration interface
 gem 'activeadmin', github: 'gregbell/active_admin'
 
+# Insight into PostgreSQL database
+gem 'pghero'
+
 group :development do
   # Automate deployments
   gem 'capistrano-rails', require: false

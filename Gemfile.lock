@@ -212,6 +212,8 @@ GEM
       mini_portile (~> 0.6.0)
     orm_adapter (0.5.0)
     pg (0.18.1)
+    pghero (0.1.9)
+      activerecord
     polyamorous (1.1.0)
       activerecord (>= 3.0)
     puma (2.11.1)
@@ -419,6 +421,7 @@ DEPENDENCIES
   newrelic_rpm
   nokogiri
   pg
+  pghero
   puma
   rack-cache!
   rails (~> 4.2.0)
