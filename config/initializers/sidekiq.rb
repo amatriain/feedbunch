@@ -3,11 +3,13 @@ require 'resolv-replace'
 
 # Redis server location
 Sidekiq.configure_server do |config|
-  config.redis = { url: Rails.application.secrets.redis_sidekiq }
+  # Server needs (concurrency + 2) redis connections
+  config.redis = { url: Rails.application.secrets.redis_sidekiq, size: 5 }
 end
 
 Sidekiq.configure_client do |config|
-  config.redis = { url: Rails.application.secrets.redis_sidekiq }
+  # Client needs 1 redis connection per process (see Puma config, num of process = num of Puma workers)
+  config.redis = { url: Rails.application.secrets.redis_sidekiq, size: 1 }
 end
 
 # Show error backtraces
