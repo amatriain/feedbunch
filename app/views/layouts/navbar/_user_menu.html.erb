@@ -27,6 +27,15 @@
           </li>
         <% end %>
 
+        <% if can? :manage, PgHero %>
+          <li>
+            <%= link_to '/pghero', target: '_blank' do %>
+              <i class="fa fa-database fa-fw"></i>
+              <%= t 'layouts.navbar.db_stats' %>
+            <% end %>
+          </li>
+        <% end %>
+
         <% if can? :manage, Redmon %>
           <li>
             <%= link_to '/redmon', target: '_blank' do %>

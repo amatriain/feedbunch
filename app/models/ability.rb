@@ -34,6 +34,7 @@ class Ability
       can :manage, Sidekiq
       can :manage, ActiveAdmin
       can :manage, Redmon
+      can :manage, PgHero
     end
   end
 end

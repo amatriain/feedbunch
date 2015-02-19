@@ -83,4 +83,32 @@ describe 'authorization', type: :feature do
       expect {visit '/admin'}.to raise_error ActionController::RoutingError
     end
   end
+
+  context 'PgHero access' do
+
+    it 'shows PgHero link to admin users' do
+      login_user_for_feature @admin_user
+      visit read_path
+
+      expect(page).to have_css 'a[href="/pghero"]'
+    end
+
+    it 'does not show PgHero link to non-admin users' do
+      login_user_for_feature @normal_user
+      visit read_path
+
+      expect(page).to have_no_css 'a[href="/pghero"]'
+    end
+
+    it 'allows access to PgHero to admin users' do
+      login_user_for_feature @admin_user
+      expect {visit '/pghero'}.to raise_error ActiveRecord::StatementInvalid,
+                                              "SQLite3::SQLException: no such table: pg_extension: SELECT COUNT(*) AS count FROM pg_extension WHERE extname = 'pg_stat_statements'"
+    end
+
+    it 'does not allow access to PgHero to non-admin users' do
+      login_user_for_feature @normal_user
+      expect {visit '/pghero'}.to raise_error ActionController::RoutingError
+    end
+  end
 end

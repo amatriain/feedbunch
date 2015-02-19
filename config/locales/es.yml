@@ -32,6 +32,7 @@ es:
       logout: "Salir"
       admin: "Administración"
       cache_stats: "Estadísticas cache de Rails"
+      db_stats: "Estadísticas de base de datos"
       background_jobs: "Tareas en background"
       my_account: "Mi cuenta"
       read_feeds: "Leer feeds"
