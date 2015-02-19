@@ -105,6 +105,8 @@ group :test, :development do
 end
 
 group :test do
+  gem 'rspec'
+
   # Code coverage
   gem 'coveralls', require: false
 
