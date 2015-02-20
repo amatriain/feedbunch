@@ -26,6 +26,10 @@ class EntryManager
           next
         end
 
+        # Remove excess whitespaces; necessary to check if the entry already exists, because the Entry model
+        # strips the guid (among other attributes) before saving.
+        guid.strip!
+
         if Entry.exists? guid: guid, feed_id: feed.id
           Rails.logger.debug "Already existing entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}. Ignoring it"
         elsif DeletedEntry.exists? guid: guid, feed_id: feed.id
