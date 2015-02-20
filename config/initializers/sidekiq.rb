@@ -1,15 +1,20 @@
 # Replace libc-based DNS resolution with pure Ruby DNS resolution, to avoid locking the ruby interpreter
 require 'resolv-replace'
 
+# Create Redis connection
+redis_conn = proc {
+  Redis.new url: Rails.application.secrets.redis_sidekiq
+}
+
 # Redis server location
 Sidekiq.configure_server do |config|
   # Server needs (concurrency + 2) redis connections
-  config.redis = { url: Rails.application.secrets.redis_sidekiq, size: 5 }
+  config.redis = ConnectionPool.new size: 5, &redis_conn
 end
 
 Sidekiq.configure_client do |config|
   # Client needs 1 redis connection per process (see Puma config, num of process = num of Puma workers)
-  config.redis = { url: Rails.application.secrets.redis_sidekiq, size: 1 }
+  config.redis = ConnectionPool.new size: 1, &redis_conn
 end
 
 # Show error backtraces
