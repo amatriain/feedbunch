@@ -43,7 +43,8 @@ class EntryManager
       rescue => e
         Rails.logger.error "There's been a problem processing a fetched entry from feed #{feed.id} - #{feed.title}. Skipping entry."
         Rails.logger.error e.message
-        Rails.logger.error e.backtrace
+        # Do not print backtrace for AR validation errors, it's just white noise
+        Rails.logger.error e.backtrace unless e.is_a? ActiveRecord::RecordInvalid
         next
       end
     end
