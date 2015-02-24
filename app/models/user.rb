@@ -132,6 +132,7 @@ class User < ActiveRecord::Base
   has_many :subscribe_job_states, dependent: :destroy
 
   validates :admin, inclusion: {in: [true, false]}
+  validates :free, inclusion: {in: [true, false]}
   validates :name, presence: true, uniqueness: {case_sensitive: true}
   validates :locale, presence: true
   validates :timezone, presence: true
@@ -357,6 +358,7 @@ class User < ActiveRecord::Base
   # - locale: 'en'
   # - timezone: 'UTC'
   # - admin: false
+  # - free: false
   # - quick_reading: false
   # - open_all_entries: false
   # - show_main_tour, show_mobile_tour, show_feed_tour: show_entry_tour: true
@@ -384,6 +386,11 @@ class User < ActiveRecord::Base
     if self.admin == nil
       Rails.logger.info "User #{self.email} has unsupported admin #{self.admin}. Defaulting to admin 'false' instead"
       self.admin = false
+    end
+
+    if self.free == nil
+      Rails.logger.info "User #{self.email} has unsupported free #{self.free}. Defaulting to free 'false' instead"
+      self.free = false
     end
 
     if self.quick_reading == nil

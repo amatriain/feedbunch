@@ -274,6 +274,16 @@ describe User, type: :model do
     end
   end
 
+  context 'free users' do
+
+    it 'gives a default value of false' do
+      user = FactoryGirl.build :user, free: nil
+      user.save!
+      expect(user.reload.free).not_to be_nil
+      expect(user.free).to be false
+    end
+  end
+
   context 'quick reading' do
 
     it 'gives a default value of false' do
