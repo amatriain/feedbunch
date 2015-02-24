@@ -131,6 +131,7 @@ class User < ActiveRecord::Base
   has_many :refresh_feed_job_states, dependent: :destroy
   has_many :subscribe_job_states, dependent: :destroy
 
+  validates :admin, inclusion: {in: [true, false]}
   validates :name, presence: true, uniqueness: {case_sensitive: true}
   validates :locale, presence: true
   validates :timezone, presence: true
@@ -355,6 +356,7 @@ class User < ActiveRecord::Base
   # Give the following default values to the user, in case no value or an invalid value is set:
   # - locale: 'en'
   # - timezone: 'UTC'
+  # - admin: false
   # - quick_reading: false
   # - open_all_entries: false
   # - show_main_tour, show_mobile_tour, show_feed_tour: show_entry_tour: true
@@ -377,6 +379,11 @@ class User < ActiveRecord::Base
     if !timezone_names.include? self.timezone
       Rails.logger.info "User #{self.email} has unsupported timezone #{self.timezone}. Defaulting to timezone 'UTC' instead"
       self.timezone = 'UTC'
+    end
+
+    if self.admin == nil
+      Rails.logger.info "User #{self.email} has unsupported admin #{self.admin}. Defaulting to admin 'false' instead"
+      self.admin = false
     end
 
     if self.quick_reading == nil

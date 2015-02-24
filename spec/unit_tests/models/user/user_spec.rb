@@ -264,6 +264,16 @@ describe User, type: :model do
 
   end
 
+  context 'admin' do
+
+    it 'gives a default value of false' do
+      user = FactoryGirl.build :user, admin: nil
+      user.save!
+      expect(user.reload.admin).not_to be_nil
+      expect(user.admin).to be false
+    end
+  end
+
   context 'quick reading' do
 
     it 'gives a default value of false' do
