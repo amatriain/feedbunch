@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150206151549) do
+ActiveRecord::Schema.define(version: 20150224131027) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -220,6 +220,7 @@ ActiveRecord::Schema.define(version: 20150206151549) do
     t.datetime "refresh_feed_jobs_updated_at"
     t.datetime "config_updated_at"
     t.datetime "user_data_updated_at"
+    t.boolean  "free",                                     default: false, null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

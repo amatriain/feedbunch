@@ -44,6 +44,9 @@ require 'etag_calculator'
 #
 # - admin: Boolean that indicates whether the user is an administrator. This attribute is used to restrict access to certain
 # functionality, like ActiveAdmin and Sidekiq administration.
+# - free: Boolean that indicates if the user has been granted free access to the app (if true) or if he's a paying user (if false).
+# Note that regular users have this attribute set to false, even during any unpaid trial period. Only users who are never
+# required to pay anything have this attribute set to true.
 # - name: text with the username, to be displayed in the app. Usernames are unique. Defaults to the value of the "email" attribute.
 # - locale: locale (en, es etc) in which the user wants to see the application. By default "en".
 # - timezone: name of the timezone (Europe/Madrid, UTC etc) to which the user wants to see times localized. By default "UTC".
