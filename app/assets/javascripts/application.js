@@ -18,10 +18,10 @@
 //= require ../../../vendor/assets/javascripts/fastclick-1.0.6.min
 //= require ../../../vendor/assets/javascripts/favico-0.3.5.min
 //= require ../../../vendor/assets/javascripts/hopscotch-0.2.3.min
-//= require ../../../vendor/assets/javascripts/jquery.withinViewport-0.2
+//= require ../../../vendor/assets/javascripts/withinViewport-0.0.4
+//= require ../../../vendor/assets/javascripts/jquery.withinViewport-0.0.4
 //= require ../../../vendor/assets/javascripts/ng-infinite-scroll-1.2.0.min
 //= require ../../../vendor/assets/javascripts/velocity-1.1.0.min
-//= require ../../../vendor/assets/javascripts/withinViewport-0.2
 //= require ../../../vendor/assets/javascripts/URI-1.14.1.min
 
 //= require jquery_ujs
