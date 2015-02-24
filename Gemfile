@@ -72,7 +72,7 @@ gem 'rubyzip'
 gem 'http_accept_language'
 
 # Administration interface
-gem 'activeadmin', github: 'gregbell/active_admin'
+gem 'activeadmin', github: 'activeadmin'
 
 # Insight into PostgreSQL database
 gem 'pghero'
