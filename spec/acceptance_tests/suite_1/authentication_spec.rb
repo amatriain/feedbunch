@@ -355,7 +355,7 @@ describe 'authentication', type: :feature do
     end
 
     it 'redirects to login page if an AJAX request is returned an HTTP 401 Unauthorized', js: true do
-      page.driver.browser.clear_cookies
+      page.driver.browser.set_cookie '_feedbunch_session=not_valid_session; HttpOnly; domain=127.0.0.1; path=/'
       go_to_start_page
 
       expect(page).to have_text 'Log in'
