@@ -16,6 +16,7 @@ ActiveAdmin.register User do
       f.input :email
       f.input :name
       f.input :admin
+      f.input :free
     end
     f.actions
   end

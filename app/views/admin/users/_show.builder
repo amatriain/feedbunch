@@ -4,6 +4,7 @@ context.instance_eval  do
     row :email
     row :name
     row :admin
+    row :free
     row :locale
     row :timezone
     row :quick_reading

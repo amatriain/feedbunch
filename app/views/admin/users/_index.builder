@@ -6,6 +6,7 @@ context.instance_eval  do
     column :email
     column :name
     column :admin
+    column :free
     column :locale
     column :timezone
     column :quick_reading
