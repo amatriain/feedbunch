@@ -82,6 +82,9 @@ RSpec.configure do |config|
     page.driver.allow_url 'ajax.googleapis.com'
   end
 
+  # Include ShowMeTheCookies to manipulate cookies in acceptance tests
+  config.include ShowMeTheCookies, type: :feature
+
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.

@@ -327,6 +327,8 @@ GEM
       tilt (~> 1.1)
     sax-machine (1.2.0)
     sexp_processor (4.4.5)
+    show_me_the_cookies (2.6.0)
+      capybara (~> 2.0)
     sidekiq (3.3.2)
       celluloid (>= 0.16.0)
       connection_pool (>= 2.1.1)
@@ -439,6 +441,7 @@ DEPENDENCIES
   rspec-rails
   rubyzip
   sass-rails
+  show_me_the_cookies
   sidekiq (>= 3.2.5)
   sidekiq-superworker
   sidetiq
