@@ -12,6 +12,7 @@ require 'capybara/rspec'
 require 'capybara-webkit'
 require 'database_cleaner'
 require 'nokogiri'
+require 'show_me_the_cookies'
 
 # Factories instead of database fixtures
 require 'factory_girl_rails'
