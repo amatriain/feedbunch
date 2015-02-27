@@ -270,7 +270,7 @@ class Feed < ActiveRecord::Base
   # If it is blacklisted, a BlacklistedUrlError is raised. Otherwise returns nil.
 
   def check_if_blacklisted
-    raise BlacklistedUrlError.new if FeedBlacklister.blacklisted? self
+    raise BlacklistedUrlError.new if FeedBlacklister.blacklisted_feed? self
     return nil
   end
 

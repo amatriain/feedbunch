@@ -27,6 +27,13 @@ class URLSubscriber
       end
     end
 
+    # Check if the feed url is blacklisted
+    if FeedBlacklister.blacklisted_url? url
+      Rails.logger.warn "URL #{url} is blacklisted, cannot add subscription"
+      job_state = user.subscribe_job_states.create fetch_url: url, state: SubscribeJobState::ERROR
+      return job_state
+    end
+
     job_state = user.subscribe_job_states.create fetch_url: url
     Rails.logger.info "Enqueuing subscribe_user_job_state #{job_state.id} for user #{user.id} - #{user.email}"
     SubscribeUserWorker.perform_async user.id, url, job_state.id

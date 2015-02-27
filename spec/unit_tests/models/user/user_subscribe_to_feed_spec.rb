@@ -64,6 +64,66 @@ describe User, type: :model do
       expect(job_state.state).to eq RefreshFeedJobState::SUCCESS
     end
 
+    context 'blacklisted url' do
+
+      before :each do
+        @blacklisted_url = 'some.aede.bastard.com'
+        Rails.application.config.url_blacklist = [@blacklisted_url]
+      end
+
+      it 'does not enqueue job and sets state to ERROR if url matches exactly blacklisted url' do
+        # job is not enqueued
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+        @user.enqueue_subscribe_job @blacklisted_url
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+
+        # a job state ERROR is created
+        job_state = SubscribeJobState.first
+        expect(job_state.user_id).to eq @user.id
+        expect(job_state.fetch_url).to eq @blacklisted_url
+        expect(job_state.state).to eq RefreshFeedJobState::ERROR
+      end
+
+      it 'does not enqueue job and sets state to ERROR if url is a subpath of blacklisted url' do
+        # job is not enqueued
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+        @user.enqueue_subscribe_job "http://#{@blacklisted_url}/feed.php"
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+
+        # a job state ERROR is created
+        job_state = SubscribeJobState.first
+        expect(job_state.user_id).to eq @user.id
+        expect(job_state.fetch_url).to eq "http://#{@blacklisted_url}/feed.php"
+        expect(job_state.state).to eq RefreshFeedJobState::ERROR
+      end
+
+      it 'does not enqueue job and sets state to ERROR if url is subdomain of blacklisted url' do
+        # job is not enqueued
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+        @user.enqueue_subscribe_job "http://subdomain.#{@blacklisted_url}"
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+
+        # a job state ERROR is created
+        job_state = SubscribeJobState.first
+        expect(job_state.user_id).to eq @user.id
+        expect(job_state.fetch_url).to eq "http://subdomain.#{@blacklisted_url}"
+        expect(job_state.state).to eq RefreshFeedJobState::ERROR
+      end
+
+      it 'does not enqueue job and sets state to ERROR if url is subpath and subdomain of blacklisted url' do
+        # job is not enqueued
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+        @user.enqueue_subscribe_job "http://subdomain.#{@blacklisted_url}/feed.php"
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+
+        # a job state ERROR is created
+        job_state = SubscribeJobState.first
+        expect(job_state.user_id).to eq @user.id
+        expect(job_state.fetch_url).to eq "http://subdomain.#{@blacklisted_url}/feed.php"
+        expect(job_state.state).to eq RefreshFeedJobState::ERROR
+      end
+    end
+
   end
 
   context 'subscribe to feed immediately' do
