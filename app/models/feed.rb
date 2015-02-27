@@ -2,6 +2,7 @@ require 'uri'
 require 'addressable/uri'
 require 'encoding_manager'
 require 'schedule_manager'
+require 'feed_blacklister'
 
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which users can be suscribed.
@@ -59,7 +60,7 @@ class Feed < ActiveRecord::Base
   validates :fetch_interval_secs, presence: true
   validates :available, inclusion: {in: [true, false]}
 
-  before_validation :fix_attributes
+  before_validation :before_validation
 
   after_create :schedule_update
   after_destroy :unschedule_updates
@@ -196,15 +197,19 @@ class Feed < ActiveRecord::Base
   end
 
   ##
-  # Fix any problems with attribute values before validation:
+  # Various operations before each validation:
   # - fix any encoding problems, converting to utf-8 if necessary
+  # - set default values for missing attributes
   # - sanitize values, removing script tags from entry bodies etc.
+  # - encode any invalid characters in url and fetch_url
+  # - check if the feed url or fetch_url is blacklisted, and if so a BlacklistedUrlError is raised
 
-  def fix_attributes
+  def before_validation
     fix_encoding
     default_values
     sanitize_attributes
     fix_urls
+    check_if_blacklisted
   end
 
   ##
@@ -242,8 +247,13 @@ class Feed < ActiveRecord::Base
     self.fetch_url = sanitize(self.fetch_url).try :strip
     self.url = sanitize(self.url).try :strip
 
-    self.fetch_url = self.fetch_url_was if (self.fetch_url =~ URI::regexp(%w{http https})).nil?
-    self.url = self.url_was if (self.url =~ URI::regexp(%w{http https})).nil?
+    if self.fetch_url_was.present? && (self.fetch_url =~ URI::regexp(%w{http https})).nil?
+      self.fetch_url = self.fetch_url_was
+    end
+
+    if self.url_was.present? && (self.url =~ URI::regexp(%w{http https})).nil?
+      self.url = self.url_was
+    end
   end
 
   ##
@@ -252,6 +262,16 @@ class Feed < ActiveRecord::Base
   def fix_urls
     self.url = Addressable::URI.parse(self.url.to_str).display_uri.to_s if self.url.present?
     self.fetch_url = Addressable::URI.parse(self.fetch_url.to_str).display_uri.to_s if self.fetch_url.present?
+  end
+
+  ##
+  # Check if the feed's url or fetch_url is blacklisted.
+  #
+  # If it is blacklisted, a BlacklistedUrlError is raised. Otherwise returns nil.
+
+  def check_if_blacklisted
+    raise BlacklistedUrlError.new if FeedBlacklister.blacklisted? self
+    return nil
   end
 
   ##
