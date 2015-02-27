@@ -67,6 +67,9 @@ class ApplicationController < ActionController::Base
     elsif error.is_a? OpmlImportError
       # If an error happens when importing subscription data, redirect to main application page
       redirect_to read_path
+    elsif error.is_a? BlacklistedUrlError
+      # If user attempts to subscribe to a blacklisted url, return 403
+      head status: 403
     elsif error.is_a? ActionController::UnknownFormat
       # If an unsupported format is requested (e.g. requesting HTML from an API controller) return 406
       head status: 406

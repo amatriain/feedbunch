@@ -21,9 +21,14 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, sta
       .success (data)->
         startPageSvc.show_start_page()
       .error (data, status)->
-        entriesPaginationSvc.set_busy false
-        # Show alert
-        timerFlagSvc.start 'error_subscribing'
+        if status == 403
+          # User just attempted to subscribe to a blacklisted url
+          timerFlagSvc.start 'blacklisted_url'
+          startPageSvc.show_start_page()
+        else
+          entriesPaginationSvc.set_busy false
+          # Show alert
+          timerFlagSvc.start 'error_subscribing'
 
   unsubscribe: ->
     current_feed = currentFeedSvc.get()

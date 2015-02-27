@@ -114,6 +114,7 @@ en:
       success_subscribing: "Feed subscribed successfully."
       problem_subscribing: "Could not add subscription."
       problem_unsubscribing: "There has been a problem unsubscribing from the feed. Please try again later."
+      blacklisted_url: "Subscribing to a feed associated with AEDE (spanish newspaper publishers association) is not allowed"
       success_move_to_folder: "Feed moved to a different folder"
       success_remove_from_folder: "Feed removed from folder"
       success_move_to_new_folder: "Feed moved to a new folder"

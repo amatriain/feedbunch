@@ -203,6 +203,49 @@ describe 'subscription to feeds', type: :feature do
       end
 
     end
+
+    context 'blacklisted url' do
+
+      before :each do
+        @blacklisted_url = 'some.aede.bastard.com'
+        allow_any_instance_of(User).to receive :enqueue_subscribe_job do |user, url|
+          @job_state_2 = FactoryGirl.build :subscribe_job_state,
+                                          user_id: @user.id,
+                                          fetch_url: @blacklisted_url,
+                                          state: SubscribeJobState::ERROR
+          @user.subscribe_job_states << @job_state_2
+          raise BlacklistedUrlError.new
+        end
+      end
+
+      it 'shows error alert', js: true do
+        subscribe_feed @blacklisted_url
+        should_show_alert 'blacklisted-url'
+        within '#subscribe-state-alerts' do
+          expect(page).to have_text 'Unable to add subscription to feed'
+          expect(page).to have_content @blacklisted_url
+        end
+      end
+
+      it 'shows error message after reloading', js: true do
+        subscribe_feed @blacklisted_url
+        visit current_path
+        within '#subscribe-state-alerts' do
+          expect(page).to have_text 'Unable to add subscription to feed'
+          expect(page).to have_content @blacklisted_url
+        end
+      end
+
+      it 'dismisses alert permanently', js: true do
+        subscribe_feed @blacklisted_url
+        close_subscribe_job_alert @job_state_2.reload.id
+        expect(page).to have_no_text 'Unable to add subscription to feed'
+        # alert should not be present after reloading
+        visit current_path
+        expect(page).to have_no_text 'Unable to add subscription to feed'
+      end
+    end
+
   end
 
 end

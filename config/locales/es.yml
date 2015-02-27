@@ -93,6 +93,7 @@ es:
       success_subscribing: "Feed suscrito con éxito."
       problem_subscribing: "No se ha podido añadir la suscripción."
       problem_unsubscribing: "Ha habido un problema anulando la suscripción. Por favor inténtelo de nuevo más tarde."
+      blacklisted_url: "No está permitido suscribirse a un feed asociado con AEDE (asociación de editores de prensa españoles)"
       success_move_to_folder: "Feed movido a una carpeta distinta"
       success_remove_from_folder: "Feed retirado de la carpeta"
       success_move_to_new_folder: "Feed movido a una nueva carpeta"

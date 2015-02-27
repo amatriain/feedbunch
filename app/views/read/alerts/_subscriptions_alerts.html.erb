@@ -18,4 +18,10 @@
     <p><%= t 'read.alerts.problem_unsubscribing' %></p>
   </div>
 
+  <%# Alert displayed when the url the user attempted to subscribe is blacklisted %>
+  <div id="blacklisted-url" class="alert alert-danger" ng-show="blacklisted_url">
+    <button type="button" class="close" ng-click="reset_flag('blacklisted_url')">&times;</button>
+    <p><%= t 'read.alerts.blacklisted_url' %></p>
+  </div>
+
 <% end %>
