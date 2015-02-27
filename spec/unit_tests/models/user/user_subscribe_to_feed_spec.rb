@@ -74,7 +74,7 @@ describe User, type: :model do
       it 'does not enqueue job and sets state to ERROR if url matches exactly blacklisted url' do
         # job is not enqueued
         expect(SubscribeUserWorker.jobs.size).to eq 0
-        @user.enqueue_subscribe_job @blacklisted_url
+        expect{@user.enqueue_subscribe_job @blacklisted_url}.to raise_error BlacklistedUrlError
         expect(SubscribeUserWorker.jobs.size).to eq 0
 
         # a job state ERROR is created
@@ -87,7 +87,7 @@ describe User, type: :model do
       it 'does not enqueue job and sets state to ERROR if url is a subpath of blacklisted url' do
         # job is not enqueued
         expect(SubscribeUserWorker.jobs.size).to eq 0
-        @user.enqueue_subscribe_job "http://#{@blacklisted_url}/feed.php"
+        expect{@user.enqueue_subscribe_job "http://#{@blacklisted_url}/feed.php"}.to raise_error BlacklistedUrlError
         expect(SubscribeUserWorker.jobs.size).to eq 0
 
         # a job state ERROR is created
@@ -100,7 +100,7 @@ describe User, type: :model do
       it 'does not enqueue job and sets state to ERROR if url is subdomain of blacklisted url' do
         # job is not enqueued
         expect(SubscribeUserWorker.jobs.size).to eq 0
-        @user.enqueue_subscribe_job "http://subdomain.#{@blacklisted_url}"
+        expect{@user.enqueue_subscribe_job "http://subdomain.#{@blacklisted_url}"}.to raise_error BlacklistedUrlError
         expect(SubscribeUserWorker.jobs.size).to eq 0
 
         # a job state ERROR is created
@@ -113,7 +113,7 @@ describe User, type: :model do
       it 'does not enqueue job and sets state to ERROR if url is subpath and subdomain of blacklisted url' do
         # job is not enqueued
         expect(SubscribeUserWorker.jobs.size).to eq 0
-        @user.enqueue_subscribe_job "http://subdomain.#{@blacklisted_url}/feed.php"
+        expect{@user.enqueue_subscribe_job "http://subdomain.#{@blacklisted_url}/feed.php"}.to raise_error BlacklistedUrlError
         expect(SubscribeUserWorker.jobs.size).to eq 0
 
         # a job state ERROR is created

@@ -31,7 +31,7 @@ class URLSubscriber
     if FeedBlacklister.blacklisted_url? url
       Rails.logger.warn "URL #{url} is blacklisted, cannot add subscription"
       job_state = user.subscribe_job_states.create fetch_url: url, state: SubscribeJobState::ERROR
-      return job_state
+      raise BlacklistedUrlError.new
     end
 
     job_state = user.subscribe_job_states.create fetch_url: url
