@@ -36,8 +36,12 @@ class FeedBlacklister
   # Receives as argument the url string to check against the blacklist.
   #
   # Returns true if the url host is blacklisted or a subdomain of a blacklisted host, false otherwise.
+  #
+  # If the passed string is blank or nil, returns false.
 
   def self.blacklisted_url?(url)
+    return false if url.blank?
+
     # Add uri-scheme if missing, convert to downcase and remove extra whitespaces so that it can be parsed
     # to extract the host
     compare_url = ensure_scheme(url).strip.downcase
