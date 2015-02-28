@@ -122,6 +122,34 @@ describe User, type: :model do
         expect(job_state.fetch_url).to eq "http://subdomain.#{@blacklisted_url}/feed.php"
         expect(job_state.state).to eq RefreshFeedJobState::ERROR
       end
+
+      it 'enqueues job and creates job state RUNNING if url host is substring but not subdomain of a blacklisted url' do
+        not_blacklisted_url = "http://subdomain#{@blacklisted_url}/feed.php"
+
+        # job is not enqueued
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+
+        expect{@user.enqueue_subscribe_job not_blacklisted_url}.not_to raise_error
+
+        expect(SubscribeUserWorker.jobs.size).to eq 1
+        job = SubscribeUserWorker.jobs.first
+        expect(job['class']).to eq 'SubscribeUserWorker'
+
+        args = job['args']
+
+        # Check the arguments passed to the job
+        user_id = args[0]
+        expect(user_id).to eq @user.id
+        fetch_url = args[1]
+        expect(fetch_url).to eq not_blacklisted_url
+
+        # Check that the job state instance passed to the job is correct
+        job_state_id = args[2]
+        job_state = SubscribeJobState.find job_state_id
+        expect(job_state.user_id).to eq @user.id
+        expect(job_state.fetch_url).to eq not_blacklisted_url
+        expect(job_state.state).to eq SubscribeJobState::RUNNING
+      end
     end
 
   end

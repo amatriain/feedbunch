@@ -2,6 +2,7 @@
 # Class to determine if a feed is in the blacklist or not.
 
 class FeedBlacklister
+  extend UriHelpers
 
   ##
   # Check if the passed feed belongs to one of the blacklisted websites from the url_blacklist.yml config file.
@@ -29,18 +30,26 @@ class FeedBlacklister
   end
 
   ##
-  # Check if the passed url belongs to one of the blacklisted websites from the url_blacklist.yml config file.
+  # Check if the passed url's host matches or is a subdomain of one of the blacklisted websites from the url_blacklist.yml
+  # config file.
   #
   # Receives as argument the url string to check against the blacklist.
   #
-  # Returns true if the url is a sub-url of a blacklisted URL, false otherwise.
+  # Returns true if the url host is blacklisted or a subdomain of a blacklisted host, false otherwise.
 
   def self.blacklisted_url?(url)
+    # Add uri-scheme if missing, convert to downcase and remove extra whitespaces so that it can be parsed
+    # to extract the host
+    compare_url = ensure_scheme(url).strip.downcase
+    compare_host = Addressable::URI.parse(compare_url).host
+
     blacklist = Rails.application.config.url_blacklist
     blacklisted = false
     blacklist.each do |b|
-      blacklisted_url = b.strip.downcase
-      if url.strip.downcase.include?(blacklisted_url)
+      blacklisted_url = ensure_scheme(b).strip.downcase
+      blacklisted_host = Addressable::URI.parse(blacklisted_url).host
+      # Use regex to see if passed host matches or is subdomain of the blacklisted url's host
+      if /\A(.+\.)*#{blacklisted_host}\z/ =~ compare_host
         Rails.logger.warn "URL #{url} matches blacklisted URL #{blacklisted_url}"
         blacklisted = true
         break

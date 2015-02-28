@@ -472,6 +472,11 @@ describe Feed, type: :model do
         feed_2 = FactoryGirl.build :feed, url: "http://subdomain.#{@blacklisted_url}/feed.php"
         expect{feed_2.save}.to raise_error BlacklistedUrlError
       end
+
+      it 'does not raise error if url host is substring but not subdomain of a blacklisted url' do
+        feed_2 = FactoryGirl.build :feed, url: "http://substring#{@blacklisted_url}/feed.php"
+        expect{feed_2.save}.not_to raise_error
+      end
     end
 
     context 'blacklisted fetch_url' do
@@ -498,7 +503,12 @@ describe Feed, type: :model do
 
       it 'raises an error when trying to save a feed with fetch_url = subpath and subdomain of a blacklisted url' do
         feed_2 = FactoryGirl.create :feed, fetch_url: 'http://some.url'
-        expect{feed_2.update fetch_url: "http://subdomain#{@blacklisted_url}/feed.php"}.to raise_error BlacklistedUrlError
+        expect{feed_2.update fetch_url: "http://subdomain.#{@blacklisted_url}/feed.php"}.to raise_error BlacklistedUrlError
+      end
+
+      it 'does not raise error if fetch_url host is substring but not subdomain of a blacklisted url'  do
+        feed_2 = FactoryGirl.build :feed, fetch_url: "http://substring#{@blacklisted_url}/feed.php"
+        expect{feed_2.save}.not_to raise_error
       end
     end
 
