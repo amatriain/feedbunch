@@ -14,8 +14,13 @@ module UriHelpers
   # For details about this uri-scheme see http://en.wikipedia.org/wiki/Feed_URI_scheme
   #
   # If the URL has an http:// or https:// scheme, it is returned untouched.
+  #
+  # If a nil or empty string is passed, returns nil.
 
   def ensure_scheme(url)
+    # Check that the passed string is contains something
+    return nil if url.blank?
+
     url_stripped = url.strip
 
     # If the url has the feed:// or feed: uri-schemes, remove them.
