@@ -140,4 +140,24 @@ describe ImportSubscriptionWorker do
     end
   end
 
+  context 'blacklisted URL' do
+
+    before :each do
+      @blacklisted_url = 'some.aede.bastard.com'
+      Rails.application.config.url_blacklist = [@blacklisted_url]
+    end
+
+    it 'does not subscribe user to blacklisted URL' do
+      ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @blacklisted_url
+      expect(@user.reload.feeds.count).to eq 0
+    end
+
+    it 'creates OpmlImportFailure instance if an error is raised' do
+      expect(OpmlImportFailure.all.count).to eq 0
+      ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @blacklisted_url
+      expect(OpmlImportFailure.all.count).to eq 1
+      expect(OpmlImportFailure.first.url).to eq @blacklisted_url
+    end
+  end
+
 end

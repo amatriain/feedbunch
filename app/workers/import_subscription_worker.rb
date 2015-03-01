@@ -91,7 +91,7 @@ class ImportSubscriptionWorker
   # - the user performing the import
   # - url of the feed
   #
-  # Returns the subscribe feed if successful, raises an error otherwise.
+  # Returns the subscribe feed if successful, nil otherwise.
 
   def import_feed(user, url)
     Rails.logger.info "As part of OPML import, subscribing user #{user.id} - #{user.email} to feed #{url}"
@@ -115,17 +115,29 @@ class ImportSubscriptionWorker
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
     Rails.logger.error "Controlled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{url}"
     Rails.logger.error e.message
-    failure = OpmlImportFailure.new url: url
-    user.opml_import_job_state.opml_import_failures << failure
+    add_failure user, url
+    return nil
+  rescue BlacklistedUrlError => e
+    # If the url is in the blacklist, do not add subscription.
+    Rails.logger.error "User #{user.try :id} - #{user.try :email} attempted to import subscription to blacklisted feed URL #{url}, ignoring it"
+    add_failure user, url
     return nil
   rescue => e
     # an uncontrolled error has happened. Log the full backtrace but do not re-raise, so that the batch continues with next imported feed
     Rails.logger.error "Uncontrolled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{url}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
+    add_failure user, url
+    return nil
+  end
+
+  ##
+  # Add a url to the list of failures for this OPML import.
+  # Receives as argument the user doing the import and the failed url.
+
+  def add_failure(user, url)
     failure = OpmlImportFailure.new url: url
     user.opml_import_job_state.opml_import_failures << failure
-    return nil
   end
 
 end
