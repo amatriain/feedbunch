@@ -72,7 +72,7 @@ class URLSubscriber
   # - "\xkcd.com"
 
   def self.subscribe(url, user)
-    Rails.logger.info "User #{user.id} - #{user.email} submitted Subscribe form with value #{url}"
+    Rails.logger.info "Subscribing user #{user.id} - #{user.email} to feed URL #{url}"
 
     # Ensure the url has a schema (defaults to http:// if none is passed)
     feed_url = ensure_scheme url
