@@ -12,18 +12,13 @@ describe FeedbunchAuth::RegistrationsController, type: :controller do
       @request.env['devise.mapping'] = Devise.mappings[:user]
     end
 
-    # TODO uncomment this test when beta ends and signup is opened to everyone
-=begin
     it 'returns redirect to root path' do
       post :create, 'user' => {'email'=>@user.email, 'name'=>@user.name, 'password'=>@user.password,
                                'password_confirmation'=>@user.password, 'locale'=>@user.locale,
                                'timezone'=>@user.timezone}
       expect(response).to redirect_to root_path
     end
-=end
 
-    # TODO uncomment this test when beta ends and signup is opened to everyone
-=begin
     it 'destroys user before sign up if he was invited but unconfirmed' do
       friend_email = 'friend@email.com'
       friend_name = 'friend_name'
@@ -44,10 +39,7 @@ describe FeedbunchAuth::RegistrationsController, type: :controller do
                                'timezone'=>friend_timezone}
       expect(response).to redirect_to root_path
     end
-=end
 
-    # TODO uncomment this test when beta ends and signup is opened to everyone
-=begin
     it 'does not destroy confirmed user' do
       @user.save!
       expect_any_instance_of(User).not_to receive :destroy
@@ -56,7 +48,6 @@ describe FeedbunchAuth::RegistrationsController, type: :controller do
                                'timezone'=>@user.timezone}
       expect(response).to be_success
     end
-=end
 
   end
 

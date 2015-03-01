@@ -4,18 +4,18 @@
 
 <% cache "devise_registrations_new-#{I18n.locale}" do %>
 
-  <%# TODO delete this div when beta stage ends and signup is again open for everyone %>
-  <div id="signup-disabled-warning" class="alert alert-warning">
+  <%# TODO delete this div when open beta stage ends %>
+  <div id="open-beta-warning" class="alert alert-warning">
     <div class="row">
       <div class="col-xs-3 col-sm-2 text-center">
         <i class="fa fa-flask fa-4x"></i>
       </div>
 
       <div class="col-xs-9 col-sm-10">
-        <p><%= t 'devise.views.sign_up_disabled_1' %></p>
+        <p><%= t 'devise.views.open_beta_1' %></p>
       </div>
     </div>
-    <p class="text-center"><%= t 'devise.views.sign_up_disabled_2' %></p>
+    <p class="text-center"><%= t 'devise.views.open_beta_2' %></p>
   </div>
 
   <div class="row">
@@ -26,9 +26,6 @@
                           authenticity_token: '',   # Rails unobtrusive-JS will set the correct value from the meta tag in head,
                                                     # this way this form can be cached and still send the correct token when POSTing.
                           :url => user_registration_path(locale: I18n.locale) do |f| %>
-
-        <%# TODO remove this fieldset to enable the signup form when beta stage ends %>
-        <fieldset id="signup-disabled-form" disabled>
 
         <%= f.input :email, as: :email_icon, autofocus: true %>
         <%= f.input :name, as: :user_icon, required: false %>
@@ -45,8 +42,6 @@
             <% end %>
           </div>
         </div>
-
-        </fieldset>
 
     <% end %>
     </div>
