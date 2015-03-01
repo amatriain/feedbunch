@@ -3,8 +3,7 @@ require 'rails_helper'
 describe FeedbunchAuth::InvitationsController, type: :controller do
 
   before :each do
-    # TODO remove admin: true when the invite feature is opened to everyone
-    @user = FactoryGirl.create :user, admin: true
+    @user = FactoryGirl.create :user
     @friend_email = 'friends.will.be.friends@righttotheend.com'
     login_user_for_unit @user
   end
@@ -13,21 +12,12 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
 
     context 'validations' do
 
-      # TODO delete this test when the invite feature is opened to everyone
-      it 'returns 403 if user is not an admin' do
-        @user.update admin: false
-        post :create, user: {email: @friend_email}, format: :json
-        expect(response.status).to eq 403
-      end
-
       it 'returns 409 if user already exists and has not been invited' do
         user2 = FactoryGirl.create :user, email: @friend_email
         post :create, user: {email: @friend_email}, format: :json
         expect(response.status).to eq 409
       end
 
-      # TODO uncomment these tests when the invite feature is opened to everyone
-=begin
       it 'returns 400 if user has no invitations left' do
         @user.update invitation_limit: 10, invitations_count: 10
 
@@ -43,7 +33,6 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
 
         expect(response).to be_success
       end
-=end
 
       it 'returns success regardless of invitations limit if user is an admin' do
         @user.update admin: true, invitation_limit: 10, invitations_count: 10
@@ -130,8 +119,6 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
         expect(@user.reload.invitations_count).to eq invitations_before + 1
       end
 
-      # TODO uncomment these tests when the invite feature is opened to everyone
-=begin
       it 'does not resend invitation if inviter has no invitations left' do
         @user.update invitation_limit: 10, invitations_count: 10
 
@@ -157,7 +144,6 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
 
         expect(response.status).to eq 202
       end
-=end
 
     end
 

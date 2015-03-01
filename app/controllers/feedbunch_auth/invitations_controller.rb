@@ -16,13 +16,6 @@ class FeedbunchAuth::InvitationsController < Devise::InvitationsController
   def create
     invited_email = friend_invitation_params[:email]
 
-    # TODO after beta stage remove this to allow anyone to invite friends
-    if !current_inviter.admin
-      Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} tried to send invitation to #{invited_email} without being an admin"
-      head status: 403
-      return
-    end
-
     # Check if user already exists
     if User.exists? email: invited_email
       user = User.find_by_email invited_email

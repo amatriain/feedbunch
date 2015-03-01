@@ -6,21 +6,10 @@ describe 'invite friend', type: :feature do
     @user = FactoryGirl.create :user
     @friend_email = 'some_friends_email@domain.com'
 
-    # TODO remove this line when friend invitation is opened to everyone
-    @user.update admin: true
-
     login_user_for_feature @user
   end
 
   context 'send invitation' do
-
-    # TODO remove this test when friend invitation is opened to everyone
-    it 'non-admin users cannot send invitations', js: true do
-      @user.update admin: false
-      visit edit_user_registration_path
-      expect(page).to have_no_css '#send-invitation-button', visible: true
-    end
-
 
     it 'creates user and sends invitation email', js: true do
       expect(User.exists? email: @friend_email).to be false
@@ -106,8 +95,6 @@ describe 'invite friend', type: :feature do
       expect(@user.invitations).to include reinvited_user
     end
 
-    # TODO uncomment this test when the invite feature is opened to everyone
-=begin
     it 'cannot send invitation if user has no invitations left', js: true do
       @user.update invitation_limit: 10, invitations_count: 10
 
@@ -117,7 +104,6 @@ describe 'invite friend', type: :feature do
       mail_should_not_be_sent
       expect(User.exists? email: @friend_email).to be false
     end
-=end
 
     it 'displays an alert if there is an error sending an invitation', js: true do
       allow(User).to receive(:exists?).and_raise StandardError.new
