@@ -1,8 +1,67 @@
-Feedbunch
-==========
-[![Build Status](https://travis-ci.org/amatriain/feedbunch.png?branch=master)](https://travis-ci.org/amatriain/feedbunch) [![Coverage Status](https://coveralls.io/repos/amatriain/feedbunch/badge.png?branch=master)](https://coveralls.io/r/amatriain/feedbunch) [![Code Climate](https://codeclimate.com/github/amatriain/feedbunch.png)](https://codeclimate.com/github/amatriain/feedbunch) [![Inline docs](http://inch-ci.org/github/amatriain/feedbunch.png)](http://inch-ci.org/github/amatriain/feedbunch) [![Dependency Status](https://gemnasium.com/amatriain/feedbunch.png)](https://gemnasium.com/amatriain/feedbunch)
+#Feedbunch
+
+A simple and elegant feed reader.
+
+[![Build Status](https://travis-ci.org/amatriain/feedbunch.png?branch=master)](https://travis-ci.org/amatriain/feedbunch)
+[![Coverage Status](https://coveralls.io/repos/amatriain/feedbunch/badge.png?branch=master)](https://coveralls.io/r/amatriain/feedbunch)
+[![Code Climate](https://codeclimate.com/github/amatriain/feedbunch.png)](https://codeclimate.com/github/amatriain/feedbunch)
+[![Inline docs](http://inch-ci.org/github/amatriain/feedbunch.png)](http://inch-ci.org/github/amatriain/feedbunch)
+
+## Overview
+
+Feedbunch is a feed reader, a web application that allows users to subscribe and read Atom and RSS feeds. It is offered
+as a SaaS (software-as-a-service) in [feedbunch.com](http://feedbunch.com), and is fully open source.
+
+Feedbunch aims to be as pleasant to use as possible, with a simple and uncluttered interface. It hides unnecessary
+complexity from users as much as possible:
+
+- it adapts automatically to different browser sizes (desktop, tablet or smartphone), presenting an interface suited for
+each screen size
+- it supports feed autodiscovery, allowing users in most cases to subscribe to a feed just entering the website URL,
+without having to look for the sometimes hard to find "subscribe to feed" link on the page
+- all feed entries are sanitized before being displayed to the user, removing potentially malicious scripts and content.
+ Users will be protected from malware and vulnerabilities even if the feed's website becomes compromised by hackers
+- it learns and adapts to the periodicity at which new entries appear in each feed, ensuring that new entries are
+shown to users as soon as possible after publishing
+- images in an entry are loaded only after the user opens the entry, saving bandwidth for images in entries that the
+user never opens (specially nice for people with bandwidth caps!)
+- in most cases it can detect when a website has changed its feed URL and switch to the new URL without missing entries
+(e.g. if a blog migrates from Wordpress built-in feeds to  Feedburner), even if the website does not set up a proper
+redirect to the new URL
+- it detects when a feed has become permanently unavailable and desists from updating it, saving bandwith for the domain
+owner
+
+## What is a feed reader? What is a feed?
+
+You can find a simple description of what a feed reader is in [this wikipedia article](http://en.wikipedia.org/wiki/News_aggregator)
+and a good description of the use and technology behind feeds in [this Google support article](https://support.google.com/feedburner/answer/79408?hl=en).
+
+Basically, they are a way for people to aggregate updates from various websites in a single place. Instead of having to
+visit each of your favorite websites every day to see if there's new content, 
+
+The main standards for feeds are [RSS](http://en.wikipedia.org/wiki/RSS) and [Atom](http://en.wikipedia.org/wiki/Atom_%28standard%29)
+(wikipedia links). Often people speak about "RSS feeds" indistinctly, which is actually a bit of a misnomer. Feedbunch
+users don't have to worry about this, both standards are transparently supported.
+
+### What are feeds?
+
+## Getting started
+
+## Getting help
+
+## Credits and acknowledgements
+
+## License
 
 Licensed under the MIT license (see LICENSE.txt file in the root directory for details).
+
+## How to contribute
+
+### Code documentation
+
+### Tests
+
+
 
 As you probably know, Google has recently announced its decision to [discontinue Google Reader on July 1, 2013](http://googlereader.blogspot.ca/2013/03/powering-down-google-reader.html).
 
