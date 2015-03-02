@@ -4,7 +4,7 @@ es:
       short_year: "%d de %b %Y"
   pages:
     index:
-      tagline: "Un lector de feeds de código abierto"
+      tagline: "Un lector de feeds simple y elegante"
       sign_up: "Crea una cuenta"
       or: "o"
       sign_in: "Entra en tu cuenta"

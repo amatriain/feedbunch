@@ -25,7 +25,7 @@ en:
       short_year: "%d %b %Y"
   pages:
     index:
-      tagline: "An open-source feed reader"
+      tagline: "A simple and elegant feed reader"
       sign_up: "Sign up"
       or: "or"
       sign_in: "Log in"
