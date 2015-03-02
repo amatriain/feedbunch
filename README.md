@@ -17,6 +17,8 @@ complexity from users as much as possible:
 
 - it adapts automatically to different browser sizes (desktop, tablet or smartphone), presenting an interface suited for
 each screen size
+- it has simple guided tours to familiarize new users with the use of the application without having to read any
+documentation
 - it supports feed autodiscovery, allowing users in most cases to subscribe to a feed just entering the website URL,
 without having to look for the sometimes hard to find "subscribe to feed" link on the page
 - all feed entries are sanitized before being displayed to the user, removing potentially malicious scripts and content.
@@ -36,20 +38,65 @@ owner
 You can find a simple description of what a feed reader is in [this wikipedia article](http://en.wikipedia.org/wiki/News_aggregator)
 and a good description of the use and technology behind feeds in [this Google support article](https://support.google.com/feedburner/answer/79408?hl=en).
 
-Basically, they are a way for people to aggregate updates from various websites in a single place. Instead of having to
-visit each of your favorite websites every day to see if there's new content, 
+Basically, it is a way to aggregate content updates from various websites in a single place. Instead of having to
+visit each of your favorite websites every day to see if there's new content, anything those websites publish will
+appear in Feedbunch. This way you only have to visit Feedbunch to be up to date with all blogs, newspapers, webcomics etc
+that you follow. You will save a lot of time.
+
+Another advantage of using a feed reader is that you can subscribe and unsubscribe from feeds as you get interested or lose
+your interest in them, in a way creating your own personalized newspaper. You can also organize feeds in folders to help
+you organize your reading efficiently and cope with information overload. Believe me, using feeds is addictive, you may
+soon find yourself subscribed to so many that anything that helps you organize them sounds like a great idea!
+
+For this to work, each website has to make available a special XML document that gets updated every time new content is
+published in the website. This XML document is called the **feed** and every new piece of content that is added to it is
+called an **entry**. Entries can be news articles in a newspaper's website, new pages in a webcomic, new comments in a
+blog entry... Most websites nowadays have a feed (or several), in fact most blogging and CMS platforms include a feed by
+default in any websites they manage, without having to configure anything.
 
 The main standards for feeds are [RSS](http://en.wikipedia.org/wiki/RSS) and [Atom](http://en.wikipedia.org/wiki/Atom_%28standard%29)
 (wikipedia links). Often people speak about "RSS feeds" indistinctly, which is actually a bit of a misnomer. Feedbunch
 users don't have to worry about this, both standards are transparently supported.
 
-### What are feeds?
-
 ## Getting started
+
+Just visit [feedbunch.com](http://feedbunch.com) and sign up for a new account. You will need a valid email address.
+
+Once signed in, take some time to follow the interactive tours, they will show you what you can do with the application.
+Import your subscriptions in OPML format from another feed aggregator or just start subscribing to feeds. Pretty soon
+you will have a personalized set of feeds that interest you.
 
 ## Getting help
 
+You can get help, inform us of bugs, suggest new features or just tell us what you think about Feedbunch through:
+
+- email: admin@feedbunch.com
+- twitter: [@feedbunch](http://twitter.com/feedbunch)
+- github: [amatriain/feedbunch](https://github.com/amatriain/feedbunch)
+
+You can use any of them, but in general:
+
+- if you're reporting an error and have some experience reporting software bugs, the github repo's issue tracker is best.
+Please use english if possible.
+- if you're asking a general question that can also be interesting for other users, twitter is best.
+- for matters you do not with to discuss in public, use the email
+
 ## Credits and acknowledgements
+
+For a good long while the most popular feed reader was Google Reader. In fact it was probably the only feed reader that
+mattered for most of the Internet. However Google closed down GReader on July 1 2013, forcing users to migrate to
+alternative services. The development of Feedbunch was started to attempt to replace GReader and it is no coincidence that
+some ideas in the user interface are inspired in GReader.
+
+The server API is written using Ruby on Rails, along with many ruby gems generously shared by the community. Sidekiq is
+used to process jobs asynchronously.
+
+The client is an Ajax webpage. Bootstrap is used for the visual layout, along with FontAwesome for the icons. AngularJS
+is used to communicate with the server-side API and keep the page dinamically updated with feeds, entries etc. Several
+javascript libraries are also used like velocity.js for animations, hopscotch.js for the guided tours, favico.js to
+display the number of unread entries in the favicon, and others.
+
+PostgreSQL is used for the database layer, and Redis for more transient data (Rails cache and Sidekiq data).
 
 ## License
 
@@ -57,33 +104,50 @@ Licensed under the MIT license (see LICENSE.txt file in the root directory for d
 
 ## How to contribute
 
+Code is hosted in the [amatriain/feedbunch github repo](https://github.com/amatriain/feedbunch).
+
+You can create issues in the issue tracker to discuss any bugs you find.
+
+To contribute code:
+
+- fork the repo
+- create a branch with a name relevant to the change (e.g. "fix-mcguffin-rendering")
+- commit your changes to the branch. Make small commits, avoid huge commits difficult to review. Please take some time to
+read the surrounding code and imitate the coding style as much as you can. In your commit comments, use the first line
+to briefly describe the change and go into detail below.
+- create a pull request
+
 ### Code documentation
+
+All classes, modules and methods are commented with [Rdoc](https://github.com/rdoc/rdoc). HTML documentation is
+available online [at rubydoc](http://www.rubydoc.info/github/amatriain/feedbunch/).
+
+If you add new methods, classes etc please add comments comparable to the existing ones. If you change existing methods
+please update the method and class comment if they no longer accurately describe the method behavior.
+
+Also you can add Ruby comments wherever you think the intent is not clear from reading the code. Just don't overdo it,
+the best code is self-explanatory.
 
 ### Tests
 
+The project uses Rspec for its tests. The ```spec``` folder is organized a bit different from the default Rspec layout:
 
+- the ```unit_tests``` folder has unit tests for individual classes (models, controllers, etc).
+- the ```acceptance_tests``` folder contains what Rspec calls feature tests. They simulate a user operating the application
+with a headless webkit broser, using the capybara-webkit gem.
 
-As you probably know, Google has recently announced its decision to [discontinue Google Reader on July 1, 2013](http://googlereader.blogspot.ca/2013/03/powering-down-google-reader.html).
+The tests use FactoryGirl object factories, instead of test fixtures. Factory definitions are in the ```spec/factories```
+folder.
 
-If you didn't know: first of all, where have you been living lately? Second: yes I know, it's a damn shame, what is Google thinking about, curse them and their "do no evil", all that jazz. Third, you should make a backup of your Google Reader data, specially your suscribed feeds. Go to [Google Takeout](https://www.google.com/takeout/?pli=1#custom:reader), make a backup and save it somewhere safe. Preferably make copies in different hard drives, better safe than sorry. Go on, I'll be waiting here.
+Please add new tests or update existing ones when adding or changing features.
 
-Understandably there's been a [lot](http://lifehacker.com/5990454/google-is-killing-google-reader?tag=google-reader) of [talk](http://techcrunch.com/2013/03/24/bees/), [headscratching](http://www.slate.com/articles/technology/technology/2013/03/google_reader_why_did_everyone_s_favorite_rss_program_die_what_free_web.html) and [facepalming](http://www.reddit.com/r/technology/comments/1a8ygk/official_google_reader_blog_powering_down_google/) from the internet. I think this is a horrible misstep from Google, but even though some [petitions](https://www.change.org/petitions/google-keep-google-reader-running) have been started to try to convince them to keep Reader running, I think there's zero chance of Google changing their minds about this.
+TravisCI is used for continuous integration. Any pull requests that have failed tests will probably not be accepted.
 
-People who feel that Google+ is not at all a replacement to a feed reader, like myself, are now looking for a valid replacement. There are not many: Google Reader was good enough, and it was from Google, and it was free. It's hard to compete against that, and the result is that there were not many who tried. And of those alternatives that do exist, I feel that most are not a good fit to an ex-Reader user: they have glitzy but uncomfortable user interfaces with huge image tiles instead of text content, trying too hard to differentiate from Reader. Or they focus too much on newsreading or social content instead of just being a feed reader and staying out of the way. Or they require installing a browser plugin instead of having a web interface accessible from anywhere. Or they are too closed and don't support open APIs or a standard way of exporting my data, making it hard to migrate from them in the future.
+### Logging
 
-Ideally as far as I'm concerned a feed reader should:
+The rails logger (```Rails.logger```) is used to write a log of events. Most methods have log statements to help with
+debugging.
 
-- support all current Google Reader features.
-- support the social sharing features that [google removed some time ago](http://googlereader.blogspot.com.es/2011/10/new-in-reader-fresh-design-and-google.html) (yes, this was a sign that Google perhaps didn't care about its users so much). In fact it should also integrate with services Google has decided to ignore: Twitter, Facebook, Evernote, Instapaper, Pocket...
-- have a text-centric interface similar to Google Reader, while at the same time not looking dated.
-- support the Google Reader API, so that it would be easy for existing Reader clients (like the beautiful [Press for Android](http://twentyfivesquares.com/press/)) to use this service instead of Reader as a backend.
-- be open-source, developed in the open with open technologies and standards.
-- have an export feature that would allow for easily migrating to other services.
-- be reasonably easy for a technically proficient user to install in his own server, so that you're never a victim of vendor lock-in.
-- have a distributed architecture in which each deployment of the application knows about other deployments and communicates with them, so that you can engage in social sharing not just with users from your deployment, but with users from other deployments too.
-
-That's a pretty specific wish list. As far as I know there's nothing out there that fullfills these requirements, so in the true spirit of open-source I've decided to scratch this itch and implement it.
-
-I'm using technologies I feel comfortable with: Ruby on Rails, Resque, Postgresql and Bootstrap, mainly. Current deployment target is an EC2 instance with Ubuntu server, Apache and Passenger. During development I may decide to use technologies I'm not yet proficient with like MongoDB, we will see.
-
-This is very much a work in progress and for some time there won't be much to see. If you like the idea and feel like you can contribute, do not hesitate to contact me, my email is in my profile.
+If you add features please consider if it's worth it adding log statements. Remember that the default log level in
+production is ```warn```, so use lower-priority logging (```debug```, ```info```) for log lines that are not usually
+interesting, only when debugging a particular problem. Try not to clutter the logs.
