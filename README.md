@@ -10,7 +10,7 @@ A simple and elegant feed reader.
 ## Overview
 
 Feedbunch is a feed reader, a web application that allows users to subscribe and read Atom and RSS feeds. It is offered
-as a SaaS (software-as-a-service) in [feedbunch.com](http://feedbunch.com), and is fully open source.
+as a SaaS (software-as-a-service) at [feedbunch.com](http://feedbunch.com), and is fully open source.
 
 Feedbunch aims to be as pleasant to use as possible, with a simple and uncluttered interface. It hides unnecessary
 complexity from users as much as possible:
