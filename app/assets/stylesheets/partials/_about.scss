@@ -1,3 +1,16 @@
 #about {
   opacity: 0.95;
+
+  #contact-list {
+    font-size: 21px;
+    font-weight: 200;
+
+    li {
+      margin-bottom: 15px;
+    }
+
+    .contact {
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    }
+  }
 }

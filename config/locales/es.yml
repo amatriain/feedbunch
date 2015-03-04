@@ -17,8 +17,16 @@ es:
       about_feeds:
         title: "¿Qué es un lector de feeds? ¿Y un feed?"
         text_1_html: "Puedes leer una descripcion sencilla de qué es un lector de feeds <a href='http://es.wikipedia.org/wiki/Agregador' target='_blank'>en este artículo de la wikipedia</a> y una buena descripción del uso y la tecnología detrás de los feeds <a href='https://support.google.com/feedburner/answer/79408?hl=en' target='_blank'>en este artículo de Google</a>."
-        text_2: "Básicamente, un lector de feeds es un modo de agregar contenido de varios sitios web en un sólo sitio. En vez de tener que visitar cada uno de tus sitios web cada día para ver si tienen nuevo contenido, cualquier cosa que esos sitios web publiquen aparecerá en Feedbunch. De este modo sólo tienes que visitar Feedbunch para estar al día con todos los blogs, periódicos, webcomics etc que sigas. Crearás tu propio periódico personalizado y ahorrarás mucho tiempo."
+        text_2: "Básicamente, un lector de feeds es un modo de agregar contenido de varios sitios web en un sólo sitio. En vez de tener que visitar cada uno de tus sitios web favoritos cada día para ver si tienen nuevo contenido, cualquier cosa que esos sitios web publiquen aparecerá en Feedbunch. De este modo sólo tienes que visitar Feedbunch para estar al día con todos los blogs, periódicos, webcomics etc que sigas. Crearás tu propio periódico personalizado y ahorrarás mucho tiempo."
         text_3_html: "Para que esto funcione, cada sitio web tiene que poner disponible online un documento especial que se actualiza cada vez que se publica nuevo contenido en el sitio web. Este documento se llama el <strong>feed</strong> y cada nueva pieza de contenido que se le añada se llama una <strong>entrada</strong>. Las entradas pueden ser artículos de noticias en la página web de un periódico, nuevas páginas en un webcomic, nuevos comentarios en una entrada de un blog... Hoy en día la mayoría de sitios web tienen un feed (¡o varios!)."
+      getting_started:
+        title: "Cómo empezar"
+        text_1: "Crea una nueva cuenta usando el botón de más arriba (necesitarás una dirección válida de correo electrónico)."
+        text_2: "Una vez hayas accedido con tu cuenta, tómate tu tiempo para completar los tutoriales guiados, te mostrarán lo que puedes hacer con la aplicación. Importa tus suscripciones en formato OPML desde otro agregador de feeds o simplemente empieza a suscribirte a feeds. Muy pronto tendrás un conjunto personalizado de feeds que te interesan."
+      getting_help:
+        title: "Obtener ayuda"
+        text_1: "Puedes pedir ayuda o decirnos lo que piensas de Feedbunch a traves de:"
+        text_2: "Puedes usar cualquiera de ellos, pero en general el gestor de incidencias de github es lo mejor para discutir errores y twitter es lo mejor para temas que puedan ser útiles a otros usuarios."
   layouts:
     noscript: "Tu navegador no soporta JavaScript. Este sitio web necesita JavaScript para funcionar correctamente."
     cookies:

@@ -46,7 +46,8 @@ en:
         text_2: "Once signed in, take some time to follow the interactive tours, they will show you what you can do with the application. Import your subscriptions in OPML format from another feed aggregator or just start subscribing to feeds. Pretty soon you will have a personalized set of feeds that interest you."
       getting_help:
         title: "Getting help"
-        text_1: ""
+        text_1: "You can ask for help or give us feedback through:"
+        text_2: "You can use any of them, but generally the github issue tracker is best for discussing bugs and twitter is best for questions that other users can find useful."
   layouts:
     noscript: "Your browser does not support JavaScript. This website needs JavaScript to work correctly."
     cookies:
