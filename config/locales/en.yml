@@ -29,6 +29,24 @@ en:
       sign_up: "Sign up"
       or: "or"
       sign_in: "Log in"
+    about:
+      about_feedbunch:
+        title: "About Feedbunch"
+        text_1: "Feedbunch is a feed reader, a web application to subscribe and read RSS and Atom feeds."
+        text_2: "It aims to be as pleasant to use as possible, with a simple and uncluttered interface. It hides unnecessary complexity from users as much as possible, and it adapts its interface to destkop, tablet and smartphone devices."
+        text_3: "Feedbunch is open source (MIT license) and under active development."
+      about_feeds:
+        title: "What is a feed reader? And a feed?"
+        text_1_html: "You can find a simple description of what a feed reader is <a href='http://en.wikipedia.org/wiki/News_aggregator' target='_blank'>in this wikipedia article</a> and a good description of the use and technology behind feeds <a href='https://support.google.com/feedburner/answer/79408?hl=en' target='_blank'>in this Google article</a>."
+        text_2: "Basically, a feed reader is a way to aggregate content from various websites in a single place. Instead of having to visit each of your favorite websites every day to see if there's new content, anything those websites publish will appear in Feedbunch. This way you only have to visit Feedbunch to be up to date with all blogs, newspapers, webcomics etc that you follow. You will create your own personalized newspaper and save a lot of time."
+        text_3_html: "For this to work, each website has to make available a special document online that gets updated every time new content is published in the website. This document is called the <strong>feed</strong> and every new piece of content that is added to it is called an <strong>entry</strong>. Entries can be news articles in a newspaper's website, new pages in a webcomic, new comments in a blog entry... Most websites nowadays have a feed (or several!)."
+      getting_started:
+        title: "Getting started"
+        text_1: "Sign up for a new account using the button above (you will need a valid email address)."
+        text_2: "Once signed in, take some time to follow the interactive tours, they will show you what you can do with the application. Import your subscriptions in OPML format from another feed aggregator or just start subscribing to feeds. Pretty soon you will have a personalized set of feeds that interest you."
+      getting_help:
+        title: "Getting help"
+        text_1: ""
   layouts:
     noscript: "Your browser does not support JavaScript. This website needs JavaScript to work correctly."
     cookies:

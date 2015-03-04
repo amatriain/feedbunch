@@ -1,42 +1,44 @@
-  <div id="landing-page" class="container">
+<div id="landing-page" class="container">
 
-    <%= render 'layouts/locale_dropdown' %>
+  <%= render 'layouts/locale_dropdown' %>
 
 <% cache "index_page-#{I18n.locale}" do %>
 
-    <div class="jumbotron">
-      <div class="page-header">
-        <h1>
-          <%=
-              link_to root_url(locale: I18n.locale), class: 'hidden-xs' do
-                image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
-              end
-          %>
-          Feedbunch
-        </h1>
-      </div>
+  <div class="jumbotron">
+    <div class="page-header">
+      <h1>
+        <%=
+            link_to root_url(locale: I18n.locale), class: 'hidden-xs' do
+              image_tag asset_path('feed128x128.png'), alt: 'feedbunch'
+            end
+        %>
+        Feedbunch
+      </h1>
+    </div>
 
-      <div class="row">
-        <div class="col-xs-12 col-md-11 col-md-offset-1">
-          <p class="lead"><%= t '.tagline' %></p>
-          <p id="registration-links">
-            <span id="sign_up_button">
-              <%= link_to new_user_registration_path(locale: I18n.locale),
-                          class: 'btn btn-primary btn-lg', id: 'sign_up' do %>
-                <%= t('.sign_up') %> <i class="fa fa-plus-circle"></i>
-              <% end %>
-            </span>
-            <%= t '.or' %> <%= link_to read_path, id: 'sign_in' do %>
-              <%= t('.sign_in') %> <i class="fa fa-sign-in"></i>
+    <div class="row">
+      <div class="col-xs-12 col-md-11 col-md-offset-1">
+        <p class="lead"><%= t '.tagline' %></p>
+        <p id="registration-links">
+          <span id="sign_up_button">
+            <%= link_to new_user_registration_path(locale: I18n.locale),
+                        class: 'btn btn-primary btn-lg', id: 'sign_up' do %>
+              <%= t('.sign_up') %> <i class="fa fa-plus-circle"></i>
             <% end %>
-          </p>
-        </div>
+          </span>
+          <%= t '.or' %> <%= link_to read_path, id: 'sign_in' do %>
+            <%= t('.sign_in') %> <i class="fa fa-sign-in"></i>
+          <% end %>
+        </p>
       </div>
+    </div>
 
 <% end %>
 
-      <%= render 'layouts/social_links' %>
-
-    </div>
+    <%= render 'layouts/social_links' %>
 
   </div>
+
+</div>
+
+<%= render 'pages/about' %>
