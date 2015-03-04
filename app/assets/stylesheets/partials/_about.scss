@@ -1,16 +1,36 @@
 #about {
-  opacity: 0.95;
+  background-color: rgba(238, 238, 238, 0.95);
 
-  #contact-list {
-    font-size: 21px;
-    font-weight: 200;
+  .panel-heading {
+    padding: 0;
+  }
 
-    li {
-      margin-bottom: 15px;
+  .panel-title a {
+    display: block;
+    width: 100%;
+    margin-bottom: 0;
+    padding: {
+      top: 10px;
+      bottom: 10px;
+      left: 15px;
+      right: 15px;
     }
+  }
 
-    .contact {
-      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  .panel-body {
+    background-color: rgba(240,240,240,0.9);
+
+    #contact-list {
+      font-size: 21px;
+      font-weight: 200;
+
+      li {
+        margin-bottom: 15px;
+      }
+
+      .contact {
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      }
     }
   }
 }
