@@ -4,66 +4,105 @@
 
     <div id="about" class="jumbotron">
 
-      <p class="lead">
-        <strong><%= t 'pages.about.about_feedbunch.title' %></strong>
-      </p>
+      <div class="panel-group" id="accordion">
 
-      <p>
-        <%= t 'pages.about.about_feedbunch.text_1' %>
-      </p>
+        <div class="panel panel-default">
+          <div class="panel-heading" id="heading_about_feedbunch">
+            <h4 class="panel-title">
+              <a class="lead" data-toggle="collapse" data-parent="#accordion" href="#collapse_about_feedbunch">
+                <strong><%= t 'pages.about.about_feedbunch.title' %></strong>
+              </a>
+            </h4>
+          </div>
+          <div id="collapse_about_feedbunch" class="panel-collapse collapse in">
+            <div class="panel-body">
+              <p>
+                <%= t 'pages.about.about_feedbunch.text_1' %>
+              </p>
 
-      <p>
-        <%= t 'pages.about.about_feedbunch.text_2' %>
-      </p>
+              <p>
+                <%= t 'pages.about.about_feedbunch.text_2' %>
+              </p>
 
-      <p>
-        <%= t 'pages.about.about_feedbunch.text_3' %>
-      </p>
+              <p>
+                <%= t 'pages.about.about_feedbunch.text_3' %>
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <p class="lead">
-        <strong><%= t 'pages.about.about_feeds.title' %></strong>
-      </p>
+        <div class="panel panel-default">
+          <div class="panel-heading" id="heading_about_feeds">
+            <h4 class="panel-title">
+              <a class="collapsed lead" data-toggle="collapse" data-parent="#accordion" href="#collapse_about_feeds">
+                <strong><%= t 'pages.about.about_feeds.title' %></strong>
+              </a>
+            </h4>
+          </div>
+          <div id="collapse_about_feeds" class="panel-collapse collapse">
+            <div class="panel-body">
+              <p>
+                <%= t 'pages.about.about_feeds.text_1_html' %>
+              </p>
 
-      <p>
-        <%= t 'pages.about.about_feeds.text_1_html' %>
-      </p>
+              <p>
+                <%= t 'pages.about.about_feeds.text_2' %>
+              </p>
 
-      <p>
-        <%= t 'pages.about.about_feeds.text_2' %>
-      </p>
+              <p>
+                <%= t 'pages.about.about_feeds.text_3_html' %>
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <p>
-        <%= t 'pages.about.about_feeds.text_3_html' %>
-      </p>
+        <div class="panel panel-default">
+          <div class="panel-heading" id="heading_getting_started">
+            <h4 class="panel-title">
+              <a class="collapsed lead" data-toggle="collapse" data-parent="#accordion" href="#collapse_getting_started">
+                <strong><%= t 'pages.about.getting_started.title' %></strong>
+              </a>
+            </h4>
+          </div>
+          <div id="collapse_getting_started" class="panel-collapse collapse">
+            <div class="panel-body">
+              <p>
+                <%= t 'pages.about.getting_started.text_1' %>
+              </p>
 
-      <p class="lead">
-        <strong><%= t 'pages.about.getting_started.title' %></strong>
-      </p>
+              <p>
+                <%= t 'pages.about.getting_started.text_2' %>
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <p>
-        <%= t 'pages.about.getting_started.text_1' %>
-      </p>
+        <div class="panel panel-default">
+          <div class="panel-heading" id="heading_getting_help">
+            <h4 class="panel-title">
+              <a class="collapsed lead" data-toggle="collapse" data-parent="#accordion" href="#collapse_getting_help">
+                <strong><%= t 'pages.about.getting_help.title' %></strong>
+              </a>
+            </h4>
+          </div>
+          <div id="collapse_getting_help" class="panel-collapse collapse">
+            <div class="panel-body">
+              <p>
+                <%= t 'pages.about.getting_help.text_1' %>
+              </p>
+              <ul id="contact-list" class="fa fa-ul">
+                <li><i class="fa fa-li fa-twitter"></i><span class="contact"><a href="http://twitter.com/feedbunch" target="_blank">Twitter (@feedbunch)</a></span></li>
+                <li><i class="fa fa-li fa-envelope"></i><span class="contact"><a href="mailto:admin@feedbunch.com">Email (admin@feedbunch.com)</a></span></li>
+                <li><i class="fa fa-li fa-github"></i><span class="contact"><a href="https://github.com/amatriain/feedbunch" target="_blank">Github (amatriain/feedbunch)</a></span></li>
+              </ul>
 
-      <p>
-        <%= t 'pages.about.getting_started.text_2' %>
-      </p>
-
-      <p class="lead">
-        <strong><%= t 'pages.about.getting_help.title' %></strong>
-      </p>
-
-      <p>
-        <%= t 'pages.about.getting_help.text_1' %>
-      </p>
-      <ul id="contact-list" class="fa fa-ul">
-        <li><i class="fa fa-li fa-twitter"></i><span class="contact"><a href="http://twitter.com/feedbunch" target="_blank">Twitter (@feedbunch)</a></span></li>
-        <li><i class="fa fa-li fa-envelope"></i><span class="contact"><a href="mailto:admin@feedbunch.com">Email (admin@feedbunch.com)</a></span></li>
-        <li><i class="fa fa-li fa-github"></i><span class="contact"><a href="https://github.com/amatriain/feedbunch" target="_blank">Github (amatriain/feedbunch)</a></span></li>
-      </ul>
-
-      <p>
-        <%= t 'pages.about.getting_help.text_2' %>
-      </p>
+              <p>
+                <%= t 'pages.about.getting_help.text_2' %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
 
