@@ -11,8 +11,8 @@ es:
     about:
       about_feedbunch:
         title: "Acerca de Feedbunch"
-        text_1: "Feedbunch es un lector de feeds, una aplicación web para subscribirse y leer feeds RSS y Atom."
-        text_2: "Pretende ser lo más agradable de usar posible, con una interfaz simple y limpia. Oculta a los usuarios toda complejidad innecesaria tanto como sea posible, y adapta su interfaz automáticamente a tablets, smartphones y navegadores de escritorio."
+        text_1: "Feedbunch es un lector de feeds, una aplicación web para suscribirse y leer feeds RSS y Atom."
+        text_2: "Pretende ser lo más agradable de usar posible, con una interfaz simple y limpia. Oculta a los usuarios toda complejidad innecesaria y adapta su interfaz automáticamente a tablets, smartphones y navegadores de escritorio."
         text_3: "Feedbunch es un proyecto de código abierto (licencia MIT) y su desarrollo está activo."
       about_feeds:
         title: "¿Qué es un lector de feeds? ¿Y un feed?"
