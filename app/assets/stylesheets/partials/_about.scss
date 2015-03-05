@@ -5,15 +5,21 @@
     padding: 0;
   }
 
-  .panel-title a {
-    display: block;
-    width: 100%;
-    margin-bottom: 0;
-    padding: {
-      top: 10px;
-      bottom: 10px;
-      left: 15px;
-      right: 15px;
+  .panel-title {
+    a {
+      display: block;
+      width: 100%;
+      margin-bottom: 0;
+      padding: {
+        top: 10px;
+        bottom: 10px;
+        left: 15px;
+        right: 15px;
+      }
+    }
+
+    a:hover {
+      background-color: #d3d3d3;
     }
   }
 
