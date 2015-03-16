@@ -85,6 +85,8 @@ group :development do
   gem 'spring'
   # Irb-like console in error pages, new in Rails 4.2
   gem 'web-console', '~> 2.0'
+  # Integrate bower with rails
+  gem 'bower-rails', '~> 0.9.2'
 end
 
 group :test, :development do
