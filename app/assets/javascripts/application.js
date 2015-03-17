@@ -20,9 +20,9 @@
 //= require hopscotch/dist/js/hopscotch
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport-0.2
 //= require ngInfiniteScroll
+//= require URIjs
 //= require ../../../vendor/assets/javascripts/velocity-1.2.2.min
 //= require ../../../vendor/assets/javascripts/withinViewport-0.2
-//= require ../../../vendor/assets/javascripts/URI-1.14.1.min
 
 //= require jquery_ujs
 //= require ng-modules/ng-app

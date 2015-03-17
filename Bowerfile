@@ -3,6 +3,7 @@ asset 'fastclick'
 asset 'favico.js'
 asset 'hopscotch'
 asset 'ngInfiniteScroll'
+asset 'URIjs'
 
 dependency_group :dev_dependencies do
   asset 'bootlint', github: 'twbs/bootlint'

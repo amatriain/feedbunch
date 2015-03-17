@@ -5,7 +5,8 @@
     "fastclick": "latest",
     "favico.js": "latest",
     "hopscotch": "latest",
-    "ngInfiniteScroll": "latest"
+    "ngInfiniteScroll": "latest",
+    "URIjs": "latest"
   },
   "devDependencies": {
     "bootlint": "git://github.com/twbs/bootlint"
