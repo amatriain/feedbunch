@@ -6,7 +6,8 @@
     "favico.js": "latest",
     "hopscotch": "latest",
     "ngInfiniteScroll": "latest",
-    "URIjs": "latest"
+    "URIjs": "latest",
+    "velocity": "latest"
   },
   "devDependencies": {
     "bootlint": "git://github.com/twbs/bootlint"

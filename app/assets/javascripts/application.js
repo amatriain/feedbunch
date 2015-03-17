@@ -21,7 +21,7 @@
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport-0.2
 //= require ngInfiniteScroll
 //= require URIjs
-//= require ../../../vendor/assets/javascripts/velocity-1.2.2.min
+//= require velocity
 //= require ../../../vendor/assets/javascripts/withinViewport-0.2
 
 //= require jquery_ujs
