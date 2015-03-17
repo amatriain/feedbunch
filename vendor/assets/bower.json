@@ -1,0 +1,6 @@
+{
+  "name": "dsl-generated dependencies",
+  "devDependencies": {
+    "bootlint": "git://github.com/twbs/bootlint"
+  }
+}

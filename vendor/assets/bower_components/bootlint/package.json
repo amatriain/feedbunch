@@ -1,0 +1,93 @@
+{
+  "name": "bootlint",
+  "version": "0.12.0",
+  "description": "HTML linter for Bootstrap projects",
+  "keywords": [
+    "bootstrap",
+    "checker",
+    "correctness",
+    "html",
+    "lint",
+    "linter",
+    "validator",
+    "validity"
+  ],
+  "homepage": "https://github.com/twbs/bootlint",
+  "bugs": {
+    "url": "https://github.com/twbs/bootlint/issues"
+  },
+  "author": {
+    "name": "Chris Rebert",
+    "email": "code@rebertia.com",
+    "url": "http://chrisrebert.com"
+  },
+  "contributors": [
+    {
+      "name": "Heinrich Fenkart",
+      "email": "hnrch02@gmail.com",
+      "url": "http://hnrch02.me"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twbs/bootlint.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "coveralls": "^2.11.2",
+    "grunt-banner": "^0.3.1",
+    "grunt-browserify": "^3.2.0",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-nodeunit": "^0.4.1",
+    "grunt-contrib-qunit": "^0.5.2",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-eslint": "^7.0.0",
+    "grunt-exec": "^0.4.6",
+    "grunt-jscs": "^1.5.0",
+    "jquery": "~2.1.3",
+    "jscoverage": "^0.5.9",
+    "jscs-jsdoc": "^0.4.5",
+    "load-grunt-tasks": "^3.1.0",
+    "nodeunit": "^0.9.0",
+    "npm-shrinkwrap": "^200.1.0",
+    "time-grunt": "^1.0.0"
+  },
+  "dependencies": {
+    "binary-search": "^1.2.0",
+    "bluebird": "^2.9.12",
+    "body-parser": "^1.12.0",
+    "chalk": "^1.0.0",
+    "cheerio": "^0.18.0",
+    "commander": "^2.6.0",
+    "debug": "^2.1.1",
+    "express": "^4.11.2",
+    "glob": "^4.4.0",
+    "morgan": "^1.5.1",
+    "semver": "^4.3.0",
+    "void-elements": "^2.0.1"
+  },
+  "main": "./src/bootlint.js",
+  "bin": {
+    "bootlint": "./src/cli.js"
+  },
+  "browser": {
+    "binary-search": false,
+    "cheerio": "jquery",
+    "url": "./src/url.js",
+    "./cli": false,
+    "./location": false
+  },
+  "files": [
+    "bin",
+    "dist",
+    "src",
+    "app.js",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "grunt test",
+    "coveralls": "jscoverage src && BOOTLINT_COV=1 nodeunit --reporter=lcov test | coveralls",
+    "start": "./bin/www"
+  }
+}
