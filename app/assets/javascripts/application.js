@@ -16,7 +16,7 @@
 
 //= require enquire
 //= require fastclick
-//= require ../../../vendor/assets/javascripts/favico-0.3.5.min
+//= require favico.js/favico
 //= require ../../../vendor/assets/javascripts/hopscotch-0.2.3.min
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport-0.2
 //= require ../../../vendor/assets/javascripts/ng-infinite-scroll-1.2.0.min

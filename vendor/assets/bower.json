@@ -2,7 +2,8 @@
   "name": "dsl-generated dependencies",
   "dependencies": {
     "enquire": "latest",
-    "fastclick": "latest"
+    "fastclick": "latest",
+    "favico.js": "latest"
   },
   "devDependencies": {
     "bootlint": "git://github.com/twbs/bootlint"

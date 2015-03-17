@@ -1,5 +1,6 @@
 asset 'enquire'
 asset 'fastclick'
+asset 'favico.js'
 
 dependency_group :dev_dependencies do
   asset 'bootlint', github: 'twbs/bootlint'
