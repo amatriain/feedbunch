@@ -18,11 +18,11 @@
 //= require fastclick
 //= require favico.js/favico
 //= require hopscotch/dist/js/hopscotch
-//= require ../../../vendor/assets/javascripts/jquery.withinViewport-0.2
 //= require ngInfiniteScroll
 //= require URIjs
 //= require velocity
-//= require ../../../vendor/assets/javascripts/withinViewport-0.2
+//= require within-viewport
+//= require within-viewport/jquery.withinViewport
 
 //= require jquery_ujs
 //= require ng-modules/ng-app

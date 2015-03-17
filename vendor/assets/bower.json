@@ -7,7 +7,8 @@
     "hopscotch": "latest",
     "ngInfiniteScroll": "latest",
     "URIjs": "latest",
-    "velocity": "latest"
+    "velocity": "latest",
+    "within-viewport": "latest"
   },
   "devDependencies": {
     "bootlint": "git://github.com/twbs/bootlint"
