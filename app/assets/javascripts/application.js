@@ -12,7 +12,7 @@
 
 // Bootlint is a static html analyzer to help following Bootstrap's best practices
 // It should NEVER be required in production, it will be selectively enabled for testing.
-// require bootlint/dist/browser/bootlint.js
+// require bootlint/dist/browser/bootlint
 
 //= require ../../../vendor/assets/javascripts/enquire-2.1.2.min
 //= require ../../../vendor/assets/javascripts/fastclick-1.0.6.min
