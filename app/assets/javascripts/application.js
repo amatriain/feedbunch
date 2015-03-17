@@ -19,7 +19,7 @@
 //= require favico.js/favico
 //= require hopscotch/dist/js/hopscotch
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport-0.2
-//= require ../../../vendor/assets/javascripts/ng-infinite-scroll-1.2.0.min
+//= require ngInfiniteScroll
 //= require ../../../vendor/assets/javascripts/velocity-1.2.2.min
 //= require ../../../vendor/assets/javascripts/withinViewport-0.2
 //= require ../../../vendor/assets/javascripts/URI-1.14.1.min

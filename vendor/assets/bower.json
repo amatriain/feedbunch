@@ -4,7 +4,8 @@
     "enquire": "latest",
     "fastclick": "latest",
     "favico.js": "latest",
-    "hopscotch": "latest"
+    "hopscotch": "latest",
+    "ngInfiniteScroll": "latest"
   },
   "devDependencies": {
     "bootlint": "git://github.com/twbs/bootlint"
