@@ -14,7 +14,7 @@
 // It should NEVER be required in production, it will be selectively enabled for testing.
 // require bootlint/dist/browser/bootlint
 
-//= require ../../../vendor/assets/javascripts/enquire-2.1.2.min
+//= require enquire
 //= require ../../../vendor/assets/javascripts/fastclick-1.0.6.min
 //= require ../../../vendor/assets/javascripts/favico-0.3.5.min
 //= require ../../../vendor/assets/javascripts/hopscotch-0.2.3.min
