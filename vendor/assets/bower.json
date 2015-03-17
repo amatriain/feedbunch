@@ -3,7 +3,8 @@
   "dependencies": {
     "enquire": "latest",
     "fastclick": "latest",
-    "favico.js": "latest"
+    "favico.js": "latest",
+    "hopscotch": "latest"
   },
   "devDependencies": {
     "bootlint": "git://github.com/twbs/bootlint"
