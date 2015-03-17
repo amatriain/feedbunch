@@ -15,7 +15,7 @@
 // require bootlint/dist/browser/bootlint
 
 //= require enquire
-//= require ../../../vendor/assets/javascripts/fastclick-1.0.6.min
+//= require fastclick
 //= require ../../../vendor/assets/javascripts/favico-0.3.5.min
 //= require ../../../vendor/assets/javascripts/hopscotch-0.2.3.min
 //= require ../../../vendor/assets/javascripts/jquery.withinViewport-0.2

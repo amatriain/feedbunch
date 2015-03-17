@@ -1,7 +1,8 @@
 {
   "name": "dsl-generated dependencies",
   "dependencies": {
-    "enquire": "latest"
+    "enquire": "latest",
+    "fastclick": "latest"
   },
   "devDependencies": {
     "bootlint": "git://github.com/twbs/bootlint"
