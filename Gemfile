@@ -14,6 +14,9 @@ gem 'uglifier'
 
 gem 'jquery-rails'
 
+# Integrate bower (frontend package manager) with rails
+gem 'bower-rails', '~> 0.9.2'
+
 # Serve the app with Puma
 gem 'puma'
 
@@ -81,12 +84,12 @@ group :development do
   # Automate deployments
   gem 'capistrano-rails', require: false
   gem 'capistrano-rvm', require: false
+
   # App preloader to speed up tests, new in Rails 4.1.0
   gem 'spring'
+
   # Irb-like console in error pages, new in Rails 4.2
   gem 'web-console', '~> 2.0'
-  # Integrate bower with rails
-  gem 'bower-rails', '~> 0.9.2'
 end
 
 group :test, :development do
