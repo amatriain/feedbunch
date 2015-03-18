@@ -85,10 +85,11 @@ angular.module('feedbunch').service 'lazyLoadingSvc',
     # Load images visible within the viewport (and 600px below it).
     #---------------------------------------------
     load_viewport_images: ->
-      $('.entry .entry-content img[data-src]').withinViewportBottom({bottom: -600}).each ->
-        entry_id = $(this).closest('.entry').children('.open-entry-link').attr 'data-entry-id'
-        entry = findSvc.find_entry entry_id
-        load_image $(this), entry
+      $('.entry .entry-content img[data-src]').each ->
+        if $(this).is ':in-viewport'
+          entry_id = $(this).closest('.entry').children('.open-entry-link').attr 'data-entry-id'
+          entry = findSvc.find_entry entry_id
+          load_image $(this), entry
 
   return service
 ]

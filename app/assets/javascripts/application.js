@@ -21,8 +21,7 @@
 //= require ngInfiniteScroll
 //= require URIjs
 //= require velocity
-//= require within-viewport
-//= require within-viewport/jquery.withinViewport
+//= require isInViewport
 
 //= require jquery_ujs
 //= require ng-modules/ng-app

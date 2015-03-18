@@ -5,7 +5,7 @@ asset 'hopscotch'
 asset 'ngInfiniteScroll'
 asset 'URIjs'
 asset 'velocity'
-asset 'within-viewport'
+asset 'isInViewport'
 
 dependency_group :dev_dependencies do
   asset 'bootlint', github: 'twbs/bootlint'

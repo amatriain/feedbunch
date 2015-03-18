@@ -6,18 +6,21 @@ angular.module('feedbunch').service 'openAllEntriesSvc',
 ['$rootScope', '$timeout', 'lazyLoadingSvc',
 ($rootScope, $timeout, lazyLoadingSvc)->
 
+  # Persistent variable to store the scrolling timer
+  scrolling_timer = null
+
   #---------------------------------------------
   # Lazy load images as soon as they are scrolled into the viewport.
   #---------------------------------------------
   start: ->
     $(window).scroll ->
       # Launch handler only 250 ms after user has stopped scrolling, for performance reasons.
-      if $rootScope.scrolling_timer
+      if scrolling_timer
         # If user scrolls again during 250ms after last scroll, reset 250ms timer.
-        $timeout.cancel $rootScope.scrolling_timer
+        $timeout.cancel scrolling_timer
 
-      $rootScope.scrolling_timer = $timeout ->
-        delete $rootScope.scrolling_timer
+      scrolling_timer = $timeout ->
+        scrolling_timer = null
         lazyLoadingSvc.load_viewport_images()
       , 250
 ]
