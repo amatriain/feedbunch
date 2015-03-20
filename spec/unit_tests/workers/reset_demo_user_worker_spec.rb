@@ -49,7 +49,18 @@ describe ResetDemoUserWorker do
     end
 
     context 'reset demo user' do
-      # TODO implement
+
+      before :each do
+        @demo_user = FactoryGirl.create :user, email: @demo_email, password: @demo_password
+      end
+
+      it 'resets admin to false' do
+        @demo_user.update admin: true
+
+        expect(@demo_user.admin).to be true
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.admin).to be false
+      end
     end
   end
 
