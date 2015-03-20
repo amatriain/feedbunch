@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'openAllEntriesSvc',
-['$rootScope', '$timeout', 'lazyLoadingSvc',
-($rootScope, $timeout, lazyLoadingSvc)->
+['$timeout', 'lazyLoadingSvc',
+($timeout, lazyLoadingSvc)->
 
   # Persistent variable to store the scrolling timer
   scrolling_timer = null
