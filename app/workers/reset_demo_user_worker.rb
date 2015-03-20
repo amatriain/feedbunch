@@ -20,6 +20,14 @@ class ResetDemoUserWorker
   end
 
   ##
+  # Store config values in instance variables, for DRYer code.
+
+  def initialize
+    @demo_email = Feedbunch::Application.config.demo_email
+    @demo_password = Feedbunch::Application.config.demo_password
+  end
+
+  ##
   # Create the demo user if it still doesn't exist. Reset its configuration, folders and subscribed feeds.
 
   def perform
@@ -42,9 +50,9 @@ class ResetDemoUserWorker
   # Destroy the demo user, if it exists.
 
   def destroy_demo_user
-    if User.exists? email: Feedbunch::Application.config.demo_email
+    if User.exists? email: @demo_email
       Rails.logger.warn 'Demo user disabled but exists in the database. Destroying it.'
-      demo_user = User.find_by_email Feedbunch::Application.config.demo_email
+      demo_user = User.find_by_email @demo_email
       demo_user.destroy
     end
   end
@@ -54,11 +62,11 @@ class ResetDemoUserWorker
   # Returns the demo user, either just created or previously existing.
 
   def create_demo_user
-    if User.exists? email: Feedbunch::Application.config.demo_email
-      demo_user = User.find_by_email Feedbunch::Application.config.demo_email
+    if User.exists? email: @demo_email
+      demo_user = User.find_by_email @demo_email
     else
-      demo_user = User.new email: Feedbunch::Application.config.demo_email,
-                           password: Feedbunch::Application.config.demo_password,
+      demo_user = User.new email: @demo_email,
+                           password: @demo_password,
                            confirmed_at: Time.zone.now
       Rails.logger.debug 'Demo user does not exist, creating it'
       demo_user.save!
