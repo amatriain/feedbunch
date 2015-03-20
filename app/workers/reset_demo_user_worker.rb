@@ -19,18 +19,15 @@ class ResetDemoUserWorker
     hourly
   end
 
-  DEMO_EMAIL = 'demo@feedbunch.com'
-  DEMO_PASSWORD = 'feedbunch-demo'
-
   ##
   # Create the demo user if it still doesn't exist. Reset its configuration, folders and subscribed feeds.
 
   def perform
     Rails.logger.debug 'Resetting demo user'
 
-    unless User.exists? email: DEMO_EMAIL
-      demo_user = User.new email: DEMO_EMAIL,
-                           password: DEMO_PASSWORD,
+    unless User.exists? email: Feedbunch::Application.config.demo_email
+      demo_user = User.new email: Feedbunch::Application.config.demo_email,
+                           password: Feedbunch::Application.config.demo_password,
                            confirmed_at: Time.zone.now
       Rails.logger.debug 'Demo user does not exist, creating it'
       demo_user.save!
