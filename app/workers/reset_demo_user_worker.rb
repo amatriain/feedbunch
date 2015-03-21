@@ -127,6 +127,7 @@ class ResetDemoUserWorker
     # destroy all folders and unsubscribe all feeds
     demo_user.feeds.each { |f| demo_user.unsubscribe f}
     demo_user.folders.destroy_all
+    demo_user.reload
 
     @demo_feeds_and_folders.keys.each do |folder_title|
       # the special value "NO FOLDER" is not an actual folder, we don't create it
