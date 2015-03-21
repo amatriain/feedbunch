@@ -19,7 +19,7 @@
     <div class="row">
       <div class="col-xs-12 col-md-11 col-md-offset-1">
         <p class="lead"><%= t '.tagline' %></p>
-        <p id="registration-links">
+        <div id="registration-links">
           <span id="sign_up_button">
             <%= link_to new_user_registration_path(locale: I18n.locale),
                         class: 'btn btn-primary btn-lg', id: 'sign_up' do %>
@@ -29,7 +29,7 @@
           <%= t '.or' %> <%= link_to read_path, id: 'sign_in' do %>
             <%= t('.sign_in') %> <i class="fa fa-sign-in"></i>
           <% end %>
-        </p>
+        </div>
       </div>
     </div>
 
