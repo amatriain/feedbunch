@@ -12,7 +12,8 @@
 
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap-sprockets";
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap";
-@import "font-awesome/css/font-awesome";
+@import "font-awesome/scss/font-awesome";
+@import "typography/font-awesome";
 @import "hopscotch/dist/css/hopscotch";
 @import "variables/*";
 @import "partials/*";
