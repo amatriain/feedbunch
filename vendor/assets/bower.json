@@ -1,6 +1,12 @@
 {
   "name": "dsl-generated dependencies",
   "dependencies": {
+    "jquery": "latest",
+    "angular": "latest",
+    "angular-sanitize": "latest",
+    "angular-touch": "latest",
+    "bootstrap-sass-official": "latest",
+    "font-awesome": "latest",
     "enquire": "latest",
     "fastclick": "latest",
     "favico.js": "latest",
