@@ -13,6 +13,8 @@ Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'im
 Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower-components')
 # Necessary for bootstrap fonts
 Rails.application.config.assets.paths << Rails.root.join("vendor","assets","bower_components","bootstrap-sass-official","assets","fonts")
+# Necessary for fontawesome fonts
+Rails.application.config.assets.paths << Rails.root.join("vendor","assets","bower_components","font-awesome","fonts")
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
@@ -21,6 +23,14 @@ Rails.application.config.assets.precompile += %w(.otf .eot .svg .ttf .woff)
 Rails.application.config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
 # Necessary for bootstrap fonts
 Rails.application.config.assets.precompile += %w( bootstrap/glyphicons-halflings-regular.eot
-                                                  bootstrap/glyphicons-halflings-regular.woff2
+                                                  bootstrap/glyphicons-halflings-regular.svg
+                                                  bootstrap/glyphicons-halflings-regular.ttf
                                                   bootstrap/glyphicons-halflings-regular.woff
-                                                  bootstrap/glyphicons-halflings-regular.ttf )
+                                                  bootstrap/glyphicons-halflings-regular.woff2 )
+# Necessary for fontawesome fonts
+Rails.application.config.assets.precompile += %w( FontAwesome.otf
+                                                  fontawesome-webfont.eot
+                                                  fontawesome-webfont.svg
+                                                  fontawesome-webfont.ttf
+                                                  fontawesome-webfont.woff
+                                                  fontawesome-webfont.woff2 )
