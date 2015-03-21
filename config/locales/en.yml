@@ -29,6 +29,16 @@ en:
       sign_up: "Sign up"
       or: "or"
       sign_in: "Log in"
+      demo_intro: "You can also "
+      demo: "try a free demo"
+    popups:
+      demo_info:
+        title: "Demo user"
+        help_1: "To try a free Feedbunch demo click on \"Log in\" and enter this:"
+        email: "Email: "
+        password: "Password: "
+        help_2: "IMPORTANT: the demo user resets every hour. You cannot use it for any serious reading!"
+        close: "Close"
     about:
       about_feedbunch:
         title: "About Feedbunch"

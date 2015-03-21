@@ -1,0 +1,43 @@
+<% cache "demo_info-#{I18n.locale}" do %>
+
+  <div id="demo-info-popup" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3><%= t 'pages.popups.demo_info.title' %></h3>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <div class="row">
+              <div class="hidden-xs col-sm-2">
+                <i class="fa fa-star fa-4x"></i>
+              </div>
+              <div class="col-xs-12 col-sm-10">
+                <p><%= t 'pages.popups.demo_info.help_1' %></p>
+                <ul>
+                  <li>
+                    <%= t 'pages.popups.demo_info.email' %>
+                    <strong><%= Feedbunch::Application.config.demo_email %></strong>
+                  </li>
+                  <li>
+                    <%= t 'pages.popups.demo_info.password' %>
+                    <strong><%= Feedbunch::Application.config.demo_password %></strong>
+                  </li>
+                </ul>
+                <p><%= t 'pages.popups.demo_info.help_2' %></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button id="demo-info-close" type="button" class="btn btn-default" data-dismiss="modal" ><%= t 'pages.popups.demo_info.close' %></button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<% end %>

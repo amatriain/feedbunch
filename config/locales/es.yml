@@ -8,6 +8,16 @@ es:
       sign_up: "Crea una cuenta"
       or: "o"
       sign_in: "Entra en tu cuenta"
+      demo_intro: "También puedes "
+      demo: "probar una demostración gratuita"
+    popups:
+      demo_info:
+        title: "Usuario de demostración"
+        help_1: "Para probar una demostración gratuita de Feedbunch haz click en \"Entra en tu cuenta\" y escribe esto:"
+        email: "Email: "
+        password: "Contraseña: "
+        help_2: "IMPORTANTE: el usuario de demostración se resetea cada hora. ¡No podrás usarlo para leer en serio!"
+        close: "Cerrar"
     about:
       about_feedbunch:
         title: "Acerca de Feedbunch"

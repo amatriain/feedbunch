@@ -40,3 +40,9 @@ $(document).ready ->
   #-------------------------------------------------------
   $("body").on "shown.bs.modal", "#invite-friend-popup",  ->
     $("#user_invitation_email", this).focus()
+
+  #-------------------------------------------------------
+  # Give focus to the Close button when showing the "Demo user info" modal.
+  #-------------------------------------------------------
+  $("body").on "shown.bs.modal", "#demo-info-popup",  ->
+    $("#demo-info-close", this).focus()

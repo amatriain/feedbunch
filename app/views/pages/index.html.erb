@@ -19,6 +19,7 @@
     <div class="row">
       <div class="col-xs-12 col-md-11 col-md-offset-1">
         <p class="lead"><%= t '.tagline' %></p>
+
         <div id="registration-links">
           <span id="sign_up_button">
             <%= link_to new_user_registration_path(locale: I18n.locale),
@@ -30,6 +31,18 @@
             <%= t('.sign_in') %> <i class="fa fa-sign-in"></i>
           <% end %>
         </div>
+
+        <% if Feedbunch::Application.config.demo_enabled %>
+          <div id="demo-link">
+            <%= t '.demo_intro' %>
+            <a data-toggle="modal"
+               data-target="#demo-info-popup">
+              <%= t('.demo') %>
+              <i class="fa fa-star"></i>
+            </a>
+          </div>
+        <% end %>
+
       </div>
     </div>
 
