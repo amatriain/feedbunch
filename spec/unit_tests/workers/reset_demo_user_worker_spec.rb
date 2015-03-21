@@ -32,6 +32,15 @@ describe ResetDemoUserWorker do
 
     before :each do
       Feedbunch::Application.config.demo_enabled = true
+
+      allow_any_instance_of(User).to receive :subscribe do |user, url|
+        feed = FactoryGirl.create :feed, fetch_url: url
+        subscription = FactoryGirl.build :feed_subscription,
+                                         user_id: user.id,
+                                         feed_id: feed.id
+        user.feed_subscriptions << subscription
+        feed
+      end
     end
 
     it 'creates demo user if it does not exist' do
@@ -60,6 +69,179 @@ describe ResetDemoUserWorker do
         expect(@demo_user.admin).to be true
         ResetDemoUserWorker.new.perform
         expect(@demo_user.reload.admin).to be false
+      end
+
+      it 'resets locale to default' do
+        default_locale = I18n.default_locale
+        @demo_user.update locale: :es
+
+        expect(@demo_user.locale).to eq :es.to_s
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.locale).to eq default_locale.to_s
+      end
+
+      it 'resets timezone to default' do
+        default_time_zone = Feedbunch::Application.config.time_zone
+        last_time_zone = ActiveSupport::TimeZone.all.last.name
+        expect(default_time_zone).not_to eq last_time_zone
+        @demo_user.update timezone: last_time_zone
+
+        expect(@demo_user.timezone).to eq last_time_zone
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.timezone).to eq default_time_zone
+      end
+
+      it 'resets quick_reading to default' do
+        default_quick_reading = Feedbunch::Application.config.demo_quick_reading
+        @demo_user.update quick_reading: !default_quick_reading
+
+        expect(@demo_user.quick_reading).to be !default_quick_reading
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.quick_reading).to be default_quick_reading
+      end
+
+      it 'resets open_all_entries to default' do
+        default_open_all_entries = Feedbunch::Application.config.demo_open_all_entries
+        @demo_user.update open_all_entries: !default_open_all_entries
+
+        expect(@demo_user.open_all_entries).to be !default_open_all_entries
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.open_all_entries).to be default_open_all_entries
+      end
+
+      it 'resets name to default' do
+        default_name = Feedbunch::Application.config.demo_name
+        another_name = 'another username'
+        expect(default_name).not_to eq another_name
+        @demo_user.update name: another_name
+
+        expect(@demo_user.name).to eq another_name
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.name).to eq default_name
+      end
+
+      it 'resets invitation limit to zero' do
+        @demo_user.update invitation_limit: 1000
+
+        expect(@demo_user.invitation_limit).not_to eq 0
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.invitation_limit).to eq 0
+      end
+
+      it 'resets all tours' do
+        @demo_user.update show_main_tour: false,
+                          show_mobile_tour: false,
+                          show_feed_tour: false,
+                          show_entry_tour: false
+
+        expect(@demo_user.show_main_tour).to be false
+        expect(@demo_user.show_mobile_tour).to be false
+        expect(@demo_user.show_feed_tour).to be false
+        expect(@demo_user.show_entry_tour).to be false
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.show_main_tour).to be true
+        expect(@demo_user.show_mobile_tour).to be true
+        expect(@demo_user.show_feed_tour).to be true
+        expect(@demo_user.show_entry_tour).to be true
+      end
+
+      it 'resets free to true' do
+        @demo_user.update free: false
+
+        expect(@demo_user.free).not_to be true
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.free).to be true
+      end
+
+      it 'resets OPML import state to NONE' do
+        opml_import = FactoryGirl.build :opml_import_job_state,
+                                        user_id: @demo_user.id,
+                                        state: OpmlImportJobState::SUCCESS,
+                                        total_feeds: 10,
+                                        processed_feeds: 10
+        @demo_user.opml_import_job_state = opml_import
+
+        expect(@demo_user.opml_import_job_state.state).not_to eq OpmlImportJobState::NONE
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.opml_import_job_state.state).to eq OpmlImportJobState::NONE
+      end
+
+      it 'resets OPML export state to NONE' do
+        opml_export = FactoryGirl.build :opml_export_job_state,
+                                        user_id: @demo_user.id,
+                                        state: OpmlExportJobState::ERROR
+        @demo_user.opml_export_job_state = opml_export
+
+        expect(@demo_user.opml_export_job_state.state).not_to eq OpmlExportJobState::NONE
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.opml_export_job_state.state).to eq OpmlExportJobState::NONE
+      end
+
+      it 'destroys subscribe job states' do
+        job_state_1 = FactoryGirl.build :subscribe_job_state,
+                                        user_id: @demo_user.id,
+                                        state: SubscribeJobState::SUCCESS
+        job_state_2 = FactoryGirl.build :subscribe_job_state,
+                                        user_id: @demo_user.id,
+                                        state: SubscribeJobState::SUCCESS
+        @demo_user.subscribe_job_states << job_state_1 << job_state_2
+
+        expect(@demo_user.subscribe_job_states).not_to be_blank
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.subscribe_job_states).to be_blank
+      end
+
+      it 'destroys refresh job states' do
+        job_state_1 = FactoryGirl.build :refresh_feed_job_state,
+                                        user_id: @demo_user.id,
+                                        state: RefreshFeedJobState::SUCCESS
+        job_state_2 = FactoryGirl.build :refresh_feed_job_state,
+                                        user_id: @demo_user.id,
+                                        state: RefreshFeedJobState::SUCCESS
+        @demo_user.refresh_feed_job_states << job_state_1 << job_state_2
+
+        expect(@demo_user.refresh_feed_job_states).not_to be_blank
+        ResetDemoUserWorker.new.perform
+        expect(@demo_user.reload.refresh_feed_job_states).to be_blank
+      end
+
+      context 'reset feeds and folders' do
+
+        it 'resets folders' do
+          folder_1 = FactoryGirl.build :folder, user_id: @demo_user.id
+          folder_2 = FactoryGirl.build :folder, user_id: @demo_user.id
+          @demo_user.folders << folder_1 << folder_2
+          # remove the special value "NONE" from the list of default folders, it is not an actual folder
+          # present for any user
+          default_folders = Feedbunch::Application.config.demo_subscriptions.keys
+          default_folders.delete Folder::NO_FOLDER
+
+          expect(@demo_user.folders.map{ |f| f.title}).not_to match_array default_folders
+          ResetDemoUserWorker.new.perform
+          expect(@demo_user.reload.folders.map{ |f| f.title}).to match_array default_folders
+        end
+
+        it 'resets feeds' do
+          feed_1 = @demo_user.subscribe 'http://some.feed.com'
+          feed_2 = @demo_user.subscribe 'http://another.feed.com'
+          default_subscriptions = Feedbunch::Application.config.demo_subscriptions
+          # Add an empty array of feeds in "NO_FOLDER" unless there are already feeds in "NO_FOLDER" in the
+          # default subscriptions
+          default_subscriptions[Folder::NO_FOLDER] = [] unless default_subscriptions.keys.include? Folder::NO_FOLDER
+
+          ResetDemoUserWorker.new.perform
+
+          default_subscriptions.keys.each do |folder_title|
+            if folder_title == Folder::NO_FOLDER
+              folder = folder_title
+            else
+              folder = Folder.find_by_title folder_title
+              expect(@demo_user.folders).to include folder
+            end
+
+            expect(@demo_user.folder_feeds(folder, include_read: true).map {|f| f.fetch_url}).to match_array default_subscriptions[folder_title]
+          end
+        end
       end
     end
   end

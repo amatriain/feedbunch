@@ -9,5 +9,7 @@ describe User, type: :model do
     it 'cannot change its password'
 
     it 'cannot be locked because of authentication failures'
+
+    # TODO implement this
   end
 end
