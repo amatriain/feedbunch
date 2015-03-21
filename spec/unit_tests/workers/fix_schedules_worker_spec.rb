@@ -47,7 +47,8 @@ describe FixSchedulesWorker do
 
     expect(ScheduledUpdateFeedWorker).to receive(:perform_at).once do |perform_time, feed_id|
       # Scheduled time should be in the next hour
-      expect(perform_time).to be_between Time.zone.now, Time.zone.now + 1.hour
+      # Give 1 additional minute on each end to the interval, to get rid of precision errors.
+      expect(perform_time).to be_between (Time.zone.now - 1.minute), (Time.zone.now + 1.hour + 1.minute)
       expect(feed_id).to eq @feed.id
     end
 
