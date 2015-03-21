@@ -1,4 +1,4 @@
-:concurrency: 3
+:concurrency: 10
 :queues:
   - [interactive, 10]
   - [update_feeds, 2]
