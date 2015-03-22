@@ -9,7 +9,7 @@
 class ImportSubscriptionWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: :update_feeds
+  sidekiq_options queue: :import_subscriptions
 
   ##
   # Import a single feed subscription for a user. Optionally the feed can be put into a folder.

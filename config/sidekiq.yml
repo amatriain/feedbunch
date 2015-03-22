@@ -1,6 +1,7 @@
 :concurrency: 10
 :queues:
   - [interactive, 10]
+  - [import_subscriptions, 4]
   - [update_feeds, 2]
   - [mailers, 2]
   - maintenance
