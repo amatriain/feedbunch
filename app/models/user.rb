@@ -333,6 +333,33 @@ class User < ActiveRecord::Base
       self.create_opml_export_job_state state: OpmlExportJobState::NONE
       Rails.logger.debug "User #{self.email} has no OpmlExportJobState, creating one with state NONE"
     end
+
+    # If demo is enabled, demo user cannot change email or password nor be locked
+    if Feedbunch::Application.config.demo_enabled
+      demo_email = Feedbunch::Application.config.demo_email
+      if email_changed? && self.email_was == demo_email
+        Rails.logger.info 'Somebody attempted to change the demo user email. Blocking the attempt.'
+        self.errors.add :email, 'Cannot change demo user email'
+        self.email = demo_email
+      end
+
+      demo_password = Feedbunch::Application.config.demo_password
+      if encrypted_password_changed? && self.email == demo_email
+        Rails.logger.info 'Somebody attempted to change the demo user password. Blocking the attempt.'
+        self.errors.add :password, 'Cannot change demo user password'
+        self.password = demo_password
+      end
+
+      if locked_at_changed? && self.email == demo_email
+        Rails.logger.info 'Keeping demo user from being locked because of too many authentication failures'
+        self.locked_at = nil
+      end
+
+      if unlock_token_changed? && self.email == demo_email
+        Rails.logger.info 'Removing unlock token for demo user, demo user cannot be locked out'
+        self.unlock_token = nil
+      end
+    end
   end
 
   ##
