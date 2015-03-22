@@ -144,7 +144,8 @@ describe ImportSubscriptionWorker do
 
     before :each do
       @blacklisted_url = 'some.aede.bastard.com'
-      Rails.application.config.url_blacklist = [@blacklisted_url]
+      @blacklisted_host = Addressable::URI.parse("http://#{@blacklisted_url}").host
+      Rails.application.config.hosts_blacklist = [@blacklisted_host]
     end
 
     it 'does not subscribe user to blacklisted URL' do

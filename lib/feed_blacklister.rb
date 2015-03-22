@@ -47,14 +47,12 @@ class FeedBlacklister
     compare_url = ensure_scheme(url).strip.downcase
     compare_host = Addressable::URI.parse(compare_url).host
 
-    blacklist = Rails.application.config.url_blacklist
+    blacklist = Rails.application.config.hosts_blacklist
     blacklisted = false
     blacklist.each do |b|
-      blacklisted_url = ensure_scheme(b).strip.downcase
-      blacklisted_host = Addressable::URI.parse(blacklisted_url).host
       # Use regex to see if passed host matches or is subdomain of the blacklisted url's host
-      if /\A(.+\.)*#{blacklisted_host}\z/ =~ compare_host
-        Rails.logger.warn "URL #{url} matches blacklisted URL #{b}"
+      if /\A(.+\.)*#{b}\z/ =~ compare_host
+        Rails.logger.warn "URL #{url} matches blacklisted host #{b}"
         blacklisted = true
         break
       end

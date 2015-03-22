@@ -68,7 +68,8 @@ describe User, type: :model do
 
       before :each do
         @blacklisted_url = 'some.aede.bastard.com'
-        Rails.application.config.url_blacklist = [@blacklisted_url]
+        @blacklisted_host = Addressable::URI.parse("http://#{@blacklisted_url}").host
+        Rails.application.config.hosts_blacklist = [@blacklisted_host]
       end
 
       it 'does not enqueue job and sets state to ERROR if url matches exactly blacklisted url' do
