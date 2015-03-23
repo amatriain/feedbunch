@@ -16,7 +16,7 @@ describe FileClient do
   end
 
   it 'saves file in some folder' do
-    FileClient.save @user, @upload_folder, @filename, @file_content
+    FileClient.save @user.id, @upload_folder, @filename, @file_content
     expect(FileTest.exists?(@filepath)).to be true
   end
 
@@ -24,7 +24,7 @@ describe FileClient do
     FileUtils.mkdir_p File.dirname(@filepath)
     File.open(@filepath, 'w'){|f| f.write @file_content}
 
-    FileClient.delete @user, @upload_folder, @filename
+    FileClient.delete @user.id, @upload_folder, @filename
     expect(FileTest.exists?(@filepath)).to be false
   end
 
@@ -32,7 +32,7 @@ describe FileClient do
     FileUtils.mkdir_p File.dirname(@filepath)
     File.open(@filepath, 'w') {|f| f.write @file_content}
 
-    contents = FileClient.read @user, @upload_folder, @filename
+    contents = FileClient.read @user.id, @upload_folder, @filename
     expect(contents).to eq @file_content
   end
 
@@ -43,17 +43,17 @@ describe FileClient do
     allow(File).to receive(:open).and_raise error
     allow(File).to receive(:delete).and_raise error
 
-    expect {FileClient.save @user, @upload_folder, @filename, @file_content}.to raise_error(StandardError)
-    expect {FileClient.delete @user, @upload_folder, @filename}.to raise_error(StandardError)
+    expect {FileClient.save @user.id, @upload_folder, @filename, @file_content}.to raise_error(StandardError)
+    expect {FileClient.delete @user.id, @upload_folder, @filename}.to raise_error(StandardError)
   end
 
   it 'returns true if file exists' do
-    FileClient.save @user, @upload_folder, @filename, @file_content
-    expect(FileClient.exists?(@user, @upload_folder, @filename)).to be true
+    FileClient.save @user.id, @upload_folder, @filename, @file_content
+    expect(FileClient.exists?(@user.id, @upload_folder, @filename)).to be true
   end
 
   it 'returns false if file does not exist' do
-    expect(FileClient.exists?(@user, @upload_folder, @filename)).to be false
+    expect(FileClient.exists?(@user.id, @upload_folder, @filename)).to be false
   end
 
 end

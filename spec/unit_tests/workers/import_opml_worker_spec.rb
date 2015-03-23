@@ -15,8 +15,8 @@ describe ImportOpmlWorker do
     @filepath = File.join __dir__, '..', '..', 'attachments', @filename
     @file_contents = File.read @filepath
 
-    allow(Feedbunch::Application.config.uploads_manager).to receive :read do |user, folder, filename|
-      expect(user).to eq @user
+    allow(Feedbunch::Application.config.uploads_manager).to receive :read do |user_id, folder, filename|
+      expect(user_id).to eq @user.id
       if filename == @filename
         @file_contents
       else
@@ -91,18 +91,18 @@ describe ImportOpmlWorker do
   context 'OPML file management' do
 
     it 'reads uploaded file' do
-      expect(Feedbunch::Application.config.uploads_manager).to receive(:read).with @user, OPMLImporter::FOLDER, @filename
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:read).with @user.id, OPMLImporter::FOLDER, @filename
       ImportOpmlWorker.new.perform @filename, @user.id
     end
 
     it 'deletes file after finishing successfully' do
-      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user, OPMLImporter::FOLDER, @filename
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user.id, OPMLImporter::FOLDER, @filename
       ImportOpmlWorker.new.perform @filename, @user.id
     end
 
     it 'deletes file after finishing with an error' do
       allow_any_instance_of(User).to receive(:opml_import_job_state).and_raise StandardError.new
-      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user, OPMLImporter::FOLDER, @filename
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user.id, OPMLImporter::FOLDER, @filename
 
       expect {ImportOpmlWorker.new.perform @filename, @user.id}.to raise_error StandardError
     end

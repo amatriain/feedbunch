@@ -28,8 +28,8 @@ describe User, type: :model do
       @user.opml_export_job_state = opml_export_job_state
 
       allow(Feedbunch::Application.config.uploads_manager).to receive(:exists?).and_return true
-      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).once do |user, folder, file|
-        expect(user).to eq @user
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).once do |user_id, folder, file|
+        expect(user_id).to eq @user.id
         expect(folder).to eq OPMLExporter::FOLDER
         expect(file).to eq filename
       end

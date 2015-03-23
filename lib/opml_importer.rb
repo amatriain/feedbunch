@@ -30,7 +30,7 @@ class OPMLImporter
 
     subscription_data = self.read_data_file file
     filename = "feedbunch_import_#{Time.zone.now.to_i}.opml"
-    Feedbunch::Application.config.uploads_manager.save user, FOLDER, filename, subscription_data
+    Feedbunch::Application.config.uploads_manager.save user.id, FOLDER, filename, subscription_data
 
     Rails.logger.info "Enqueuing Import Subscriptions Job for user #{user.id} - #{user.email}, OPML file #{filename}"
     ImportOpmlWorker.perform_async filename, user.id
@@ -55,7 +55,7 @@ class OPMLImporter
 
   def self.process_opml(filename, user)
     # Open file and check if it actually exists
-    xml_contents = Feedbunch::Application.config.uploads_manager.read user, FOLDER, filename
+    xml_contents = Feedbunch::Application.config.uploads_manager.read user.id, FOLDER, filename
     if xml_contents == nil
       Rails.logger.error "Trying to import for user #{user.id} from non-existing OPML file: #{filename}"
       raise OpmlImportError.new

@@ -48,7 +48,7 @@ class ImportOpmlWorker
   rescue => e
     OPMLImportNotifier.notify_error user, e
   ensure
-    Feedbunch::Application.config.uploads_manager.delete user, OPMLImporter::FOLDER, filename
+    Feedbunch::Application.config.uploads_manager.delete user_id, OPMLImporter::FOLDER, filename
   end
 
 end

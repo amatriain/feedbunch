@@ -93,12 +93,12 @@ class OPMLExporter
 
     filename = user.opml_export_job_state.filename
     # Check that the file with the saved filename actually exists.
-    if !Feedbunch::Application.config.uploads_manager.exists? user, OPMLExporter::FOLDER, filename
+    if !Feedbunch::Application.config.uploads_manager.exists? user.id, OPMLExporter::FOLDER, filename
       Rails.logger.error "User #{user.id} - #{user.email} tried to download his OPML export file #{filename} but it doesn't exist"
       raise OpmlExportDoesNotExistError.new
     end
 
-    opml_data = Feedbunch::Application.config.uploads_manager.read user, OPMLExporter::FOLDER, filename
+    opml_data = Feedbunch::Application.config.uploads_manager.read user.id, OPMLExporter::FOLDER, filename
     return opml_data
   end
 

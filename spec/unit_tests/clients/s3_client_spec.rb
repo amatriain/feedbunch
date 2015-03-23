@@ -23,16 +23,16 @@ describe S3Client do
 
   it 'uploads file to S3' do
     expect(@s3_objects_mock).to receive(:create).with(@s3_key, @file_content)
-    S3Client.save @user, @upload_folder, @filename, @file_content
+    S3Client.save @user.id, @upload_folder, @filename, @file_content
   end
 
   it 'deletes file from S3' do
     expect(@s3_object_mock).to receive :delete
-    S3Client.delete @user, @upload_folder, @filename
+    S3Client.delete @user.id, @upload_folder, @filename
   end
 
   it 'reads file from S3' do
-    content = S3Client.read @user, @upload_folder, @filename
+    content = S3Client.read @user.id, @upload_folder, @filename
     expect(content).to eq @file_content
   end
 
@@ -41,18 +41,18 @@ describe S3Client do
     error = AWS::Errors::Base.new(error_message)
     allow_any_instance_of(AWS::S3).to receive(:buckets).and_raise error
 
-    expect {S3Client.save @user, @upload_folder, @filename, @file_content}.to raise_error(AWS::Errors::Base, error_message)
-    expect {S3Client.delete @user, @upload_folder, @filename}.to raise_error(AWS::Errors::Base, error_message)
+    expect {S3Client.save @user.id, @upload_folder, @filename, @file_content}.to raise_error(AWS::Errors::Base, error_message)
+    expect {S3Client.delete @user.id, @upload_folder, @filename}.to raise_error(AWS::Errors::Base, error_message)
   end
 
   it 'returns true if file exists' do
-    exists = S3Client.exists? @user, @upload_folder, @filename
+    exists = S3Client.exists? @user.id, @upload_folder, @filename
     expect(exists).to be true
   end
 
   it 'returns false if file does not exist' do
     allow(@s3_object_mock).to receive(:exists?).and_return false
-    exists = S3Client.exists? @user, @upload_folder, @filename
+    exists = S3Client.exists? @user.id, @upload_folder, @filename
     expect(exists).to be false
   end
 

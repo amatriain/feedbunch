@@ -11,14 +11,14 @@ class S3Client
   ##
   # Save a file in Amazon S3. Amazon API keys must be present in an aws_key.rb file.
   # Accepts as arguments:
-  # - the user who is saving the file
+  # - the id of the user who is saving the file
   # - the folder (under the bucket) in which the file will besaved
   # - the filename
   # - the contents of the file.
   # File is saved in the "uploads" folder in the feedbunch-#{Rails.env} bucket.
 
-  def self.save(user, folder, filename, content)
-    key = self.key user, folder, filename
+  def self.save(user_id, folder, filename, content)
+    key = self.key user_id, folder, filename
     Rails.logger.info "Uploading to S3 object with key #{key}"
     s3_object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects.create key, content
     Rails.logger.debug "Succesfully uploaded to S3 object with key #{key}"
@@ -28,12 +28,12 @@ class S3Client
   ##
   # Delete a file from Amazon S3. Amazon API keys must be present in an aws_key.rb file.
   # Accepts as arguments:
-  # - the user who is deleting the file
+  # - the id of the user who is deleting the file
   # - the folder (under the bucket) in which the file is expected to be.
   # - the filename
 
-  def self.delete(user, folder, filename)
-    key = self.key user, folder, filename
+  def self.delete(user_id, folder, filename)
+    key = self.key user_id, folder, filename
     object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects[key]
     if object.exists?
       Rails.logger.info "deleting S3 object with key #{key}"
@@ -47,14 +47,14 @@ class S3Client
   ##
   # Read a file from Amazon S3. Amazon API keys must be present in an aws_key.rb file.
   # Accepts as arguments:
-  # - the user who is reading the file
+  # - the id of the user who is reading the file
   # - the folder (under the bucket) in which the file is expected to be.
   # - the filename
   #
   # Returns the file contents if it exists, or nil otherwise.
 
-  def self.read(user, folder, filename)
-    key = self.key user, folder, filename
+  def self.read(user_id, folder, filename)
+    key = self.key user_id, folder, filename
     object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects[key]
     if object.exists?
       Rails.logger.info "reading S3 object with key #{key}"
@@ -69,12 +69,12 @@ class S3Client
   ##
   # Returns a boolean: true if a file with the passed filename exists, false otherwise.
   # Receives as arguments:
-  # - the user who is checking the file existence
+  # - the id of the user who is checking the file existence
   # - the folder in which the file is expected to be found
   # - the filename
 
-  def self.exists?(user, folder, filename)
-    key = self.key user, folder, filename
+  def self.exists?(user_id, folder, filename)
+    key = self.key user_id, folder, filename
     Rails.logger.info "checking if S3 object with key #{key} exists"
     object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects[key]
     exists = object.exists?
@@ -91,7 +91,7 @@ class S3Client
   ##
   # Get a file's S3 key, which can be used with the AWS API to operate on the file.
   # Receives as arguments:
-  # - the user who "owns" the file
+  # - the id of the user who "owns" the file
   # - the folder (inside the bucket) in which the file is expected to be.
   # - the filename
   #
@@ -99,8 +99,8 @@ class S3Client
   # Assumes that the S3 bucket for the file is feedbunch-#{Rails.env} (e.g. feedbunch-production for the
   # production environment)
 
-  def self.key(user, folder, filename)
-    key = "#{folder}/#{user.id.to_s}/#{filename}"
+  def self.key(user_id, folder, filename)
+    key = "#{folder}/#{user_id}/#{filename}"
     return key
   end
 end
