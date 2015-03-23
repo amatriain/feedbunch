@@ -88,10 +88,15 @@ class FeedClient
     feed_response = RestClient.get url, user_agent: user_agent
 
     # If the response was retrieved from the cache, do not process it (entries are already in the db)
-    x_rack_cache = feed_response.headers[:x_rack_cache]
-    if x_rack_cache.include?('fresh') || (x_rack_cache.include?('valid') && !x_rack_cache.include?('invalid'))
-      Rails.logger.info "Feed #{feed.id} - #{feed.fetch_url} cached response is valid, there are no new entries. Skipping response processing."
-      return nil
+    headers = feed_response.try :headers
+    if headers.present?
+      x_rack_cache = headers[:x_rack_cache]
+      if x_rack_cache.present?
+        if x_rack_cache.include?('fresh') || (x_rack_cache.include?('valid') && !x_rack_cache.include?('invalid'))
+          Rails.logger.info "Feed #{feed.id} - #{feed.fetch_url} cached response is valid, there are no new entries. Skipping response processing."
+          return nil
+        end
+      end
     end
 
     # Specify encoding ISO-8859-1 if necessary
@@ -99,17 +104,17 @@ class FeedClient
       feed_response.force_encoding 'iso-8859-1'
     end
 
-    if feed_response.present?
-      begin
-        # Try to parse the response as a feed
-        FeedParser.parse feed, feed_response
-        return nil
-      rescue
-        return feed_response
-      end
-    else
+    if feed_response.blank?
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
       raise EmptyResponseError.new
+    end
+
+    begin
+      # Try to parse the response as a feed
+      FeedParser.parse feed, feed_response
+      return nil
+    rescue
+      return feed_response
     end
   rescue RestClient::NotModified => e
     Rails.logger.info "Feed #{feed.fetch_url} returned 304 - not modified"
