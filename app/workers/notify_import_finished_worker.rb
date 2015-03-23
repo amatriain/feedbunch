@@ -9,7 +9,7 @@
 class NotifyImportFinishedWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: :update_feeds
+  sidekiq_options queue: :import_subscriptions
 
   ##
   # Send a notification email to the user when the opml import finishes.
