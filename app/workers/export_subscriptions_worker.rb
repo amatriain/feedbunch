@@ -60,20 +60,4 @@ class ExportSubscriptionsWorker
     # Re-raise the exception so that Sidekiq takes care of it
     raise e
   end
-
-  private
-
-  ##
-  # Return the filename that will be used for the OPML export created by a user.
-  #
-  # This filename is guaranteed to be different for each user, and it's easy to find the file for a given user because
-  # the filename includes the user's email, which is guaranteed to be unique.
-  #
-  # The filename is always the same for a given user, because the app will not keep more than one OPML export for a given
-  # user.
-
-  def user_filename(user)
-    filename = "feedbunch_#{user.email}.opml"
-    return filename
-  end
 end
