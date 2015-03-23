@@ -20,11 +20,23 @@ class UpdateFeedUnreadCountWorker
   # This method is intended to be invoked from Sidekiq, which means it is performed in the background.
 
   def perform(feed_id, user_id)
+    # Check if the user actually exists
+    if !User.exists? user_id
+      Rails.logger.warn "Trying to update unread entries for non-existing user @#{user_id}, aborting job"
+      return
+    end
     user = User.find user_id
+
+    # Check that feed actually exists
+    if !Feed.exists? feed_id
+      Rails.logger.warn "Trying to update unread entries for non-existing feed #{feed_id}, aborting job"
+      return
+    end
     feed = Feed.find feed_id
 
     if !user.feeds.include? feed
-      raise NotSubscribedError.new
+      Rails.logger.warn "Trying to update unread entries for feed #{feed_id} - #{feed.fetch_url}, user #{user.id} - #{user.email} but user is not subscribed to feed, aborting job"
+      return
     end
 
     SubscriptionsManager.recalculate_unread_count feed, user

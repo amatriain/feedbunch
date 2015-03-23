@@ -24,7 +24,7 @@ describe UpdateFeedUnreadCountWorker do
   it 'does nothing if the feed does not exist' do
     expect(SubscriptionsManager).not_to receive :recalculate_unread_count
 
-    expect{UpdateFeedUnreadCountWorker.new.perform 1234567890, @user.id}.to raise_error
+    UpdateFeedUnreadCountWorker.new.perform 1234567890, @user.id
 
     # Unread count should be corrected
     expect(@user.feed_unread_count(@feed)).to eq 0
@@ -33,7 +33,7 @@ describe UpdateFeedUnreadCountWorker do
   it 'does nothing if the user does not exist' do
     expect(SubscriptionsManager).not_to receive :recalculate_unread_count
 
-    expect{UpdateFeedUnreadCountWorker.new.perform @feed.id, 1234567890}.to raise_error
+    UpdateFeedUnreadCountWorker.new.perform @feed.id, 1234567890
 
     # Unread count should be corrected
     expect(@user.feed_unread_count(@feed)).to eq 0
@@ -43,7 +43,7 @@ describe UpdateFeedUnreadCountWorker do
     feed2 = FactoryGirl.create :feed
     expect(SubscriptionsManager).not_to receive :recalculate_unread_count
 
-    expect{UpdateFeedUnreadCountWorker.new.perform feed2.id, @user.id}.to raise_error
+    UpdateFeedUnreadCountWorker.new.perform feed2.id, @user.id
 
     # Unread count should be corrected
     expect(@user.feed_unread_count(@feed)).to eq 0
