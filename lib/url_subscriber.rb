@@ -15,6 +15,13 @@ class URLSubscriber
   def self.enqueue_subscribe_job(url, user)
     Rails.logger.info "User #{user.id} - #{user.email} has requested to be subscribed to feed with fetch_url #{url}"
 
+    # Check if the feed url is blacklisted
+    if FeedBlacklister.blacklisted_url? url
+      Rails.logger.warn "URL #{url} is blacklisted, cannot add subscription"
+      job_state = user.subscribe_job_states.create fetch_url: url, state: SubscribeJobState::ERROR
+      raise BlacklistedUrlError.new
+    end
+
     # Check if the user is already subscribed to the feed
     existing_feed = Feed.url_variants_feed url
     if existing_feed.present?
@@ -25,13 +32,6 @@ class URLSubscriber
                                                      feed_id: existing_feed.id
         return job_state
       end
-    end
-
-    # Check if the feed url is blacklisted
-    if FeedBlacklister.blacklisted_url? url
-      Rails.logger.warn "URL #{url} is blacklisted, cannot add subscription"
-      job_state = user.subscribe_job_states.create fetch_url: url, state: SubscribeJobState::ERROR
-      raise BlacklistedUrlError.new
     end
 
     job_state = user.subscribe_job_states.create fetch_url: url
