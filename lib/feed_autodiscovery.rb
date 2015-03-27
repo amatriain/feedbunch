@@ -2,6 +2,8 @@
 # Class to performs feed autodiscovery on an HTML document.
 
 class FeedAutodiscovery
+  extend UriHelpers
+
   ##
   # Try to perform feed autodiscovery on an HTTP response, with the assumption that it's an HTML document.
   #
@@ -75,16 +77,14 @@ class FeedAutodiscovery
   # Returns the URL converted to absolute, if it was relative, or unchanged if it already was absolute
 
   def self.relative_to_absolute_url(url, feed)
-    absolute_url = url
-    uri = URI url
-    if uri.host.blank?
-      uri_webpage = URI feed.fetch_url
-      uri.scheme = uri_webpage.scheme
-      uri.host = uri_webpage.host
-      absolute_url = uri.to_s
-      Rails.logger.info "Retrieved relative feed path #{url}, converted to absolute URL #{absolute_url}"
+    normalized_url = Addressable::URI.parse(url).normalize
+    if normalized_url.host.blank?
+      url_webpage = Addressable::URI.parse feed.fetch_url
+      normalized_url.scheme = url_webpage.scheme
+      normalized_url.host = url_webpage.host
+      Rails.logger.info "Retrieved relative feed path #{url}, converted to absolute URL #{normalized_url}"
     end
-    return absolute_url
+    return normalized_url.to_s
   end
 
   ##
@@ -99,14 +99,12 @@ class FeedAutodiscovery
   # had absolute protocol.
 
   def self.relative_to_absolute_protocol(url, feed)
-    absolute_protocol_url = url
-    uri = URI url
-    if uri.scheme.blank?
-      uri_webpage = URI feed.fetch_url
-      uri.scheme = uri_webpage.scheme
-      absolute_protocol_url = uri.to_s
-      Rails.logger.info "Retrieved relative feed path #{url}, converted to absolute URL #{absolute_protocol_url}"
+    normalized_url = Addressable::URI.parse(url).normalize
+    if normalized_url.scheme.blank?
+      url_webpage = Addressable::URI.parse feed.fetch_url
+      normalized_url.scheme = url_webpage.scheme
+      Rails.logger.info "Retrieved relative feed path #{url}, converted to absolute URL #{normalized_url}"
     end
-    return absolute_protocol_url
+    return normalized_url.to_s
   end
 end

@@ -454,6 +454,16 @@ describe Feed, type: :model do
         expect{feed_2.save}.to raise_error BlacklistedUrlError
       end
 
+      it 'raises an error when trying to create a feed with internationalized blacklisted url' do
+        blacklisted_url = 'http://www.gewürzrevolver.de'
+        normalized_url = Addressable::URI.parse(blacklisted_url).normalize
+        blacklisted_host = normalized_url.host
+        Rails.application.config.hosts_blacklist = [blacklisted_host]
+
+        feed_2 = FactoryGirl.build :feed, url: blacklisted_url
+        expect{feed_2.save}.to raise_error BlacklistedUrlError
+      end
+
       it 'raises an error when trying to update a feed with a blacklisted url' do
         feed_2 = FactoryGirl.create :feed, url: 'http://some.url'
         expect{feed_2.update url: "http://#{@blacklisted_url}"}.to raise_error BlacklistedUrlError
@@ -484,6 +494,16 @@ describe Feed, type: :model do
 
       it 'raises an error when trying to create a feed with blacklisted fetch_url' do
         feed_2 = FactoryGirl.build :feed, fetch_url: "http://#{@blacklisted_url}"
+        expect{feed_2.save}.to raise_error BlacklistedUrlError
+      end
+
+      it 'raises an error when trying to create a feed with internationalized blacklisted fetch_url' do
+        blacklisted_url = 'http://www.gewürzrevolver.de'
+        normalized_url = Addressable::URI.parse(blacklisted_url).normalize
+        blacklisted_host = normalized_url.host
+        Rails.application.config.hosts_blacklist = [blacklisted_host]
+
+        feed_2 = FactoryGirl.build :feed, fetch_url: blacklisted_url
         expect{feed_2.save}.to raise_error BlacklistedUrlError
       end
 

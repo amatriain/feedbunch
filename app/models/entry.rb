@@ -39,6 +39,7 @@ require 'encoding_manager'
 
 class Entry < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
+  include UriHelpers
 
   belongs_to :feed
   validates :feed_id, presence: true
@@ -104,7 +105,6 @@ class Entry < ActiveRecord::Base
 
   def fix_encoding
     self.title = EncodingManager.fix_encoding self.title
-    self.url = EncodingManager.fix_encoding self.url
     self.author = EncodingManager.fix_encoding self.author
     self.content = EncodingManager.fix_encoding self.content
     self.summary = EncodingManager.fix_encoding self.summary
@@ -246,29 +246,26 @@ class Entry < ActiveRecord::Base
   end
 
   ##
-  # Fix problems with the entry URL, by URL-encoding any illegal characters and converting relative URLs to absolute ones.
+  # Fix problems with the entry URL, by normalizing the URL and converting relative URLs to absolute ones.
 
   def fix_url
     if self.url.present?
-      # URL-encode illegal characters
-      self.url = URI.encode self.url.to_str
+      self.url = normalize_url self.url
 
       # if the entry url is relative, try to make it absolute using the feed's host
-      uri = URI self.url
+      uri = Addressable::URI.parse self.url
       if uri.relative?
         # Use host from feed URL, or if the feed only has a fetch URL use it instead.
         if self.feed.url.present?
-          uri_feed = URI self.feed.url
+          uri_feed = Addressable::URI.parse self.feed.url
         else
-          uri_feed = URI self.feed.fetch_url
+          uri_feed = Addressable::URI.parse self.feed.fetch_url
         end
-        absolute_uri = URI uri
-        absolute_uri.scheme = uri_feed.scheme
-        absolute_uri.host = uri_feed.host
+        uri.scheme = uri_feed.scheme
+        uri.host = uri_feed.host
         # Path must begin with a '/'
-        uri.path = '/' + uri.path if uri.path[0] != '/'
-        absolute_uri.path = uri.path
-        self.url = absolute_uri.to_s
+        uri.path = "/#{uri.path}" if uri.path[0] != '/'
+        self.url = uri.to_s
       end
     end
   end

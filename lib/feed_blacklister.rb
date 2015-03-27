@@ -44,7 +44,7 @@ class FeedBlacklister
 
     # Add uri-scheme if missing, convert to downcase and remove extra whitespaces so that it can be parsed
     # to extract the host
-    compare_url = ensure_scheme(url).strip.downcase
+    compare_url = normalize_url(url).strip.downcase
     compare_host = Addressable::URI.parse(compare_url).host
 
     blacklist = Rails.application.config.hosts_blacklist

@@ -128,10 +128,10 @@ WEBPAGE_HTML
     end
 
     it 'uses https:// for autodiscovered protocol relative URL' do
-      feed_fetch_url_relative = '//webpage.com/feed'
-      feed_fetch_url_absolute = 'https://webpage.com/feed'
+      feed_fetch_url_relative = '//webpage.com/feed/'
+      feed_fetch_url_absolute = 'https://webpage.com/feed/'
       feed_url = 'https://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryGirl.create :feed, title: feed_url, url: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -159,6 +159,36 @@ WEBPAGE_HTML
       FeedClient.fetch feed, true
       feed.reload
       expect(feed.fetch_url).to eq feed_fetch_url_absolute
+    end
+
+    it 'autodiscovers from internationalized URL' do
+      feed_url = 'http://www.gewürzrevolver.de'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="feed" href="#{feed_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      allow(webpage_html).to receive(:headers).and_return({})
+
+      # First fetch the webpage; then, when fetching the actual feed URL, simulate receiving a 304-Not Modified
+      allow(RestClient).to receive :get do |url|
+        if url == Addressable::URI.parse(feed_url).normalize.to_s
+          raise RestClient::NotModified.new
+        else
+          webpage_html
+        end
+      end
+
+      expect(@feed.fetch_url).not_to eq feed_url
+      FeedClient.fetch @feed, true
+      @feed.reload
+      expect(@feed.fetch_url).to eq Addressable::URI.parse(feed_url).normalize.to_s
     end
 
     it 'fetches feed' do
@@ -250,6 +280,62 @@ FEED_XML
         if url==feed_url
           feed_xml
         elsif url==new_feed.url
+          webpage_html
+        end
+      end
+
+      expect(old_feed.entries).to be_blank
+
+      FeedClient.fetch new_feed, true
+
+      # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
+      # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
+      expect(old_feed.entries.count).to eq 1
+      expect(old_feed.entries.where(guid: @entry1.guid)).to be_present
+      expect(Feed.exists? new_feed.id).to be false
+    end
+
+    it 'autodiscovers already existing feed from internationalized URL' do
+      feed_url = 'http://www.gewürzrevolver.de/'
+      webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="feed" href="#{feed_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+      allow(webpage_html).to receive(:headers).and_return({})
+
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>#{@feed_title}</title>
+  <link href="#{@feed_url}" rel="alternate" />
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+  <entry>
+    <title>#{@entry1.title}</title>
+    <link href="#{@entry1.url}" rel="alternate" />
+    <updated>#{@entry1.published}</updated>
+    <id>#{@entry1.guid}</id>
+    <summary type="html">#{@entry1.summary}</summary>
+  </entry>
+</feed>
+FEED_XML
+      allow(feed_xml).to receive(:headers).and_return({})
+
+      old_feed = FactoryGirl.create :feed, fetch_url: feed_url
+      new_feed = FactoryGirl.create :feed
+
+      # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
+      allow(RestClient).to receive :get do |url|
+        if url == Addressable::URI.parse(feed_url).normalize.to_s
+          feed_xml
+        elsif url == new_feed.url
           webpage_html
         end
       end

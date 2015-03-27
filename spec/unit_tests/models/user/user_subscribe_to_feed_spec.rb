@@ -8,7 +8,34 @@ describe User, type: :model do
 
   context 'enqueue a job to subscribe to a feed' do
 
-    it 'enqueues a job to subscribe to the feed' do
+    it 'enqueues a job to subscribe feed' do
+      expect(SubscribeUserWorker.jobs.size).to eq 0
+
+      @user.enqueue_subscribe_job @feed.fetch_url
+
+      expect(SubscribeUserWorker.jobs.size).to eq 1
+      job = SubscribeUserWorker.jobs.first
+      expect(job['class']).to eq 'SubscribeUserWorker'
+
+      args = job['args']
+
+      # Check the arguments passed to the job
+      user_id = args[0]
+      expect(user_id).to eq @user.id
+      fetch_url = args[1]
+      expect(fetch_url).to eq @feed.fetch_url
+
+      # Check that the job state instance passed to the job is correct
+      job_state_id = args[2]
+      job_state = SubscribeJobState.find job_state_id
+      expect(job_state.user_id).to eq @user.id
+      expect(job_state.fetch_url).to eq @feed.fetch_url
+      expect(job_state.state).to eq SubscribeJobState::RUNNING
+    end
+
+    it 'enqueues a job to subscribe feed with internationalized url' do
+      @feed.update fetch_url: 'http://www.gewürzrevolver.de'
+
       expect(SubscribeUserWorker.jobs.size).to eq 0
 
       @user.enqueue_subscribe_job @feed.fetch_url
@@ -82,6 +109,24 @@ describe User, type: :model do
         job_state = SubscribeJobState.first
         expect(job_state.user_id).to eq @user.id
         expect(job_state.fetch_url).to eq @blacklisted_url
+        expect(job_state.state).to eq RefreshFeedJobState::ERROR
+      end
+
+      it 'does not enqueue job and sets state to ERROR if url is internationalized and blacklisted' do
+        blacklisted_url = 'http://www.gewürzrevolver.de'
+        normalized_url = Addressable::URI.parse(blacklisted_url).normalize
+        blacklisted_host = normalized_url.host
+        Rails.application.config.hosts_blacklist = [blacklisted_host]
+
+        # job is not enqueued
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+        expect{@user.enqueue_subscribe_job blacklisted_url}.to raise_error BlacklistedUrlError
+        expect(SubscribeUserWorker.jobs.size).to eq 0
+
+        # a job state ERROR is created
+        job_state = SubscribeJobState.first
+        expect(job_state.user_id).to eq @user.id
+        expect(job_state.fetch_url).to eq blacklisted_url
         expect(job_state.state).to eq RefreshFeedJobState::ERROR
       end
 
@@ -180,7 +225,7 @@ describe User, type: :model do
       result = @user.subscribe url
 
       expect(result).to be_present
-      feed = @user.feeds.find_by fetch_url: 'http://'+url
+      feed = @user.feeds.find_by fetch_url: "http://#{url}"
       expect(feed).to be_present
       expect(result).to eq feed
     end
@@ -215,7 +260,21 @@ describe User, type: :model do
       expect(result).to eq feed
     end
 
-    it 'subscribes to the feed actually fetched, not necessarily to a new one' do
+    it 'accepts internationalized URLs' do
+      url = 'http://www.gewürzrevolver.de/'
+      allow(FeedClient).to receive :fetch do |feed, perform_autodiscovery|
+        feed
+      end
+
+      result = @user.subscribe url
+
+      expect(result).to be_present
+      feed = @user.feeds.find_by fetch_url: url
+      expect(feed).to be_present
+      expect(result).to eq feed
+    end
+
+    it 'subscribes existing feed' do
       url = 'xkcd.com'
       existing_feed = FactoryGirl.create :feed
       allow(FeedClient).to receive :fetch do

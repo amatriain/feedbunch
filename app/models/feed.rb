@@ -44,6 +44,7 @@ require 'feed_blacklister'
 
 class Feed < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
+  include UriHelpers
   extend UriHelpers
 
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy
@@ -127,7 +128,7 @@ class Feed < ActiveRecord::Base
 
   def self.url_variants_feed(feed_url)
     # Ensure that the passed url has an http:/// or https:// uri-scheme
-    url = ensure_scheme feed_url
+    url = normalize_url feed_url
     # Remove leading and trailing whitespace, to avoid confusion when detecting trailing slashes
     stripped_url = url.strip
     Rails.logger.info "Searching for matching feeds for url #{stripped_url}"
@@ -205,10 +206,10 @@ class Feed < ActiveRecord::Base
   # - check if the feed url or fetch_url is blacklisted, and if so a BlacklistedUrlError is raised
 
   def before_validation
+    fix_urls
     fix_encoding
     default_values
     sanitize_attributes
-    fix_urls
     check_if_blacklisted
   end
 
@@ -229,8 +230,6 @@ class Feed < ActiveRecord::Base
 
   def fix_encoding
     self.title = EncodingManager.fix_encoding self.title
-    self.url = EncodingManager.fix_encoding self.url
-    self.fetch_url = EncodingManager.fix_encoding self.fetch_url
   end
 
   ##
@@ -260,8 +259,8 @@ class Feed < ActiveRecord::Base
   # Fix problems with URLs, by URL-encoding any illegal characters.
 
   def fix_urls
-    self.url = Addressable::URI.parse(self.url.to_str).display_uri.to_s if self.url.present?
-    self.fetch_url = Addressable::URI.parse(self.fetch_url.to_str).display_uri.to_s if self.fetch_url.present?
+    self.url = normalize_url self.url if self.url.present?
+    self.fetch_url = normalize_url self.fetch_url if self.fetch_url.present?
   end
 
   ##
