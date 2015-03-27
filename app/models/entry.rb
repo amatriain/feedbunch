@@ -104,6 +104,7 @@ class Entry < ActiveRecord::Base
 
   def fix_encoding
     self.title = EncodingManager.fix_encoding self.title
+    self.url = EncodingManager.fix_encoding self.url
     self.author = EncodingManager.fix_encoding self.author
     self.content = EncodingManager.fix_encoding self.content
     self.summary = EncodingManager.fix_encoding self.summary
@@ -248,25 +249,7 @@ class Entry < ActiveRecord::Base
   # Fix problems with the entry URL, by normalizing the URL and converting relative URLs to absolute ones.
 
   def fix_url
-    if self.url.present?
-      self.url = URLNormalizer.normalize_feed_url self.url
-
-      # if the entry url is relative, try to make it absolute using the feed's host
-      uri = Addressable::URI.parse self.url
-      if uri.relative?
-        # Use host from feed URL, or if the feed only has a fetch URL use it instead.
-        if self.feed.url.present?
-          uri_feed = Addressable::URI.parse self.feed.url
-        else
-          uri_feed = Addressable::URI.parse self.feed.fetch_url
-        end
-        uri.scheme = uri_feed.scheme
-        uri.host = uri_feed.host
-        # Path must begin with a '/'
-        uri.path = "/#{uri.path}" if uri.path[0] != '/'
-        self.url = uri.to_s
-      end
-    end
+    self.url = URLNormalizer.normalize_entry_url self.url, self
   end
 
   ##

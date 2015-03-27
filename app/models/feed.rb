@@ -204,10 +204,10 @@ class Feed < ActiveRecord::Base
   # - check if the feed url or fetch_url is blacklisted, and if so a BlacklistedUrlError is raised
 
   def before_validation
-    fix_urls
     fix_encoding
     default_values
     sanitize_attributes
+    fix_urls
     check_if_blacklisted
   end
 
@@ -228,6 +228,8 @@ class Feed < ActiveRecord::Base
 
   def fix_encoding
     self.title = EncodingManager.fix_encoding self.title
+    self.url = EncodingManager.fix_encoding self.url
+    self.fetch_url = EncodingManager.fix_encoding self.fetch_url
   end
 
   ##

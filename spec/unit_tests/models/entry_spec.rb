@@ -62,7 +62,7 @@ describe Entry, type: :model do
   context 'default values' do
 
     before :each do
-      @url = 'http://some.feed.com'
+      @url = 'http://some.feed.com/'
     end
 
     it 'defaults guid to url attribute' do
@@ -125,8 +125,8 @@ describe Entry, type: :model do
     end
 
     it 'sanitizes url' do
-      unsanitized_url = 'http://xkcd.com<script>alert("pwned!");</script>'
-      sanitized_url = 'http://xkcd.com'
+      unsanitized_url = 'http://xkcd.com/<script>alert("pwned!");</script>'
+      sanitized_url = 'http://xkcd.com/'
       entry = FactoryGirl.create :entry, url: unsanitized_url
       expect(entry.url).to eq sanitized_url
     end
@@ -170,8 +170,8 @@ describe Entry, type: :model do
     end
 
     it 'trims url' do
-      untrimmed_url = "\n    http://xkcd.com"
-      trimmed_url = 'http://xkcd.com'
+      untrimmed_url = "\n    http://xkcd.com/"
+      trimmed_url = 'http://xkcd.com/'
       entry = FactoryGirl.create :entry, url: untrimmed_url
       expect(entry.url).to eq trimmed_url
     end

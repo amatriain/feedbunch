@@ -5,9 +5,9 @@ class URLNormalizer
 
   ##
   # Normalize the passed URL:
+  # - Make sure that the URL passed as argument has an http:// or https://scheme.
   # - If the URL contains non-ascii characters, convert to ASCII using punycode
   # (see http://en.wikipedia.org/wiki/Internationalized_domain_name)
-  # - Make sure that the URL passed as argument has an http:// or https://scheme.
   #
   # Receives as argument an URL string.
   #
@@ -20,7 +20,7 @@ class URLNormalizer
   # If a nil or empty string is passed, returns nil.
 
   def self.normalize_feed_url(url)
-    # Check that the passed string is contains something
+    # Check that the passed string contains something
     return nil if url.blank?
 
     normalized_url = url.strip
@@ -41,5 +41,62 @@ class URLNormalizer
 
     normalized_url = Addressable::URI.parse(normalized_url).normalize.to_s
     return normalized_url
+  end
+
+  ##
+  # Normalize an entry URL:
+  # - If the URL contains non-ascii characters, convert to ASCII using punycode
+  # (see http://en.wikipedia.org/wiki/Internationalized_domain_name)
+  #
+  # Receives as argument an URL string.
+  #
+  # If a nil or empty string is passed, returns nil.
+
+  def self.normalize_entry_url(url, entry)
+    # Check that the passed string contains something
+    return nil if url.blank?
+
+    normalized_url = url.strip
+
+    # If the url is scheme relative, remove the leading '//', later 'http://' or 'https://' will be prepended
+    normalized_url.sub! /\A\/\//, ''
+
+    # if the entry url is relative, try to make it absolute using the feed's host
+    parsed_uri = Addressable::URI.parse entry.url
+    if parsed_uri.relative?
+      # Path must begin with a '/'
+      normalized_url = "/#{normalized_url}" if parsed_uri.path[0] != '/'
+
+      # Use host from feed URL, or if the feed only has a fetch URL use it instead.
+      uri_feed = entry_feed_uri entry
+      normalized_url = "#{uri_feed.host}#{normalized_url}"
+    end
+
+    # If url has no http or https scheme, add http://
+    unless normalized_url =~ /\Ahttp:\/\//i || normalized_url =~ /\Ahttps:\/\//i
+      # Do not recalculate feed URI if previously calculated.
+      uri_feed ||= entry_feed_uri entry
+      Rails.logger.info "Value #{url} has no http or https URI scheme, trying to add scheme from feed url #{uri_feed}"
+      normalized_url = "#{uri_feed.scheme}://#{normalized_url}"
+    end
+
+    normalized_url = Addressable::URI.parse(normalized_url).normalize.to_s
+    return normalized_url
+  end
+
+  private
+
+  ##
+  # Returns an Addressable::URI object with the URI of the feed to which an entry belongs.
+  # It uses the url attribute of the feed or, if url is blank, it uses the feeds's fetch_url attribute.
+  # Receives an entry as argument.
+
+  def self.entry_feed_uri(entry)
+    if entry.feed.url.present?
+      uri_feed = Addressable::URI.parse entry.feed.url
+    else
+      uri_feed = Addressable::URI.parse entry.feed.fetch_url
+    end
+    return uri_feed
   end
 end

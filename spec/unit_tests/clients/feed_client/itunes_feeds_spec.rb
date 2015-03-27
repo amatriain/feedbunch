@@ -153,7 +153,7 @@ FEED_XML
       # Create an entry for feed feed2 with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
       entry = FactoryGirl.create :entry, feed_id: feed2.id, title: 'Original title',
-                                 url: 'http://origina.url.com', author: 'Original author',
+                                 url: 'http://original.url.com/', author: 'Original author',
                                  content: 'Original content', summary: '<p>Original summary</p>',
                                  published: Time.zone.parse('2013-01-01T00:00:00'),
                                  guid: @entry1.guid
@@ -166,7 +166,7 @@ FEED_XML
       entry.reload
       expect(entry.feed_id).to eq feed2.id
       expect(entry.title).to eq 'Original title'
-      expect(entry.url).to eq 'http://origina.url.com'
+      expect(entry.url).to eq 'http://original.url.com/'
       expect(entry.author).to eq 'Original author'
       expect(entry.summary).to eq '<p>Original summary</p>'
       expect(entry.published).to eq Time.zone.parse('2013-01-01T00:00:00')
