@@ -19,7 +19,7 @@ class URLNormalizer
   #
   # If a nil or empty string is passed, returns nil.
 
-  def self.normalize_url(url)
+  def self.normalize_feed_url(url)
     # Check that the passed string is contains something
     return nil if url.blank?
 
