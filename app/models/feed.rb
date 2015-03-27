@@ -44,8 +44,6 @@ require 'feed_blacklister'
 
 class Feed < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
-  include UriHelpers
-  extend UriHelpers
 
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy
   has_many :users, through: :feed_subscriptions
@@ -128,7 +126,7 @@ class Feed < ActiveRecord::Base
 
   def self.url_variants_feed(feed_url)
     # Ensure that the passed url has an http:/// or https:// uri-scheme
-    url = normalize_url feed_url
+    url = URLNormalizer.normalize_url feed_url
     # Remove leading and trailing whitespace, to avoid confusion when detecting trailing slashes
     stripped_url = url.strip
     Rails.logger.info "Searching for matching feeds for url #{stripped_url}"
@@ -259,8 +257,8 @@ class Feed < ActiveRecord::Base
   # Fix problems with URLs, by URL-encoding any illegal characters.
 
   def fix_urls
-    self.url = normalize_url self.url if self.url.present?
-    self.fetch_url = normalize_url self.fetch_url if self.fetch_url.present?
+    self.url = URLNormalizer.normalize_url self.url if self.url.present?
+    self.fetch_url = URLNormalizer.normalize_url self.fetch_url if self.fetch_url.present?
   end
 
   ##

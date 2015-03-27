@@ -2,7 +2,6 @@
 # Class to determine if a feed is in the blacklist or not.
 
 class FeedBlacklister
-  extend UriHelpers
 
   ##
   # Check if the passed feed belongs to one of the blacklisted websites from the url_blacklist.yml config file.
@@ -44,7 +43,7 @@ class FeedBlacklister
 
     # Add uri-scheme if missing, convert to downcase and remove extra whitespaces so that it can be parsed
     # to extract the host
-    compare_url = normalize_url(url).strip.downcase
+    compare_url = URLNormalizer.normalize_url(url).strip.downcase
     compare_host = Addressable::URI.parse(compare_url).host
 
     blacklist = Rails.application.config.hosts_blacklist

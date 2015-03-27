@@ -39,7 +39,6 @@ require 'encoding_manager'
 
 class Entry < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
-  include UriHelpers
 
   belongs_to :feed
   validates :feed_id, presence: true
@@ -250,7 +249,7 @@ class Entry < ActiveRecord::Base
 
   def fix_url
     if self.url.present?
-      self.url = normalize_url self.url
+      self.url = URLNormalizer.normalize_url self.url
 
       # if the entry url is relative, try to make it absolute using the feed's host
       uri = Addressable::URI.parse self.url

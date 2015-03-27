@@ -4,7 +4,6 @@ require 'subscriptions_manager'
 # This class has methods to subscribe a user to a feed.
 
 class URLSubscriber
-  extend UriHelpers
 
   ##
   # Enqueue a job to subscribe a user to a feed.
@@ -75,7 +74,7 @@ class URLSubscriber
     Rails.logger.info "Subscribing user #{user.id} - #{user.email} to feed URL #{url}"
 
     # Ensure the url has a schema (defaults to http:// if none is passed)
-    feed_url = normalize_url url
+    feed_url = URLNormalizer.normalize_url url
 
     # Try to subscribe the user to the feed assuming it's in the database
     feed = subscribe_known_feed user, feed_url
