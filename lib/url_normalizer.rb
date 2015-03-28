@@ -45,6 +45,8 @@ class URLNormalizer
 
   ##
   # Normalize an entry URL:
+  # - make sure that it is an absolute URL, prepending the feed host if necessary
+  # - make sure that the URL has an http or https scheme, using the feed's scheme by default
   # - If the URL contains non-ascii characters, convert to ASCII using punycode
   # (see http://en.wikipedia.org/wiki/Internationalized_domain_name)
   #
