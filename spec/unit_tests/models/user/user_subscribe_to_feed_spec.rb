@@ -269,7 +269,7 @@ describe User, type: :model do
       result = @user.subscribe url
 
       expect(result).to be_present
-      feed = @user.feeds.find_by fetch_url: url
+      feed = @user.feeds.find_by fetch_url: Addressable::URI.parse(url).normalize.to_s
       expect(feed).to be_present
       expect(result).to eq feed
     end
