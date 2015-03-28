@@ -1,6 +1,9 @@
 language: ruby
 cache: bundler
-sudo: false
+
+# Temporarily disable container-based infrastructure
+sudo: required
+
 rvm:
   - "ruby-2.2.1"
 script:
