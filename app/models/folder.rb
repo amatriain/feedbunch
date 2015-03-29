@@ -1,3 +1,5 @@
+require 'sanitize'
+
 ##
 # Folder model. Each instance of this class represents a single folder to which a user can add feeds.
 #
@@ -24,7 +26,6 @@
 #   - moving a feed into or out of the folder
 
 class Folder < ActiveRecord::Base
-  include ActionView::Helpers::SanitizeHelper
 
   # Class constants for special "no folder" and "all folders" cases
   NO_FOLDER = 'none'
@@ -70,7 +71,9 @@ class Folder < ActiveRecord::Base
   # Better paranoid than sorry!
 
   def sanitize_attributes
-    self.title = sanitize self.title
+    config = Sanitize::Config.merge Sanitize::Config::RESTRICTED,
+                                    remove_contents: true
+    self.title = Sanitize.fragment self.title, config
   end
 
   ##

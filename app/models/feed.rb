@@ -3,6 +3,7 @@ require 'addressable/uri'
 require 'encoding_manager'
 require 'schedule_manager'
 require 'feed_blacklister'
+require 'sanitize'
 
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which users can be suscribed.
@@ -43,7 +44,6 @@ require 'feed_blacklister'
 # before saving/updating each instance in the database.
 
 class Feed < ActiveRecord::Base
-  include ActionView::Helpers::SanitizeHelper
 
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy
   has_many :users, through: :feed_subscriptions
@@ -242,9 +242,11 @@ class Feed < ActiveRecord::Base
   # the update only for that attribute and keep the old value.
 
   def sanitize_attributes
-    self.title = sanitize(self.title).try :strip
-    self.fetch_url = sanitize(self.fetch_url).try :strip
-    self.url = sanitize(self.url).try :strip
+    config = Sanitize::Config.merge Sanitize::Config::RESTRICTED,
+                                               remove_contents: true
+    self.title = Sanitize.fragment(self.title, config).try :strip
+    self.fetch_url = Sanitize.fragment(self.fetch_url, config).try :strip
+    self.url = Sanitize.fragment(self.url, config).try :strip
 
     if self.fetch_url_was.present? && (self.fetch_url =~ URI::regexp(%w{http https})).nil?
       self.fetch_url = self.fetch_url_was

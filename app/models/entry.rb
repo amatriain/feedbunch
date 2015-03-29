@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'encoding_manager'
+require 'sanitize'
 
 ##
 # Feed entry model. Each instance of this class represents an entry in an RSS or Atom feed.
@@ -38,7 +39,6 @@ require 'encoding_manager'
 # instance in the database.
 
 class Entry < ActiveRecord::Base
-  include ActionView::Helpers::SanitizeHelper
 
   belongs_to :feed
   validates :feed_id, presence: true
@@ -130,12 +130,24 @@ class Entry < ActiveRecord::Base
   # Better paranoid than sorry!
 
   def sanitize_attributes
-    self.title = sanitize self.title
-    self.url = sanitize self.url
-    self.author = sanitize self.author
-    self.content = sanitize self.content
-    self.summary = sanitize self.summary
-    self.guid = sanitize self.guid
+    # Allow "target" attribute for "a" elements and "data-src" attribute for "img" elements in relaxed configuration
+    attributes = Sanitize::Config::RELAXED[:attributes]
+                        .merge({'a' => ['target']}) {|key, oldval, newval| oldval + newval}
+                        .merge({'img' => ['data-src']}) {|key, oldval, newval| oldval + newval}
+    config_relaxed = Sanitize::Config.merge Sanitize::Config::RELAXED,
+                                            remove_contents: true,
+                                            attributes: attributes
+    config_restricted = Sanitize::Config.merge Sanitize::Config::RESTRICTED,
+                                    :remove_contents => true
+
+    # Summary, content are sanitized with relaxed config, we want imgs etc to be present.
+    # Other attributes are sanitized with restricted config, they should be plain text.
+    self.title = Sanitize.fragment self.title, config_restricted
+    self.url = Sanitize.fragment self.url, config_restricted
+    self.author = Sanitize.fragment self.author, config_restricted
+    self.content = Sanitize.fragment self.content, config_relaxed
+    self.summary = Sanitize.fragment self.summary, config_relaxed
+    self.guid = Sanitize.fragment self.guid, config_restricted
   end
 
   ##

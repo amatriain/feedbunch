@@ -4,8 +4,8 @@ ruby '2.2.1'
 
 gem 'rails', '~> 4.2.0'
 
-# Restore old sanitizer behavior. This gem won't be supported after Rails 5!!!
-gem 'rails-deprecated_sanitizer'
+# Sanitizer to replace poorly maintained new rails sanitizer
+gem 'sanitize'
 
 gem 'responders'
 gem 'sass-rails'
