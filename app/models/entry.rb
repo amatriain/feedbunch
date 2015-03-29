@@ -165,7 +165,6 @@ class Entry < ActiveRecord::Base
     html_doc = Nokogiri::HTML html_fragment
     html_doc = link_manipulations html_doc
     html_doc = image_manipulations html_doc
-    html_doc = remove_comments html_doc
     return html_doc.css('body').children.to_s
   end
 
@@ -203,17 +202,6 @@ class Entry < ActiveRecord::Base
       src = URLNormalizer.normalize_entry_url img['src'], self
       img['src'] = '/images/Ajax-loader.gif'
       img['data-src'] = src
-    end
-    return html_doc
-  end
-
-  ##
-  # Remove all HTML comments (<!-- ... -->) from entries.
-  # Receives as argument a parsed HTML fragment.
-
-  def remove_comments(html_doc)
-    html_doc.css('//comment()').each do |comment|
-      comment.remove
     end
     return html_doc
   end
