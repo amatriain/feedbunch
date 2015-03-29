@@ -74,6 +74,14 @@ describe 'feeds', type: :feature do
       expect(page).to have_css '#read-all-button', visible: true
     end
 
+    it 'shows feed title when a feed is selected', js: true do
+      read_feed @feed1, @user
+      expect(page).to have_css '#feed-title', visible: true
+      within '#feed-title' do
+        expect(page).to have_text @feed1.title
+      end
+    end
+
     it 'shows entries for a feed not in a folder', js: true do
       read_feed @feed3, @user
 
