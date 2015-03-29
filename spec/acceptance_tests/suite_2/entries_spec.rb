@@ -341,13 +341,13 @@ describe 'feed entries', type: :feature do
       end
 
       it 'shows a spinner instead of images before opening an entry', js: true do
-        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src='#{@img_url_load}']", visible: false
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src*='#{@img_url_load}']", visible: false
         expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@spinner_url}'][data-src*='#{@img_url_fail}']", visible: false
       end
 
       it 'loads images when opening an entry', js: true do
         read_entry @entry1
-        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_load}']", visible: false
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src*='#{@img_url_load}']", visible: false
         expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src*='#{@img_url_fail}']", visible: false
       end
 

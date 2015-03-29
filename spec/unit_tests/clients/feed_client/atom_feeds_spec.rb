@@ -313,7 +313,7 @@ FEED_XML
       @entry.summary = nil
       @entry.content = <<ENTRY_CONTENT
 <p><em>Not Invented Here</em> <a href="http://notinventedhe.re/book" target="_blank">collections</a> now available in ebook and good-old-fashioned paper versions!</p>
-<a href="/on/2014-5-29" target="_blank"><img alt="Not Invented Here strip for 5/29/2014" src="/images/Ajax-loader.gif" data-src="/images/Ajax-loader.gif"></a><a href="/on/2014-5-29/comic#disqus_thread" target="_blank">comments</a>|<a href="mailto:nihcomic@gmail.com" target="_blank">email</a>|<a href="http://www.twitter.com/nihcomic" target="_blank">twitter</a><img src="/images/Ajax-loader.gif" data-src=\"/images/Ajax-loader.gif\">
+<a href="/on/2014-5-29" target="_blank"><img alt="Not Invented Here strip for 5/29/2014" src="/images/Ajax-loader.gif" data-src="http://notinventedhe.re/images/Ajax-loader.gif"></a><a href="/on/2014-5-29/comic#disqus_thread" target="_blank">comments</a>|<a href="mailto:nihcomic@gmail.com" target="_blank">email</a>|<a href="http://www.twitter.com/nihcomic" target="_blank">twitter</a><img src="/images/Ajax-loader.gif" data-src=\"http://notinventedhe.re/images/Ajax-loader.gif\">
 ENTRY_CONTENT
 
       @entry.published = '2014-05-29T07:00:00.0000000Z'
