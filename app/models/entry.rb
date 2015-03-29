@@ -91,11 +91,11 @@ class Entry < ActiveRecord::Base
   def fix_attributes
     fix_encoding
     strip_attributes
-    remove_comments
     sanitize_attributes
     content_manipulation
     default_attribute_values
     fix_url
+    remove_comments
   end
 
   ##
@@ -208,7 +208,7 @@ class Entry < ActiveRecord::Base
       img.remove_attribute 'class'
 
       # prepare image for lazy loading
-      src = img['src']
+      src = URLNormalizer.normalize_entry_url img['src'], self
       img['src'] = '/images/Ajax-loader.gif'
       img['data-src'] = src
     end
