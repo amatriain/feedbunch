@@ -64,7 +64,7 @@ class URLNormalizer
     normalized_url.sub! /\A\/\//, ''
 
     # if the entry url is relative, try to make it absolute using the feed's host
-    parsed_uri = Addressable::URI.parse entry.url
+    parsed_uri = Addressable::URI.parse normalized_url
     if parsed_uri.relative?
       # Path must begin with a '/'
       normalized_url = "/#{normalized_url}" if parsed_uri.path[0] != '/'
