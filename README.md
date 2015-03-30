@@ -134,7 +134,7 @@ The project uses Rspec for its tests. The ```spec``` folder is organized a bit d
 
 - the ```unit_tests``` folder has unit tests for individual classes (models, controllers, etc).
 - the ```acceptance_tests``` folder contains what Rspec calls feature tests. They simulate a user operating the application
-with a headless webkit broser, using the capybara-webkit gem.
+with a headless webkit browser, using the capybara-webkit gem.
 
 The tests use FactoryGirl object factories, instead of test fixtures. Factory definitions are in the ```spec/factories```
 folder.
