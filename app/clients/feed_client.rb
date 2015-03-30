@@ -102,15 +102,17 @@ class FeedClient
     feed_response = RestClient.get url, user_agent: user_agent
 
     # If the response was retrieved from the cache, do not process it (entries are already in the db)
-    headers = feed_response.try :headers
-    if headers.present?
-      x_rack_cache = headers[:x_rack_cache]
-      if x_rack_cache.present?
-        if x_rack_cache.include?('fresh') || (x_rack_cache.include?('valid') && !x_rack_cache.include?('invalid'))
-          Rails.logger.info "Feed #{feed.id} - #{feed.fetch_url} cached response is valid, there are no new entries. Skipping response processing."
-          return nil
+    if http_caching
+      headers = feed_response.try :headers
+      if headers.present?
+        x_rack_cache = headers[:x_rack_cache]
+        if x_rack_cache.present?
+          if x_rack_cache.include?('fresh') || (x_rack_cache.include?('valid') && !x_rack_cache.include?('invalid'))
+            Rails.logger.info "Feed #{feed.id} - #{feed.fetch_url} cached response is valid, there are no new entries. Skipping response processing."
+            return nil
+          end
         end
-      end
+        end
     end
 
     # Specify encoding ISO-8859-1 if necessary
