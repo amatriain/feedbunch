@@ -75,15 +75,8 @@ class FeedClient
   # If the feed is successfully fetched and parsed, returns nil.
 
   def self.fetch_valid_feed(feed, http_caching, perform_autodiscovery)
-    if http_caching
-      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} using HTTP caching if possible"
-      RestClient.enable Rack::Cache,
-                        verbose: true,
-                        metastore: "file:#{Rails.root.join('rack_cache', 'metastore').to_s}",
-                        entitystore: "file:#{Rails.root.join('rack_cache', 'entitystore').to_s}"
-    else
-      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} without HTTP caching"
-    end
+    # User-agent used by feedbunch when fetching feeds
+    user_agent = Feedbunch::Application.config.user_agent
 
     if perform_autodiscovery
       Rails.logger.info "Performing autodiscovery on feed #{feed.id} - URL #{feed.url}"
@@ -93,8 +86,16 @@ class FeedClient
       url = feed.fetch_url
     end
 
-    # User-agent used by feedbunch when fetching feeds
-    user_agent = Feedbunch::Application.config.user_agent
+    if http_caching
+      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} using HTTP caching if possible"
+      RestClient.enable Rack::Cache,
+                        verbose: true,
+                        metastore: "file:#{Rails.root.join('rack_cache', 'metastore').to_s}",
+                        entitystore: "file:#{Rails.root.join('rack_cache', 'entitystore').to_s}"
+    else
+      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} without HTTP caching"
+      RestClient.disable Rack::Cache
+    end
 
     # GET the feed
     Rails.logger.info "Fetching from URL #{url}"
