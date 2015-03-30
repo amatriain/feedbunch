@@ -158,7 +158,9 @@ class FeedClient
       if discovered_feed.present?
         # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
         # This second fetch will not try to perform autodiscovery, to avoid entering an infinite loop.
-        return FeedClient.fetch discovered_feed, perform_autodiscovery: false
+        # Also this second fetch will not use a client-side cache, to make sure we don't retrieve a stale
+        # response from the cache.
+        return FeedClient.fetch discovered_feed, http_caching: false, perform_autodiscovery: false
       else
         raise FeedAutodiscoveryError.new
       end
