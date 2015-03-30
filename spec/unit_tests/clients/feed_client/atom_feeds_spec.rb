@@ -310,7 +310,7 @@ FEED_XML
       @entry = FactoryGirl.build :entry
       @entry.title = 'This strip was Not Invented Here on Thursday, May 29, 2014'
       @entry.url = 'http://notinventedhe.re/on/2014-5-29/comic'
-      @entry.summary = nil
+      @entry.summary = ''
       @entry.content = <<ENTRY_CONTENT
 <p><em>Not Invented Here</em> <a href="http://notinventedhe.re/book" target="_blank">collections</a> now available in ebook and good-old-fashioned paper versions!</p>
 <a href="/on/2014-5-29" target="_blank"><img alt="Not Invented Here strip for 5/29/2014" src="/images/Ajax-loader.gif" data-src="http://notinventedhe.re/images/Ajax-loader.gif"></a><a href="/on/2014-5-29/comic#disqus_thread" target="_blank">comments</a>|<a href="mailto:nihcomic@gmail.com" target="_blank">email</a>|<a href="http://www.twitter.com/nihcomic" target="_blank">twitter</a><img src="/images/Ajax-loader.gif" data-src=\"http://notinventedhe.re/images/Ajax-loader.gif\">

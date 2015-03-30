@@ -9,8 +9,8 @@ FactoryGirl.define do
   factory :entry do
     title {generate :entry_title_sequence}
     url {generate :entry_url_sequence}
-    author nil
-    content nil
+    author ''
+    content ''
     summary {generate :entry_summary_sequence}
     published {Time.zone.now}
     guid {generate :entry_guid_sequence}
