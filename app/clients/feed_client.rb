@@ -16,14 +16,14 @@ class FeedClient
   ##
   # Fetch a feed, parse it and save the entries in the database. This is a class method.
   #
-  # Receives as argument the feed to fetch. It must already be saved in the database and its
-  # fetch_url field must have value.
+  # Receives as arguments
+  # - feed: feed to be fetched. It must already be saved in the database and its fetch_url field must have a value.
+  # - http_caching (optional). Boolean indicating if client-side HTTP caching (with rack-cache) will be used.
+  # Defaults to true.
+  # - perform_autodiscovery (optional). Boolean indicating if feed autodiscovery should be performed on an HTML response.
+  # Defaults to false.
   #
-  # Optionally receives as argument a boolean that tells the method whether to perform feed autodiscovery. It
-  # defaults to false.
-  #
-  # HTTP caching is used as much as possible (i.e. caching headers are stored and sent so that data is actually sent
-  # only if the cached data is no longer valid).
+  # If HTTP caching is used the response will be retrieved from the local cache if the headers show it is still valid.
   #
   # If the response to the GET is not a feed but an HTML document and the "perform_autodiscovery" argument is
   # true, it tries to autodiscover a feed from the HTML. If a feed is autodiscovered, it is immediately
@@ -32,8 +32,8 @@ class FeedClient
   #
   # Returns feed instance if fetch is successful, raises an error otherwise.
 
-  def self.fetch(feed, perform_autodiscovery=false)
-    http_response = fetch_valid_feed feed, perform_autodiscovery
+  def self.fetch(feed, http_caching: true, perform_autodiscovery: false)
+    http_response = fetch_valid_feed feed, http_caching, perform_autodiscovery
 
     if http_response.present?
       feed = handle_html_response feed, http_response, perform_autodiscovery
@@ -48,8 +48,16 @@ class FeedClient
   # Fetch a feed, parse it and save received entries in the database.
   # This method assumes that the document at feed.fetch_url is a valid feed.
   #
-  # Receives as argument the feed instance to be fetched and a boolean indicating whether to perform feed autodiscovery
-  # if necessary.
+  # Receives as arguments:
+  # - feed instance to be fetched
+  # - http_caching: boolean indicating whether to use client-side HTTP caching.
+  # - perform_autodiscovery: boolean indicating whether autodiscovery will be performed if the response is an HTML
+  # document.
+  #
+  # If the http_caching argument is true, the response will be retrieved from the local cache if the headers indicate
+  # that it is still valid. If the response is retrieved from the cache, as indicated by the X-Rack-Cache header,
+  # the response won't be processed (no parsing, saving entries etc) because it is assumed that the entries in the
+  # response have already been saved in the database.
   #
   # If the perform_autodiscovery argument is true, the url attribute of the feed is used for the HTTP GET (it is the
   # attribute most likely to lead to a webpage) and no HTTP caching headers are sent (we want to get the most up to date
@@ -66,17 +74,23 @@ class FeedClient
   #
   # If the feed is successfully fetched and parsed, returns nil.
 
-  def self.fetch_valid_feed(feed, perform_autodiscovery)
-    if perform_autodiscovery
-      Rails.logger.info "Performing autodiscovery on feed #{feed.id} - URL #{feed.url} without HTTP caching"
-      url = feed.url
-    else
-      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} without autodiscovery, using HTTP caching if possible"
-      url = feed.fetch_url
+  def self.fetch_valid_feed(feed, http_caching, perform_autodiscovery)
+    if http_caching
+      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} using HTTP caching if possible"
       RestClient.enable Rack::Cache,
                         verbose: true,
                         metastore: "file:#{Rails.root.join('rack_cache', 'metastore').to_s}",
                         entitystore: "file:#{Rails.root.join('rack_cache', 'entitystore').to_s}"
+    else
+      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} without HTTP caching"
+    end
+
+    if perform_autodiscovery
+      Rails.logger.info "Performing autodiscovery on feed #{feed.id} - URL #{feed.url}"
+      url = feed.url
+    else
+      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} without autodiscovery"
+      url = feed.fetch_url
     end
 
     # User-agent used by feedbunch when fetching feeds
@@ -144,7 +158,7 @@ class FeedClient
       if discovered_feed.present?
         # If feed autodiscovery is successful, fetch the feed to get its entries, title, url etc.
         # This second fetch will not try to perform autodiscovery, to avoid entering an infinite loop.
-        return FeedClient.fetch discovered_feed, false
+        return FeedClient.fetch discovered_feed, perform_autodiscovery: false
       else
         raise FeedAutodiscoveryError.new
       end

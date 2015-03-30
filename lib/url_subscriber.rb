@@ -138,7 +138,7 @@ class URLSubscriber
     Rails.logger.info "Feed #{feed_url} not in the database, trying to fetch it"
     feed = Feed.create! fetch_url: feed_url, title: feed_url
     begin
-      fetched_feed = FeedClient.fetch feed, true
+      fetched_feed = FeedClient.fetch feed, perform_autodiscovery: true
       if fetched_feed
         if user.feeds.include? fetched_feed
           # Only subscribe user to the actually fetched feed if he's not already subscribed

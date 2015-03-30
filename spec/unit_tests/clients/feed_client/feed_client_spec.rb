@@ -54,7 +54,7 @@ WEBPAGE_HTML
       end
 
       expect(@feed.fetch_url).not_to eq feed_url
-      FeedClient.fetch @feed, true
+      FeedClient.fetch @feed, perform_autodiscovery: true
       @feed.reload
       expect(@feed.fetch_url).to eq feed_url
     end
@@ -88,7 +88,7 @@ WEBPAGE_HTML
       end
 
       expect(feed.fetch_url).not_to eq feed_fetch_url
-      FeedClient.fetch feed, true
+      FeedClient.fetch feed, perform_autodiscovery: true
       feed.reload
       expect(feed.fetch_url).to eq feed_fetch_url
     end
@@ -122,7 +122,7 @@ WEBPAGE_HTML
       end
 
       expect(feed.fetch_url).not_to eq feed_fetch_url_absolute
-      FeedClient.fetch feed, true
+      FeedClient.fetch feed, perform_autodiscovery: true
       feed.reload
       expect(feed.fetch_url).to eq feed_fetch_url_absolute
     end
@@ -156,7 +156,7 @@ WEBPAGE_HTML
       end
 
       expect(feed.fetch_url).not_to eq feed_fetch_url_absolute
-      FeedClient.fetch feed, true
+      FeedClient.fetch feed, perform_autodiscovery: true
       feed.reload
       expect(feed.fetch_url).to eq feed_fetch_url_absolute
     end
@@ -186,7 +186,7 @@ WEBPAGE_HTML
       end
 
       expect(@feed.fetch_url).not_to eq feed_url
-      FeedClient.fetch @feed, true
+      FeedClient.fetch @feed, perform_autodiscovery: true
       @feed.reload
       expect(@feed.fetch_url).to eq Addressable::URI.parse(feed_url).normalize.to_s
     end
@@ -234,7 +234,7 @@ FEED_XML
       end
 
       expect(@feed.entries).to be_blank
-      FeedClient.fetch @feed, true
+      FeedClient.fetch @feed, perform_autodiscovery: true
       expect(@feed.entries.count).to eq 1
       expect(@feed.entries.where(guid: @entry1.guid)).to be_present
     end
@@ -286,7 +286,7 @@ FEED_XML
 
       expect(old_feed.entries).to be_blank
 
-      FeedClient.fetch new_feed, true
+      FeedClient.fetch new_feed, perform_autodiscovery: true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
@@ -342,7 +342,7 @@ FEED_XML
 
       expect(old_feed.entries).to be_blank
 
-      FeedClient.fetch new_feed, true
+      FeedClient.fetch new_feed, perform_autodiscovery: true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
@@ -382,7 +382,7 @@ WEBPAGE_HTML
       end
 
       expect(@feed.fetch_url).not_to eq feed_url
-      FeedClient.fetch @feed, true
+      FeedClient.fetch @feed, perform_autodiscovery: true
       @feed.reload
       expect(@feed.fetch_url).to eq feed_url
     end
@@ -410,7 +410,7 @@ WEBPAGE_HTML
       allow(webpage_html).to receive(:headers).and_return({})
       allow(RestClient).to receive(:get).and_return webpage_html
 
-      expect {FeedClient.fetch @feed, true}.to raise_error FeedAutodiscoveryError
+      expect {FeedClient.fetch @feed, perform_autodiscovery: true}.to raise_error FeedAutodiscoveryError
     end
 
     it 'raises error if trying to fetch from a webpage and being told not to perform autodiscovery' do
@@ -429,7 +429,7 @@ WEBPAGE_HTML
       allow(webpage_html).to receive(:headers).and_return({})
       allow(RestClient).to receive(:get).and_return webpage_html
 
-      expect{FeedClient.fetch @feed, false}.to raise_error FeedFetchError
+      expect{FeedClient.fetch @feed, perform_autodiscovery: false}.to raise_error FeedFetchError
     end
 
     it 'raises error if trying to perform feed autodiscovery on a malformed webpage' do
@@ -437,7 +437,7 @@ WEBPAGE_HTML
       allow(webpage_html).to receive(:headers).and_return({})
       allow(RestClient).to receive(:get).and_return webpage_html
 
-      expect {FeedClient.fetch @feed, true}.to raise_error FeedAutodiscoveryError
+      expect {FeedClient.fetch @feed, perform_autodiscovery: true}.to raise_error FeedAutodiscoveryError
     end
 
     it 'does not enter an infinite loop during autodiscovery if the feed linked is not actually a feed' do
@@ -456,7 +456,7 @@ WEBPAGE_HTML
       allow(RestClient).to receive(:get).and_return webpage_html
 
       expect(RestClient).to receive(:get).twice
-      expect {FeedClient.fetch @feed, true}.to raise_error FeedFetchError
+      expect {FeedClient.fetch @feed, perform_autodiscovery: true}.to raise_error FeedFetchError
     end
 
     it 'processes entries skipping those that have errors' do

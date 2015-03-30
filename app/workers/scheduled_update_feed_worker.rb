@@ -65,7 +65,7 @@ class ScheduledUpdateFeedWorker
       # This is intended for the case in which the owner of a feed changes its URL (e.g. migrating from a custom solution
       # to feedburner) but the website itself is still available at the old URL. This happens often. Feedbunch attempts
       # to autocorrect the situation, as long as autodiscovery is enabled.
-      FeedClient.fetch feed, true
+      FeedClient.fetch feed, perform_autodiscovery: true
     end
 
     entries_after = feed.entries.count

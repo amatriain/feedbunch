@@ -408,7 +408,7 @@ WEBPAGE_HTML
       end
 
       expect(@feed.fetch_url).not_to eq feed_url
-      FeedClient.fetch @feed, true
+      FeedClient.fetch @feed, perform_autodiscovery: true
       @feed.reload
       expect(@feed.fetch_url).to eq feed_url
     end
@@ -442,7 +442,7 @@ WEBPAGE_HTML
       end
 
       expect(feed.fetch_url).not_to eq feed_fetch_url
-      FeedClient.fetch feed, true
+      FeedClient.fetch feed, perform_autodiscovery: true
       feed.reload
       expect(feed.fetch_url).to eq feed_fetch_url
     end
@@ -476,7 +476,7 @@ WEBPAGE_HTML
       end
 
       expect(feed.fetch_url).not_to eq feed_fetch_url_absolute
-      FeedClient.fetch feed, true
+      FeedClient.fetch feed, perform_autodiscovery: true
       feed.reload
       expect(feed.fetch_url).to eq feed_fetch_url_absolute
     end
@@ -510,7 +510,7 @@ WEBPAGE_HTML
       end
 
       expect(feed.fetch_url).not_to eq feed_fetch_url_absolute
-      FeedClient.fetch feed, true
+      FeedClient.fetch feed, perform_autodiscovery: true
       feed.reload
       expect(feed.fetch_url).to eq feed_fetch_url_absolute
     end
@@ -558,7 +558,7 @@ FEED_XML
       end
 
       expect(@feed.entries).to be_blank
-      FeedClient.fetch @feed, true
+      FeedClient.fetch @feed, perform_autodiscovery: true
       expect(@feed.entries.count).to eq 1
       expect( @feed.entries.where guid: @entry1.guid ).to be_present
     end
@@ -610,7 +610,7 @@ FEED_XML
 
       expect(old_feed.entries).to be_blank
 
-      FeedClient.fetch new_feed, true
+      FeedClient.fetch new_feed, perform_autodiscovery: true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
       # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
@@ -649,7 +649,7 @@ WEBPAGE_HTML
       end
 
       expect(@feed.fetch_url).not_to eq atom_url
-      FeedClient.fetch @feed, true
+      FeedClient.fetch @feed, perform_autodiscovery: true
       @feed.reload
       expect(@feed.fetch_url).to eq atom_url
     end
