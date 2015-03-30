@@ -66,7 +66,7 @@ describe ScheduledUpdateFeedWorker do
     end
 
     it 'decrements a 10% the fetch interval if new entries are fetched' do
-      allow(FeedClient).to receive(:fetch) do
+      allow(FeedClient).to receive :fetch do
         entry = FactoryGirl.build :entry, feed_id: @feed.id
         @feed.entries << entry
       end
@@ -82,7 +82,7 @@ describe ScheduledUpdateFeedWorker do
     end
 
     it 'increments a 10% the fetch interval if no new entries are fetched' do
-      allow(FeedClient).to receive(:fetch)
+      allow(FeedClient).to receive :fetch
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
         expect(in_seconds).to eq 3960
@@ -95,7 +95,7 @@ describe ScheduledUpdateFeedWorker do
     end
 
     it 'does not set a fetch interval smaller than the configured minimum' do
-      allow(FeedClient).to receive(:fetch) do
+      allow(FeedClient).to receive :fetch do
         entry = FactoryGirl.build :entry, feed_id: @feed.id
         @feed.entries << entry
       end
@@ -111,7 +111,7 @@ describe ScheduledUpdateFeedWorker do
     end
 
     it 'does not set a fetch interval greater than the configured maximum' do
-      allow(FeedClient).to receive(:fetch)
+      allow(FeedClient).to receive :fetch
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
         expect(in_seconds).to eq 21600
@@ -417,7 +417,7 @@ WEBPAGE_HTML
     end
 
     it 'sets failing_since to nil when an update runs successfully' do
-      allow(FeedClient).to receive(:fetch)
+      allow(FeedClient).to receive :fetch
       date = Time.zone.parse '2000-01-01'
       @feed.update failing_since: date
 

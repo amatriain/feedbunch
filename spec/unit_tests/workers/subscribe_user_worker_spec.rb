@@ -12,7 +12,7 @@ describe SubscribeUserWorker do
     @user.subscribe_job_states << @job_state
 
     # Stub FeedClient.stub so that it does not actually fetch feeds, but returns them untouched
-    allow(FeedClient).to receive :fetch do |feed, perform_autodiscovery|
+    allow(FeedClient).to receive :fetch do |feed, args|
       feed
     end
   end
@@ -32,9 +32,9 @@ describe SubscribeUserWorker do
   end
 
   it 'fetches new feeds' do
-    expect(FeedClient).to receive(:fetch) do |feed, autodiscovery|
+    expect(FeedClient).to receive :fetch  do |feed, args|
       expect(feed.fetch_url).to eq @url
-      expect(autodiscovery).to be true
+      expect(args[:perform_autodiscovery]).to be true
       feed
     end
     SubscribeUserWorker.new.perform @user.id, @url, @job_state.id

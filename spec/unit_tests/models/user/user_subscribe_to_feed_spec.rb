@@ -218,7 +218,7 @@ describe User, type: :model do
 
     it 'accepts URLs without scheme, defaults to http://' do
       url = 'xkcd.com/'
-      allow(FeedClient).to receive :fetch do |feed, perform_autodiscovery|
+      allow(FeedClient).to receive :fetch do |feed, args|
         feed
       end
 
@@ -233,7 +233,7 @@ describe User, type: :model do
     it 'accepts URLs with feed:// scheme, defaults to http://' do
       url_feed = 'feed://xkcd.com/'
       url_http = 'http://xkcd.com/'
-      allow(FeedClient).to receive :fetch do |feed, perform_autodiscovery|
+      allow(FeedClient).to receive :fetch do |feed, args|
         feed
       end
 
@@ -248,7 +248,7 @@ describe User, type: :model do
     it 'accepts URLs with feed: scheme, defaults to http://' do
       url_feed = 'feed:http://xkcd.com/'
       url_http = 'http://xkcd.com/'
-      allow(FeedClient).to receive :fetch do |feed, perform_autodiscovery|
+      allow(FeedClient).to receive :fetch do |feed, args|
         feed
       end
 
@@ -262,7 +262,7 @@ describe User, type: :model do
 
     it 'accepts internationalized URLs' do
       url = 'http://www.gewürzrevolver.de/'
-      allow(FeedClient).to receive :fetch do |feed, perform_autodiscovery|
+      allow(FeedClient).to receive :fetch do |feed, args|
         feed
       end
 
