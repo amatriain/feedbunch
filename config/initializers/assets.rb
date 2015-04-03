@@ -11,8 +11,6 @@ Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'im
 
 # Add the bower-components path to assets pipeline
 Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components')
-# Add fallback.js path to asset pipeline
-Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'fallback')
 
 # Necessary for bootstrap fonts
 Rails.application.config.assets.paths << Rails.root.join("vendor","assets","bower_components","bootstrap-sass-official","assets","fonts")
@@ -27,8 +25,7 @@ Rails.application.config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
 
 # Precompile js libraries to serve them individually as fallback if CDN goes down
 Rails.application.config.assets.precompile += %w(
-                                                  fallback.js
-                                                  fallback_js/load_libraries.js
+                                                  load_libs.js
                                                   jquery/dist/jquery.js
                                                   angular/angular.js
                                                   angular-sanitize/angular-sanitize.js
