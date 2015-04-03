@@ -1,8 +1,8 @@
 language: ruby
 cache: bundler
 
-# Temporarily disable container-based infrastructure
-sudo: required
+# Use container-based infrastructure
+sudo: false
 
 rvm:
   - "ruby-2.2.1"
