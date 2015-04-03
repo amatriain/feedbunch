@@ -14,11 +14,9 @@
 // It should NEVER be required in production, it will be selectively enabled for testing.
 // require bootlint/dist/browser/bootlint
 
-//= require jquery
-//= require angular
-//= require angular-sanitize
-//= require angular-touch
-//= require bootstrap-sass-official
+// Libraries listed here are always served as local assets
+
+// VENDOR LIBRARIES
 //= require enquire
 //= require fastclick
 //= require favico.js/favico
@@ -29,6 +27,8 @@
 //= require isInViewport
 
 //= require jquery_ujs
+
+// APP FILES
 //= require ng-modules/ng-app
 //= require_tree ./ng-modules
 //= require_tree ./ng-controllers
@@ -36,3 +36,6 @@
 //= require_tree ./ng-services
 //= require_tree ./misc
 
+// Define an attribute in window object so this file can be loaded with fallback.js
+// The defined object is used by fallback.js to decide if the file has already been loaded.
+window.feedbunch_application = true
