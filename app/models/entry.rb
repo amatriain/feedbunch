@@ -184,12 +184,6 @@ class Entry < ActiveRecord::Base
 
   def image_manipulations(html_doc)
     html_doc.css('img').each do |img|
-      # replace image styling
-      img.remove_attribute 'height'
-      img.remove_attribute 'width'
-      img.remove_attribute 'style'
-      img.remove_attribute 'class'
-
       # prepare image for lazy loading
       src = URLNormalizer.normalize_entry_url img['src'], self
       img['src'] = '/images/Ajax-loader.gif'
