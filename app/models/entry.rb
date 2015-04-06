@@ -134,9 +134,16 @@ class Entry < ActiveRecord::Base
     attributes = Sanitize::Config::RELAXED[:attributes]
                         .merge({'a' => ['target']}) {|key, oldval, newval| oldval + newval}
                         .merge({'img' => ['data-src']}) {|key, oldval, newval| oldval + newval}
+    # Deep copy of the attributes hash, otherwise it cannot be modified (Sanitize freezes the original hash)
+    attributes = attributes.deep_dup
+    # "style", "class", "hidden" attributes are not allowed for any element in relaxed config
+    attributes[:all].delete('style').delete('class').delete 'hidden'
+    # "align", "border", "height", "width" attributes are not allowed for images in relaxed config
+    attributes['img'].delete('align').delete('border').delete('height').delete 'width'
     config_relaxed = Sanitize::Config.merge Sanitize::Config::RELAXED,
                                             remove_contents: true,
                                             attributes: attributes
+
     config_restricted = Sanitize::Config.merge Sanitize::Config::RESTRICTED,
                                     :remove_contents => true
 
