@@ -169,7 +169,13 @@
           }
         }
 
-        img.small-img,
+        img.small-img {
+          margin: {
+            left: 1em;
+            right: 1em;
+          }
+        }
+
         img[src='/images/Ajax-loader.gif']{
           margin: {
             left: 3px;
