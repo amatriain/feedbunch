@@ -1,6 +1,5 @@
 require 'nokogiri'
 require 'encoding_manager'
-require 'sanitize'
 
 ##
 # Feed entry model. Each instance of this class represents an entry in an RSS or Atom feed.
@@ -130,22 +129,8 @@ class Entry < ActiveRecord::Base
   # Better paranoid than sorry!
 
   def sanitize_attributes
-    # Allow "target" attribute for "a" elements and "data-src" attribute for "img" elements in relaxed configuration
-    attributes = Sanitize::Config::RELAXED[:attributes]
-                        .merge({'a' => ['target']}) {|key, oldval, newval| oldval + newval}
-                        .merge({'img' => ['data-src']}) {|key, oldval, newval| oldval + newval}
-    # Deep copy of the attributes hash, otherwise it cannot be modified (Sanitize freezes the original hash)
-    attributes = attributes.deep_dup
-    # "style", "class", "hidden" attributes are not allowed for any element in relaxed config
-    attributes[:all].delete('style').delete('class').delete 'hidden'
-    # "align", "border", "height", "width" attributes are not allowed for images in relaxed config
-    attributes['img'].delete('align').delete('border').delete('height').delete 'width'
-    config_relaxed = Sanitize::Config.merge Sanitize::Config::RELAXED,
-                                            remove_contents: true,
-                                            attributes: attributes
-
-    config_restricted = Sanitize::Config.merge Sanitize::Config::RESTRICTED,
-                                    :remove_contents => true
+    config_relaxed = Feedbunch::Application.config.relaxed_sanitizer
+    config_restricted = Feedbunch::Application.config.restricted_sanitizer
 
     # Summary, content are sanitized with relaxed config, we want imgs etc to be present.
     # Other attributes are sanitized with restricted config, they should be plain text.

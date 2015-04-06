@@ -3,7 +3,6 @@ require 'addressable/uri'
 require 'encoding_manager'
 require 'schedule_manager'
 require 'feed_blacklister'
-require 'sanitize'
 
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which users can be suscribed.
@@ -242,8 +241,8 @@ class Feed < ActiveRecord::Base
   # the update only for that attribute and keep the old value.
 
   def sanitize_attributes
-    config = Sanitize::Config.merge Sanitize::Config::RESTRICTED,
-                                               remove_contents: true
+    config = Feedbunch::Application.config.restricted_sanitizer
+
     self.title = Sanitize.fragment(self.title, config).try :strip
     self.fetch_url = Sanitize.fragment(self.fetch_url, config).try :strip
     self.url = Sanitize.fragment(self.url, config).try :strip
