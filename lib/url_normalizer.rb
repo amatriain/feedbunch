@@ -60,26 +60,30 @@ class URLNormalizer
 
     normalized_url = url.strip
 
-    # If the url is scheme relative, remove the leading '//', later 'http://' or 'https://' will be prepended
-    normalized_url.sub! /\A\/\//, ''
+    # Addressable treats scheme-relative URIs as relative URIs, but we do not want to add the feed host etc to
+    # scheme-relative URIs in entries. So, if URI is scheme-relative, skip the manipulations performed on relative
+    # URIs.
+    if normalized_url =~ /\A\/\//
+      Rails.logger.info "Value {url} is a scheme relative URI, leaving it unchanged"
+    else
+      # if the entry url is relative, try to make it absolute using the feed's host
+      parsed_uri = Addressable::URI.parse normalized_url
+      if parsed_uri.relative?
+        # Path must begin with a '/'
+        normalized_url = "/#{normalized_url}" if parsed_uri.path[0] != '/'
 
-    # if the entry url is relative, try to make it absolute using the feed's host
-    parsed_uri = Addressable::URI.parse normalized_url
-    if parsed_uri.relative?
-      # Path must begin with a '/'
-      normalized_url = "/#{normalized_url}" if parsed_uri.path[0] != '/'
+        # Use host from feed URL, or if the feed only has a fetch URL use it instead.
+        uri_feed = entry_feed_uri entry
+        normalized_url = "#{uri_feed.host}#{normalized_url}"
+      end
 
-      # Use host from feed URL, or if the feed only has a fetch URL use it instead.
-      uri_feed = entry_feed_uri entry
-      normalized_url = "#{uri_feed.host}#{normalized_url}"
-    end
-
-    # If url has no http or https scheme, add http://
-    unless normalized_url =~ /\Ahttp:\/\//i || normalized_url =~ /\Ahttps:\/\//i
-      # Do not recalculate feed URI if previously calculated.
-      uri_feed ||= entry_feed_uri entry
-      Rails.logger.info "Value #{url} has no http or https URI scheme, trying to add scheme from feed url #{uri_feed}"
-      normalized_url = "#{uri_feed.scheme}://#{normalized_url}"
+      # If url has no http or https scheme, add http://
+      unless normalized_url =~ /\Ahttp:\/\//i || normalized_url =~ /\Ahttps:\/\//i
+        # Do not recalculate feed URI if previously calculated.
+        uri_feed ||= entry_feed_uri entry
+        Rails.logger.info "Value #{url} has no http or https URI scheme, trying to add scheme from feed url #{uri_feed}"
+        normalized_url = "#{uri_feed.scheme}://#{normalized_url}"
+      end
     end
 
     normalized_url = Addressable::URI.parse(normalized_url).normalize.to_s
