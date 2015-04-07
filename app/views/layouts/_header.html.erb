@@ -7,14 +7,12 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= favicon_link_tag '/favicon.ico' %>
+
+    <%# Comment next block and uncomment corresponding block in application.css.scss to serve Bootstrap and Fontawesome
+        as local assets, not from a CDN %>
+    <%= stylesheet_link_tag    '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css', media: 'all' %>
+    <%= stylesheet_link_tag    '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', media: 'all' %>
 <% end %>
-
-    <%# CI environment loads stylesheet assets directly from CDN, other environments compile them with asset pipeline %>
-    <% if Rails.env == 'ci' %>
-      <%= stylesheet_link_tag    '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css', media: 'all' %>
-      <%= stylesheet_link_tag    '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', media: 'all' %>
-    <% end %>
-
     <%= stylesheet_link_tag    'application', :media => 'all' %>
 
     <link rel="icon" sizes="192x192" href="<%= image_path 'feed192x192.png' %>">
