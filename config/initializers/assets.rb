@@ -26,7 +26,7 @@ Rails.application.config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
 # Precompile js libraries to serve them individually as fallback if CDN goes down
 Rails.application.config.assets.precompile += %w(
                                                   load_libs.js
-                                                  jquery/dist/jquery.js
+                                                  jquery.js
                                                   angular/angular.js
                                                   angular-sanitize/angular-sanitize.js
                                                   angular-touch/angular-touch.js
