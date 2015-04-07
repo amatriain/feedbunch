@@ -19,6 +19,21 @@ attributes[:all].delete('style').delete('class').delete 'hidden'
 # "align", "border", "height", "width" attributes are not allowed for images
 attributes['img'].delete('align').delete('border').delete('height').delete 'width'
 
+# "width" attribute not allowed for "col" elements
+attributes['col'].delete 'width'
+
+# "width" attribute not allowed for "colgroup" elements
+attributes['colgroup'].delete 'width'
+
+# "width" attribute not allowed for tables
+attributes['table'].delete 'width'
+
+# "width" attribute not allowed for table cells
+attributes['td'].delete 'width'
+
+# "width" attribute not allowed for table headers
+attributes['th'].delete 'width'
+
 # "data-src" attribute allowed for "img" elements
 attributes = attributes.merge({'img' => ['data-src']}) {|key, oldval, newval| oldval + newval}
 
