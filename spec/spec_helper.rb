@@ -101,5 +101,12 @@ RSpec.configure do |config|
 
     # Clear the email delivery queue before each test.
     ActionMailer::Base.deliveries.clear
+
+    # Set a list of blacklisted URLs
+    blacklisted_1 = 'http://first.blacklisted.com'
+    blacklisted_host_1 = Addressable::URI.parse(blacklisted_1).host
+    blacklisted_2 = 'http://second.blacklisted.com'
+    blacklisted_host_2 = Addressable::URI.parse(blacklisted_2).host
+    Rails.application.config.hosts_blacklist = [blacklisted_host_1, blacklisted_host_2]
   end
 end
