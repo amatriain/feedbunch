@@ -9,7 +9,6 @@ require 'rspec/rails'
 # For acceptance testing
 require 'capybara/rails'
 require 'capybara/rspec'
-require 'capybara-webkit'
 require 'database_cleaner'
 require 'nokogiri'
 require 'show_me_the_cookies'
@@ -62,8 +61,8 @@ RSpec.configure do |config|
   # To test controllers protected by Devise authentication
   config.include Devise::TestHelpers, :type => :controller
 
-  # Use capybara-webkit for javascript-enabled acceptance tests
-  Capybara.javascript_driver = :webkit
+  # Use selenium for javascript-enabled acceptance tests
+  Capybara.javascript_driver = :selenium
 
   # Make capybara wait for a long time for things to appear in the DOM,
   # in case there's a long-running AJAX call running which changes the DOM after a few seconds
@@ -76,12 +75,14 @@ RSpec.configure do |config|
 
   # Block external URLs that serve files unnecessary for testing (fonts, twitter API, etc) to speed up tests.
   # This is a whitelist approach: only calls to explicitly allowed hosts or URLs will go through.
+=begin
   config.before :each, js: true do
     page.driver.block_unknown_urls
     page.driver.allow_url 'code.jquery.com'
     page.driver.allow_url 'maxcdn.bootstrapcdn.com'
     page.driver.allow_url 'ajax.googleapis.com'
   end
+=end
 
   # Include ShowMeTheCookies to manipulate cookies in acceptance tests
   config.include ShowMeTheCookies, type: :feature

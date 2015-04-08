@@ -117,7 +117,7 @@ group :test do
 
   # To simulate a user's browser during acceptance testing
   gem 'capybara'
-  gem 'capybara-webkit'
+  gem 'selenium-webdriver'
   gem 'show_me_the_cookies'
 
   # To be able to open the browser during debugging of acceptance tests
