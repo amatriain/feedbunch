@@ -3,7 +3,7 @@ More info [here](http://lab.ejci.net/favico.js/).
 
 
 Author [Miroslav Magda](http://blog.ejci.net)
-Version 0.3.4
+Version 0.3.6
 
 Contributors:
 [Serge Barysiuk](https://github.com/sbarysiuk),
@@ -12,13 +12,16 @@ Contributors:
 [LoicMahieu](https://github.com/LoicMahieu),
 [Renan Gonçalves](https://github.com/renan),
 [Adam Savitzky](https://github.com/adambom),
-[Jory Graham](https://github.com/jorygraham)
+[Jory Graham](https://github.com/jory)
 
 
 ##License
 All code is open source and dual licensed under GPL and MIT. Check the individual licenses for more information.
 
 ###Change log
+####0.3.6
+* bigfixes
+
 ####0.3.4
 * new option for position
 
@@ -50,7 +53,7 @@ All code is open source and dual licensed under GPL and MIT. Check the individua
 * Code cleanup
 
 ####0.1.1
-* Improving performance in chrome 
+* Improving performance in chrome
 
 ####0.1.0
-* proof of concept 
+* proof of concept

@@ -2,7 +2,7 @@
  * @license MIT
  * @fileOverview Favico animations
  * @author Miroslav Magda, http://blog.ejci.net
- * @version 0.3.5
+ * @version 0.3.6
  */
 
 /**
@@ -18,11 +18,13 @@
  *    position : 'down',
  *    type : 'circle',
  *    animation : 'slide',
+ *    dataUrl: function(url){}
  * });
  */
 (function() {
 
-	var Favico = (function(opt) {'use strict';
+	var Favico = (function(opt) {
+		'use strict';
 		opt = (opt) ? opt : {};
 		var _def = {
 			bgColor : '#d00',
@@ -32,7 +34,8 @@
 			type : 'circle',
 			position : 'down', // down, up, left, leftup (upleft)
 			animation : 'slide',
-			elementId : false
+			elementId : false,
+			dataUrl : false
 		};
 		var _opt, _orig, _h, _w, _canvas, _context, _img, _ready, _lastBadge, _running, _readyCb, _stop, _browser, _animTimeout, _drawTimeout;
 
@@ -87,36 +90,33 @@
 				}
 			}
 			_opt.type = (type['' + _opt.type]) ? _opt.type : _def.type;
-			try {
-				_orig = link.getIcon();
-				//create temp canvas
-				_canvas = document.createElement('canvas');
-				//create temp image
-				_img = document.createElement('img');
-				if (_orig.hasAttribute('href')) {
-					_img.setAttribute('src', _orig.getAttribute('href'));
-					//get width/height
-					_img.onload = function() {
-						_h = (_img.height > 0) ? _img.height : 32;
-						_w = (_img.width > 0) ? _img.width : 32;
-						_canvas.height = _h;
-						_canvas.width = _w;
-						_context = _canvas.getContext('2d');
-						icon.ready();
-					};
-				} else {
-					_img.setAttribute('src', '');
-					_h = 32;
-					_w = 32;
-					_img.height = _h;
-					_img.width = _w;
+
+			_orig = link.getIcon();
+			//create temp canvas
+			_canvas = document.createElement('canvas');
+			//create temp image
+			_img = document.createElement('img');
+			if (_orig.hasAttribute('href')) {
+				_img.setAttribute('src', _orig.getAttribute('href'));
+				//get width/height
+				_img.onload = function() {
+					_h = (_img.height > 0) ? _img.height : 32;
+					_w = (_img.width > 0) ? _img.width : 32;
 					_canvas.height = _h;
 					_canvas.width = _w;
 					_context = _canvas.getContext('2d');
 					icon.ready();
-				}
-			} catch(e) {
-				throw 'Error initializing favico. Message: ' + e.message;
+				};
+			} else {
+				_img.setAttribute('src', '');
+				_h = 32;
+				_w = 32;
+				_img.height = _h;
+				_img.width = _w;
+				_canvas.height = _h;
+				_canvas.width = _w;
+				_context = _canvas.getContext('2d');
+				icon.ready();
 			}
 
 		};
@@ -142,6 +142,7 @@
 			}
 			_queue = [];
 			_lastBadge = false;
+			_running = false;
 			_context.clearRect(0, 0, _w, _h);
 			_context.drawImage(_img, 0, 0, _w, _h);
 			//_stop=true;
@@ -454,7 +455,6 @@
 		 */
 		link.getIcon = function() {
 			var elm = false;
-			var url = '';
 			//get link element
 			var getLink = function() {
 				var link = document.getElementsByTagName('head')[0].getElementsByTagName('link');
@@ -465,7 +465,9 @@
 				}
 				return false;
 			};
-			if (_opt.elementId) {
+			if (_opt.element) {
+				elm = _opt.element;
+			} else if (_opt.elementId) {
 				//if img element identified by elementId
 				elm = document.getElementById(_opt.elementId);
 				elm.setAttribute('href', elm.getAttribute('src'));
@@ -478,17 +480,18 @@
 					document.getElementsByTagName('head')[0].appendChild(elm);
 				}
 			}
-			//check if image and link url is on same domain. if not raise error
-			url = (_opt.elementId) ? elm.src : elm.href;
-			if (url.substr(0, 5) !== 'data:' && url.indexOf(document.location.hostname) === -1) {
-				throw new Error('Error setting favicon. Favicon image is on different domain (Icon: ' + url + ', Domain: ' + document.location.hostname + ')');
-			}
 			elm.setAttribute('type', 'image/png');
 			return elm;
 		};
 		link.setIcon = function(canvas) {
 			var url = canvas.toDataURL('image/png');
-			if (_opt.elementId) {
+			if (_opt.dataUrl) {
+				//if using custom exporter
+				_opt.dataUrl(url);
+			}
+			if (_opt.element) {
+				_opt.element.setAttribute('src', url);
+			} else if (_opt.elementId) {
 				//if is attached to element (image)
 				document.getElementById(_opt.elementId).setAttribute('src', url);
 			} else {
