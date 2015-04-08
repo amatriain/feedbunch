@@ -79,7 +79,7 @@ See the [About Page](http://medialize.github.io/URI.js/) and [API Docs](http://m
 
 URI.js (without plugins) has a gzipped weight of about 7KB - if you include all extensions you end up at about 13KB. So unless you *need* second level domain support and use URI templates, we suggest you don't include them in your build. If you don't need a full featured URI mangler, it may be worth looking into the much smaller parser-only alternatives [listed below](#alternatives).
 
-URI.js is available through [npm](http://npmjs.org/), [bower](http://bower.io/), [Jam](http://jamjs.org/) and manually from the [build page](http://medialize.github.io/URI.js/build.html):
+URI.js is available through [npm](http://npmjs.org/), [bower](http://bower.io/), [Jam](http://jamjs.org/), [spm](http://spmjs.io/) and manually from the [build page](http://medialize.github.io/URI.js/build.html):
 
 ```bash
 # using bower
@@ -90,6 +90,9 @@ jam install URIjs
 
 # using npm
 npm install URIjs
+
+# using spm
+spm install urijs
 ```
 
 ### Browser ###
@@ -155,6 +158,9 @@ Documents specifying how URLs work:
 * [RFC 3986 - Uniform Resource Identifier (URI): Generic Syntax](http://tools.ietf.org/html/rfc3986)
 * [RFC 3987 - Internationalized Resource Identifiers (IRI)](http://tools.ietf.org/html/rfc3987)
 * [RFC 2732 - Format for Literal IPv6 Addresses in URL's](http://tools.ietf.org/html/rfc2732)
+* [RFC 2368 - The `mailto:` URL Scheme](https://www.ietf.org/rfc/rfc2368.txt)
+* [RFC 2141 - URN Syntax](https://www.ietf.org/rfc/rfc2141.txt)
+* [IANA URN Namespace Registry](http://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml)
 * [Punycode: A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)](http://tools.ietf.org/html/rfc3492)
 * [application/x-www-form-urlencoded](http://www.w3.org/TR/REC-html40/interact/forms.html#form-content-type) (Query String Parameters) and [application/x-www-form-urlencoded encoding algorithm](http://www.whatwg.org/specs/web-apps/current-work/multipage/association-of-controls-and-forms.html#application/x-www-form-urlencoded-encoding-algorithm)
 * [What every web developer must know about URL encoding](http://blog.lunatech.com/2009/02/03/what-every-web-developer-must-know-about-url-encoding)
@@ -237,6 +243,18 @@ URI.js is published under the [MIT license](http://www.opensource.org/licenses/m
 
 
 ## Changelog ##
+
+### 1.15.0 (April 1st 2015 - no joke, promise!) ###
+
+* fixing `URI(undefined)` to throw TypeError - ([Issue #189](https://github.com/medialize/URI.js/issues/189), [Issue #196](https://github.com/medialize/URI.js/issues/196), [eakron](https://github.com/eakron)) - *tiny backward-compatibility-break*
+* fixing [`.absoluteTo()`](http://medialize.github.io/URI.js/docs.html#absoluteto) - ([Issue #200](https://github.com/medialize/URI.js/issues/200), [giltayar](https://github.com/giltayar))
+* fixing [`.pathname()`](http://medialize.github.io/URI.js/docs.html#accessors-pathname) to properly en/decode URN paths - ([Issue #201](https://github.com/medialize/URI.js/pull/201), [mlefoster](https://github.com/mlefoster))
+* fixing URI normalization to properly handle URN paths based on [RFC 2141](https://www.ietf.org/rfc/rfc2141.txt) syntax - ([Issue #201](https://github.com/medialize/URI.js/pull/201), [mlefoster](https://github.com/mlefoster))
+  * fixing [`.normalize()`](http://medialize.github.io/URI.js/docs.html#normalize) and [`.normalizePath()`](http://medialize.github.io/URI.js/docs.html#normalize-path) to properly normalize URN paths
+  * adding `URI.encodeUrnPathSegment()`
+  * adding `URI.decodeUrnPathSegment()`
+  * adding `URI.decodeUrnPath()`
+  * adding `URI.recodeUrnPath()`
 
 ### 1.14.2 (February 25th 2015) ###
 
