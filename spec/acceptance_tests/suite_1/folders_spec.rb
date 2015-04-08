@@ -25,119 +25,124 @@ describe 'folders and feeds', type: :feature do
     @user.subscribe @feed1.fetch_url
     @user.subscribe @feed2.fetch_url
     @folder1.feeds << @feed1
-
-    login_user_for_feature @user
-    visit read_path
-  end
-
-  it 'shows only folders that belong to the user', js: true do
-    expect(page).to have_content @folder1.title
-    expect(page).to have_no_content @folder3.title
   end
 
   it 'shows an alert if it cannot load folders', js: true do
     allow_any_instance_of(User).to receive(:folders).and_raise StandardError.new
-    visit read_path
+    login_user_for_feature @user
     should_show_alert 'problem-loading-folders'
   end
 
-  it 'shows a list with feeds which are not in any folder', js: true do
-    # @feed1 is in a folder and should not be in the list. Only @feed2 should be there.
-    expect(page).to have_css "#sidebar #folders-list #folder-none a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
-    expect(page).to have_no_css "#sidebar #folders-list #folder-none a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
-  end
+  context 'show folders' do
 
-  it 'shows folders containing their respective feeds', js: true do
-    within '#sidebar' do
+    before :each do
+      login_user_for_feature @user
+    end
+
+    it 'shows only folders that belong to the user', js: true do
       expect(page).to have_content @folder1.title
+      expect(page).to have_no_content @folder3.title
+    end
 
-      open_folder @folder1
+    it 'shows a list with feeds which are not in any folder', js: true do
+      # @feed1 is in a folder and should not be in the list. Only @feed2 should be there.
+      expect(page).to have_css "#sidebar #folders-list #folder-none a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
+      expect(page).to have_no_css "#sidebar #folders-list #folder-none a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
+    end
 
-      within "#folders-list #folder-#{@folder1.id}" do
-        expect(page).to have_css "a#open-folder-#{@folder1.id}"
+    it 'shows folders containing their respective feeds', js: true do
+      within '#sidebar' do
+        expect(page).to have_content @folder1.title
 
-        # Folder should be open (class "in" present)
-        expect(page).to have_css "#feeds-#{@folder1.id}", visible: true
+        open_folder @folder1
 
-        # Should have inside only those feeds associated to the folder
-        within "#feeds-#{@folder1.id}" do
-          expect(page).to have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
-          expect(page).to have_no_css "a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
+        within "#folders-list #folder-#{@folder1.id}" do
+          expect(page).to have_css "a#open-folder-#{@folder1.id}"
+
+          # Folder should be open (class "in" present)
+          expect(page).to have_css "#feeds-#{@folder1.id}", visible: true
+
+          # Should have inside only those feeds associated to the folder
+          within "#feeds-#{@folder1.id}" do
+            expect(page).to have_css "a[data-sidebar-feed][data-feed-id='#{@feed1.id}']"
+            expect(page).to have_no_css "a[data-sidebar-feed][data-feed-id='#{@feed2.id}']"
+          end
         end
       end
     end
-  end
 
-  it 'only shows folders with unread entries by default', js: true do
-    # @user is subscribed to feed3, without unread entries, which is the only feed in folder3
-    folder3 = FactoryGirl.build :folder, user_id: @user.id
-    @user.folders << folder3
-    feed3 = FactoryGirl.create :feed
-    @user.subscribe feed3.fetch_url
-    folder3.feeds << feed3
+    it 'only shows folders with unread entries by default', js: true do
+      # @user is subscribed to feed3, without unread entries, which is the only feed in folder3
+      folder3 = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder3
+      feed3 = FactoryGirl.create :feed
+      @user.subscribe feed3.fetch_url
+      folder3.feeds << feed3
 
-    visit read_path
-    # folder3 should be hidden
-    expect(page).to have_no_content folder3.title
-  end
+      visit read_path
+      # folder3 should be hidden
+      expect(page).to have_no_content folder3.title
+    end
 
-  it 'shows folders without unread entries if a feed in the folder has a subscribe job state alert', js: true do
-    # feed3 has a subscribe job state alert in the start page
-    # feed3 is the only feed in folder3, and it has no unread entries
-    folder3 = FactoryGirl.build :folder, user_id: @user.id
-    @user.folders << folder3
-    feed3 = FactoryGirl.create :feed
-    @user.subscribe feed3.fetch_url
-    folder3.feeds << feed3
-    subscribe_job_state = FactoryGirl.build SubscribeJobState, state: SubscribeJobState::SUCCESS,
-                                            feed_id: feed3.id, user_id: @user.id
-    @user.subscribe_job_states << subscribe_job_state
+    it 'shows folders without unread entries if a feed in the folder has a subscribe job state alert', js: true do
+      # feed3 has a subscribe job state alert in the start page
+      # feed3 is the only feed in folder3, and it has no unread entries
+      folder3 = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder3
+      feed3 = FactoryGirl.create :feed
+      @user.subscribe feed3.fetch_url
+      folder3.feeds << feed3
+      subscribe_job_state = FactoryGirl.build SubscribeJobState, state: SubscribeJobState::SUCCESS,
+                                              feed_id: feed3.id, user_id: @user.id
+      @user.subscribe_job_states << subscribe_job_state
 
-    visit read_path
+      visit read_path
 
-    #folder3 should be visible
-    expect(page).to have_content folder3.title
-  end
+      #folder3 should be visible
+      expect(page).to have_content folder3.title
+    end
 
-  it 'shows folders without unread entries if a feed in the folder has a refresh job state alert', js: true do
-    # feed3 has a refresh job state alert in the start page
-    # feed3 is the only feed in folder3, and it has no unread entries
-    folder3 = FactoryGirl.build :folder, user_id: @user.id
-    @user.folders << folder3
-    feed3 = FactoryGirl.create :feed
-    @user.subscribe feed3.fetch_url
-    folder3.feeds << feed3
-    refresh_feed_job_state = FactoryGirl.build RefreshFeedJobState, state: SubscribeJobState::SUCCESS,
-                                            feed_id: feed3.id, user_id: @user.id
-    @user.refresh_feed_job_states << refresh_feed_job_state
+    it 'shows folders without unread entries if a feed in the folder has a refresh job state alert', js: true do
+      # feed3 has a refresh job state alert in the start page
+      # feed3 is the only feed in folder3, and it has no unread entries
+      folder3 = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder3
+      feed3 = FactoryGirl.create :feed
+      @user.subscribe feed3.fetch_url
+      folder3.feeds << feed3
+      refresh_feed_job_state = FactoryGirl.build RefreshFeedJobState, state: SubscribeJobState::SUCCESS,
+                                                 feed_id: feed3.id, user_id: @user.id
+      @user.refresh_feed_job_states << refresh_feed_job_state
 
-    visit read_path
+      visit read_path
 
-    #folder3 should be visible
-    expect(page).to have_content folder3.title
-  end
+      #folder3 should be visible
+      expect(page).to have_content folder3.title
+    end
 
-  it 'shows folders without unread entries and hides them again when clicking on the button', js: true do
-    # @user is subscribed to feed3, without unread entries, which is the only feed in folder3
-    folder3 = FactoryGirl.build :folder, user_id: @user.id
-    @user.folders << folder3
-    feed3 = FactoryGirl.create :feed
-    @user.subscribe feed3.fetch_url
-    folder3.feeds << feed3
+    it 'shows folders without unread entries and hides them again when clicking on the button', js: true do
+      # @user is subscribed to feed3, without unread entries, which is the only feed in folder3
+      folder3 = FactoryGirl.build :folder, user_id: @user.id
+      @user.folders << folder3
+      feed3 = FactoryGirl.create :feed
+      @user.subscribe feed3.fetch_url
+      folder3.feeds << feed3
 
-    visit read_path
-    show_read
-    # folder3 should appear
-    expect(page).to have_content folder3.title
+      visit read_path
+      show_read
+      # folder3 should appear
+      expect(page).to have_content folder3.title
 
-    hide_read
-    # folder3 should disappear
-    expect(page).to have_no_content folder3.title
+      hide_read
+      # folder3 should disappear
+      expect(page).to have_no_content folder3.title
+    end
   end
 
   context 'folder management' do
 
     before :each do
+      login_user_for_feature @user
       read_feed @feed1, @user
     end
 

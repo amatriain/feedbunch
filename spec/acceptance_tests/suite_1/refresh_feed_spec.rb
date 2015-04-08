@@ -8,6 +8,9 @@ describe 'refresh feeds', type: :feature do
     @entry = FactoryGirl.build :entry, feed_id: @feed.id
     @feed.entries << @entry
     @user.subscribe @feed.fetch_url
+    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @user.folders << @folder
+    @folder.feeds << @feed
 
     @job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed.id
     allow_any_instance_of(User).to receive :refresh_feed do |user|
@@ -17,17 +20,20 @@ describe 'refresh feeds', type: :feature do
     end
 
     login_user_for_feature @user
-    visit read_path
-    read_feed @feed, @user
   end
   
   it 'goes to start page after clicking on refresh', js: true do
+    read_feed @feed, @user
     expect(page).to have_no_css '#start-info'
     refresh_feed
     expect(page).to have_css '#start-info'
   end
 
   context 'while refresh is running' do
+
+    before :each do
+      read_feed @feed, @user
+    end
 
     it 'shows message', js: true do
       refresh_feed
@@ -62,15 +68,12 @@ describe 'refresh feeds', type: :feature do
     end
 
     it 'opens folder in the sidebar when clicking on feed title', js: true do
-      folder = FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << folder
-      folder.feeds << @feed
       refresh_feed
       visit current_path
 
-      folder_should_be_closed folder
+      folder_should_be_closed @folder
       find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
-      folder_should_be_open folder
+      folder_should_be_open @folder
     end
 
     it 'permanently dismisses alert when clicking on feed title', js: true do
@@ -110,6 +113,8 @@ describe 'refresh feeds', type: :feature do
           @job_state
         end
       end
+
+      read_feed @feed, @user
     end
 
     it 'shows success alert', js: true do
@@ -146,15 +151,12 @@ describe 'refresh feeds', type: :feature do
     end
 
     it 'opens folder in the sidebar when clicking on feed title', js: true do
-      folder = FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << folder
-      folder.feeds << @feed
       refresh_feed
       visit current_path
 
-      folder_should_be_closed folder
+      folder_should_be_closed @folder
       find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
-      folder_should_be_open folder
+      folder_should_be_open @folder
     end
 
     it 'permanently dismisses alert when clicking on feed title', js: true do
@@ -197,6 +199,8 @@ describe 'refresh feeds', type: :feature do
           @job_state
         end
       end
+
+      read_feed @feed, @user
     end
 
     it 'shows error alert', js: true do
@@ -233,15 +237,12 @@ describe 'refresh feeds', type: :feature do
     end
 
     it 'opens folder in the sidebar when clicking on feed title', js: true do
-      folder = FactoryGirl.build :folder, user_id: @user.id
-      @user.folders << folder
-      folder.feeds << @feed
       refresh_feed
       visit current_path
 
-      folder_should_be_closed folder
+      folder_should_be_closed @folder
       find("#refresh-state-#{@job_state.reload.id} a.job-feed-title").click
-      folder_should_be_open folder
+      folder_should_be_open @folder
     end
 
     it 'permanently dismisses alert when clicking on feed title', js: true do

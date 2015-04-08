@@ -2,19 +2,27 @@ require 'rails_helper'
 
 describe 'feeds', type: :feature do
 
+  before :each do
+    # Ensure no actual HTTP calls are made
+    allow(RestClient).to receive(:get).and_return true
+
+    @user = FactoryGirl.create :user
+  end
+
   it 'redirects unauthenticated visitors to login page' do
     visit read_path
     expect(current_path).to eq new_user_session_path
   end
 
+  it 'shows an alert if it cannot load feeds', js: true do
+    allow_any_instance_of(User).to receive(:subscribed_feeds).and_raise StandardError.new
+    login_user_for_feature @user
+    should_show_alert 'problem-loading-feeds'
+  end
+
   context 'feed reading' do
 
     before :each do
-      # Ensure no actual HTTP calls are made
-      allow(RestClient).to receive(:get).and_return true
-
-      @user = FactoryGirl.create :user
-
       @folder1 = FactoryGirl.build :folder, user_id: @user.id
       @folder2 = FactoryGirl.create :folder
       @user.folders << @folder1
@@ -56,12 +64,6 @@ describe 'feeds', type: :feature do
       within "#sidebar #folder-none a[data-sidebar-feed][data-feed-id='#{@feed3.id}']" do
         expect(page).to have_text @feed3.title
       end
-    end
-
-    it 'shows an alert if it cannot load feeds', js: true do
-      allow_any_instance_of(User).to receive(:subscribed_feeds).and_raise StandardError.new
-      visit read_path
-      should_show_alert 'problem-loading-feeds'
     end
 
     it 'hides Read All button until a feed is selected', js: true do

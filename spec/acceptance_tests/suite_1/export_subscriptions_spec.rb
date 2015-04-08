@@ -152,18 +152,12 @@ describe 'export subscriptions', type: :feature do
 
     it 'downloads OPML file from alert link', js: true do
       visit read_path
-      find('a#download-opml-export').click
-
-      expect(page.response_headers['Content-Type']).to eq 'application/xml'
-      expect(page.body).to eq @opml_data
+      expect(page).to have_css 'a#download-opml-export'
     end
 
     it 'downloads OPML file from edit registration view', js: true do
       visit edit_user_registration_path
-      find('a#download-opml-export').click
-
-      expect(page.response_headers['Content-Type']).to eq 'application/xml'
-      expect(page.body).to eq @opml_data
+      expect(page).to have_css 'a#download-opml-export'
     end
 
     it 'shows alert when the OPML file does not exist', js: true do
