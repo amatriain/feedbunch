@@ -105,6 +105,7 @@ describe 'refresh feeds', type: :feature do
   context 'refresh finishes successfully' do
 
     before :each do
+      # Each feed refresh increments unread entries by 1, state is set to SUCCESS
       allow_any_instance_of(User).to receive :find_refresh_feed_job_state do |user|
         if user.id == @user.id
           feed_subscription = FeedSubscription.find_by user_id: user.id, feed_id: @feed.id
@@ -171,7 +172,9 @@ describe 'refresh feeds', type: :feature do
 
     it 'loads feed even if it has no unread entries', js: true do
       refresh_feed
-      Entry.destroy_all
+      # Once refresh has finished running, delete entries and set unread count to 0
+      expect(page).to have_text 'Feed refreshed successfully'
+      @feed.entries.destroy_all
       subscription = FeedSubscription.find_by user_id: @user.id, feed_id: @feed.id
       subscription.update unread_entries: 0
 
