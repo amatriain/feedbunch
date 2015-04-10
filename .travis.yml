@@ -8,7 +8,7 @@ rvm:
   - "ruby-2.2.1"
 script:
   - "bundle exec brakeman -z"
-  - "bundle exec rake db:migrate"
+  - "bundle exec rake db:schema:load"
   - "bundle exec rake spec:travisci"
 env:
   global:
