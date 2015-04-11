@@ -10,29 +10,29 @@ describe 'authentication', type: :feature do
 
   context 'unauthenticated visitors' do
 
-    it 'does not redirect to read view when user tries to access the root URL' do
+    it 'does not redirect to read view when user tries to access the root URL', js: true do
       visit root_path
       expect(current_path).to eq root_path
     end
 
-    it 'shows a link to the app in the main page' do
+    it 'shows a link to the app in the main page', js: true do
       visit '/'
       within "a#sign_in[href*=\"#{read_path}\"]" do
         expect(page).to have_content 'Log in'
       end
     end
 
-    it 'shows a signup link in the main page' do
+    it 'shows a signup link in the main page', js: true do
       visit '/'
       expect(page).to have_css "a#sign_up[href*=\"#{new_user_registration_path}\"]"
     end
 
-    it 'redirects user to feeds page after a successful login' do
+    it 'redirects user to feeds page after a successful login', js: true do
       login_user_for_feature @user
       expect(current_path).to eq read_path
     end
 
-    it 'stays on the login page after a failed login attempt' do
+    it 'stays on the login page after a failed login attempt', js: true do
       visit new_user_session_path
       fill_in 'Email', with: @user.email
       fill_in 'Password', with: 'wrong password!!!'
@@ -40,7 +40,7 @@ describe 'authentication', type: :feature do
       expect(current_path).to eq new_user_session_path
     end
 
-    it 'does not show navbar' do
+    it 'does not show navbar', js: true do
       visit '/'
       expect(page).to have_no_css 'div.navbar'
     end
@@ -51,7 +51,7 @@ describe 'authentication', type: :feature do
         visit new_user_registration_path
       end
 
-      it 'signs up new user' do
+      it 'signs up new user', js: true do
         new_email = 'new_email@test.com'
         new_password = 'new_password'
 
@@ -61,7 +61,7 @@ describe 'authentication', type: :feature do
         user_should_be_logged_in
       end
 
-      it 'does not sign up user if email already registered' do
+      it 'does not sign up user if email already registered', js: true do
         new_password = 'new_password'
         user = FactoryGirl.build :user, email: @user.email, password: new_password
         fill_in 'Email', with: @user.email
@@ -78,7 +78,7 @@ describe 'authentication', type: :feature do
         failed_login_user_for_feature user.email, new_password
       end
 
-      it 'does not sign up user if both password fields do not match' do
+      it 'does not sign up user if both password fields do not match', js: true do
         new_email = 'new_email@test.com'
         new_password = 'new_password'
         different_password = 'different_password'
@@ -105,15 +105,16 @@ describe 'authentication', type: :feature do
         visit new_user_password_path
       end
 
-      it 'allows password reset' do
+      it 'allows password reset', js: true do
         fill_in 'Email', with: @user.email
         click_on 'Reset password'
 
         # test that a confirmation email is sent
-        email_change_link = mail_should_be_sent path: edit_user_password_path, to: @user.email
+        password_change_link = mail_should_be_sent path: edit_user_password_path, to: @user.email
+        password_change_url = get_password_change_link_from_email password_change_link
 
         # follow link received by email
-        visit email_change_link
+        visit password_change_url
         expect(current_path).to eq edit_user_password_path
 
         # submit password change form
@@ -135,15 +136,16 @@ describe 'authentication', type: :feature do
         login_user_for_feature @user
       end
 
-      it 'does not allow password change if both fields do not match' do
+      it 'does not allow password change if both fields do not match', js: true do
         fill_in 'Email', with: @user.email
         click_on 'Reset password'
 
         # test that a confirmation email is sent
         email_change_link = mail_should_be_sent path: edit_user_password_path, to: @user.email
+        email_change_url = get_password_change_link_from_email email_change_link
 
         # follow link received by email
-        visit email_change_link
+        visit email_change_url
         expect(current_path).to eq edit_user_password_path
 
         # submit password change form
@@ -165,7 +167,7 @@ describe 'authentication', type: :feature do
         failed_login_user_for_feature @user.email, different_password
       end
 
-      it 'does not send password change email to an unregistered address' do
+      it 'does not send password change email to an unregistered address', js: true do
         fill_in 'Email', with: 'unregistered_email@test.com'
         click_on 'Reset password'
 
@@ -177,7 +179,7 @@ describe 'authentication', type: :feature do
 
     context 'resend confirmation email' do
 
-      it 'sends confirmation email to unconfirmed user' do
+      it 'sends confirmation email to unconfirmed user', js: true do
         # sign up new user
         visit new_user_registration_path
         new_email = 'new_email@test.com'
@@ -198,18 +200,19 @@ describe 'authentication', type: :feature do
 
         # Check that confirmation email is sent
         confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
+        confirmation_url = get_confirm_address_link_from_email confirmation_link
 
         # Check that user cannot log in before confirming
         failed_login_user_for_feature new_email, new_password
 
         # Confirm email, user should be able to log in afterwards
-        visit confirmation_link
+        visit confirmation_url
 
         # Check that user can log in
         login_user_for_feature user
       end
 
-      it 'does not send confirmation email to a confirmed user' do
+      it 'does not send confirmation email to a confirmed user', js: true do
         # sign up new user
         visit new_user_registration_path
         new_email = 'new_email@test.com'
@@ -222,7 +225,8 @@ describe 'authentication', type: :feature do
 
         # Confirm email
         confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
-        visit confirmation_link
+        confirmation_url = get_confirm_address_link_from_email confirmation_link
+        visit confirmation_url
 
         # Ask for resend of confirmation email
         visit new_user_confirmation_path
@@ -233,7 +237,7 @@ describe 'authentication', type: :feature do
         mail_should_not_be_sent
       end
 
-      it 'does not send confirmation email to an unregistered user' do
+      it 'does not send confirmation email to an unregistered user', js: true do
         unregistered_email = 'unregistered@test.com'
 
         # Ask for resend of confirmation email
@@ -249,7 +253,7 @@ describe 'authentication', type: :feature do
 
     context 'user locking' do
 
-      it 'locks user after too many failed authentication attempts' do
+      it 'locks user after too many failed authentication attempts', js: true do
         # lock user after 5 failed authentication attempts
         wrong_password = 'wrong_password'
         (1..6).each do
@@ -260,7 +264,7 @@ describe 'authentication', type: :feature do
         failed_login_user_for_feature @user.email, @user.password
       end
 
-      it 'automatically sends unlock email to a locked user' do
+      it 'automatically sends unlock email to a locked user', js: true do
         # Lock user after 5 failed authentication attempts
         # The next authentication attempt the app sends an unlock email to
         # notify the user and give him the chance to unlock his account.
@@ -271,13 +275,14 @@ describe 'authentication', type: :feature do
 
         # Check that unlock email is sent
         unlock_link = mail_should_be_sent path: unlock_account_path, to: @user.email
+        unlock_url = get_unlock_link_from_email unlock_link
 
         # Check that can log in after following unlock link
-        visit unlock_link
+        visit unlock_url
         login_user_for_feature @user
       end
 
-      it 'resends unlock email to a locked user' do
+      it 'resends unlock email to a locked user', js: true do
         # lock user after 5 failed authentication attempts
         wrong_password = 'wrong_password'
         (1..6).each do
@@ -294,13 +299,14 @@ describe 'authentication', type: :feature do
 
         # Check that unlock email is sent
         unlock_link = mail_should_be_sent path: unlock_account_path, to: @user.email
+        unlock_url = get_unlock_link_from_email unlock_link
 
         # Check that can log in after following unlock link
-        visit unlock_link
+        visit unlock_url
         login_user_for_feature @user
       end
 
-      it 'does not send unlock email to an unlocked user' do
+      it 'does not send unlock email to an unlocked user', js: true do
         # Ask for an unlock email to be sent
         visit new_user_unlock_path
         fill_in 'Email', with: @user.email
@@ -310,7 +316,7 @@ describe 'authentication', type: :feature do
         mail_should_not_be_sent
       end
 
-      it 'does not send unlock email to an unregistered user' do
+      it 'does not send unlock email to an unregistered user', js: true do
         # Ask for an unlock email to be sent
         visit new_user_unlock_path
         fill_in 'Email', with: 'unregistered@test.com'
@@ -330,11 +336,11 @@ describe 'authentication', type: :feature do
       login_user_for_feature @user
     end
 
-    it 'redirects to read view after a successful login' do
+    it 'redirects to read view after a successful login', js: true do
       expect(current_path).to eq read_path
     end
 
-    it 'redirects to read view if user tries to access the root URL' do
+    it 'redirects to read view if user tries to access the root URL', js: true do
       visit root_path
       expect(current_path).to eq read_path
     end
@@ -357,41 +363,44 @@ describe 'authentication', type: :feature do
       expect(current_path).to eq new_user_session_path
     end
 
-    it 'does not show the login link in the main page' do
+    it 'does not show the login link in the main page', js: true do
       expect(page).to have_no_css "a#sign_in[href*=\"#{new_user_session_path}\"]"
     end
 
-    it 'does not show the signup link in the main page' do
+    it 'does not show the signup link in the main page', js: true do
       expect(page).to have_no_css "a#sign_up[href*=\"#{new_user_registration_path}\"]"
     end
 
-    it 'shows navbar' do
+    it 'shows navbar', js: true do
       expect(page).to have_css 'div.navbar'
     end
 
-    it 'shows link to feeds page in the navbar' do
+    it 'shows link to feeds page in the navbar', js: true do
       expect(page).to have_css 'div.navbar div.navbar-header a.navbar-brand'
       find('div.navbar div.navbar-header a.navbar-brand').click
       expect(current_path).to eq read_path
     end
 
-    it 'shows logout link in the navbar' do
+    it 'shows logout link in the navbar', js: true do
+      open_user_menu
       expect(page).to have_css 'div.navbar ul li a#sign_out'
     end
 
-    it 'logs out user and redirects to main page' do
+    it 'logs out user and redirects to main page', js: true do
+      open_user_menu
       find('div.navbar ul li a#sign_out').click
       expect(current_path).to eq root_path
       user_should_not_be_logged_in
     end
 
-    it 'shows account details link in the navbar' do
+    it 'shows account details link in the navbar', js: true do
+      open_user_menu
       expect(page).to have_css 'div.navbar ul li a#my_account'
       find('div.navbar ul li a#my_account').click
       expect(current_path).to eq edit_user_registration_path
     end
 
-    it 'does not show link to read view in user dropdown if user is already in read view' do
+    it 'does not show link to read view in user dropdown if user is already in read view', js: true do
       expect(current_path).to eq read_path
       expect(page).to_not have_css 'div.navbar ul li a#read_feeds'
     end
@@ -402,24 +411,24 @@ describe 'authentication', type: :feature do
         visit edit_user_registration_path
       end
 
-      it 'shows navbar' do
+      it 'shows navbar', js: true do
         expect(page).to have_css 'div.navbar'
       end
 
-      it 'shows link to go to feeds list' do
+      it 'shows link to go to feeds list', js: true do
         expect(page).to have_css 'a#return'
         find('a#return').click
         expect(current_path).to eq read_path
       end
 
-      it 'shows link to read view in user dropdown' do
-        expect(page).to have_css 'div.navbar ul li a#read_feeds'
+      it 'shows link to read view in user dropdown', js: true do
         open_user_menu
+        expect(page).to have_css 'div.navbar ul li a#read_feeds'
         find('a#read_feeds').click
         expect(current_path).to eq read_path
       end
 
-      it 'allows email change' do
+      it 'allows email change', js: true do
         new_email = 'new_email@test.com'
         fill_in 'Email', with: new_email
         fill_in 'Current password', with: @user.password
@@ -428,13 +437,15 @@ describe 'authentication', type: :feature do
 
         # test that a confirmation email is sent
         confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
+        # Convert the link sent by email into a relative URL that can be accessed during testing
+        confirmation_url = get_confirm_address_link_from_email confirmation_link
 
         # test that before confirmation I can login with the old email
         login_user_for_feature @user
         logout_user
 
         # test that after confirmation I cannot login with the old email
-        visit confirmation_link
+        visit confirmation_url
         failed_login_user_for_feature @user.email, @user.password
 
         # test that after confirmation I can login with the new email
@@ -442,7 +453,7 @@ describe 'authentication', type: :feature do
         login_user_for_feature @user
       end
 
-      it 'does not allow email change if current password is left blank' do
+      it 'does not allow email change if current password is left blank', js: true do
         new_email = 'new_email@test.com'
         fill_in 'Email', with: new_email
         click_on 'Update account'
@@ -455,7 +466,7 @@ describe 'authentication', type: :feature do
         login_user_for_feature @user
       end
 
-      it 'does not allow email change if current password is filled with wrong password' do
+      it 'does not allow email change if current password is filled with wrong password', js: true do
         new_email = 'new_email@test.com'
         fill_in 'Email', with: new_email
         fill_in 'Current password', with: 'wrong_password'
@@ -470,7 +481,7 @@ describe 'authentication', type: :feature do
         logout_user
       end
 
-      it 'allows password change' do
+      it 'allows password change', js: true do
         new_password = 'new_password'
         fill_in 'New password', with: new_password
         fill_in 'Confirm password', with: new_password
@@ -486,7 +497,7 @@ describe 'authentication', type: :feature do
         login_user_for_feature @user
       end
 
-      it 'does not allow password change if current password is left blank' do
+      it 'does not allow password change if current password is left blank', js: true do
         new_password = 'new_password'
         fill_in 'New password', with: new_password
         fill_in 'Confirm password', with: new_password
@@ -497,7 +508,7 @@ describe 'authentication', type: :feature do
         login_user_for_feature @user
       end
 
-      it 'does not allow password change if current password is filled with wrong password' do
+      it 'does not allow password change if current password is filled with wrong password', js: true do
         new_password = 'new_password'
         fill_in 'New password', with: new_password
         fill_in 'Confirm password', with: new_password
@@ -509,7 +520,7 @@ describe 'authentication', type: :feature do
         login_user_for_feature @user
       end
 
-      it 'does not allow password change if both password fields do not match' do
+      it 'does not allow password change if both password fields do not match', js: true do
         new_password = 'new_password'
         fill_in 'New password', with: new_password
         fill_in 'Confirm password', with: 'different_new_password'
@@ -587,7 +598,6 @@ describe 'authentication', type: :feature do
         click_on 'Log in'
         expect(page).to have_text 'Invalid email or password'
       end
-
     end
   end
 end
