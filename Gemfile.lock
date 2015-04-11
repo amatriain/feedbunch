@@ -148,7 +148,7 @@ GEM
     domain_name (0.5.23)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
-    eventmachine (1.0.4)
+    eventmachine (1.0.7)
     execjs (2.5.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
