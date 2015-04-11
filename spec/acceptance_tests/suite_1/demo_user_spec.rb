@@ -19,7 +19,6 @@ describe 'demo user', type: :feature do
 
     before :each do
       Feedbunch::Application.config.demo_enabled = false
-      visit root_path
     end
 
     it 'does not show a link to the demo', js: true do
