@@ -17,6 +17,13 @@ def user_should_not_be_logged_in
 end
 
 ##
+# Test that the page javascript has finished loading.
+
+def page_should_finish_loading
+  expect(page).not_to have_css '.sidebar-spinner'
+end
+
+##
 # Test that an email has been sent during acceptance testing. Accepts the following arguments:
 #
 # - text - variable-length array of strings. The method tests that all strings are present in the email body.

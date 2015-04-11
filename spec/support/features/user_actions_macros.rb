@@ -9,6 +9,7 @@ def login_user_for_feature(user)
   fill_in 'Password', with: user.password
   click_on 'Log in'
   user_should_be_logged_in
+  page_should_finish_loading
 end
 
 ##
