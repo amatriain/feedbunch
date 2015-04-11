@@ -126,6 +126,8 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
 
       $rootScope.folders_loaded = true
     .error (data, status)->
+      reset_timer()
+      $rootScope.folders_loaded = true
       timerFlagSvc.start 'error_loading_folders' if status!=0
 
   #--------------------------------------------
