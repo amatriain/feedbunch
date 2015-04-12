@@ -23,3 +23,10 @@ before_install:
 before_script:
   - "cp config/secrets_ci.yml config/secrets.yml"
   - "cp config/database.yml.ci config/database.yml"
+  - "bundle exec rails s"
+addons:
+  sauce_connect:
+    username:
+      secure: "D/mJzqzlsWRgm5wsGUE5tRxlHcEagIllZJ5ueuxIfF9gnveeZlWN5PCzIqFkkGmiJyKSWn5urpLIcR2rT+ew8DKypHQ84NejE3DCbN8wC756iFsmwB0S7Ck4aZKYjhOOVOkvbtMhb/lIp8SZd9NrQxZ0TqmG2kYoKPurwkSPbuQ="
+    access_key:
+      secure: "dh34bPkuFQNWuCALEl4sG3rPlNdYE7p/swuey1fmhiT2kBWmfkNJXa/6XuD9lLStV+dRwG3+S1pXnNz4glGjRyoPQlNGMD+j3CBW/Y+HvhbLz4F5ASTBCy8nAHXTM8XRU53Q+mzzy1/jlQPPZeOCrXOYfpfdlvzIChzdcFYqUpY="
