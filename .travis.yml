@@ -23,7 +23,7 @@ before_install:
 before_script:
   - "cp config/secrets_ci.yml config/secrets.yml"
   - "cp config/database.yml.ci config/database.yml"
-  - "bundle exec rails s"
+  - "bundle exec rails s -d"
 addons:
   sauce_connect:
     username:
