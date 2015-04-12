@@ -72,8 +72,13 @@ RSpec.configure do |config|
                                             url: "http://#{username}:#{access_key}@ondemand.saucelabs.com/wd/hub",
                                             desired_capabilities: caps
                                           })
+  driver_name = "sauce_#{Time.now.to_i}"
+  Capybara.register_driver driver_name do |app|
+    driver
+  end
+  Capybara.javascript_driver = driver_name
   # Use selenium for javascript-enabled acceptance tests
-  Capybara.javascript_driver = :selenium
+  #Capybara.javascript_driver = :selenium
 
   # Make capybara wait for a long time for things to appear in the DOM,
   # in case there's a long-running AJAX call running which changes the DOM after a few seconds
