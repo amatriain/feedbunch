@@ -485,7 +485,7 @@ DEPENDENCIES
   rubyzip
   sanitize
   sass-rails
-  sauce (~> 3.1.1)
+  sauce
   sauce-connect
   selenium-webdriver
   show_me_the_cookies

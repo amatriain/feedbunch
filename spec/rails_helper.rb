@@ -63,9 +63,6 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
 
   # Run selenium tests in the sauce labs cloud
-
-
-
   driver_name = "sauce_#{Time.now.to_i}"
   Capybara.register_driver driver_name do |app|
     username = ENV['SAUCE_USERNAME']
