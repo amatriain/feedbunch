@@ -62,8 +62,6 @@ RSpec.configure do |config|
   # To test controllers protected by Devise authentication
   config.include Devise::TestHelpers, :type => :controller
 
-  # Use selenium for javascript-enabled acceptance tests
-  Capybara.javascript_driver = :selenium
   # Run selenium tests in the sauce labs cloud
   caps = Selenium::WebDriver::Remote::Capabilities.firefox({
                                                              'tunnel-identifier' => ENV['TRAVIS_JOB_NUMBER']
@@ -74,6 +72,8 @@ RSpec.configure do |config|
                                             url: "http://#{username}:#{access_key}@ondemand.saucelabs.com/wd/hub",
                                             desired_capabilities: caps
                                           })
+  # Use selenium for javascript-enabled acceptance tests
+  Capybara.javascript_driver = driver
 
   # Make capybara wait for a long time for things to appear in the DOM,
   # in case there's a long-running AJAX call running which changes the DOM after a few seconds
