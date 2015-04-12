@@ -107,6 +107,11 @@ group :test, :development do
 
   # Factories instead of DB fixtures during testing
   gem 'factory_girl_rails'
+
+  # Run selenium tests in the saucelabs cloud
+  gem 'sauce', '~> 3.1.1'
+  gem 'sauce-connect'
+  gem 'parallel_tests'
 end
 
 group :test do
