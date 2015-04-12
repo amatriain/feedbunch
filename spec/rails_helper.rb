@@ -62,24 +62,27 @@ RSpec.configure do |config|
   # To test controllers protected by Devise authentication
   config.include Devise::TestHelpers, :type => :controller
 
-  # Run selenium tests in the sauce labs cloud
-  driver_name = "sauce_#{Time.now.to_i}"
-  Capybara.register_driver driver_name do |app|
-    username = ENV['SAUCE_USERNAME']
-    access_key = ENV['SAUCE_ACCESS_KEY']
-    caps = Selenium::WebDriver::Remote::Capabilities.firefox({
-                                                               'tunnel-identifier' => ENV['TRAVIS_JOB_NUMBER']
-                                                             })
-    # driver = Selenium::WebDriver.for(:remote, {
-    #                                           url: "http://#{username}:#{access_key}@ondemand.saucelabs.com/wd/hub",
-    #                                           desired_capabilities: caps
-    #                                         })
-    url = "http://#{username}:#{access_key}@ondemand.saucelabs.com/wd/hub"
-    Capybara::Selenium::Driver.new app, browser: :remote, url: url, desired_capabilities: caps
+  # Set driver for acceptance tests
+  if ENV['TEST_SUITE'] != 'unit'
+    if ENV['CI']
+      # If running in Travis CI, connect to the Sauce Labs selenium cloud
+      driver_name = "sauce_#{Time.now.to_i}"
+      Capybara.register_driver driver_name do |app|
+        username = ENV['SAUCE_USERNAME']
+        access_key = ENV['SAUCE_ACCESS_KEY']
+        caps = Selenium::WebDriver::Remote::Capabilities.firefox ({
+          'tunnel-identifier' => ENV['TRAVIS_JOB_NUMBER'],
+          'max-duration' => 36000
+        })
+        url = "http://#{username}:#{access_key}@ondemand.saucelabs.com/wd/hub"
+        Capybara::Selenium::Driver.new app, browser: :remote, url: url, desired_capabilities: caps
+      end
+      Capybara.javascript_driver = driver_name
+    else
+      # Other environments use selenium locally
+      Capybara.javascript_driver = :selenium
+    end
   end
-  Capybara.javascript_driver = driver_name
-  # Use selenium for javascript-enabled acceptance tests
-  #Capybara.javascript_driver = :selenium
 
   # Make capybara wait for a long time for things to appear in the DOM,
   # in case there's a long-running AJAX call running which changes the DOM after a few seconds
