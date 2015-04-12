@@ -13,6 +13,9 @@ script:
 env:
   global:
     - RAILS_ENV=ci
+    # Sauce Labs credentials
+    - secure: dAxWvDQOomsy+I4kIwwODbIyg6jTsE1KbzoM7+TEIMZD6wH5BmVlUndxTJArzLzwN12uFok57lCy7KvOEN2LFJXQMt6mzMXaPUFHNs3GmNrthaKPJnLVhvkd5mM8RBE41PfU+lq9dG7taLcGC153XTSsruu9XhvVUD4Cpez9BNs=
+    - secure: SvZoLXJXnXjFLU3xCQXYnAEHhnFV2Ai17sMJdqh0OyhHG5wM5kIrwV1uj9KF4Q1M3A+Ir6d6oD6hVg/322nfuEpMpWzotzythRo+slqBaiUyL0yrfzu0TpUYVmwYQeBF3t3jHG8EifzCdO1UcolfGqS/kRUKAzqr+MhPz01uVaE=
   matrix:
     - TEST_SUITE=unit
     - TEST_SUITE=acceptance_1
@@ -23,10 +26,5 @@ before_install:
 before_script:
   - "cp config/secrets_ci.yml config/secrets.yml"
   - "cp config/database.yml.ci config/database.yml"
-  - "bundle exec rails s -d"
 addons:
-  sauce_connect:
-    username:
-      secure: "D/mJzqzlsWRgm5wsGUE5tRxlHcEagIllZJ5ueuxIfF9gnveeZlWN5PCzIqFkkGmiJyKSWn5urpLIcR2rT+ew8DKypHQ84NejE3DCbN8wC756iFsmwB0S7Ck4aZKYjhOOVOkvbtMhb/lIp8SZd9NrQxZ0TqmG2kYoKPurwkSPbuQ="
-    access_key:
-      secure: "dh34bPkuFQNWuCALEl4sG3rPlNdYE7p/swuey1fmhiT2kBWmfkNJXa/6XuD9lLStV+dRwG3+S1pXnNz4glGjRyoPQlNGMD+j3CBW/Y+HvhbLz4F5ASTBCy8nAHXTM8XRU53Q+mzzy1/jlQPPZeOCrXOYfpfdlvzIChzdcFYqUpY="
+  sauce_connect: true
