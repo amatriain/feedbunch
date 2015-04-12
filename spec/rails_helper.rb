@@ -73,7 +73,7 @@ RSpec.configure do |config|
                                             desired_capabilities: caps
                                           })
   # Use selenium for javascript-enabled acceptance tests
-  Capybara.javascript_driver = :sauce
+  Capybara.javascript_driver = :selenium
 
   # Make capybara wait for a long time for things to appear in the DOM,
   # in case there's a long-running AJAX call running which changes the DOM after a few seconds
