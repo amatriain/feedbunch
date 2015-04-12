@@ -9,6 +9,7 @@ require 'rspec/rails'
 # For acceptance testing
 require 'capybara/rails'
 require 'capybara/rspec'
+require 'selenium-webdriver'
 require 'database_cleaner'
 require 'nokogiri'
 require 'show_me_the_cookies'
