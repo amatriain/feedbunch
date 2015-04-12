@@ -31,7 +31,7 @@ describe 'subscription to feeds', type: :feature do
       expect(page).to have_content @feed1.title
     end
 
-    it 'does not show feeds the user is not subscribed to' do
+    it 'does not show feeds the user is not subscribed to', js: true do
       expect(page).to have_no_content @feed2.title
     end
   end
