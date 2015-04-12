@@ -63,6 +63,16 @@ RSpec.configure do |config|
 
   # Use selenium for javascript-enabled acceptance tests
   Capybara.javascript_driver = :selenium
+  # Run selenium tests in the sauce labs cloud
+  caps = Selenium::WebDriver::Remote::Capabilities.firefox({
+                                                             'tunnel-identifier' => ENV['TRAVIS_JOB_NUMBER']
+                                                           })
+  username = ENV['SAUCE_USERNAME']
+  access_key = ENV['SAUCE_ACCESS_KEY']
+  driver = Selenium::WebDriver.for(:remote, {
+                                            url: "http://#{username}:#{access_key}@ondemand.saucelabs.com/wd/hub",
+                                            desired_capabilities: caps
+                                          })
 
   # Make capybara wait for a long time for things to appear in the DOM,
   # in case there's a long-running AJAX call running which changes the DOM after a few seconds
