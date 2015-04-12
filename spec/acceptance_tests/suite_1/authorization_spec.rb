@@ -26,6 +26,7 @@ describe 'authorization', type: :feature do
     end
 
     it 'allows access to Redmon to admin users', js: true do
+      skip
       login_user_for_feature @admin_user
       visit '/redmon'
       expect(page).not_to have_content 'No route matches'
