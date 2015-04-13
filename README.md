@@ -2,7 +2,7 @@
 
 A simple and elegant feed reader.
 
-[![Build Status](https://travis-ci.org/amatriain/feedbunch.png?branch=master)](https://travis-ci.org/amatriain/feedbunch)
+[![Build Status](https://semaphoreci.com/api/v1/projects/fb7ea494-699a-4733-a494-b806ae6fb249/396842/badge.svg)](https://semaphoreci.com/amatriain/feedbunch)
 [![Coverage Status](https://coveralls.io/repos/amatriain/feedbunch/badge.png?branch=master)](https://coveralls.io/r/amatriain/feedbunch)
 [![Code Climate](https://codeclimate.com/github/amatriain/feedbunch.png)](https://codeclimate.com/github/amatriain/feedbunch)
 [![Inline docs](http://inch-ci.org/github/amatriain/feedbunch.png)](http://inch-ci.org/github/amatriain/feedbunch)
