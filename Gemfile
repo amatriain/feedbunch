@@ -115,7 +115,11 @@ group :test, :development do
 end
 
 group :test do
+  # Testing
   gem 'rspec'
+
+  # Retry failed tests
+  gem 'rspec-retry'
 
   # Code coverage
   gem 'coveralls', require: false
