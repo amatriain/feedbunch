@@ -108,12 +108,10 @@ group :test, :development do
   # Factories instead of DB fixtures during testing
   gem 'factory_girl_rails'
 
-  if ENV['CI'] && ENV['TRAVIS']
-    # Run travis CI selenium tests in the saucelabs cloud
-    gem 'sauce'
-    gem 'sauce-connect'
-    gem 'parallel_tests'
-  end
+  # Run travis CI selenium tests in the saucelabs cloud
+  gem 'sauce', require: false
+  gem 'sauce-connect', require: false
+  gem 'parallel_tests', require: false
 end
 
 group :test do
