@@ -72,7 +72,7 @@ RSpec.configure do |config|
         access_key = ENV['SAUCE_ACCESS_KEY']
         caps = Selenium::WebDriver::Remote::Capabilities.firefox ({
           'tunnel-identifier' => ENV['TRAVIS_JOB_NUMBER'],
-          'max-duration' => 3600
+          'max-duration' => 7200
         })
         url = "http://#{username}:#{access_key}@ondemand.saucelabs.com/wd/hub"
         Capybara::Selenium::Driver.new app, browser: :remote, url: url, desired_capabilities: caps
