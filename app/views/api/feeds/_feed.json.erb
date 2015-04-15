@@ -1,7 +1,7 @@
 {
   "id": "<%= feed.id %>",
   "title": <%= feed.title.to_json.html_safe %>,
-  "url": "<%= feed.url %>",
+  "url": "<%= feed.url.html_safe %>",
   "folder_id": "<%= folder_id %>",
   "unread_entries": <%= unread_count %>
 }
