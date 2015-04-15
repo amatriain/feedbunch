@@ -244,8 +244,9 @@ class Feed < ActiveRecord::Base
     config = Feedbunch::Application.config.restricted_sanitizer
 
     self.title = Sanitize.fragment(self.title, config).try :strip
-    self.fetch_url = Sanitize.fragment(self.fetch_url, config).try :strip
-    self.url = Sanitize.fragment(self.url, config).try :strip
+    # Unescape HTML entities in the URL escaped by the sanitizer
+    self.fetch_url = CGI.unescapeHTML(Sanitize.fragment(self.fetch_url, config).try :strip)
+    self.url = CGI.unescapeHTML(Sanitize.fragment(self.url, config).try :strip)
 
     if self.fetch_url_was.present? && (self.fetch_url =~ URI::regexp(%w{http https})).nil?
       self.fetch_url = self.fetch_url_was

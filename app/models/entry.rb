@@ -135,11 +135,12 @@ class Entry < ActiveRecord::Base
     # Summary, content are sanitized with relaxed config, we want imgs etc to be present.
     # Other attributes are sanitized with restricted config, they should be plain text.
     self.title = Sanitize.fragment self.title, config_restricted
-    self.url = Sanitize.fragment self.url, config_restricted
     self.author = Sanitize.fragment self.author, config_restricted
     self.content = Sanitize.fragment self.content, config_relaxed
     self.summary = Sanitize.fragment self.summary, config_relaxed
     self.guid = Sanitize.fragment self.guid, config_restricted
+    # Unescape HTML entities in the URL escaped by the sanitizer
+    self.url = CGI.unescapeHTML(Sanitize.fragment self.url, config_restricted)
   end
 
   ##
