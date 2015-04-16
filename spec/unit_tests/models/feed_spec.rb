@@ -114,6 +114,15 @@ describe Feed, type: :model do
       expect(feed.fetch_url).to eq sanitized_url
     end
 
+    it 'does not make title blank after sanitization' do
+      old_title = 'title'
+      new_title = '<!-- removed by sanitization -->'
+      feed = FactoryGirl.create :feed, title: old_title
+      feed.update! title: new_title
+      expect(feed.reload.title).not_to be_blank
+      expect(feed.title).to eq old_title
+    end
+
   end
 
   context 'trimming' do

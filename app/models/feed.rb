@@ -211,6 +211,16 @@ class Feed < ActiveRecord::Base
   end
 
   ##
+  # Fix problems with encoding in text attributes.
+  # Specifically, convert from ISO-8859-1 to UTF-8 if necessary.
+
+  def fix_encoding
+    self.title = EncodingManager.fix_encoding self.title
+    self.url = EncodingManager.fix_encoding self.url
+    self.fetch_url = EncodingManager.fix_encoding self.fetch_url
+  end
+
+  ##
   # Give default values to attributes:
   # - fetch_interval_secs defaults to 3600 seconds (1 hour)
   # - available defaults to true
@@ -219,16 +229,6 @@ class Feed < ActiveRecord::Base
     self.url = self.fetch_url if self.url.blank?
     self.fetch_interval_secs = 3600 if self.fetch_interval_secs.blank?
     self.available = true if self.available.nil?
-  end
-
-  ##
-  # Fix problems with encoding in text attributes.
-  # Specifically, convert from ISO-8859-1 to UTF-8 if necessary.
-
-  def fix_encoding
-    self.title = EncodingManager.fix_encoding self.title
-    self.url = EncodingManager.fix_encoding self.url
-    self.fetch_url = EncodingManager.fix_encoding self.fetch_url
   end
 
   ##
@@ -244,16 +244,24 @@ class Feed < ActiveRecord::Base
     config = Feedbunch::Application.config.restricted_sanitizer
 
     self.title = Sanitize.fragment(self.title, config).try :strip
+
     # Unescape HTML entities in the URL escaped by the sanitizer
     self.fetch_url = CGI.unescapeHTML(Sanitize.fragment(self.fetch_url, config).try :strip)
     self.url = CGI.unescapeHTML(Sanitize.fragment(self.url, config).try :strip)
 
+    # URLs must be valid http or https
     if self.fetch_url_was.present? && (self.fetch_url =~ URI::regexp(%w{http https})).nil?
       self.fetch_url = self.fetch_url_was
     end
 
     if self.url_was.present? && (self.url =~ URI::regexp(%w{http https})).nil?
       self.url = self.url_was
+    end
+
+    # Title must not become blank because of sanitization
+    if self.title.blank? && self.title_was.present?
+      Rails.logger.debug "Feed #{id} title '#{title_was}' would have become blank because of sanitization. Keeping the old value instead."
+      self.title = self.title_was
     end
   end
 
