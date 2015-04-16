@@ -9,7 +9,7 @@ redis_conn = proc {
 # Redis server location
 Sidekiq.configure_server do |config|
   # Server needs (concurrency + 2) redis connections
-  config.redis = ConnectionPool.new size: 5, &redis_conn
+  config.redis = ConnectionPool.new size: 12, &redis_conn
 end
 
 Sidekiq.configure_client do |config|
