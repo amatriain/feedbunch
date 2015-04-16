@@ -67,10 +67,12 @@ describe EntryState, type: :model do
       user = FactoryGirl.create :user
       user.subscribe feed.fetch_url
 
+      # Just after EntryState is created, default published value is the same as that of its Entry
       expect(EntryState.where(entry_id: entry.id, user_id: user.id).first.published).to eq entry.reload.published
 
-      # TODO try to change EntryState instance published attribute, check that it is automatically
-      # reset to the Entry published value.
+      # Even if other code tries to change the EntryState published value, it still has the same value as the Entry
+      EntryState.where(entry_id: entry.id, user_id: user.id).first.update published: Time.zone.now - 10.years
+      expect(EntryState.where(entry_id: entry.id, user_id: user.id).first.published).to eq entry.reload.published
     end
   end
 end
