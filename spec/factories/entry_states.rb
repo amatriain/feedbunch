@@ -5,6 +5,7 @@ FactoryGirl.define do
     read false
     user
     entry
+    published Time.zone.now
 
     factory :entry_read do
       read true
