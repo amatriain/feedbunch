@@ -29,5 +29,7 @@ class EntryState < ActiveRecord::Base
   belongs_to :entry
   validates :entry_id, presence: true, uniqueness: {scope: :user_id}
 
+  validates :published, presence: true
+
   validates :read, inclusion: {in: [true, false]}
 end

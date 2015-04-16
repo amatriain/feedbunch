@@ -57,4 +57,20 @@ describe EntryState, type: :model do
       expect(EntryState.exists?(entry_id: entry2.id, user_id: user.id)).to be true
     end
   end
+
+  context 'default values' do
+
+    it 'sets published attribute to the entry published date' do
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+
+      expect(EntryState.where(entry_id: entry.id, user_id: user.id).first.published).to eq entry.published
+
+      # TODO try to change EntryState instance published attribute, check that it is automatically
+      # reset to the Entry published value.
+    end
+  end
 end
