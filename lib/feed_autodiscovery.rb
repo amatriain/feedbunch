@@ -77,8 +77,12 @@ class FeedAutodiscovery
   # Returns the URL converted to absolute, if it was relative, or unchanged if it already was absolute
 
   def self.relative_to_absolute_url(url, feed)
-    normalized_url = Addressable::URI.parse(url).normalize
+    normalized_url = url.strip
+    normalized_url = Addressable::URI.parse(normalized_url).normalize
     if normalized_url.host.blank?
+      # Path must begin with a '/'
+      normalized_url.path = "/#{normalized_url.path}" if normalized_url.path[0] != '/'
+
       url_webpage = Addressable::URI.parse feed.fetch_url
       normalized_url.scheme = url_webpage.scheme
       normalized_url.host = url_webpage.host
