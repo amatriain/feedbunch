@@ -14,6 +14,8 @@
 # - read: boolean. Mandatory. Indicates whether a user has read an entry or not.
 # - user_id: integer. Mandatory. ID of the user who has read/unread the entry.
 # - entry_id; integer. Mandatory. ID of the feed entry which is read/unread.
+# - published: datetime when the entry was published. This has the same value as the "published" attribute of the
+# corresponding Entry instance, it is copied to this model to denormalize the database and get faster queries.
 #
 # New entries start in the unread state for all subscribed users when a feed is fetched. As a user reads entries,
 # they are automatically marked as read unless he manually changes their state. By default, only unread entries
