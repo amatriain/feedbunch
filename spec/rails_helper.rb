@@ -5,6 +5,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
+require 'rspec/retry'
 
 # For acceptance testing
 require 'capybara/rails'
@@ -58,6 +59,14 @@ RSpec.configure do |config|
       end
     end
   }
+
+  # Retry failed tests, show retry status in the output
+  config.verbose_retry = true
+  if Rails.env == 'ci'
+    config.default_retry_count = 3
+  else
+    config.default_retry_count = 1
+  end
 
   # To test controllers protected by Devise authentication
   config.include Devise::TestHelpers, :type => :controller
