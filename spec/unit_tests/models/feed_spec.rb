@@ -55,10 +55,10 @@ describe Feed, type: :model do
     end
 
     it 'does not accept an empty title' do
-      @feed.title = ''
-      expect(@feed.valid?).to be false
-      @feed.title = nil
-      expect(@feed.valid?).to be false
+      feed = FactoryGirl.build :feed, title: ''
+      expect(feed.valid?).to be false
+      feed.title = nil
+      expect(feed.valid?).to be false
     end
 
   end
