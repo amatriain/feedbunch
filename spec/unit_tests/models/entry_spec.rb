@@ -34,6 +34,12 @@ describe Entry, type: :model do
       expect(entry.url).to eq "http://#{host}#{relative_url}"
     end
 
+    it 'requires a published datetime' do
+      entry = FactoryGirl.build :entry, published: nil
+      entry.save!
+      expect(entry.published).not_to be nil
+    end
+
     it 'does not accept duplicate guids for the same feed' do
       entry_dupe = FactoryGirl.build :entry, guid: @entry.guid, feed_id: @entry.feed.id
       expect(entry_dupe).not_to be_valid
