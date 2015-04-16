@@ -11,17 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150416171302) do
+ActiveRecord::Schema.define(version: 20150416222532) do
 
   create_table "active_admin_comments", force: :cascade do |t|
-    t.string   "namespace"
+    t.string   "namespace",     limit: 255
     t.text     "body"
-    t.string   "resource_id",   null: false
-    t.string   "resource_type", null: false
+    t.string   "resource_id",   limit: 255, null: false
+    t.string   "resource_type", limit: 255, null: false
     t.integer  "author_id"
-    t.string   "author_type"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.string   "author_type",   limit: 255
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 20150416171302) do
 
   add_index "entry_states", ["entry_id", "user_id"], name: "index_entry_states_on_entry_id_user_id"
   add_index "entry_states", ["entry_id"], name: "index_entry_states_on_entry_id"
+  add_index "entry_states", ["published", "entry_id"], name: "index_entry_states_on_order_fields"
   add_index "entry_states", ["read", "user_id"], name: "index_entry_states_on_read_user_id"
   add_index "entry_states", ["user_id"], name: "index_entry_states_on_user_id"
 
@@ -176,52 +177,52 @@ ActiveRecord::Schema.define(version: 20150416171302) do
   add_index "subscribe_job_states", ["user_id"], name: "index_subscribe_job_states_on_user_id"
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                        default: "",    null: false
-    t.string   "encrypted_password",           default: ""
-    t.string   "reset_password_token"
+    t.string   "email",                        limit: 255, default: "",    null: false
+    t.string   "encrypted_password",           limit: 255, default: ""
+    t.string   "reset_password_token",         limit: 255
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                default: 0
+    t.integer  "sign_in_count",                            default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.string   "confirmation_token"
+    t.string   "current_sign_in_ip",           limit: 255
+    t.string   "last_sign_in_ip",              limit: 255
+    t.string   "confirmation_token",           limit: 255
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email"
-    t.integer  "failed_attempts",              default: 0
-    t.string   "unlock_token"
+    t.string   "unconfirmed_email",            limit: 255
+    t.integer  "failed_attempts",                          default: 0
+    t.string   "unlock_token",                 limit: 255
     t.datetime "locked_at"
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
-    t.boolean  "admin",                        default: false, null: false
-    t.text     "locale",                                       null: false
-    t.text     "timezone",                                     null: false
-    t.boolean  "quick_reading",                default: false, null: false
-    t.boolean  "open_all_entries",             default: false, null: false
-    t.text     "name",                                         null: false
-    t.string   "invitation_token"
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
+    t.boolean  "admin",                                    default: false, null: false
+    t.text     "locale",                                                   null: false
+    t.text     "timezone",                                                 null: false
+    t.boolean  "quick_reading",                            default: false, null: false
+    t.boolean  "open_all_entries",                         default: false, null: false
+    t.text     "name",                                                     null: false
+    t.string   "invitation_token",             limit: 255
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
-    t.string   "invited_by_type"
-    t.integer  "invitations_count",            default: 0
-    t.string   "unencrypted_invitation_token"
+    t.string   "invited_by_type",              limit: 255
+    t.integer  "invitations_count",                        default: 0
+    t.string   "unencrypted_invitation_token", limit: 255
     t.datetime "invitations_count_reset_at"
-    t.boolean  "show_main_tour",               default: true,  null: false
-    t.boolean  "show_mobile_tour",             default: true,  null: false
-    t.boolean  "show_feed_tour",               default: true,  null: false
-    t.boolean  "show_entry_tour",              default: true,  null: false
+    t.boolean  "show_main_tour",                           default: true,  null: false
+    t.boolean  "show_mobile_tour",                         default: true,  null: false
+    t.boolean  "show_feed_tour",                           default: true,  null: false
+    t.boolean  "show_entry_tour",                          default: true,  null: false
     t.datetime "subscriptions_updated_at"
     t.datetime "folders_updated_at"
     t.datetime "subscribe_jobs_updated_at"
     t.datetime "refresh_feed_jobs_updated_at"
     t.datetime "config_updated_at"
     t.datetime "user_data_updated_at"
-    t.boolean  "free",                         default: false, null: false
+    t.boolean  "free",                                     default: false, null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
