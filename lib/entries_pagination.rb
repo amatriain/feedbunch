@@ -90,12 +90,12 @@ class EntriesPagination
     if page.present?
       entries = Entry.joins(:entry_states, :feed)
                       .where(entry_states: {read: false, user_id: user.id}, feeds: {id: feed.id})
-                      .order('published desc, created_at desc, id desc')
+                      .order('entry_states.published desc, entry_states.entry_id desc')
                       .page page
     else
       entries = Entry.joins(:entry_states, :feed)
                       .where(entry_states: {read: false, user_id: user.id}, feeds: {id: feed.id})
-                      .order 'published desc, created_at desc, id desc'
+                      .order 'entry_states.published desc, entry_states.entry_id desc'
     end
     return entries
   end
@@ -115,12 +115,12 @@ class EntriesPagination
     if page.present?
       entries = Entry.joins(:entry_states, feed: :folders)
                       .where(entry_states: {read: false, user_id: user.id}, folders: {id: folder.id})
-                      .order('published desc, created_at desc, id desc')
+                      .order('entry_states.published desc, entry_states.entry_id desc')
                       .page page
     else
       entries = Entry.joins(:entry_states, feed: :folders)
                       .where(entry_states: {read: false, user_id: user.id}, folders: {id: folder.id})
-                      .order 'published desc, created_at desc, id desc'
+                      .order 'entry_states.published desc, entry_states.entry_id desc'
     end
     return entries
   end
@@ -139,12 +139,12 @@ class EntriesPagination
     if page.present?
       entries = Entry.joins(:entry_states)
                     .where(entry_states: {read: false, user_id: user.id})
-                    .order('published desc, created_at desc, id desc')
+                    .order('entry_states.published desc, entry_states.entry_id desc')
                     .page page
     else
       entries = Entry.joins(:entry_states)
                     .where(entry_states: {read: false, user_id: user.id})
-                    .order 'published desc, created_at desc, id desc'
+                    .order 'entry_states.published desc, entry_states.entry_id desc'
     end
     return entries
   end
