@@ -32,4 +32,17 @@ class EntryState < ActiveRecord::Base
   validates :published, presence: true
 
   validates :read, inclusion: {in: [true, false]}
+
+  before_validation :fixed_published_value
+
+  private
+
+  ##
+  # The published attribute always has the same value as the corresponding attribute in the associated Entry instance.
+  # This is just a db denormalization to speed up queries.
+  # No other value can be set, every time the EntryState instance is saved the published attribute is reset to this value.
+
+  def fixed_published_value
+    self.published = self.entry.published if self.entry.present?
+  end
 end

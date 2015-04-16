@@ -67,7 +67,7 @@ describe EntryState, type: :model do
       user = FactoryGirl.create :user
       user.subscribe feed.fetch_url
 
-      expect(EntryState.where(entry_id: entry.id, user_id: user.id).first.published).to eq entry.published
+      expect(EntryState.where(entry_id: entry.id, user_id: user.id).first.published).to eq entry.reload.published
 
       # TODO try to change EntryState instance published attribute, check that it is automatically
       # reset to the Entry published value.

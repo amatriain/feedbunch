@@ -239,7 +239,7 @@ class Entry < ActiveRecord::Base
   def set_unread_state
     self.feed.users(true).each do |user|
       if !EntryState.exists? user_id: user.id, entry_id: self.id
-        entry_state = user.entry_states.create entry_id: self.id, read: false
+        entry_state = user.entry_states.create! entry_id: self.id, read: false
       end
     end
   end

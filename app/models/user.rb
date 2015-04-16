@@ -500,7 +500,7 @@ class User < ActiveRecord::Base
     feed = feed_subscription.feed
     feed.entries.each do |entry|
       if !EntryState.exists? user_id: self.id, entry_id: entry.id
-        entry_state = self.entry_states.create entry_id: entry.id, read: false
+        entry_state = self.entry_states.create! entry_id: entry.id, read: false
       end
     end
   end
