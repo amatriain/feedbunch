@@ -6,6 +6,7 @@ FactoryGirl.define do
     user
     entry
     published Time.zone.now
+    entry_created_at Time.zone.now
 
     factory :entry_read do
       read true

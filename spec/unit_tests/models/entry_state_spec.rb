@@ -74,5 +74,20 @@ describe EntryState, type: :model do
       EntryState.where(entry_id: entry.id, user_id: user.id).first.update published: Time.zone.now - 10.years
       expect(EntryState.where(entry_id: entry.id, user_id: user.id).first.published).to eq entry.reload.published
     end
+
+    it 'sets entry_created_at attribute to the entry created_at date' do
+      feed = FactoryGirl.create :feed
+      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed.entries << entry
+      user = FactoryGirl.create :user
+      user.subscribe feed.fetch_url
+
+      # Just after EntryState is created, default entry_created_at value is the same as that of its Entry
+      expect(EntryState.where(entry_id: entry.id, user_id: user.id).first.entry_created_at).to eq entry.reload.created_at
+
+      # Even if other code tries to change the EntryState entry_created_at value, it still has the same value as the Entry
+      EntryState.where(entry_id: entry.id, user_id: user.id).first.update entry_created_at: Time.zone.now - 10.years
+      expect(EntryState.where(entry_id: entry.id, user_id: user.id).first.entry_created_at).to eq entry.reload.created_at
+    end
   end
 end
