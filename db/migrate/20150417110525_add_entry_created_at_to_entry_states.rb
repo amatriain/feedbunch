@@ -2,7 +2,7 @@ class AddEntryCreatedAtToEntryStates < ActiveRecord::Migration
   def up
     add_column :entry_states, :entry_created_at, :datetime, null: true
 
-    EntryState.all.each do |es|
+    EntryState.all.find_each do |es|
       es.update entry_created_at: es.entry.created_at
     end
 

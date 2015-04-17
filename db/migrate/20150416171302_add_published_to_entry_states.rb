@@ -2,7 +2,7 @@ class AddPublishedToEntryStates < ActiveRecord::Migration
   def up
     add_column :entry_states, :published, :datetime, null: true
 
-    EntryState.all.each do |es|
+    EntryState.all.find_each do |es|
       es.update published: es.entry.published
     end
 
