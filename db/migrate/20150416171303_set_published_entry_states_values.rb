@@ -1,4 +1,4 @@
-class AddPublishedToEntryStates < ActiveRecord::Migration
+class SetPublishedEntryStatesValues < ActiveRecord::Migration
   def up
     EntryState.all.find_each do |es|
       es.update published: es.entry.published

@@ -1,4 +1,4 @@
-class AddEntryCreatedAtToEntryStates < ActiveRecord::Migration
+class SetEntryCreatedAtEntryStatesValues < ActiveRecord::Migration
   def up
     EntryState.all.find_each do |es|
       es.update entry_created_at: es.entry.created_at
