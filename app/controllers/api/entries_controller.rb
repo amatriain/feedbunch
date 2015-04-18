@@ -113,7 +113,7 @@ class Api::EntriesController < ApplicationController
   def index_entries
     if @entries.present?
       @user = current_user
-      respond_with @entries, @user
+      respond_with @entries, @user, @include_read
     else
       Rails.logger.info "No entries found for feed_id #{params[:feed_id]} / folder_id #{params[:folder_id]}, returning a 404"
       head status: 404

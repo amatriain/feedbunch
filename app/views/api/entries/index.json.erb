@@ -2,7 +2,12 @@
 <% first_entry = true %>
 <% @entries.each do |entry| %>
   <% begin %>
-    <% read = entry.read_by? @user %>
+    <%# If list doesn't include read entries, skip looking at the DB for the entry state, we already know it is unread. Better performance this way. %>
+    <% if @include_read %>
+      <% read = entry.read_by? @user %>
+    <% else %>
+      <% read = false %>
+    <% end %>
     <% if !first_entry %>
 ,
     <% end %>
