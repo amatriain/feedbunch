@@ -102,11 +102,7 @@ describe 'feed entries', type: :feature do
 
     # Regression test for bug #560
     it 'does not show entries for just unsubscribed feeds', js: true do
-      allow_any_instance_of(Entry).to receive(:read_by?) do |entry|
-        # An unsubscribe job is simultaneously running and entry states for @feed1 have just disappeared!
-        raise NotSubscribedError.new if entry.feed_id == @feed1.id
-        false
-      end
+      @user.unsubscribe @feed1
 
       read_folder @folder
       
