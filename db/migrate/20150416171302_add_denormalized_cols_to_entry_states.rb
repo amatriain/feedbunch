@@ -3,10 +3,8 @@ class AddDenormalizedColsToEntryStates < ActiveRecord::Migration
     add_column :entry_states, :published, :datetime, null: true
     add_column :entry_states, :entry_created_at, :datetime, null: true
 
-    EntryState.all.find_each do |es|
-      es.update published: es.entry.published,
-                entry_created_at: es.entry.created_at
-    end
+    execute 'update entry_states set published=(select published from entries where entries.id=entry_states.entry_id)'
+    execute 'update entry_states set entry_created_at=(select created_at from entries where entries.id=entry_states.entry_id)'
 
     # Set not null constraint after giving a published value to all columns, otherwise the database will respond with an error
     change_column_null :entry_states, :published, false, Time.zone.now
