@@ -235,7 +235,7 @@ GEM
       activerecord
     polyamorous (1.1.0)
       activerecord (>= 3.0)
-    puma (2.11.1)
+    puma (2.11.2)
       rack (>= 1.1, < 2.0)
     rack (1.6.0)
     rack-protection (1.5.3)
