@@ -211,7 +211,7 @@ GEM
       mime-types (>= 1.16, < 3)
     mime-types (2.4.3)
     mini_portile (0.6.2)
-    minitest (5.5.1)
+    minitest (5.6.0)
     mixlib-cli (1.5.0)
     multi_json (1.11.0)
     net-http-persistent (2.9.4)
@@ -231,7 +231,7 @@ GEM
     parallel_tests (0.15.0)
       parallel
     pg (0.18.1)
-    pghero (0.1.10)
+    pghero (1.0.1)
       activerecord
     polyamorous (1.1.0)
       activerecord (>= 3.0)
