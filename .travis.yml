@@ -5,7 +5,7 @@ cache: bundler
 sudo: false
 
 rvm:
-  - "ruby-2.2.1"
+  - "ruby-2.2.2"
 script:
   - "bundle exec brakeman -z"
   - "bundle exec rake db:schema:load"
