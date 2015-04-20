@@ -9,10 +9,10 @@ require 'uri'
 class S3Client
 
   ##
-  # Save a file in Amazon S3. Amazon API keys must be present in an aws_key.rb file.
+  # Save a file in Amazon S3. Amazon API keys must be present in an aws-sdk.rb file.
   # Accepts as arguments:
   # - the id of the user who is saving the file
-  # - the folder (under the bucket) in which the file will besaved
+  # - the folder (under the bucket) in which the file will be saved
   # - the filename
   # - the contents of the file.
   # File is saved in the "uploads" folder in the feedbunch-#{Rails.env} bucket.
@@ -20,13 +20,16 @@ class S3Client
   def self.save(user_id, folder, filename, content)
     key = self.key user_id, folder, filename
     Rails.logger.info "Uploading to S3 object with key #{key}"
-    s3_object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects.create key, content
+    s3 = Aws::S3::Resource.new
+    bucket = s3.bucket Feedbunch::Application.config.s3_bucket
+    obj = bucket.object key
+    obj.put body: content
     Rails.logger.debug "Succesfully uploaded to S3 object with key #{key}"
     return nil
   end
 
   ##
-  # Delete a file from Amazon S3. Amazon API keys must be present in an aws_key.rb file.
+  # Delete a file from Amazon S3. Amazon API keys must be present in an aws-sdk.rb file.
   # Accepts as arguments:
   # - the id of the user who is deleting the file
   # - the folder (under the bucket) in which the file is expected to be.
@@ -45,7 +48,7 @@ class S3Client
   end
 
   ##
-  # Read a file from Amazon S3. Amazon API keys must be present in an aws_key.rb file.
+  # Read a file from Amazon S3. Amazon API keys must be present in an aws-sdk.rb file.
   # Accepts as arguments:
   # - the id of the user who is reading the file
   # - the folder (under the bucket) in which the file is expected to be.
