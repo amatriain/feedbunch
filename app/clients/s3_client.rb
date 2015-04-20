@@ -22,8 +22,7 @@ class S3Client
     Rails.logger.info "Uploading to S3 object with key #{key}"
     s3 = Aws::S3::Resource.new
     bucket = s3.bucket Feedbunch::Application.config.s3_bucket
-    obj = bucket.object key
-    obj.put body: content
+    bucket.put_object key: key, body: content
     Rails.logger.debug "Succesfully uploaded to S3 object with key #{key}"
     return nil
   end
@@ -37,7 +36,9 @@ class S3Client
 
   def self.delete(user_id, folder, filename)
     key = self.key user_id, folder, filename
-    object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects[key]
+    s3 = Aws::S3::Resource.new
+    bucket = s3.bucket Feedbunch::Application.config.s3_bucket
+    object = bucket.object key
     if object.exists?
       Rails.logger.info "deleting S3 object with key #{key}"
       object.delete
@@ -58,10 +59,12 @@ class S3Client
 
   def self.read(user_id, folder, filename)
     key = self.key user_id, folder, filename
-    object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects[key]
+    s3 = Aws::S3::Resource.new
+    bucket = s3.bucket Feedbunch::Application.config.s3_bucket
+    object = bucket.object key
     if object.exists?
       Rails.logger.info "reading S3 object with key #{key}"
-      object_contents = object.read
+      object_contents = object.get.body.read
     else
       Rails.logger.error "trying to read non-existing S3 object with key #{key}"
     end
@@ -79,7 +82,9 @@ class S3Client
   def self.exists?(user_id, folder, filename)
     key = self.key user_id, folder, filename
     Rails.logger.info "checking if S3 object with key #{key} exists"
-    object = AWS::S3.new.buckets[Feedbunch::Application.config.s3_bucket].objects[key]
+    s3 = Aws::S3::Resource.new
+    bucket = s3.bucket Feedbunch::Application.config.s3_bucket
+    object = bucket.object key
     exists = object.exists?
     if exists
       Rails.logger.info "S3 object with key #{key} exists"
