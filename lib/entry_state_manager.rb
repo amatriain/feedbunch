@@ -73,7 +73,7 @@ class EntryStateManager
       update_all read: read
 
     # Update unread entries count for the feed
-    UpdateFeedUnreadCountWorker.perform_async entry.feed_id, user.id
+    SubscriptionsManager.recalculate_unread_count entry.feed, user
   end
 
   ##
@@ -95,7 +95,7 @@ class EntryStateManager
 
     # Update unread entries count for the feeds
     folder.feeds.each do |f|
-      UpdateFeedUnreadCountWorker.perform_async f.id, user.id
+      SubscriptionsManager.recalculate_unread_count f, user
     end
   end
 
@@ -116,7 +116,7 @@ class EntryStateManager
 
     # Update unread entries count for the feeds
     user.feeds.each do |f|
-      UpdateFeedUnreadCountWorker.perform_async f.id, user.id
+      SubscriptionsManager.recalculate_unread_count f, user
     end
   end
 end
