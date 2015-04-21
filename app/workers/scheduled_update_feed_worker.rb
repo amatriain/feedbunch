@@ -105,7 +105,7 @@ class ScheduledUpdateFeedWorker
     if feed.present? && feed.try(:available)
       # Update timestamp of the last time the feed was fetched
       Rails.logger.debug "Updating time of last update for feed #{feed.id} - #{feed.title}"
-      feed.update! last_fetched: Time.zone.now
+      feed.reload.update! last_fetched: Time.zone.now
 
       if entries_after > entries_before
         # If new entries have been fetched, decrement the fetch interval
