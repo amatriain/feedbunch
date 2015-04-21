@@ -6,7 +6,7 @@
 class RefreshFeedWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: :update_feeds
+  sidekiq_options queue: :interactive
 
   ##
   # Fetch and update entries for a feed, as requested by a user.
