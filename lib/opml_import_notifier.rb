@@ -24,12 +24,6 @@ class OPMLImportNotifier
 
   def self.notify_error(user, error=nil)
     # If an exception is raised, set the import process state to ERROR
-    Rails.logger.info "OPML import for user #{user.try :id} - #{user.try :email} finished with an error"
-    if error.present?
-      Rails.logger.error error.message
-      Rails.logger.error error.backtrace
-    end
-
     if user.present?
       user.create_opml_import_job_state if user.opml_import_job_state.blank?
       user.opml_import_job_state.update state: OpmlImportJobState::ERROR
@@ -37,8 +31,14 @@ class OPMLImportNotifier
       OpmlImportMailer.import_finished_error_email(user).deliver_now
     end
 
-    # Re-raise the exception so that Sidekiq takes care of it
-    raise error
+    Rails.logger.info "OPML import for user #{user.try :id} - #{user.try :email} finished with an error"
+    if error.present?
+      Rails.logger.error error.message
+      Rails.logger.error error.backtrace
+      # Re-raise the exception so that Sidekiq takes care of it,
+      # unless it is a known controlled error (e.g. user uploaded a non-xml file).
+      raise error unless error.is_a? Nokogiri::XML::SyntaxError
+    end
   end
 
 end
