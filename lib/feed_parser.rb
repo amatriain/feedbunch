@@ -25,6 +25,8 @@ class FeedParser
     # Preserve xhtml markup in entries
     Feedjira::Parser::Atom.preprocess_xml = true
     Feedjira::Parser::AtomFeedBurner.preprocess_xml = true
+    # Use Ox for SAX parsing
+    SAXMachine.handler = :ox
     feed_parsed = Feedjira::Feed.parse feed_response
     Rails.logger.info "Correctly parsed feed from url #{feed.fetch_url}"
 
