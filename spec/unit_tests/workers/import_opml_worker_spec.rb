@@ -41,7 +41,8 @@ describe ImportOpmlWorker do
       not_valid_xml_filename = File.join __dir__, '..', '..', 'attachments', 'not-well-formed-xml.opml'
       file_contents = File.read not_valid_xml_filename
       allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return file_contents
-      expect {ImportOpmlWorker.new.perform not_valid_xml_filename, @user.id}.to raise_error Nokogiri::XML::SyntaxError
+      # a malformed XML uploaded by the user is an expected and controlled error, no error will be raised to Sidekiq
+      expect {ImportOpmlWorker.new.perform not_valid_xml_filename, @user.id}.not_to raise_error
       @user.reload
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
     end
