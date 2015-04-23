@@ -12,20 +12,22 @@ class SignupsManager
 
   def self.send_confirmation_reminders
     signups_older_than = Time.zone.now - Feedbunch::Application.config.first_confirmation_reminder_after
-    Rails.logger.info "Sending confirmation reminder to unconfirmed users signed up before #{signups_older_than}"
+    Rails.logger.info "Sending first confirmation reminder to unconfirmed users signed up before #{signups_older_than}"
 
     old_unconfirmed_signups = User.
-        where 'confirmed_at is null AND confirmation_sent_at < ?',
-              signups_older_than
+        where "confirmed_at is null AND confirmation_sent_at < ? AND first_confirmation_reminder_sent = ?",
+              signups_older_than, false
 
     if old_unconfirmed_signups.empty?
-      Rails.logger.info 'No old unconfirmed signups need to be sent a reminder'
+      Rails.logger.info 'No old unconfirmed signups need to be sent a first reminder'
       return
     end
-    Rails.logger.info "Sending #{old_unconfirmed_signups.count} reminders to old unconfirmed signups"
+    Rails.logger.info "Sending #{old_unconfirmed_signups.count} first reminders to old unconfirmed signups"
 
     old_unconfirmed_signups.find_each do |user|
+      Rails.logger.info "Sending first reminder to #{user.id} - #{user.email}"
       SignupConfirmationReminderMailer.reminder_email(user).deliver_now
+      user.update first_confirmation_reminder_sent: true
     end
   end
 

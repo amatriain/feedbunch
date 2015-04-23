@@ -422,4 +422,14 @@ describe User, type: :model do
     end
   end
 
+  context 'first_confirmation_reminder_sent defaults' do
+
+    it 'gives a default value of false' do
+      user = FactoryGirl.build :user, first_confirmation_reminder_sent: nil
+      user.save!
+      expect(user.reload.first_confirmation_reminder_sent).not_to be_nil
+      expect(user.first_confirmation_reminder_sent).to be false
+    end
+  end
+
 end

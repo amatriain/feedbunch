@@ -165,7 +165,6 @@ describe CleanupSignupsWorker do
     end
 
     it 'does not send this reminder a second time' do
-      pending
       time_signup = @time_first_confirmation_reminder - 1.hour
       # signup is 1 hour older than the interval to be considered for sending a reminder
       @user.update confirmation_sent_at: time_signup
