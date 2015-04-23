@@ -94,9 +94,9 @@ require 'etag_calculator'
 # updated every time one of these happens:
 #   - user subscribes to a new feed
 #   - user unsubscribes from a feed
-# - first_confirmation_reminder_sent: boolean that indicates if the first confirmation reminder email has been sent to a user.
-# This happens when a user signs up but never clicks on the link in the confirmation email. The first confirmation reminder
-# will be sent just once.
+# - first_confirmation_reminder_sent, first_confirmation_reminder_sent: booleans that indicates if the first and second
+# confirmation reminder emails have been sent to a user. This happens when a user signs up but never clicks on the link
+# in the confirmation email. Each of the two confirmation reminders will be sent just once.
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -143,6 +143,7 @@ class User < ActiveRecord::Base
   validates :open_all_entries, inclusion: {in: [true, false]}
   validates :show_main_tour, inclusion: {in: [true, false]}
   validates :first_confirmation_reminder_sent, inclusion: {in: [true, false]}
+  validates :second_confirmation_reminder_sent, inclusion: {in: [true, false]}
 
   before_save :before_save_user
   after_save :after_save_user
@@ -396,7 +397,7 @@ class User < ActiveRecord::Base
   # - name: defaults to the value of the "email" attribute
   # - invitation_limit: the value configured in Feedbunch::Application.config.daily_invitations_limit (in config/application.rb)
   # - subscriptions_updated_at: current date/time
-  # - first_confirmation_reminder_sent: false
+  # - first_confirmation_reminder_sent, second_confirmation_reminder_sent: false
 
   def default_values
     # Convert the symbols for the available locales to strings, to be able to compare with the user locale
@@ -500,6 +501,11 @@ class User < ActiveRecord::Base
     if self.first_confirmation_reminder_sent == nil
       Rails.logger.info "User #{self.email} has unsupported first_confirmation_reminder_sent #{self.first_confirmation_reminder_sent}. Defaulting to 'false' instead"
       self.first_confirmation_reminder_sent = false
+    end
+
+    if self.second_confirmation_reminder_sent == nil
+      Rails.logger.info "User #{self.email} has unsupported second_confirmation_reminder_sent #{self.second_confirmation_reminder_sent}. Defaulting to 'false' instead"
+      self.second_confirmation_reminder_sent = false
     end
 
     return true

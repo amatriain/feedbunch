@@ -134,74 +134,152 @@ describe CleanupSignupsWorker do
     end
   end
 
-  context 'first reminder email' do
+  context 'confirmation reminder emails' do
 
-    before :each do
-      first_confirmation_reminder_after = Feedbunch::Application.config.first_confirmation_reminder_after
-      # Unconfirmed signups from before this time will be sent a reminder email
-      @time_first_confirmation_reminder = @time_now - first_confirmation_reminder_after
+    context 'first reminder email' do
+
+      before :each do
+        first_confirmation_reminder_after = Feedbunch::Application.config.first_confirmation_reminder_after
+        # Unconfirmed signups from before this time will be sent a reminder email
+        @time_first_confirmation_reminder = @time_now - first_confirmation_reminder_after
+      end
+
+      it 'sends reminder to old unconfirmed signups' do
+        time_signup = @time_first_confirmation_reminder - 1.hour
+        # signup is 1 hour older than the interval to be considered for sending a reminder
+        @user.update confirmation_sent_at: time_signup
+        expect(@user.reload.first_confirmation_reminder_sent).to be false
+
+        CleanupSignupsWorker.new.perform
+
+        mail_should_be_sent 'Remember to confirm your email address', path: '/resend_confirmation', to: @user.email
+        expect(@user.reload.first_confirmation_reminder_sent).to be true
+      end
+
+      it 'does not send reminder to newer signups' do
+        time_signup = @time_first_confirmation_reminder + 1.hour
+        # signup is 1 hour newer than the interval to be considered for sending a reminder
+        @user.update confirmation_sent_at: time_signup
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+
+        CleanupSignupsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
+
+      it 'does not send this reminder a second time' do
+        time_signup = @time_first_confirmation_reminder - 1.hour
+        # signup is 1 hour older than the interval to be considered for sending a reminder
+        @user.update confirmation_sent_at: time_signup
+
+        CleanupSignupsWorker.new.perform
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+        CleanupSignupsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
+
+      it 'does not send reminder to confirmed users' do
+        time_signup = @time_first_confirmation_reminder - 1.hour
+        # signup is 1 hour older than the interval to be considered for sending a reminder
+        @user.update confirmation_sent_at: time_signup, confirmed_at: Time.zone.now
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+
+        CleanupSignupsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
+
+      it 'does not send reminder to invited users' do
+        time_signup = @time_first_confirmation_reminder - 1.hour
+        # signup is 1 hour older than the interval to be considered for sending a reminder
+        @user.update confirmation_sent_at: time_signup,
+                     invitation_sent_at: Time.zone.now - 1.hour
+
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+
+        CleanupSignupsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
     end
 
-    it 'sends reminder to old unconfirmed signups' do
-      time_signup = @time_first_confirmation_reminder - 1.hour
-      # signup is 1 hour older than the interval to be considered for sending a reminder
-      @user.update confirmation_sent_at: time_signup
+    context 'second reminder email' do
 
-      CleanupSignupsWorker.new.perform
+      before :each do
+        second_confirmation_reminder_after = Feedbunch::Application.config.second_confirmation_reminder_after
+        # Unconfirmed signups from before this time will be sent a reminder email
+        @time_second_confirmation_reminder = @time_now - second_confirmation_reminder_after
+        # User has already been sent the first reminder, we're testing the second reminder here
+        @user.update first_confirmation_reminder_sent: true
+      end
 
-      mail_should_be_sent 'Remember to confirm your email address', path: '/resend_confirmation', to: @user.email
-    end
+      it 'sends reminder to old unconfirmed signups' do
+        time_signup = @time_second_confirmation_reminder - 1.hour
+        # signup is 1 hour older than the interval to be considered for sending a reminder
+        @user.update confirmation_sent_at: time_signup
+        expect(@user.reload.second_confirmation_reminder_sent).to be false
 
-    it 'does not send reminder to newer signups' do
-      time_signup = @time_first_confirmation_reminder + 1.hour
-      # signup is 1 hour newer than the interval to be considered for sending a reminder
-      @user.update confirmation_sent_at: time_signup
-      # Clear the email delivery queue
-      ActionMailer::Base.deliveries.clear
+        CleanupSignupsWorker.new.perform
 
-      CleanupSignupsWorker.new.perform
+        mail_should_be_sent 'Remember to confirm your email address', path: '/resend_confirmation', to: @user.email
+        expect(@user.reload.second_confirmation_reminder_sent).to be true
+      end
 
-      mail_should_not_be_sent
-    end
+      it 'does not send reminder to newer signups' do
+        time_signup = @time_second_confirmation_reminder + 1.hour
+        # signup is 1 hour newer than the interval to be considered for sending a reminder
+        @user.update confirmation_sent_at: time_signup
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
 
-    it 'does not send this reminder a second time' do
-      time_signup = @time_first_confirmation_reminder - 1.hour
-      # signup is 1 hour older than the interval to be considered for sending a reminder
-      @user.update confirmation_sent_at: time_signup
+        CleanupSignupsWorker.new.perform
 
-      CleanupSignupsWorker.new.perform
-      # Clear the email delivery queue
-      ActionMailer::Base.deliveries.clear
-      CleanupSignupsWorker.new.perform
+        mail_should_not_be_sent
+      end
 
-      mail_should_not_be_sent
-    end
+      it 'does not send this reminder a second time' do
+        time_signup = @time_second_confirmation_reminder - 1.hour
+        # signup is 1 hour older than the interval to be considered for sending a reminder
+        @user.update confirmation_sent_at: time_signup
 
-    it 'does not send reminder to confirmed users' do
-      time_signup = @time_first_confirmation_reminder - 1.hour
-      # signup is 1 hour older than the interval to be considered for sending a reminder
-      @user.update confirmation_sent_at: time_signup, confirmed_at: Time.zone.now
-      # Clear the email delivery queue
-      ActionMailer::Base.deliveries.clear
+        CleanupSignupsWorker.new.perform
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+        CleanupSignupsWorker.new.perform
 
-      CleanupSignupsWorker.new.perform
+        mail_should_not_be_sent
+      end
 
-      mail_should_not_be_sent
-    end
+      it 'does not send reminder to confirmed users' do
+        time_signup = @time_second_confirmation_reminder - 1.hour
+        # signup is 1 hour older than the interval to be considered for sending a reminder
+        @user.update confirmation_sent_at: time_signup, confirmed_at: Time.zone.now
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
 
-    it 'does not send reminder to invited users' do
-      time_signup = @time_first_confirmation_reminder - 1.hour
-      # signup is 1 hour older than the interval to be considered for sending a reminder
-      @user.update confirmation_sent_at: time_signup,
-                   invitation_sent_at: Time.zone.now - 1.hour
+        CleanupSignupsWorker.new.perform
 
-      # Clear the email delivery queue
-      ActionMailer::Base.deliveries.clear
+        mail_should_not_be_sent
+      end
 
-      CleanupSignupsWorker.new.perform
+      it 'does not send reminder to invited users' do
+        time_signup = @time_second_confirmation_reminder - 1.hour
+        # signup is 1 hour older than the interval to be considered for sending a reminder
+        @user.update confirmation_sent_at: time_signup,
+                     invitation_sent_at: Time.zone.now - 1.hour
 
-      mail_should_not_be_sent
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+
+        CleanupSignupsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
     end
   end
-
 end
