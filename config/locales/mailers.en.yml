@@ -36,10 +36,10 @@ en:
       body_3: "If the error persists, please contact us at %{admin_email}"
   signup_confirmation_reminder_mailer:
     reminder_email:
-      subject: "Remember to confirm your email address to enter Feedbunch"
-      header: "Remember to confirm your email address to enter Feedbunch"
-      body_1_html: "On %{date} you signed up at <a href='https://www.feedbunch.com'>Feedbunch</a> using the <em>%{email}</em> email address. However you still haven't confirmed your email address."
-      body_2: "When you signed up we sent you an email with a confirmation link; please click on it to confirm you address. You won't be able to access your account until you do it."
-      body_3_html: "If you didn't receive the confirmation link, <a href='%{url}'>click here</a> and enter your email address and we will send it again."
+      subject: "Please confirm your email address to access Feedbunch"
+      header: "Please confirm your email address to access Feedbunch"
+      body_1_html: "On %{date} you signed up at <a href='https://www.feedbunch.com'>Feedbunch</a> using the email address <strong>%{email}</strong>. However you still haven't confirmed this email address."
+      body_2: "When you signed up we sent you an email with a confirmation link; please click on that link to confirm you address. You won't be able to access your account until you do it."
+      body_3_html: "If you didn't receive the confirmation link, <strong><a href='%{url}'>click here</a></strong> and enter your email address and we will send it again."
       body_4: "Also please check your spam folder and adjust your email filters so that our emails appear in your inbox."
       body_5: "We are waiting for you at Feedbunch, the simple and elegant feed reader."

@@ -152,7 +152,7 @@ describe CleanupSignupsWorker do
 
         CleanupSignupsWorker.new.perform
 
-        mail_should_be_sent 'Remember to confirm your email address', path: '/resend_confirmation', to: @user.email
+        mail_should_be_sent 'Please confirm your email address', path: '/resend_confirmation', to: @user.email
         expect(@user.reload.first_confirmation_reminder_sent).to be true
       end
 
@@ -226,7 +226,7 @@ describe CleanupSignupsWorker do
 
         CleanupSignupsWorker.new.perform
 
-        mail_should_be_sent 'Remember to confirm your email address', path: '/resend_confirmation', to: @user.email
+        mail_should_be_sent 'Please confirm your email address', path: '/resend_confirmation', to: @user.email
         expect(@user.reload.second_confirmation_reminder_sent).to be true
       end
 

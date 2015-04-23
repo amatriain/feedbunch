@@ -6,13 +6,15 @@
 <body>
 <h1><%= t 'signup_confirmation_reminder_mailer.reminder_email.header' %></h1>
 <p>
-  <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_1_html', date: @user.created_at, email: @user.email %>
+  <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_1_html',
+        date: I18n.localize(@user.created_at.in_time_zone(ActiveSupport::TimeZone[@user.timezone]), format: :short),
+        email: @user.email %>
 </p>
 <p>
   <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_2' %>
 </p>
 <p>
-  <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_3_html', url: new_user_confirmation_path %>
+  <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_3_html', url: new_user_confirmation_url(locale: @user.locale) %>
 </p>
 <p>
   <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_4' %>
