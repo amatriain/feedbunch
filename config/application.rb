@@ -106,5 +106,8 @@ module Feedbunch
 
     # Interval after which an unconfirmed signup will be discarded
     config.discard_unconfirmed_signups_after = 1.month
+    # Intervals to send reminders to unconfirmed users
+    config.first_confirmation_reminder_after = 1.day
+    config.second_confirmation_reminder_after = 1.week
   end
 end

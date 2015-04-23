@@ -33,3 +33,12 @@ es:
       body_2_html: "Puede que se trate de un error transitorio. Por favor espera unos minutos y %{link} para volver a intentarlo."
       try_again_link: "ve a Feedbunch"
       body_3: "Si el error persiste, por favor contacta con nosotros en %{admin_email}"
+  signup_confirmation_reminder_mailer:
+    reminder_email:
+      subject: "Recuerda confirmar tu dirección de correo electrónico para entrar en Feedbunch"
+      header: "Recuerda confirmar tu dirección de correo electrónico para entrar en Feedbunch"
+      body_1_html: "El %{date} te diste de alta en <a href='https://www.feedbunch.com'>Feedbunch</a> usando la dirección de correo electrónico <em>%{email}</em>. No obstante aún no has confirmado tu dirección de correo electrónico."
+      body_2: "Cuando te diste de alta te enviamos un correo electrónico con un link de confirmación; por favor haz click en él para confirmar tu dirección. No podrás acceder a tu cuenta mientras no lo hagas."
+      body_3_html: "Si no recibiste el link de confirmación, <a href='%{url}'>haz click aquí</a> y escribe tu dirección de correo electrónico para que te lo enviemos de nuevo."
+      body_4: "Por favor, comprueba además tu carpeta de spam y ajusta tus filtros de correo para que nuestros correos electrónicos aparezcan en tu carpeta de entrada."
+      body_5: "Te estamos esperando en Feedbunch, el lector de feeds simple y elegante."

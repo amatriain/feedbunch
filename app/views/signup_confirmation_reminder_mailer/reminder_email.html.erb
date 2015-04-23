@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<h1><%= t 'signup_confirmation_reminder_mailer.reminder_email.header' %></h1>
+<p>
+  <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_1_html', date: @user.created_at, email: @user.email %>
+</p>
+<p>
+  <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_2' %>
+</p>
+<p>
+  <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_3_html', url: new_user_confirmation_path %>
+</p>
+<p>
+  <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_4' %>
+</p>
+<p>
+  <%= t 'signup_confirmation_reminder_mailer.reminder_email.body_5' %>
+</p>
+</body>
+</html>
