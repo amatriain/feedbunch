@@ -498,7 +498,7 @@ class User < ActiveRecord::Base
 
   def mark_unread_entries(feed_subscription)
     feed = feed_subscription.feed
-    feed.entries.each do |entry|
+    feed.entries.find_each do |entry|
       if !EntryState.exists? user_id: self.id, entry_id: entry.id
         entry_state = self.entry_states.create! entry_id: entry.id, read: false
       end
@@ -529,7 +529,7 @@ class User < ActiveRecord::Base
 
   def removed_feed_subscription(feed_subscription)
     feed = feed_subscription.feed
-    if feed.users.blank?
+    if feed.users.count == 0
       Rails.logger.warn "no more users subscribed to feed #{feed.id} - #{feed.fetch_url} . Removing it from the database"
       feed.destroy
     end
@@ -539,7 +539,7 @@ class User < ActiveRecord::Base
   # Remove al read/unread entry information for this user, for all entries of the feed passed as argument.
 
   def remove_entry_states(feed)
-    feed.entries.each do |entry|
+    feed.entries.find_each do |entry|
       entry_state = EntryState.find_by user_id: self.id, entry_id: entry.id
       self.entry_states.delete entry_state
     end

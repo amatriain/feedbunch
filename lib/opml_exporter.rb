@@ -62,9 +62,9 @@ class OPMLExporter
             xml.outline type: 'rss', title: feed.title, text: feed.title, xmlUrl: feed.fetch_url, htmlUrl: feed.url
           end
           # folders
-          user.folders.order(:title).each do |folder|
+          user.folders.order(:title).find_each do |folder|
             xml.outline(title: folder.title, text: folder.title) {
-              user.folder_feeds(folder, include_read: true).order(:title).each do |feed|
+              user.folder_feeds(folder, include_read: true).order(:title).find_each do |feed|
                 xml.outline type: 'rss', title: feed.title, text: feed.title, xmlUrl: feed.fetch_url, htmlUrl: feed.url
               end
             }

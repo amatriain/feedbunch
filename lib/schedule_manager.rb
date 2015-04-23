@@ -14,7 +14,7 @@ class ScheduleManager
     Rails.logger.debug 'Fixing scheduled feed updates'
     feeds_unscheduled = []
 
-    Feed.where(available: true).each do |feed|
+    Feed.where(available: true).find_each do |feed|
       # get update schedule for the feed
       schedule_present = feed_schedule_present? feed.id
       Rails.logger.debug "Update schedule for feed #{feed.id}  #{feed.title} present?: #{schedule_present}"

@@ -35,7 +35,7 @@ class InvitationsManager
     Rails.logger.info "Setting the daily invitations limit for all users to #{limit}"
     users = User.where 'invitation_limit != ? or invitation_limit is null', limit
     Rails.logger.debug "A total of #{users.length} users have an invitation limit that needs updating"
-    users.each {|u| u.update invitation_limit: limit}
+    users.find_each {|u| u.update invitation_limit: limit}
   end
 
   ##
@@ -56,6 +56,6 @@ class InvitationsManager
     Rails.logger.info "Resetting users daily invitations count to zero. Ignoring users who had it reset later than #{last_reset_at}"
     users = User.where 'invitations_count > 0 and (invitations_count_reset_at <= ? or invitations_count_reset_at is null)', last_reset_at
     Rails.logger.debug "Resetting invitations count for #{users.length} users"
-    users.each {|u| u.update invitations_count: 0, invitations_count_reset_at: Time.zone.now}
+    users.find_each {|u| u.update invitations_count: 0, invitations_count_reset_at: Time.zone.now}
   end
 end

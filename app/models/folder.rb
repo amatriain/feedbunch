@@ -108,7 +108,7 @@ class Folder < ActiveRecord::Base
   # In this case, delete the folder from the database.
 
   def remove_empty_folders(feed)
-    if self.feeds.blank?
+    if self.feeds.count == 0
       self.destroy
     end
   end

@@ -178,7 +178,7 @@ class Feed < ActiveRecord::Base
 
   def touch_subscriptions
     if title_changed? || url_changed?
-      feed_subscriptions.each do |s|
+      feed_subscriptions.find_each do |s|
         s.touch_subscriptions
       end
     end

@@ -237,7 +237,7 @@ class Entry < ActiveRecord::Base
   # Or in layman's terms: mark this entry as unread for all users subscribed to the feed.
 
   def set_unread_state
-    self.feed.users(true).each do |user|
+    self.feed.users(true).find_each do |user|
       if !EntryState.exists? user_id: user.id, entry_id: self.id
         entry_state = user.entry_states.create! entry_id: self.id, read: false
       end

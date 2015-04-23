@@ -125,7 +125,7 @@ class ResetDemoUserWorker
   def reset_feeds_and_folders(demo_user)
     Rails.logger.debug 'Resetting feeds and folders for the demo user'
     # destroy all folders and unsubscribe all feeds
-    demo_user.feeds.each { |f| demo_user.unsubscribe f}
+    demo_user.feeds.find_each { |f| demo_user.unsubscribe f}
     demo_user.folders.destroy_all
     demo_user.reload
 

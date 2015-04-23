@@ -116,7 +116,7 @@ class ScheduledUpdateFeedWorker
       end
 
       # Update unread entries count for all subscribed users.
-      feed.users.each do |user|
+      feed.users.find_each do |user|
         SubscriptionsManager.recalculate_unread_count feed, user
       end
     end

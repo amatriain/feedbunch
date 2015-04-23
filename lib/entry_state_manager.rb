@@ -94,7 +94,7 @@ class EntryStateManager
       update_all read: read
 
     # Update unread entries count for the feeds
-    folder.feeds.each do |f|
+    folder.feeds.find_each do |f|
       SubscriptionsManager.recalculate_unread_count f, user
     end
   end
@@ -115,7 +115,7 @@ class EntryStateManager
       update_all read: read
 
     # Update unread entries count for the feeds
-    user.feeds.each do |f|
+    user.feeds.find_each do |f|
       SubscriptionsManager.recalculate_unread_count f, user
     end
   end
