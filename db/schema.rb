@@ -228,7 +228,7 @@ ActiveRecord::Schema.define(version: 20150423124227) do
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-  add_index "users", ["confirmed_at", "confirmation_sent_at", "first_confirmation_reminder_sent"], name: "index_users_on_first_reminder_fields"
+  add_index "users", ["confirmed_at", "confirmation_sent_at", "first_confirmation_reminder_sent", "invitation_sent_at"], name: "index_users_on_first_reminder_fields"
   add_index "users", ["confirmed_at", "confirmation_sent_at"], name: "index_users_on_confirmation_fields"
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["invitation_limit"], name: "index_users_on_invitation_limit"

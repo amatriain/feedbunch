@@ -181,15 +181,27 @@ describe CleanupSignupsWorker do
       time_signup = @time_first_confirmation_reminder - 1.hour
       # signup is 1 hour older than the interval to be considered for sending a reminder
       @user.update confirmation_sent_at: time_signup, confirmed_at: Time.zone.now
-
-      CleanupSignupsWorker.new.perform
       # Clear the email delivery queue
       ActionMailer::Base.deliveries.clear
+
       CleanupSignupsWorker.new.perform
 
       mail_should_not_be_sent
     end
-    
+
+    it 'does not send reminder to invited users' do
+      time_signup = @time_first_confirmation_reminder - 1.hour
+      # signup is 1 hour older than the interval to be considered for sending a reminder
+      @user.update confirmation_sent_at: time_signup,
+                   invitation_sent_at: Time.zone.now - 1.hour
+
+      # Clear the email delivery queue
+      ActionMailer::Base.deliveries.clear
+
+      CleanupSignupsWorker.new.perform
+
+      mail_should_not_be_sent
+    end
   end
 
 end
