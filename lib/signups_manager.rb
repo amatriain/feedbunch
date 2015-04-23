@@ -10,7 +10,7 @@ class SignupsManager
   # - config.first_confirmation_reminder_after
   # - config.second_confirmation_reminder_after
 
-  def self.send_confirmation_reminders
+  def self.send_first_confirmation_reminders
     signups_older_than = Time.zone.now - Feedbunch::Application.config.first_confirmation_reminder_after
     Rails.logger.info "Sending first confirmation reminder to unconfirmed users signed up before #{signups_older_than}"
 

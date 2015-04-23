@@ -24,7 +24,7 @@ class CleanupSignupsWorker
   # This method is intended to be invoked from Sidekiq, which means it is performed in the background.
 
   def perform
-    SignupsManager.send_confirmation_reminders
+    SignupsManager.send_first_confirmation_reminders
     SignupsManager.destroy_old_signups
   end
 end
