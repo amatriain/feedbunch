@@ -405,6 +405,14 @@ describe 'authentication', type: :feature do
       expect(page).to_not have_css 'div.navbar ul li a#read_feeds'
     end
 
+    it 'shows help popup', js: true do
+      expect(page).not_to have_css '#help-feedback-popup', visible: true
+      open_user_menu
+      expect(page).to have_css 'div.navbar ul li a#help'
+      find('div.navbar ul li a#help').click
+      expect(page).to have_css '#help-feedback-popup', visible: true
+    end
+
     context 'edit profile' do
 
       before :each do

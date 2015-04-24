@@ -79,6 +79,7 @@ en:
       folder_button: "Folder"
       folder_new: "New folder"
       folder_none: "No folder"
+      help: "Help and Feedback"
       logout: "Logout"
       admin: "Administration"
       cache_stats: "Rails cache stats"
@@ -102,6 +103,11 @@ en:
       rails_license: "MIT license"
       ruby_license: "Ruby license"
     popups:
+      help:
+        title: "Help and Feedback"
+        text_1: "You can ask for help or give us feedback through:"
+        text_2: "You can use any of them, but generally the github issue tracker is best for discussing bugs and twitter is best for questions that other users can find useful."
+        close: "Close"
       import_subscriptions:
         title: "Import subscriptions"
         help_1: "Import your feed subscriptions in OPML format from another feed aggregator."

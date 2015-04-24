@@ -71,6 +71,15 @@
         </li>
 
         <li>
+          <a id="help"
+             data-toggle="modal"
+             data-target="#help-feedback-popup">
+            <i class="fa fa-question fa-fw"></i>
+            <%= t 'layouts.navbar.help' %>
+          </a>
+        </li>
+
+        <li>
           <%= link_to destroy_user_session_path, :method => :delete, id: 'sign_out' do %>
             <i class="fa fa-sign-out fa-fw"></i>
             <%= t 'layouts.navbar.logout' %>

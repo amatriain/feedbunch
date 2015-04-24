@@ -23,7 +23,14 @@ $(document).ready ->
     $("#unsubscribe-cancel", this).focus()
 
   #-------------------------------------------------------
-  # Give focus to the cancel button field when showing the "Import subscriptions" modal.
+  # Give focus to the close button when showing the "Help and Feedback" modal.
+  #-------------------------------------------------------
+
+  $("body").on "shown.bs.modal", "#help-feedback-popup",  ->
+    $("#help-close", this).focus()
+
+  #-------------------------------------------------------
+  # Give focus to the cancel button when showing the "Import subscriptions" modal.
   #-------------------------------------------------------
 
   $("body").on "shown.bs.modal", "#opml-import-popup",  ->
@@ -42,7 +49,7 @@ $(document).ready ->
     $("#user_invitation_email", this).focus()
 
   #-------------------------------------------------------
-  # Give focus to the Close button when showing the "Demo user info" modal.
+  # Give focus to the close button when showing the "Demo user info" modal.
   #-------------------------------------------------------
   $("body").on "shown.bs.modal", "#demo-info-popup",  ->
     $("#demo-info-close", this).focus()

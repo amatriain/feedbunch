@@ -1,0 +1,45 @@
+<% cache "help-feedback-popup-#{I18n.locale}" do %>
+
+  <div id="help-feedback-popup" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3><%= t 'layouts.popups.help.title' %></h3>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <div class="row">
+              <div class="hidden-xs col-sm-2">
+                <i class="fa fa-question-circle fa-4x"></i>
+              </div>
+              <div class="col-xs-12 col-sm-10">
+                <p><%= t 'layouts.popups.help.text_1' %></p>
+                <ul id="help-contact-list" class="fa fa-ul">
+                  <li><a class="alert-link" href="http://twitter.com/feedbunch" target="_blank"><i class="fa fa-li fa-twitter fa-lg"></i>Twitter (@feedbunch)</a></li>
+                  <li><a class="alert-link" href="mailto:admin@feedbunch.com"><i class="fa fa-li fa-envelope fa-lg"></i>Email (admin@feedbunch.com)</a></li>
+                  <li><a class="alert-link" href="https://github.com/amatriain/feedbunch" target="_blank"><i class="fa fa-li fa-github fa-lg"></i>Github (amatriain/feedbunch)</a></li>
+                </ul>
+                <p>
+                  <%= t 'layouts.popups.help.text_2' %>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button id="help-close"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                    ng-click="unsubscribe()">
+              <%= t 'layouts.popups.help.close' %>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<% end %>

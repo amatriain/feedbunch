@@ -58,6 +58,7 @@ es:
       folder_button: "Carpeta"
       folder_new: "Nueva carpeta"
       folder_none: "Ninguna carpeta"
+      help: "Ayuda y Dinos tu opinión"
       logout: "Salir"
       admin: "Administración"
       cache_stats: "Estadísticas cache de Rails"
@@ -81,6 +82,11 @@ es:
       rails_license: "Licencia MIT"
       ruby_license: "Ruby license"
     popups:
+      help:
+        title: "Ayuda y Danos tu opinión"
+        text_1: "Puedes pedir ayuda o decirnos lo que piensas de Feedbunch a traves de:"
+        text_2: "Puedes usar cualquiera de ellos, pero en general el gestor de incidencias de github es lo mejor para discutir errores y twitter es lo mejor para temas que puedan ser útiles a otros usuarios."
+        close: "Cerrar"
       import_subscriptions:
         title: "Importar suscripciones"
         help_1: "Importa tus suscripciones a feeds en formato OPML desde otro agregador de feeds."
