@@ -27,6 +27,7 @@ class CleanupInvitationsWorker
   # This method is intended to be invoked from Sidekiq, which means it is performed in the background.
 
   def perform
+    InvitationsManager.send_invitation_reminders
     InvitationsManager.destroy_old_invitations
     InvitationsManager.update_daily_limit
     InvitationsManager.reset_invitations_count

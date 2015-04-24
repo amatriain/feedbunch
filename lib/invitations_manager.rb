@@ -4,6 +4,18 @@
 class InvitationsManager
 
   ##
+  # Send a reminder email to users who were invited but didn't yet accept the invitation.
+  # Two reminders are sent, after that the unconfirmed user is destroyed (see destroy_old_invitations below).
+  # The time after the invitation that reminders are sent is configured in these config/application.rb values:
+  # - config.first_confirmation_reminder_after
+  # - config.second_confirmation_reminder_after
+
+  def self.send_invitation_reminders
+    send_first_invitation_reminders
+    send_second_invitation_reminders
+  end
+
+  ##
   # Destroy old User records corresponding to invitations sent but never accepted.
   # This will trigger the destruction of associated records (opml_import_job_state, etc).
   # The interval after which an unaccepted invitation is discarded is configured with
@@ -57,5 +69,61 @@ class InvitationsManager
     users = User.where 'invitations_count > 0 and (invitations_count_reset_at <= ? or invitations_count_reset_at is null)', last_reset_at
     Rails.logger.debug "Resetting invitations count for #{users.length} users"
     users.find_each {|u| u.update invitations_count: 0, invitations_count_reset_at: Time.zone.now}
+  end
+
+  private
+
+  ##
+  # Send a reminder email to users who were invited but didn't yet accept the invitation.
+  # This method sends the first reminder email.
+  # The time after invitation that the first reminder is sent is configured in these config/application.rb value:
+  # config.first_confirmation_reminder_after
+
+  def self.send_first_invitation_reminders
+    invitations_older_than = Time.zone.now - Feedbunch::Application.config.first_confirmation_reminder_after
+    Rails.logger.info "Sending first confirmation reminder to users invited before #{invitations_older_than} who have not accepted the invitation"
+
+    old_unaccepted_invitations = User.
+        where 'invitation_token is not null AND invitation_accepted_at is null AND invitation_sent_at < ? AND first_confirmation_reminder_sent = ?',
+              invitations_older_than, false
+
+    if old_unaccepted_invitations.empty?
+      Rails.logger.info 'No old unaccepted invitations need to be sent a first reminder'
+      return
+    end
+    Rails.logger.info "Sending #{old_unaccepted_invitations.count} first reminders to old unaccepted invitations"
+
+    old_unaccepted_invitations.find_each do |user|
+      Rails.logger.info "Sending first reminder to #{user.id} - #{user.email}"
+      Devise.mailer.invitation_instructions(user, user.unencrypted_invitation_token).deliver_now
+      user.update first_confirmation_reminder_sent: true
+    end
+  end
+
+  ##
+  # Send a reminder email to users who were invited but didn't yet accept the invitation.
+  # This method sends the second reminder email.
+  # The time after invitation that the second reminder is sent is configured in these config/application.rb value:
+  # config.second_confirmation_reminder_after
+
+  def self.send_second_invitation_reminders
+    invitations_older_than = Time.zone.now - Feedbunch::Application.config.second_confirmation_reminder_after
+    Rails.logger.info "Sending second confirmation reminder to users invited before #{invitations_older_than} who have not accepted the invitation"
+
+    old_unaccepted_invitations = User.
+        where 'invitation_token is not null AND invitation_accepted_at is null AND invitation_sent_at < ? AND second_confirmation_reminder_sent = ?',
+              invitations_older_than, false
+
+    if old_unaccepted_invitations.empty?
+      Rails.logger.info 'No old unaccepted invitations need to be sent a second reminder'
+      return
+    end
+    Rails.logger.info "Sending #{old_unaccepted_invitations.count} second reminders to old unaccepted invitations"
+
+    old_unaccepted_invitations.find_each do |user|
+      Rails.logger.info "Sending second reminder to #{user.id} - #{user.email}"
+      Devise.mailer.invitation_instructions(user, user.unencrypted_invitation_token).deliver_now
+      user.update second_confirmation_reminder_sent: true
+    end
   end
 end

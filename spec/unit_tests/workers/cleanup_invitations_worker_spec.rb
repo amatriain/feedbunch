@@ -8,6 +8,11 @@ describe CleanupInvitationsWorker do
     # During the tests, Time.zone.now will always return "2001-01-01 10:00:00"
     @time_now = Time.zone.parse('2000-01-01 10:00:00')
     allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return @time_now
+
+    @friend_email_1 = 'some_friend_1@email.com'
+    @friend_email_2 = 'some_friend_2@email.com'
+    @friend_name_1 = 'some friend_1'
+    @friend_name_2 = 'some friend_2'
   end
 
   context 'discard old unaccepted invitations' do
@@ -16,11 +21,6 @@ describe CleanupInvitationsWorker do
       discard_unaccepted_invitations_after = Feedbunch::Application.config.discard_unaccepted_invitations_after
       # Unaccepted invitations sent before this time are considered "old" and will be destroyed.
       @time_invitations_old = @time_now - discard_unaccepted_invitations_after
-
-      @friend_email_1 = 'some_friend_1@email.com'
-      @friend_email_2 = 'some_friend_2@email.com'
-      @friend_name_1 = 'some friend_1'
-      @friend_name_2 = 'some friend_2'
     end
 
     it 'destroys old unaccepted invitations' do
@@ -264,6 +264,149 @@ describe CleanupInvitationsWorker do
       expect(@user.invitations_count_reset_at).to eq last_reset_at
     end
 
+  end
+
+  context 'invitation reminder emails' do
+
+    context 'first reminder email' do
+
+      before :each do
+        first_invitation_reminder_after = Feedbunch::Application.config.first_confirmation_reminder_after
+        # Unaccepted invitation from before this time will be sent a reminder email
+        @time_first_invitation_reminder = @time_now - first_invitation_reminder_after
+
+        invitation_params_1 = {email: @friend_email_1,
+                              name: @friend_name_1,
+                              locale: @user.locale,
+                              timezone: @user.timezone}
+        @invited_user = User.invite! invitation_params_1, @user
+      end
+
+      it 'sends reminder to users with old unaccepted invitations' do
+        time_invitation = @time_first_invitation_reminder - 1.hour
+        # invitation is 1 hour older than the interval to be considered for sending a reminder
+        @invited_user.update invitation_created_at: time_invitation,
+                            invitation_sent_at: time_invitation
+        expect(@invited_user.reload.first_confirmation_reminder_sent).to be false
+
+        CleanupInvitationsWorker.new.perform
+
+        mail_should_be_sent 'Someone has invited you', path: '/invitation', to: @invited_user.email
+        expect(@invited_user.reload.first_confirmation_reminder_sent).to be true
+      end
+
+      it 'does not send reminder to users with newer unaccepted invitations' do
+        time_invitation = @time_first_invitation_reminder + 1.hour
+        # invitation is 1 hour newer than the interval to be considered for sending a reminder
+        @invited_user.update invitation_created_at: time_invitation,
+                             invitation_sent_at: time_invitation
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+
+        CleanupInvitationsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
+
+      it 'does not send this reminder a second time' do
+        time_invitation = @time_first_invitation_reminder - 1.hour
+        # invitation is 1 hour older than the interval to be considered for sending a reminder
+        @invited_user.update invitation_created_at: time_invitation,
+                             invitation_sent_at: time_invitation
+
+        CleanupInvitationsWorker.new.perform
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+        CleanupInvitationsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
+
+      it 'does not send reminder to users who accepted the invitation' do
+        time_invitation = @time_first_invitation_reminder - 1.hour
+        # invitation is 1 hour older than the interval to be considered for sending a reminder
+        @invited_user.update invitation_created_at: time_invitation,
+                             invitation_sent_at: time_invitation
+        @invited_user.accept_invitation!
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+
+        CleanupInvitationsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
+    end
+
+    context 'second reminder email' do
+
+      before :each do
+        second_invitation_reminder_after = Feedbunch::Application.config.second_confirmation_reminder_after
+        # Unaccepted invitations from before this time will be sent a reminder email
+        @time_second_confirmation_reminder = @time_now - second_invitation_reminder_after
+
+        invitation_params_1 = {email: @friend_email_1,
+                               name: @friend_name_1,
+                               locale: @user.locale,
+                               timezone: @user.timezone}
+        @invited_user = User.invite! invitation_params_1, @user
+        # User has already been sent the first reminder, we're testing the second reminder here
+        @invited_user.update first_confirmation_reminder_sent: true
+      end
+
+      it 'sends reminder to users with old unaccepted invitations' do
+        time_invitation = @time_second_confirmation_reminder - 1.hour
+        # invitation is 1 hour older than the interval to be considered for sending a reminder
+        @invited_user.update invitation_created_at: time_invitation,
+                             invitation_sent_at: time_invitation
+        expect(@invited_user.reload.second_confirmation_reminder_sent).to be false
+
+        CleanupInvitationsWorker.new.perform
+
+        mail_should_be_sent 'Someone has invited you', path: '/invitation', to: @invited_user.email
+        expect(@invited_user.reload.second_confirmation_reminder_sent).to be true
+      end
+
+      it 'does not send reminder to users with newer invitations' do
+        time_invitation = @time_second_confirmation_reminder + 1.hour
+        # invitation is 1 hour newer than the interval to be considered for sending a reminder
+        @invited_user.update invitation_created_at: time_invitation,
+                             invitation_sent_at: time_invitation
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+
+        CleanupInvitationsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
+
+      it 'does not send this reminder a second time' do
+        time_invitation = @time_second_confirmation_reminder - 1.hour
+        # invitation is 1 hour older than the interval to be considered for sending a reminder
+        @invited_user.update invitation_created_at: time_invitation,
+                             invitation_sent_at: time_invitation
+
+        CleanupInvitationsWorker.new.perform
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+        CleanupInvitationsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
+
+      it 'does not send reminder to users who accepted the invitation' do
+        time_invitation = @time_second_confirmation_reminder - 1.hour
+        # invitation is 1 hour older than the interval to be considered for sending a reminder
+        @invited_user.update invitation_created_at: time_invitation,
+                             invitation_sent_at: time_invitation
+        @invited_user.accept_invitation!
+        # Clear the email delivery queue
+        ActionMailer::Base.deliveries.clear
+
+        CleanupInvitationsWorker.new.perform
+
+        mail_should_not_be_sent
+      end
+    end
   end
 
 end
