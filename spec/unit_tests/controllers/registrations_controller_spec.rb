@@ -12,11 +12,11 @@ describe FeedbunchAuth::RegistrationsController, type: :controller do
       @request.env['devise.mapping'] = Devise.mappings[:user]
     end
 
-    it 'returns redirect to root path' do
+    it 'returns redirect to signup success path' do
       post :create, 'user' => {'email'=>@user.email, 'name'=>@user.name, 'password'=>@user.password,
                                'password_confirmation'=>@user.password, 'locale'=>@user.locale,
                                'timezone'=>@user.timezone}
-      expect(response).to redirect_to root_path
+      expect(response).to redirect_to signup_success_path
     end
 
     it 'destroys user before sign up if he was invited but unconfirmed' do
@@ -37,7 +37,7 @@ describe FeedbunchAuth::RegistrationsController, type: :controller do
       post :create, 'user' => {'email'=>friend_email, 'name'=>friend_name, 'password'=>'friend_password',
                                'password_confirmation'=>'friend_password', 'locale'=>friend_locale,
                                'timezone'=>friend_timezone}
-      expect(response).to redirect_to root_path
+      expect(response).to redirect_to signup_success_path
     end
 
     it 'does not destroy confirmed user' do
