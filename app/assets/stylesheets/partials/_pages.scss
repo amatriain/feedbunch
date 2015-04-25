@@ -1,5 +1,6 @@
 @media (max-width: $screen-sm-min) {
-  #landing-page {
+  #landing-page,
+  #signup-success {
     padding-top: 15px;
     text-align: center;
 
@@ -34,12 +35,14 @@
 }
 
 @media (min-width: $screen-sm-min) {
-  #landing-page {
+  #landing-page,
+  #signup-success {
     padding-top: 50px;
   }
 }
 
-#landing-page {
+#landing-page,
+#signup-success {
 
   .jumbotron {
     background-color: rgba(238, 238, 238, 0.95);
