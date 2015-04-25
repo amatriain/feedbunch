@@ -8,7 +8,6 @@ class FeedbunchAuth::InvitationsController < Devise::InvitationsController
 
   prepend_before_filter :authenticate_inviter!, :only => [:create]
   prepend_before_filter :has_invitations_left?, :only => [:create]
-  helper_method :after_sign_in_path_for
 
   ##
   # Send an invitation email to the passed email address.
@@ -44,6 +43,13 @@ class FeedbunchAuth::InvitationsController < Devise::InvitationsController
   end
 
   protected
+
+  ##
+  # After a successful login, a user is redirected to the feeds list
+
+  def after_sign_in_path_for(resource)
+    read_path
+  end
 
   ##
   # Create a user invitation.

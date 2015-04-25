@@ -38,13 +38,6 @@ class ApplicationController < ActionController::Base
   end
 
   ##
-  # After a successful login, a user is redirected to the feeds list
-
-  def after_sign_in_path_for(resource)
-    read_path
-  end
-
-  ##
   # Handle an error raised during action processing.
   # It just logs the error and returns an HTTP status code, depending
   # on the kind of error raised.
