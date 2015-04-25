@@ -37,6 +37,12 @@ es:
         title: "Obtener ayuda"
         text_1: "Puedes pedir ayuda o decirnos lo que piensas de Feedbunch a traves de:"
         text_2: "Puedes usar cualquiera de ellos, pero en general el gestor de incidencias de github es lo mejor para discutir errores y twitter es lo mejor para temas que puedan ser útiles a otros usuarios."
+    signup_success:
+      text_1: "¡Gracias por darte de alta en Feedbunch!"
+      text_2_html: "Hemos enviado un correo electrónico a la dirección que nos has dado. Por favor sigue las instrucciones en ese correo para <strong>confirmar tu dirección de correo electrónico</strong>. No podrás entrar en Feedbunch hasta que tu dirección de correo electrónico esté confirmada."
+      text_3: "Por favor comprueba tu carpeta de spam si no ves el correo de confirmación en tu carpeta de entrada en unos minutos."
+      text_4_html: "Si quieres que volvamos a enviarte el correo de confirmación, <a href='%{url}' class='alert-link'>haz click aquí</a> e introduce tu dirección de correo electrónico."
+      text_5: "¡Que disfrutes leyendo feeds!"
   layouts:
     noscript: "Tu navegador no soporta JavaScript. Este sitio web necesita JavaScript para funcionar correctamente."
     cookies:

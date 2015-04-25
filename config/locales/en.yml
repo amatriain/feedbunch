@@ -58,6 +58,12 @@ en:
         title: "Getting help"
         text_1: "You can ask for help or give us feedback through:"
         text_2: "You can use any of them, but generally the github issue tracker is best for discussing bugs and twitter is best for questions that other users can find useful."
+    signup_success:
+      text_1: "Thanks for signing up to Feedbunch!"
+      text_2_html: "We have sent an email to the address you provided. Please follow the instructions in that email to <strong>confirm your email address</strong>. You won't be able to access Feedbunch until your email address is confirmed."
+      text_3: "Please check your spam folder if you don't see the confirmation email in your inbox in a few minutes."
+      text_4_html: "If you want us to send the confirmation email again, <a href='%{url}' class='alert-link'>click here</a> and enter your email address."
+      text_5: "Happy feed reading!"
   layouts:
     noscript: "Your browser does not support JavaScript. This website needs JavaScript to work correctly."
     cookies:

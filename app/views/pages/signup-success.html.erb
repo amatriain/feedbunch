@@ -17,9 +17,30 @@
     </div>
 
     <div class="row">
-
       <div class="col-xs-12 col-md-11 col-md-offset-1">
+        <p class="lead"><%= t 'pages.index.tagline' %></p>
+      </div>
+    </div>
 
+    <div class="row">
+      <div class="col-xs-12">
+        <div id="signup-confirm-instructions" class="alert alert-warning">
+          <div class="row">
+
+            <div class="hidden-xs col-sm-2 text-center">
+              <i class="fa fa-envelope-o fa-4x"></i>
+            </div>
+
+            <div class="col-xs-12 col-sm-10">
+              <p><%= t 'pages.signup_success.text_1' %></p>
+              <p><%= t 'pages.signup_success.text_2_html' %></p>
+              <p><%= t 'pages.signup_success.text_3' %></p>
+              <p><%= t 'pages.signup_success.text_4_html', url: new_user_confirmation_path %></p>
+              <p><%= t 'pages.signup_success.text_5' %></p>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
 
