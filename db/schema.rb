@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150423171725) do
+ActiveRecord::Schema.define(version: 20150425084525) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -234,6 +234,8 @@ ActiveRecord::Schema.define(version: 20150423171725) do
   add_index "users", ["confirmed_at", "confirmation_sent_at"], name: "index_users_on_confirmation_fields"
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["invitation_limit"], name: "index_users_on_invitation_limit"
+  add_index "users", ["invitation_token", "invitation_accepted_at", "invitation_sent_at", "first_confirmation_reminder_sent"], name: "index_users_on_first_invitation_reminder_fields"
+  add_index "users", ["invitation_token", "invitation_accepted_at", "invitation_sent_at", "second_confirmation_reminder_sent"], name: "index_users_on_second_invitation_reminder_fields"
   add_index "users", ["invitation_token", "invitation_accepted_at", "invitation_sent_at"], name: "index_users_on_invitation_fields"
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true
   add_index "users", ["invitations_count", "invitations_count_reset_at"], name: "index_users_on_invitation_count_fields"
