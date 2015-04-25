@@ -62,7 +62,14 @@ class FeedbunchAuth::RegistrationsController < Devise::RegistrationsController
 
 
 
-  private
+  protected
+
+  ##
+  # Redirect user to a static page after signup
+
+  def after_inactive_sign_up_path_for(resource)
+    signup_success_path
+  end
 
   def profiles_controller_destroy_params
     params.require(:delete_user_registration).permit(:password)

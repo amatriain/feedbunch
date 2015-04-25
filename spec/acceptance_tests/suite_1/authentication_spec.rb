@@ -61,6 +61,13 @@ describe 'authentication', type: :feature do
         user_should_be_logged_in
       end
 
+      it 'redirects to signup success view after a successful signup', js: true do
+        new_email = 'new_email@test.com'
+        new_password = 'new_password'
+        sign_up new_email, new_password, confirm_account: false
+        expect(current_path).to eq signup_success_path
+      end
+
       it 'does not sign up user if email already registered', js: true do
         new_password = 'new_password'
         user = FactoryGirl.build :user, email: @user.email, password: new_password

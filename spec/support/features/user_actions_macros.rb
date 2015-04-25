@@ -483,26 +483,31 @@ end
 
 ##
 # Sign up a new user account.
-# Receives as arguments the email address and password for the new account.
+# Receives as arguments:
+# - email address for the new account
+# - password for the new account
+# - optionally, whether to confirm the account clicking on the link sent to the user in an email. Defaults to true.
 
-def sign_up(email, password)
+def sign_up(email, password, confirm_account: true)
   visit new_user_registration_path
   fill_in 'Email', with: email
   fill_in 'Password', with: password
   fill_in 'Confirm password', with: password
   click_on 'Sign up'
-  expect(current_path).to eq root_path
+  expect(current_path).to eq signup_success_path
 
-  # test that a confirmation email is sent
-  confirmation_link = mail_should_be_sent path: confirmation_path, to: email
+  if confirm_account
+    # test that a confirmation email is sent
+    confirmation_link = mail_should_be_sent path: confirmation_path, to: email
 
-  # Test that user cannot login before confirming the email address
-  failed_login_user_for_feature email, password
+    # Test that user cannot login before confirming the email address
+    failed_login_user_for_feature email, password
 
-  # Convert the link sent by email into a relative URL that can be accessed during testing
-  confirmation_url = get_confirm_address_link_from_email confirmation_link
-  # Follow confirmation link received by email, user should be able to log in afterwards
-  visit confirmation_url
+    # Convert the link sent by email into a relative URL that can be accessed during testing
+    confirmation_url = get_confirm_address_link_from_email confirmation_link
+    # Follow confirmation link received by email, user should be able to log in afterwards
+    visit confirmation_url
+  end
 end
 
 ##

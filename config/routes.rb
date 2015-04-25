@@ -54,7 +54,8 @@ Rails.application.routes.draw do
   end
 
   # Static pages served with High_voltage gem
-  root :to => 'high_voltage/pages#show', id: 'index'
+  root to: 'high_voltage/pages#show', id: 'index'
+  get '/signup-success' => 'high_voltage/pages#show', id: 'signup-success', as: :signup_success
 
   # Main app page
   get '/read' => 'read#index', as: :read
@@ -101,7 +102,6 @@ Rails.application.routes.draw do
     match '/tours/mobile' => 'tours#show_mobile', via: [:get], as: 'tours_show_mobile'
     match '/tours/feed' => 'tours#show_feed', via: [:get], as: 'tours_show_feed'
     match '/tours/entry' => 'tours#show_entry', via: [:get], as: 'tours_show_entry'
-
   end
 
   # Restrict access to Sidekiq web ui to admin users only
