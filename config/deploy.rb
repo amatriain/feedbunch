@@ -111,14 +111,14 @@ namespace :redis_cache do
 
   desc 'Start Redis backend for Rails cache'
   task :start do
-    on roles :background do
+    on roles :app do
       execute :redis_cache, 'start'
     end
   end
 
   desc 'Stop Redis backend for Rails cache'
   task :stop do
-    on roles :background do
+    on roles :app do
       execute :redis_cache, 'stop'
     end
   end
@@ -131,7 +131,7 @@ namespace :redis_cache do
 
   desc 'Clear the Rails cache, removing all saved data from Redis'
   task :clear do
-    on roles :background do
+    on roles :app do
       within release_path do
         execute :rake, 'rails_cache:clear'
       end
