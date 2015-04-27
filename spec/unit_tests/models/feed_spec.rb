@@ -149,29 +149,44 @@ describe Feed, type: :model do
     end
   end
 
-  context 'convert to utf-8' do
-    it 'converts title' do
-      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
-      not_utf8_title = "\xE8 title"
-      utf8_title = 'è title'
-      feed = FactoryGirl.create :feed, title: not_utf8_title
-      expect(feed.title).to eq utf8_title
+  context 'fix encoding' do
+
+    context 'fix missing utf-8 encoding' do
+
+      it 'converts title' do
+        # \xE2\x80\x93 is a unicode escape sequence
+        not_utf8_title = "Senior Front End \xE2\x80\x93 EasyPost (YC S13) Hiring"
+        utf8_title = 'Senior Front End – EasyPost (YC S13) Hiring'
+        not_utf8_title.force_encoding 'ascii-8bit'
+        feed = FactoryGirl.create :feed, title: not_utf8_title
+        expect(feed.title).to eq utf8_title
+      end
     end
 
-    it 'converts url' do
-      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
-      not_utf8_url = "http://xkcd.com/\xE8"
-      utf8_url = 'http://xkcd.com/%C3%A8'
-      feed = FactoryGirl.create :feed, url: not_utf8_url
-      expect(feed.url).to eq utf8_url
-    end
+    context 'convert to utf-8' do
+      it 'converts title' do
+        # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+        not_utf8_title = "\xE8 title"
+        utf8_title = 'è title'
+        feed = FactoryGirl.create :feed, title: not_utf8_title
+        expect(feed.title).to eq utf8_title
+      end
 
-    it 'converts fetch url' do
-      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
-      not_utf8_url = "http://xkcd.com/\xE8"
-      utf8_url = 'http://xkcd.com/%C3%A8'
-      feed = FactoryGirl.create :feed, fetch_url: not_utf8_url
-      expect(feed.fetch_url).to eq utf8_url
+      it 'converts url' do
+        # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+        not_utf8_url = "http://xkcd.com/\xE8"
+        utf8_url = 'http://xkcd.com/%C3%A8'
+        feed = FactoryGirl.create :feed, url: not_utf8_url
+        expect(feed.url).to eq utf8_url
+      end
+
+      it 'converts fetch url' do
+        # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+        not_utf8_url = "http://xkcd.com/\xE8"
+        utf8_url = 'http://xkcd.com/%C3%A8'
+        feed = FactoryGirl.create :feed, fetch_url: not_utf8_url
+        expect(feed.fetch_url).to eq utf8_url
+      end
     end
   end
 

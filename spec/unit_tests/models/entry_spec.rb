@@ -205,54 +205,70 @@ describe Entry, type: :model do
     end
   end
 
-  context 'convert to utf-8' do
-    it 'converts title' do
-      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
-      not_utf8_title = "\xE8 title"
-      utf8_title = 'è title'
-      entry = FactoryGirl.create :entry, title: not_utf8_title
-      expect(entry.title).to eq utf8_title
+  context 'fix encoding' do
+
+    context 'fix missing utf-8 encoding' do
+
+      it 'converts title' do
+        # \xE2\x80\x93 is a unicode escape sequence
+        not_utf8_title = "Senior Front End \xE2\x80\x93 EasyPost (YC S13) Hiring"
+        utf8_title = 'Senior Front End – EasyPost (YC S13) Hiring'
+        not_utf8_title.force_encoding 'ascii-8bit'
+        entry = FactoryGirl.create :entry, title: not_utf8_title
+        expect(entry.title).to eq utf8_title
+      end
     end
 
-    it 'converts url' do
-      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
-      not_utf8_url = "http://xkcd.com/\xE8"
-      utf8_url = 'http://xkcd.com/%C3%A8'
-      entry = FactoryGirl.create :entry, url: not_utf8_url
-      expect(entry.url).to eq utf8_url
+    context 'convert to utf-8' do
+      it 'converts title' do
+        # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+        not_utf8_title = "\xE8 title"
+        utf8_title = 'è title'
+        entry = FactoryGirl.create :entry, title: not_utf8_title
+        expect(entry.title).to eq utf8_title
+      end
+
+      it 'converts url' do
+        # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+        not_utf8_url = "http://xkcd.com/\xE8"
+        utf8_url = 'http://xkcd.com/%C3%A8'
+        entry = FactoryGirl.create :entry, url: not_utf8_url
+        expect(entry.url).to eq utf8_url
+      end
+
+      it 'converts author' do
+        # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+        not_utf8_author = "\xE8 author"
+        utf8_author = 'è author'
+        entry = FactoryGirl.create :entry, author: not_utf8_author
+        expect(entry.author).to eq utf8_author
+      end
+
+      it 'converts content' do
+        # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+        not_utf8_content = "<p>\xE8 content</p>"
+        utf8_content = '<p>è content</p>'
+        entry = FactoryGirl.create :entry, content: not_utf8_content
+        expect(entry.content).to eq utf8_content
+      end
+
+      it 'converts summary' do
+        # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+        not_utf8_summary = "<p>\xE8 summary</p>"
+        utf8_summary = '<p>è summary</p>'
+        entry = FactoryGirl.create :entry, summary: not_utf8_summary
+        expect(entry.summary).to eq utf8_summary
+      end
+
+      it 'converts guid' do
+        # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
+        not_utf8_guid = "\xE8 guid"
+        utf8_guid = 'è guid'
+        entry = FactoryGirl.create :entry, guid: not_utf8_guid
+        expect(entry.guid).to eq utf8_guid
+      end
     end
 
-    it 'converts author' do
-      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
-      not_utf8_author = "\xE8 author"
-      utf8_author = 'è author'
-      entry = FactoryGirl.create :entry, author: not_utf8_author
-      expect(entry.author).to eq utf8_author
-    end
-
-    it 'converts content' do
-      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
-      not_utf8_content = "<p>\xE8 content</p>"
-      utf8_content = '<p>è content</p>'
-      entry = FactoryGirl.create :entry, content: not_utf8_content
-      expect(entry.content).to eq utf8_content
-    end
-
-    it 'converts summary' do
-      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
-      not_utf8_summary = "<p>\xE8 summary</p>"
-      utf8_summary = '<p>è summary</p>'
-      entry = FactoryGirl.create :entry, summary: not_utf8_summary
-      expect(entry.summary).to eq utf8_summary
-    end
-
-    it 'converts guid' do
-      # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
-      not_utf8_guid = "\xE8 guid"
-      utf8_guid = 'è guid'
-      entry = FactoryGirl.create :entry, guid: not_utf8_guid
-      expect(entry.guid).to eq utf8_guid
-    end
   end
 
   context 'markup manipulation' do
