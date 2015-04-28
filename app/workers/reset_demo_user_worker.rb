@@ -124,6 +124,7 @@ class ResetDemoUserWorker
 
   def reset_feeds_and_folders(demo_user)
     Rails.logger.debug 'Resetting feeds and folders for the demo user'
+
     # destroy all folders and unsubscribe all feeds
     demo_user.feeds.find_each { |f| demo_user.unsubscribe f}
     demo_user.folders.destroy_all
@@ -136,6 +137,24 @@ class ResetDemoUserWorker
         feed = demo_user.subscribe feed_url
         folder.feeds << feed unless folder.blank?
       end
+    end
+  end
+
+  ##
+  # From the feeds/folders hash stored in the @demo_feeds_and_folders variable, returns a flat array with
+  # the feed URLs the demo user should be subscribed to.
+
+  def demo_subscriptions_list
+    return @demo_feeds_and_folders.values.flatten
+  end
+
+  ##
+  # Unsuscribe demo user from any feeds that have been added besides the defaults.
+  # Receives as arguments the demo user and an array with the URLs of the default subscriptions of the demo user.
+
+  def unsubscribe_extra_feeds(demo_user, demo_subscriptions)
+    demo_user.feeds.find_each do |feed|
+      # TODO
     end
   end
 end
