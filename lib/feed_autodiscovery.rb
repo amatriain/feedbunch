@@ -46,10 +46,13 @@ class FeedAutodiscovery
         Rails.logger.info "Autodiscovered feed with URL #{feed_href}. Feed #{feed.id} already has this fetch_url, no changes necessary."
         discovered_feed = feed
       elsif existing_feed.present? && existing_feed != feed
-        # There is already a feed in the db with the discovered url. Discard the passed feed and return the
-        # already existing feed, so that users are subscribed to the already existing feed instead of having
-        # a duplicate in the db.
+        # There is already a feed in the db with the discovered url. Discard the passed feed and subscribe users to the already existing one.
         Rails.logger.info "Autodiscovered already known feed with url #{feed_href}. Using it and destroying feed with url #{feed.url} passed as argument"
+        feed.users.find_each do |user|
+          Rails.logger.info "User #{user.id} - #{user.email} is subscribed to feed #{feed.url} to be destroyed, subscribing to existing feed #{existing_feed.id} - #{feed_href} instead"
+          user.subscribe existing_feed.fetch_url
+        end
+
         feed.destroy
         discovered_feed = existing_feed
       else

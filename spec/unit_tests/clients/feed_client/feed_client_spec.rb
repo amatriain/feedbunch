@@ -275,6 +275,10 @@ FEED_XML
       old_feed = FactoryGirl.create :feed, fetch_url: feed_url
       new_feed = FactoryGirl.create :feed
 
+      # user is subscribed to the feed being updated
+      user = FactoryGirl.create :user
+      user.subscribe new_feed.fetch_url
+
       # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
       allow(RestClient).to receive :get do |url|
         if url==feed_url
@@ -285,14 +289,20 @@ FEED_XML
       end
 
       expect(old_feed.entries).to be_blank
+      expect(old_feed.users).to be_blank
+      expect(new_feed.users.count).to eq 1
+      expect(new_feed.users).to include user
 
       FeedClient.fetch new_feed, perform_autodiscovery: true
 
       # When performing autodiscovery, FeedClient should realise that there is another feed in the database with
-      # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one
-      expect(old_feed.entries.count).to eq 1
+      # the autodiscovered fetch_url; it should delete the "new" feed and instead fetch and return the "old" one.
+      # Any users that were subscribed to the "new" feed should be subscribed to the "old" one now.
+      expect(old_feed.reload.entries.count).to eq 1
       expect(old_feed.entries.where(guid: @entry1.guid)).to be_present
       expect(Feed.exists? new_feed.id).to be false
+      expect(old_feed.users.count).to eq 1
+      expect(old_feed.users).to include user
     end
 
     it 'autodiscovers already existing feed from internationalized URL' do
