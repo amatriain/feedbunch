@@ -13,9 +13,6 @@ script:
 env:
   global:
     - RAILS_ENV=ci
-    # Sauce Labs credentials
-    - secure: dAxWvDQOomsy+I4kIwwODbIyg6jTsE1KbzoM7+TEIMZD6wH5BmVlUndxTJArzLzwN12uFok57lCy7KvOEN2LFJXQMt6mzMXaPUFHNs3GmNrthaKPJnLVhvkd5mM8RBE41PfU+lq9dG7taLcGC153XTSsruu9XhvVUD4Cpez9BNs=
-    - secure: SvZoLXJXnXjFLU3xCQXYnAEHhnFV2Ai17sMJdqh0OyhHG5wM5kIrwV1uj9KF4Q1M3A+Ir6d6oD6hVg/322nfuEpMpWzotzythRo+slqBaiUyL0yrfzu0TpUYVmwYQeBF3t3jHG8EifzCdO1UcolfGqS/kRUKAzqr+MhPz01uVaE=
   matrix:
     - TEST_SUITE=unit
     - TEST_SUITE=acceptance_1
@@ -26,5 +23,3 @@ before_install:
 before_script:
   - "cp config/secrets_ci.yml config/secrets.yml"
   - "cp config/database.yml.ci config/database.yml"
-addons:
-  sauce_connect: true

@@ -73,24 +73,7 @@ RSpec.configure do |config|
 
   # Set driver for acceptance tests
   if ENV['TEST_SUITE'] != 'unit'
-    if ENV['CI'] && ENV['TRAVIS']
-      # If running in Travis CI, connect to the Sauce Labs selenium cloud
-      driver_name = "sauce_#{Time.now.to_i}"
-      Capybara.register_driver driver_name do |app|
-        username = ENV['SAUCE_USERNAME']
-        access_key = ENV['SAUCE_ACCESS_KEY']
-        caps = Selenium::WebDriver::Remote::Capabilities.firefox ({
-          'tunnel-identifier' => ENV['TRAVIS_JOB_NUMBER'],
-          'max-duration' => 7200
-        })
-        url = "http://#{username}:#{access_key}@ondemand.saucelabs.com/wd/hub"
-        Capybara::Selenium::Driver.new app, browser: :remote, url: url, desired_capabilities: caps
-      end
-      Capybara.javascript_driver = driver_name
-    else
-      # Other environments use selenium locally
-      Capybara.javascript_driver = :selenium
-    end
+    Capybara.javascript_driver = :selenium
   end
 
   # Make capybara wait for a long time for things to appear in the DOM,

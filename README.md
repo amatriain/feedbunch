@@ -141,7 +141,7 @@ folder.
 
 Please add new tests or update existing ones when adding or changing features.
 
-TravisCI is used for continuous integration. Any pull requests that have failed tests will probably not be accepted.
+Semaphore CI is used for continuous integration. Any pull requests that have failed tests will probably not be accepted.
 
 ### Logging
 
