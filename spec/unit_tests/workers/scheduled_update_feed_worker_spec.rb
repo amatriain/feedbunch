@@ -72,26 +72,26 @@ describe ScheduledUpdateFeedWorker do
       end
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3240
+        expect(in_seconds).to be_between(3240 - 60.seconds, 3240 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.reload.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3240
+      expect(@feed.reload.fetch_interval_secs).to be_between(3240 - 60.seconds, 3240 + 60.seconds).inclusive
     end
 
     it 'increments a 10% the fetch interval if no new entries are fetched' do
       allow(FeedClient).to receive :fetch
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.reload.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
     it 'does not set a fetch interval smaller than the configured minimum' do
@@ -101,26 +101,26 @@ describe ScheduledUpdateFeedWorker do
       end
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 600
+        expect(in_seconds).to be_between(600 - 60.seconds, 600 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       @feed.update fetch_interval_secs: 10.minutes
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 10.minutes
+      expect(@feed.reload.fetch_interval_secs).to be_between(600 - 60.seconds, 600 + 60.seconds).inclusive
     end
 
     it 'does not set a fetch interval greater than the configured maximum' do
       allow(FeedClient).to receive :fetch
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 21600
+        expect(in_seconds).to be_between(21600 - 60.seconds, 21600 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       @feed.update fetch_interval_secs: 6.hours
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 6.hours
+      expect(@feed.reload.fetch_interval_secs).to be_between(21600 - 60.seconds, 21600 + 60.seconds).inclusive
     end
 
   end
@@ -276,130 +276,130 @@ WEBPAGE_HTML
       allow(FeedClient).to receive(:fetch).and_raise RestClient::Exception.new
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
     it 'increments the fetch interval if the request times out' do
       allow(FeedClient).to receive(:fetch).and_raise RestClient::RequestTimeout.new
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
     it 'increments the fetch interval if the feed server FQDN cannot be resolved' do
       allow(FeedClient).to receive(:fetch).and_raise SocketError.new('getaddrinfo: Name or service not known')
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
     it 'increments the fetch interval if the feed server connection times out' do
       allow(FeedClient).to receive(:fetch).and_raise Errno::ETIMEDOUT.new
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
     it 'increments the fetch interval if the server refuses the connection' do
       allow(FeedClient).to receive(:fetch).and_raise Errno::ECONNREFUSED.new('Connection refused - connect(2) for "feed.com" port 80')
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
     it 'increments the fetch interval if the server is unreachable' do
       allow(FeedClient).to receive(:fetch).and_raise Errno::EHOSTUNREACH
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
     it 'increments the fetch interval if the server resets the connection' do
       allow(FeedClient).to receive(:fetch).and_raise Errno::ECONNRESET
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
     it 'increments the fetch interval if the feed server response is empty' do
       allow(FeedClient).to receive(:fetch).and_raise EmptyResponseError.new
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
     it 'increments the fetch interval if there is a problem trying to do a feed autodiscovery' do
       allow(FeedClient).to receive(:fetch).and_raise FeedAutodiscoveryError.new
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
     it 'increments the fetch interval if there is a problem trying to fetch a valid feed xml' do
       allow(FeedClient).to receive(:fetch).and_raise FeedFetchError.new
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to eq 3960
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       expect(@feed.fetch_interval_secs).to eq 3600
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to eq 3960
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
   end

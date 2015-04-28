@@ -92,6 +92,10 @@ class ScheduleManager
     min = Feedbunch::Application.config.min_update_interval
     new_interval = min if new_interval < min
 
+    # Add up to +/- 1 minute to the update interval, to add some entropy and distribute updates more evenly over time.
+    entropy = schedule_entropy
+    new_interval += entropy.seconds
+
     # Decrement the update interval saved in the database
     Rails.logger.debug "Decrementing update interval of feed #{feed.id} - #{feed.title} to #{new_interval} seconds"
     feed.update fetch_interval_secs: new_interval
@@ -110,6 +114,10 @@ class ScheduleManager
     max = Feedbunch::Application.config.max_update_interval
     new_interval = max if new_interval > max
 
+    # Add up to +/- 1 minute to the update interval, to add some entropy and distribute updates more evenly over time.
+    entropy = schedule_entropy
+    new_interval += entropy.seconds
+
     # Increment the update interval saved in the database
     Rails.logger.debug "Incrementing update interval of feed #{feed.id} - #{feed.title} to #{new_interval} seconds"
     feed.update fetch_interval_secs: new_interval
@@ -119,6 +127,14 @@ class ScheduleManager
   end
 
   private
+
+  ##
+  # Return a random number between -60 and 60.
+  # It can be used (as seconds) to add some entropy to schedules, so that scheduled updates are more evenly distributed.
+
+  def self.schedule_entropy
+    return Random.rand(121) - 60
+  end
 
   ##
   # Set a scheduled update for a feed.
