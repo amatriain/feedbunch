@@ -125,17 +125,32 @@ class ResetDemoUserWorker
   def reset_feeds_and_folders(demo_user)
     Rails.logger.debug 'Resetting feeds and folders for the demo user'
 
-    # destroy all folders and unsubscribe all feeds
-    demo_user.feeds.find_each { |f| demo_user.unsubscribe f}
-    demo_user.folders.destroy_all
-    demo_user.reload
+    demo_feed_urls = demo_subscriptions_list
+    reset_feed_subscriptions demo_user, demo_feed_urls
 
+    # Mark all entries as unread
+    demo_user.entry_states.update_all read: false
+
+    reset_folders demo_user
+
+    # Finally move feeds to their right folders
     @demo_feeds_and_folders.keys.each do |folder_title|
-      # the special value "NO FOLDER" is not an actual folder, we don't create it
-      folder = demo_user.folders.create title: folder_title unless folder_title == Folder::NO_FOLDER
-      @demo_feeds_and_folders[folder_title].each do |feed_url|
-        feed = demo_user.subscribe feed_url
-        folder.feeds << feed unless folder.blank?
+      # the special value "NO FOLDER" is not an actual folder, skip it
+      if folder_title != Folder::NO_FOLDER
+        folder = demo_user.folders.find_by_title folder_title
+
+        @demo_feeds_and_folders[folder_title].each do |feed_url|
+          feed = Feed.url_variants_feed feed_url
+
+          # Only move feed to different folder if necessary
+          current_folder = feed.user_folder demo_user
+          if current_folder != folder
+            Rails.logger.debug "Demo user - moving feed #{feed.id} - #{feed.fetch_url} to folder #{folder_title}"
+            folder.feeds << feed unless folder.blank?
+          else
+            Rails.logger.debug "Demo user - feed #{feed.fetch_url} is already in default folder #{folder_title}"
+          end
+        end
       end
     end
   end
@@ -149,12 +164,82 @@ class ResetDemoUserWorker
   end
 
   ##
-  # Unsuscribe demo user from any feeds that have been added besides the defaults.
-  # Receives as arguments the demo user and an array with the URLs of the default subscriptions of the demo user.
+  # Subscribe demo user to any feeds missing from the defaults, and unsubscribe from any feeds not in the defaults.
+  # Receives as arguments the demo user and an array with the default feed URLs.
+  # After this method is finished, it is guaranteed that the demo user is subscribed exactly to the default feeds.
+  # However it is not guaranteed that feeds are in the correct folders.
 
-  def unsubscribe_extra_feeds(demo_user, demo_subscriptions)
+  def reset_feed_subscriptions(demo_user, demo_feed_urls)
+    already_subscribed_default_urls = []
+    not_subscribed_default_urls = []
+
+    # Find out which of the default feed urls are already subscribed by the demo user, and which ones are not
+    demo_feed_urls.each do |url|
+      feed = Feed.url_variants_feed url
+      if feed.present?
+        subscribed_feed = demo_user.feeds.where(id: feed.id).first
+        if subscribed_feed.present?
+          Rails.logger.debug "Demo user already subscribed to feed #{url}"
+          already_subscribed_default_urls << subscribed_feed.fetch_url
+        else
+          Rails.logger.debug "Demo user not subscribed to existing feed #{url}"
+          not_subscribed_default_urls << url
+        end
+      else
+        Rails.logger.debug "Demo feed #{url} does not exist in the database"
+        not_subscribed_default_urls << url
+      end
+    end
+
+    # Unsubscribe feeds not in the list of demo feed urls
     demo_user.feeds.find_each do |feed|
-      # TODO
+      unless already_subscribed_default_urls.include? feed.fetch_url
+        Rails.logger.debug "Unsubscribing demo user from feed not in defaults: #{feed.id} - #{feed.fetch_url}"
+        demo_user.unsubscribe feed
+      end
+    end
+
+    # Subscribe to missing demo feeds
+    not_subscribed_default_urls.each do |url|
+      Rails.logger.debug "Subscribing demo user to missing default feed #{url}"
+      demo_user.subscribe url
+    end
+  end
+
+  ##
+  # Create missing default folders for the demo user, and destroy any folders not in the defaults.
+  # Receives as argument the demo user.
+
+  def reset_folders(demo_user)
+    already_existing_default_folders = []
+    not_existing_default_folders = []
+
+    # Find out which folders are already created and which ones are not
+    @demo_feeds_and_folders.keys.each do |folder_title|
+      # the special value "NO FOLDER" is not an actual folder, skip it
+      if folder_title != Folder::NO_FOLDER
+        if demo_user.folders.where(title: folder_title).first.present?
+          Rails.logger.debug "Demo user already has folder #{folder_title}"
+          already_existing_default_folders << folder_title
+        else
+          Rails.logger.debug "Demo user does not have folder #{folder_title}"
+          not_existing_default_folders << folder_title
+        end
+      end
+    end
+
+    # Destroy folders not in the defaults
+    demo_user.folders.find_each do |folder|
+      unless already_existing_default_folders.include? folder.title
+        Rails.logger.debug "Destroying folder owned by demo user but not in the default list: #{folder.id} - #{folder.title}"
+        folder.destroy
+      end
+    end
+
+    # Create missing folders
+    not_existing_default_folders.each do |folder_title|
+      Rails.logger.debug "Creating for the demo user missing folder #{folder_title}"
+      demo_user.folders.create title: folder_title
     end
   end
 end
