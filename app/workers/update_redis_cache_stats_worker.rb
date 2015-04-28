@@ -14,7 +14,7 @@ class UpdateRedisCacheStatsWorker
   sidekiq_options retry: false, queue: :maintenance
   # Run every minute.
   recurrence do
-    minutely
+    minutely 10
   end
 
   ##
