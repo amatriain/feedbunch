@@ -101,7 +101,7 @@ class ScheduleManager
     feed.update fetch_interval_secs: new_interval
 
     # Actually decrement the update interval
-    set_scheduled_update feed.id, feed.fetch_interval_secs
+    set_scheduled_update feed.id, feed.fetch_interval_secs, remove_other_schedules: false
   end
 
   ##
@@ -123,7 +123,7 @@ class ScheduleManager
     feed.update fetch_interval_secs: new_interval
 
     # Actually increment the update interval
-    set_scheduled_update feed.id, feed.fetch_interval_secs
+    set_scheduled_update feed.id, feed.fetch_interval_secs, remove_other_schedules: false
   end
 
   private
