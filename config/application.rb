@@ -76,8 +76,8 @@ module Feedbunch
     config.exceptions_app = self.routes
 
     # Maximum and minimum interval between updates for each feed, regardless of how often new entries appear.
-    config.max_update_interval = 6.hours
-    config.min_update_interval = 10.minutes
+    config.max_update_interval = 12.hours
+    config.min_update_interval = 30.minutes
 
     # If a feed's update fail for more than this time, the feed is marked as permanently unavailable (no more
     # updates will be attempted)
