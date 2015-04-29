@@ -20,14 +20,5 @@
     "bower_components",
     "test",
     "tests"
-  ],
-  "_release": "0.2.4",
-  "_resolution": {
-    "type": "version",
-    "tag": "v0.2.4",
-    "commit": "1bc604523e72c1f4fa6e4620ce94cc02d1dd3714"
-  },
-  "_source": "git://github.com/linkedin/hopscotch.git",
-  "_target": "*",
-  "_originalSource": "hopscotch"
+  ]
 }
