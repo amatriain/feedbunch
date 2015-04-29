@@ -17,6 +17,9 @@ gem 'jquery-rails'
 # Integrate bower (frontend package manager) with rails
 gem 'bower-rails', '~> 0.9.2'
 
+# Ruby profiling
+gem 'ruby-prof'
+
 # Serve the app with Puma
 gem 'puma'
 
