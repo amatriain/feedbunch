@@ -12,11 +12,17 @@ class ScheduleManager
 
   def self.fix_scheduled_updates
     Rails.logger.debug 'Fixing scheduled feed updates'
+
+    queue = Sidekiq::Queue.new 'update_feeds'
+    scheduled_set = Sidekiq::ScheduledSet.new
+    retrySet = Sidekiq::RetrySet.new
+    workers = Sidekiq::Workers.new
+
     feeds_unscheduled = []
 
     Feed.where(available: true).find_each do |feed|
       # get update schedule for the feed
-      schedule_present = feed_schedule_present? feed.id
+      schedule_present = feed_schedule_present? feed.id, queue, scheduled_set, retrySet, workers
       Rails.logger.debug "Update schedule for feed #{feed.id}  #{feed.title} present?: #{schedule_present}"
 
       # if a feed has no update schedule, add it to the array of feeds to be fixed
@@ -187,9 +193,14 @@ class ScheduleManager
   ##
   # Check if the passed feed's scheduled updates have been set.
   #
-  # Receives as argument a feed id.
+  # Receives as arguments:
+  # - feed id
+  # - sidekiq object for the queue named "update_feeds"
+  # - sidekiq object for the scheduled jobs
+  # - sidekiq object for the jobs marked for retrying
+  # - sidekiq object for the jobs currently running in a worker thread
   #
-  # To check if the feed updates have been scheduled, the following Sidekiq queues are checked:
+  # To check if the feed updates have been scheduled, the following Sidekiq queues passed as arguments are checked:
   # - The named "update_feeds" queue. The worker will be found there when its scheduled run time comes, until
   # a Sidekiq thread is free to process it.
   # - The queue with jobs scheduled to run in the future
@@ -200,11 +211,11 @@ class ScheduleManager
   # If a ScheduledFeedUpdateWorker is found in any of these queues with the id of the passed feed as argument,
   # a boolean true is returned. Otherwise false is returned.
 
-  def self.feed_schedule_present?(feed_id)
-    queued = feed_update_queued? feed_id
-    scheduled = feed_update_scheduled? feed_id
-    retrying = feed_update_retrying? feed_id
-    running = feed_update_running? feed_id
+  def self.feed_schedule_present?(feed_id, queue, scheduled_set, retrySet, workers)
+    queued = feed_update_queued? feed_id, queue
+    scheduled = feed_update_scheduled? feed_id, scheduled_set
+    retrying = feed_update_retrying? feed_id, retrySet
+    running = feed_update_running? feed_id, workers
 
     present = (queued || scheduled || retrying || running)
 
@@ -221,12 +232,13 @@ class ScheduleManager
   # Check if a scheduled update for the passed feed is already in the 'update_feeds' queue waiting
   # for a free Sidekiq thread to be processed.
   #
-  # Receives as argument a feed id.
+  # Receives as arguments:
+  # - feed id
+  # - sidekiq object for the "update_feeds" queue
   #
   # Returns true if the update is already queued, false otherwise.
 
-  def self.feed_update_queued?(feed_id)
-    queue = Sidekiq::Queue.new 'update_feeds'
+  def self.feed_update_queued?(feed_id, queue)
     queued = queue.any? {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed_id}
 
     if queued
@@ -241,12 +253,13 @@ class ScheduleManager
   ##
   # Check if an update for the passed feed is scheduled.
   #
-  # Receives as argument a feed id.
+  # Receives as arguments:
+  # - feed id
+  # - sidekiq object for the scheduled jobs
   #
   # Returns true if the update is scheduled, false otherwise.
 
-  def self.feed_update_scheduled?(feed_id)
-    scheduled_set = Sidekiq::ScheduledSet.new
+  def self.feed_update_scheduled?(feed_id, scheduled_set)
     scheduled = scheduled_set.any? {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed_id}
 
     if scheduled
@@ -261,12 +274,13 @@ class ScheduleManager
   ##
   # Check if an update for the passed feed has failed and is scheduled for retrying.
   #
-  # Receives as argument a feed id.
+  # Receives as arguments:
+  # - feed id
+  # - sidekiq object for the jobs marked for retrying
   #
   # Returns true if the update is going to be retried, false otherwise.
 
-  def self.feed_update_retrying?(feed_id)
-    retrySet = Sidekiq::RetrySet.new
+  def self.feed_update_retrying?(feed_id, retrySet)
     retrying = retrySet.any? {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed_id}
 
     if retrying
@@ -281,12 +295,13 @@ class ScheduleManager
   ##
   # Check if an update for the passed feed is currently being processed.
   #
-  # Receives as argument a feed id.
+  # Receives as arguments:
+  # - feed id
+  # - sidekiq object for the currently running jobs
   #
   # Returns true if the update is currently running, false otherwise.
 
-  def self.feed_update_running?(feed_id)
-    workers = Sidekiq::Workers.new
+  def self.feed_update_running?(feed_id, workers)
     running = workers.any? do |process_id, thread_id, work|
       work['payload']['class'] == 'ScheduledUpdateFeedWorker' && work['payload']['args'][0] == feed_id
     end
