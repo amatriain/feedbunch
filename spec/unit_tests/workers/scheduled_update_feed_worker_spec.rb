@@ -441,22 +441,24 @@ WEBPAGE_HTML
       expect(@feed.reload.failing_since).to eq date2
     end
 
-    it 'marks feed as unavailable when it has been failing longer than a week' do
+    it 'marks feed as unavailable when it has been failing longer than the configured maximum' do
+      unavailable_after = Feedbunch::Application.config.unavailable_after
       allow(FeedClient).to receive(:fetch).and_raise RestClient::Exception.new
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
-      @feed.update failing_since: date - (1.week + 1.day)
+      @feed.update failing_since: date - (unavailable_after + 1.day)
 
       expect(@feed.available).to be true
       ScheduledUpdateFeedWorker.new.perform @feed.id
       expect(@feed.reload.available).to be false
     end
 
-    it 'does not schedule next update for a feed that has been failing longer than a week' do
+    it 'does not schedule next update for a feed that has been failing longer than the configured maximum' do
+      unavailable_after = Feedbunch::Application.config.unavailable_after
       allow(FeedClient).to receive(:fetch).and_raise RestClient::Exception.new
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
-      @feed.update failing_since: date - (1.week + 1.day)
+      @feed.update failing_since: date - (unavailable_after + 1.day)
 
       expect(ScheduledUpdateFeedWorker).not_to receive :perform_in
       expect(ScheduledUpdateFeedWorker).not_to receive :perform_at
