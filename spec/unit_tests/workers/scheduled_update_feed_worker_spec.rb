@@ -95,32 +95,35 @@ describe ScheduledUpdateFeedWorker do
     end
 
     it 'does not set a fetch interval smaller than the configured minimum' do
+      min_interval = Feedbunch::Application.config.min_update_interval
+
       allow(FeedClient).to receive :fetch do
         entry = FactoryGirl.build :entry, feed_id: @feed.id
         @feed.entries << entry
       end
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to be_between(600 - 60.seconds, 600 + 60.seconds).inclusive
+        expect(in_seconds).to be_between(min_interval - 60.seconds, min_interval + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       @feed.update fetch_interval_secs: 10.minutes
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to be_between(600 - 60.seconds, 600 + 60.seconds).inclusive
+      expect(@feed.reload.fetch_interval_secs).to be_between(min_interval - 60.seconds, min_interval + 60.seconds).inclusive
     end
 
     it 'does not set a fetch interval greater than the configured maximum' do
       allow(FeedClient).to receive :fetch
+      max_interval = Feedbunch::Application.config.max_update_interval
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to be_between(21600 - 60.seconds, 21600 + 60.seconds).inclusive
+        expect(in_seconds).to be_between(max_interval - 60.seconds, max_interval + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
-      @feed.update fetch_interval_secs: 6.hours
+      @feed.update fetch_interval_secs: max_interval
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to be_between(21600 - 60.seconds, 21600 + 60.seconds).inclusive
+      expect(@feed.reload.fetch_interval_secs).to be_between(max_interval - 60.seconds, max_interval + 60.seconds).inclusive
     end
 
   end
