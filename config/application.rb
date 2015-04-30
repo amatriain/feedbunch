@@ -81,7 +81,7 @@ module Feedbunch
 
     # If a feed's update fail for more than this time, the feed is marked as permanently unavailable (no more
     # updates will be attempted)
-    config.unavailable_after = 1.week
+    config.unavailable_after = 1.month
 
     # Job state alerts (subscribe_job and refresh_feed_job) when they are older than this
     config.destroy_job_states_after = 24.hours
