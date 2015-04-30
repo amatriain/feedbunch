@@ -28,13 +28,19 @@ class ScheduleManager
     feeds_unscheduled = []
 
     Feed.where(available: true).find_each do |feed|
-      # get update schedule for the feed
-      schedule_present = feed_schedule_present? feed.id, queued_ids, scheduled_ids, retry_ids, worker_ids
-      Rails.logger.debug "Update schedule for feed #{feed.id}  #{feed.title} present?: #{schedule_present}"
+      # count how many update workers there are for each feed in Sidekiq
+      schedule_count = feed_schedule_count feed.id, queued_ids, scheduled_ids, retry_ids, worker_ids
+      Rails.logger.debug "Update schedule for feed #{feed.id}  #{feed.title} present #{schedule_count} times"
 
       # if a feed has no update schedule, add it to the array of feeds to be fixed
-      if !schedule_present
+      if schedule_count == 0
         Rails.logger.warn "Missing schedule for feed #{feed.id} - #{feed.title}"
+        feeds_unscheduled << feed
+      elsif schedule_count > 1
+        # there should be one scheduled update for each feed.
+        # If a feed has more than one scheduled update, remove all updates for the feed and add it to the array of feeds to be fixed
+        Rails.logger.warn "Feed #{feed.id} - #{feed.title} is scheduled more than one time, removing all scheduled updates to re-add just one"
+        unschedule_feed_updates feed.id
         feeds_unscheduled << feed
       end
     end
@@ -62,7 +68,7 @@ class ScheduleManager
   def self.schedule_first_update(feed_id)
     delay = Random.rand 61
     Rails.logger.info "Scheduling updates of feed #{feed_id} every hour, starting #{delay} minutes from now at #{Time.zone.now + delay.minutes}"
-    set_scheduled_update feed_id, delay.minutes, remove_other_schedules: false
+    set_scheduled_update feed_id, delay.minutes
   end
 
   ##
@@ -114,7 +120,7 @@ class ScheduleManager
     feed.update fetch_interval_secs: new_interval
 
     # Actually decrement the update interval
-    set_scheduled_update feed.id, feed.fetch_interval_secs, remove_other_schedules: false
+    set_scheduled_update feed.id, feed.fetch_interval_secs
   end
 
   ##
@@ -136,7 +142,7 @@ class ScheduleManager
     feed.update fetch_interval_secs: new_interval
 
     # Actually increment the update interval
-    set_scheduled_update feed.id, feed.fetch_interval_secs, remove_other_schedules: false
+    set_scheduled_update feed.id, feed.fetch_interval_secs
   end
 
   private
@@ -152,24 +158,11 @@ class ScheduleManager
   ##
   # Set a scheduled update for a feed.
   #
-  # Optionally if the feed already has a scheduled update,
-  # it is unscheduled. This guarantees that each feed
-  # has at most one update scheduled in the future.
-  #
   # Receives as arguments:
   # - ID of the feed that will be updated
   # - in_seconds: number of seconds until the update runs
-  # - optionally, a boolean that indicates whether to remove other scheduled updates set for the feed.
-  # If we are sure that no other updates are scheduled, a false should be passed to this argument
-  # for performance reasons. True by default.
 
-  def self.set_scheduled_update(feed_id, in_seconds, remove_other_schedules: true)
-    if remove_other_schedules
-      Rails.logger.info "Checking if feed #{feed_id} has an update already scheduled"
-      scheduled = feed_schedule_present? feed_id
-      unschedule_feed_updates feed_id if scheduled
-    end
-
+  def self.set_scheduled_update(feed_id, in_seconds)
     Rails.logger.info "Setting scheduled update of feed #{feed_id} in #{in_seconds} seconds"
     ScheduledUpdateFeedWorker.perform_in in_seconds.seconds, feed_id
   end
@@ -198,7 +191,7 @@ class ScheduleManager
   end
 
   ##
-  # Check if the passed feed's scheduled updates have been set.
+  # Count how many scheduled updates are set for the passed feed.
   #
   # Receives as arguments:
   # - feed id
@@ -207,7 +200,7 @@ class ScheduleManager
   # - array of IDs of feeds with updates marked for retrying
   # - array of IDs of feeds with updates currently running in a worker thread
   #
-  # To check if the feed updates have been scheduled, the following Sidekiq queues passed as arguments are checked:
+  # To count the number of feed updates that have been scheduled, the following Sidekiq queues passed as arguments are checked:
   # - The named "update_feeds" queue. The worker will be found there when its scheduled run time comes, until
   # a Sidekiq thread is free to process it.
   # - The queue with jobs scheduled to run in the future
@@ -215,109 +208,109 @@ class ScheduleManager
   # the future
   # - The currently running jobs
   #
-  # If a ScheduledFeedUpdateWorker is found in any of these queues with the id of the passed feed as argument,
-  # a boolean true is returned. Otherwise false is returned.
+  # The number of times ScheduledFeedUpdateWorker is found in any of these queues with the id of the passed feed as argument
+  # is counted and returned.
 
-  def self.feed_schedule_present?(feed_id, queued_ids, scheduled_ids, retry_ids, worker_ids)
-    queued = feed_update_queued? feed_id, queued_ids
-    scheduled = feed_update_scheduled? feed_id, scheduled_ids
-    retrying = feed_update_retrying? feed_id, retry_ids
-    running = feed_update_running? feed_id, worker_ids
+  def self.feed_schedule_count(feed_id, queued_ids, scheduled_ids, retry_ids, worker_ids)
+    queued_count = update_queued_count feed_id, queued_ids
+    scheduled_count = update_scheduled_count feed_id, scheduled_ids
+    retrying_count = update_retrying_count feed_id, retry_ids
+    running_count = update_running_count feed_id, worker_ids
 
-    present = (queued || scheduled || retrying || running)
+    updates_count = queued_count + scheduled_count + retrying_count + running_count
 
-    if present
+    if updates_count > 0
       Rails.logger.info "Feed #{feed_id} update worker is present"
     else
       Rails.logger.info "Feed #{feed_id} update worker is not present"
     end
 
-    return present
+    return updates_count
   end
 
   ##
-  # Check if a scheduled update for the passed feed is already in the 'update_feeds' queue waiting
+  # Count how many scheduled updates for the passed feed are already in the 'update_feeds' queue waiting
   # for a free Sidekiq thread to be processed.
   #
   # Receives as arguments:
   # - feed id
   # - array of IDs of feeds in the "update_feeds" queue
   #
-  # Returns true if the update is already queued, false otherwise.
+  # Returns the count of scheduled updates, zero if none.
 
-  def self.feed_update_queued?(feed_id, queued_ids)
-    queued = queued_ids.include? feed_id
+  def self.update_queued_count(feed_id, queued_ids)
+    queued_count = queued_ids.count feed_id
 
-    if queued
+    if queued_count > 0
       Rails.logger.info "Feed #{feed_id} update worker queued for immediate processing"
     else
       Rails.logger.info "Feed #{feed_id} update worker not queued for immediate processing"
     end
 
-    return queued
+    return queued_count
   end
 
   ##
-  # Check if an update for the passed feed is scheduled.
+  # Count how many updates for the passed feed are scheduled.
   #
   # Receives as arguments:
   # - feed id
   # - array of IDs of feeds with a scheduled update
   #
-  # Returns true if the update is scheduled, false otherwise.
+  # Returns the count of scheduled updates for the passed feed, zero if none.
 
-  def self.feed_update_scheduled?(feed_id, scheduled_ids)
-    scheduled = scheduled_ids.include? feed_id
+  def self.update_scheduled_count(feed_id, scheduled_ids)
+    scheduled_count = scheduled_ids.count feed_id
 
-    if scheduled
+    if scheduled_count > 0
       Rails.logger.info "Feed #{feed_id} update worker scheduled"
     else
       Rails.logger.info "Feed #{feed_id} update worker not scheduled"
     end
 
-    return scheduled
+    return scheduled_count
   end
 
   ##
-  # Check if an update for the passed feed has failed and is scheduled for retrying.
+  # Count how many updates for the passed feed are scheduled for retrying.
   #
   # Receives as arguments:
   # - feed id
   # - array of IDs of feeds with updates marked for retrying
   #
-  # Returns true if the update is going to be retried, false otherwise.
+  # Returns the count of updates scheduled for retrying, zero if none.
 
-  def self.feed_update_retrying?(feed_id, retry_ids)
-    retrying = retry_ids.include? feed_id
+  def self.update_retrying_count(feed_id, retry_ids)
+    retrying_count = retry_ids.count feed_id
 
-    if retrying
+    if retrying_count > 0
       Rails.logger.info "Feed #{feed_id} update worker scheduled for retrying"
     else
       Rails.logger.info "Feed #{feed_id} update worker not scheduled for retrying"
     end
 
-    return retrying
+    return retrying_count
   end
 
   ##
-  # Check if an update for the passed feed is currently being processed.
+  # Count how many updates for the passed feed are currently being processed.
   #
   # Receives as arguments:
   # - feed id
   # - array of IDs of feeds with updates currently running in a worker thread
   #
-  # Returns true if the update is currently running, false otherwise.
+  # Returns the count of updates currently running, zero if no update for the passed feed is running.
 
-  def self.feed_update_running?(feed_id, worker_ids)
-    running = worker_ids.include? feed_id
+  def self.update_running_count(feed_id, worker_ids)
+    running_count = worker_ids.count feed_id
 
-    if running
+    if running_count > 0
       Rails.logger.info "Feed #{feed_id} update worker currently running"
     else
       Rails.logger.info "Feed #{feed_id} update worker currently not running"
     end
 
-    return running
+    return running_count
   end
 end
 
