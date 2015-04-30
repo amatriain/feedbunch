@@ -14,15 +14,22 @@ class ScheduleManager
     Rails.logger.debug 'Fixing scheduled feed updates'
 
     queue = Sidekiq::Queue.new 'update_feeds'
+    queued_ids = queue.select{|job| job.klass == 'ScheduledUpdateFeedWorker'}.map{|job| job.args[0]}
+
     scheduled_set = Sidekiq::ScheduledSet.new
+    scheduled_ids = scheduled_set.select{|job| job.klass == 'ScheduledUpdateFeedWorker'}.map{|job| job.args[0]}
+
     retrySet = Sidekiq::RetrySet.new
+    retry_ids = retrySet.select{|job| job.klass == 'ScheduledUpdateFeedWorker'}.map{|job| job.args[0]}
+
     workers = Sidekiq::Workers.new
+    worker_ids = workers.select{|process_id, thread_id, work| work['payload']['class'] == 'ScheduledUpdateFeedWorker'}.map{|process_id, thread_id, work| work['payload']['args'][0]}
 
     feeds_unscheduled = []
 
     Feed.where(available: true).find_each do |feed|
       # get update schedule for the feed
-      schedule_present = feed_schedule_present? feed.id, queue, scheduled_set, retrySet, workers
+      schedule_present = feed_schedule_present? feed.id, queued_ids, scheduled_ids, retry_ids, worker_ids
       Rails.logger.debug "Update schedule for feed #{feed.id}  #{feed.title} present?: #{schedule_present}"
 
       # if a feed has no update schedule, add it to the array of feeds to be fixed
@@ -195,10 +202,10 @@ class ScheduleManager
   #
   # Receives as arguments:
   # - feed id
-  # - sidekiq object for the queue named "update_feeds"
-  # - sidekiq object for the scheduled jobs
-  # - sidekiq object for the jobs marked for retrying
-  # - sidekiq object for the jobs currently running in a worker thread
+  # - array of IDs of feeds in the "update_feeds" queue
+  # - array of IDs of feeds with a scheduled update
+  # - array of IDs of feeds with updates marked for retrying
+  # - array of IDs of feeds with updates currently running in a worker thread
   #
   # To check if the feed updates have been scheduled, the following Sidekiq queues passed as arguments are checked:
   # - The named "update_feeds" queue. The worker will be found there when its scheduled run time comes, until
@@ -211,11 +218,11 @@ class ScheduleManager
   # If a ScheduledFeedUpdateWorker is found in any of these queues with the id of the passed feed as argument,
   # a boolean true is returned. Otherwise false is returned.
 
-  def self.feed_schedule_present?(feed_id, queue, scheduled_set, retrySet, workers)
-    queued = feed_update_queued? feed_id, queue
-    scheduled = feed_update_scheduled? feed_id, scheduled_set
-    retrying = feed_update_retrying? feed_id, retrySet
-    running = feed_update_running? feed_id, workers
+  def self.feed_schedule_present?(feed_id, queued_ids, scheduled_ids, retry_ids, worker_ids)
+    queued = feed_update_queued? feed_id, queued_ids
+    scheduled = feed_update_scheduled? feed_id, scheduled_ids
+    retrying = feed_update_retrying? feed_id, retry_ids
+    running = feed_update_running? feed_id, worker_ids
 
     present = (queued || scheduled || retrying || running)
 
@@ -234,12 +241,12 @@ class ScheduleManager
   #
   # Receives as arguments:
   # - feed id
-  # - sidekiq object for the "update_feeds" queue
+  # - array of IDs of feeds in the "update_feeds" queue
   #
   # Returns true if the update is already queued, false otherwise.
 
-  def self.feed_update_queued?(feed_id, queue)
-    queued = queue.any? {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed_id}
+  def self.feed_update_queued?(feed_id, queued_ids)
+    queued = queued_ids.include? feed_id
 
     if queued
       Rails.logger.info "Feed #{feed_id} update worker queued for immediate processing"
@@ -255,12 +262,12 @@ class ScheduleManager
   #
   # Receives as arguments:
   # - feed id
-  # - sidekiq object for the scheduled jobs
+  # - array of IDs of feeds with a scheduled update
   #
   # Returns true if the update is scheduled, false otherwise.
 
-  def self.feed_update_scheduled?(feed_id, scheduled_set)
-    scheduled = scheduled_set.any? {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed_id}
+  def self.feed_update_scheduled?(feed_id, scheduled_ids)
+    scheduled = scheduled_ids.include? feed_id
 
     if scheduled
       Rails.logger.info "Feed #{feed_id} update worker scheduled"
@@ -276,12 +283,12 @@ class ScheduleManager
   #
   # Receives as arguments:
   # - feed id
-  # - sidekiq object for the jobs marked for retrying
+  # - array of IDs of feeds with updates marked for retrying
   #
   # Returns true if the update is going to be retried, false otherwise.
 
-  def self.feed_update_retrying?(feed_id, retrySet)
-    retrying = retrySet.any? {|job| job.klass == 'ScheduledUpdateFeedWorker' && job.args[0] == feed_id}
+  def self.feed_update_retrying?(feed_id, retry_ids)
+    retrying = retry_ids.include? feed_id
 
     if retrying
       Rails.logger.info "Feed #{feed_id} update worker scheduled for retrying"
@@ -297,14 +304,12 @@ class ScheduleManager
   #
   # Receives as arguments:
   # - feed id
-  # - sidekiq object for the currently running jobs
+  # - array of IDs of feeds with updates currently running in a worker thread
   #
   # Returns true if the update is currently running, false otherwise.
 
-  def self.feed_update_running?(feed_id, workers)
-    running = workers.any? do |process_id, thread_id, work|
-      work['payload']['class'] == 'ScheduledUpdateFeedWorker' && work['payload']['args'][0] == feed_id
-    end
+  def self.feed_update_running?(feed_id, worker_ids)
+    running = worker_ids.include? feed_id
 
     if running
       Rails.logger.info "Feed #{feed_id} update worker currently running"
