@@ -7,16 +7,23 @@
       right:5px;
     }
 
+    i.current-entry {
+      position: absolute;
+      left: -1px;
+      top: 22px;
+      visibility: hidden;
+    }
+
     .entry-feed-column {
       padding: {
-        left: 0;
+        left: 5px;
         right: 10px;
       }
     }
 
     .entry-title-column {
       padding: {
-        left: 0;
+        left: 5px;
         right: 5px;
       }
     }
@@ -33,6 +40,13 @@
 /* For screens wider than 992px, Bootstrap v3 "md" (medium) breakpoint. */
 /* I.e. for md- and lg- screens, not for xs- and sm- screens */
 @media (min-width: $screen-md-min) {
+  i.current-entry {
+    position: absolute;
+    left: 1px;
+    top: 9px;
+    visibility: hidden;
+  }
+
   .entry-content{
     padding: 20px;
   }
@@ -72,6 +86,12 @@
 
     a.entry-becoming-read{
       background-color: #EAFFD6;
+    }
+
+    a:hover {
+      i.current-entry {
+        visibility: visible;
+      }
     }
 
     a.entry-read:hover{

@@ -27,6 +27,8 @@
          ng-class="{'entry-read':entry.read && !entry.changing_state, 'entry-unread': !entry.read && !entry.changing_state, 'entry-becoming-read':entry.read && entry.changing_state, 'entry-becoming-unread':!entry.read && entry.changing_state}"
          ng-click="toggle_open_entry(entry)">
 
+        <i class="fa fa-fw fa-caret-right current-entry"></i>
+
         <div class="row">
 
           <div class="hidden-xs hidden-sm col-md-2 entry-feed-column">
