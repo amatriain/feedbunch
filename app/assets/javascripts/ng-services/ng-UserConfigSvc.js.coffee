@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'userConfigSvc',
-['$rootScope', '$http', 'timerFlagSvc', 'quickReadingSvc', 'openAllEntriesSvc', 'tourSvc',
-($rootScope, $http, timerFlagSvc, quickReadingSvc, openAllEntriesSvc, tourSvc)->
+['$rootScope', '$http', 'timerFlagSvc', 'quickReadingSvc', 'openAllEntriesSvc', 'tourSvc', 'keyboardShortcutsSvc',
+($rootScope, $http, timerFlagSvc, quickReadingSvc, openAllEntriesSvc, tourSvc, keyboardShortcutsSvc)->
 
   #---------------------------------------------
   # Load user configuration data via AJAX into the root scope
@@ -30,6 +30,9 @@ angular.module('feedbunch').service 'userConfigSvc',
 
       # Show the mobile application tour, if the show_mobile_tour flag is true
       tourSvc.show_mobile_tour() if $rootScope.show_mobile_tour
+
+      # Start responding to keyboard shortcuts
+      keyboardShortcutsSvc.start()
     .error (data, status)->
       timerFlagSvc.start 'error_loading_user_config' if status!=0
 ]
