@@ -11,7 +11,7 @@
       position: absolute;
       left: -1px;
       top: 22px;
-      visibility: hidden;
+      display: none;
     }
 
     .entry-feed-column {
@@ -44,7 +44,7 @@
     position: absolute;
     left: 1px;
     top: 9px;
-    visibility: hidden;
+    display: none;
   }
 
   .entry-content{
@@ -54,6 +54,12 @@
 
 #feed-entries {
   margin-bottom: 1em;
+
+  .entry:first-child {
+    i.current-entry {
+      display: inline;
+    }
+  }
 
   .entry {
     margin: {
@@ -86,12 +92,6 @@
 
     a.entry-becoming-read{
       background-color: #EAFFD6;
-    }
-
-    a:hover {
-      i.current-entry {
-        visibility: visible;
-      }
     }
 
     a.entry-read:hover{

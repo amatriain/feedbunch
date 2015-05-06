@@ -10,6 +10,9 @@ angular.module('feedbunch').service 'keyboardShortcutsSvc',
   # Start responding to keyboard shortcuts
   #---------------------------------------------
   start: ->
+    # TODO - do not enable keyboard shortcuts while a text field is visible! (e.g. when creating a new folder,
+    # renaming a feed, subscribing to a new feed etc). Otherwise e.g. we cannot enter a folder name with "j" or "k" chars
+
     $(document).keypress (event)->
       # j=106, k=107
       if event.which in [106, 107]

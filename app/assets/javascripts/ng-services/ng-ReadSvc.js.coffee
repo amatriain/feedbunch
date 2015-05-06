@@ -5,10 +5,10 @@
 angular.module('feedbunch').service 'readSvc',
 ['$rootScope', '$http', '$q', '$timeout', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc', 'lazyLoadingSvc', 'startPageSvc',
-'findSvc', 'changeUnreadCountSvc',
+'findSvc', 'changeUnreadCountSvc', 'highlightedEntrySvc',
 ($rootScope, $http, $q, $timeout, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
 entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc, startPageSvc,
-findSvc, changeUnreadCountSvc)->
+findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
 
   # Maximum number of entries in each page.
   # This MUST match the entries page size set in the server!
@@ -50,8 +50,11 @@ findSvc, changeUnreadCountSvc)->
       $rootScope.entries_http_canceler = null
       entriesPaginationSvc.set_busy false
 
+      # If entries list is empty, populate it with received entries and highlight first entry.
+      # Otherwise concatenate the received page of entries to the list of entries.
       if !$rootScope.entries || $rootScope.entries?.length == 0
         $rootScope.entries = data.slice()
+        highlightedEntrySvc.reset()
       else
         $rootScope.entries = $rootScope.entries.concat data.slice()
 
@@ -115,8 +118,11 @@ findSvc, changeUnreadCountSvc)->
       $rootScope.entries_http_canceler = null
       entriesPaginationSvc.set_busy false
 
+      # If entries list is empty, populate it with received entries and highlight first entry.
+      # Otherwise concatenate the received page of entries to the list of entries.
       if !$rootScope.entries || $rootScope.entries?.length == 0
         $rootScope.entries = data.slice()
+        highlightedEntrySvc.reset()
       else
         $rootScope.entries = $rootScope.entries.concat data.slice()
 
