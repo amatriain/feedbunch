@@ -8,19 +8,25 @@ angular.module('feedbunch').service 'openEntrySvc',
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Set an entry as closed.
+  # Receives as arguments:
+  # - entry to close
+  # - boolean indicating if it has been initiated by a keyboard shortcut (default false)
   #--------------------------------------------
-  close = (entry)->
-    animationsSvc.close_entry entry
+  close = (entry, keyboardInitiated=false)->
+    animationsSvc.close_entry entry, keyboardInitiated
     index = $rootScope.open_entries.indexOf entry
     $rootScope.open_entries.splice index, 1 if index != -1
 
   service =
 
     #---------------------------------------------
-    # Set an entry as open
+    # Set an entry as open.
+    # Receives as arguments:
+    # - entry to open
+    # - boolean indicating if it has been initiated by a keyboard shortcut (default false)
     #---------------------------------------------
-    open: (entry)->
-      animationsSvc.open_entry entry
+    open: (entry, keyboardInitiated=false)->
+      animationsSvc.open_entry entry, keyboardInitiated
 
       # Close any other open entry, unless the user has selected the "open all entries by default" config option
       if $rootScope.open_entries && !$rootScope.open_all_entries

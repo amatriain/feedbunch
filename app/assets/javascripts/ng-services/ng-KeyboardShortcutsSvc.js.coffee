@@ -19,6 +19,6 @@ angular.module('feedbunch').service 'keyboardShortcutsSvc',
         if $rootScope.entries
           highlightedEntrySvc.next() if event.which == 106
           highlightedEntrySvc.previous() if event.which == 107
-          entrySvc.toggle_open_entry highlightedEntrySvc.get() if event.which == 32
+          entrySvc.toggle_open_entry highlightedEntrySvc.get(), true if event.which == 32
         event.preventDefault()
 ]

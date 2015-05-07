@@ -100,13 +100,16 @@ lazyLoadingSvc, tourSvc)->
 
     #--------------------------------------------
     # Set (if opening) or unset (if closing) the currently open entry. If opening, mark it as read.
+    # Receives as arguments:
+    # - entry to be opened or closed
+    # - boolean indicating if it has been initiated by a keyboard shortcut (default false)
     #--------------------------------------------
-    toggle_open_entry: (entry)->
+    toggle_open_entry: (entry, keyboardInitiated=false)->
       if openEntrySvc.is_open entry
         # User is closing the open entry
-        openEntrySvc.close entry
+        openEntrySvc.close entry, keyboardInitiated
       else
-        openEntrySvc.open entry
+        openEntrySvc.open entry, keyboardInitiated
         if !entry.read
           # User is opening an unread entry, mark it as read
           change_entry_state entry, true

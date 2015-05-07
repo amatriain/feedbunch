@@ -11,7 +11,7 @@ angular.module('feedbunch').service 'animationsSvc',
   # This intended to prevent unexpected entries from being highlighted after an autoscroll, if
   # the mouse pointer was on the entries list.
   #--------------------------------------------
-  disable_mouseover_highlight = ->
+  disable_mouseover_highlight = (timeout=250)->
     $rootScope.mouseover_highlight_disabled = true
 
     # only one timer is running at once, so that mouseover highlight is only reenabled
@@ -24,7 +24,7 @@ angular.module('feedbunch').service 'animationsSvc',
     $rootScope.entry_autoscroll_timer = $timeout ->
       $rootScope.mouseover_highlight_disabled = false
       delete $rootScope.entry_autoscroll_timer
-    , 250
+    , timeout
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Add a CSS class that identifies entry as open, for testing.
@@ -150,8 +150,14 @@ angular.module('feedbunch').service 'animationsSvc',
 
     #---------------------------------------------
     # Animate opening an entry, by transitioning its height from zero to its final value.
+    # Receives as arguments:
+    # - entry to be opened
+    # - boolean indicating if it has been initiated by a keyboard shortcut (default false). In this case, temporarily
+    # disable highlighting entries by mouseover, to avoid unexpected side effects.
     #---------------------------------------------
-    open_entry: (entry)->
+    open_entry: (entry, keyboardInitiated=false)->
+      disable_mouseover_highlight(1000) if keyboardInitiated
+
       entry_summary = $("#entry-#{entry.id}-summary")
 
       # Temporarily make entry content visible (height > 0) to measure its height
@@ -171,9 +177,14 @@ angular.module('feedbunch').service 'animationsSvc',
         .velocity 'scroll', {offset: topOffset, duration: 250, delay: 50}
 
     #---------------------------------------------
-    # Animate closing an entry, by transitioning its height from its current value to zero
+    # Animate closing an entry, by transitioning its height from its current value to zero.
+    # Receives as arguments:
+    # - entry to be closed
+    # - boolean indicating if it has been initiated by a keyboard shortcut (default false). In this case, temporarily
+    # disable highlighting entries by mouseover, to avoid unexpected side effects.
     #---------------------------------------------
-    close_entry: (entry)->
+    close_entry: (entry, keyboardInitiated=false)->
+      disable_mouseover_highlight(1000) if keyboardInitiated
       $("#entry-#{entry.id}-summary")
         .velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
           {duration: 300, easing: 'swing', complete: remove_entry_open_class}
