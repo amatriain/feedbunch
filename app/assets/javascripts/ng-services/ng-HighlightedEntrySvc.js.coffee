@@ -12,11 +12,10 @@ angular.module('feedbunch').service 'highlightedEntrySvc',
   set = (entry)->
     $rootScope.highlighted_entry = entry
 
-    entry_css_selector = "#feed-entries a[data-entry-id=#{entry.id}]"
-
+    entry_link = $("#feed-entries a[data-entry-id=#{entry.id}]")
     # Add CSS class "highlighted-entry" only to currently highlighted entry
-    $('#feed-entries a[data-entry-id].highlighted-entry').removeClass 'highlighted-entry'
-    $(entry_css_selector).addClass 'highlighted-entry'
+    entry_link.addClass 'highlighted-entry'
+    $("#feed-entries a[data-entry-id!=#{entry.id}].highlighted-entry").removeClass 'highlighted-entry'
 
   service =
 
