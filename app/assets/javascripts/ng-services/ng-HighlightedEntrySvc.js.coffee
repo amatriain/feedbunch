@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'highlightedEntrySvc',
-['$rootScope',
-($rootScope)->
+['$rootScope', 'animationsSvc',
+($rootScope, animationsSvc)->
 
   #---------------------------------------------
   # PRIVATE FUNCTION: Set the currently highlighted entry
@@ -48,7 +48,10 @@ angular.module('feedbunch').service 'highlightedEntrySvc',
     next: ->
       index = $rootScope.entries.indexOf $rootScope.highlighted_entry
       if index >= 0 && index < ($rootScope.entries.length - 1)
-        set $rootScope.entries[index + 1]
+        next_entry = $rootScope.entries[index + 1]
+        set next_entry
+        # Scroll page so that highlighted entry is visible, if necessary
+        animationsSvc.entry_scroll_down next_entry
 
     #---------------------------------------------
     # Highlight the previous entry (above current one)
@@ -56,7 +59,10 @@ angular.module('feedbunch').service 'highlightedEntrySvc',
     previous: ->
       index = $rootScope.entries.indexOf $rootScope.highlighted_entry
       if index > 0 && index < $rootScope.entries.length
-        set $rootScope.entries[index - 1]
+        previous_entry = $rootScope.entries[index - 1]
+        set previous_entry
+        # Scroll page so that highlighted entry is visible, if necessary
+        animationsSvc.entry_scroll_up previous_entry
 
   return service
 ]

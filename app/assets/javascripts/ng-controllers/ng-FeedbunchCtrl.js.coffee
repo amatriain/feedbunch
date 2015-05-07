@@ -195,7 +195,7 @@ tourSvc, highlightedEntrySvc)->
   # Highlight an entry when the mouse hovers over it
   #--------------------------------------------
   $scope.highlight_entry = (entry)->
-    highlightedEntrySvc.set entry
+    highlightedEntrySvc.set entry unless $rootScope.mouseover_highlight_disabled
     return
 
   #--------------------------------------------

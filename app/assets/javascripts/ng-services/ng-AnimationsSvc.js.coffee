@@ -3,8 +3,28 @@
 ########################################################
 
 angular.module('feedbunch').service 'animationsSvc',
-['$rootScope',
-($rootScope)->
+['$rootScope', '$timeout',
+($rootScope, $timeout)->
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION - Temporarily disable highlighting entries by mouseover.
+  # This intended to prevent unexpected entries from being highlighted after an autoscroll, if
+  # the mouse pointer was on the entries list.
+  #--------------------------------------------
+  disable_mouseover_highlight = ->
+    $rootScope.mouseover_highlight_disabled = true
+
+    # only one timer is running at once, so that mouseover highlight is only reenabled
+    # after all entry autoscroll animations have finished
+    timer = $rootScope.entry_autoscroll_timer
+    if timer?
+      $timeout.cancel timer
+      delete $rootScope.entry_autoscroll_timer
+
+    $rootScope.entry_autoscroll_timer = $timeout ->
+      $rootScope.mouseover_highlight_disabled = false
+      delete $rootScope.entry_autoscroll_timer
+    , 250
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Add a CSS class that identifies entry as open, for testing.
@@ -107,6 +127,26 @@ angular.module('feedbunch').service 'animationsSvc',
     show_sidebar: ->
       enquire.register xs_max_media_query, ->
         $('#sidebar-column').velocity {translateX: '0'}, {duration: 300, easing: 'swing'}
+
+    #---------------------------------------------
+    # If an entry is not in the viewport, scroll down until it is completely inside the viewport
+    #---------------------------------------------
+    entry_scroll_down: (entry)->
+      entry_link = $("#feed-entries a[data-entry-id=#{entry.id}]")
+      if !entry_link.parent().next().is ':in-viewport'
+        disable_mouseover_highlight()
+        offset = -1 * ($(window).height() - entry_link.outerHeight())
+        entry_link.velocity 'scroll', {offset: offset, duration: 100}
+
+    #---------------------------------------------
+    # If an entry is not in the viewport, scroll up until it is completely inside the viewport
+    #---------------------------------------------
+    entry_scroll_up: (entry)->
+      entry_link = $("#feed-entries a[data-entry-id=#{entry.id}]")
+      if !entry_link.parent().prev().prev().is ":in-viewport"
+        disable_mouseover_highlight()
+        offset = -1 * (3 + $("div.navbar").outerHeight())
+        entry_link.velocity 'scroll', {offset: offset, duration: 100}
 
     #---------------------------------------------
     # Animate opening an entry, by transitioning its height from zero to its final value.
