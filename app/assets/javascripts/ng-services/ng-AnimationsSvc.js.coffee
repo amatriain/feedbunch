@@ -7,26 +7,6 @@ angular.module('feedbunch').service 'animationsSvc',
 ($rootScope, $timeout)->
 
   #--------------------------------------------
-  # PRIVATE FUNCTION - Temporarily disable highlighting entries by mouseover.
-  # This intended to prevent unexpected entries from being highlighted after an autoscroll, if
-  # the mouse pointer was on the entries list.
-  #--------------------------------------------
-  disable_mouseover_highlight = (timeout=250)->
-    $rootScope.mouseover_highlight_disabled = true
-
-    # only one timer is running at once, so that mouseover highlight is only reenabled
-    # after all entry autoscroll animations have finished
-    timer = $rootScope.entry_autoscroll_timer
-    if timer?
-      $timeout.cancel timer
-      delete $rootScope.entry_autoscroll_timer
-
-    $rootScope.entry_autoscroll_timer = $timeout ->
-      $rootScope.mouseover_highlight_disabled = false
-      delete $rootScope.entry_autoscroll_timer
-    , timeout
-
-  #--------------------------------------------
   # PRIVATE FUNCTION - Add a CSS class that identifies entry as open, for testing.
   # Also set explictly height to 'auto' (setting the CSS class alone does not override the explicitly set
   # height otherwise).
@@ -134,7 +114,6 @@ angular.module('feedbunch').service 'animationsSvc',
     entry_scroll_down: (entry)->
       entry_link = $("#feed-entries a[data-entry-id=#{entry.id}]")
       if !entry_link.parent().next().is ':in-viewport'
-        disable_mouseover_highlight()
         offset = -1 * ($(window).height() - entry_link.outerHeight())
         entry_link.velocity 'scroll', {offset: offset, duration: 100}
 
@@ -144,7 +123,6 @@ angular.module('feedbunch').service 'animationsSvc',
     entry_scroll_up: (entry)->
       entry_link = $("#feed-entries a[data-entry-id=#{entry.id}]")
       if !entry_link.parent().prev().prev().is ":in-viewport"
-        disable_mouseover_highlight()
         offset = -1 * (3 + $("div.navbar").outerHeight())
         entry_link.velocity 'scroll', {offset: offset, duration: 100}
 
@@ -152,12 +130,8 @@ angular.module('feedbunch').service 'animationsSvc',
     # Animate opening an entry, by transitioning its height from zero to its final value.
     # Receives as arguments:
     # - entry to be opened
-    # - boolean indicating if it has been initiated by a keyboard shortcut (default false). In this case, temporarily
-    # disable highlighting entries by mouseover, to avoid unexpected side effects.
     #---------------------------------------------
-    open_entry: (entry, keyboardInitiated=false)->
-      disable_mouseover_highlight(1000) if keyboardInitiated
-
+    open_entry: (entry)->
       entry_summary = $("#entry-#{entry.id}-summary")
 
       # Temporarily make entry content visible (height > 0) to measure its height
@@ -180,11 +154,8 @@ angular.module('feedbunch').service 'animationsSvc',
     # Animate closing an entry, by transitioning its height from its current value to zero.
     # Receives as arguments:
     # - entry to be closed
-    # - boolean indicating if it has been initiated by a keyboard shortcut (default false). In this case, temporarily
-    # disable highlighting entries by mouseover, to avoid unexpected side effects.
     #---------------------------------------------
-    close_entry: (entry, keyboardInitiated=false)->
-      disable_mouseover_highlight(1000) if keyboardInitiated
+    close_entry: (entry)->
       $("#entry-#{entry.id}-summary")
         .velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
           {duration: 300, easing: 'swing', complete: remove_entry_open_class}
