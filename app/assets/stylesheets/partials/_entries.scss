@@ -11,7 +11,6 @@
       position: absolute;
       left: -1px;
       top: 22px;
-      display: none;
     }
 
     .entry-feed-column {
@@ -44,7 +43,6 @@
     position: absolute;
     left: 1px;
     top: 9px;
-    display: none;
   }
 
   .entry-content{
@@ -75,6 +73,18 @@
         bottom: 5px;
         left: 10px;
         right: 10px;
+      }
+    }
+
+    a[data-entry-id] {
+      i.current-entry {
+        display: none;
+      }
+    }
+
+    a[data-entry-id].highlighted-entry {
+      i.current-entry {
+        display: inline;
       }
     }
 
