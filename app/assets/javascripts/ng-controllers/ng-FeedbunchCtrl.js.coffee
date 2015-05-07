@@ -7,12 +7,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
-'tourSvc',
+'tourSvc', 'highlightedEntrySvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
-tourSvc)->
+tourSvc, highlightedEntrySvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -189,6 +189,13 @@ tourSvc)->
   $scope.toggle_open_folder = (folder)->
     readSvc.toggle_open_folder folder
     menuCollapseSvc.close()
+    return
+
+  #--------------------------------------------
+  # Highlight an entry when the mouse hovers over it
+  #--------------------------------------------
+  $scope.highlight_entry = (entry)->
+    highlightedEntrySvc.set entry
     return
 
   #--------------------------------------------

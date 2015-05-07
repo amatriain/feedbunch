@@ -94,19 +94,19 @@
       background-color: #EAFFD6;
     }
 
-    a.entry-read:hover{
+    a.entry-read.highlighted-entry{
       background-color: #d6ffac;
     }
 
-    a.entry-becoming-read:hover{
+    a.entry-becoming-read.highlighted-entry{
       background-color: #d6ffac;
     }
 
-    a.entry-unread:hover{
+    a.entry-unread.highlighted-entry{
       background-color: #E8E8E8;
     }
 
-    a.entry-becoming-unread:hover{
+    a.entry-becoming-unread.highlighted-entry{
       background-color: #E8E8E8;
     }
 
