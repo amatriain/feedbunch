@@ -15,12 +15,12 @@ angular.module('feedbunch').service 'highlightedEntrySvc',
     entry_css_selector = "#feed-entries a[data-entry-id=#{entry.id}]"
 
     # Add CSS class "highlighted-entry" only to currently highlighted entry
+    $('#feed-entries a[data-entry-id].highlighted-entry').removeClass 'highlighted-entry'
     $(entry_css_selector).addClass 'highlighted-entry'
-    $('a[data-entry-id]').not(entry_css_selector).removeClass 'highlighted-entry'
 
     # Make caret visible only for the currently highlighted entry
+    $('i.current-entry:visible').hide()
     $("#{entry_css_selector} i.current-entry").show()
-    $('i.current-entry').not("#{entry_css_selector} i.current-entry").hide()
 
   service =
 
