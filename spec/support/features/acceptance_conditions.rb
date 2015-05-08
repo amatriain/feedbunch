@@ -237,3 +237,25 @@ end
 def tour_should_not_be_visible
   expect(page).to have_no_css 'div.hopscotch-bubble'
 end
+
+##
+# Test that the passed entry is highlighted
+
+def entry_should_be_highlighted(entry)
+  entry_should_be_visible entry
+  within "#feed-entries #entry-#{entry.id}" do
+    expect(page).to have_css 'a.open-entry-link.highlighted-entry'
+    expect(page).to have_css 'i.fa-caret-right.current-entry', visible: true
+  end
+end
+
+##
+# Test that the passed entry is not highlighted
+
+def entry_should_not_be_highlighted(entry)
+  entry_should_be_visible entry
+  within "#feed-entries #entry-#{entry.id}" do
+    expect(page).not_to have_css 'a.open-entry-link.highlighted-entry'
+    expect(page).not_to have_css 'i.fa-caret-right.current-entry', visible: true
+  end
+end

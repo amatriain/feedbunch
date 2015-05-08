@@ -542,3 +542,10 @@ def reset_tours
   find('#reset-tours-button').click
   should_show_alert 'success-reset-tours'
 end
+
+##
+# Press the passed key in the keyboard
+
+def press_key(key)
+  page.find('body').native.send_keys key
+end
