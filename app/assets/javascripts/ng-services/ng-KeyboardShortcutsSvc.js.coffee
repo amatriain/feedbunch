@@ -29,4 +29,10 @@ angular.module('feedbunch').service 'keyboardShortcutsSvc',
           highlightedEntrySvc.previous() if event.which == 107
           entrySvc.toggle_open_entry highlightedEntrySvc.get() if event.which == 32
         event.preventDefault()
+
+  #---------------------------------------------
+  # Start responding to keyboard shortcuts
+  #---------------------------------------------
+  stop: ->
+    $(document).off 'keypress'
 ]

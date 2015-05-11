@@ -25,14 +25,12 @@ $(document).ready ->
   #-------------------------------------------------------
   # Give focus to the close button when showing the "Help and Feedback" modal.
   #-------------------------------------------------------
-
   $("body").on "shown.bs.modal", "#help-feedback-popup",  ->
     $("#help-close", this).focus()
 
   #-------------------------------------------------------
   # Give focus to the cancel button when showing the "Import subscriptions" modal.
   #-------------------------------------------------------
-
   $("body").on "shown.bs.modal", "#opml-import-popup",  ->
     $("#opml-import-cancel", this).focus()
 
