@@ -1,26 +1,47 @@
 ########################################################
-# AngularJS service for the currently highlighted feed.
+# AngularJS service for the currently highlighted link in the sidebar.
 ########################################################
 
-angular.module('feedbunch').service 'highlightedFeedSvc',
+angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
 ['$rootScope', '$filter', 'animationsSvc', 'findSvc',
 ($rootScope, $filter, animationsSvc, findSvc)->
 
   #---------------------------------------------
-  # PRIVATE FUNCTION: Set the currently highlighted feed
+  # PRIVATE CONSTANTS
   #---------------------------------------------
-  set = (feed)->
-    if feed == 'start'
-      $rootScope.highlighted_feed_id = 'start'
+  START = 'start'
+  FEED = 'feed'
+  FOLDER = 'folder'
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Highlight a single link in the sidebar.
+  # Receives as argument a jquery object for the highlighted link.
+  #---------------------------------------------
+  single_highlighted_link = (link)->
+    $("#folders-list a[data-feed-id].highlighted-feed").removeClass 'highlighted-link'
+    link.addClass 'highlighted-link'
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Set the currently highlighted link.
+  # Receives as arguments:
+  # - id: if the selected link is the "Start" link, the START constant is passed here.
+  # If it's a feed link, it's the feed ID. If it's a folder's "Read all subscriptions" link, it's the folder ID.
+  # - type: optional argument. If the id argument is START, this argument will be ignored. Otherwise, it takes the value
+  # FEED or FOLDER to indicate if the ID passed corresponds to a feed or a folder.
+  #---------------------------------------------
+  set = (id, type=null)->
+    if id == START
+      $rootScope.highlighted_sidebar_link = {id: id, type: null}
       start_link = $('#start-page')
-      start_link.addClass 'highlighted-feed'
-      $('#folders-list a[data-feed-id].highlighted-feed').removeClass 'highlighted-feed'
-    else
-      $rootScope.highlighted_feed_id = feed.id
-      feed_link = $("#folders-list a[data-feed-id=#{feed.id}]")
-      # Add CSS class "highlighted-feed" only to currently highlighted feed
-      feed_link.addClass 'highlighted-feed'
-      $("#folders-list a[data-feed-id!=#{feed.id}].highlighted-feed").removeClass 'highlighted-feed'
+      single_highlighted_link start_link
+    else if type == FEED
+      $rootScope.highlighted_sidebar_link = {id: id, type: type}
+      feed_link = $("#folders-list a[data-feed-id=#{id}]")
+      single_highlighted_link feed_link
+    else if type == FOLDER
+      $rootScope.highlighted_sidebar_link = {id: id, type: type}
+      folder_link = $("#folders-list #feeds-#{id} a[data-feed-id='all]")
+      single_highlighted_link folder_link
 
   service =
 
@@ -28,21 +49,33 @@ angular.module('feedbunch').service 'highlightedFeedSvc',
     # Set the "start" link in the sidebar as the currently highlighted one
     #---------------------------------------------
     reset: ->
-      set 'start'
+      set START
 
     #---------------------------------------------
-    # Set the currently highlighted feed
+    # Highlight the link for the passed feed
     #---------------------------------------------
-    set: set
+    set_feed: (feed)->
+      set feed.id, FEED
 
     #---------------------------------------------
-    # Get the currently highlighted feed
+    # Highlight the link for the passed folder
+    #---------------------------------------------
+      set_folder: (folder)->
+        set folder.id, FOLDER
+
+    #---------------------------------------------
+    # Get the currently highlighted link.
+    # It returns an object with two attributes:
+    # - id: the ID of the feed or folder, if the highlighted link corresponds to a link or folder; or "start" if
+    # the highlighted link is the "Start" link
+    # - type: either "feed" or "folder" if the highlighted link is a feed or folder; or null if the highlighted link
+    # is the "Start" link
     #---------------------------------------------
     get: ->
-      return $rootScope.highlighted_feed_id
+      return $rootScope.highlighted_sidebar_link
 
     #---------------------------------------------
-    # Highlight the next feed (below current one)
+    # Highlight the next link (below current one).
     #---------------------------------------------
     next: ->
       current_feed = findSvc.find_feed $rootScope.highlighted_feed_id
