@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').controller 'DeviseCtrl',
 ['$scope', '$window', 'timerFlagSvc', 'sidebarVisibleSvc', 'tooltipSvc', 'invitationsSvc', 'cookiesSvc',
-'animationsSvc', 'tourSvc',
+'animationsSvc', 'tourSvc', 'formFocusSvc',
 ($scope, $window, timerFlagSvc, sidebarVisibleSvc, tooltipSvc, invitationsSvc, cookiesSvc,
-animationsSvc, tourSvc)->
+animationsSvc, tourSvc, formFocusSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -26,6 +26,9 @@ animationsSvc, tourSvc)->
 
   # Initialize tooltip on cookies warning "accept" button
   tooltipSvc.cookies_warning_tooltips()
+
+  # Initialize giving focus to form fields when shown
+  formFocusSvc.start()
 
   #--------------------------------------------
   # When clicking on the top-left navbar button (only visible in smartphone-sized viewports),

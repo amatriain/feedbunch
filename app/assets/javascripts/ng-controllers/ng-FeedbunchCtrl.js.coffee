@@ -7,12 +7,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
-'tourSvc', 'highlightedEntrySvc',
+'tourSvc', 'highlightedEntrySvc', 'formFocusSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
-tourSvc, highlightedEntrySvc)->
+tourSvc, highlightedEntrySvc, formFocusSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -38,6 +38,9 @@ tourSvc, highlightedEntrySvc)->
 
   # Initialize export alert tooltips
   tooltipSvc.export_state_tooltips()
+
+  # Initialize giving focus to form fields when shown
+  formFocusSvc.start()
 
   # Load configuration for the current user.
   userConfigSvc.load_config()
