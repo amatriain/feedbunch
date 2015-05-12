@@ -81,9 +81,9 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
   # - id: the feed or folder ID if it's a feed or folder link; or START if it's the "Start" link
   # - type: FEED or FOLDER if it's a feed or folder link; or null if it's the "Start" link
   #---------------------------------------------
-  link_index = (link, sidebar_links)->
-    id = link.id
-    type = link.type
+  link_index = (link_object, sidebar_links)->
+    id = link_object.id
+    type = link_object.type
     array_links = $filter('filter') sidebar_links, (l)->
       return l.id == id && l.type == type
 
