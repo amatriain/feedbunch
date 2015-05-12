@@ -93,6 +93,22 @@
 
 #sidebar {
 
+  a:hover {
+    background-color: transparent;
+  }
+
+  a.highlighted-link {
+    background-color: #eee;
+  }
+
+  li.active > a#start-page,
+  li.active > a#start-page.highlighted-link,
+  li.active > a[data-sidebar-feed],
+  li.active > a[data-sidebar-feed].highlighted-link {
+    background-color: #337ab7;
+    color: #fff;
+  }
+
   .sidebar-spinner {
     margin-left: 45%;
   }

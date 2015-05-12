@@ -103,7 +103,7 @@ end
 
 def unread_folder_entries_should_eq(folder, count)
   if folder=='all'
-    within '#sidebar #folders-list #folder-none #all-feeds span.badge' do
+    within '#sidebar #folders-list #folder-none #feeds-all span.badge' do
       expect(page).to have_content "#{count}"
     end
   else

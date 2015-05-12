@@ -1,10 +1,11 @@
 <% cache "sidebar_read_all-#{I18n.locale}" do %>
 
-  <li id="all-feeds"
+  <li id="feeds-all"
       ng-class="{active: current_folder.id=='all', disabled: !all_subscriptions_enabled()}">
     <a data-sidebar-feed
        data-feed-id="all"
-       ng-click="set_current_folder('all')">
+       ng-click="set_current_folder('all')"
+       ng-mouseover="highlight_folder_link('all')">
 
       <div class="row">
 

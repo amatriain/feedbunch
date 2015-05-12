@@ -7,12 +7,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
-'tourSvc', 'highlightedEntrySvc', 'formFocusSvc',
+'tourSvc', 'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'formFocusSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
-tourSvc, highlightedEntrySvc, formFocusSvc)->
+tourSvc, highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -192,6 +192,27 @@ tourSvc, highlightedEntrySvc, formFocusSvc)->
   $scope.toggle_open_folder = (folder)->
     readSvc.toggle_open_folder folder
     menuCollapseSvc.close()
+    return
+
+  #--------------------------------------------
+  # Highlight the start link in the sidebar when the mouse hovers over it
+  #--------------------------------------------
+  $scope.highlight_start_link = ()->
+    highlightedSidebarLinkSvc.reset()
+    return
+
+  #--------------------------------------------
+  # Highlight a folder link in the sidebar when the mouse hovers over it
+  #--------------------------------------------
+  $scope.highlight_folder_link = (folder)->
+    highlightedSidebarLinkSvc.set_folder folder
+    return
+
+  #--------------------------------------------
+  # Highlight a feed link in the sidebar when the mouse hovers over it
+  #--------------------------------------------
+  $scope.highlight_feed_link = (feed)->
+    highlightedSidebarLinkSvc.set_feed feed
     return
 
   #--------------------------------------------

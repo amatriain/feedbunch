@@ -243,7 +243,7 @@ describe 'feeds', type: :feature do
       it 'shows a link to read entries in all subscriptions', js: true do
         expect(page).to have_css "#sidebar a[data-sidebar-feed][data-feed-id='all']"
         # Wait for the "all subscriptions" link to become enabled
-        expect(page).to have_no_css "#sidebar #all-feeds.disabled a[data-sidebar-feed][data-feed-id='all']"
+        expect(page).to have_no_css "#sidebar #feeds-all.disabled a[data-sidebar-feed][data-feed-id='all']"
 
         # Click on link to read all feeds
         find("#sidebar #folder-none a[data-sidebar-feed][data-feed-id='all']").click
@@ -276,7 +276,7 @@ describe 'feeds', type: :feature do
 
         expect(page).to have_css "#sidebar a[data-sidebar-feed][data-feed-id='all']"
         # Wait for the "all subscriptions" link to become enabled
-        expect(page).to have_no_css "#sidebar #all-feeds.disabled a[data-sidebar-feed][data-feed-id='all']"
+        expect(page).to have_no_css "#sidebar #feeds-all.disabled a[data-sidebar-feed][data-feed-id='all']"
 
         # Click on link to read all feeds
         find("#sidebar #folder-none a[data-sidebar-feed][data-feed-id='all']").click
