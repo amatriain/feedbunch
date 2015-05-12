@@ -60,8 +60,8 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
     #---------------------------------------------
     # Highlight the link for the passed folder
     #---------------------------------------------
-      set_folder: (folder)->
-        set folder.id, FOLDER
+    set_folder: (folder)->
+      set folder.id, FOLDER
 
     #---------------------------------------------
     # Get the currently highlighted link.
