@@ -51,24 +51,45 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
   #---------------------------------------------
   sidebar_links = ->
     links = []
-    links << {id: START, type: null}
+    links.push {id: START, type: null}
 
     no_folder_feeds = findSvc.find_folder_feeds 'none'
     ordered_feeds = $filter('orderBy') no_folder_feeds, 'title'
-    links << {id: 'none', type: FOLDER}
-    for feed in ordered_feeds
-      links << {id: feed.id, type: FEED}
+    links.push {id: 'none', type: FOLDER}
+    if ordered_feeds && ordered_feeds?.length > 0
+      for feed in ordered_feeds
+        links.push {id: feed.id, type: FEED}
 
     ordered_folders = $filter('orderBy') $rootScope.folders, 'title'
     for folder in ordered_folders
       folder_feeds = findSvc.find_folder_feeds folder
       # The "All subscriptions" link for a folder is visible only if there is more than 1 feed in it
-      links << {id: folder.id, type: FOLDER} if folder_feeds.length > 1
+      links.push {id: folder.id, type: FOLDER} if folder_feeds.length > 1
       ordered_feeds = $filter('orderBy') folder_feeds, 'title'
-      for feed in ordered_feeds
-        links << {id: feed.id, type: FEED}
+      if ordered_feeds && ordered_feeds?.length > 0
+        for feed in ordered_feeds
+          links.push {id: feed.id, type: FEED}
 
     return links
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: find the index of the passed link in the array of sidebar links.
+  # A simple .indexOf search won't work because the passed link object is not actually in the array,
+  # rather an object with the same attribute values is in the array.
+  #
+  # The objects representing links have two attributes:
+  # - id: the feed or folder ID if it's a feed or folder link; or START if it's the "Start" link
+  # - type: FEED or FOLDER if it's a feed or folder link; or null if it's the "Start" link
+  #---------------------------------------------
+  link_index = (link, sidebar_links)->
+    id = link.id
+    type = link.type
+    array_links = $filter('filter') sidebar_links, (l)->
+      return l.id == id && l.type == type
+
+    array_link = array_links[0] if array_links?.length == 1
+    index = sidebar_links.indexOf array_link
+    return index
 
   service =
 
@@ -110,7 +131,7 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
     #---------------------------------------------
     next: ->
       links = sidebar_links()
-      index = links.indexOf $rootScope.highlighted_sidebar_link
+      index = link_index $rootScope.highlighted_sidebar_link, links
       if index >= 0 && index < (links.length - 1)
         next_link = links[index + 1]
         set next_link
@@ -123,7 +144,7 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
 
     previous: ->
       links = sidebar_links()
-      index = links.indexOf $rootScope.highlighted_sidebar_link
+      index = link_index $rootScope.highlighted_sidebar_link, links
       if index > 0 && index < links.length
         previous_link = links[index - 1]
         set previous_link
