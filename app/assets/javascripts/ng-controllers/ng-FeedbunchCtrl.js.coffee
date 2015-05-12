@@ -198,21 +198,21 @@ tourSvc, highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
   # Highlight the start link in the sidebar when the mouse hovers over it
   #--------------------------------------------
   $scope.highlight_start_link = ()->
-    highlightedSidebarLinkSvc.reset()
+    highlightedSidebarLinkSvc.reset() unless $rootScope.mouseover_highlight_disabled
     return
 
   #--------------------------------------------
   # Highlight a folder link in the sidebar when the mouse hovers over it
   #--------------------------------------------
   $scope.highlight_folder_link = (folder)->
-    highlightedSidebarLinkSvc.set_folder folder
+    highlightedSidebarLinkSvc.set_folder folder unless $rootScope.mouseover_highlight_disabled
     return
 
   #--------------------------------------------
   # Highlight a feed link in the sidebar when the mouse hovers over it
   #--------------------------------------------
   $scope.highlight_feed_link = (feed)->
-    highlightedSidebarLinkSvc.set_feed feed
+    highlightedSidebarLinkSvc.set_feed feed unless $rootScope.mouseover_highlight_disabled
     return
 
   #--------------------------------------------
