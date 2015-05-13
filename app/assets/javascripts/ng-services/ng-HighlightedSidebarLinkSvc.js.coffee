@@ -145,7 +145,8 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
         if folder_id? && folder_id != 'all' && folder_id != 'none'
           folder = findSvc.find_folder folder_id
           openFolderSvc.set folder
-        # TODO autoscroll sidebar if necessary
+
+        animationsSvc.sidebar_scroll_down next_link
 
     #---------------------------------------------
     # Highlight the previous link (above current one)
@@ -169,7 +170,8 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
         if folder_id? && folder_id != 'all' && folder_id != 'none'
           folder = findSvc.find_folder folder_id
           openFolderSvc.set folder
-        # TODO autoscroll sidebar if necessary
+
+        animationsSvc.sidebar_scroll_up previous_link
 
   return service
 ]

@@ -109,6 +109,44 @@ angular.module('feedbunch').service 'animationsSvc',
         $('#sidebar-column').velocity {translateX: '0'}, {duration: 300, easing: 'swing'}
 
     #---------------------------------------------
+    # If a sidebar link is not in the viewport, scroll the sidebar down until it is completely inside the viewport.
+    # Receives as argument a link object, which has two attributes:
+    # - id: if it's a feed or folder link, the ID of the feed or folder. If it's the "Start" link, it has the value 'start'
+    # - type: either 'feed' or 'folder' if it's a feed or folder link; null if it's the "Start" link
+    #---------------------------------------------
+    sidebar_scroll_down: (link_object)->
+      if link_object.type == 'feed'
+        sidebar_link = $("#folders-list a[data-feed-id=#{link_object.id}]").parent()
+      else if link_object.type == 'folder'
+        sidebar_link = $("#folders-list #feeds-#{link_object.id} a[data-feed-id='all']").parent()
+      else if link_object.id == 'start'
+        sidebar_link = $('#start-page').parent()
+
+      if !sidebar_link.next().is ':in-viewport'
+        sidebar_column = $('#sidebar-column')
+        offset = -1 * (sidebar_column.height() - sidebar_link.outerHeight())
+        sidebar_link.velocity 'scroll', {container: sidebar_column, offset: offset, duration: 100}
+
+    #---------------------------------------------
+    # If a sidebar link is not in the viewport, scroll the sidebar up until it is completely inside the viewport.
+    # Receives as argument a link object, which has two attributes:
+    # - id: if it's a feed or folder link, the ID of the feed or folder. If it's the "Start" link, it has the value 'start'
+    # - type: either 'feed' or 'folder' if it's a feed or folder link; null if it's the "Start" link
+    #---------------------------------------------
+    sidebar_scroll_up: (link_object)->
+      if link_object.type == 'feed'
+        sidebar_link = $("#folders-list a[data-feed-id=#{link_object.id}]").parent()
+      else if link_object.type == 'folder'
+        sidebar_link = $("#folders-list #feeds-#{link_object.id} a[data-feed-id='all']").parent()
+      else if link_object.id == 'start'
+        sidebar_link = $('#start-page').parent()
+
+      if !sidebar_link.prev().prev().prev().is ':in-viewport'
+        sidebar_column = $('#sidebar-column')
+        offset = -8
+        sidebar_link.velocity 'scroll', {container: sidebar_column, offset: offset, duration: 100}
+
+    #---------------------------------------------
     # If an entry is not in the viewport, scroll down until it is completely inside the viewport
     #---------------------------------------------
     entry_scroll_down: (entry)->
