@@ -7,12 +7,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
-'tourSvc', 'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'formFocusSvc',
+'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'formFocusSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
-tourSvc, highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
+highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -153,12 +153,6 @@ tourSvc, highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
     feed = findSvc.find_feed feed_id
     if feed?
       currentFeedSvc.set feed
-      tooltipSvc.feed_title_tooltip()
-      feedsFoldersSvc.load_feed feed_id
-      readSvc.read_entries_page()
-      menuCollapseSvc.close()
-      sidebarVisibleSvc.set false
-      tourSvc.show_feed_tour() if $rootScope.show_feed_tour
     return
 
   #--------------------------------------------
