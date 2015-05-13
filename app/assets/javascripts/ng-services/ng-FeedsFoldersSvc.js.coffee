@@ -295,7 +295,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
     #---------------------------------------------
     load_folder_feeds: (folder)->
       # If passed folder is "all", load all feeds in a paginated fashion.
-      if folder=="all"
+      if folder=='all' || folder?.id == 'all'
         load_data()
       # If any other folder is passed, load feeds in that folder only (not paginated)
       else

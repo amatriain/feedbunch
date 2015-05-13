@@ -11,8 +11,8 @@ menuCollapseSvc, sidebarVisibleSvc)->
   set: (folder)->
     entriesPaginationSvc.reset_entries()
     $rootScope.current_feed = null
-    if folder=="all"
-      $rootScope.current_folder = {id: "all"}
+    if folder=='all' || folder?.id == 'all'
+      $rootScope.current_folder = {id: 'all'}
     else
       # Open the folder if it isn't already open.
       openFolderSvc.set folder

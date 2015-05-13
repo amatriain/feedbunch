@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'keyboardShortcutsSvc',
 ['$rootScope', 'highlightedEntrySvc', 'highlightedSidebarLinkSvc','entrySvc', 'startPageSvc', 'currentFeedSvc',
-'findSvc',
+'currentFolderSvc', 'findSvc',
 ($rootScope, highlightedEntrySvc, highlightedSidebarLinkSvc, entrySvc, startPageSvc, currentFeedSvc,
-findSvc)->
+currentFolderSvc, findSvc)->
 
   #---------------------------------------------
   # Start responding to keyboard shortcuts
@@ -47,10 +47,10 @@ findSvc)->
             startPageSvc.show_start_page()
           else if highlighted_link.type == 'feed'
             feed = findSvc.find_feed highlighted_link.id
-            currentFeedSvc.set feed
+            currentFeedSvc.set feed if feed?
           else if highlighted_link.type == 'folder'
-            # TODO
-            alert 'todo'
+            folder = findSvc.find_folder highlighted_link.id
+            currentFolderSvc.set folder if folder?
 
         event.preventDefault()
 
