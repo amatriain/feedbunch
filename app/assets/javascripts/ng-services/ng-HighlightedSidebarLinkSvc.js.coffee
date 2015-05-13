@@ -61,14 +61,15 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
         links.push {id: feed.id, type: FEED}
 
     ordered_folders = $filter('orderBy') $rootScope.folders, 'title'
-    for folder in ordered_folders
-      folder_feeds = findSvc.find_folder_feeds folder
-      # The "All subscriptions" link for a folder is visible only if there is more than 1 feed in it
-      links.push {id: folder.id, type: FOLDER} if folder_feeds.length > 1
-      ordered_feeds = $filter('orderBy') folder_feeds, 'title'
-      if ordered_feeds && ordered_feeds?.length > 0
-        for feed in ordered_feeds
-          links.push {id: feed.id, type: FEED}
+    if ordered_folders? && ordered_folders?.length > 0
+      for folder in ordered_folders
+        folder_feeds = findSvc.find_folder_feeds folder
+        # The "All subscriptions" link for a folder is visible only if there is more than 1 feed in it
+        links.push {id: folder.id, type: FOLDER} if folder_feeds.length > 1
+        ordered_feeds = $filter('orderBy') folder_feeds, 'title'
+        if ordered_feeds && ordered_feeds?.length > 0
+          for feed in ordered_feeds
+            links.push {id: feed.id, type: FEED}
 
     return links
 
