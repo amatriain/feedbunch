@@ -1,5 +1,5 @@
 ########################################################
-# AngularJS service to set, unset and recover the currently selected folder in the root scope
+# AngularJS service to set and recover the currently selected folder in the root scope
 ########################################################
 
 angular.module('feedbunch').service 'currentFolderSvc',
