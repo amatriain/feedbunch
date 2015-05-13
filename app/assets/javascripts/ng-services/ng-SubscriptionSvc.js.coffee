@@ -38,12 +38,11 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, sta
       folder_id = current_feed.folder_id
       path = "/api/feeds/#{current_feed.id}.json"
 
-      $rootScope.subscribed_feeds_count -= 1
-
-      # Tell the model that no feed is currently selected.
+      # Show the start page
       startPageSvc.show_start_page()
 
       # Remove feed from feeds list
+      $rootScope.subscribed_feeds_count -= 1
       cleanupSvc.remove_feed current_feed.id
       favicoSvc.update_unread_badge()
 
@@ -53,6 +52,9 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, sta
 
       $http.delete(path)
       .success ->
+        cleanupSvc.remove_feed current_feed.id
+        favicoSvc.update_unread_badge()
+
         # If there are no other feeds in the folder, remove it from the scope
         if folder_id != 'none'
           $http.get("/api/folders/#{folder_id}/feeds.json?include_read=true")

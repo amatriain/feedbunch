@@ -187,37 +187,51 @@ describe 'unsubscribe from feed', type: :feature do
     end
   end
 
-  it 'removes refresh job state alert for the unsubscribed feed', js: true do
-    job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed1.id
-    @user.refresh_feed_job_states << job_state
-    go_to_start_page
-    within '#refresh-state-alerts' do
-      expect(page).to have_text 'Currently refreshing feed'
-      expect(page).to have_content @feed1.title
+  context 'job states' do
+
+    before :each do
+      # Immediately unsubscribe from feed
+      allow_any_instance_of(User).to receive :enqueue_unsubscribe_job do |user, feed|
+        user.unsubscribe feed
+      end
     end
 
-    unsubscribe_feed @feed1, @user
+    it 'removes refresh job state alert for the unsubscribed feed', js: true do
+      job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed1.id
+      @user.refresh_feed_job_states << job_state
+      go_to_start_page
+      within '#refresh-state-alerts' do
+        expect(page).to have_text 'Currently refreshing feed'
+        expect(page).to have_content @feed1.title
+      end
 
-    expect(page).to have_css '#subscription-stats'
-    expect(page).to have_no_text 'Currently refreshing feed'
-    expect(page).to have_no_content @feed1.title
-  end
+      unsubscribe_feed @feed1, @user
 
-  it 'removes subscribe job state alert for the unsubscribed feed', js: true do
-    job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, feed_id: @feed1.id,
-                                  fetch_url: @feed1.fetch_url, state: SubscribeJobState::SUCCESS
-    @user.subscribe_job_states << job_state
-    go_to_start_page
-    within '#subscribe-state-alerts' do
-      expect(page).to have_text 'Successfully added subscription to feed'
-      expect(page).to have_content @feed1.title
+      expect(page).to have_css '#subscription-stats'
+      expect(page).to have_no_text 'Currently refreshing feed'
+      expect(page).to have_no_content @feed1.title
     end
 
-    unsubscribe_feed @feed1, @user
+    it 'removes subscribe job state alert for the unsubscribed feed', js: true do
+      job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, feed_id: @feed1.id,
+                                    fetch_url: @feed1.fetch_url, state: SubscribeJobState::SUCCESS
+      @user.subscribe_job_states << job_state
+      go_to_start_page
+      within '#subscribe-state-alerts' do
+        expect(page).to have_text 'Successfully added subscription to feed'
+        expect(page).to have_content @feed1.title
+      end
 
-    expect(page).to have_css '#subscription-stats'
-    expect(page).to have_no_text 'Successfully added subscription to feed'
-    expect(page).to have_no_content @feed1.title
+      # Immediately unsubscribe from feed
+      allow_any_instance_of(User).to receive :enqueue_unsubscribe_job do |user, feed|
+        user.unsubscribe feed
+      end
+
+      unsubscribe_feed @feed1, @user
+
+      expect(page).to have_css '#subscription-stats'
+      expect(page).to have_no_text 'Successfully added subscription to feed'
+      expect(page).to have_no_content @feed1.title
+    end
   end
-
 end

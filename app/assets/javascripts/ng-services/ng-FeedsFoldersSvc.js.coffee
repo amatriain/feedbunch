@@ -76,7 +76,11 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       favicoSvc.update_unread_badge()
     .error (data, status)->
       delete $rootScope.loading_single_feed[id]
-      timerFlagSvc.start 'error_loading_feeds' if status!=0
+      if status == 404
+        # The requested feed does not exist in db, remove it from scope
+        cleanupSvc.remove_feed id
+      else
+        timerFlagSvc.start 'error_loading_feeds' if status!=0
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds and folders every minute.

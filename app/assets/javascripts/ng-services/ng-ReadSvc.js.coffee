@@ -90,6 +90,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
             entriesPaginationSvc.set_error_no_entries true
             feed.unread_entries = 0
         else
+          startPageSvc.show_start_page()
           timerFlagSvc.start 'error_loading_entries'
 
   #--------------------------------------------
@@ -157,6 +158,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
             entriesPaginationSvc.set_error_no_entries true
             $rootScope.current_feed?.unread_entries = 0
         else
+          startPageSvc.show_start_page()
           timerFlagSvc.start 'error_loading_entries'
 
   #--------------------------------------------
