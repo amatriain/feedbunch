@@ -3,10 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').service 'readSvc',
-['$rootScope', '$http', '$q', '$timeout', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
+['$rootScope', '$http', '$q', '$timeout', 'timerFlagSvc', 'openFolderSvc',
 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc', 'lazyLoadingSvc', 'startPageSvc',
 'findSvc', 'changeUnreadCountSvc', 'highlightedEntrySvc',
-($rootScope, $http, $q, $timeout, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
+($rootScope, $http, $q, $timeout, timerFlagSvc, openFolderSvc,
 entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc, startPageSvc,
 findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
 
@@ -90,7 +90,6 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
             entriesPaginationSvc.set_error_no_entries true
             feed.unread_entries = 0
         else
-          currentFeedSvc.unset()
           timerFlagSvc.start 'error_loading_entries'
 
   #--------------------------------------------
@@ -156,9 +155,8 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
 
           if entriesPaginationSvc.is_first_page()
             entriesPaginationSvc.set_error_no_entries true
-            currentFeedSvc.get()?.unread_entries = 0
+            $rootScope.current_feed?.unread_entries = 0
         else
-          currentFolderSvc.unset()
           timerFlagSvc.start 'error_loading_entries'
 
   #--------------------------------------------
@@ -177,8 +175,8 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
     # Load a page of entries for the currently selected feed or folder
     #---------------------------------------------
     read_entries_page: ->
-      current_feed = currentFeedSvc.get()
-      current_folder = currentFolderSvc.get()
+      current_feed = $rootScope.current_feed
+      current_folder = $rootScope.current_folder
       if current_feed
         load_feed_entries current_feed
       else if current_folder
@@ -191,7 +189,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
       entriesPaginationSvc.reset_entries()
       entriesPaginationSvc.set_busy true
 
-      $http.put("/api/feeds/#{currentFeedSvc.get().id}.json")
+      $http.put("/api/feeds/#{$rootScope.current_feed.id}.json")
       .success (data)->
         startPageSvc.show_start_page()
       .error (data, status)->
