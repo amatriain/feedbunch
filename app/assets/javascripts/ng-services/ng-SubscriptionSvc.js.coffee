@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'subscriptionSvc',
-['$rootScope', '$http', 'currentFeedSvc', 'currentFolderSvc', 'readSvc', 'folderSvc', 'timerFlagSvc',
+['$rootScope', '$http', 'readSvc', 'folderSvc', 'timerFlagSvc',
 'entriesPaginationSvc', 'openFolderSvc', 'feedsFoldersSvc', 'cleanupSvc', 'favicoSvc', 'startPageSvc',
-($rootScope, $http, currentFeedSvc, currentFolderSvc, readSvc, folderSvc, timerFlagSvc,
+($rootScope, $http, readSvc, folderSvc, timerFlagSvc,
 entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, startPageSvc)->
 
   #---------------------------------------------
@@ -28,10 +28,11 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, sta
         else
           entriesPaginationSvc.set_busy false
           # Show alert
+          startPageSvc.show_start_page()
           timerFlagSvc.start 'error_subscribing'
 
   unsubscribe: ->
-    current_feed = currentFeedSvc.get()
+    current_feed = $rootScope.current_feed
     if current_feed
       # Before deleting from the global scope, save some data we'll need later
       folder_id = current_feed.folder_id
@@ -40,7 +41,7 @@ entriesPaginationSvc, openFolderSvc, feedsFoldersSvc, cleanupSvc, favicoSvc, sta
       $rootScope.subscribed_feeds_count -= 1
 
       # Tell the model that no feed is currently selected.
-      currentFeedSvc.unset()
+      startPageSvc.show_start_page()
 
       # Remove feed from feeds list
       cleanupSvc.remove_feed current_feed.id
