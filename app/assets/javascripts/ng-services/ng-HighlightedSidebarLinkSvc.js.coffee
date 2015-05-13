@@ -65,7 +65,7 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
       for folder in ordered_folders
         folder_feeds = findSvc.find_folder_feeds folder
         # The "All subscriptions" link for a folder is visible only if there is more than 1 feed in it
-        links.push {id: folder.id, type: FOLDER} if folder_feeds.length > 1
+        links.push {id: folder.id, type: FOLDER} if folder_feeds?.length > 1
         ordered_feeds = $filter('orderBy') folder_feeds, 'title'
         if ordered_feeds && ordered_feeds?.length > 0
           for feed in ordered_feeds
