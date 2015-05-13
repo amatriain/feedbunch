@@ -162,10 +162,6 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
     # If the "all subscriptions" link is not enabled, do nothing.
     if $scope.all_subscriptions_enabled()
       currentFolderSvc.set folder
-      feedsFoldersSvc.load_folder_feeds folder
-      readSvc.read_entries_page()
-      menuCollapseSvc.close()
-      sidebarVisibleSvc.set false
     return
 
   #--------------------------------------------
