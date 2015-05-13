@@ -16,10 +16,6 @@ angular.module('feedbunch').service 'currentFeedSvc',
       folder = findSvc.find_folder feed.folder_id
       openFolderSvc.set folder
 
-  unset: ->
-    entriesPaginationSvc.reset_entries()
-    $rootScope.current_feed = null
-
   get: ->
     return findSvc.find_feed $rootScope.current_feed?.id
 ]

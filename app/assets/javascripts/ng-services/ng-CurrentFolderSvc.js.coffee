@@ -17,10 +17,6 @@ angular.module('feedbunch').service 'currentFolderSvc',
       $rootScope.current_folder = folder
     cleanupSvc.hide_read_feeds()
 
-  unset: ->
-    entriesPaginationSvc.reset_entries()
-    $rootScope.current_folder = null
-
   get: ->
     return findSvc.find_folder $rootScope.current_folder?.id
 ]
