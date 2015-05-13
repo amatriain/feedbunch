@@ -193,7 +193,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
       .success (data)->
         startPageSvc.show_start_page()
       .error (data, status)->
-        entriesPaginationSvc.set_busy false
+        startPageSvc.show_start_page()
         timerFlagSvc.start 'error_refreshing_feed' if status!=0
 
     #--------------------------------------------
