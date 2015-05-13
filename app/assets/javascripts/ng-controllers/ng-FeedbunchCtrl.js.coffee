@@ -42,6 +42,9 @@ tourSvc, highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
   # Initialize giving focus to form fields when shown
   formFocusSvc.start()
 
+  # Highlight the "Start" link in the sidebar
+  highlightedSidebarLinkSvc.reset()
+
   # Load configuration for the current user.
   userConfigSvc.load_config()
 

@@ -55,7 +55,7 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
 
     no_folder_feeds = findSvc.find_folder_feeds 'none'
     ordered_feeds = $filter('orderBy') no_folder_feeds, 'title'
-    links.push {id: 'none', type: FOLDER}
+    links.push {id: 'all', type: FOLDER}
     if ordered_feeds && ordered_feeds?.length > 0
       for feed in ordered_feeds
         links.push {id: feed.id, type: FEED}
@@ -82,10 +82,8 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
   # - type: FEED or FOLDER if it's a feed or folder link; or null if it's the "Start" link
   #---------------------------------------------
   link_index = (link_object, sidebar_links)->
-    id = link_object.id
-    type = link_object.type
     array_links = $filter('filter') sidebar_links, (l)->
-      return l.id == id && l.type == type
+      return l.id == link_object.id && l.type == link_object.type
 
     array_link = array_links[0] if array_links?.length == 1
     index = sidebar_links.indexOf array_link
@@ -134,7 +132,7 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
       index = link_index $rootScope.highlighted_sidebar_link, links
       if index >= 0 && index < (links.length - 1)
         next_link = links[index + 1]
-        set next_link
+        set next_link.id, next_link.type
         # TODO open folder if necessary
         # TODO autoscroll sidebar if necessary
 
@@ -147,7 +145,7 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
       index = link_index $rootScope.highlighted_sidebar_link, links
       if index > 0 && index < links.length
         previous_link = links[index - 1]
-        set previous_link
+        set previous_link.id, previous_link.type
         # TODO open folder if necessary
         # TODO autoscroll sidebar if necessary
 
