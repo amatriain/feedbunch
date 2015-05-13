@@ -3,18 +3,18 @@
 ########################################################
 
 angular.module('feedbunch').service 'startPageSvc',
-['$rootScope', '$timeout', 'currentFeedSvc', 'currentFolderSvc', 'entriesPaginationSvc', 'menuCollapseSvc',
+['$rootScope', '$timeout', 'entriesPaginationSvc', 'menuCollapseSvc',
 'sidebarVisibleSvc', 'jobStateSvc',
-($rootScope, $timeout, currentFeedSvc, currentFolderSvc, entriesPaginationSvc, menuCollapseSvc,
+($rootScope, $timeout, entriesPaginationSvc, menuCollapseSvc,
 sidebarVisibleSvc, jobStateSvc)->
 
   #--------------------------------------------
   # Show the start page
   #--------------------------------------------
   show_start_page: ->
-    currentFeedSvc.unset()
-    currentFolderSvc.unset()
-    entriesPaginationSvc.set_busy false
+    $rootScope.current_feed = null
+    $rootScope.current_folder = null
+    entriesPaginationSvc.reset_entries()
     menuCollapseSvc.close()
     jobStateSvc.load_data()
     sidebarVisibleSvc.set false
