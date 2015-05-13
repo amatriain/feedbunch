@@ -142,7 +142,7 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
           folder_id = feed.folder_id
 
         # The "all" folder is a bit special, it cannot be opened/closed
-        if folder_id? && folder_id != 'all'
+        if folder_id? && folder_id != 'all' && folder_id != 'none'
           folder = findSvc.find_folder folder_id
           openFolderSvc.set folder
         # TODO autoscroll sidebar if necessary
@@ -166,7 +166,7 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
           folder_id = feed.folder_id
 
         # The "all" folder is a bit special, it cannot be opened/closed
-        if folder_id? && folder_id != 'all'
+        if folder_id? && folder_id != 'all' && folder_id != 'none'
           folder = findSvc.find_folder folder_id
           openFolderSvc.set folder
         # TODO autoscroll sidebar if necessary
