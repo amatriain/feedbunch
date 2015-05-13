@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
-['$rootScope', '$filter', 'animationsSvc', 'findSvc',
-($rootScope, $filter, animationsSvc, findSvc)->
+['$rootScope', '$filter', 'animationsSvc', 'findSvc', 'openFolderSvc',
+($rootScope, $filter, animationsSvc, findSvc, openFolderSvc)->
 
   #---------------------------------------------
   # PRIVATE CONSTANTS
@@ -133,7 +133,18 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
       if index >= 0 && index < (links.length - 1)
         next_link = links[index + 1]
         set next_link.id, next_link.type
-        # TODO open folder if necessary
+
+        # Open folder if necessary
+        if next_link.type == FOLDER
+          folder_id = next_link.id
+        else if next_link.type == FEED
+          feed = findSvc.find_feed next_link.id
+          folder_id = feed.folder_id
+
+        # The "all" folder is a bit special, it cannot be opened/closed
+        if folder_id? && folder_id != 'all'
+          folder = findSvc.find_folder folder_id
+          openFolderSvc.set folder
         # TODO autoscroll sidebar if necessary
 
     #---------------------------------------------
@@ -146,7 +157,18 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
       if index > 0 && index < links.length
         previous_link = links[index - 1]
         set previous_link.id, previous_link.type
-        # TODO open folder if necessary
+
+        # Open folder if necessary
+        if previous_link.type == FOLDER
+          folder_id = previous_link.id
+        else if previous_link.type == FEED
+          feed = findSvc.find_feed previous_link.id
+          folder_id = feed.folder_id
+
+        # The "all" folder is a bit special, it cannot be opened/closed
+        if folder_id? && folder_id != 'all'
+          folder = findSvc.find_folder folder_id
+          openFolderSvc.set folder
         # TODO autoscroll sidebar if necessary
 
   return service
