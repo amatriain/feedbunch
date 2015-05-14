@@ -259,3 +259,60 @@ def entry_should_not_be_highlighted(entry)
     expect(page).not_to have_css 'i.fa-caret-right.current-entry', visible: true
   end
 end
+
+##
+# Test that the start link is highlighted
+def start_link_should_be_highlighted
+  within '#sidebar' do
+    expect(page).to have_css 'a#start-page.highlighted-link'
+  end
+end
+
+##
+# Test that the start link is not highlighted
+def start_link_should_not_be_highlighted
+  within '#sidebar' do
+    expect(page).not_to have_css 'a#start-page.highlighted-link'
+  end
+end
+
+##
+# Test that feed sidebar link is highlighted
+def feed_link_should_be_highlighted(feed)
+  within "#sidebar #folders-list" do
+    expect(page).to have_css "a[data-feed-id='#{feed.id}'].highlighted-link"
+  end
+end
+
+##
+# Test that feed sidebar link is not highlighted
+def feed_link_should_not_be_highlighted(feed)
+  within '#sidebar #folders-list' do
+    expect(page).not_to have_css "a[data-feed-id='#{feed.id}'].highlighted-link"
+  end
+end
+
+# Test that folder "all subscriptions" sidebar link is highlighted
+def folder_link_should_be_highlighted(folder)
+  if folder == 'none'
+    id = 'none'
+  else
+    id = folder.id
+  end
+  within "#sidebar #folders-list #folder-#{id}" do
+    expect(page).to have_css "a[data-feed-id='all'].highlighted-link"
+  end
+end
+
+##
+# Test that folder "all subscriptions" sidebar link is not highlighted
+def folder_link_should_not_be_highlighted(folder)
+  if folder == 'none'
+    id = 'none'
+  else
+    id = folder.id
+  end
+  within "#sidebar #folders-list #folder-#{id}" do
+    expect(page).not_to have_css "a[data-feed-id='all'].highlighted-link"
+  end
+end
