@@ -199,4 +199,52 @@ describe 'keyboard shortcuts', type: :feature do
       expect(page).to have_text @entry4.title
     end
   end
+
+  context 'show/hide read entries shortcut' do
+
+    before :each do
+      # @feed1 has two entries, @entry1 (read) and @entry2 (unread)
+      es = EntryState.where(entry_id: @entry1.id, user_id: @user.id).first
+      es.update read: true
+      s = FeedSubscription.where(feed_id: @feed1.id, user_id: @user.id).first
+      s.update unread_entries: 1
+
+      # @feed4 has one entry, @entry5 (read)
+      @feed4 = FactoryGirl.create :feed
+      @entry5 = FactoryGirl.build :entry, feed_id: @feed4.id
+      @feed4.entries << @entry5
+      @user.subscribe @feed4.fetch_url
+      es2 = EntryState.where(entry_id: @entry5.id, user_id: @user.id).first
+      es2.update read: true
+      s = FeedSubscription.where(feed_id: @feed4.id, user_id: @user.id).first
+      s.update unread_entries: 0
+
+      visit read_path
+    end
+
+    it 'shows and hides read entries', js: true do
+      # @entry1 is read, so it isn't visible by default
+      expect(page).to have_text @feed1.title
+      read_feed @feed1, @user
+      expect(page).not_to have_text @entry1.title
+      expect(page).to have_text @entry2.title
+
+      # @feed4 has no unread entries, so it isn't visible by default
+      expect(page).not_to have_text @feed4.title
+
+      # show read entries
+      press_key 'd'
+      expect(page).to have_text @feed1.title
+      expect(page).to have_text @entry1.title
+      expect(page).to have_text @entry2.title
+      expect(page).to have_text @feed4.title
+
+      # Hide read entries
+      press_key 'd'
+      expect(page).to have_text @feed1.title
+      expect(page).not_to have_text @entry1.title
+      expect(page).to have_text @entry2.title
+      expect(page).not_to have_text @feed4.title
+    end
+  end
 end
