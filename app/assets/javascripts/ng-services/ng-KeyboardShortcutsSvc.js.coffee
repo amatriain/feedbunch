@@ -4,17 +4,17 @@
 
 angular.module('feedbunch').service 'keyboardShortcutsSvc',
 ['$rootScope', 'highlightedEntrySvc', 'highlightedSidebarLinkSvc','entrySvc', 'startPageSvc', 'currentFeedSvc',
-'currentFolderSvc', 'findSvc',
+'currentFolderSvc', 'findSvc', 'feedsFoldersSvc', 'readSvc', 'menuCollapseSvc',
 ($rootScope, highlightedEntrySvc, highlightedSidebarLinkSvc, entrySvc, startPageSvc, currentFeedSvc,
-currentFolderSvc, findSvc)->
+currentFolderSvc, findSvc, feedsFoldersSvc, readSvc, menuCollapseSvc)->
 
   #---------------------------------------------
   # Start responding to keyboard shortcuts
   #---------------------------------------------
   start: ->
     $(document).keypress (event)->
-      # enter=13, spacebar=32, j=106, k=107, h=104, l=108
-      if event.which in [13, 32, 104, 108, 106, 107]
+      # enter=13, spacebar=32, j=106, k=107, h=104, l=108, d=100
+      if event.which in [13, 32, 104, 108, 106, 107, 100]
         # If a keyboard shortcut is used, stop highlighting entries on mousover until user actually moves the mouse.
         # This prevents accidental mouseover events when autoscrolling.
         $rootScope.mouseover_highlight_disabled = true
@@ -51,6 +51,19 @@ currentFolderSvc, findSvc)->
           else if highlighted_link.type == 'folder'
             folder = findSvc.find_folder highlighted_link.id
             currentFolderSvc.set folder if folder?
+
+        # toggle show/hide read entries
+        if event.which == 100
+          if $rootScope.show_read
+            # hide read entries
+            feedsFoldersSvc.hide_read()
+            readSvc.read_entries_page()
+            menuCollapseSvc.close()
+          else
+            # show read entries
+            feedsFoldersSvc.show_read()
+            readSvc.read_entries_page()
+            menuCollapseSvc.close()
 
         event.preventDefault()
 
