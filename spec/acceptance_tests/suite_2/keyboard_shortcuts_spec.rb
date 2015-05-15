@@ -247,4 +247,26 @@ describe 'keyboard shortcuts', type: :feature do
       expect(page).not_to have_text @feed4.title
     end
   end
+
+  context 'mark all entris as read' do
+
+    it 'marks all entries as read', js: true do
+      read_feed @feed1, @user
+      expect(page).to have_text @entry1.title
+      entry_should_be_marked_unread @entry1
+      expect(page).to have_text @entry2.title
+      entry_should_be_marked_unread @entry2
+
+      press_key 'a'
+
+      expect(page).to have_text @entry1.title
+      entry_should_be_marked_read @entry1
+      expect(page).to have_text @entry2.title
+      entry_should_be_marked_read @entry2
+
+      read_feed @feed1, @user
+      expect(page).not_to have_text @entry1.title
+      expect(page).not_to have_text @entry2.title
+    end
+  end
 end
