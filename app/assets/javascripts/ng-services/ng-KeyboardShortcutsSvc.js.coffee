@@ -13,8 +13,8 @@ currentFolderSvc, findSvc, feedsFoldersSvc, readSvc, menuCollapseSvc)->
   #---------------------------------------------
   start: ->
     $(document).keypress (event)->
-      # enter=13, spacebar=32, j=106, k=107, h=104, l=108, d=100, a=97
-      if event.which in [13, 32, 104, 108, 106, 107, 100, 97]
+      # enter=13, spacebar=32, j=106, k=107, h=104, l=108, d=100, a=97, r=114
+      if event.which in [13, 32, 104, 108, 106, 107, 100, 97, 114]
         # If a keyboard shortcut is used, stop highlighting entries on mousover until user actually moves the mouse.
         # This prevents accidental mouseover events when autoscrolling.
         $rootScope.mouseover_highlight_disabled = true
@@ -67,6 +67,14 @@ currentFolderSvc, findSvc, feedsFoldersSvc, readSvc, menuCollapseSvc)->
 
         # mark all entries as read
         entrySvc.mark_all_read() if event.which == 97
+
+        # toggle read/unread state of currently highlighted entry
+        if event.which == 114
+          entry = highlightedEntrySvc.get()
+          if entry.read
+            entrySvc.unread_entry entry
+          else
+            entrySvc.read_entry entry
 
         event.preventDefault()
 
