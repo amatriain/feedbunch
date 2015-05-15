@@ -260,9 +260,7 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
   # Mark all entries as read
   #--------------------------------------------
   $scope.mark_all_read = ->
-    animationsSvc.highlight_read_all_button()
     entrySvc.mark_all_read()
-    menuCollapseSvc.close()
     return
 
   #--------------------------------------------

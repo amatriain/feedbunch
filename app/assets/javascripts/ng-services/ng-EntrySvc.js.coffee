@@ -5,10 +5,10 @@
 angular.module('feedbunch').service 'entrySvc',
 ['$rootScope', '$http', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
 'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc', 'feedsFoldersSvc',
-'lazyLoadingSvc', 'tourSvc',
+'lazyLoadingSvc', 'tourSvc', 'animationsSvc', 'menuCollapseSvc',
 ($rootScope, $http, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
 currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc,
-lazyLoadingSvc, tourSvc)->
+lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark a single entry as read or unread.
@@ -132,6 +132,8 @@ lazyLoadingSvc, tourSvc)->
     # Mark all entries as read
     #--------------------------------------------
     mark_all_read: ->
+      animationsSvc.highlight_read_all_button()
+      menuCollapseSvc.close()
       change_entries_read()
 
     #--------------------------------------------
