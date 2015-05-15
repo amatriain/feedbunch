@@ -116,10 +116,17 @@ class FeedClient
         end
     end
 
-    # Specify encoding ISO-8859-1 if necessary
-    if feed_response.try(:encoding)==Encoding::UTF_8 && !feed_response.try(:valid_encoding?)
-      feed_response.force_encoding 'iso-8859-1'
+    # Correct encoding and convert to UTF-8 if necessary.
+    # RestClients ignores the HTTP charset and always thinks responses are UTF-8, this must be corrected.
+    if !feed_response.try(:valid_encoding?)
+      headers = feed_response.try :headers
+      content_type = headers[:content_type] unless headers.blank?
+      charset = content_type.to_s[/\bcharset=([^ ]+)/, 1] unless content_type.blank?
+      feed_response.force_encoding charset unless charset.blank?
     end
+
+    # We want the response to end up being UTF-8 because Feedjira handles other encodings poorly.
+    feed_response.try :encode!, 'utf-8'
 
     if feed_response.blank?
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
