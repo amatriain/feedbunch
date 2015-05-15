@@ -126,7 +126,7 @@ class FeedClient
     end
 
     # We want the response to end up being UTF-8 because Feedjira handles other encodings poorly.
-    feed_response.try :encode!, 'utf-8'
+    feed_response.try :encode!, 'utf-8', {:invalid => :replace, :undef => :replace, :replace => '?'}
 
     if feed_response.blank?
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
