@@ -506,4 +506,131 @@ FEED_XML
       expect(entry1.guid).to eq @entry1.guid
     end
   end
+
+  context 'corrects errors in charset reported by HTTP header' do
+
+    before :each do
+      @feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>#{@feed_title}</title>
+  <link href="#{@feed_url}" rel="alternate" />
+  <id>http://xkcd.com/</id>
+  <updated>2013-04-15T00:00:00Z</updated>
+  <entry>
+    <title>#{@entry2.title}</title>
+    <link href="#{@entry2.url}" rel="alternate" />
+    <updated>#{@entry2.published}</updated>
+    <id>#{@entry2.guid}</id>
+    <summary type="html">#{@entry2.summary}</summary>
+  </entry>
+  <entry>
+    <title>#{@entry1.title}</title>
+    <link href="#{@entry1.url}" rel="alternate" />
+    <updated>#{@entry1.published}</updated>
+    <id>#{@entry1.guid}</id>
+    <summary type="html">#{@entry1.summary}</summary>
+  </entry>
+</feed>
+FEED_XML
+
+      allow(RestClient).to receive(:get).and_return @feed_xml
+    end
+
+    it 'corrects charset surrounded by single quotes' do
+      allow(@feed_xml).to receive(:headers).and_return({content_type: "text/html; charset='utf-8'"})
+
+      FeedClient.fetch @feed
+      @feed.reload
+      expect(@feed.entries.count).to eq 2
+
+      entry1 = @feed.entries[0]
+      expect(entry1.title).to eq @entry1.title
+      expect(entry1.url).to eq @entry1.url
+      expect(entry1.author).to eq @entry1.author
+      expect(entry1.summary).to eq CGI.unescapeHTML(@entry1.summary)
+      expect(entry1.published).to eq @entry1.published
+      expect(entry1.guid).to eq @entry1.guid
+
+      entry2 = @feed.entries[1]
+      expect(entry2.title).to eq @entry2.title
+      expect(entry2.url).to eq @entry2.url
+      expect(entry2.author).to eq @entry2.author
+      expect(entry2.summary).to eq CGI.unescapeHTML(@entry2.summary)
+      expect(entry2.published).to eq @entry2.published
+      expect(entry2.guid).to eq @entry2.guid
+    end
+
+    it 'corrects charset surrounded by double quotes' do
+      allow(@feed_xml).to receive(:headers).and_return({content_type: "text/html; charset=\"utf-8\""})
+
+      FeedClient.fetch @feed
+      @feed.reload
+      expect(@feed.entries.count).to eq 2
+
+      entry1 = @feed.entries[0]
+      expect(entry1.title).to eq @entry1.title
+      expect(entry1.url).to eq @entry1.url
+      expect(entry1.author).to eq @entry1.author
+      expect(entry1.summary).to eq CGI.unescapeHTML(@entry1.summary)
+      expect(entry1.published).to eq @entry1.published
+      expect(entry1.guid).to eq @entry1.guid
+
+      entry2 = @feed.entries[1]
+      expect(entry2.title).to eq @entry2.title
+      expect(entry2.url).to eq @entry2.url
+      expect(entry2.author).to eq @entry2.author
+      expect(entry2.summary).to eq CGI.unescapeHTML(@entry2.summary)
+      expect(entry2.published).to eq @entry2.published
+      expect(entry2.guid).to eq @entry2.guid
+    end
+
+    it 'corrects charset with semicolon at the end' do
+      allow(@feed_xml).to receive(:headers).and_return({content_type: "text/html; charset=utf-8;"})
+
+      FeedClient.fetch @feed
+      @feed.reload
+      expect(@feed.entries.count).to eq 2
+
+      entry1 = @feed.entries[0]
+      expect(entry1.title).to eq @entry1.title
+      expect(entry1.url).to eq @entry1.url
+      expect(entry1.author).to eq @entry1.author
+      expect(entry1.summary).to eq CGI.unescapeHTML(@entry1.summary)
+      expect(entry1.published).to eq @entry1.published
+      expect(entry1.guid).to eq @entry1.guid
+
+      entry2 = @feed.entries[1]
+      expect(entry2.title).to eq @entry2.title
+      expect(entry2.url).to eq @entry2.url
+      expect(entry2.author).to eq @entry2.author
+      expect(entry2.summary).to eq CGI.unescapeHTML(@entry2.summary)
+      expect(entry2.published).to eq @entry2.published
+      expect(entry2.guid).to eq @entry2.guid
+    end
+
+    it 'uses utf-8 by default if an unknown charset is reported by HTTP header' do
+      allow(@feed_xml).to receive(:headers).and_return({content_type: "text/html; charset=some-freak-charset"})
+
+      FeedClient.fetch @feed
+      @feed.reload
+      expect(@feed.entries.count).to eq 2
+
+      entry1 = @feed.entries[0]
+      expect(entry1.title).to eq @entry1.title
+      expect(entry1.url).to eq @entry1.url
+      expect(entry1.author).to eq @entry1.author
+      expect(entry1.summary).to eq CGI.unescapeHTML(@entry1.summary)
+      expect(entry1.published).to eq @entry1.published
+      expect(entry1.guid).to eq @entry1.guid
+
+      entry2 = @feed.entries[1]
+      expect(entry2.title).to eq @entry2.title
+      expect(entry2.url).to eq @entry2.url
+      expect(entry2.author).to eq @entry2.author
+      expect(entry2.summary).to eq CGI.unescapeHTML(@entry2.summary)
+      expect(entry2.published).to eq @entry2.published
+      expect(entry2.guid).to eq @entry2.guid
+    end
+  end
 end

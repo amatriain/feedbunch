@@ -117,10 +117,18 @@ class FeedClient
     end
 
     # RestClients ignores the HTTP charset and always thinks responses are UTF-8, this must be corrected.
+    charset = 'utf-8' # default value if charset not reported by HTTO header
     headers = feed_response.try :headers
     content_type = headers[:content_type] unless headers.blank?
-    charset = content_type.to_s[/\bcharset=([^ ]+)/, 1] unless content_type.blank?
-    feed_response.force_encoding charset unless charset.blank?
+    charset = content_type.to_s[/\bcharset[ ]*=[ '"]*([^ '";]+)['";]*/, 1] unless content_type.blank?
+    begin
+      encoding = Encoding.find charset
+    rescue ArgumentError
+      Rails.logger.warn "Unknown charset #{charset} reported by HTTP content-type header, using utf-8 instead"
+      encoding = Encoding.find 'utf-8'
+    end
+
+    feed_response.force_encoding encoding unless charset.blank? || feed_response.nil?
 
     # We want the response to end up being UTF-8 because Feedjira handles other encodings poorly.
     feed_response.try :encode!, 'utf-8', {:invalid => :replace, :undef => :replace, :replace => '?'}
