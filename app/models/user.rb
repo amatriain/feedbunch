@@ -120,11 +120,11 @@ class User < ActiveRecord::Base
   # Accessor to the unencrypted invitation token, to be able to resend invitations.
   attr_reader :raw_invitation_token
 
-  has_many :invitations, class_name: self.to_s, as: :invited_by
+  has_many :invitations, class_name: to_s, as: :invited_by
   has_many :feed_subscriptions, -> {uniq}, dependent: :destroy,
-           after_add: :mark_unread_entries,
-           before_remove: :before_remove_feed_subscription,
-           after_remove: :removed_feed_subscription
+                                           after_add: :mark_unread_entries,
+                                           before_remove: :before_remove_feed_subscription,
+                                           after_remove: :removed_feed_subscription
   has_many :feeds, through: :feed_subscriptions
   has_many :folders, -> {uniq}, dependent: :destroy
   has_many :entries, through: :feeds
@@ -203,7 +203,7 @@ class User < ActiveRecord::Base
   # Find a refresh_feed_job_state belonging to the user
 
   def find_refresh_feed_job_state(job_id)
-    return self.refresh_feed_job_states.find job_id
+    refresh_feed_job_states.find job_id
   end
 
   ##
@@ -217,7 +217,7 @@ class User < ActiveRecord::Base
   # Find a subscribe_job_state belonging to the user
 
   def find_subscribe_job_state(job_id)
-    return self.subscribe_job_states.find job_id
+    subscribe_job_states.find job_id
   end
 
   ##
@@ -277,7 +277,7 @@ class User < ActiveRecord::Base
   # Receives a boolean argument and sets the alert to visible (if true) or hidden (if false).
 
   def set_opml_import_job_state_visible(visible)
-    self.opml_import_job_state.update show_alert: visible
+    opml_import_job_state.update show_alert: visible
   end
 
   ##
@@ -285,7 +285,7 @@ class User < ActiveRecord::Base
   # Receives a boolean argument and sets the alert to visible (if true) or hidden (if false).
 
   def set_opml_export_job_state_visible(visible)
-    self.opml_export_job_state.update show_alert: visible
+    opml_export_job_state.update show_alert: visible
   end
 
   ##
@@ -293,7 +293,7 @@ class User < ActiveRecord::Base
   # the user.
   def delete_profile
     self.lock_access! send_instructions: false
-    DestroyUserWorker.perform_async self.id
+    DestroyUserWorker.perform_async id
   end
 
   ##
@@ -310,10 +310,10 @@ class User < ActiveRecord::Base
     new_config[:show_mobile_tour] = show_mobile_tour if !show_mobile_tour.nil?
     new_config[:show_feed_tour] = show_feed_tour if !show_feed_tour.nil?
     new_config[:show_entry_tour] = show_entry_tour if !show_entry_tour.nil?
-    Rails.logger.info "Updating user #{self.id} - #{self.email} with show_main_tour #{show_main_tour}, " +
-                          "show_mobile_tour #{show_mobile_tour}, show_feed_tour #{show_feed_tour}, " +
+    Rails.logger.info "Updating user #{id} - #{email} with show_main_tour #{show_main_tour}, " \
+                          "show_mobile_tour #{show_mobile_tour}, show_feed_tour #{show_feed_tour}, " \
                           "show_entry_tour #{show_entry_tour}"
-    self.update new_config if new_config.length > 0
+    update new_config if new_config.length > 0
   end
 
   private
@@ -327,40 +327,40 @@ class User < ActiveRecord::Base
   # the user has never ran an OPML export).
 
   def before_save_user
-    self.encrypted_password.encode! 'utf-8'
+    encrypted_password.encode! 'utf-8'
 
-    if self.opml_import_job_state.blank?
-      self.create_opml_import_job_state state: OpmlImportJobState::NONE
-      Rails.logger.debug "User #{self.email} has no OpmlImportJobState, creating one with state NONE"
+    if opml_import_job_state.blank?
+      create_opml_import_job_state state: OpmlImportJobState::NONE
+      Rails.logger.debug "User #{email} has no OpmlImportJobState, creating one with state NONE"
     end
 
-    if self.opml_export_job_state.blank?
-      self.create_opml_export_job_state state: OpmlExportJobState::NONE
-      Rails.logger.debug "User #{self.email} has no OpmlExportJobState, creating one with state NONE"
+    if opml_export_job_state.blank?
+      create_opml_export_job_state state: OpmlExportJobState::NONE
+      Rails.logger.debug "User #{email} has no OpmlExportJobState, creating one with state NONE"
     end
 
     # If demo is enabled, demo user cannot change email or password nor be locked
     if Feedbunch::Application.config.demo_enabled
       demo_email = Feedbunch::Application.config.demo_email
-      if email_changed? && self.email_was == demo_email
+      if email_changed? && email_was == demo_email
         Rails.logger.info 'Somebody attempted to change the demo user email. Blocking the attempt.'
-        self.errors.add :email, 'Cannot change demo user email'
+        errors.add :email, 'Cannot change demo user email'
         self.email = demo_email
       end
 
       demo_password = Feedbunch::Application.config.demo_password
-      if encrypted_password_changed? && self.email == demo_email
+      if encrypted_password_changed? && email == demo_email
         Rails.logger.info 'Somebody attempted to change the demo user password. Blocking the attempt.'
-        self.errors.add :password, 'Cannot change demo user password'
+        errors.add :password, 'Cannot change demo user password'
         self.password = demo_password
       end
 
-      if locked_at_changed? && self.email == demo_email
+      if locked_at_changed? && email == demo_email
         Rails.logger.info 'Keeping demo user from being locked because of too many authentication failures'
         self.locked_at = nil
       end
 
-      if unlock_token_changed? && self.email == demo_email
+      if unlock_token_changed? && email == demo_email
         Rails.logger.info 'Removing unlock token for demo user, demo user cannot be locked out'
         self.unlock_token = nil
       end
@@ -379,8 +379,8 @@ class User < ActiveRecord::Base
 
   def after_save_user
     if quick_reading_changed? || open_all_entries_changed? ||
-        show_main_tour_changed? || show_mobile_tour_changed? ||
-        show_feed_tour_changed? || show_entry_tour_changed?
+       show_main_tour_changed? || show_mobile_tour_changed? ||
+       show_feed_tour_changed? || show_entry_tour_changed?
       update_column :config_updated_at, Time.zone.now
     end
   end
@@ -405,110 +405,110 @@ class User < ActiveRecord::Base
     # array of available locales) because memory allocated for symbols is never released by ruby, which means an
     # attacker could cause a memory leak by creating users with weird unavailable locales.
     available_locales = I18n.available_locales.map {|l| l.to_s}
-    if !available_locales.include? self.locale
-      Rails.logger.info "User #{self.email} has unsupported locale #{self.locale}. Defaulting to locale 'en' instead"
+    if !available_locales.include? locale
+      Rails.logger.info "User #{email} has unsupported locale #{locale}. Defaulting to locale 'en' instead"
       self.locale = 'en'
     end
 
     timezone_names = ActiveSupport::TimeZone.all.map{|tz| tz.name}
-    if !timezone_names.include? self.timezone
-      Rails.logger.info "User #{self.email} has unsupported timezone #{self.timezone}. Defaulting to timezone 'UTC' instead"
+    if !timezone_names.include? timezone
+      Rails.logger.info "User #{email} has unsupported timezone #{timezone}. Defaulting to timezone 'UTC' instead"
       self.timezone = 'UTC'
     end
 
-    if self.admin == nil
-      Rails.logger.info "User #{self.email} has unsupported admin #{self.admin}. Defaulting to admin 'false' instead"
+    if admin.nil?
+      Rails.logger.info "User #{email} has unsupported admin #{admin}. Defaulting to admin 'false' instead"
       self.admin = false
     end
 
-    if self.free == nil
-      Rails.logger.info "User #{self.email} has unsupported free #{self.free}. Defaulting to free 'false' instead"
+    if free.nil?
+      Rails.logger.info "User #{email} has unsupported free #{free}. Defaulting to free 'false' instead"
       self.free = false
     end
 
-    if self.quick_reading == nil
-      Rails.logger.info "User #{self.email} has unsupported quick_reading #{self.quick_reading}. Defaulting to quick_reading 'false' instead"
+    if quick_reading.nil?
+      Rails.logger.info "User #{email} has unsupported quick_reading #{quick_reading}. Defaulting to quick_reading 'false' instead"
       self.quick_reading = false
     end
 
-    if self.open_all_entries == nil
-      Rails.logger.info "User #{self.email} has unsupported open_all_entries #{self.open_all_entries}. Defaulting to open_all_entries 'false' instead"
+    if open_all_entries.nil?
+      Rails.logger.info "User #{email} has unsupported open_all_entries #{open_all_entries}. Defaulting to open_all_entries 'false' instead"
       self.open_all_entries = false
     end
 
-    if self.show_main_tour == nil
-      Rails.logger.info "User #{self.email} has unsupported show_main_tour #{self.show_main_tour}. Defaulting to show_main_tour 'true' instead"
+    if show_main_tour.nil?
+      Rails.logger.info "User #{email} has unsupported show_main_tour #{show_main_tour}. Defaulting to show_main_tour 'true' instead"
       self.show_main_tour = true
     end
 
-    if self.show_mobile_tour == nil
-      Rails.logger.info "User #{self.email} has unsupported show_mobile_tour #{self.show_mobile_tour}. Defaulting to show_mobile_tour 'true' instead"
+    if show_mobile_tour.nil?
+      Rails.logger.info "User #{email} has unsupported show_mobile_tour #{show_mobile_tour}. Defaulting to show_mobile_tour 'true' instead"
       self.show_mobile_tour = true
     end
 
-    if self.show_feed_tour == nil
-      Rails.logger.info "User #{self.email} has unsupported show_feed_tour #{self.show_feed_tour}. Defaulting to show_feed_tour 'true' instead"
+    if show_feed_tour.nil?
+      Rails.logger.info "User #{email} has unsupported show_feed_tour #{show_feed_tour}. Defaulting to show_feed_tour 'true' instead"
       self.show_feed_tour = true
     end
 
-    if self.show_entry_tour == nil
-      Rails.logger.info "User #{self.email} has unsupported show_entry_tour #{self.show_entry_tour}. Defaulting to show_entry_tour 'true' instead"
+    if show_entry_tour.nil?
+      Rails.logger.info "User #{email} has unsupported show_entry_tour #{show_entry_tour}. Defaulting to show_entry_tour 'true' instead"
       self.show_entry_tour = true
     end
 
-    if self.name.blank?
-      Rails.logger.info "User #{self.email} has no name set. Using the email by default."
-      self.name = self.email
+    if name.blank?
+      Rails.logger.info "User #{email} has no name set. Using the email by default."
+      self.name = email
     end
 
     # By default each user has the daily invitations limit set in application.rb
-    if self.invitation_limit.blank?
+    if invitation_limit.blank?
       limit = Feedbunch::Application.config.daily_invitations_limit
-      Rails.logger.info "User #{self.email} has no invitation limit set. Using #{limit} by default."
+      Rails.logger.info "User #{email} has no invitation limit set. Using #{limit} by default."
       self.invitation_limit = limit
     end
 
-    if self.subscriptions_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported subscriptions_updated_at value, using current datetime by default"
+    if subscriptions_updated_at.nil?
+      Rails.logger.info "User #{email} has unsupported subscriptions_updated_at value, using current datetime by default"
       self.subscriptions_updated_at = Time.zone.now
     end
 
-    if self.folders_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported folders_updated_at value, using current datetime by default"
+    if folders_updated_at.nil?
+      Rails.logger.info "User #{email} has unsupported folders_updated_at value, using current datetime by default"
       self.folders_updated_at = Time.zone.now
     end
 
-    if self.refresh_feed_jobs_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported refresh_feed_jobs_updated_at value, using current datetime by default"
+    if refresh_feed_jobs_updated_at.nil?
+      Rails.logger.info "User #{email} has unsupported refresh_feed_jobs_updated_at value, using current datetime by default"
       self.refresh_feed_jobs_updated_at = Time.zone.now
     end
 
-    if self.subscribe_jobs_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported subscribe_jobs_updated_at value, using current datetime by default"
+    if subscribe_jobs_updated_at.nil?
+      Rails.logger.info "User #{email} has unsupported subscribe_jobs_updated_at value, using current datetime by default"
       self.subscribe_jobs_updated_at = Time.zone.now
     end
 
-    if self.config_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported config_updated_at value, using current datetime by default"
+    if config_updated_at.nil?
+      Rails.logger.info "User #{email} has unsupported config_updated_at value, using current datetime by default"
       self.config_updated_at = Time.zone.now
     end
 
-    if self.user_data_updated_at == nil
-      Rails.logger.info "User #{self.email} has unsupported user_data_updated_at value, using current datetime by default"
+    if user_data_updated_at.nil?
+      Rails.logger.info "User #{email} has unsupported user_data_updated_at value, using current datetime by default"
       self.user_data_updated_at = Time.zone.now
     end
 
-    if self.first_confirmation_reminder_sent == nil
-      Rails.logger.info "User #{self.email} has unsupported first_confirmation_reminder_sent #{self.first_confirmation_reminder_sent}. Defaulting to 'false' instead"
+    if first_confirmation_reminder_sent.nil?
+      Rails.logger.info "User #{email} has unsupported first_confirmation_reminder_sent #{first_confirmation_reminder_sent}. Defaulting to 'false' instead"
       self.first_confirmation_reminder_sent = false
     end
 
-    if self.second_confirmation_reminder_sent == nil
-      Rails.logger.info "User #{self.email} has unsupported second_confirmation_reminder_sent #{self.second_confirmation_reminder_sent}. Defaulting to 'false' instead"
+    if second_confirmation_reminder_sent.nil?
+      Rails.logger.info "User #{email} has unsupported second_confirmation_reminder_sent #{second_confirmation_reminder_sent}. Defaulting to 'false' instead"
       self.second_confirmation_reminder_sent = false
     end
 
-    return true
+    true
   end
 
   ##
@@ -517,8 +517,8 @@ class User < ActiveRecord::Base
   def mark_unread_entries(feed_subscription)
     feed = feed_subscription.feed
     feed.entries.find_each do |entry|
-      if !EntryState.exists? user_id: self.id, entry_id: entry.id
-        entry_state = self.entry_states.create! entry_id: entry.id, read: false
+      if !EntryState.exists? user_id: id, entry_id: entry.id
+        entry_state = entry_states.create! entry_id: entry.id, read: false
       end
     end
   end
@@ -558,8 +558,8 @@ class User < ActiveRecord::Base
 
   def remove_entry_states(feed)
     feed.entries.find_each do |entry|
-      entry_state = EntryState.find_by user_id: self.id, entry_id: entry.id
-      self.entry_states.delete entry_state
+      entry_state = EntryState.find_by user_id: id, entry_id: entry.id
+      entry_states.delete entry_state
     end
   end
 
@@ -567,14 +567,14 @@ class User < ActiveRecord::Base
   # Remove al RefreshFeedJobState instances associated with this user and the feed passed as argument
 
   def remove_refresh_feed_job_states(feed)
-    self.refresh_feed_job_states.where(feed_id: feed.id).destroy_all
+    refresh_feed_job_states.where(feed_id: feed.id).destroy_all
   end
 
   ##
   # Remove al SubscribeJobState instances associated with this user and the feed passed as argument
 
   def remove_subscribe_job_states(feed)
-    self.subscribe_job_states.where(feed_id: feed.id).destroy_all
+    subscribe_job_states.where(feed_id: feed.id).destroy_all
   end
 
 end
