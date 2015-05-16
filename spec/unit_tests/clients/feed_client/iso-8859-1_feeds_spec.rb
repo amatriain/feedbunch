@@ -30,7 +30,7 @@ describe FeedClient do
     before :each do
       feed_file = File.join __dir__, '..', '..', '..', 'attachments', 'iso-8859-1-feed.xml'
       feed_xml = File.read feed_file
-      allow(feed_xml).to receive(:headers).and_return({})
+      allow(feed_xml).to receive(:headers).and_return({content_type: 'text/html; charset=iso-8859-1'})
       allow(RestClient).to receive(:get).and_return feed_xml
     end
 

@@ -95,32 +95,35 @@ describe ScheduledUpdateFeedWorker do
     end
 
     it 'does not set a fetch interval smaller than the configured minimum' do
+      min_interval = Feedbunch::Application.config.min_update_interval
+
       allow(FeedClient).to receive :fetch do
         entry = FactoryGirl.build :entry, feed_id: @feed.id
         @feed.entries << entry
       end
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to be_between(600 - 60.seconds, 600 + 60.seconds).inclusive
+        expect(in_seconds).to be_between(min_interval - 60.seconds, min_interval + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
       @feed.update fetch_interval_secs: 10.minutes
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to be_between(600 - 60.seconds, 600 + 60.seconds).inclusive
+      expect(@feed.reload.fetch_interval_secs).to be_between(min_interval - 60.seconds, min_interval + 60.seconds).inclusive
     end
 
     it 'does not set a fetch interval greater than the configured maximum' do
       allow(FeedClient).to receive :fetch
+      max_interval = Feedbunch::Application.config.max_update_interval
 
       expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
-        expect(in_seconds).to be_between(21600 - 60.seconds, 21600 + 60.seconds).inclusive
+        expect(in_seconds).to be_between(max_interval - 60.seconds, max_interval + 60.seconds).inclusive
         expect(feed_id).to eq @feed.id
       end
 
-      @feed.update fetch_interval_secs: 6.hours
+      @feed.update fetch_interval_secs: max_interval
       ScheduledUpdateFeedWorker.new.perform @feed.id
-      expect(@feed.reload.fetch_interval_secs).to be_between(21600 - 60.seconds, 21600 + 60.seconds).inclusive
+      expect(@feed.reload.fetch_interval_secs).to be_between(max_interval - 60.seconds, max_interval + 60.seconds).inclusive
     end
 
   end
@@ -438,22 +441,24 @@ WEBPAGE_HTML
       expect(@feed.reload.failing_since).to eq date2
     end
 
-    it 'marks feed as unavailable when it has been failing longer than a week' do
+    it 'marks feed as unavailable when it has been failing longer than the configured maximum' do
+      unavailable_after = Feedbunch::Application.config.unavailable_after
       allow(FeedClient).to receive(:fetch).and_raise RestClient::Exception.new
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
-      @feed.update failing_since: date - (1.week + 1.day)
+      @feed.update failing_since: date - (unavailable_after + 1.day)
 
       expect(@feed.available).to be true
       ScheduledUpdateFeedWorker.new.perform @feed.id
       expect(@feed.reload.available).to be false
     end
 
-    it 'does not schedule next update for a feed that has been failing longer than a week' do
+    it 'does not schedule next update for a feed that has been failing longer than the configured maximum' do
+      unavailable_after = Feedbunch::Application.config.unavailable_after
       allow(FeedClient).to receive(:fetch).and_raise RestClient::Exception.new
       date = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return date
-      @feed.update failing_since: date - (1.week + 1.day)
+      @feed.update failing_since: date - (unavailable_after + 1.day)
 
       expect(ScheduledUpdateFeedWorker).not_to receive :perform_in
       expect(ScheduledUpdateFeedWorker).not_to receive :perform_at
