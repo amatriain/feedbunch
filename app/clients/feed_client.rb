@@ -132,7 +132,8 @@ class FeedClient
       encoding = Encoding.find 'utf-8'
     end
 
-    feed_response.force_encoding encoding unless charset.blank? || feed_response.nil?
+    Rails.logger.info "Detected encoding #{encoding.to_s} for the feed, converting to utf-8 if necessary"
+    feed_response.force_encoding encoding unless feed_response.nil?
 
     # We want the response to end up being UTF-8 because Feedjira handles other encodings poorly.
     feed_response.try :encode!, 'utf-8', {:invalid => :replace, :undef => :replace, :replace => '?'}
