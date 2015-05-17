@@ -167,6 +167,7 @@ describe Feed, type: :model do
       it 'converts title' do
         # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
         not_utf8_title = "\xE8 title"
+        not_utf8_title.force_encoding 'iso-8859-1'
         utf8_title = 'è title'
         feed = FactoryGirl.create :feed, title: not_utf8_title
         expect(feed.title).to eq utf8_title
@@ -175,6 +176,7 @@ describe Feed, type: :model do
       it 'converts url' do
         # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
         not_utf8_url = "http://xkcd.com/\xE8"
+        not_utf8_url.force_encoding 'iso-8859-1'
         utf8_url = 'http://xkcd.com/%C3%A8'
         feed = FactoryGirl.create :feed, url: not_utf8_url
         expect(feed.url).to eq utf8_url
@@ -183,6 +185,7 @@ describe Feed, type: :model do
       it 'converts fetch url' do
         # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
         not_utf8_url = "http://xkcd.com/\xE8"
+        not_utf8_url.force_encoding 'iso-8859-1'
         utf8_url = 'http://xkcd.com/%C3%A8'
         feed = FactoryGirl.create :feed, fetch_url: not_utf8_url
         expect(feed.fetch_url).to eq utf8_url

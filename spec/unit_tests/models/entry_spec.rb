@@ -223,6 +223,7 @@ describe Entry, type: :model do
       it 'converts title' do
         # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
         not_utf8_title = "\xE8 title"
+        not_utf8_title.force_encoding 'iso-8859-1'
         utf8_title = 'è title'
         entry = FactoryGirl.create :entry, title: not_utf8_title
         expect(entry.title).to eq utf8_title
@@ -231,6 +232,7 @@ describe Entry, type: :model do
       it 'converts url' do
         # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
         not_utf8_url = "http://xkcd.com/\xE8"
+        not_utf8_url.force_encoding 'iso-8859-1'
         utf8_url = 'http://xkcd.com/%C3%A8'
         entry = FactoryGirl.create :entry, url: not_utf8_url
         expect(entry.url).to eq utf8_url
@@ -239,6 +241,7 @@ describe Entry, type: :model do
       it 'converts author' do
         # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
         not_utf8_author = "\xE8 author"
+        not_utf8_author.force_encoding 'iso-8859-1'
         utf8_author = 'è author'
         entry = FactoryGirl.create :entry, author: not_utf8_author
         expect(entry.author).to eq utf8_author
@@ -247,6 +250,7 @@ describe Entry, type: :model do
       it 'converts content' do
         # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
         not_utf8_content = "<p>\xE8 content</p>"
+        not_utf8_content.force_encoding 'iso-8859-1'
         utf8_content = '<p>è content</p>'
         entry = FactoryGirl.create :entry, content: not_utf8_content
         expect(entry.content).to eq utf8_content
@@ -255,6 +259,7 @@ describe Entry, type: :model do
       it 'converts summary' do
         # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
         not_utf8_summary = "<p>\xE8 summary</p>"
+        not_utf8_summary.force_encoding 'iso-8859-1'
         utf8_summary = '<p>è summary</p>'
         entry = FactoryGirl.create :entry, summary: not_utf8_summary
         expect(entry.summary).to eq utf8_summary
@@ -263,6 +268,7 @@ describe Entry, type: :model do
       it 'converts guid' do
         # 0xE8 is a valid character in ISO-8859-1, invalid in UTF-8
         not_utf8_guid = "\xE8 guid"
+        not_utf8_guid.force_encoding 'iso-8859-1'
         utf8_guid = 'è guid'
         entry = FactoryGirl.create :entry, guid: not_utf8_guid
         expect(entry.guid).to eq utf8_guid

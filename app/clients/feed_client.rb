@@ -116,27 +116,7 @@ class FeedClient
         end
     end
 
-    # RestClients ignores the HTTP charset and always thinks responses are UTF-8, this must be corrected.
-    headers = feed_response.try :headers
-    content_type = headers[:content_type] unless headers.blank?
-    charset = content_type.to_s[/\bcharset[ ]*=[ '"]*([^ '";]+)['";]*/, 1] unless content_type.blank?
-    begin
-      if charset.present?
-        encoding = Encoding.find charset
-      else
-        # use utf-8 by default if charset not reported by HTTP content-type
-        encoding = Encoding.find 'utf-8'
-      end
-    rescue ArgumentError
-      Rails.logger.warn "Unknown charset #{charset} reported by HTTP content-type header, using utf-8 instead"
-      encoding = Encoding.find 'utf-8'
-    end
-
-    Rails.logger.info "Detected encoding #{encoding.to_s} for the feed, converting to utf-8 if necessary"
-    feed_response.force_encoding encoding unless feed_response.nil?
-
-    # We want the response to end up being UTF-8 because Feedjira handles other encodings poorly.
-    feed_response.try :encode!, 'utf-8', {:invalid => :replace, :undef => :replace, :replace => '?'}
+    feed_response = fix_encoding feed_response
 
     if feed_response.blank?
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
@@ -190,5 +170,63 @@ class FeedClient
     end
   end
 
+  ##
+  # Set the correct encoding of the feed string.
+  #
+  # The actual encoding of the response is detected with this algorithm:
+  # - if the HTTP content-type header reports a charset, that encoding is assumed. Otherwise utf-8 is assumed.
+  # - the response body is checked to see if the above encoding is valid. If it isn't, the XML is parsed to read the
+  # encoding reported in the xml (this may happen for feeds that do not report an encoding in the content-type header
+  # but rather report a non-utf8 encoding in the <xml encoding="..."> attribute).
+  #
+  # Once the actual encoding is determined, the encoding is forced so Ruby is aware of it without changing the string
+  # internal representation, and it is returned.
+  #
+  # Returns nil if a nil string is passed.
 
+  def self.fix_encoding(feed_response)
+    return nil if feed_response.nil?
+
+    # Detect encoding from HTTP content-type header, in case RestClient has detected the wrong encoding
+    headers = feed_response.try :headers
+    content_type = headers[:content_type] unless headers.blank?
+    charset_http = content_type.to_s[/\bcharset[ ]*=[ '"]*([^ '";]+)['";]*/, 1] unless content_type.blank?
+
+    encoding = find_encoding charset_http
+    feed_response.force_encoding encoding
+
+    unless feed_response.valid_encoding?
+      Rails.logger.info "Encoding #{encoding.to_s} detected from HTTP headers is not valid, parsing XML to read encoding"
+      parsed_feed = Ox.parse feed_response
+      encoding_xml = parsed_feed.encoding
+
+      encoding = find_encoding encoding_xml
+      feed_response.force_encoding encoding
+    end
+
+    # We want the response to end up being UTF-8 for convenience
+    Rails.logger.info "Detected encoding #{encoding.to_s} for the feed, converting to utf-8 if necessary"
+
+    return feed_response
+  end
+
+  ##
+  # Returns a ruby Encoding instance for the passed string.
+  # If the passed string is not a valid encoding, an Encoding instance for UTF-8 is returned by default.
+
+  def self.find_encoding(charset)
+    begin
+      if charset.present?
+        encoding = Encoding.find charset
+      else
+        # use utf-8 by default if a nil is passed
+        encoding = Encoding.find 'utf-8'
+      end
+    rescue ArgumentError
+      Rails.logger.warn "Unknown charset #{charset}, using utf-8 instead"
+      encoding = Encoding.find 'utf-8'
+    end
+
+    return encoding
+  end
 end

@@ -632,5 +632,68 @@ FEED_XML
       expect(entry2.published).to eq @entry2.published
       expect(entry2.guid).to eq @entry2.guid
     end
+
+    it 'uses encoding from XML if encoding cannot be determined from HTTP headers' do
+      feed_title = "张五常".encode 'gbk'
+      feed_link = "http://zhangwuchang.blog.tianya.cn/".encode 'gbk'
+
+      entry1_title = "合约一般理论的基础".encode 'gbk'
+      entry1_published = "2012-6-26 8:49:00(星期六)晴".encode 'gbk'
+      entry1_url = "http://blog.tianya.cn/post-503241-43467918-1.shtml".encode 'gbk'
+      entry1_description = "<p>（五常按：本文是《制度的选择》第一章《经济学的缺环》的最后第五节。）</p>".encode 'gbk'
+
+      entry2_title = "菲国难明，伦敦可庆".encode 'gbk'
+      entry2_published = "2012-5-29 9:03:00(星期六)晴".encode 'gbk'
+      entry2_url = "http://blog.tianya.cn/post-503241-42527364-1.shtml".encode 'gbk'
+      entry2_description = "<p>无从以一个知者的立场发言，</p>".encode 'gbk'
+
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="gbk"?>
+<rss version="2.0">
+  <channel>
+    <title>#{feed_title}</title>
+    <link>#{feed_link}</link>
+    <description>
+    </description>
+    <item>
+      <title><![CDATA[#{entry1_title}]]></title>
+      <pubDate>#{entry1_published}</pubDate>
+      <link>#{entry1_url}</link>
+      <description><![CDATA[#{entry1_description}]]></description>
+    </item>
+    <item>
+      <title><![CDATA[#{entry2_title}]]></title>
+      <pubDate>#{entry2_published}</pubDate>
+      <link>#{entry2_url}</link>
+      <description><![CDATA[#{entry2_description}]]></description>
+    </item>
+    </channel>
+</rss>
+FEED_XML
+
+      feed_xml.encode! 'gbk'
+
+      allow(RestClient).to receive(:get).and_return feed_xml
+      allow(feed_xml).to receive(:headers).and_return({content_type: 'text/html'})
+
+      FeedClient.fetch @feed
+      @feed.reload
+      expect(@feed.entries.count).to eq 2
+
+      expect(@feed.title).to eq feed_title.encode! 'utf-8'
+      expect(@feed.url).to eq feed_link.encode! 'utf-8'
+
+      entry1 = @feed.entries.second
+      expect(entry1.title).to eq entry1_title.encode! 'utf-8'
+      expect(entry1.published).to eq entry1_published.encode! 'utf-8'
+      expect(entry1.url).to eq entry1_url.encode! 'utf-8'
+      expect(entry1.summary).to eq entry1_description.encode! 'utf-8'
+
+      entry2 = @feed.entries.first
+      expect(entry2.title).to eq entry2_title.encode! 'utf-8'
+      expect(entry2.published).to eq entry2_published.encode! 'utf-8'
+      expect(entry2.url).to eq entry2_url.encode! 'utf-8'
+      expect(entry2.summary).to eq entry2_description.encode! 'utf-8'
+    end
   end
 end

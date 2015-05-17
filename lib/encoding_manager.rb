@@ -13,7 +13,7 @@ class EncodingManager
   def self.fix_encoding(text)
     fixed_text = text
     fixed_text = fix_utf8 fixed_text
-    fixed_text = fix_iso8859_1 fixed_text
+    fixed_text = convert_to_utf8 fixed_text
     return fixed_text
   end
 
@@ -41,20 +41,16 @@ class EncodingManager
   end
 
   ##
-  # If the passed string is not valid UTF-8, reencode it from ISO-8859-1 to UTF-8 replacing unknown characters with "?".
-  # If the string is not ISO-8859-1 this method wil not work as expected.
-  # Returns the string, reencoded if necessary.
+  # Convert the passed string to UTF-8 replacing unknown characters with "?".
+  # Returns the string, with the internal representation and encoding changed if necessary.
 
-  def self.fix_iso8859_1(text)
-    fixed_text = text
+  def self.convert_to_utf8(text)
+    converted_text = text
 
-    if !text.nil?
-      if !text.valid_encoding?
-        Rails.logger.debug "Text ###{text}## is not valid UTF-8, reencoding from ISO-8859-1 to UTF-8"
-        fixed_text = text.encode('UTF-8', 'iso-8859-1', {:invalid => :replace, :undef => :replace, :replace => '?'})
-      end
+    unless text.nil?
+      converted_text = text.encode 'UTF-8', {:invalid => :replace, :undef => :replace, :replace => '?'}
     end
 
-    return fixed_text
+    return converted_text
   end
 end
