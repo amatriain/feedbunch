@@ -533,12 +533,14 @@ class User < ActiveRecord::Base
   def before_remove_feed_subscription(feed_subscription)
     feed = feed_subscription.feed
 
-    folder = feed.user_folder self
-    folder.feeds.delete feed if folder.present?
+    if feed.present?
+      folder = feed.user_folder self
+      folder.feeds.delete feed if folder.present?
 
-    remove_entry_states feed
-    remove_refresh_feed_job_states feed
-    remove_subscribe_job_states feed
+      remove_entry_states feed
+      remove_refresh_feed_job_states feed
+      remove_subscribe_job_states feed
+    end
   end
 
   ##
