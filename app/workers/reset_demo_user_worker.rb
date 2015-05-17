@@ -177,7 +177,7 @@ class ResetDemoUserWorker
     demo_feed_urls.each do |url|
       feed = Feed.url_variants_feed url
       if feed.present?
-        subscribed_feed = demo_user.feeds.where(id: feed.id).first
+        subscribed_feed = demo_user.feeds.find feed.id
         if subscribed_feed.present?
           Rails.logger.debug "Demo user already subscribed to feed #{url}"
           already_subscribed_default_urls << subscribed_feed.fetch_url
@@ -218,7 +218,7 @@ class ResetDemoUserWorker
     @demo_feeds_and_folders.keys.each do |folder_title|
       # the special value "NO FOLDER" is not an actual folder, skip it
       if folder_title != Folder::NO_FOLDER
-        if demo_user.folders.where(title: folder_title).first.present?
+        if demo_user.folders.find_by(title: folder_title).present?
           Rails.logger.debug "Demo user already has folder #{folder_title}"
           already_existing_default_folders << folder_title
         else
