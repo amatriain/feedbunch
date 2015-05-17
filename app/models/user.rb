@@ -559,7 +559,7 @@ class User < ActiveRecord::Base
   def remove_entry_states(feed)
     feed.entries.find_each do |entry|
       entry_state = EntryState.find_by user_id: self.id, entry_id: entry.id
-      self.entry_states.delete entry_state
+      self.entry_states.delete entry_state if entry_state.present?
     end
   end
 
