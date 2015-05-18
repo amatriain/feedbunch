@@ -4,5 +4,17 @@
   "show_main_tour": <%= @user.show_main_tour %>,
   "show_mobile_tour": <%= @user.show_mobile_tour %>,
   "show_feed_tour": <%= @user.show_feed_tour %>,
-  "show_entry_tour": <%= @user.show_entry_tour %>
+  "show_entry_tour": <%= @user.show_entry_tour %>,
+  "kb_shortcuts":
+  {
+    "select_sidebar_link": <%= @kb_shortcuts[:select_sidebar_link] %>,
+    "toggle_open_entry": <%= @kb_shortcuts[:toggle_open_entry] %>,
+    "sidebar_link_up": <%= @kb_shortcuts[:sidebar_link_up] %>,
+    "sidebar_link_down": <%= @kb_shortcuts[:sidebar_link_down] %>,
+    "entries_up": <%= @kb_shortcuts[:entries_up] %>,
+    "entries_down": <%= @kb_shortcuts[:entries_down] %>,
+    "toggle_show_read": <%= @kb_shortcuts[:toggle_show_read] %>,
+    "mark_all_read": <%= @kb_shortcuts[:mark_all_read] %>,
+    "toggle_read_entry": <%= @kb_shortcuts[:toggle_read_entry] %>
+  }
 }

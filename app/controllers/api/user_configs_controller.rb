@@ -15,7 +15,20 @@ class Api::UserConfigsController < ApplicationController
     if stale? etag: EtagCalculator.etag(current_user.config_updated_at),
               last_modified: current_user.config_updated_at
       @user = current_user
-      respond_with current_user
+
+      # Keyboard shortcuts for all users are set in application configuration
+      @kb_shortcuts = {}
+      @kb_shortcuts[:select_sidebar_link] = Feedbunch::Application.config.kb_select_sidebar_link
+      @kb_shortcuts[:toggle_open_entry] = Feedbunch::Application.config.kb_toggle_open_entry
+      @kb_shortcuts[:sidebar_link_up] = Feedbunch::Application.config.kb_sidebar_link_up
+      @kb_shortcuts[:sidebar_link_down] = Feedbunch::Application.config.kb_sidebar_link_down
+      @kb_shortcuts[:entries_up] = Feedbunch::Application.config.kb_entries_up
+      @kb_shortcuts[:entries_down] = Feedbunch::Application.config.kb_entries_down
+      @kb_shortcuts[:toggle_show_read] = Feedbunch::Application.config.kb_toggle_show_read
+      @kb_shortcuts[:mark_all_read] = Feedbunch::Application.config.kb_mark_all_read
+      @kb_shortcuts[:toggle_read_entry] = Feedbunch::Application.config.kb_toggle_read_entry
+
+      respond_with @user, @kb_shortcuts
     end
   rescue => e
     handle_error e

@@ -13,8 +13,10 @@ currentFolderSvc, findSvc, feedsFoldersSvc, readSvc, menuCollapseSvc)->
   #---------------------------------------------
   start: ->
     $(document).keypress (event)->
-      # enter=13, spacebar=32, j=106, k=107, h=104, l=108, d=100, a=97, r=114
-      if event.which in [13, 32, 104, 108, 106, 107, 100, 97, 114]
+      kb_shortcuts_array = []
+      kb_shortcuts_array.push val for key, val of $rootScope.kb_shortcuts
+
+      if event.which in kb_shortcuts_array
 
         # If a keyboard shortcut is used, stop highlighting entries on mousover until user actually moves the mouse.
         # This prevents accidental mouseover events when autoscrolling.
@@ -27,19 +29,19 @@ currentFolderSvc, findSvc, feedsFoldersSvc, readSvc, menuCollapseSvc)->
         # shortcuts related to entries
         if $rootScope.entries
           # next entry
-          highlightedEntrySvc.next() if event.which == 106
+          highlightedEntrySvc.next() if event.which == $rootScope.kb_shortcuts["entries_down"]
 
           # previous entry
-          highlightedEntrySvc.previous() if event.which == 107
+          highlightedEntrySvc.previous() if event.which == $rootScope.kb_shortcuts["entries_up"]
 
           # toggle open/close state of entry
-          entrySvc.toggle_open_entry highlightedEntrySvc.get() if event.which == 32
+          entrySvc.toggle_open_entry highlightedEntrySvc.get() if event.which == $rootScope.kb_shortcuts["toggle_open_entry"]
 
           # mark all entries as read
-          entrySvc.mark_all_read() if event.which == 97
+          entrySvc.mark_all_read() if event.which == $rootScope.kb_shortcuts["mark_all_read"]
 
           # toggle read/unread state of currently highlighted entry
-          if event.which == 114
+          if event.which == $rootScope.kb_shortcuts["toggle_read_entry"]
             entry = highlightedEntrySvc.get()
             if entry.read
               entrySvc.unread_entry entry
@@ -47,13 +49,13 @@ currentFolderSvc, findSvc, feedsFoldersSvc, readSvc, menuCollapseSvc)->
               entrySvc.read_entry entry
 
         # next link in sidebar
-        highlightedSidebarLinkSvc.next() if event.which == 108
+        highlightedSidebarLinkSvc.next() if event.which == $rootScope.kb_shortcuts["sidebar_link_down"]
 
         # previous link in sidebar
-        highlightedSidebarLinkSvc.previous() if event.which == 104
+        highlightedSidebarLinkSvc.previous() if event.which == $rootScope.kb_shortcuts["sidebar_link_up"]
 
         # select the currently highlighted link (feed or folder) in the sidebar for reading
-        if event.which == 13
+        if event.which == $rootScope.kb_shortcuts["select_sidebar_link"]
           highlighted_link = highlightedSidebarLinkSvc.get()
           if highlighted_link.id == 'start'
             startPageSvc.show_start_page()
@@ -65,7 +67,7 @@ currentFolderSvc, findSvc, feedsFoldersSvc, readSvc, menuCollapseSvc)->
             currentFolderSvc.set folder if folder?
 
         # toggle show/hide read entries
-        if event.which == 100
+        if event.which == $rootScope.kb_shortcuts["toggle_show_read"]
           if $rootScope.show_read
             # hide read entries
             feedsFoldersSvc.hide_read()

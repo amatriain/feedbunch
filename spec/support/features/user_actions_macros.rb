@@ -544,8 +544,9 @@ def reset_tours
 end
 
 ##
-# Press the passed key in the keyboard
+# Press the passed key in the keyboard.
+# Receives a numeric key code.
 
 def press_key(key)
-  page.find('body').native.send_keys key
+  page.find('body').native.send_keys key.chr
 end
