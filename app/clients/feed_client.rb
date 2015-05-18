@@ -35,7 +35,7 @@ class FeedClient
   def self.fetch(feed, http_caching: true, perform_autodiscovery: false)
     http_response = fetch_valid_feed feed, http_caching, perform_autodiscovery
 
-    if http_response.present?
+    unless http_response.nil?
       feed = handle_html_response feed, http_response, perform_autodiscovery
     end
 
