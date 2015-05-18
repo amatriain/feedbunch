@@ -50,7 +50,7 @@ class FeedAutodiscovery
         Rails.logger.info "Autodiscovered already known feed with url #{feed_href}. Using it and destroying feed with url #{feed.url} passed as argument"
         feed.users.find_each do |user|
           Rails.logger.info "User #{user.id} - #{user.email} is subscribed to feed #{feed.url} to be destroyed, subscribing to existing feed #{existing_feed.id} - #{feed_href} instead"
-          user.subscribe existing_feed.fetch_url
+          user.subscribe existing_feed.fetch_url unless user.feeds.include? existing_feed
         end
 
         feed.destroy
