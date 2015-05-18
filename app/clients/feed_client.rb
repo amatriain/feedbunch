@@ -197,8 +197,13 @@ class FeedClient
 
     unless feed_response.valid_encoding?
       Rails.logger.info "Encoding #{encoding.to_s} detected from HTTP headers is not valid, parsing XML to read encoding"
-      parsed_feed = Ox.parse feed_response
-      encoding_xml = parsed_feed.encoding
+      begin
+        parsed_feed = Ox.parse feed_response
+        encoding_xml = parsed_feed.encoding
+      rescue
+        Rails.logger.info 'Could not determine encoding from XML'
+        encoding_xml = nil
+      end
 
       encoding = find_encoding encoding_xml
       feed_response.force_encoding encoding
@@ -220,6 +225,7 @@ class FeedClient
         encoding = Encoding.find charset
       else
         # use utf-8 by default if a nil is passed
+        Rails.logger.info 'No encoding could be determined, using utf-8 by default'
         encoding = Encoding.find 'utf-8'
       end
     rescue ArgumentError
