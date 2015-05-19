@@ -97,6 +97,7 @@ require 'etag_calculator'
 # - first_confirmation_reminder_sent, first_confirmation_reminder_sent: booleans that indicates if the first and second
 # confirmation reminder emails have been sent to a user. This happens when a user signs up but never clicks on the link
 # in the confirmation email. Each of the two confirmation reminders will be sent just once.
+# - kb_shortcuts_enabled: boolean that indicates if keyboard shortcuts are enabled for a user. True by default.
 #
 # When a user is subscribed to a feed (this is, when a feed is added to the user.feeds array), EntryState instances
 # are saved to mark all its entries as unread for this user.
@@ -144,6 +145,7 @@ class User < ActiveRecord::Base
   validates :show_main_tour, inclusion: {in: [true, false]}
   validates :first_confirmation_reminder_sent, inclusion: {in: [true, false]}
   validates :second_confirmation_reminder_sent, inclusion: {in: [true, false]}
+  validates :kb_shortcuts_enabled, inclusion: {in: [true, false]}
 
   before_save :before_save_user
   after_save :after_save_user
@@ -506,6 +508,11 @@ class User < ActiveRecord::Base
     if self.second_confirmation_reminder_sent == nil
       Rails.logger.info "User #{self.email} has unsupported second_confirmation_reminder_sent #{self.second_confirmation_reminder_sent}. Defaulting to 'false' instead"
       self.second_confirmation_reminder_sent = false
+    end
+
+    if self.kb_shortcuts_enabled == nil
+      Rails.logger.info "User #{self.email} has unsupported kb_shortcuts_enabled #{self.kb_shortcuts_enabled}. Defaulting to 'true' instead"
+      self.kb_shortcuts_enabled = true
     end
 
     return true

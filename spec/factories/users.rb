@@ -29,6 +29,7 @@ FactoryGirl.define do
     user_data_updated_at Time.zone.now
     first_confirmation_reminder_sent false
     second_confirmation_reminder_sent false
+    kb_shortcuts_enabled true
 
     factory :user_unconfirmed do
       confirmed_at nil

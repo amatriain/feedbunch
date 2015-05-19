@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150425084525) do
+ActiveRecord::Schema.define(version: 20150519105502) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -226,6 +226,7 @@ ActiveRecord::Schema.define(version: 20150425084525) do
     t.boolean  "free",                              default: false, null: false
     t.boolean  "first_confirmation_reminder_sent",  default: false, null: false
     t.boolean  "second_confirmation_reminder_sent", default: false, null: false
+    t.boolean  "kb_shortcuts_enabled",              default: true,  null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

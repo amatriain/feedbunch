@@ -439,4 +439,14 @@ describe User, type: :model do
     end
   end
 
+  context 'keyboard shortcuts enabled defaults' do
+
+    it 'enables keyboard shortcuts by default' do
+      user = FactoryGirl.build :user, kb_shortcuts_enabled: nil
+      user.save!
+      expect(user.reload.kb_shortcuts_enabled).not_to be_nil
+      expect(user.reload.kb_shortcuts_enabled).to be true
+    end
+  end
+
 end
