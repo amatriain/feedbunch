@@ -64,6 +64,7 @@ es:
       folder_button: "Carpeta"
       folder_new: "Nueva carpeta"
       folder_none: "Ninguna carpeta"
+      kb_shortcuts: "Atajos de teclado"
       help: "Ayuda y Dinos tu opinión"
       logout: "Salir"
       admin: "Administración"
@@ -88,6 +89,19 @@ es:
       rails_license: "Licencia MIT"
       ruby_license: "Ruby license"
     popups:
+      kb_shortcuts:
+        title: "Atajos de teclado"
+        text_1: "Puedes usar estos atajos de teclado mientras lees feeds:"
+        entries_down: "Bajar entrada:"
+        entries_up: "Subir entrada:"
+        toggle_open_entry: "Abrir/cerrar entrada:"
+        sidebar_link_down: "Bajar feed/carpeta:"
+        sidebar_link_up: "Subir feed/carpeta:"
+        select_sidebar_link: "Leer feed/carpeta:"
+        toggle_show_read: "Mostrar/ocultar entradas leídas:"
+        toggle_read_entry: "Marcar como leída/sin leer una sola entrada:"
+        mark_all_read: "Marcar todas las entradas como leídas:"
+        text_2: "Puedes habilitar o deshabilitar los atajos de teclado desde la página de tu perfil."
       help:
         title: "Ayuda y Danos tu opinión"
         text_1: "Puedes pedir ayuda o decirnos lo que piensas de Feedbunch a traves de:"

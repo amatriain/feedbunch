@@ -57,6 +57,21 @@ angular.module('feedbunch').service 'formFocusSvc',
       keyboardShortcutsSvc.start()
 
     #-------------------------------------------------------
+    # Give focus to the close button when showing the "Keyboard shortcuts" modal.
+    #-------------------------------------------------------
+    $("body").on "shown.bs.modal", "#help-kb-shortcuts-popup",  ->
+      # Stop responding to keyboard shortcuts
+      keyboardShortcutsSvc.stop()
+      $("#kb-shortcuts-close", this).focus()
+
+    #-------------------------------------------------------
+    # Reenable keyboard shortcuts when the "Keyboard shortcuts" modal is hidden
+    #-------------------------------------------------------
+    $("body").on "hidden.bs.modal", "#help-kb-shortcuts-popup",  ->
+      # Start responding to keyboard shortcuts
+      keyboardShortcutsSvc.start()
+
+    #-------------------------------------------------------
     # Give focus to the close button when showing the "Help and Feedback" modal.
     #-------------------------------------------------------
     $("body").on "shown.bs.modal", "#help-feedback-popup",  ->

@@ -1,0 +1,78 @@
+<% cache "help-kb-shortcuts-popup-#{I18n.locale}" do %>
+
+  <div id="help-kb-shortcuts-popup" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3><%= t 'layouts.popups.kb_shortcuts.title' %></h3>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <div class="row">
+              <div class="hidden-xs col-sm-2">
+                <i class="fa fa-keyboard-o fa-4x"></i>
+              </div>
+              <div class="col-xs-12 col-sm-10">
+                <p><%= t 'layouts.popups.kb_shortcuts.text_1' %></p>
+                <ul>
+                  <li>
+                    <%= t 'layouts.popups.kb_shortcuts.entries_down' %>
+                    <strong><%= KeycodeToStringConverter.convert Feedbunch::Application.config.kb_entries_down, I18n.locale %></strong>
+                  </li>
+                  <li>
+                    <%= t 'layouts.popups.kb_shortcuts.entries_up' %>
+                    <strong><%= KeycodeToStringConverter.convert Feedbunch::Application.config.kb_entries_up, I18n.locale %></strong>
+                  </li>
+                  <li>
+                    <%= t 'layouts.popups.kb_shortcuts.toggle_open_entry' %>
+                    <strong><%= KeycodeToStringConverter.convert Feedbunch::Application.config.kb_toggle_open_entry, I18n.locale %></strong>
+                  </li>
+                  <li>
+                    <%= t 'layouts.popups.kb_shortcuts.sidebar_link_down' %>
+                    <strong><%= KeycodeToStringConverter.convert Feedbunch::Application.config.kb_sidebar_link_down, I18n.locale %></strong>
+                  </li>
+                  <li>
+                    <%= t 'layouts.popups.kb_shortcuts.sidebar_link_up' %>
+                    <strong><%= KeycodeToStringConverter.convert Feedbunch::Application.config.kb_sidebar_link_up, I18n.locale %></strong>
+                  </li>
+                  <li>
+                    <%= t 'layouts.popups.kb_shortcuts.select_sidebar_link' %>
+                    <strong><%= KeycodeToStringConverter.convert Feedbunch::Application.config.kb_select_sidebar_link, I18n.locale %></strong>
+                  </li>
+                  <li>
+                    <%= t 'layouts.popups.kb_shortcuts.toggle_show_read' %>
+                    <strong><%= KeycodeToStringConverter.convert Feedbunch::Application.config.kb_toggle_show_read, I18n.locale %></strong>
+                  </li>
+                  <li>
+                    <%= t 'layouts.popups.kb_shortcuts.toggle_read_entry' %>
+                    <strong><%= KeycodeToStringConverter.convert Feedbunch::Application.config.kb_toggle_read_entry, I18n.locale %></strong>
+                  </li>
+                  <li>
+                    <%= t 'layouts.popups.kb_shortcuts.mark_all_read' %>
+                    <strong><%= KeycodeToStringConverter.convert Feedbunch::Application.config.kb_mark_all_read, I18n.locale %></strong>
+                  </li>
+                </ul>
+                <p>
+                  <%= t 'layouts.popups.kb_shortcuts.text_2' %>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button id="kb-shortcuts-close"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                    ng-click="unsubscribe()">
+              <%= t 'layouts.popups.help.close' %>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<% end %>

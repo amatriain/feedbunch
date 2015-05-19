@@ -85,6 +85,7 @@ en:
       folder_button: "Folder"
       folder_new: "New folder"
       folder_none: "No folder"
+      kb_shortcuts: "Keyboard shortcuts"
       help: "Help and Feedback"
       logout: "Logout"
       admin: "Administration"
@@ -109,6 +110,19 @@ en:
       rails_license: "MIT license"
       ruby_license: "Ruby license"
     popups:
+      kb_shortcuts:
+        title: "Keyboard shortcuts"
+        text_1: "You can use these keyboard shortcuts while reading feeds:"
+        entries_down: "Entry down:"
+        entries_up: "Entry up:"
+        toggle_open_entry: "Open/close entry:"
+        sidebar_link_down: "Feed/folder down:"
+        sidebar_link_up: "Feed/folder up:"
+        select_sidebar_link: "Read feed/folder:"
+        toggle_show_read: "Show/hide read entries:"
+        toggle_read_entry: "Mark read/unread a single entry:"
+        mark_all_read: "Mark all entries as read:"
+        text_2: "You can enable or disable keyboard shortcuts from your profile page."
       help:
         title: "Help and Feedback"
         text_1: "You can ask for help or give us feedback through:"
