@@ -378,11 +378,13 @@ class User < ActiveRecord::Base
   #   - show_mobile_tour
   #   - show_feed_tour
   #   - show_entry_tour
+  #   - kb_shortcuts_enabled
 
   def after_save_user
     if quick_reading_changed? || open_all_entries_changed? ||
         show_main_tour_changed? || show_mobile_tour_changed? ||
-        show_feed_tour_changed? || show_entry_tour_changed?
+        show_feed_tour_changed? || show_entry_tour_changed? ||
+        kb_shortcuts_enabled_changed?
       update_column :config_updated_at, Time.zone.now
     end
   end

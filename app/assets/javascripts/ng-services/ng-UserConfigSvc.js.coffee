@@ -18,6 +18,7 @@ angular.module('feedbunch').service 'userConfigSvc',
       $rootScope.show_mobile_tour = data["show_mobile_tour"]
       $rootScope.show_feed_tour = data["show_feed_tour"]
       $rootScope.show_entry_tour = data["show_entry_tour"]
+      $rootScope.kb_shortcuts_enabled = data["kb_shortcuts_enabled"]
       $rootScope.kb_shortcuts = data["kb_shortcuts"]
 
       # Start running Quick Reading mode, if the user has selected it.

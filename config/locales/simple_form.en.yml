@@ -19,6 +19,7 @@ en:
         current_password: "Current password"
         locale: "Language"
         timezone: "Time zone"
+        kb_shortcuts_enabled: "Enable keyboard shortcuts"
         quick_reading: "Enable Quick Reading mode"
         open_all_entries: "Open all entries by default"
       subscription:
@@ -33,6 +34,7 @@ en:
         password: "Password length must be between 8 and 128 characters."
         current_password: "(REQUIRED) Enter your current password to confirm your changes."
         blank_password: "Leave blank if you don't want to change it."
+        kb_shortcuts_enabled: "Keyboard shortcuts can be used to manage the application without using a mouse."
         quick_reading: "In Quick Reading mode, entries are automatically marked as read while scrolling."
         open_all_entries: "If checked, all entries will be open when they are loaded."
       subscription:

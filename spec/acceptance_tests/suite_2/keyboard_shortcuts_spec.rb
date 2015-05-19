@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'selenium/webdriver/common/keys'
 
 describe 'keyboard shortcuts', type: :feature do
 
@@ -317,6 +316,70 @@ describe 'keyboard shortcuts', type: :feature do
       entry_should_be_marked_unread @entry1
       expect(page).to have_text @entry2.title
       entry_should_be_marked_unread @entry2
+    end
+  end
+
+  context 'keyboard shortcuts configuration' do
+
+    it 'disables keyboard shortcuts', js: true do
+      disable_kb_shortcuts @user
+      read_feed @feed1, @user
+
+      # Entry navigation shortcuts should be disabled
+      entry_should_be_highlighted @entry1
+      entry_should_not_be_highlighted @entry2
+      press_key Feedbunch::Application.config.kb_entries_down
+      entry_should_be_highlighted @entry1
+      entry_should_not_be_highlighted @entry2
+
+      # Sidebar navigation shortcuts should be disabled
+      feed_link_should_be_highlighted @feed1
+      press_key Feedbunch::Application.config.kb_sidebar_link_down
+      start_link_should_not_be_highlighted
+      folder_link_should_not_be_highlighted 'none'
+      feed_link_should_be_highlighted @feed1
+      press_key Feedbunch::Application.config.kb_sidebar_link_up
+      start_link_should_not_be_highlighted
+      folder_link_should_not_be_highlighted 'none'
+      feed_link_should_be_highlighted @feed1
+
+      # Mark all as read shortcut should be disabled
+      expect(page).to have_text @entry1.title
+      entry_should_be_marked_unread @entry1
+      expect(page).to have_text @entry2.title
+      entry_should_be_marked_unread @entry2
+      press_key Feedbunch::Application.config.kb_mark_all_read
+      expect(page).to have_text @entry1.title
+      entry_should_be_marked_unread @entry1
+      expect(page).to have_text @entry2.title
+      entry_should_be_marked_unread @entry2
+    end
+
+    it 'enables keyboard shortcuts', js: true do
+      disable_kb_shortcuts @user
+      read_feed @feed1, @user
+
+      # Shortcuts should be disabled
+      entry_should_be_highlighted @entry1
+      entry_should_not_be_highlighted @entry2
+      press_key Feedbunch::Application.config.kb_entries_down
+      entry_should_be_highlighted @entry1
+      entry_should_not_be_highlighted @entry2
+
+      enable_kb_shortcuts @user
+      read_feed @feed1, @user
+
+      # Shortcuts should be enabled
+      entry_should_be_highlighted @entry1
+      entry_should_not_be_highlighted @entry2
+      press_key Feedbunch::Application.config.kb_entries_down
+      entry_should_not_be_highlighted @entry1
+      entry_should_be_highlighted @entry2
+
+      feed_link_should_be_highlighted @feed1
+      press_key Feedbunch::Application.config.kb_sidebar_link_up
+      folder_link_should_be_highlighted 'none'
+      feed_link_should_not_be_highlighted @feed1
     end
   end
 end

@@ -351,22 +351,54 @@ def unsubscribe_feed(feed, user)
 end
 
 ##
+# Enter the edit registration page, check the "enable keyboard shortcuts" checkbox if it isn't already,
+# enter the current password and save the changes.
+# Receives as argument the user performing the action.
+
+def enable_kb_shortcuts(user)
+  visit edit_user_registration_path
+  unless page.find('#user_kb_shortcuts_enabled').checked?
+    page.execute_script('$("#user_kb_shortcuts_enabled").click()')
+
+    fill_in 'user_current_password', with: user.password
+    click_on 'Update account'
+    expect(current_path).to eq read_path
+  end
+  visit read_path unless current_path == read_path
+end
+
+##
+# Enter the edit registration page, uncheck the "enable keyboard shortcuts" checkbox if it isn't already,
+# enter the current password and save the changes.
+# Receives as argument the user performing the action.
+
+def disable_kb_shortcuts(user)
+  visit edit_user_registration_path
+  if page.find('#user_kb_shortcuts_enabled').checked?
+    page.execute_script('$("#user_kb_shortcuts_enabled").click()')
+
+    fill_in 'user_current_password', with: user.password
+    click_on 'Update account'
+    expect(current_path).to eq read_path
+  end
+  visit read_path unless current_path == read_path
+end
+
+##
 # Enter the edit registration page, check the "enable quick reading" checkbox if it isn't already,
 # enter the current password and save the changes.
 # Receives as argument the user performing the action.
 
 def enable_quick_reading(user)
   visit edit_user_registration_path
+  unless page.find('#user_quick_reading').checked?
+    page.execute_script('$("#user_quick_reading").click()')
 
-  # capybara check method currently not working because of a capybara-webkit bug: see https://github.com/thoughtbot/capybara-webkit/issues/494
-  #check 'user_quick_reading'
-
-  # instead we click the checkbox with javascript (dirty hack suggested in the above bug comments):
-  page.execute_script('$("#user_quick_reading").click()')
-
-  fill_in 'user_current_password', with: user.password
-  click_on 'Update account'
-  expect(current_path).to eq read_path
+    fill_in 'user_current_password', with: user.password
+    click_on 'Update account'
+    expect(current_path).to eq read_path
+  end
+  visit read_path unless current_path == read_path
 end
 
 ##
@@ -376,16 +408,14 @@ end
 
 def enable_open_all_entries(user)
   visit edit_user_registration_path
+  unless page.find('#user_open_all_entries').checked?
+    page.execute_script('$("#user_open_all_entries").click()')
 
-  # capybara check method currently not working because of a capybara-webkit bug: see https://github.com/thoughtbot/capybara-webkit/issues/494
-  #check 'user_open_all_entries'
-
-  # instead we click the checkbox with javascript (dirty hack suggested in the above bug comments):
-  page.execute_script('$("#user_open_all_entries").click()')
-
-  fill_in 'user_current_password', with: user.password
-  click_on 'Update account'
-  expect(current_path).to eq read_path
+    fill_in 'user_current_password', with: user.password
+    click_on 'Update account'
+    expect(current_path).to eq read_path
+  end
+  visit read_path unless current_path == read_path
 end
 
 ##
