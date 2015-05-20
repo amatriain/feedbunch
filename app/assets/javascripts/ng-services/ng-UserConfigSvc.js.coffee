@@ -28,15 +28,10 @@ angular.module('feedbunch').service 'userConfigSvc',
       # Start lazy-loading images, if all entries are open by default
       openAllEntriesSvc.start() if $rootScope.open_all_entries
 
-      if $rootScope.show_main_tour
-        # Show the main application tour, if the show_main_tour flag is true
-        tourSvc.show_main_tour()
-      else if $rootScope.show_kb_shortcuts_tour
-        # Keyboard shortcuts tour is shown instead, if user has seen the main tour but not yet the keyboard shortcuts tour
-        tourSvc.show_kb_shortcuts_tour()
-
-      # Show the mobile application tour, if the show_mobile_tour flag is true
-      tourSvc.show_mobile_tour() if $rootScope.show_mobile_tour
+      # Show application tours if applicable
+      tourSvc.show_main_tour()
+      tourSvc.show_kb_shortcuts_tour()
+      tourSvc.show_mobile_tour()
 
       # Start responding to keyboard shortcuts
       keyboardShortcutsSvc.start()

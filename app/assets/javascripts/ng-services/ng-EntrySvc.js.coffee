@@ -114,7 +114,7 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
           change_entry_state entry, true
         # lazy load images
         lazyLoadingSvc.load_entry_images entry
-        tourSvc.show_entry_tour() if $rootScope.show_entry_tour
+        tourSvc.show_entry_tour()
 
     #--------------------------------------------
     # Mark a single entry as unread

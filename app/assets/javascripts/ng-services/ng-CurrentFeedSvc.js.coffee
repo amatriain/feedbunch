@@ -22,7 +22,7 @@ readSvc, menuCollapseSvc, sidebarVisibleSvc, tourSvc)->
     readSvc.read_entries_page()
     menuCollapseSvc.close()
     sidebarVisibleSvc.set false
-    tourSvc.show_feed_tour() if $rootScope.show_feed_tour
+    tourSvc.show_feed_tour()
 
   get: ->
     return findSvc.find_feed $rootScope.current_feed?.id

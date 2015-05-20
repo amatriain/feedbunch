@@ -65,22 +65,24 @@ angular.module('feedbunch').service 'tourSvc',
   # PRIVATE FUNCTION: show the keyboard shortcuts application tour.
   #---------------------------------------------
   show_kb_shortcuts_tour = ->
-    # The keyboards shortcuts tour is only shown in screens bigger than a smartphone
-    enquire.register sm_min_media_query, ->
-      $http.get("/api/tours/kb_shortcuts.json")
-      .success (data)->
-        tour =
-          id: 'kb_shortcuts-tour',
-          showCloseButton: true,
-          showPrevButton: false,
-          showNextButton: true,
-          onEnd: dont_show_kb_shortcuts_tour,
-          onClose: dont_show_kb_shortcuts_tour,
-          i18n: data['i18n'],
-          steps: data['steps']
-        hopscotch.startTour tour
-      .error (data, status)->
-        timerFlagSvc.start 'error_loading_tour' if status!=0
+    # If main tour is completed, kb shortcuts tour is shown as soon as page is loaded (unless already completed too)
+    if !$rootScope.show_main_tour && $rootScope.show_kb_shortcuts_tour
+      # The keyboards shortcuts tour is only shown in screens bigger than a smartphone
+      enquire.register sm_min_media_query, ->
+        $http.get("/api/tours/kb_shortcuts.json")
+        .success (data)->
+          tour =
+            id: 'kb_shortcuts-tour',
+            showCloseButton: true,
+            showPrevButton: false,
+            showNextButton: true,
+            onEnd: dont_show_kb_shortcuts_tour,
+            onClose: dont_show_kb_shortcuts_tour,
+            i18n: data['i18n'],
+            steps: data['steps']
+          hopscotch.startTour tour
+        .error (data, status)->
+          timerFlagSvc.start 'error_loading_tour' if status!=0
 
   #--------------------------------------------
   # PRIVATE FUNCTION: at the end of main tour, mark show_main_tour flag to false so it's not shown again; and if the
@@ -95,88 +97,93 @@ angular.module('feedbunch').service 'tourSvc',
     # Show the main application tour.
     #---------------------------------------------
     show_main_tour: ->
-      # The main tour is only shown in screens bigger than a smartphone
-      enquire.register sm_min_media_query, ->
-        $http.get("/api/tours/main.json")
-        .success (data)->
-          tour =
-            id: 'main-tour',
-            showCloseButton: true,
-            showPrevButton: false,
-            showNextButton: true,
-            onEnd: main_tour_end,
-            onClose: main_tour_end,
-            i18n: data['i18n'],
-            steps: data['steps']
-          hopscotch.startTour tour
-        .error (data, status)->
-          timerFlagSvc.start 'error_loading_tour' if status!=0
+      # Show the main application tour, if the show_main_tour flag is true
+      if $rootScope.show_main_tour
+        # The main tour is only shown in screens bigger than a smartphone
+        enquire.register sm_min_media_query, ->
+          $http.get("/api/tours/main.json")
+          .success (data)->
+            tour =
+              id: 'main-tour',
+              showCloseButton: true,
+              showPrevButton: false,
+              showNextButton: true,
+              onEnd: main_tour_end,
+              onClose: main_tour_end,
+              i18n: data['i18n'],
+              steps: data['steps']
+            hopscotch.startTour tour
+          .error (data, status)->
+            timerFlagSvc.start 'error_loading_tour' if status!=0
 
     #---------------------------------------------
     # Show the mobile application tour.
     #---------------------------------------------
     show_mobile_tour: ->
-      # The mobile tour is only shown in smartphone-sized screens
-      enquire.register xs_max_media_query, ->
-        $http.get("/api/tours/mobile.json")
-        .success (data)->
-          tour =
-            id: 'mobile-tour',
-            showCloseButton: true,
-            showPrevButton: false,
-            showNextButton: true,
-            onEnd: dont_show_mobile_tour,
-            onClose: dont_show_mobile_tour,
-            i18n: data['i18n'],
-            steps: data['steps']
-          hopscotch.startTour tour
-        .error (data, status)->
-          timerFlagSvc.start 'error_loading_tour' if status!=0
+      if $rootScope.show_mobile_tour
+        # The mobile tour is only shown in smartphone-sized screens
+        enquire.register xs_max_media_query, ->
+          $http.get("/api/tours/mobile.json")
+          .success (data)->
+            tour =
+              id: 'mobile-tour',
+              showCloseButton: true,
+              showPrevButton: false,
+              showNextButton: true,
+              onEnd: dont_show_mobile_tour,
+              onClose: dont_show_mobile_tour,
+              i18n: data['i18n'],
+              steps: data['steps']
+            hopscotch.startTour tour
+          .error (data, status)->
+            timerFlagSvc.start 'error_loading_tour' if status!=0
 
     #---------------------------------------------
     # Show the feed application tour.
     #---------------------------------------------
     show_feed_tour: ->
-      # The feed tour is only shown in screens bigger than a smartphone
-      enquire.register sm_min_media_query, ->
-        $http.get("/api/tours/feed.json")
-        .success (data)->
-          tour =
-            id: 'feed-tour',
-            showCloseButton: true,
-            showPrevButton: false,
-            showNextButton: true,
-            onEnd: dont_show_feed_tour,
-            onClose: dont_show_feed_tour,
-            i18n: data['i18n'],
-            steps: data['steps']
-          hopscotch.startTour tour
-        .error (data, status)->
-          timerFlagSvc.start 'error_loading_tour' if status!=0
+      if $rootScope.show_feed_tour
+        # The feed tour is only shown in screens bigger than a smartphone
+        enquire.register sm_min_media_query, ->
+          $http.get("/api/tours/feed.json")
+          .success (data)->
+            tour =
+              id: 'feed-tour',
+              showCloseButton: true,
+              showPrevButton: false,
+              showNextButton: true,
+              onEnd: dont_show_feed_tour,
+              onClose: dont_show_feed_tour,
+              i18n: data['i18n'],
+              steps: data['steps']
+            hopscotch.startTour tour
+          .error (data, status)->
+            timerFlagSvc.start 'error_loading_tour' if status!=0
 
     #---------------------------------------------
     # Show the entry application tour.
     #---------------------------------------------
     show_entry_tour: ->
-      $http.get("/api/tours/entry.json")
-      .success (data)->
-        tour =
-          id: 'entry-tour',
-          showCloseButton: true,
-          showPrevButton: false,
-          showNextButton: true,
-          onEnd: dont_show_entry_tour,
-          onClose: dont_show_entry_tour,
-          i18n: data['i18n'],
-          steps: data['steps']
-        # Show entry tour after a 600ms delay, to give entry open/autoscroll
-        # animation time to finish.
-        $timeout ->
-          hopscotch.startTour tour
-        , 600
+      if $rootScope.show_entry_tour
+        $http.get("/api/tours/entry.json")
+        .success (data)->
+          tour =
+            id: 'entry-tour',
+            showCloseButton: true,
+            showPrevButton: false,
+            showNextButton: true,
+            onEnd: dont_show_entry_tour,
+            onClose: dont_show_entry_tour,
+            i18n: data['i18n'],
+            steps: data['steps']
+          # Show entry tour after a 600ms delay, to give entry open/autoscroll
+          # animation time to finish.
+          $timeout ->
+            hopscotch.startTour tour
+          , 600
 
-      .error (data, status)->
-        timerFlagSvc.start 'error_loading_tour' if status!=0
+        .error (data, status)->
+          timerFlagSvc.start 'error_loading_tour' if status!=0
 
     #---------------------------------------------
     # Show the keyboard shortcuts application tour.
