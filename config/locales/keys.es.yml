@@ -2,7 +2,7 @@ es:
   keys:
     backspace: "Borrar"
     tab: "Tabulador"
-    enter: "Enter"
+    enter: "Intro"
     shift: "Mayusculas"
     ctrl: "Ctrl"
     alt: "Alt"
