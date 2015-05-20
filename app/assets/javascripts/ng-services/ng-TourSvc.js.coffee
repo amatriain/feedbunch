@@ -52,6 +52,15 @@ angular.module('feedbunch').service 'tourSvc',
     .error (data, status)->
       timerFlagSvc.start 'error_changing_show_tour' if status!=0
 
+  #--------------------------------------------
+  # PRIVATE FUNCTION: set to false the show_kb_shortcuts_tour flag for the current user.
+  #--------------------------------------------
+  dont_show_kb_shortcuts_tour = ->
+    $rootScope.show_kb_shortcuts_tour = false
+    $http.put("/api/user_config.json", user_config: {show_kb_shortcuts_tour: 'false'})
+    .error (data, status)->
+      timerFlagSvc.start 'error_changing_show_tour' if status!=0
+
   service =
     #---------------------------------------------
     # Show the main application tour.
@@ -141,6 +150,27 @@ angular.module('feedbunch').service 'tourSvc',
         timerFlagSvc.start 'error_loading_tour' if status!=0
 
     #---------------------------------------------
+    # Show the keyboard shortcuts application tour.
+    #---------------------------------------------
+    show_kb_shortcuts_tour: ->
+      # The keyboards shortcuts tour is only shown in screens bigger than a smartphone
+      enquire.register sm_min_media_query, ->
+        $http.get("/api/tours/kb_shortcuts.json")
+        .success (data)->
+          tour =
+            id: 'kb_shortcuts-tour',
+            showCloseButton: true,
+            showPrevButton: false,
+            showNextButton: true,
+            onEnd: dont_show_kb_shortcuts_tour,
+            onClose: dont_show_kb_shortcuts_tour,
+            i18n: data['i18n'],
+            steps: data['steps']
+          hopscotch.startTour tour
+        .error (data, status)->
+          timerFlagSvc.start 'error_loading_tour' if status!=0
+
+    #---------------------------------------------
     # Reset all application tours, so that they are shown again from the beginning.
     #---------------------------------------------
     reset_tours: ->
@@ -148,12 +178,14 @@ angular.module('feedbunch').service 'tourSvc',
       $rootScope.show_mobile_tour = true
       $rootScope.show_feed_tour = true
       $rootScope.show_entry_tour = true
+      $rootScope.show_kb_shortcuts_tour = true
       $http.put "/api/user_config.json",
         user_config:
           show_main_tour: 'true',
           show_mobile_tour: 'true',
           show_feed_tour: 'true',
-          show_entry_tour: 'true'
+          show_entry_tour: 'true',
+          show_kb_shortcuts_tour: 'true'
       .success (data)->
         timerFlagSvc.start 'success_reset_tours'
       .error (data, status)->

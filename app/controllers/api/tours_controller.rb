@@ -42,4 +42,13 @@ class Api::ToursController < ApplicationController
   rescue => e
     handle_error e
   end
+
+  ##
+  # Return JSON object with i18n strings for the keyboard shortcuts application tour.
+
+  def show_kb_shortcuts
+    respond_with
+  rescue => e
+    handle_error e
+  end
 end

@@ -1,0 +1,33 @@
+<% cache "kb_shortcuts_tour-#{I18n.locale}" do %>
+
+  {
+    "i18n": {
+      "nextBtn": "<%= t 'read.tours.entry.nextBtn' %>",
+      "doneBtn": "<%= t 'read.tours.entry.doneBtn' %>",
+      "closeTooltip": "<%= t 'read.tours.entry.closeTooltip' %>"
+    },
+    "steps": [
+      {
+        "target": ".entry_open_lead",
+        "placement": "bottom",
+        "title": "<%= t 'read.tours.entry.step1.title' %>",
+        "content": "<%= t 'read.tours.entry.step1.content_html' %>"
+      },
+      {
+        "target": ".entry_open_state_btn",
+        "placement": "bottom",
+        "title": "<%= t 'read.tours.entry.step2.title' %>",
+        "content": "<%= t 'read.tours.entry.step2.content_html' %>"
+      },
+      {
+        "target": ".entry_open_social",
+        "placement": "bottom",
+        "arrowOffset": 250,
+        "xOffset": -210,
+        "title": "<%= t 'read.tours.entry.step3.title' %>",
+        "content": "<%= t 'read.tours.entry.step3.content_html' %>"
+      }
+    ]
+  }
+
+<% end %>
