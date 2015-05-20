@@ -1,0 +1,22 @@
+# Special keys names, localized
+en:
+  keys:
+    backspace: "Backspace"
+    tab: "Tab"
+    enter: "Enter"
+    shift: "Shift"
+    ctrl: "Ctrl"
+    alt: "Alt"
+    capslock: "Caps Lock"
+    escape: "Escape"
+    spacebar: "Spacebar"
+    pageup: "Page Up"
+    pagedown: "Page Down"
+    end: "End"
+    home: "Home"
+    arrow_left: "Left Arrow"
+    arrow_up: "Up Arrow"
+    arrow_right: "Right Arrow"
+    arrow_down: "Down Arrow"
+    insert: "Insert"
+    delete: "Delete"
