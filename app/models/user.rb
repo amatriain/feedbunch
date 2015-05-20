@@ -60,6 +60,7 @@ require 'etag_calculator'
 # True by default.
 # - show_feed_tour: boolean indicating whether the feed tour should be shown. True by default.
 # - show_entry_tour: boolean indicating whether the entry tour should be shown. True by default.
+# - show_kb_shortcuts_tour: boolean indicating whether the keyboard shortcuts tour should be shown. True by default.
 # - subscriptions_updated_at: datetime when subscriptions were updated for the last time. Events that
 # update this attribute are:
 #   - subscribing to a new feed
@@ -90,6 +91,8 @@ require 'etag_calculator'
 #   - show_mobile_tour
 #   - show_feed_tour
 #   - show_entry_tour
+#   - show_kb_shortcuts_tour
+#   - kb_shortcuts_enabled
 # - user_data_updated_at: datetime when user data for this user was last updated. This attribute is
 # updated every time one of these happens:
 #   - user subscribes to a new feed
@@ -143,6 +146,10 @@ class User < ActiveRecord::Base
   validates :quick_reading, inclusion: {in: [true, false]}
   validates :open_all_entries, inclusion: {in: [true, false]}
   validates :show_main_tour, inclusion: {in: [true, false]}
+  validates :show_mobile_tour, inclusion: {in: [true, false]}
+  validates :show_feed_tour, inclusion: {in: [true, false]}
+  validates :show_entry_tour, inclusion: {in: [true, false]}
+  validates :show_kb_shortcuts_tour, inclusion: {in: [true, false]}
   validates :first_confirmation_reminder_sent, inclusion: {in: [true, false]}
   validates :second_confirmation_reminder_sent, inclusion: {in: [true, false]}
   validates :kb_shortcuts_enabled, inclusion: {in: [true, false]}
@@ -305,16 +312,19 @@ class User < ActiveRecord::Base
   # - show_mobile_tour (boolean): whether to show the mobile application tour
   # - show_feed_tour (boolean): whether to show the feed application tour
   # - show_entry_tour (boolean): whether to show the entry application tour
+  # - show_kb_shortcuts_tour (boolean): whether to show the keyboard shortcuts application tour
 
-  def update_config(show_main_tour: nil, show_mobile_tour: nil, show_feed_tour: nil, show_entry_tour: nil)
+  def update_config(show_main_tour: nil, show_mobile_tour: nil, show_feed_tour: nil, show_entry_tour: nil,
+                    show_kb_shortcuts_tour: nil)
     new_config = {}
     new_config[:show_main_tour] = show_main_tour if !show_main_tour.nil?
     new_config[:show_mobile_tour] = show_mobile_tour if !show_mobile_tour.nil?
     new_config[:show_feed_tour] = show_feed_tour if !show_feed_tour.nil?
     new_config[:show_entry_tour] = show_entry_tour if !show_entry_tour.nil?
+    new_config[:show_kb_shortcuts_tour] = show_kb_shortcuts_tour if !show_kb_shortcuts_tour.nil?
     Rails.logger.info "Updating user #{self.id} - #{self.email} with show_main_tour #{show_main_tour}, " +
                           "show_mobile_tour #{show_mobile_tour}, show_feed_tour #{show_feed_tour}, " +
-                          "show_entry_tour #{show_entry_tour}"
+                          "show_entry_tour #{show_entry_tour}, show_kb_shortcuts_tour #{show_kb_shortcuts_tour}"
     self.update new_config if new_config.length > 0
   end
 
@@ -378,13 +388,14 @@ class User < ActiveRecord::Base
   #   - show_mobile_tour
   #   - show_feed_tour
   #   - show_entry_tour
+  #   - show_kb_shortcuts_tour
   #   - kb_shortcuts_enabled
 
   def after_save_user
     if quick_reading_changed? || open_all_entries_changed? ||
         show_main_tour_changed? || show_mobile_tour_changed? ||
         show_feed_tour_changed? || show_entry_tour_changed? ||
-        kb_shortcuts_enabled_changed?
+        show_kb_shortcuts_tour_changed? || kb_shortcuts_enabled_changed?
       update_column :config_updated_at, Time.zone.now
     end
   end
@@ -397,7 +408,7 @@ class User < ActiveRecord::Base
   # - free: false
   # - quick_reading: false
   # - open_all_entries: false
-  # - show_main_tour, show_mobile_tour, show_feed_tour: show_entry_tour: true
+  # - show_main_tour, show_mobile_tour, show_feed_tour: show_entry_tour, show_kb_shortcuts_tour: true
   # - name: defaults to the value of the "email" attribute
   # - invitation_limit: the value configured in Feedbunch::Application.config.daily_invitations_limit (in config/application.rb)
   # - subscriptions_updated_at: current date/time
@@ -458,6 +469,11 @@ class User < ActiveRecord::Base
     if self.show_entry_tour == nil
       Rails.logger.info "User #{self.email} has unsupported show_entry_tour #{self.show_entry_tour}. Defaulting to show_entry_tour 'true' instead"
       self.show_entry_tour = true
+    end
+
+    if self.show_kb_shortcuts_tour == nil
+      Rails.logger.info "User #{self.email} has unsupported show_kb_shortcuts_tour #{self.show_kb_shortcuts_tour}. Defaulting to show_entry_tour 'true' instead"
+      self.show_kb_shortcuts_tour = true
     end
 
     if self.name.blank?

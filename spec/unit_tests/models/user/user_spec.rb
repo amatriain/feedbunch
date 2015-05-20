@@ -344,6 +344,16 @@ describe User, type: :model do
     end
   end
 
+  context 'show keyboard shortcuts app tour by default' do
+
+    it 'gives a default value of true' do
+      user = FactoryGirl.build :user, show_kb_shortcuts_tour: nil
+      user.save!
+      expect(user.reload.show_kb_shortcuts_tour).not_to be_nil
+      expect(user.show_kb_shortcuts_tour).to be true
+    end
+  end
+
   context 'subscriptions_updated_at defaults' do
 
     it 'defaults to md5 hash of current time' do

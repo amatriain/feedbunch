@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150519105502) do
+ActiveRecord::Schema.define(version: 20150520115850) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -217,6 +217,7 @@ ActiveRecord::Schema.define(version: 20150519105502) do
     t.boolean  "show_mobile_tour",                  default: true,  null: false
     t.boolean  "show_feed_tour",                    default: true,  null: false
     t.boolean  "show_entry_tour",                   default: true,  null: false
+    t.boolean  "show_kb_shortcuts_tour",            default: true,  null: false
     t.datetime "subscriptions_updated_at"
     t.datetime "folders_updated_at"
     t.datetime "subscribe_jobs_updated_at"

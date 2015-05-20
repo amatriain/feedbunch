@@ -100,6 +100,7 @@ class ResetDemoUserWorker
     demo_user.show_mobile_tour = true
     demo_user.show_feed_tour = true
     demo_user.show_entry_tour = true
+    demo_user.show_kb_shortcuts_tour = true
     demo_user.free = true
     demo_user.save!
   end

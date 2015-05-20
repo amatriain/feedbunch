@@ -9,7 +9,8 @@ describe User, type: :model do
                                show_main_tour: false,
                                show_mobile_tour: false,
                                show_feed_tour: false,
-                               show_entry_tour: false
+                               show_entry_tour: false,
+                               show_kb_shortcuts_tour: false
     @old_config_updated_at = @user.reload.config_updated_at
   end
 
@@ -42,6 +43,11 @@ describe User, type: :model do
 
     it 'when show_entry_tour is updated' do
       @user.update show_entry_tour: true
+      expect(@user.reload.config_updated_at).not_to eq @old_config_updated_at
+    end
+
+    it 'when show_kb_shortcuts_tour is updated' do
+      @user.update show_kb_shortcuts_tour: true
       expect(@user.reload.config_updated_at).not_to eq @old_config_updated_at
     end
   end

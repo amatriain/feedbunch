@@ -21,6 +21,7 @@ FactoryGirl.define do
     show_mobile_tour false
     show_feed_tour false
     show_entry_tour false
+    show_kb_shortcuts_tour false
     subscriptions_updated_at Time.zone.now
     folders_updated_at Time.zone.now
     refresh_feed_jobs_updated_at Time.zone.now

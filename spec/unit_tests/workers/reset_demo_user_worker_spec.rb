@@ -132,7 +132,8 @@ describe ResetDemoUserWorker do
         @demo_user.update show_main_tour: false,
                           show_mobile_tour: false,
                           show_feed_tour: false,
-                          show_entry_tour: false
+                          show_entry_tour: false,
+                          show_kb_shortcuts_tour: false
 
         expect(@demo_user.show_main_tour).to be false
         expect(@demo_user.show_mobile_tour).to be false
@@ -143,6 +144,7 @@ describe ResetDemoUserWorker do
         expect(@demo_user.show_mobile_tour).to be true
         expect(@demo_user.show_feed_tour).to be true
         expect(@demo_user.show_entry_tour).to be true
+        expect(@demo_user.show_kb_shortcuts_tour).to be true
       end
 
       it 'resets free to true' do
