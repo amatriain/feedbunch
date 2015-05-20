@@ -62,6 +62,29 @@ angular.module('feedbunch').service 'tourSvc',
       timerFlagSvc.start 'error_changing_show_tour' if status!=0
 
   #---------------------------------------------
+  # PRIVATE FUNCTION: show the main application tour.
+  #---------------------------------------------
+  show_main_tour = ->
+    # Show the main application tour, if the show_main_tour flag is true
+    if $rootScope.show_main_tour
+      # The main tour is only shown in screens bigger than a smartphone
+      enquire.register sm_min_media_query, ->
+        $http.get("/api/tours/main.json")
+        .success (data)->
+          tour =
+            id: 'main-tour',
+            showCloseButton: true,
+            showPrevButton: false,
+            showNextButton: true,
+            onEnd: main_tour_end,
+            onClose: main_tour_end,
+            i18n: data['i18n'],
+            steps: data['steps']
+          hopscotch.startTour tour
+        .error (data, status)->
+          timerFlagSvc.start 'error_loading_tour' if status!=0
+
+  #---------------------------------------------
   # PRIVATE FUNCTION: show the keyboard shortcuts application tour.
   #---------------------------------------------
   show_kb_shortcuts_tour = ->
@@ -84,6 +107,28 @@ angular.module('feedbunch').service 'tourSvc',
         .error (data, status)->
           timerFlagSvc.start 'error_loading_tour' if status!=0
 
+  #---------------------------------------------
+  # PRIVATE FUNCTION: show the mobile application tour.
+  #---------------------------------------------
+  show_mobile_tour = ->
+    if $rootScope.show_mobile_tour
+      # The mobile tour is only shown in smartphone-sized screens
+      enquire.register xs_max_media_query, ->
+        $http.get("/api/tours/mobile.json")
+        .success (data)->
+          tour =
+            id: 'mobile-tour',
+            showCloseButton: true,
+            showPrevButton: false,
+            showNextButton: true,
+            onEnd: dont_show_mobile_tour,
+            onClose: dont_show_mobile_tour,
+            i18n: data['i18n'],
+            steps: data['steps']
+          hopscotch.startTour tour
+        .error (data, status)->
+          timerFlagSvc.start 'error_loading_tour' if status!=0
+
   #--------------------------------------------
   # PRIVATE FUNCTION: at the end of main tour, mark show_main_tour flag to false so it's not shown again; and if the
   # show_kb_shortcuts_flag is set to true, show the keyboard shortcuts tour
@@ -93,50 +138,32 @@ angular.module('feedbunch').service 'tourSvc',
     show_kb_shortcuts_tour() if $rootScope.show_kb_shortcuts_tour
 
   service =
+
+    #---------------------------------------------
+    # Show tours if the appropiate user config flags are set to true, when the page finishes loading:
+    # - main tour (only for screens bigger than smartphones)
+    # - keyboard shortcuts tour (only for screens bigger than smartphones, and only if the main tour is already completed)
+    # - mobile tour (only for smartphone-sized screens)
+    #---------------------------------------------
+    start: ->
+      show_main_tour()
+      show_kb_shortcuts_tour()
+      show_mobile_tour()
+
     #---------------------------------------------
     # Show the main application tour.
     #---------------------------------------------
-    show_main_tour: ->
-      # Show the main application tour, if the show_main_tour flag is true
-      if $rootScope.show_main_tour
-        # The main tour is only shown in screens bigger than a smartphone
-        enquire.register sm_min_media_query, ->
-          $http.get("/api/tours/main.json")
-          .success (data)->
-            tour =
-              id: 'main-tour',
-              showCloseButton: true,
-              showPrevButton: false,
-              showNextButton: true,
-              onEnd: main_tour_end,
-              onClose: main_tour_end,
-              i18n: data['i18n'],
-              steps: data['steps']
-            hopscotch.startTour tour
-          .error (data, status)->
-            timerFlagSvc.start 'error_loading_tour' if status!=0
+    show_main_tour: show_main_tour
+
+    #---------------------------------------------
+    # Show the keyboard shortcuts application tour.
+    #---------------------------------------------
+    show_kb_shortcuts_tour: show_kb_shortcuts_tour
 
     #---------------------------------------------
     # Show the mobile application tour.
     #---------------------------------------------
-    show_mobile_tour: ->
-      if $rootScope.show_mobile_tour
-        # The mobile tour is only shown in smartphone-sized screens
-        enquire.register xs_max_media_query, ->
-          $http.get("/api/tours/mobile.json")
-          .success (data)->
-            tour =
-              id: 'mobile-tour',
-              showCloseButton: true,
-              showPrevButton: false,
-              showNextButton: true,
-              onEnd: dont_show_mobile_tour,
-              onClose: dont_show_mobile_tour,
-              i18n: data['i18n'],
-              steps: data['steps']
-            hopscotch.startTour tour
-          .error (data, status)->
-            timerFlagSvc.start 'error_loading_tour' if status!=0
+    show_mobile_tour: show_mobile_tour
 
     #---------------------------------------------
     # Show the feed application tour.
@@ -185,10 +212,7 @@ angular.module('feedbunch').service 'tourSvc',
         .error (data, status)->
           timerFlagSvc.start 'error_loading_tour' if status!=0
 
-    #---------------------------------------------
-    # Show the keyboard shortcuts application tour.
-    #---------------------------------------------
-    show_kb_shortcuts_tour: show_kb_shortcuts_tour
+
 
     #---------------------------------------------
     # Reset all application tours, so that they are shown again from the beginning.

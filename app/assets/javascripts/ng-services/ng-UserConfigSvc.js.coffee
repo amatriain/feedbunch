@@ -28,10 +28,8 @@ angular.module('feedbunch').service 'userConfigSvc',
       # Start lazy-loading images, if all entries are open by default
       openAllEntriesSvc.start() if $rootScope.open_all_entries
 
-      # Show application tours if applicable
-      tourSvc.show_main_tour()
-      tourSvc.show_kb_shortcuts_tour()
-      tourSvc.show_mobile_tour()
+      # Show application tours if corresponding user config flags are set to true
+      tourSvc.start()
 
       # Start responding to keyboard shortcuts
       keyboardShortcutsSvc.start()
