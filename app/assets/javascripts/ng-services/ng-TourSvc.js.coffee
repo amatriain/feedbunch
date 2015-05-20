@@ -61,6 +61,35 @@ angular.module('feedbunch').service 'tourSvc',
     .error (data, status)->
       timerFlagSvc.start 'error_changing_show_tour' if status!=0
 
+  #---------------------------------------------
+  # PRIVATE FUNCTION: show the keyboard shortcuts application tour.
+  #---------------------------------------------
+  show_kb_shortcuts_tour = ->
+    # The keyboards shortcuts tour is only shown in screens bigger than a smartphone
+    enquire.register sm_min_media_query, ->
+      $http.get("/api/tours/kb_shortcuts.json")
+      .success (data)->
+        tour =
+          id: 'kb_shortcuts-tour',
+          showCloseButton: true,
+          showPrevButton: false,
+          showNextButton: true,
+          onEnd: dont_show_kb_shortcuts_tour,
+          onClose: dont_show_kb_shortcuts_tour,
+          i18n: data['i18n'],
+          steps: data['steps']
+        hopscotch.startTour tour
+      .error (data, status)->
+        timerFlagSvc.start 'error_loading_tour' if status!=0
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: at the end of main tour, mark show_main_tour flag to false so it's not shown again; and if the
+  # show_kb_shortcuts_flag is set to true, show the keyboard shortcuts tour
+  #--------------------------------------------
+  main_tour_end = ->
+    dont_show_main_tour()
+    show_kb_shortcuts_tour() if $rootScope.show_kb_shortcuts_tour
+
   service =
     #---------------------------------------------
     # Show the main application tour.
@@ -75,8 +104,8 @@ angular.module('feedbunch').service 'tourSvc',
             showCloseButton: true,
             showPrevButton: false,
             showNextButton: true,
-            onEnd: dont_show_main_tour,
-            onClose: dont_show_main_tour,
+            onEnd: main_tour_end,
+            onClose: main_tour_end,
             i18n: data['i18n'],
             steps: data['steps']
           hopscotch.startTour tour
@@ -152,23 +181,7 @@ angular.module('feedbunch').service 'tourSvc',
     #---------------------------------------------
     # Show the keyboard shortcuts application tour.
     #---------------------------------------------
-    show_kb_shortcuts_tour: ->
-      # The keyboards shortcuts tour is only shown in screens bigger than a smartphone
-      enquire.register sm_min_media_query, ->
-        $http.get("/api/tours/kb_shortcuts.json")
-        .success (data)->
-          tour =
-            id: 'kb_shortcuts-tour',
-            showCloseButton: true,
-            showPrevButton: false,
-            showNextButton: true,
-            onEnd: dont_show_kb_shortcuts_tour,
-            onClose: dont_show_kb_shortcuts_tour,
-            i18n: data['i18n'],
-            steps: data['steps']
-          hopscotch.startTour tour
-        .error (data, status)->
-          timerFlagSvc.start 'error_loading_tour' if status!=0
+    show_kb_shortcuts_tour: show_kb_shortcuts_tour
 
     #---------------------------------------------
     # Reset all application tours, so that they are shown again from the beginning.

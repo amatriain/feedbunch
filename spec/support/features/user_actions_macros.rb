@@ -541,13 +541,12 @@ def sign_up(email, password, confirm_account: true)
 end
 
 ##
-# Close an application tour window, if visible
+# Close an application tour window, if visible.
 
-def close_tour
+def close_tour(check_closed=true)
   # Close tour only if it is visible
   if page.has_css? 'div.hopscotch-bubble'
     find('div.hopscotch-bubble a.hopscotch-bubble-close').click
-    tour_should_not_be_visible
   end
 end
 
@@ -561,7 +560,6 @@ def complete_tour
       find('div.hopscotch-bubble .hopscotch-next').click
     end
   end
-  tour_should_not_be_visible
 end
 
 ##

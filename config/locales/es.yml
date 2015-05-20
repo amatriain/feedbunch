@@ -99,7 +99,7 @@ es:
         sidebar_link_up: "Subir feed/carpeta:"
         select_sidebar_link: "Leer feed/carpeta:"
         toggle_show_read: "Mostrar/ocultar entradas leídas:"
-        toggle_read_entry: "Marcar como leída/sin leer una sola entrada:"
+        toggle_read_entry: "Marcar una sola entrada como leída/sin leer:"
         mark_all_read: "Marcar todas las entradas como leídas:"
         text_2: "Puedes habilitar o deshabilitar los atajos de teclado desde la página de tu perfil."
       help:
@@ -217,71 +217,6 @@ es:
         error: "No se ha podido añadir suscripción al feed:"
         running: "Se está añadiendo suscripción al feed:"
         success: "Añadida con éxito suscripción al feed:"
-    tours:
-      main:
-        nextBtn: 'Siguiente'
-        doneBtn: 'Terminar'
-        closeTooltip: 'Cerrar'
-        step1:
-          title: 'Inicio'
-          content_html: '<p>Esta es la página de inicio.</p><p>Aquí puedes ver tus estadísticas de uso. En esta página también se muestran diversas notificaciones.</p>'
-        step2:
-          title: 'Barra lateral'
-          content_html: '<p>Aquí puedes ver los feeds a los que estás suscrito.</p><ul><li>Haz click en un feed para ver sus entradas.</li><li>Haz click en <strong><em>Todas las suscripciones</em></strong> para ver entradas de todos los feeds.</li><li>Haz click en <strong><em>Inicio</em></strong> para ver de nuevo la página de inicio.</li></ul>'
-        step3:
-          title: 'Mostrar/ocultar entradas leídas'
-          content_html: '<p>Por defecto sólo se muestran entradas aún sin leer.</p><p>Haciendo click aquí puedes mostrar entradas ya leídas u ocultarlas de nuevo.</p>'
-        step4:
-          title: 'Menú Feeds'
-          content_html: '<p>Desde este menú puedes:</p><ul><li>Suscribirte a nuevos feeds.</li><li>Anular suscripciones.</li><li>Refrescar feeds.</li></ul>'
-        step5:
-          title: 'Menú de usuario'
-          content_html: '<p>Desde este menú puedes acceder a la configuración de tu perfil y cerrar tu sesión.</p>'
-      mobile:
-        nextBtn: 'Siguiente'
-        doneBtn: 'Terminar'
-        closeTooltip: 'Cerrar'
-        step1:
-          title: 'Lista de feeds'
-          content_html: '<p>Aquí puedes ver los feeds a los que estás suscrito.</p><ul><li>Haz click en un feed para ver sus entradas.</li><li>Haz click en <strong><em>Todas las suscripciones</em></strong> para ver entradas de todos los feeds.</li><li>Haz click en <strong><em>Inicio</em></strong> para ver de nuevo la página de inicio.</li></ul>'
-        step2:
-          title: 'Botón menú'
-          content_html: '<p>Este botón abre el menú de la aplicación.</p><p>Puedes usarlo para suscribirte a nuevos feeds, anular suscripciones, gestionar tu perfil...</p>'
-        step3:
-          title: 'Mostrar feeds/entradas'
-          content_html: '<p>Con este botón puedes cambiar entre ver la lista de feeds o ver las entradas.</p>'
-        step4:
-          title: 'Desliza tu dedo'
-          content_html: '<p>Puedes deslizar tu dedo en vez de pulsar el botón para ver la lista de feeds o las entradas:</p><p><i class=\"fa fa-2x fa-hand-o-left\"></i>&nbsp;Desliza tu dedo a la izquierda para ocultar la lista de feeds.</p><p><i class=\"fa fa-2x fa-hand-o-right\"></i>&nbsp;Desliza a la derecha para mostrar la lista de feeds.</p>'
-        step5:
-          title: 'Instalar en la pantalla de inicio'
-          content_html: '<p>Puedes instalar Feedbunch en la pantalla de inicio de tu móvil usando el menú del navegador.</p><p>Una vez instalado Feedbunch se mostrará a pantalla completa y será en general más usable.</p>'
-      feed:
-        nextBtn: 'Siguiente'
-        doneBtn: 'Terminar'
-        closeTooltip: 'Cerrar'
-        step1:
-          title: 'Lista de entradas'
-          content_html: '<p>Esta es la lista de entradas de un feed.</p><p>Haz click en una entrada para abrirla.</p><p>Haz click en el nombre del feed para abrir la página web en una pestaña nueva.</p>'
-        step2:
-          title: 'Leer todos'
-          content_html: '<p>Si haces click aquí, todas las entradas de la lista se marcarán como leídas.</p><p>Por defecto sólo se muestran entradas sin leer.</p>'
-        step3:
-          title: 'Carpetas'
-          content_html: 'Puedes organizar tus feeds en carpetas usando este menú.'
-      entry:
-        nextBtn: 'Siguiente'
-        doneBtn: 'Terminar'
-        closeTooltip: 'Cerrar'
-        step1:
-          title: 'Entradas'
-          content_html: '<p>Este es el contenido de una entrada.</p><p>Algunos feeds publican sólo un resumen del contenido original en sus entradas; puedes hacer click en el título de la entrada para abrir la página web original.</p>'
-        step2:
-          title: 'Entradas leídas/sin leer'
-          content_html: 'Con este botón puedes cambiar la entrada de leída a sin leer, y viceversa.'
-        step3:
-          title: 'Compartir en redes sociales'
-          content_html: 'Desde este menú puedes compartir la entrada en tus redes sociales.'
   error_pages:
     error_404:
       title: "Página no encontrada."

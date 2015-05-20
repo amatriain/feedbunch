@@ -235,7 +235,7 @@ end
 # Test that the application tour is not visible.
 
 def tour_should_not_be_visible
-  expect(page).to have_no_css 'div.hopscotch-bubble'
+  expect(page).not_to have_css 'div.hopscotch-bubble'
 end
 
 ##

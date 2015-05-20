@@ -160,11 +160,57 @@ describe 'application tours', type: :feature do
     end
   end
 
+  context 'keyboard shortcuts tour' do
+
+    it 'shows the tour after completing main tour', js: true do
+      @user.update show_main_tour: true,
+                   show_kb_shortcuts_tour: true
+      login_user_for_feature @user
+
+      tour_should_be_visible 'Start'
+      close_tour
+      tour_should_be_visible 'Keyboard shortcuts'
+    end
+
+    it 'shows the tour if main tour was already finished', js: true do
+      @user.update show_main_tour: false,
+                   show_kb_shortcuts_tour: true
+      login_user_for_feature @user
+      tour_should_be_visible 'Keyboard shortcuts'
+    end
+
+    it 'does not show the tour after completing it', js: true do
+      @user.update show_main_tour: false,
+                   show_kb_shortcuts_tour: true
+      login_user_for_feature @user
+      complete_tour
+
+      visit read_path
+      # wait for client code to initialize
+      sleep 1
+      tour_should_not_be_visible
+    end
+
+    it 'does not show the tour after closing it', js: true do
+      @user.update show_main_tour: false,
+                   show_kb_shortcuts_tour: true
+      login_user_for_feature @user
+      close_tour
+
+      visit read_path
+      # wait for client code to initialize
+      sleep 1
+      tour_should_not_be_visible
+    end
+  end
+
   context 'returning users' do
 
     before :each do
       @user.update show_main_tour: false,
-                   show_feed_tour: false
+                   show_feed_tour: false,
+                   show_entry_tour: false,
+                   show_kb_shortcuts_tour: false
 
       @feed1 = FactoryGirl.create :feed
       @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
@@ -174,7 +220,7 @@ describe 'application tours', type: :feature do
       login_user_for_feature @user
     end
 
-    it 'does not show the main tour', js: true do
+    it 'does not show the main or keyboard shortcuts tour', js: true do
       tour_should_not_be_visible
     end
 
@@ -211,13 +257,16 @@ describe 'application tours', type: :feature do
 
         # Show main tour
         tour_should_be_visible 'Start'
-
         close_tour
+
+        # Show keyboard shortcuts tour
+        tour_should_be_visible 'Keyboard shortcuts'
+        close_tour
+
 
         # Show feed tour
         read_feed @feed1, @user
         tour_should_be_visible 'Entries list'
-
         close_tour
 
         # Show entry tour
