@@ -412,6 +412,14 @@ describe 'authentication', type: :feature do
       expect(page).to_not have_css 'div.navbar ul li a#read_feeds'
     end
 
+    it 'shows keyboard shortcuts help popup', js: true do
+      expect(page).not_to have_css '#help-kb-shortcuts-popup', visible: true
+      open_user_menu
+      expect(page).to have_css 'div.navbar ul li a#help-kb-shortcuts'
+      find('div.navbar ul li a#help-kb-shortcuts').click
+      expect(page).to have_css '#help-kb-shortcuts-popup', visible: true
+    end
+
     it 'shows help popup', js: true do
       expect(page).not_to have_css '#help-feedback-popup', visible: true
       open_user_menu
