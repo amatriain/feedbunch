@@ -210,7 +210,7 @@ class FeedClient
     end
 
     # We want the response to end up being UTF-8 for convenience
-    Rails.logger.info "Detected encoding #{encoding.to_s} for the feed, converting to utf-8 if necessary"
+    Rails.logger.info "Detected encoding #{encoding.to_s} for the feed"
 
     return feed_response
   end
