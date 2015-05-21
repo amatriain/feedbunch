@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
 ['$rootScope', '$http', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
-'feedsPaginationSvc', 'cleanupSvc', 'favicoSvc', 'animationsSvc',
+'feedsPaginationSvc', 'cleanupSvc', 'favicoSvc', 'animationsSvc', 'highlightedSidebarLinkSvc',
 ($rootScope, $http, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
- feedsPaginationSvc, cleanupSvc, favicoSvc, animationsSvc)->
+ feedsPaginationSvc, cleanupSvc, favicoSvc, animationsSvc, highlightedSidebarLinkSvc)->
 
   # Maximum number of feeds in each page.
   # This MUST match the feeds page size set in the server!
@@ -233,6 +233,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       entriesPaginationSvc.reset_entries()
       $rootScope.feeds_loaded = false
       feedsPaginationSvc.set_busy false
+      highlightedSidebarLinkSvc.reset()
       load_data()
 
     #---------------------------------------------
@@ -246,6 +247,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
       $rootScope.feeds_loaded = false
       cleanupSvc.hide_read_feeds()
       feedsPaginationSvc.set_busy false
+      highlightedSidebarLinkSvc.reset()
       load_data()
 
     #---------------------------------------------
