@@ -125,7 +125,7 @@ class FeedClient
 
     begin
       # Try to parse the response as a feed
-      FeedParser.parse feed, feed_response
+      FeedParser.parse feed, feed_response, feed_response.encoding
       return nil
     rescue
       return feed_response

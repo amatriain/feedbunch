@@ -17,11 +17,16 @@ class FeedParser
   # this function will raise an error and it's the responsibility of the calling function to capture this error and
   # handle feed autodiscovery on the HTML.
   #
-  # Receives as arguments the feed object corresponding to the feed being fetched and the response to be parsed.
+  # Receives as arguments:
+  # - feed object corresponding to the feed being fetched
+  # - response to be parsed
+  # - encoding of the feed. Necessary because Feedjira sometimes receives a non-utf8 feed as input and returns a parsed
+  # feed object with e.g. title incorrectly marked as utf-8, when actually the internal representation is in the same encoding
+  # as the input. This makes necessary converting Feedjira outputs to the input encoding.
   #
   # Returns the updated feed object.
 
-  def self.parse(feed, feed_response)
+  def self.parse(feed, feed_response, encoding)
     # Preserve xhtml markup in entries
     Feedjira::Parser::Atom.preprocess_xml = true
     Feedjira::Parser::AtomFeedBurner.preprocess_xml = true
@@ -33,6 +38,8 @@ class FeedParser
     # Save the feed title and url.
     # Warning: don't confuse url (the url of the website generating the feed) with fetch_url (the url from which the
     # XML of the feed is fetched).
+    feed_parsed.title = EncodingManager.set_encoding feed_parsed.title, encoding
+    feed_parsed.url = EncodingManager.set_encoding feed_parsed.url, encoding
     Rails.logger.info "Fetched from: #{feed.fetch_url} - title: #{feed_parsed.title} - url: #{feed_parsed.url}"
 
     # Update feed title and feed url only of they are present in the fetched XML
@@ -45,7 +52,7 @@ class FeedParser
     feed.update feed_attribs
 
     # Save entries in the database
-    EntryManager.save_new_entries feed, feed_parsed.entries
+    EntryManager.save_new_entries feed, feed_parsed.entries, encoding
 
     return feed
   end

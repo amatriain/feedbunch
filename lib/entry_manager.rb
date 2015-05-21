@@ -13,13 +13,18 @@ class EntryManager
   # The argument passed are:
   # - the feed to which the entries belong (an instance of the Feed model)
   # - an Enumerable with the feed entries to save.
+  # - encoding of the feed. Necessary because Feedjira sometimes receives a non-utf8 feed as input and returns a parsed
+  # feed object with e.g. entry titles incorrectly marked as utf-8, when actually the internal representation is in the same encoding
+  # as the input. This makes necessary converting Feedjira outputs to the input encoding.
   #
   # If during processing there is a problem with an entry, it is skipped and the next one is processed,
   # instead of failing the whole process.
 
-  def self.save_new_entries(feed, entries)
+  def self.save_new_entries(feed, entries, encoding)
     entries.reverse_each do |entry|
+
       begin
+        set_entry_encoding entry, encoding
         guid = entry.entry_id || entry.url
         if guid.blank?
           Rails.logger.error "Received entry without guid or url for feed #{feed.id} - #{feed.title}. Skipping it."
@@ -51,6 +56,22 @@ class EntryManager
   end
 
   private
+
+  ##
+  # Make sure that all entry attributes from a Feejira entry are valid for their current encoding; otherwise the encoding
+  # is forced to the one passed as argument.
+  #
+  # This is intended for the case in which Feedjira sets an incorrect encoding. This may happen if e.g. the correct encoding
+  # is reported in the HTTP headers for the feed, but the feed XML reports an incorrect encoding in the opening tag.
+
+  def self.set_entry_encoding(entry, encoding)
+    entry.title = EncodingManager.set_encoding entry.title, encoding
+    entry.url = EncodingManager.set_encoding entry.url, encoding
+    entry.author = EncodingManager.set_encoding entry.author, encoding
+    entry.content = EncodingManager.set_encoding entry.content, encoding
+    entry.summary = EncodingManager.set_encoding entry.summary, encoding
+    entry.entry_id = EncodingManager.set_encoding entry.entry_id, encoding
+  end
 
   ##
   # Convert an entry created by Feedjira to a hash, with just the keys needed to create an Entry instance.

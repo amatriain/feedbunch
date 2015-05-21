@@ -17,6 +17,21 @@ class EncodingManager
     return fixed_text
   end
 
+  ##
+  # Check if the passed text is valid for its current encoding. If not, the passed encoding is forced.
+  # This is intended for the case in which Feedjira is passed a non-utf8 string but the outputs are in
+  # utf-8.
+
+  def self.set_encoding(text, encoding)
+    text_encoded = text
+    unless text_encoded.nil?
+      unless text_encoded.valid_encoding?
+        text_encoded.force_encoding encoding
+      end
+    end
+    return text_encoded
+  end
+
   private
 
   ##
