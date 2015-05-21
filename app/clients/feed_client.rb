@@ -118,7 +118,7 @@ class FeedClient
 
     feed_response = fix_encoding feed_response
 
-    if feed_response.nil? || feed_response.strip.size == 0
+    if feed_response.nil? || feed_response.try(:size) == 0 || feed_response =~ /^[ ]+$/
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
       raise EmptyResponseError.new
     end
