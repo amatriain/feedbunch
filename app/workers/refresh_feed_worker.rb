@@ -68,6 +68,8 @@ class RefreshFeedWorker
       Errno::ETIMEDOUT,
       Errno::ECONNREFUSED,
       Errno::EHOSTUNREACH,
+      Errno::ECONNRESET,
+      Zlib::GzipFile::Error,
       EmptyResponseError,
       FeedAutodiscoveryError,
       FeedFetchError => e

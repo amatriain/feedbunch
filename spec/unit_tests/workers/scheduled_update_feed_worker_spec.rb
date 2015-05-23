@@ -405,6 +405,19 @@ WEBPAGE_HTML
       expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
     end
 
+    it 'increments the fetch interval if the response should be zipped but it is not' do
+      allow(FeedClient).to receive(:fetch).and_raise Zlib::GzipFile::Error.new
+
+      expect(ScheduledUpdateFeedWorker).to receive :perform_in do |in_seconds, feed_id|
+        expect(in_seconds).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
+        expect(feed_id).to eq @feed.id
+      end
+
+      expect(@feed.fetch_interval_secs).to eq 3600
+      ScheduledUpdateFeedWorker.new.perform @feed.id
+      expect(@feed.reload.fetch_interval_secs).to be_between(3960 - 60.seconds, 3960 + 60.seconds).inclusive
+    end
+
   end
 
   context 'failing feed' do

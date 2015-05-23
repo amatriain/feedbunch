@@ -54,6 +54,8 @@ class SubscribeUserWorker
       Errno::ETIMEDOUT,
       Errno::ECONNREFUSED,
       Errno::EHOSTUNREACH,
+      Errno::ECONNRESET,
+      Zlib::GzipFile::Error,
       AlreadySubscribedError,
       EmptyResponseError,
       FeedAutodiscoveryError,
