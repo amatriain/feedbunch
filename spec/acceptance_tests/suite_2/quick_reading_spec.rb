@@ -62,7 +62,7 @@ describe 'quick reading mode', type: :feature do
 
       # scroll down enough to hide the top entry
       page.execute_script "document.getElementById('entry-#{@entries[49].id}').scrollIntoView(true);"
-      page.execute_script 'window.scrollBy(0,50)'
+      page.execute_script 'window.scrollBy(0,100)'
       # wait 0.5 seconds for entries to be marked as read, if quick reading were enabled
       sleep 0.5
       # scroll to top of page again
