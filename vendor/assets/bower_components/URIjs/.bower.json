@@ -1,6 +1,6 @@
 {
   "name": "URIjs",
-  "version": "1.15.0",
+  "version": "1.15.1",
   "main": [
     "src/URI.js",
     "src/IPv6.js",
@@ -28,11 +28,11 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/medialize/URI.js",
-  "_release": "1.15.0",
+  "_release": "1.15.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.15.0",
-    "commit": "141c04d4eec6205e1d8f2d8b4c3081f3985ff36b"
+    "tag": "v1.15.1",
+    "commit": "42a16eb102b7ce01854c2f3ca03d707f077f38a3"
   },
   "_source": "git://github.com/medialize/URI.js.git",
   "_target": "*",

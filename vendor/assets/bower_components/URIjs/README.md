@@ -244,6 +244,11 @@ URI.js is published under the [MIT license](http://www.opensource.org/licenses/m
 
 ## Changelog ##
 
+### 1.15.1 (April 5th 2015) ###
+
+* fixing `URI()` to match behavior of `new URI()` (caused by [#196](https://github.com/medialize/URI.js/issues/196)) - [Issue #205](https://github.com/medialize/URI.js/issues/205)
+* fixing [`URI.removeQuery()`](http://medialize.github.io/URI.js/docs.html#search-remove) to accept RegExp for name and value arguments - ([Issue #204](https://github.com/medialize/URI.js/issues/204), [peterwillis](https://github.com/peterwillis))
+
 ### 1.15.0 (April 1st 2015 - no joke, promise!) ###
 
 * fixing `URI(undefined)` to throw TypeError - ([Issue #189](https://github.com/medialize/URI.js/issues/189), [Issue #196](https://github.com/medialize/URI.js/issues/196), [eakron](https://github.com/eakron)) - *tiny backward-compatibility-break*
