@@ -10,13 +10,11 @@
  *
  */
 
-// To use bootstrap and fontawesome as local assets, disabled for now (we load them from a CDN)
-/*
-  @import "bootstrap-sass-official/assets/stylesheets/bootstrap-sprockets";
-  @import "bootstrap-sass-official/assets/stylesheets/bootstrap";
-  @import "font-awesome/scss/font-awesome";
-  @import "typography/font-awesome";
-*/
+// To use bootstrap and fontawesome as local assets
+@import "bootstrap-sass-official/assets/stylesheets/bootstrap-sprockets";
+@import "bootstrap-sass-official/assets/stylesheets/bootstrap";
+@import "font-awesome/scss/font-awesome";
+@import "typography/font-awesome";
 
 @import "hopscotch/dist/css/hopscotch";
 @import "variables/*";
