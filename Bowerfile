@@ -1,4 +1,3 @@
-asset 'fallback'
 asset 'jquery'
 asset 'angular'
 asset 'angular-sanitize'

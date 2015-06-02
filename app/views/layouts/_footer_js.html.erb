@@ -1,5 +1,4 @@
 <% cache 'footer_js' do %>
-  <%# Comment next block to serve JQuery, AngularJS and Bootstrap as local assets, not from a CDN %>
   <%= javascript_include_tag '//code.jquery.com/jquery-2.1.4.min.js' %>
   <%= javascript_include_tag '//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js' %>
   <%= javascript_include_tag '//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-sanitize.min.js' %>
@@ -7,12 +6,7 @@
   <%= javascript_include_tag '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js' %>
 <% end %>
 
-<%# Comment to serve JQuery, AngularJS and Bootstrap as local assets, not from a CDN %>
 <%= javascript_include_tag 'application' %>
-
-<%# Uncomment to serve JQuery, AngularJS and Bootstrap as local assets, not from a CDN %>
-<%#= javascript_include_tag 'load_libs' %>
-
 
 <% cache 'footer_social_js' do %>
 

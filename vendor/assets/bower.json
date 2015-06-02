@@ -1,7 +1,6 @@
 {
   "name": "dsl-generated dependencies",
   "dependencies": {
-    "fallback": "latest",
     "jquery": "latest",
     "angular": "latest",
     "angular-sanitize": "latest",

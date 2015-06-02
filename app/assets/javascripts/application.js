@@ -35,7 +35,3 @@
 //= require_tree ./ng-filters
 //= require_tree ./ng-services
 //= require_tree ./misc
-
-// Define an attribute in window object so this file can be loaded with fallback.js
-// The defined object is used by fallback.js to decide if the file has already been loaded.
-window.feedbunch_application = true

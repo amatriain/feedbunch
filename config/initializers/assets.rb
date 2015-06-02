@@ -23,9 +23,8 @@ Rails.application.config.assets.paths << Rails.root.join("vendor","assets","bowe
 Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf|woff2|otf)\z/
 Rails.application.config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
 
-# Precompile js libraries to serve them individually as fallback if CDN goes down
+# Precompile js libraries to serve them individually
 Rails.application.config.assets.precompile += %w(
-                                                  load_libs.js
                                                   jquery.js
                                                   angular/angular.js
                                                   angular-sanitize/angular-sanitize.js

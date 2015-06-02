@@ -10,8 +10,7 @@
  *
  */
 
-// Uncomment next block and comment corresponding block in _header.html.erb to serve Bootstrap and Fontawesome
-// as local assets, not from a CDN
+// To use bootstrap and fontawesome as local assets, disabled for now (we load them from a CDN)
 /*
   @import "bootstrap-sass-official/assets/stylesheets/bootstrap-sprockets";
   @import "bootstrap-sass-official/assets/stylesheets/bootstrap";
