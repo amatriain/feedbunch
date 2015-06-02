@@ -2,7 +2,7 @@
 
 <% cache 'footer_social_js' do %>
 
-  <%# Facebook SDK for javascript initialization %>
+  <%# Facebook SDK for javascript asynchronous load and initialization %>
   <script>
     window.fbAsyncInit = function() {
       FB.init({
@@ -20,7 +20,23 @@
     }(document, 'script', 'facebook-jssdk'));
   </script>
 
-  <%= javascript_include_tag '//platform.twitter.com/widgets.js' %>
+  <%# Twitter widgets.js asynchronous load and initialization %>
+  <script>window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+
+    t._e = [];
+    t.ready = function(f) {
+      t._e.push(f);
+    };
+
+    return t;
+  }(document, "script", "twitter-wjs"));</script>
 
 <% end %>
 
