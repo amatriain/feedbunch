@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'openEntrySvc',
-['$rootScope', '$timeout', 'animationsSvc',
-($rootScope, $timeout, animationsSvc)->
+['$rootScope', '$timeout', 'animationsSvc', 'tooltipSvc',
+($rootScope, $timeout, animationsSvc, tooltipSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Set an entry as closed.
@@ -13,6 +13,7 @@ angular.module('feedbunch').service 'openEntrySvc',
   #--------------------------------------------
   close = (entry)->
     animationsSvc.close_entry entry
+    tooltipSvc.entry_tooltips_hide entry
     index = $rootScope.open_entries.indexOf entry
     $rootScope.open_entries.splice index, 1 if index != -1
 

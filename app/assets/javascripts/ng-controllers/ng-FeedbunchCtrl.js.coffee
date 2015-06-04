@@ -232,8 +232,8 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
   #--------------------------------------------
   # Enable tooltips for an entry.
   #--------------------------------------------
-  $scope.tooltips_entry = (entry)->
-    tooltipSvc.entry_tooltips entry
+  $scope.tooltips_entry_show = (entry)->
+    tooltipSvc.entry_tooltips_show entry
     return
 
   #--------------------------------------------

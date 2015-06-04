@@ -19,11 +19,20 @@ angular.module('feedbunch').service 'tooltipSvc',
   #---------------------------------------------
   # Enable tooltips on some entry buttons and links
   #---------------------------------------------
-  entry_tooltips: (entry)->
+  entry_tooltips_show: (entry)->
     # Do not enable tooltips in smartphone and tablet-sized screens
     enquire.register md_min_media_query, ->
       $("#entry-#{entry.id} a[data-toggle='tooltip']").tooltip(container: 'body', delay: {'show': 500})
       $("#entry-#{entry.id} a[data-share-entry-dropdown]").tooltip(container: 'body', delay: {'show': 500})
+
+  #---------------------------------------------
+  # Hide tooltips on some entry buttons and links
+  #---------------------------------------------
+  entry_tooltips_hide: (entry)->
+    # Tooltips are not enabled in smartphone and tablet-sized screens
+    enquire.register md_min_media_query, ->
+      $("#entry-#{entry.id} a[data-toggle='tooltip']").tooltip 'hide'
+      $("#entry-#{entry.id} a[data-share-entry-dropdown]").tooltip 'hide'
 
   #---------------------------------------------
   # Enable tooltips on navbar buttons
