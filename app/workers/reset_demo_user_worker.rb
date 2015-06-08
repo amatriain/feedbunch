@@ -178,7 +178,7 @@ class ResetDemoUserWorker
     demo_feed_urls.each do |url|
       feed = Feed.url_variants_feed url
       if feed.present?
-        subscribed_feed = demo_user.feeds.find feed.id
+        subscribed_feed = demo_user.feeds.find_by id: feed.id
         if subscribed_feed.present?
           Rails.logger.debug "Demo user already subscribed to feed #{url}"
           already_subscribed_default_urls << subscribed_feed.fetch_url

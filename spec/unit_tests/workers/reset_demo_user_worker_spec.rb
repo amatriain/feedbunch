@@ -34,7 +34,11 @@ describe ResetDemoUserWorker do
       Feedbunch::Application.config.demo_enabled = true
 
       allow_any_instance_of(User).to receive :subscribe do |user, url|
-        feed = FactoryGirl.create :feed, fetch_url: url
+        if Feed.exists? fetch_url: url
+          feed = Feed.find_by fetch_url: url
+        else
+          feed = FactoryGirl.create :feed, fetch_url: url
+        end
         subscription = FactoryGirl.build :feed_subscription,
                                          user_id: user.id,
                                          feed_id: feed.id
@@ -224,15 +228,23 @@ describe ResetDemoUserWorker do
         end
 
         it 'resets feeds' do
+          default_subscriptions = Feedbunch::Application.config.demo_subscriptions
+
+          # One of the default demo feeds exists but the demo user is not subscribed to it
+          demo_feed_url = default_subscriptions.values.flatten.first
+          demo_feed = FactoryGirl.create :feed, fetch_url: demo_feed_url
+
+          # The user is subscribed to two feeds not in defaults
           feed_1 = @demo_user.subscribe 'http://some.feed.com'
           feed_2 = @demo_user.subscribe 'http://another.feed.com'
-          default_subscriptions = Feedbunch::Application.config.demo_subscriptions
+
           # Add an empty array of feeds in "NO_FOLDER" unless there are already feeds in "NO_FOLDER" in the
           # default subscriptions
           default_subscriptions[Folder::NO_FOLDER] = [] unless default_subscriptions.keys.include? Folder::NO_FOLDER
 
           ResetDemoUserWorker.new.perform
 
+          # Check that the subscriptions exactly match the defaults for the demo user
           default_subscriptions.keys.each do |folder_title|
             if folder_title == Folder::NO_FOLDER
               folder = folder_title
