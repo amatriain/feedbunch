@@ -78,7 +78,7 @@ class RefreshFeedWorker
     Rails.logger.error e.message
     job_state.update state: RefreshFeedJobState::ERROR if job_state.present?
   ensure
-    if feed.present?
+    if feed.present? && Feed.exists?(feed.try :id)
       # Update timestamp of the last time the feed was fetched
       Rails.logger.debug "Updating time of last update for feed #{feed.id} - #{feed.title}"
       feed.update! last_fetched: Time.zone.now
