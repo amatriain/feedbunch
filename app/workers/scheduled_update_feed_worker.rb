@@ -91,13 +91,13 @@ class ScheduledUpdateFeedWorker
       FeedAutodiscoveryError,
       FeedFetchError => e
     # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
-    if feed.present?
+    if feed.present? && Feed.exists?(feed.try :id)
       # If this is the first update that fails, save the date&time the feed started failing
-      feed.update failing_since: Time.zone.now if feed.failing_since.nil?
+      feed.reload.update! failing_since: Time.zone.now if feed.failing_since.nil?
 
       # If the feed has been failing for too long, mark it as unavailable
       if Time.zone.now - feed.failing_since > Feedbunch::Application.config.unavailable_after
-        feed.update available: false
+        feed.reload.update! available: false
       end
     end
 
