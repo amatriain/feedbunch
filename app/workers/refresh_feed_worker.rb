@@ -70,6 +70,7 @@ class RefreshFeedWorker
       Errno::EHOSTUNREACH,
       Errno::ECONNRESET,
       Zlib::GzipFile::Error,
+      OpenSSL::SSL::SSLError,
       EmptyResponseError,
       FeedAutodiscoveryError,
       FeedFetchError => e

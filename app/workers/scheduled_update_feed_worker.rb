@@ -57,6 +57,7 @@ class ScheduledUpdateFeedWorker
       Errno::EHOSTUNREACH,
       Errno::ECONNRESET,
       Zlib::GzipFile::Error,
+      OpenSSL::SSL::SSLError,
       EmptyResponseError,
       FeedAutodiscoveryError,
       FeedFetchError => e
@@ -87,6 +88,7 @@ class ScheduledUpdateFeedWorker
       Errno::EHOSTUNREACH,
       Errno::ECONNRESET,
       Zlib::GzipFile::Error,
+      OpenSSL::SSL::SSLError,
       EmptyResponseError,
       FeedAutodiscoveryError,
       FeedFetchError => e
