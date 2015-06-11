@@ -52,7 +52,7 @@ class Feed < ActiveRecord::Base
   has_many :refresh_feed_job_states, dependent: :destroy
   has_many :subscribe_job_states, dependent: :destroy
 
-  validates :fetch_url, format: {with: URI::regexp(%w{http https})}, presence: true, uniqueness: {case_sensitive: false}
+  validates :fetch_url, format: {with: URI::regexp(%w{http https})}, presence: true, uniqueness: {case_sensitive: true}
   validates :url, format: {with: URI::regexp(%w{http https})}, allow_blank: true
   validates :title, presence: true
   validates :fetch_interval_secs, presence: true
