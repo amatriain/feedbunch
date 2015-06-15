@@ -2,7 +2,7 @@
 # AngularJS service to give focus to certain form inputs as soon as the form is shown.
 ########################################################
 
-angular.module('feedbunch').service 'formFocusSvc',
+angular.module('feedbunch').service 'dialogsSvc',
 ['$rootScope', 'keyboardShortcutsSvc'
 ($rootScope, keyboardShortcutsSvc)->
 

@@ -7,12 +7,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
-'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'formFocusSvc',
+'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'dialogsSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
-highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
+highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -39,8 +39,8 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
   # Initialize export alert tooltips
   tooltipSvc.export_state_tooltips()
 
-  # Initialize giving focus to form fields when shown
-  formFocusSvc.start()
+  # Initialize event handlers when modal dialogs are shown or hidden
+  dialogsSvc.start()
 
   # Highlight the "Start" link in the sidebar
   highlightedSidebarLinkSvc.reset()

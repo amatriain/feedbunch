@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').controller 'PagesCtrl',
-['$scope', 'timerFlagSvc', 'tooltipSvc', 'cookiesSvc', 'animationsSvc', 'formFocusSvc',
-($scope, timerFlagSvc, tooltipSvc, cookiesSvc, animationsSvc, formFocusSvc)->
+['$scope', 'timerFlagSvc', 'tooltipSvc', 'cookiesSvc', 'animationsSvc', 'dialogsSvc',
+($scope, timerFlagSvc, tooltipSvc, cookiesSvc, animationsSvc, dialogsSvc)->
 
   # If there is a rails alert, show it and close it after 5 seconds
   timerFlagSvc.start 'error_rails'
@@ -15,8 +15,8 @@ angular.module('feedbunch').controller 'PagesCtrl',
   # Initialize tooltip on cookies warning "accept" button
   tooltipSvc.cookies_warning_tooltips()
 
-  # Initialize giving focus to form fields when shown
-  formFocusSvc.start()
+  # Initialize event handlers when modal dialogs are shown or hidden
+  dialogsSvc.start()
 
   #--------------------------------------------
   # Toggle (open/close) the switch locale menu with an animation
