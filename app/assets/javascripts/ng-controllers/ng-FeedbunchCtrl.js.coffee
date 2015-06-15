@@ -92,7 +92,7 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, formFocusSvc)->
 
     # There seems to be a bug in Bootstrap in which the backdrop can remain. See
     # http://competa.com/blog/2013/11/how-to-stop-twitter-bootstrap-modal-dialogs-breaking-on-browser-history-navigation-in-angularjs/
-    $('.modal-backdrop').remove();
+    $('.modal-backdrop').remove()
 
     subscriptionSvc.subscribe $scope.subscription_url
     $scope.subscription_url = null
