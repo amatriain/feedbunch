@@ -12,6 +12,17 @@ angular.module('feedbunch').service 'dialogsSvc',
   start: ->
 
     #-------------------------------------------------------
+    # Hide the semitraslucent backdrop when a modal dialog is closed.
+    # This is normally done automatically by Bootstrap but can fail in some cases leaving the backdrop permanently
+    # visible, see:
+    #   http://competa.com/blog/2013/11/how-to-stop-twitter-bootstrap-modal-dialogs-breaking-on-browser-history-navigation-in-angularjs/
+    # The fix is to force the backdrop to be removed every time a modal is hidden.
+    #-------------------------------------------------------
+    $("body").on "hidden.bs.modal", ".modal",  ->
+      # Remove the backdrop
+      $('.modal-backdrop').remove()
+
+    #-------------------------------------------------------
     # Give focus to the text input field when showing the "Add subscription" modal.
     #-------------------------------------------------------
     $("body").on "shown.bs.modal", "#subscribe-feed-popup",  ->
