@@ -29,7 +29,7 @@ ActiveAdmin.register_page "Dashboard" do
       column do
         panel 'Recently failing feeds' do
           ul do
-            Feed.where(available: true).where.not(failing_since: nil).order('failing_since DESC').limit(10).map do |feed|
+            Feed.where(available: true).where.not(failing_since: nil).order('failing_since DESC').limit(100).map do |feed|
               li link_to("#{feed.title} (since  #{feed.failing_since})", admin_feed_path(feed))
             end
           end
@@ -38,7 +38,7 @@ ActiveAdmin.register_page "Dashboard" do
       column do
         panel 'Recent permanently unavailable feeds' do
           ul do
-            Feed.where(available: false).order('updated_at DESC').limit(10).map do |feed|
+            Feed.where(available: false).order('updated_at DESC').limit(100).map do |feed|
               li link_to("#{feed.title} (since #{feed.updated_at})", admin_feed_path(feed))
             end
           end
@@ -50,7 +50,7 @@ ActiveAdmin.register_page "Dashboard" do
       column do
         panel 'Recent confirmed users' do
           ul do
-            User.where('confirmed_at is not null').order('created_at DESC').limit(10).map do |user|
+            User.where('confirmed_at is not null').order('created_at DESC').limit(100).map do |user|
               li link_to("#{user.name} (#{user.email})", admin_user_path(user))
             end
           end
@@ -59,7 +59,7 @@ ActiveAdmin.register_page "Dashboard" do
       column do
         panel 'Recently added feeds' do
           ul do
-            Feed.order('created_at DESC').limit(10).map do |feed|
+            Feed.order('created_at DESC').limit(100).map do |feed|
               li link_to("#{feed.title} (#{feed.fetch_url})", admin_feed_path(feed))
             end
           end
