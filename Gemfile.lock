@@ -93,7 +93,7 @@ GEM
       sass (~> 3.0)
       terminal-table (~> 1.4)
     builder (3.2.2)
-    cancancan (1.10.1)
+    cancancan (1.11.0)
     capistrano (3.4.0)
       i18n
       rake (>= 10.0.0)
