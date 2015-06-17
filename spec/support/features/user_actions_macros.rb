@@ -260,6 +260,7 @@ def move_feed_to_new_folder(feed, title, user)
     find('a[data-folder-id="new"]').click
   end
   expect(page).to have_css '#new-folder-popup'
+  sleep 0.5
   within '#new-folder-popup' do
     fill_in 'Title', with: title
     find('#new-folder-submit').click
