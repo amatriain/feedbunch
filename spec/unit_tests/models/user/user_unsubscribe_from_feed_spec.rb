@@ -44,12 +44,12 @@ describe User, type: :model do
 
     it 'raises error if the user is not subscribed to the feed' do
       feed2 = FactoryGirl.create :feed
-      expect {@user.unsubscribe feed2}.to raise_error
+      expect {@user.unsubscribe feed2}.to raise_error NotSubscribedError
     end
 
     it 'raises an error if there is a problem unsubscribing' do
       allow(SubscriptionsManager).to receive(:remove_subscription).and_raise StandardError.new
-      expect {@user.unsubscribe @feed}.to raise_error
+      expect {@user.unsubscribe @feed}.to raise_error StandardError
     end
 
     it 'does not change subscriptions to the feed by other users' do

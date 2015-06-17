@@ -151,7 +151,7 @@ describe ImportOpmlWorker do
     end
 
     it 'sets data import state to ERROR' do
-      expect {ImportOpmlWorker.new.perform @filename, @user.id}.to raise_error
+      expect {ImportOpmlWorker.new.perform @filename, @user.id}.to raise_error StandardError
       @user.reload
       expect(@user.opml_import_job_state.state).to eq OpmlImportJobState::ERROR
     end

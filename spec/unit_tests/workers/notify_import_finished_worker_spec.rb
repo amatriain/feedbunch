@@ -75,12 +75,12 @@ describe NotifyImportFinishedWorker do
     end
 
     it 'sets data import state to ERROR if an error is raised' do
-      expect {NotifyImportFinishedWorker.new.perform @opml_import_job_state.id}.to raise_error
+      expect {NotifyImportFinishedWorker.new.perform @opml_import_job_state.id}.to raise_error StandardError
       expect(@opml_import_job_state.reload.state).to eq OpmlImportJobState::ERROR
     end
 
     it 'sends an email' do
-      expect {NotifyImportFinishedWorker.new.perform @opml_import_job_state.id}.to raise_error
+      expect {NotifyImportFinishedWorker.new.perform @opml_import_job_state.id}.to raise_error StandardError
       mail_should_be_sent 'There has been an error importing your feed subscriptions into', to: @user.email
     end
 

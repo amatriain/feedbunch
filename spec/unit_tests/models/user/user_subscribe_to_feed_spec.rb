@@ -204,14 +204,14 @@ describe User, type: :model do
 
     it 'does not allow subscribing to the same feed more than once' do
       @user.subscribe @feed.fetch_url
-      expect {@user.subscribe @feed.fetch_url}.to raise_error
+      expect {@user.subscribe @feed.fetch_url}.to raise_error AlreadySubscribedError
       expect(@user.feeds.count).to eq 1
       expect(@user.feeds.first).to eq @feed
     end
 
     it 'rejects non-valid URLs' do
       invalid_url = 'not-an-url'
-      expect{@user.subscribe invalid_url}.to raise_error
+      expect{@user.subscribe invalid_url}.to raise_error EmptyResponseError
       expect(@user.feeds.where(fetch_url: invalid_url)).to be_blank
       expect(@user.feeds.where(url: invalid_url)).to be_blank
     end

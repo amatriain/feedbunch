@@ -468,7 +468,7 @@ describe Entry, type: :model do
       entry = FactoryGirl.build :entry, feed_id: feed.id
       feed.entries << entry
 
-      expect {entry.read_by? user}.to raise_error
+      expect {entry.read_by? user}.to raise_error NotSubscribedError
     end
   end
 end

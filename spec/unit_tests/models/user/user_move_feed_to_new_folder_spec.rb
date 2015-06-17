@@ -73,7 +73,7 @@ describe User, type: :model do
       folder2 = FactoryGirl.build :folder, user_id: user2.id, title: @title
       user2.folders << folder2
 
-      expect {@user.move_feed_to_folder @feed, folder_title: @title}.to_not raise_error
+      expect {@user.move_feed_to_folder @feed, folder_title: @title}.not_to raise_error
     end
 
     it 'raises an error if user is not subscribed to the feed' do

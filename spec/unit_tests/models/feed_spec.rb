@@ -281,7 +281,7 @@ describe Feed, type: :model do
       expect(@feed.users.count).to eq 2
       expect(@feed.users.where(id: @user1.id).count).to eq 1
 
-      expect {@user1.subscribe @feed.fetch_url}.to raise_error
+      expect {@user1.subscribe @feed.fetch_url}.to raise_error AlreadySubscribedError
       expect(@feed.users.count).to eq 2
       expect(@feed.users.where(id: @user1.id).count).to eq 1
     end
