@@ -72,13 +72,17 @@ class ScheduledUpdateFeedWorker
       FeedClient.fetch feed, http_caching: false, perform_autodiscovery: true
     end
 
-    entries_after = feed.entries.count
+    if feed.present? && Feed.exists?(feed.try :id)
+      feed = feed.reload
 
-    # If the update didn't fail, mark the feed as "not currently failing"
-    feed.update failing_since: nil if !feed.failing_since.nil?
+      entries_after = feed.entries.count
 
-    # Delete entries that are too old
-    OldEntriesCleaner.cleanup feed
+      # If the update didn't fail, mark the feed as "not currently failing"
+      feed.update failing_since: nil unless feed.failing_since.nil?
+
+      # Delete entries that are too old
+      OldEntriesCleaner.cleanup feed
+    end
 
   rescue RestClient::Exception,
       RestClient::RequestTimeout,
@@ -94,12 +98,13 @@ class ScheduledUpdateFeedWorker
       FeedFetchError => e
     # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
     if feed.present? && Feed.exists?(feed.try :id)
+      feed = feed.reload
       # If this is the first update that fails, save the date&time the feed started failing
-      feed.reload.update! failing_since: Time.zone.now if feed.failing_since.nil?
+      feed.update! failing_since: Time.zone.now if feed.failing_since.nil?
 
       # If the feed has been failing for too long, mark it as unavailable
       if Time.zone.now - feed.failing_since > Feedbunch::Application.config.unavailable_after
-        feed.reload.update! available: false
+        feed.update! available: false
       end
     end
 
