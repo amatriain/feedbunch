@@ -80,7 +80,7 @@ GEM
       sass (~> 3.4)
       thor
     bower-rails (0.9.2)
-    brakeman (3.0.4)
+    brakeman (3.0.5)
       erubis (~> 2.6)
       fastercsv (~> 1.5)
       haml (>= 3.0, < 5.0)
