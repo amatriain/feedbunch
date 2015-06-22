@@ -121,13 +121,15 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
     # Mark a single entry as unread
     #--------------------------------------------
     read_entry: (entry)->
-      change_entry_state entry, true if !entry.read
+      if entry?
+        change_entry_state entry, true if !entry.read
 
     #--------------------------------------------
     # Mark a single entry as unread
     #--------------------------------------------
     unread_entry: (entry)->
-      change_entry_state entry, false if entry.read
+      if entry?
+        change_entry_state entry, false if entry.read
 
     #--------------------------------------------
     # Mark all entries as read

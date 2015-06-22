@@ -45,10 +45,11 @@ currentFolderSvc, findSvc, feedsFoldersSvc, readSvc, menuCollapseSvc)->
             # toggle read/unread state of currently highlighted entry
             if event.which == $rootScope.kb_shortcuts["toggle_read_entry"]
               entry = highlightedEntrySvc.get()
-              if entry.read
-                entrySvc.unread_entry entry
-              else
-                entrySvc.read_entry entry
+              if entry?
+                if entry.read
+                  entrySvc.unread_entry entry
+                else
+                  entrySvc.read_entry entry
 
           # next link in sidebar
           highlightedSidebarLinkSvc.next() if event.which == $rootScope.kb_shortcuts["sidebar_link_down"]
