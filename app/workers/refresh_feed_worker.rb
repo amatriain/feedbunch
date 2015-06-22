@@ -65,6 +65,7 @@ class RefreshFeedWorker
   rescue RestClient::Exception,
       RestClient::RequestTimeout,
       SocketError,
+      Net::HTTPBadResponse,
       Errno::ETIMEDOUT,
       Errno::ECONNREFUSED,
       Errno::EHOSTUNREACH,
