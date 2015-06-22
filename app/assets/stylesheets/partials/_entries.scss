@@ -8,9 +8,7 @@
     }
 
     i.current-entry {
-      position: absolute;
-      left: -1px;
-      top: 22px;
+      display: none;
     }
 
     .entry-feed-column {
@@ -39,25 +37,48 @@
 /* For screens wider than 992px, Bootstrap v3 "md" (medium) breakpoint. */
 /* I.e. for md- and lg- screens, not for xs- and sm- screens */
 @media (min-width: $screen-md-min) {
-  i.current-entry {
-    position: absolute;
-    left: 1px;
-    top: 9px;
-  }
+  #feed-entries {
+    .entry {
+      a[data-entry-id] {
+        i.current-entry {
+          display: none;
+        }
+      }
 
-  .entry-content{
-    padding: 20px;
+      a[data-entry-id].highlighted-entry {
+        i.current-entry {
+          display: inline;
+          position: absolute;
+          left: 1px;
+          top: 9px;
+        }
+      }
+
+      a.entry-read.highlighted-entry {
+        background-color: #d6ffac;
+      }
+
+      a.entry-becoming-read.highlighted-entry {
+        background-color: #d6ffac;
+      }
+
+      a.entry-unread.highlighted-entry {
+        background-color: #E8E8E8;
+      }
+
+      a.entry-becoming-unread.highlighted-entry {
+        background-color: #E8E8E8;
+      }
+
+      .entry-content {
+        padding: 20px;
+      }
+    }
   }
 }
 
 #feed-entries {
   margin-bottom: 1em;
-
-  .entry:first-child {
-    i.current-entry {
-      display: inline;
-    }
-  }
 
   .entry {
     margin: {
@@ -76,18 +97,6 @@
       }
     }
 
-    a[data-entry-id] {
-      i.current-entry {
-        display: none;
-      }
-    }
-
-    a[data-entry-id].highlighted-entry {
-      i.current-entry {
-        display: inline;
-      }
-    }
-
     a.entry-unread{
       background-color: #F5F5F5;
     }
@@ -102,22 +111,6 @@
 
     a.entry-becoming-read{
       background-color: #EAFFD6;
-    }
-
-    a.entry-read.highlighted-entry{
-      background-color: #d6ffac;
-    }
-
-    a.entry-becoming-read.highlighted-entry{
-      background-color: #d6ffac;
-    }
-
-    a.entry-unread.highlighted-entry{
-      background-color: #E8E8E8;
-    }
-
-    a.entry-becoming-unread.highlighted-entry{
-      background-color: #E8E8E8;
     }
 
     .entry-feed-title,
@@ -189,7 +182,7 @@
         img.loading {
           opacity: 0;
           height: 0;
-          visibility: none;
+          visibility: hidden;
         }
 
         img.large-img{
