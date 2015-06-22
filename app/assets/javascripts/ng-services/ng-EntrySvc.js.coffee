@@ -104,17 +104,18 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
     # - entry to be opened or closed
     #--------------------------------------------
     toggle_open_entry: (entry)->
-      if openEntrySvc.is_open entry
-        # User is closing the open entry
-        openEntrySvc.close entry
-      else
-        openEntrySvc.open entry
-        if !entry.read
-          # User is opening an unread entry, mark it as read
-          change_entry_state entry, true
-        # lazy load images
-        lazyLoadingSvc.load_entry_images entry
-        tourSvc.show_entry_tour()
+      if entry?
+        if openEntrySvc.is_open entry
+          # User is closing the open entry
+          openEntrySvc.close entry
+        else
+          openEntrySvc.open entry
+          if !entry.read
+            # User is opening an unread entry, mark it as read
+            change_entry_state entry, true
+          # lazy load images
+          lazyLoadingSvc.load_entry_images entry
+          tourSvc.show_entry_tour()
 
     #--------------------------------------------
     # Mark a single entry as unread
