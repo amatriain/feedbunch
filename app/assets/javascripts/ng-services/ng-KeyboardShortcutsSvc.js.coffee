@@ -60,14 +60,15 @@ currentFolderSvc, findSvc, feedsFoldersSvc, readSvc, menuCollapseSvc)->
           # select the currently highlighted link (feed or folder) in the sidebar for reading
           if event.which == $rootScope.kb_shortcuts["select_sidebar_link"]
             highlighted_link = highlightedSidebarLinkSvc.get()
-            if highlighted_link.id == 'start'
-              startPageSvc.show_start_page()
-            else if highlighted_link.type == 'feed'
-              feed = findSvc.find_feed highlighted_link.id
-              currentFeedSvc.set feed if feed?
-            else if highlighted_link.type == 'folder'
-              folder = findSvc.find_folder highlighted_link.id
-              currentFolderSvc.set folder if folder?
+            if highlighted_link?
+              if highlighted_link.id == 'start'
+                startPageSvc.show_start_page()
+              else if highlighted_link.type == 'feed'
+                feed = findSvc.find_feed highlighted_link.id
+                currentFeedSvc.set feed if feed?
+              else if highlighted_link.type == 'folder'
+                folder = findSvc.find_folder highlighted_link.id
+                currentFolderSvc.set folder if folder?
 
           # toggle show/hide read entries
           if event.which == $rootScope.kb_shortcuts["toggle_show_read"]
