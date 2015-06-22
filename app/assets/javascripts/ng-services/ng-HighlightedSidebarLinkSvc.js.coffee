@@ -6,6 +6,9 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
 ['$rootScope', '$filter', 'animationsSvc', 'findSvc', 'openFolderSvc',
 ($rootScope, $filter, animationsSvc, findSvc, openFolderSvc)->
 
+  # Media query to enable highlighting only in screens wider than a tablet's
+  md_min_media_query = 'screen and (min-width: 992px)'
+
   #---------------------------------------------
   # PRIVATE CONSTANTS
   #---------------------------------------------
@@ -30,18 +33,20 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
   # FEED or FOLDER to indicate if the ID passed corresponds to a feed or a folder.
   #---------------------------------------------
   set = (id, type=null)->
-    if id == START
-      $rootScope.highlighted_sidebar_link = {id: id, type: null}
-      start_link = $('#start-page')
-      single_highlighted_link start_link
-    else if type == FEED
-      $rootScope.highlighted_sidebar_link = {id: id, type: type}
-      feed_link = $("#folders-list a[data-feed-id=#{id}]")
-      single_highlighted_link feed_link
-    else if type == FOLDER
-      $rootScope.highlighted_sidebar_link = {id: id, type: type}
-      folder_link = $("#folders-list #feeds-#{id} a[data-feed-id='all']")
-      single_highlighted_link folder_link
+    # Do not enable highlighting in smartphone and tablet-sized screens
+    enquire.register md_min_media_query, ->
+      if id == START
+        $rootScope.highlighted_sidebar_link = {id: id, type: null}
+        start_link = $('#start-page')
+        single_highlighted_link start_link
+      else if type == FEED
+        $rootScope.highlighted_sidebar_link = {id: id, type: type}
+        feed_link = $("#folders-list a[data-feed-id=#{id}]")
+        single_highlighted_link feed_link
+      else if type == FOLDER
+        $rootScope.highlighted_sidebar_link = {id: id, type: type}
+        folder_link = $("#folders-list #feeds-#{id} a[data-feed-id='all']")
+        single_highlighted_link folder_link
 
   #---------------------------------------------
   # PRIVATE FUNCTION: returns an array with the links in the sidebar, in the same order they are visible.
@@ -129,50 +134,54 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
     # Highlight the next link (below current one).
     #---------------------------------------------
     next: ->
-      links = sidebar_links()
-      index = link_index $rootScope.highlighted_sidebar_link, links
-      if index >= 0 && index < (links.length - 1)
-        next_link = links[index + 1]
-        set next_link.id, next_link.type
+      # Do not enable highlighting in smartphone and tablet-sized screens
+      enquire.register md_min_media_query, ->
+        links = sidebar_links()
+        index = link_index $rootScope.highlighted_sidebar_link, links
+        if index >= 0 && index < (links.length - 1)
+          next_link = links[index + 1]
+          set next_link.id, next_link.type
 
-        # Open folder if necessary
-        if next_link.type == FOLDER
-          folder_id = next_link.id
-        else if next_link.type == FEED
-          feed = findSvc.find_feed next_link.id
-          folder_id = feed.folder_id
+          # Open folder if necessary
+          if next_link.type == FOLDER
+            folder_id = next_link.id
+          else if next_link.type == FEED
+            feed = findSvc.find_feed next_link.id
+            folder_id = feed.folder_id
 
-        # The "all" folder is a bit special, it cannot be opened/closed
-        if folder_id? && folder_id != 'all' && folder_id != 'none'
-          folder = findSvc.find_folder folder_id
-          openFolderSvc.set folder
+          # The "all" folder is a bit special, it cannot be opened/closed
+          if folder_id? && folder_id != 'all' && folder_id != 'none'
+            folder = findSvc.find_folder folder_id
+            openFolderSvc.set folder
 
-        animationsSvc.sidebar_scroll_down next_link
+          animationsSvc.sidebar_scroll_down next_link
 
     #---------------------------------------------
     # Highlight the previous link (above current one)
     #---------------------------------------------
 
     previous: ->
-      links = sidebar_links()
-      index = link_index $rootScope.highlighted_sidebar_link, links
-      if index > 0 && index < links.length
-        previous_link = links[index - 1]
-        set previous_link.id, previous_link.type
+      # Do not enable highlighting in smartphone and tablet-sized screens
+      enquire.register md_min_media_query, ->
+        links = sidebar_links()
+        index = link_index $rootScope.highlighted_sidebar_link, links
+        if index > 0 && index < links.length
+          previous_link = links[index - 1]
+          set previous_link.id, previous_link.type
 
-        # Open folder if necessary
-        if previous_link.type == FOLDER
-          folder_id = previous_link.id
-        else if previous_link.type == FEED
-          feed = findSvc.find_feed previous_link.id
-          folder_id = feed.folder_id
+          # Open folder if necessary
+          if previous_link.type == FOLDER
+            folder_id = previous_link.id
+          else if previous_link.type == FEED
+            feed = findSvc.find_feed previous_link.id
+            folder_id = feed.folder_id
 
-        # The "all" folder is a bit special, it cannot be opened/closed
-        if folder_id? && folder_id != 'all' && folder_id != 'none'
-          folder = findSvc.find_folder folder_id
-          openFolderSvc.set folder
+          # The "all" folder is a bit special, it cannot be opened/closed
+          if folder_id? && folder_id != 'all' && folder_id != 'none'
+            folder = findSvc.find_folder folder_id
+            openFolderSvc.set folder
 
-        animationsSvc.sidebar_scroll_up previous_link
+          animationsSvc.sidebar_scroll_up previous_link
 
   return service
 ]
