@@ -30,7 +30,7 @@ class FeedSubscription < ActiveRecord::Base
 
   before_validation :default_values
   after_create :after_create
-  before_destroy :after_destroy
+  before_destroy :before_destroy
   after_save :after_save
 
   ##
@@ -76,7 +76,7 @@ class FeedSubscription < ActiveRecord::Base
   # - update the date/time of change of subscriptions
   # - update the date/time of change of user data
 
-  def after_destroy
+  def before_destroy
     touch_subscriptions
     touch_user_data
   end
