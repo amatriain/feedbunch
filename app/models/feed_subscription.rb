@@ -30,7 +30,7 @@ class FeedSubscription < ActiveRecord::Base
 
   before_validation :default_values
   after_create :after_create
-  before_destroy :before_destroy
+  before_destroy :before_destroy, prepend: true
   after_save :after_save
 
   ##

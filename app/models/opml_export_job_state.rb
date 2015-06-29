@@ -29,7 +29,7 @@ class OpmlExportJobState < ActiveRecord::Base
   validate :export_date_present_only_if_job_successful
 
   before_validation :default_values
-  before_destroy :delete_opml_file
+  before_destroy :delete_opml_file, prepend: true
 
   private
 
