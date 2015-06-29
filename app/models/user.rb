@@ -157,6 +157,7 @@ class User < ActiveRecord::Base
   before_save :before_save_user
   after_save :after_save_user
   before_validation :default_values
+  before_destroy :before_destroy_user, prepend: true
 
   ##
   # Retrieves feeds subscribed by the user. See FeedsPagination#subscribed_feeds.
@@ -377,6 +378,17 @@ class User < ActiveRecord::Base
         self.unlock_token = nil
       end
     end
+  end
+
+  ##
+  # If the user being destroyed is the demo user, return false. This prevents the demo user from being actually destroyed.
+
+  def before_destroy_user
+    if Feedbunch::Application.config.demo_enabled
+      demo_email = Feedbunch::Application.config.demo_email
+      return false if self.email == demo_email
+    end
+    return true
   end
 
   ##

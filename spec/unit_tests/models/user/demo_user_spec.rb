@@ -40,6 +40,11 @@ describe User, type: :model do
         expect(@demo_user.locked_at).not_to be nil
         expect(@demo_user.unlock_token).not_to be nil
       end
+
+      it 'can destroy demo user' do
+        @demo_user.destroy
+        expect(User.exists? email: @demo_email).to be false
+      end
     end
 
     context 'demo enabled' do
@@ -90,6 +95,11 @@ describe User, type: :model do
         user.update locked_at: Time.zone.now, unlock_token: 'aaabbbccc'
         expect(user.reload.locked_at).not_to be nil
         expect(user.unlock_token).not_to be nil
+      end
+
+      it 'cannot destroy demo user' do
+        @demo_user.destroy
+        expect(User.exists? email: @demo_email).to be true
       end
 
     end
