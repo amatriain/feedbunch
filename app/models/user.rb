@@ -301,7 +301,14 @@ class User < ActiveRecord::Base
   ##
   # Immediately lock the user account so that it cannot log in. Enqueue a job to destroy
   # the user.
+  # Exception: if the user being deleted is the demo user, this method does nothing. The demo user cannot be deleted.
+
   def delete_profile
+    if Feedbunch::Application.config.demo_enabled
+      demo_email = Feedbunch::Application.config.demo_email
+      return nil if self.email == demo_email
+    end
+
     self.lock_access! send_instructions: false
     DestroyUserWorker.perform_async self.id
   end
