@@ -65,7 +65,7 @@ GEM
     addressable (2.3.8)
     arbre (1.0.3)
       activesupport (>= 3.0.0)
-    arel (6.0.0)
+    arel (6.0.1)
     aws-sdk-core (2.1.0)
       jmespath (~> 1.0)
     aws-sdk-rails (1.0.0)
@@ -227,7 +227,7 @@ GEM
     orm_adapter (0.5.0)
     ox (2.2.0)
     pg (0.18.2)
-    pghero (1.0.1)
+    pghero (1.1.0)
       activerecord
     polyamorous (1.1.0)
       activerecord (>= 3.0)
