@@ -355,7 +355,7 @@ GEM
       rubyzip (~> 1.0)
       websocket (~> 1.0)
     sexp_processor (4.6.0)
-    show_me_the_cookies (2.6.0)
+    show_me_the_cookies (3.0.0)
       capybara (~> 2.0)
     sidekiq (3.4.0)
       celluloid (>= 0.16.0)
