@@ -79,7 +79,7 @@ GEM
     bourbon (4.2.1)
       sass (~> 3.4)
       thor
-    bower-rails (0.9.2)
+    bower-rails (0.10.0)
     brakeman (3.0.5)
       erubis (~> 2.6)
       fastercsv (~> 1.5)
@@ -435,7 +435,7 @@ DEPENDENCIES
   activeadmin!
   addressable
   aws-sdk-rails
-  bower-rails (~> 0.9.2)
+  bower-rails (~> 0.10.0)
   brakeman
   cancancan
   capistrano-rails
