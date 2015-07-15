@@ -47,11 +47,20 @@ class ImportSubscriptionWorker
     end
   ensure
     # Only update total processed feeds count if job is in state RUNNING
-    if opml_import_job_state.present? && opml_import_job_state.try(:state) == OpmlImportJobState::RUNNING
-      Rails.logger.info "Incrementing processed feeds in OPML import for user #{user.try :id} - #{user.try :email} by 1"
-      processed_feeds = opml_import_job_state.reload.processed_feeds
-      # Increment the count of processed feeds up to the total number of feeds
-      opml_import_job_state.update processed_feeds: processed_feeds+1 if processed_feeds < opml_import_job_state.total_feeds
+    if OpmlImportJobState.exists? opml_import_job_state_id
+      opml_import_job_state.reload
+      if opml_import_job_state.try(:state) == OpmlImportJobState::RUNNING
+        Rails.logger.info "Incrementing processed feeds in OPML import for user #{user.try :id} - #{user.try :email} by 1"
+        processed_feeds = opml_import_job_state.reload.processed_feeds
+        # Increment the count of processed feeds up to the total number of feeds
+        opml_import_job_state.update processed_feeds: processed_feeds+1 if processed_feeds < opml_import_job_state.total_feeds
+      else
+        Rails.logger.warn "OPML import job state #{opml_import_job_state_id} has state #{opml_import_job_state.try(:state)} instead of RUNNING. Total number of processed feeds will not be incremented"
+        return
+      end
+    else
+      Rails.logger.warn "OPML import job state #{opml_import_job_state_id} was destroyed during import of feed #{url}. Aborting"
+      return
     end
   end
 
