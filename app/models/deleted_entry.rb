@@ -22,7 +22,7 @@
 class DeletedEntry < ActiveRecord::Base
   belongs_to :feed
   validates :feed_id, presence: true
-  validates :guid, presence: true, uniqueness: {case_sensitive: false, scope: :feed_id}
+  validates :guid, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}
   validate :entry_deleted
 
   private

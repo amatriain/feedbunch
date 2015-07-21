@@ -47,7 +47,7 @@ class Entry < ActiveRecord::Base
   validates :title, presence: true
   validates :url, presence: true, format: {with: URI::regexp(%w{http https})}
   validates :published, presence: true
-  validates :guid, presence: true, uniqueness: {case_sensitive: false, scope: :feed_id}
+  validates :guid, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}
   validate :entry_not_deleted
 
   before_validation :fix_attributes
