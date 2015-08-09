@@ -1,6 +1,5 @@
 {
   "name": "favico.js",
-  "version": "0.3.7",
   "homepage": "http://lab.ejci.net/favico.js/",
   "authors": [
     "Miroslav Magda <magda.miroslav@gmail.com>"
@@ -22,11 +21,12 @@
     "example-angular",
     "tests"
   ],
-  "_release": "0.3.7",
+  "version": "0.3.9",
+  "_release": "0.3.9",
   "_resolution": {
     "type": "version",
-    "tag": "0.3.7",
-    "commit": "c1d5cb8fd7172ea46d26baeff0a7cb8e0bf9213e"
+    "tag": "0.3.9",
+    "commit": "6ad9d5b996f0107f7cb688f650c7a9e9b79598a9"
   },
   "_source": "git://github.com/ejci/favico.js.git",
   "_target": "*",
