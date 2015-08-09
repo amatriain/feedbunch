@@ -318,7 +318,7 @@
     },
 
     documentIsReady: function() {
-      return document.readyState === 'complete' || document.readyState === 'interactive';
+      return document.readyState === 'complete';
     },
 
     /**
@@ -725,6 +725,7 @@
           unsafe,
           currTour,
           totalSteps,
+          totalStepsI18n,
           nextBtnText,
           isLast,
           opts;
@@ -748,7 +749,8 @@
           unsafe = currTour.unsafe;
           if(Array.isArray(currTour.steps)){
             totalSteps = currTour.steps.length;
-            isLast = (idx === totalSteps - 1);
+            totalStepsI18n = this._getStepI18nNum(this._getStepNum(totalSteps - 1));
+            isLast = (this._getStepNum(idx) === this._getStepNum(totalSteps - 1));
           }
         }
       }else{
@@ -778,7 +780,8 @@
           prevBtn: utils.getI18NString('prevBtn'),
           nextBtn: nextBtnText,
           closeTooltip: utils.getI18NString('closeTooltip'),
-          stepNum: this._getStepI18nNum(this._getStepNum(idx))
+          stepNum: this._getStepI18nNum(this._getStepNum(idx)),
+          numSteps: totalStepsI18n
         },
         buttons:{
           showPrev: (utils.valOrDefault(step.showPrevButton, this.opt.showPrevButton) && (this._getStepNum(idx) > 0)),
@@ -1193,19 +1196,20 @@
         if (callouts[opt.id]) {
           throw new Error('Callout by that id already exists. Please choose a unique id.');
         }
+        if (!utils.getStepTarget(opt)) {
+          throw new Error('Must specify existing target element via \'target\' option.');
+        }
         opt.showNextButton = opt.showPrevButton = false;
         opt.isTourBubble = false;
         callout = new HopscotchBubble(opt);
         callouts[opt.id] = callout;
         calloutOpts[opt.id] = opt;
-        if (opt.target) {
-          callout.render(opt, null, function() {
-            callout.show();
-            if (opt.onShow) {
-              utils.invokeCallback(opt.onShow);
-            }
-          });
-        }
+        callout.render(opt, null, function() {
+          callout.show();
+          if (opt.onShow) {
+            utils.invokeCallback(opt.onShow);
+          }
+        });
       }
       else {
         throw new Error('Must specify a callout id.');
@@ -1312,7 +1316,7 @@
      * @returns {Object} HopscotchBubble
      */
     getBubble = function(setOptions) {
-      if (!bubble) {
+      if (!bubble || !bubble.element || !bubble.element.parentNode) {
         bubble = new HopscotchBubble(opt);
       }
       if (setOptions) {
@@ -1661,6 +1665,8 @@
           return this.endTour(true, false);
         }
         changeStepCb.call(this, currStepNum);
+      } else if (currStepNum + direction === currTour.steps.length) {
+        return this.endTour();
       }
 
       return this;
