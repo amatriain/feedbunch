@@ -244,6 +244,19 @@ URI.js is published under the [MIT license](http://www.opensource.org/licenses/m
 
 ## Changelog ##
 
+### 1.16.0 (July 24th 2015) ###
+
+* **SECURITY** fixing [`URI.parseHost()`](http://medialize.github.io/URI.js/docs.html#static-parseHost) to rewrite `\` to `/` as Node and Browsers do - [Issue #233](https://github.com/medialize/URI.js/pull/233)
+* fixing [`.host()`](http://medialize.github.io/URI.js/docs.html#accessors-host) and [`.authority()`](http://medialize.github.io/URI.js/docs.html#accessors-authority) to raise an error if they contain a path segment (extending [Issue #233](https://github.com/medialize/URI.js/pull/233))
+
+### 1.15.2 (July 2nd 2015) ###
+
+* fixing [`URI.parseQuery()`](http://medialize.github.io/URI.js/docs.html#static-parseQuery) to accept `?foo&foo=bar` - [Issue #220](https://github.com/medialize/URI.js/issues/220)
+* fixing [`.segmentCoded()`](http://medialize.github.io/URI.js/docs.html#accessors-segmentCoded) to encode (instead of decode) array input - [Issue #223](https://github.com/medialize/URI.js/issues/223)
+* fixing [`.normalizePath()`](http://medialize.github.io/URI.js/docs.html#normalize-path) to properly resolve `/foo/..` to `/` - [Issue #224](https://github.com/medialize/URI.js/issues/224)
+* fixing [`.relativeTo()`](http://medialize.github.io/URI.js/docs.html#relativeto) to resolve `/foo/` and `/foo/bar` to `./` instead of empty string - [Issue #226](https://github.com/medialize/URI.js/issues/226)
+* fixing `bower.json`'s `"main": "src/URI.js"` - [Issue #227](https://github.com/medialize/URI.js/issues/227)
+
 ### 1.15.1 (April 5th 2015) ###
 
 * fixing `URI()` to match behavior of `new URI()` (caused by [#196](https://github.com/medialize/URI.js/issues/196)) - [Issue #205](https://github.com/medialize/URI.js/issues/205)
