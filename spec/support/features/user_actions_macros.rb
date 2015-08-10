@@ -547,7 +547,7 @@ end
 def close_tour(check_closed=true)
   # Close tour only if it is visible
   if page.has_css? 'div.hopscotch-bubble'
-    find('div.hopscotch-bubble a.hopscotch-bubble-close').click
+    find('div.hopscotch-bubble .hopscotch-bubble-close').click
   end
 end
 
