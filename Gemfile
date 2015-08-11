@@ -108,6 +108,9 @@ group :test, :development do
   # Static code vulnerability scanner
   gem 'brakeman', require: false
 
+  # Check the bundle for exploits
+  gem 'bundler-audit'
+
   # Testing framework
   gem 'rspec-rails'
 
