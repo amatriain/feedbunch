@@ -23,7 +23,6 @@
 //= require angular-touch
 //= require bootstrap-sass-official
 //= require enquire
-//= require fastclick
 //= require favico.js/favico
 //= require hopscotch/dist/js/hopscotch
 //= require ngInfiniteScroll
