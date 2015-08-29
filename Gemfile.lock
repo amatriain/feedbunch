@@ -234,7 +234,7 @@ GEM
       activerecord
     polyamorous (1.2.0)
       activerecord (>= 3.0)
-    puma (2.13.3)
+    puma (2.13.4)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -489,3 +489,6 @@ DEPENDENCIES
   uglifier
   web-console (~> 2.0)
   yard
+
+BUNDLED WITH
+   1.10.5
