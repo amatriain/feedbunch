@@ -64,6 +64,7 @@ gem 'nokogiri'
 gem 'sidekiq', '>= 3.2.5'
 gem 'sidetiq'
 gem 'sidekiq-superworker'
+gem 'sidekiq-statistic'
 
 # Sinatra required for the Sidekiq web ui
 gem 'sinatra', '>= 1.3.0', :require => nil
