@@ -373,7 +373,7 @@ GEM
       celluloid (>= 0.14.1)
       ice_cube (= 0.11.1)
       sidekiq (>= 3.0.0)
-    simple_form (3.1.0)
+    simple_form (3.1.1)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
     simplecov (0.10.0)
@@ -489,3 +489,6 @@ DEPENDENCIES
   uglifier
   web-console (~> 2.0)
   yard
+
+BUNDLED WITH
+   1.10.6
