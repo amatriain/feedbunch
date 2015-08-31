@@ -79,7 +79,7 @@ RSpec.configure do |config|
   # Make capybara wait for a long time for things to appear in the DOM,
   # in case there's a long-running AJAX call running which changes the DOM after a few seconds
   # (or we're just running in a slow CI environment)
-  Capybara.default_wait_time = 10
+  Capybara.default_max_wait_time = 10
 
   # Include Warden helpers: login_as, logout...
   # For more about these helpers see Warden wiki: https://github.com/hassox/warden/wiki/Testing
