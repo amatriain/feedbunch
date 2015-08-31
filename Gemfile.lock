@@ -489,6 +489,3 @@ DEPENDENCIES
   uglifier
   web-console (~> 2.0)
   yard
-
-BUNDLED WITH
-   1.10.5
