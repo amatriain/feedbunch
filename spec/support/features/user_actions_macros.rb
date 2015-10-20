@@ -82,7 +82,7 @@ def read_feed(feed, user)
     expect(page).to have_css "[data-sidebar-feed][data-feed-id='#{feed.id}']", visible: true
 
     # Click on feed to read its entries
-    find("[data-sidebar-feed][data-feed-id='#{feed.id}']", visible: true).click
+    find("[data-sidebar-feed][data-feed-id='#{feed.id}']").click
   end
 
   # Ensure entries have finished loading
