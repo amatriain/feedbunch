@@ -136,7 +136,7 @@ GEM
       thor (~> 0.19.1)
     crass (1.0.2)
     daemons (1.1.9)
-    database_cleaner (1.5.0)
+    database_cleaner (1.5.1)
     debug_inspector (0.0.2)
     devise (3.5.2)
       bcrypt (~> 3.0)
