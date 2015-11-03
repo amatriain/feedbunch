@@ -483,7 +483,7 @@ DEPENDENCIES
   sanitize
   sass-rails
   sax-machine
-  selenium-webdriver
+  selenium-webdriver (= 2.47.1)
   show_me_the_cookies
   sidekiq (= 3.4.2)
   sidekiq-statistic
