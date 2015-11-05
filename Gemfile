@@ -61,7 +61,7 @@ gem 'addressable'
 gem 'nokogiri'
 
 # Background jobs
-gem 'sidekiq', '3.4.2'
+gem 'sidekiq'
 gem 'sidekiq-cron'
 gem 'sidekiq-superworker'
 gem 'sidekiq-statistic'
