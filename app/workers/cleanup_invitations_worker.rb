@@ -7,14 +7,9 @@ require 'invitations_manager'
 
 class CleanupInvitationsWorker
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
 
   # This worker runs periodically. Do not retry.
   sidekiq_options retry: false, queue: :maintenance
-  # Run daily at 2 AM. Missed runs are executed immediately
-  recurrence backfill: true do
-    daily.hour_of_day 2
-  end
 
   ##
   # Clean up invitation data in the db:

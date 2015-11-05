@@ -10,14 +10,9 @@
 
 class ResetDemoUserWorker
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
 
   # This worker runs periodically. Do not retry.
   sidekiq_options retry: false, queue: :maintenance
-  # Run every hour.
-  recurrence do
-    hourly
-  end
 
   ##
   # Store config values in instance variables, for DRYer code.

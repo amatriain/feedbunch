@@ -6,10 +6,9 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
-  #  Eager load code on boot. This eager loads most of Rails and
-  # your application in memory. This is necessary so that Sidetiq
-  # is aware of all worker classes and can display them in the web UI.
-  # See: https://github.com/tobiassvn/sidetiq/wiki/Known-Issues
+  # Eager load code on boot. This eager loads most of Rails and
+  # your application in memory, allowing both threaded web servers
+  # and those relying on copy on write to perform better.
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 

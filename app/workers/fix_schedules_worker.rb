@@ -10,14 +10,9 @@ require 'schedule_manager'
 
 class FixSchedulesWorker
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
 
   # This worker runs periodically. Do not retry.
   sidekiq_options retry: false, queue: :maintenance
-  # Run daily at 5 AM. Missed runs are executed immediately
-  recurrence backfill: true do
-    daily.hour_of_day 5
-  end
 
   ##
   # Fix feed update schedules. Any feed which does not have scheduled updates

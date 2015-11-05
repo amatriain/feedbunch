@@ -7,14 +7,9 @@ require 'signups_manager'
 
 class CleanupSignupsWorker
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
 
   # This worker runs periodically. Do not retry.
   sidekiq_options retry: false, queue: :maintenance
-  # Run daily at 3 AM. Missed runs are executed immediately
-  recurrence backfill: true do
-    daily.hour_of_day 3
-  end
 
   ##
   # Clean up outdated signup data in the db:

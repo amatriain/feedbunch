@@ -8,14 +8,9 @@ require 'redmon'
 
 class UpdateRedisCacheStatsWorker
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
 
   # This worker runs periodically. Do not retry.
   sidekiq_options retry: false, queue: :maintenance
-  # Run every minute.
-  recurrence do
-    hourly.minute_of_hour 0, 10, 20, 30, 40, 50
-  end
 
   ##
   # Update stats (memory use, configuration, last time saved etc) from the Redis instance serving as Rails cache backend.

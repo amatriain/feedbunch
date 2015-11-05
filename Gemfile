@@ -62,7 +62,7 @@ gem 'nokogiri'
 
 # Background jobs
 gem 'sidekiq', '3.4.2'
-gem 'sidetiq'
+gem 'sidekiq-cron'
 gem 'sidekiq-superworker'
 gem 'sidekiq-statistic'
 
