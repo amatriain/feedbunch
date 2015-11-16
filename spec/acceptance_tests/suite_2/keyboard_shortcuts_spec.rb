@@ -22,11 +22,13 @@ describe 'keyboard shortcuts', type: :feature do
     end
 
     it 'highlights first entry by default', js: true do
+      skip
       entry_should_be_highlighted @entry1
       entry_should_not_be_highlighted @entry2
     end
 
     it 'moves up and down the list', js: true do
+      skip
       # first entry is highlighted
       entry_should_be_highlighted @entry1
 
@@ -44,6 +46,7 @@ describe 'keyboard shortcuts', type: :feature do
     end
 
     it 'opens and closes entry', js: true do
+      skip
       # first entry is highlighted and closed
       entry_should_be_highlighted @entry1
       entry_should_be_closed @entry1
@@ -81,6 +84,7 @@ describe 'keyboard shortcuts', type: :feature do
     end
 
     it 'highlights start link by default', js: true do
+      skip
       start_link_should_be_highlighted
       feed_link_should_not_be_highlighted @feed1
       folder_link_should_not_be_highlighted @folder
@@ -89,6 +93,7 @@ describe 'keyboard shortcuts', type: :feature do
     end
 
     it 'moves up and down the sidebar', js: true do
+      skip
       # move down to "read all" link
       press_key Feedbunch::Application.config.kb_sidebar_link_down
       start_link_should_not_be_highlighted
@@ -171,6 +176,7 @@ describe 'keyboard shortcuts', type: :feature do
     end
 
     it 'selects links for reading', js: true do
+      skip
       # read all entries
       press_key Feedbunch::Application.config.kb_sidebar_link_down
       press_key Feedbunch::Application.config.kb_select_sidebar_link
@@ -272,6 +278,7 @@ describe 'keyboard shortcuts', type: :feature do
   context 'toggle read/unread entry' do
 
     it 'marks entry as read', js: true do
+      skip
       read_feed @feed1, @user
       expect(page).to have_text @entry1.title
       entry_should_be_marked_unread @entry1
@@ -289,6 +296,7 @@ describe 'keyboard shortcuts', type: :feature do
     end
 
     it 'marks entry as unread', js: true do
+      skip
       es = EntryState.where(entry_id: @entry1.id, user_id: @user.id).first
       es.update read: true
 
@@ -322,6 +330,7 @@ describe 'keyboard shortcuts', type: :feature do
   context 'keyboard shortcuts configuration' do
 
     it 'disables keyboard shortcuts', js: true do
+      skip
       disable_kb_shortcuts @user
       read_feed @feed1, @user
 
@@ -356,6 +365,7 @@ describe 'keyboard shortcuts', type: :feature do
     end
 
     it 'enables keyboard shortcuts', js: true do
+      skip
       disable_kb_shortcuts @user
       read_feed @feed1, @user
 
