@@ -11,7 +11,3 @@ asset 'ngInfiniteScroll'
 asset 'URIjs'
 asset 'velocity'
 asset 'isInViewport'
-
-dependency_group :dev_dependencies do
-  asset 'bootlint', github: 'twbs/bootlint'
-end

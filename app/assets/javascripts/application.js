@@ -10,10 +10,6 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 
-// Bootlint is a static html analyzer to help following Bootstrap's best practices
-// It should NEVER be required in production, it will be selectively enabled for testing.
-// require bootlint/dist/browser/bootlint
-
 // Libraries listed here are always served as local assets
 
 // VENDOR LIBRARIES
