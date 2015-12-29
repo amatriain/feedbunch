@@ -11,7 +11,7 @@
     "favico.js": "0.3.10",
     "hopscotch": "0.2.5",
     "ngInfiniteScroll": "1.2.1",
-    "URIjs": "1.16.0",
+    "uri.js": "1.17.0",
     "velocity": "1.2.2",
     "isInViewport": "2.2.4"
   }

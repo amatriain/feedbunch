@@ -47,7 +47,7 @@ Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bo
 Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'ngInfiniteScroll', 'build')
 
 # Include urijs assets in assets paths
-Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'URIjs', 'src')
+Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'uri.js', 'src')
 
 # Include velocity-animate assets in assets paths
 Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'velocity')
