@@ -21,14 +21,14 @@
     "example-angular",
     "tests"
   ],
-  "version": "0.3.9",
-  "_release": "0.3.9",
+  "version": "0.3.10",
+  "_release": "0.3.10",
   "_resolution": {
     "type": "version",
-    "tag": "0.3.9",
-    "commit": "6ad9d5b996f0107f7cb688f650c7a9e9b79598a9"
+    "tag": "0.3.10",
+    "commit": "f9ff4d9b264a430446750adb640b29273d8c42ef"
   },
   "_source": "git://github.com/ejci/favico.js.git",
-  "_target": "0.3.9",
+  "_target": "0.3.10",
   "_originalSource": "favico.js"
 }
