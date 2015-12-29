@@ -21,6 +21,6 @@
     "commit": "5e5fd20f502861ea1ee7e644615fcd0a45d28098"
   },
   "_source": "git://github.com/medialize/URI.js.git",
-  "_target": "*",
+  "_target": "1.16.0",
   "_originalSource": "URIjs"
 }

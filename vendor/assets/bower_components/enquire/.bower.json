@@ -20,6 +20,6 @@
     "commit": "cb63611d114a0d584c9233bf6c81601971b80d0b"
   },
   "_source": "git://github.com/WickyNilliams/enquire.js.git",
-  "_target": "*",
+  "_target": "2.1.2",
   "_originalSource": "enquire"
 }

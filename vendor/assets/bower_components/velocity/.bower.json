@@ -45,6 +45,6 @@
     "commit": "6b227928631aab5694255df3c219736c4c02449d"
   },
   "_source": "git://github.com/julianshapiro/velocity.git",
-  "_target": "*",
+  "_target": "1.2.2",
   "_originalSource": "velocity"
 }

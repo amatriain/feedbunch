@@ -1,18 +1,18 @@
 {
   "name": "dsl-generated dependencies",
   "dependencies": {
-    "jquery": "latest",
-    "angular": "latest",
-    "angular-sanitize": "latest",
-    "angular-touch": "latest",
-    "bootstrap-sass-official": "latest",
-    "font-awesome": "latest",
-    "enquire": "latest",
-    "favico.js": "latest",
-    "hopscotch": "latest",
-    "ngInfiniteScroll": "latest",
-    "URIjs": "latest",
-    "velocity": "latest",
-    "isInViewport": "latest"
+    "jquery": "2.1.4",
+    "angular": "1.4.4",
+    "angular-sanitize": "1.4.4",
+    "angular-touch": "1.4.4",
+    "bootstrap-sass-official": "3.3.5",
+    "font-awesome": "4.4.0",
+    "enquire": "2.1.2",
+    "favico.js": "0.3.9",
+    "hopscotch": "0.2.5",
+    "ngInfiniteScroll": "1.2.1",
+    "URIjs": "1.16.0",
+    "velocity": "1.2.2",
+    "isInViewport": "2.2.4"
   }
 }

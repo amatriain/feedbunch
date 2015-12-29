@@ -29,6 +29,6 @@
     "commit": "6ad9d5b996f0107f7cb688f650c7a9e9b79598a9"
   },
   "_source": "git://github.com/ejci/favico.js.git",
-  "_target": "*",
+  "_target": "0.3.9",
   "_originalSource": "favico.js"
 }

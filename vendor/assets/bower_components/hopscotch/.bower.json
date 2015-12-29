@@ -28,6 +28,6 @@
     "commit": "8ca66f10b229552035caab0ea993176b607ecbb5"
   },
   "_source": "git://github.com/linkedin/hopscotch.git",
-  "_target": "*",
+  "_target": "0.2.5",
   "_originalSource": "hopscotch"
 }

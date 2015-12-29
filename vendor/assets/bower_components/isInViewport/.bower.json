@@ -35,6 +35,6 @@
     "commit": "7a6533d371c932f7663f1a068b33f96e8c33e43f"
   },
   "_source": "git://github.com/zeusdeux/isInViewport.git",
-  "_target": "*",
+  "_target": "2.2.4",
   "_originalSource": "isInViewport"
 }

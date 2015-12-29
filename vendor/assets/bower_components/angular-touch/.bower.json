@@ -14,6 +14,6 @@
     "commit": "a64470214f67bbbf6821bac67251cd99dfb0c6f8"
   },
   "_source": "git://github.com/angular/bower-angular-touch.git",
-  "_target": "*",
+  "_target": "1.4.4",
   "_originalSource": "angular-touch"
 }
