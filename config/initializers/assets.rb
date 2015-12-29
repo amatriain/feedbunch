@@ -57,12 +57,3 @@ Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bo
 # Rails.application.config.assets.precompile += %w( search.js )
 Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf|woff2|otf)\z/
 Rails.application.config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
-
-# Precompile js libraries to serve them individually
-Rails.application.config.assets.precompile += %w(
-                                                  jquery.js
-                                                  angular/angular.js
-                                                  angular-sanitize/angular-sanitize.js
-                                                  angular-touch/angular-touch.js
-                                                  bootstrap-sass-official/assets/javascripts/bootstrap.js
-                                                )
