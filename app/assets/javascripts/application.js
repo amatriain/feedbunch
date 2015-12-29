@@ -34,4 +34,3 @@
 //= require_tree ./ng-controllers
 //= require_tree ./ng-filters
 //= require_tree ./ng-services
-//= require_tree ./misc
