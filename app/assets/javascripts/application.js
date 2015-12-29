@@ -17,14 +17,14 @@
 //= require angular
 //= require angular-sanitize
 //= require angular-touch
-//= require bootstrap-sass-official
+//= require ng-infinite-scroll
+//= require bootstrap
+//= require URI
 //= require enquire
 //= require favico.js/favico
-//= require hopscotch/dist/js/hopscotch
-//= require ngInfiniteScroll
-//= require URIjs
-//= require velocity
+//= require hopscotch
 //= require isInViewport
+//= require velocity
 
 //= require jquery_ujs
 
