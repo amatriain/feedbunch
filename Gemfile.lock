@@ -352,7 +352,7 @@ GEM
       rubyzip (~> 1.0)
       websocket (~> 1.0)
     sexp_processor (4.6.0)
-    show_me_the_cookies (3.0.0)
+    show_me_the_cookies (3.1.0)
       capybara (~> 2.0)
     sidekiq (4.0.1)
       concurrent-ruby (~> 1.0)
