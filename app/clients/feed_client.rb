@@ -104,7 +104,7 @@ class FeedClient
 
     # If the response was retrieved from the cache, do not process it (entries are already in the db)
     if http_caching
-      headers = feed_response.try :headers
+      headers = feed_response&.headers
       if headers.present?
         x_rack_cache = headers[:x_rack_cache]
         if x_rack_cache.present?
@@ -118,7 +118,7 @@ class FeedClient
 
     feed_response = fix_encoding feed_response
 
-    if feed_response.nil? || feed_response.try(:size) == 0
+    if feed_response.nil? || feed_response&.size == 0
       Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
       raise EmptyResponseError.new
     end
@@ -188,7 +188,7 @@ class FeedClient
     return nil if feed_response.nil?
 
     # Detect encoding from HTTP content-type header, in case RestClient has detected the wrong encoding
-    headers = feed_response.try :headers
+    headers = feed_response&.headers
     content_type = headers[:content_type] unless headers.blank?
     charset_http = content_type.to_s[/\bcharset[ ]*=[ '"]*([^ '";]+)['";]*/, 1] unless content_type.blank?
 

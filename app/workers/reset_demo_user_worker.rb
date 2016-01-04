@@ -106,9 +106,9 @@ class ResetDemoUserWorker
 
   def reset_job_states(demo_user)
     Rails.logger.debug 'Resetting job states for the demo user'
-    demo_user.opml_import_job_state.try :destroy
+    demo_user.opml_import_job_state&.destroy
     demo_user.create_opml_import_job_state state: OpmlImportJobState::NONE
-    demo_user.opml_export_job_state.try :destroy
+    demo_user.opml_export_job_state&.destroy
     demo_user.create_opml_export_job_state state: OpmlExportJobState::NONE
     demo_user.subscribe_job_states.destroy_all
     demo_user.refresh_feed_job_states.destroy_all

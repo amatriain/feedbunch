@@ -77,7 +77,7 @@ end
 def read_feed(feed, user)
   folder = feed.user_folder user
   open_folder folder if folder.present?
-  folder_id = folder.try(:id) || 'none'
+  folder_id = folder&.id || 'none'
   within "#folders-list #folder-#{folder_id}" do
     expect(page).to have_css "[data-sidebar-feed][data-feed-id='#{feed.id}']", visible: true
 
@@ -304,7 +304,7 @@ end
 
 def remove_feed_from_folder(feed, user)
   folder = feed.user_folder user
-  folder_id = folder.try(:id) || 'none'
+  folder_id = folder&.id || 'none'
   read_feed feed, user
   open_folder_dropdown
   within '#folder-management-dropdown ul.dropdown-menu' do

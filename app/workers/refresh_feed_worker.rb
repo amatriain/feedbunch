@@ -55,7 +55,7 @@ class RefreshFeedWorker
     Rails.logger.debug "Refreshing feed #{feed.id} - #{feed.title}"
     FeedClient.fetch feed
 
-    Rails.logger.debug "Successfully finished refresh_feed_job_state #{refresh_feed_job_state_id} for feed #{feed.try :id}, user #{user.try :id}"
+    Rails.logger.debug "Successfully finished refresh_feed_job_state #{refresh_feed_job_state_id} for feed #{feed&.id}, user #{user&.id}"
     job_state.update state: RefreshFeedJobState::SUCCESS if job_state.present?
 
     # If the update didn't fail, mark the feed as "not currently failing" and "available"
@@ -76,11 +76,11 @@ class RefreshFeedWorker
       FeedAutodiscoveryError,
       FeedFetchError => e
     # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
-    Rails.logger.error "Error running refresh_feed_job_state #{refresh_feed_job_state_id} for feed #{feed.try :id}, user #{user.try :id}"
+    Rails.logger.error "Error running refresh_feed_job_state #{refresh_feed_job_state_id} for feed #{feed&.id}, user #{user&.id}"
     Rails.logger.error e.message
     job_state.update state: RefreshFeedJobState::ERROR if job_state.present?
   ensure
-    if feed.present? && Feed.exists?(feed.try :id)
+    if feed.present? && Feed.exists?(feed&.id)
       # Update timestamp of the last time the feed was fetched
       Rails.logger.debug "Updating time of last update for feed #{feed.id} - #{feed.title}"
       feed.update! last_fetched: Time.zone.now

@@ -243,11 +243,11 @@ class Feed < ActiveRecord::Base
   def sanitize_attributes
     config = Feedbunch::Application.config.restricted_sanitizer
 
-    self.title = Sanitize.fragment(self.title, config).try :strip
+    self.title = Sanitize.fragment(self.title, config)&.strip
 
     # Unescape HTML entities in the URL escaped by the sanitizer
-    self.fetch_url = CGI.unescapeHTML(Sanitize.fragment(self.fetch_url, config).try :strip)
-    self.url = CGI.unescapeHTML(Sanitize.fragment(self.url, config).try :strip)
+    self.fetch_url = CGI.unescapeHTML(Sanitize.fragment(self.fetch_url, config)&.strip)
+    self.url = CGI.unescapeHTML(Sanitize.fragment(self.url, config)&.strip)
 
     # URLs must be valid http or https
     if self.fetch_url_was.present? && (self.fetch_url =~ URI::regexp(%w{http https})).nil?

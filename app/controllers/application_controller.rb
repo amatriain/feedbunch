@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   # If no locale is available from the accept-language header, english locale will the last fallback.
 
   def set_locale
-    if current_user.try(:locale)
+    if current_user&.locale
       I18n.locale = current_user.locale
     elsif params[:locale].present?
       I18n.locale = params[:locale]

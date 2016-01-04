@@ -122,7 +122,7 @@ end
 
 def unread_feed_entries_should_eq(feed, count, user)
   folder = feed.user_folder user
-  folder_id = folder.try(:id) || 'none'
+  folder_id = folder&.id || 'none'
   open_folder folder if folder.present?
   expect(page).to have_css "#sidebar #folders-list #folder-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed.id}']"
   within "#sidebar #folders-list #folder-#{folder_id} a[data-sidebar-feed][data-feed-id='#{feed.id}'] span.badge" do

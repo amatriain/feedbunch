@@ -49,13 +49,13 @@ class ImportSubscriptionWorker
     # Only update total processed feeds count if job is in state RUNNING
     if OpmlImportJobState.exists? opml_import_job_state_id
       opml_import_job_state.reload
-      if opml_import_job_state.try(:state) == OpmlImportJobState::RUNNING
-        Rails.logger.info "Incrementing processed feeds in OPML import for user #{user.try :id} - #{user.try :email} by 1"
+      if opml_import_job_state&.state == OpmlImportJobState::RUNNING
+        Rails.logger.info "Incrementing processed feeds in OPML import for user #{user&.id} - #{user&.email} by 1"
         processed_feeds = opml_import_job_state.reload.processed_feeds
         # Increment the count of processed feeds up to the total number of feeds
         opml_import_job_state.update processed_feeds: processed_feeds+1 if processed_feeds < opml_import_job_state.total_feeds
       else
-        Rails.logger.warn "OPML import job state #{opml_import_job_state_id} has state #{opml_import_job_state.try(:state)} instead of RUNNING. Total number of processed feeds will not be incremented"
+        Rails.logger.warn "OPML import job state #{opml_import_job_state_id} has state #{opml_import_job_state&.state} instead of RUNNING. Total number of processed feeds will not be incremented"
         return
       end
     else
@@ -107,7 +107,7 @@ class ImportSubscriptionWorker
     feed = user.subscribe url
     return feed
   rescue AlreadySubscribedError => e
-    Rails.logger.error "During OPML import for user #{user.try :id} - #{user.try :email} found feed URL #{url} in OPML, but user is already subscribed to that feed. Ignoring it."
+    Rails.logger.error "During OPML import for user #{user&.id} - #{user&.email} found feed URL #{url} in OPML, but user is already subscribed to that feed. Ignoring it."
     Rails.logger.error e.message
     return user.feeds.find_by_fetch_url url
   rescue RestClient::Exception,
@@ -126,18 +126,18 @@ class ImportSubscriptionWorker
     OpmlImportError => e
 
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
-    Rails.logger.error "Controlled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{url}"
+    Rails.logger.error "Controlled error during OPML import subscribing user #{user&.id} - #{user&.email} to feed URL #{url}"
     Rails.logger.error e.message
     add_failure user, url
     return nil
   rescue BlacklistedUrlError => e
     # If the url is in the blacklist, do not add subscription.
-    Rails.logger.error "User #{user.try :id} - #{user.try :email} attempted to import subscription to blacklisted feed URL #{url}, ignoring it"
+    Rails.logger.error "User #{user&.id} - #{user&.email} attempted to import subscription to blacklisted feed URL #{url}, ignoring it"
     add_failure user, url
     return nil
   rescue => e
     # an uncontrolled error has happened. Log the full backtrace but do not re-raise, so that the batch continues with next imported feed
-    Rails.logger.error "Uncontrolled error during OPML import subscribing user #{user.try :id} - #{user.try :email} to feed URL #{url}"
+    Rails.logger.error "Uncontrolled error during OPML import subscribing user #{user&.id} - #{user&.email} to feed URL #{url}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
     add_failure user, url

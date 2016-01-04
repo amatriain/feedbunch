@@ -31,7 +31,7 @@ class OPMLImportNotifier
       OpmlImportMailer.import_finished_error_email(user).deliver_now
     end
 
-    Rails.logger.info "OPML import for user #{user.try :id} - #{user.try :email} finished with an error"
+    Rails.logger.info "OPML import for user #{user&.id} - #{user&.email} finished with an error"
     if error.present?
       Rails.logger.error error.message
       Rails.logger.error error.backtrace

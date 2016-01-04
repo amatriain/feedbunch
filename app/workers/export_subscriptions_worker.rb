@@ -27,7 +27,7 @@ class ExportSubscriptionsWorker
     user = User.find user_id
 
     # Check that user has a data_export with state RUNNING
-    if user.opml_export_job_state.try(:state) != OpmlExportJobState::RUNNING
+    if user.opml_export_job_state&.state != OpmlExportJobState::RUNNING
       Rails.logger.error "User #{user.id} - #{user.email} does not have a data export with state RUNNING, aborting OPML export"
       return
     end

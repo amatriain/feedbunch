@@ -152,8 +152,8 @@ class URLSubscriber
         return fetched_feed
       else
         Rails.logger.info "URL #{feed_url} is not a valid feed URL"
-        feed.try :destroy
-        fetched_feed.try :destroy
+        feed&.destroy
+        fetched_feed&.destroy
         return nil
       end
     rescue => e

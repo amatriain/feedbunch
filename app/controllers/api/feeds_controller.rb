@@ -42,7 +42,7 @@ class Api::FeedsController < ApplicationController
       if stale? etag: EtagCalculator.etag(@subscription.updated_at),
                 last_modified: @subscription.updated_at
         @feed = current_user.feeds.find params[:id]
-        @folder_id = @feed.user_folder(current_user).try(:id) || 'none'
+        @folder_id = @feed.user_folder(current_user)&.id || 'none'
         @unread_count = current_user.feed_unread_count @feed
         respond_with @feed, @folder_id, @unread_count
       end
@@ -149,7 +149,7 @@ class Api::FeedsController < ApplicationController
         begin
           if @folder.nil?
             # If we're retrieving feeds regardless of folder, we have to find out in which folder is each feed, if any.
-            folder_id = feed.user_folder(current_user).try(:id) || 'none'
+            folder_id = feed.user_folder(current_user)&.id || 'none'
           else
             # If we're retrieving feeds in a folder, we already know that all feeds are in this folder
             folder_id = @folder.id

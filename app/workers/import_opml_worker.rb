@@ -39,7 +39,7 @@ class ImportOpmlWorker
     user = User.find user_id
 
     # Check that user has a opml_import_job_state with state RUNNING
-    if user.opml_import_job_state.try(:state) != OpmlImportJobState::RUNNING
+    if user.opml_import_job_state&.state != OpmlImportJobState::RUNNING
       Rails.logger.error "User #{user.id} - #{user.email} does not have a data import with state RUNNING, aborting OPML import"
       return
     end

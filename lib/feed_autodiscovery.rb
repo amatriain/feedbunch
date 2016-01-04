@@ -31,7 +31,7 @@ class FeedAutodiscovery
     xpath_feed = '//head//link[@rel="feed"]'
     feed_link = doc.at_xpath(xpath_atom + '|' + xpath_rss + '|' + xpath_feed)
 
-    feed_href = feed_link.try(:attr, 'href').try(:to_s)
+    feed_href = feed_link&.attr('href')&.to_s
     if feed_href.present?
       # If the href is a path without fqdn, i.e. "/feeds.php", prepend it with the scheme and fqdn of the webpage
       feed_href = relative_to_absolute_url feed_href, feed

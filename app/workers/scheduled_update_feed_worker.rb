@@ -73,7 +73,7 @@ class ScheduledUpdateFeedWorker
       FeedClient.fetch feed, http_caching: false, perform_autodiscovery: true
     end
 
-    if feed.present? && Feed.exists?(feed.try :id)
+    if feed.present? && Feed.exists?(feed&.id)
       feed = feed.reload
 
       entries_after = feed.entries.count
@@ -99,7 +99,7 @@ class ScheduledUpdateFeedWorker
       FeedAutodiscoveryError,
       FeedFetchError => e
     # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
-    if feed.present? && Feed.exists?(feed.try :id)
+    if feed.present? && Feed.exists?(feed&.id)
       feed = feed.reload
       # If this is the first update that fails, save the date&time the feed started failing
       feed.update! failing_since: Time.zone.now if feed.failing_since.nil?
@@ -110,10 +110,10 @@ class ScheduledUpdateFeedWorker
       end
     end
 
-    Rails.logger.error "Error during scheduled update of feed #{feed_id} - #{feed.try :fetch_url}"
+    Rails.logger.error "Error during scheduled update of feed #{feed_id} - #{feed&.fetch_url}"
     Rails.logger.error e.message
   ensure
-    if feed.present? && Feed.exists?(feed.try :id) && feed.try(:available)
+    if feed.present? && Feed.exists?(feed&.id) && feed&.available
       # Update timestamp of the last time the feed was fetched
       Rails.logger.debug "Updating time of last update for feed #{feed.id} - #{feed.title}"
       feed.reload.update! last_fetched: Time.zone.now

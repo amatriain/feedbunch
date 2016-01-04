@@ -25,7 +25,7 @@ class OPMLImporter
   def self.enqueue_import_job(file, user)
     Rails.logger.info "User #{user.id} - #{user.email} requested import of a data file"
     # Destroy the current import job state for the user. This in turn triggers a deletion of any associated import failure data.
-    user.opml_import_job_state.try :destroy
+    user.opml_import_job_state&.destroy
     user.create_opml_import_job_state state: OpmlImportJobState::RUNNING
 
     subscription_data = self.read_data_file file
@@ -39,7 +39,7 @@ class OPMLImporter
     Rails.logger.error "Error trying to read OPML data from file uploaded by user #{user.id} - #{user.email}"
     Rails.logger.error e.message
     Rails.logger.error e.backtrace
-    user.opml_import_job_state.try :destroy
+    user.opml_import_job_state&.destroy
     user.create_opml_import_job_state state: OpmlImportJobState::ERROR
     raise OpmlImportError.new
   end
