@@ -57,6 +57,7 @@ class SubscribeUserWorker
       Errno::EHOSTUNREACH,
       Errno::ECONNRESET,
       Zlib::GzipFile::Error,
+      Zlib::DataError,
       OpenSSL::SSL::SSLError,
       AlreadySubscribedError,
       EmptyResponseError,
