@@ -89,7 +89,7 @@ class FeedClient
     if http_caching
       Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} using HTTP caching if possible"
       RestClient.enable Rack::Cache,
-                        verbose: true,
+                        verbose: false,
                         metastore: "file:#{Rails.root.join('rack_cache', 'metastore').to_s}",
                         entitystore: nil
     else
