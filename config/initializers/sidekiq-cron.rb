@@ -18,8 +18,8 @@ Sidekiq.configure_server do |config|
                             klass: 'DestroyOldJobStatesWorker',
                             queue: :maintenance
 
-  Sidekiq::Cron::Job.create name: 'Restore missing scheduled feed updates - daily at 5AM',
-                            cron: '0 5 * * *',
+  Sidekiq::Cron::Job.create name: 'Restore missing scheduled feed updates - daily at 6AM',
+                            cron: '0 6 * * *',
                             klass: 'FixSchedulesWorker',
                             queue: :maintenance
 
