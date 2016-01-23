@@ -71,8 +71,6 @@ class EntriesPagination
     return entries
   end
 
-  private
-  
   ##
   # Retrieve entries from the feed passed as argument that are marked as unread for the user passed.
   #
@@ -99,6 +97,7 @@ class EntriesPagination
     end
     return entries
   end
+  private_class_method :unread_feed_entries
 
   ##
   # Retrieve entries from the folder passed as argument that are marked as unread for the user passed.
@@ -124,6 +123,7 @@ class EntriesPagination
     end
     return entries
   end
+  private_class_method :unread_folder_entries
 
   ##
   # Retrieve entries from all subscribed feeds that are marked as unread for the user passed.
@@ -148,5 +148,5 @@ class EntriesPagination
     end
     return entries
   end
-
+  private_class_method :all_unread_entries
 end

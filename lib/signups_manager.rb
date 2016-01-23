@@ -38,8 +38,6 @@ class SignupsManager
     old_unconfirmed_signups.destroy_all
   end
 
-  private
-
   ##
   # Send a reminder email to users who signed up but didn't confirm their email.
   # This method sends the first reminder email.
@@ -66,6 +64,7 @@ class SignupsManager
       user.update first_confirmation_reminder_sent: true
     end
   end
+  private_class_method :send_first_confirmation_reminders
 
   ##
   # Send a reminder email to users who signed up but didn't confirm their email.
@@ -93,4 +92,5 @@ class SignupsManager
       user.update second_confirmation_reminder_sent: true
     end
   end
+  private_class_method :send_second_confirmation_reminders
 end

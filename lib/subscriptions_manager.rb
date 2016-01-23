@@ -148,8 +148,6 @@ class SubscriptionsManager
     return count
   end
 
-  private
-
   ##
   # Find out if a user is subscribed to a feed.
   #
@@ -164,6 +162,7 @@ class SubscriptionsManager
       return false
     end
   end
+  private_class_method :user_subscribed?
 
   ##
   # Check that a user is not subscribed to a feed.
@@ -180,4 +179,5 @@ class SubscriptionsManager
     end
     return nil
   end
+  private_class_method :check_user_unsubscribed
 end

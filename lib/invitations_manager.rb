@@ -71,8 +71,6 @@ class InvitationsManager
     users.find_each {|u| u.update invitations_count: 0, invitations_count_reset_at: Time.zone.now}
   end
 
-  private
-
   ##
   # Send a reminder email to users who were invited but didn't yet accept the invitation.
   # This method sends the first reminder email.
@@ -99,6 +97,7 @@ class InvitationsManager
       user.update first_confirmation_reminder_sent: true
     end
   end
+  private_class_method :send_first_invitation_reminders
 
   ##
   # Send a reminder email to users who were invited but didn't yet accept the invitation.
@@ -126,4 +125,5 @@ class InvitationsManager
       user.update second_confirmation_reminder_sent: true
     end
   end
+  private_class_method :send_second_invitation_reminders
 end
