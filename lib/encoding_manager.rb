@@ -32,8 +32,6 @@ class EncodingManager
     return text_encoded
   end
 
-  private
-
   ##
   # If the passed string is valid UTF-8, force UTF-8 encoding.
   # Returns string with encoding changed to UTF-8 if necessary.
@@ -54,6 +52,7 @@ class EncodingManager
 
     return fixed_text
   end
+  private_class_method :fix_utf8
 
   ##
   # Convert the passed string to UTF-8 replacing unknown characters with "?".
@@ -68,4 +67,5 @@ class EncodingManager
 
     return converted_text
   end
+  private_class_method :convert_to_utf8
 end

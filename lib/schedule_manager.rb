@@ -145,8 +145,6 @@ class ScheduleManager
     set_scheduled_update feed.id, feed.fetch_interval_secs
   end
 
-  private
-
   ##
   # Return a random number between -60 and 60.
   # It can be used (as seconds) to add some entropy to schedules, so that scheduled updates are more evenly distributed.
@@ -154,6 +152,7 @@ class ScheduleManager
   def self.schedule_entropy
     return Random.rand(121) - 60
   end
+  private_class_method :schedule_entropy
 
   ##
   # Set a scheduled update for a feed.
@@ -166,6 +165,7 @@ class ScheduleManager
     Rails.logger.info "Setting scheduled update of feed #{feed_id} in #{in_seconds} seconds"
     ScheduledUpdateFeedWorker.perform_in in_seconds.seconds, feed_id
   end
+  private_class_method :set_scheduled_update
 
   ##
   # Add a missing update schedule for a feed. Receives the feed as argument.
@@ -189,6 +189,7 @@ class ScheduleManager
     # in the past but it wasn't for some reason), Sidekiq will enqueue the job immediately.
     ScheduledUpdateFeedWorker.perform_at perform_at, feed.id
   end
+  private_class_method :add_missing_schedule
 
   ##
   # Count how many scheduled updates are set for the passed feed.
@@ -227,6 +228,7 @@ class ScheduleManager
 
     return updates_count
   end
+  private_class_method :feed_schedule_count
 
   ##
   # Count how many scheduled updates for the passed feed are already in the 'update_feeds' queue waiting
@@ -249,6 +251,7 @@ class ScheduleManager
 
     return queued_count
   end
+  private_class_method :update_queued_count
 
   ##
   # Count how many updates for the passed feed are scheduled.
@@ -270,6 +273,7 @@ class ScheduleManager
 
     return scheduled_count
   end
+  private_class_method :update_scheduled_count
 
   ##
   # Count how many updates for the passed feed are scheduled for retrying.
@@ -291,6 +295,7 @@ class ScheduleManager
 
     return retrying_count
   end
+  private_class_method :update_retrying_count
 
   ##
   # Count how many updates for the passed feed are currently being processed.
@@ -312,5 +317,6 @@ class ScheduleManager
 
     return running_count
   end
+  private_class_method :update_running_count
 end
 
