@@ -94,8 +94,6 @@ class S3Client
     return exists
   end
 
-  private
-
   ##
   # Get a file's S3 key, which can be used with the AWS API to operate on the file.
   # Receives as arguments:
