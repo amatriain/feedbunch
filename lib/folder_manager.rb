@@ -101,8 +101,6 @@ class FolderManager
     return folder
   end
 
-  private
-
   ##
   # Move a feed to an existing folder.
   #
