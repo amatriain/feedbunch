@@ -13,7 +13,7 @@ class FileClient
   # - the contents of the file.
 
   def self.save(user_id, folder, filename, content)
-    filepath = filepath user_id, folder, filename
+    filepath = self.filepath user_id, folder, filename
     # Create folder if necessary
     FileUtils.mkdir_p File.dirname(filepath)
     Rails.logger.info "Saving file #{filepath}"
@@ -29,7 +29,7 @@ class FileClient
   # - the filename to delete
 
   def self.delete(user_id, folder, filename)
-    filepath = filepath user_id, folder, filename
+    filepath = self.filepath user_id, folder, filename
     if FileTest.exists? filepath
       Rails.logger.info "deleting file #{filepath}"
       File.delete filepath
@@ -49,7 +49,7 @@ class FileClient
   # Returns the file contents if it exists, nil otherwise.
 
   def self.read(user_id, folder, filename)
-    filepath = filepath user_id, folder, filename
+    filepath = self.filepath user_id, folder, filename
     if FileTest.exists? filepath
       Rails.logger.info "reading file #{filepath}"
       contents = File.read filepath
@@ -68,7 +68,7 @@ class FileClient
   # - the filename
 
   def self.exists?(user_id, folder, filename)
-    filepath = filepath user_id, folder, filename
+    filepath = self.filepath user_id, folder, filename
     Rails.logger.info "searching for file #{filepath}"
     exists = FileTest.exists? filepath
     if exists
