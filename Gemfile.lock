@@ -139,7 +139,7 @@ GEM
     daemons (1.1.9)
     database_cleaner (1.5.1)
     debug_inspector (0.0.2)
-    devise (3.5.3)
+    devise (3.5.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
@@ -222,7 +222,7 @@ GEM
     net-ssh (3.0.1)
     netrc (0.11.0)
     newrelic_rpm (3.14.1.311)
-    nokogiri (1.6.7.1)
+    nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
     nokogumbo (1.4.7)
       nokogiri
