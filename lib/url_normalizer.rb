@@ -90,6 +90,10 @@ class URLNormalizer
     return normalized_url
   end
 
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
+
   ##
   # Returns an Addressable::URI object with the URI of the feed to which an entry belongs.
   # It uses the url attribute of the feed or, if url is blank, it uses the feeds's fetch_url attribute.

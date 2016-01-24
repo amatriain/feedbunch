@@ -79,6 +79,10 @@ class FileClient
     return exists
   end
 
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
+
   ##
   # Get a file's filepath, which can be used to operate on it in the filesystem.
   #

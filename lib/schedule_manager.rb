@@ -145,6 +145,10 @@ class ScheduleManager
     set_scheduled_update feed.id, feed.fetch_interval_secs
   end
 
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
+
   ##
   # Return a random number between -60 and 60.
   # It can be used (as seconds) to add some entropy to schedules, so that scheduled updates are more evenly distributed.

@@ -32,6 +32,10 @@ class EncodingManager
     return text_encoded
   end
 
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
+
   ##
   # If the passed string is valid UTF-8, force UTF-8 encoding.
   # Returns string with encoding changed to UTF-8 if necessary.

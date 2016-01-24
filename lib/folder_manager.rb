@@ -101,7 +101,9 @@ class FolderManager
     return folder
   end
 
-  private
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
 
   ##
   # Move a feed to an existing folder.
@@ -130,6 +132,7 @@ class FolderManager
 
     return folder
   end
+  private_class_method :move_feed_to_existing_folder
 
   ##
   # Create a new folder owned by the user, and move a feed to it.
@@ -154,6 +157,7 @@ class FolderManager
     self.move_feed_to_existing_folder feed, folder, user
     return folder
   end
+  private_class_method :move_feed_to_new_folder
 
   ##
   # Remove a feed from its current folder.
@@ -178,4 +182,5 @@ class FolderManager
 
     return nil
   end
+  private_class_method :remove_feed_from_folder
 end

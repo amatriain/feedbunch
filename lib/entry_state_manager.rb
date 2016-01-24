@@ -54,6 +54,10 @@ class EntryStateManager
     return nil
   end
 
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
+
   ##
   # Change the read/unread state for all entries in a feed older than the passed entry.
   #

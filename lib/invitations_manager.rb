@@ -71,6 +71,10 @@ class InvitationsManager
     users.find_each {|u| u.update invitations_count: 0, invitations_count_reset_at: Time.zone.now}
   end
 
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
+
   ##
   # Send a reminder email to users who were invited but didn't yet accept the invitation.
   # This method sends the first reminder email.

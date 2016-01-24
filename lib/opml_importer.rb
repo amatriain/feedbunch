@@ -108,7 +108,9 @@ class OPMLImporter
     return nil
   end
 
-  private
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
 
   ##
   # Read a data file and return its contents. Accepts as argument a file, which can be:
@@ -151,6 +153,7 @@ class OPMLImporter
 
     return file_contents
   end
+  private_class_method :read_data_file
 
   ##
   # Search among the files in a zip archive a file which name (including extension)
@@ -175,6 +178,7 @@ class OPMLImporter
 
     return file_contents
   end
+  private_class_method :search_zip
 
   ##
   # Count the number of feeds in an OPML file.
@@ -188,6 +192,7 @@ class OPMLImporter
     feeds_in_folders = docXml.xpath 'count(/opml/body/outline[not(@type="rss")]/outline[@type="rss" and @xmlUrl])'
     return feeds_not_in_folders + feeds_in_folders
   end
+  private_class_method :count_total_feeds
 
   ##
   # Import a folder, creating it if necessary. The folder will be owned by the passed user.
@@ -210,4 +215,5 @@ class OPMLImporter
 
     return folder
   end
+  private_class_method :import_folder
 end

@@ -69,7 +69,9 @@ class FeedAutodiscovery
     end
   end
 
-  private
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
 
   ##
   # Convert if necessary a relative URL to an absolute one, based on the feed webpage hostname.
@@ -93,6 +95,7 @@ class FeedAutodiscovery
     end
     return normalized_url.to_s
   end
+  private_class_method :relative_to_absolute_url
 
   ##
   # Convert if necessary a relative protocol URL (//web.com/feed)to one with the protocol in the
@@ -114,4 +117,5 @@ class FeedAutodiscovery
     end
     return normalized_url.to_s
   end
+  private_class_method :relative_to_absolute_protocol
 end

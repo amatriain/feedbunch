@@ -38,6 +38,10 @@ class SignupsManager
     old_unconfirmed_signups.destroy_all
   end
 
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
+
   ##
   # Send a reminder email to users who signed up but didn't confirm their email.
   # This method sends the first reminder email.

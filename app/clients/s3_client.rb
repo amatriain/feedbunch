@@ -94,7 +94,9 @@ class S3Client
     return exists
   end
 
-  private
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
 
   ##
   # Get a file's S3 key, which can be used with the AWS API to operate on the file.
@@ -111,4 +113,5 @@ class S3Client
     key = "#{folder}/#{user_id}/#{filename}"
     return key
   end
+  private_class_method :key
 end

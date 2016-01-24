@@ -71,6 +71,10 @@ class EntriesPagination
     return entries
   end
 
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
+
   ##
   # Retrieve entries from the feed passed as argument that are marked as unread for the user passed.
   #

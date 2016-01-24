@@ -42,7 +42,9 @@ class FeedClient
     return feed
   end
 
-  private
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
 
   ##
   # Fetch a feed, parse it and save received entries in the database.
@@ -134,6 +136,7 @@ class FeedClient
     Rails.logger.info "Feed #{feed.fetch_url} returned 304 - not modified"
     return nil
   end
+  private_class_method :fetch_valid_feed
 
   ##
   # Handle an HTTP response assuming it's not a valid feed but probably an HTML document,
@@ -169,6 +172,7 @@ class FeedClient
       raise FeedFetchError.new
     end
   end
+  private_class_method :handle_html_response
 
   ##
   # Set the correct encoding of the feed string.
@@ -214,6 +218,7 @@ class FeedClient
 
     return feed_response
   end
+  private_class_method :fix_encoding
 
   ##
   # Returns a ruby Encoding instance for the passed string.
@@ -235,4 +240,5 @@ class FeedClient
 
     return encoding
   end
+  private_class_method :find_encoding
 end

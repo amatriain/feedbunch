@@ -283,6 +283,10 @@ class Feed < ActiveRecord::Base
     return nil
   end
 
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
+
   ##
   # Check if a feed exists in the database with a given a URL. This is a class method.
   #
@@ -303,5 +307,6 @@ class Feed < ActiveRecord::Base
       return nil
     end
   end
+  private_class_method :url_feed
 
 end

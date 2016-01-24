@@ -148,6 +148,10 @@ class SubscriptionsManager
     return count
   end
 
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
+
   ##
   # Find out if a user is subscribed to a feed.
   #

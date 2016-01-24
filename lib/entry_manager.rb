@@ -55,7 +55,9 @@ class EntryManager
     end
   end
 
-  private
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
 
   ##
   # Make sure that all entry attributes from a Feejira entry are valid for their current encoding; otherwise the encoding
@@ -72,6 +74,7 @@ class EntryManager
     entry.summary = EncodingManager.set_encoding entry.summary, encoding
     entry.entry_id = EncodingManager.set_encoding entry.entry_id, encoding
   end
+  private_class_method :set_entry_encoding
 
   ##
   # Convert an entry created by Feedjira to a hash, with just the keys needed to create an Entry instance.
@@ -104,4 +107,5 @@ class EntryManager
     Rails.logger.debug "Obtained attributes hash for entry: #{entry_hash}"
     return entry_hash
   end
+  private_class_method :entry_to_hash
 end

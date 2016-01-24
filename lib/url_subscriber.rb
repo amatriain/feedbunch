@@ -87,7 +87,9 @@ class URLSubscriber
     return feed
   end
 
-  private
+  #############################
+  # PRIVATE CLASS METHODS
+  #############################
 
   ##
   # Subscribe a user to a feed already in the database.
@@ -119,6 +121,7 @@ class URLSubscriber
       return nil
     end
   end
+  private_class_method :subscribe_known_feed
 
   ##
   # Fetch and save a feed which is not yet in the database, and subscribe a user to it.
@@ -162,4 +165,6 @@ class URLSubscriber
       raise e
     end
   end
+  private_class_method :subscribe_new_feed
+
 end
