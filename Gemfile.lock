@@ -18,7 +18,7 @@ GIT
 
 GIT
   remote: https://github.com/amatriain/rack-cache.git
-  revision: 8ff25d31303a8069ca4b1c30cdc05771f571aad2
+  revision: 6f59861ebe71945f964a3dd2df063fa1f734435f
   branch: donotstore-backend
   specs:
     rack-cache (1.5.1)
