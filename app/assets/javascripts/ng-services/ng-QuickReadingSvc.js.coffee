@@ -24,11 +24,14 @@ angular.module('feedbunch').service 'quickReadingSvc',
 
         # mark as read entries that are in the array before the first currently visible entry
         first_entry_id = $('a[data-entry-id]:in-viewport').first().attr 'data-entry-id'
-        first_entry = findSvc.find_entry first_entry_id
-        first_entry_index = $rootScope.entries.indexOf first_entry
-        if first_entry_index?
-          entries_before = $rootScope.entries[0...first_entry_index]
-          for entry in entries_before
-            entrySvc.read_entry entry unless entry.read
+        if first_entry_id?
+          first_entry = findSvc.find_entry first_entry_id
+          first_entry_index = $rootScope.entries.indexOf first_entry
+          if first_entry_index != -1
+            entries_before = $rootScope.entries[0...first_entry_index]
+            for entry in entries_before
+              entrySvc.read_entry entry unless entry.read
+        end
+
       , 250
 ]
