@@ -54,8 +54,6 @@ class EntryStateManager
     return nil
   end
 
-  private
-
   ##
   # Change the read/unread state for all entries in a feed older than the passed entry.
   #
@@ -75,6 +73,7 @@ class EntryStateManager
     # Update unread entries count for the feed
     SubscriptionsManager.recalculate_unread_count entry.feed, user
   end
+  private_class_method :change_feed_entries_state
 
   ##
   # Change the read/unread state for all entries in a folder older than the passed entry.
@@ -98,6 +97,7 @@ class EntryStateManager
       SubscriptionsManager.recalculate_unread_count f, user
     end
   end
+  private_class_method :change_folder_entries_state
 
   ##
   # Change the read/unread state for all entries in all subscribed feeds.
@@ -119,4 +119,5 @@ class EntryStateManager
       SubscriptionsManager.recalculate_unread_count f, user
     end
   end
+  private_class_method :change_all_entries_state
 end
