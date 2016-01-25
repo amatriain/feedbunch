@@ -18,7 +18,7 @@ class S3Client
   # File is saved in the "uploads" folder in the feedbunch-#{Rails.env} bucket.
 
   def self.save(user_id, folder, filename, content)
-    key = self.key user_id, folder, filename
+    key = user_s3_key user_id, folder, filename
     Rails.logger.info "Uploading to S3 object with key #{key}"
     s3 = Aws::S3::Resource.new
     bucket = s3.bucket Feedbunch::Application.config.s3_bucket
@@ -35,7 +35,7 @@ class S3Client
   # - the filename
 
   def self.delete(user_id, folder, filename)
-    key = self.key user_id, folder, filename
+    key = user_s3_key user_id, folder, filename
     s3 = Aws::S3::Resource.new
     bucket = s3.bucket Feedbunch::Application.config.s3_bucket
     object = bucket.object key
@@ -58,7 +58,7 @@ class S3Client
   # Returns the file contents if it exists, or nil otherwise.
 
   def self.read(user_id, folder, filename)
-    key = self.key user_id, folder, filename
+    key = user_s3_key user_id, folder, filename
     s3 = Aws::S3::Resource.new
     bucket = s3.bucket Feedbunch::Application.config.s3_bucket
     object = bucket.object key
@@ -80,7 +80,7 @@ class S3Client
   # - the filename
 
   def self.exists?(user_id, folder, filename)
-    key = self.key user_id, folder, filename
+    key = user_s3_key user_id, folder, filename
     Rails.logger.info "checking if S3 object with key #{key} exists"
     s3 = Aws::S3::Resource.new
     bucket = s3.bucket Feedbunch::Application.config.s3_bucket
@@ -109,9 +109,9 @@ class S3Client
   # Assumes that the S3 bucket for the file is feedbunch-#{Rails.env} (e.g. feedbunch-production for the
   # production environment)
 
-  def self.key(user_id, folder, filename)
+  def self.user_s3_key(user_id, folder, filename)
     key = "#{folder}/#{user_id}/#{filename}"
     return key
   end
-  private_class_method :key
+  private_class_method :user_s3_key
 end

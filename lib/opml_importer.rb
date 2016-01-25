@@ -28,7 +28,7 @@ class OPMLImporter
     user.opml_import_job_state&.destroy
     user.create_opml_import_job_state state: OpmlImportJobState::RUNNING
 
-    subscription_data = self.read_data_file file
+    subscription_data = read_data_file file
     filename = "feedbunch_import_#{Time.zone.now.to_i}.opml"
     Feedbunch::Application.config.uploads_manager.save user.id, FOLDER, filename, subscription_data
 
@@ -70,7 +70,7 @@ class OPMLImporter
     end
 
     # Count total number of feeds
-    total_feeds = self.count_total_feeds docXml
+    total_feeds = count_total_feeds docXml
     # Check that the file was actually an OPML file with feeds
     if total_feeds == 0
       Rails.logger.error "Trying to import for user #{user.id} from OPML file: #{filename} but file contains no feeds"
@@ -94,7 +94,7 @@ class OPMLImporter
       # Ignore <outline> nodes which contain no feeds
       if folder_node.xpath('./outline[@type="rss" and @xmlUrl]').present?
         folder_title = folder_node['title'] || folder_node['text']
-        folder = self.import_folder folder_title, user
+        folder = import_folder folder_title, user
         folder_node.xpath('./outline[@type="rss" and @xmlUrl]').each do |feed_node|
           folder_ids << folder.id
           urls << feed_node['xmlUrl']
@@ -134,11 +134,11 @@ class OPMLImporter
   def self.read_data_file(file)
     begin
       zip_file = Zip::File.open file
-      file_contents = self.search_zip zip_file, /subscriptions.xml\z/
-      file_contents = self.search_zip zip_file, /.opml\z/ if file_contents.blank?
-      file_contents = self.search_zip zip_file, /.OPML\z/ if file_contents.blank?
-      file_contents = self.search_zip zip_file, /.xml\z/ if file_contents.blank?
-      file_contents = self.search_zip zip_file, /.XML\z/ if file_contents.blank?
+      file_contents = search_zip zip_file, /subscriptions.xml\z/
+      file_contents = search_zip zip_file, /.opml\z/ if file_contents.blank?
+      file_contents = search_zip zip_file, /.OPML\z/ if file_contents.blank?
+      file_contents = search_zip zip_file, /.xml\z/ if file_contents.blank?
+      file_contents = search_zip zip_file, /.XML\z/ if file_contents.blank?
       zip_file.close
 
       if file_contents.blank?

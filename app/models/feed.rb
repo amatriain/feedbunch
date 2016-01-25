@@ -129,15 +129,15 @@ class Feed < ActiveRecord::Base
     # Remove leading and trailing whitespace, to avoid confusion when detecting trailing slashes
     stripped_url = url.strip
     Rails.logger.info "Searching for matching feeds for url #{stripped_url}"
-    matching_feed = Feed.url_feed stripped_url
+    matching_feed = find_feed_by_url stripped_url
     if matching_feed.blank? && stripped_url =~ /.*[^\/]$/
       Rails.logger.info "No matching feed found for #{stripped_url}, adding trailing slash to search again for url"
       url_slash = stripped_url + '/'
-      matching_feed = Feed.url_feed url_slash
+      matching_feed = find_feed_by_url url_slash
     elsif matching_feed.blank? && stripped_url =~ /.*\/$/
       Rails.logger.info "No matching feed found for #{stripped_url}, removing trailing slash to search again for url"
       url_no_slash = stripped_url.chop
-      matching_feed = Feed.url_feed url_no_slash
+      matching_feed = find_feed_by_url url_no_slash
     end
 
     return matching_feed
@@ -288,14 +288,14 @@ class Feed < ActiveRecord::Base
   #############################
 
   ##
-  # Check if a feed exists in the database with a given a URL. This is a class method.
+  # Find a feed in the database with a given a URL. This is a class method.
   #
   # Receives as argument a URL.
   #
   # If there is a feed in the database which "url" or "fetch_url" field matches with
   # the url passed as argument, returns the feed object; returns nil otherwise.
 
-  def self.url_feed(url)
+  def self.find_feed_by_url(url)
     if Feed.exists? fetch_url: url
       Rails.logger.info "Feed with fetch_url #{url} already exists in the database"
       return Feed.find_by fetch_url: url
@@ -307,6 +307,6 @@ class Feed < ActiveRecord::Base
       return nil
     end
   end
-  private_class_method :url_feed
+  private_class_method :find_feed_by_url
 
 end

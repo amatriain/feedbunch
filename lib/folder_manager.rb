@@ -91,11 +91,11 @@ class FolderManager
     end
 
     if folder.present? && folder != Folder::NO_FOLDER
-      folder = self.move_feed_to_existing_folder feed, folder, user
+      folder = move_feed_to_existing_folder feed, folder, user
     elsif  folder == Folder::NO_FOLDER
-      folder = self.remove_feed_from_folder feed, user
+      folder = remove_feed_from_folder feed, user
     else
-      folder = self.move_feed_to_new_folder feed, folder_title, user
+      folder = move_feed_to_new_folder feed, folder_title, user
     end
 
     return folder
@@ -154,7 +154,7 @@ class FolderManager
 
     Rails.logger.info "Creating folder with title #{folder_title} for user #{user.id} - #{user.email}"
     folder = user.folders.create title: folder_title
-    self.move_feed_to_existing_folder feed, folder, user
+    move_feed_to_existing_folder feed, folder, user
     return folder
   end
   private_class_method :move_feed_to_new_folder

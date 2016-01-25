@@ -41,7 +41,7 @@ class EntryManager
           Rails.logger.debug "Already deleted entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}. Ignoring it"
         else
           Rails.logger.debug "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}"
-          entry_hash = self.entry_to_hash entry, guid
+          entry_hash = entry_to_hash entry, guid
           feed.entries.create! entry_hash
         end
 
