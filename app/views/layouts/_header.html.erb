@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <%= favicon_link_tag '/favicon.ico' %>
 <% end %>
     <%= stylesheet_link_tag    'application', :media => 'all' %>
 
@@ -14,4 +13,6 @@
     <link rel="manifest" href="<%= page_path 'manifest.json' %>">
     <meta name="theme-color" content="#FFA500">
     <%= csrf_meta_tags %>
+    <%# favicon must be the last element with rel="icon", otherwise favico.js won't work %>
+    <%= favicon_link_tag '/favicon.ico' %>
   </head>
