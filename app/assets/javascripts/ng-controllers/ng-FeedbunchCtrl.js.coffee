@@ -209,6 +209,13 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc)->
     return
 
   #--------------------------------------------
+  # Unset highlighting of sidebar links when the mouse hovers over a folder open link
+  #--------------------------------------------
+  $scope.remove_link_highlight = ->
+    highlightedSidebarLinkSvc.unset() unless $rootScope.mouseover_highlight_disabled
+    return
+
+  #--------------------------------------------
   # Highlight an entry when the mouse hovers over it
   #--------------------------------------------
   $scope.highlight_entry = (entry)->

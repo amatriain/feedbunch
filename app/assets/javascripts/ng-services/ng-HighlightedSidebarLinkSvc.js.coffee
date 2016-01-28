@@ -98,6 +98,13 @@ angular.module('feedbunch').service 'highlightedSidebarLinkSvc',
   service =
 
     #---------------------------------------------
+    # Unset highlighting (no sidebar link is highlighted)
+    #---------------------------------------------
+    unset: ->
+      $("#sidebar a.highlighted-link").removeClass 'highlighted-link'
+      delete $rootScope.highlighted_sidebar_link
+
+    #---------------------------------------------
     # Set the "start" link in the sidebar as the currently highlighted one
     #---------------------------------------------
     reset: ->

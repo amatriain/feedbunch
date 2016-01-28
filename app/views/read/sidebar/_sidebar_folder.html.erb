@@ -4,10 +4,11 @@
      data-folder-id="{{folder.id}}">
 
   <%# Link to open the folder and close the folder %>
-  <a id="open-folder-{{folder.id}}"
+  <a data-sidebar-folder
+     id="open-folder-{{folder.id}}"
      class="sidebar-folder list-group-item"
      ng-click="toggle_open_folder(folder)"
-     data-sidebar-folder>
+     ng-mouseover="remove_link_highlight()" >
 
     <div class="row">
 
