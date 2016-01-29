@@ -38,22 +38,29 @@
 /* Large, easily clickable feeds and folders in tablets and smartphones */
 @media (max-width: $screen-md-min) {
 
-  #sidebar {
+  #sidebar-column {
+    padding: {
+      left: 5px;
+      right:5px;
+    }
 
-    #folders-list {
-      a[data-sidebar-feed],
-      a[data-sidebar-folder] {
+    #sidebar {
+
+      #folders-list {
+        a[data-sidebar-feed],
+        a[data-sidebar-folder] {
+          padding: {
+            top: 16px;
+            bottom: 16px;
+          }
+        }
+      }
+
+      #start-page {
         padding: {
           top: 16px;
           bottom: 16px;
         }
-      }
-    }
-
-    #start-page {
-      padding: {
-        top: 16px;
-        bottom: 16px;
       }
     }
   }
@@ -79,14 +86,10 @@
         bottom: 5px;
       }
     }
-  }
-}
 
-@media (max-width: $screen-md-min) {
-  #sidebar-column {
-    padding: {
-      left: 5px;
-      right:5px;
+    /* Highlight folder on hover in larger screens */
+    #folders-list a.sidebar-folder:hover{
+      background-color: #E8E8E8;
     }
   }
 }
@@ -223,10 +226,6 @@
         left: 0;
         right: 0;
       }
-    }
-
-    a.sidebar-folder:hover{
-      background-color: #E8E8E8;
     }
 
     .folder-panel{
