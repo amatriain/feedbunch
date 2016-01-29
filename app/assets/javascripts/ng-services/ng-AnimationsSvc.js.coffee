@@ -212,14 +212,11 @@ angular.module('feedbunch').service 'animationsSvc',
       height_auto = folder_content.outerHeight() + padding_top + padding_bottom
 
       # Set height back to 0px and animate the transition to its final height
-      # After finishing opening animation, scroll to show as much of the folder content as possible.
-      # We leave an offset so that part of the folder above is still visible under the navbar.
       topOffset = -100
       folder_content
       .css('height', '0')
       .velocity {height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
         {duration: 300, easing: 'swing', complete: add_folder_open_class}
-      .velocity 'scroll', {container: sidebar_column, offset: topOffset, duration: 250, delay: 50}
 
       # Rotate folder arrow 90 degrees clockwise (pointing down)
       $("#open-folder-#{folder.id} .folder-arrow")
