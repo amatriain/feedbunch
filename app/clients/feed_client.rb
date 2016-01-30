@@ -93,7 +93,7 @@ class FeedClient
       RestClient.enable Rack::Cache,
                         verbose: false,
                         metastore: "file:#{Rails.root.join('rack_cache', 'metastore').to_s}",
-                        entitystore: nil
+                        entitystore: 'noop://'
     else
       Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} without HTTP caching"
       RestClient.disable Rack::Cache
