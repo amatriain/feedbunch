@@ -79,7 +79,11 @@ module Feedbunch
     config.max_update_interval = 6.hours
     config.min_update_interval = 15.minutes
 
-    # If a feed's update fail for more than this time, the feed is marked as permanently unavailable (no more
+    # If a feed fails to update for longer than this time, autodiscovery will be attempted on its webpage (in case
+    # the url works but the fetch_url has been changed)
+    config.autodiscovery_after = 1.day
+
+    # If a feed fails to update for longer than this time, it is marked as permanently unavailable (no more
     # updates will be attempted)
     config.unavailable_after = 1.month
 

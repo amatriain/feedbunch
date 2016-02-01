@@ -47,7 +47,6 @@ class ScheduledUpdateFeedWorker
     entries_after = 0
 
     begin
-      # Fetch feed
       FeedClient.fetch feed
     rescue RestClient::Exception,
       RestClient::RequestTimeout,
@@ -64,14 +63,23 @@ class ScheduledUpdateFeedWorker
       FeedAutodiscoveryError,
       FeedFetchError => e
 
-      # If fetching from fetch_url fails, try to perform autodiscovery (download the HTML document at feed.url and
-      # attempt to get a <link> element pointing to a feed from its <head>; this should be the current fetch_url).
-      # This is intended for the case in which the owner of a feed changes its URL (e.g. migrating from a custom solution
-      # to feedburner) but the website itself is still available at the old URL. This happens often. Feedbunch attempts
-      # to autocorrect the situation, as long as autodiscovery is enabled.
-      # Disable http caching so the most up to date version of the HTML is returned (in case an old version is
-      # cached with the old RSS URL).
-      FeedClient.fetch feed, http_caching: false, perform_autodiscovery: true
+      if feed.failing_since.present? && Time.zone.now - feed.failing_since > Feedbunch::Application.config.autodiscovery_after
+        # If fetching from fetch_url has been failing for longer than the configured autodiscovery_after value, try to
+        # perform autodiscovery (download the HTML document at feed.url and
+        # try to get a <link> element pointing to a feed from its <head>; this should be the current fetch_url).
+        #
+        # This is intended for the case in which the owner of a feed changes its URL (e.g. migrating from a custom solution
+        # to feedburner) but the website itself is still available at the old URL. This happens often. Feedbunch attempts
+        # to autocorrect the situation, as long as autodiscovery is enabled.
+        #
+        # Disable http caching so the most up to date version of the HTML is returned (in case an old version is
+        # cached with the old RSS URL).
+        FeedClient.fetch feed, http_caching: false, perform_autodiscovery: true
+      else
+        # If the feed has been failing for less than the configured autodiscovery_after value, re-raise the
+        # error to be handled by the global rescue clause
+        raise e
+      end
     end
 
     if feed.present? && Feed.exists?(feed&.id)
