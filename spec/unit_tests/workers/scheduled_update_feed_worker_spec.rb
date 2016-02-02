@@ -187,18 +187,73 @@ WEBPAGE_HTML
       end
     end
 
-    context 'failing for less than the configured time' do
+    context 'failing for less than the configured interval' do
 
-      it 'keeps feed marked as failing'
+      before :each do
+        @autodiscovery_after = Feedbunch::Application.config.autodiscovery_after
+        # Feed has been failing for 1 minute less than the configured autodiscovery_after interval
+        @failing_since = Time.zone.now + 1.minute - @autodiscovery_after
+        @feed.update failing_since: @failing_since
+      end
 
-      it 'does not try to perfom autodiscovery'
+      it 'keeps feed marked as failing' do
+        expect(@feed.failing_since).to eq @failing_since
+        ScheduledUpdateFeedWorker.new.perform @feed.id
+        expect(@feed.reload.failing_since).to eq @failing_since
+      end
 
-      it 'does not change fetch_url'
+      it 'does not try to perfom autodiscovery' do
+        expect(RestClient).to receive(:get).once
+        ScheduledUpdateFeedWorker.new.perform @feed.id
+      end
+
+      it 'does not change fetch_url' do
+        # fetch_url would be changed by autodiscovery. We want to check that autodiscovery is not performed.
+        @new_fetch_url = 'http://new.fetch.url.com/'
+
+        @webpage_html = <<WEBPAGE_HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="feed" href="#{@new_fetch_url}">
+</head>
+<body>
+  webpage body
+</body>
+</html>
+WEBPAGE_HTML
+        allow(@webpage_html).to receive(:headers).and_return({})
+
+        allow(RestClient).to receive :get do |url|
+          if url == @feed.fetch_url
+            raise RestClient::RequestTimeout.new
+          elsif url == @feed.url
+            @webpage_html
+          else
+            raise StandardError.new
+          end
+        end
+
+        old_url = @feed.fetch_url
+        ScheduledUpdateFeedWorker.new.perform @feed.id
+        expect(@feed.reload.fetch_url).to eq old_url
+      end
     end
 
-    context 'failing for longer than the configured time' do
+    context 'failing for longer than the configured interval' do
 
-      it 'attempts autodiscovery'
+      before :each do
+        @autodiscovery_after = Feedbunch::Application.config.autodiscovery_after
+        # Feed has been failing for 1 hour longer than the configured autodiscovery_after interval
+        @failing_since = Time.zone.now - 1.hour - @autodiscovery_after
+        @feed.update failing_since: @failing_since
+      end
+
+      it 'attempts autodiscovery' do
+        expect(RestClient).to receive(:get).once.with @feed.fetch_url, anything
+        expect(RestClient).to receive(:get).once.with @feed.url, anything
+        ScheduledUpdateFeedWorker.new.perform @feed.id
+      end
 
       context 'autodiscovery successful' do
 
@@ -276,10 +331,7 @@ FEED_XML
         end
 
         it 'marks feed as not failing' do
-          date = Time.zone.parse '2000-01-01'
-          @feed.update failing_since: date
-
-          expect(@feed.failing_since).to eq date
+          expect(@feed.failing_since).to eq @failing_since
           ScheduledUpdateFeedWorker.new.perform @feed.id
           expect(@feed.reload.failing_since).to be_nil
         end
@@ -292,7 +344,7 @@ FEED_XML
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="feed" href="#{@feed.url}">
+  <link rel="feed" href="#{@feed.fetch_url}">
 </head>
 <body>
   webpage body
@@ -315,9 +367,9 @@ WEBPAGE_HTML
         end
 
         it 'keeps feed marked as failing' do
-          expect(@feed.failing_since).to be_nil
+          expect(@feed.failing_since).to eq @failing_since
           ScheduledUpdateFeedWorker.new.perform @feed.id
-          expect(@feed.reload.failing_since).to eq @time_now
+          expect(@feed.reload.failing_since).to eq @failing_since
         end
 
         it 'does not change fetch_url attribute' do
