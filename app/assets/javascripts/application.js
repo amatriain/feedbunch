@@ -18,6 +18,7 @@
 //= require angular-sanitize
 //= require angular-touch
 //= require ng-infinite-scroll
+//= require fastclick
 //= require bootstrap
 //= require URI
 //= require enquire
@@ -34,3 +35,4 @@
 //= require_tree ./ng-controllers
 //= require_tree ./ng-filters
 //= require_tree ./ng-services
+//= require_tree ./misc
