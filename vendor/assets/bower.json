@@ -2,9 +2,9 @@
   "name": "dsl-generated dependencies",
   "dependencies": {
     "jquery": "2.2",
-    "angular": "1.4.8",
-    "angular-sanitize": "1.4.8",
-    "angular-touch": "1.4.8",
+    "angular": "1.5.0",
+    "angular-sanitize": "1.5.0",
+    "angular-touch": "1.5.0",
     "fastclick": "1.0.6",
     "bootstrap-sass-official": "3.3.6",
     "font-awesome": "4.5.0",
