@@ -30,6 +30,12 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
       state = "unread"
       changeUnreadCountSvc.update_unread_count entry, true
 
+    # WIP
+    worker = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
+    worker.onmessage = (e) ->
+      console.log e.data
+    worker.postMessage {id: entry.id, state: state}
+
     $http.put("/api/entries/update.json", entry: {id: entry.id, state: state})
     .success ->
       entry.changing_state = false
