@@ -227,7 +227,7 @@ GEM
       activerecord (>= 3.0)
     puma (2.16.0)
     rack (1.6.4)
-    rack-cache (1.6.0)
+    rack-cache (1.6.1)
       rack (>= 0.4)
     rack-protection (1.5.3)
       rack
