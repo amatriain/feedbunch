@@ -3,12 +3,35 @@
 ########################################################
 
 angular.module('feedbunch').service 'entrySvc',
-['$rootScope', '$http', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
+['$rootScope', '$http', '$window', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
 'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc', 'feedsFoldersSvc',
 'lazyLoadingSvc', 'tourSvc', 'animationsSvc', 'menuCollapseSvc',
-($rootScope, $http, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
+($rootScope, $http, $window, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
 currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc,
 lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
+
+  # CSRF token for POST
+  token = $('meta[name="csrf-token"]').attr 'content'
+
+  # Web worker to perform Ajax calls in a different thread.
+  # A single worker associated with this service runs at all times.
+  worker = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
+  worker.onmessage = (e) ->
+    # Entry has changed state in the server
+    if e.data.status == 200
+      entry = findSvc.find_entry e.data.id
+      entry.changing_state = false
+      # Reset here the timer that updates feeds every minute only if feed_id argument has not been passed
+      # (if it has been passed, now entries from the feed will be loaded from the server and the
+      # update timer will be reset as part of that process).
+      if e.data.feed_id?
+        read_feed e.data.feed_id
+      else
+        feedsFoldersSvc.reset_refresh_timer()
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else
+      timerFlagSvc.start 'error_changing_entry_state'
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark a single entry as read or unread.
@@ -30,24 +53,8 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
       state = "unread"
       changeUnreadCountSvc.update_unread_count entry, true
 
-    # WIP
-    worker = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
-    worker.onmessage = (e) ->
-      console.log e.data
-    worker.postMessage {id: entry.id, state: state}
-
-    $http.put("/api/entries/update.json", entry: {id: entry.id, state: state})
-    .success ->
-      entry.changing_state = false
-      # Reset here the timer that updates feeds every minute only if feed_id argument has not been passed
-      # (if it has been passed, now entries from the feed will be loaded from the server and the
-      # update timer will be reset as part of that process).
-      if feed_id?
-        read_feed feed_id
-      else
-        feedsFoldersSvc.reset_refresh_timer()
-    .error (data, status)->
-      timerFlagSvc.start 'error_changing_entry_state' if status!=0
+    # Change the entry state in a separate thread using a web worker
+    worker.postMessage {token: token, id: entry.id, state: state, feed_id: feed_id}
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Set the feed with the passed ID as the currently selected one, and
