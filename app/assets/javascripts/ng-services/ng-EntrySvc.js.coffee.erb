@@ -33,19 +33,21 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
   # it as read (true) or unread (false).
   #--------------------------------------------
   change_entry_state = (entry, read)->
-    # Mark entry as read or unread in the model
-    entry.read = read
-    entry.changing_state = true
+    # If entry is already in the requested state, nothing to be done
+    if entry.read != read
+      # Mark entry as read or unread in the model
+      entry.read = read
+      entry.changing_state = true
 
-    if read
-      state = "read"
-      changeUnreadCountSvc.update_unread_count entry, false
-    else
-      state = "unread"
-      changeUnreadCountSvc.update_unread_count entry, true
+      if read
+        state = "read"
+        changeUnreadCountSvc.update_unread_count entry, false
+      else
+        state = "unread"
+        changeUnreadCountSvc.update_unread_count entry, true
 
-    # Change the entry state in a separate thread using a web worker
-    worker.postMessage {token: token, id: entry.id, state: state}
+      # Change the entry state in a separate thread using a web worker
+      worker.postMessage {token: token, id: entry.id, state: state}
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Set the feed with the passed ID as the currently selected one, and
@@ -110,14 +112,10 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
     toggle_open_entry: (entry)->
       if entry?
         if openEntrySvc.is_open entry
-          # User is closing the open entry
           openEntrySvc.close entry
         else
           openEntrySvc.open entry
-          if !entry.read
-            # User is opening an unread entry, mark it as read
-            change_entry_state entry, true
-          # lazy load images
+          change_entry_state entry, true
           lazyLoadingSvc.load_entry_images entry
           tourSvc.show_entry_tour()
 
