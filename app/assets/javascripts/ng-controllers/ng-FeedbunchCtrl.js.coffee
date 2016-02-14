@@ -7,12 +7,12 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
-'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'dialogsSvc',
+'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'dialogsSvc', 'keyboardShortcutsSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
-highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc)->
+highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -68,6 +68,13 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc)->
 
   # Initialize collapsing menu in smartphones
   menuCollapseSvc.start()
+
+  #--------------------------------------------
+  # Respond to keyboard shortcuts
+  #--------------------------------------------
+  $scope.key_pressed = (event)->
+    keyboardShortcutsSvc.key_pressed(event)
+    return
 
   #--------------------------------------------
   # Show the start page

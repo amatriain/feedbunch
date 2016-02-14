@@ -31,8 +31,8 @@ angular.module('feedbunch').service 'userConfigSvc',
       # Show application tours if corresponding user config flags are set to true
       tourSvc.start()
 
-      # Start responding to keyboard shortcuts
-      keyboardShortcutsSvc.start()
+      # Initialize responding to keyboard shortcuts (if the user has them enabled in his config)
+      keyboardShortcutsSvc.init()
     .error (data, status)->
       timerFlagSvc.start 'error_loading_user_config' if status!=0
 ]
