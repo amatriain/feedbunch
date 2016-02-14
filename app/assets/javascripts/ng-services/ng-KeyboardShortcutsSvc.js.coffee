@@ -55,6 +55,10 @@ currentFolderSvc, findSvc, feedsFoldersSvc, readSvc, menuCollapseSvc)->
               feedsFoldersSvc.show_read() # show read entries
             readSvc.read_entries_page()
             menuCollapseSvc.close()
+          else
+            return
+
+        event.preventDefault()
 
   #---------------------------------------------
   # Stop responding to keyboard shortcuts, if keyboard shortcuts are enabled.
