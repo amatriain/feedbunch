@@ -50,12 +50,13 @@ angular.module('feedbunch').service 'highlightedEntrySvc',
     next: ->
       # Do not enable highlighting in smartphone and tablet-sized screens
       enquire.register md_min_media_query, ->
-        index = $rootScope.entries.indexOf $rootScope.highlighted_entry
-        if index >= 0 && index < ($rootScope.entries.length - 1)
-          next_entry = $rootScope.entries[index + 1]
-          set next_entry
-          # Scroll page so that highlighted entry is visible, if necessary
-          animationsSvc.entry_scroll_down next_entry
+        if $rootScope.entries && $rootScope.entries?.length > 0
+          index = $rootScope.entries.indexOf $rootScope.highlighted_entry
+          if index >= 0 && index < ($rootScope.entries.length - 1)
+            next_entry = $rootScope.entries[index + 1]
+            set next_entry
+            # Scroll page so that highlighted entry is visible, if necessary
+            animationsSvc.entry_scroll_down next_entry
 
     #---------------------------------------------
     # Highlight the previous entry (above current one)
@@ -63,12 +64,13 @@ angular.module('feedbunch').service 'highlightedEntrySvc',
     previous: ->
       # Do not enable highlighting in smartphone and tablet-sized screens
       enquire.register md_min_media_query, ->
-        index = $rootScope.entries.indexOf $rootScope.highlighted_entry
-        if index > 0 && index < $rootScope.entries.length
-          previous_entry = $rootScope.entries[index - 1]
-          set previous_entry
-          # Scroll page so that highlighted entry is visible, if necessary
-          animationsSvc.entry_scroll_up previous_entry
+        if $rootScope.entries && $rootScope.entries?.length > 0
+          index = $rootScope.entries.indexOf $rootScope.highlighted_entry
+          if index > 0 && index < $rootScope.entries.length
+            previous_entry = $rootScope.entries[index - 1]
+            set previous_entry
+            # Scroll page so that highlighted entry is visible, if necessary
+            animationsSvc.entry_scroll_up previous_entry
 
   return service
 ]
