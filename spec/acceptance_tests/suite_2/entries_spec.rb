@@ -321,13 +321,10 @@ describe 'feed entries', type: :feature do
         # @feed1 should be selected for reading
         feed_should_be_selected @feed1
 
-        # only entries from @feed1 should be visible
-        entry_should_be_visible @entry1
+        # only unread entries from @feed1 should be visible
+        entry_should_not_be_visible @entry1
         entry_should_be_visible @entry2
         entry_should_not_be_visible @entry3
-
-        # @entry1 should be marked as unread again.
-        entry_should_be_marked_unread @entry1
       end
     end
 
