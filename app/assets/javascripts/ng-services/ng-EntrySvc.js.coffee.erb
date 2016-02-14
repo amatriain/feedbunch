@@ -13,14 +13,29 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
   # CSRF token for POST
   token = $('meta[name="csrf-token"]').attr 'content'
 
-  # Web worker to perform Ajax calls in a different thread.
+  # Web worker to change a single entry state in a different thread.
   # A single worker associated with this service runs at all times.
-  worker = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
-  worker.onmessage = (e) ->
+  worker_single_entry = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
+  worker_single_entry.onmessage = (e) ->
     # Entry has changed state in the server
     if e.data.status == 200
       entry = findSvc.find_entry e.data.id
       entry.changing_state = false
+      feedsFoldersSvc.reset_refresh_timer()
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else
+      timerFlagSvc.start 'error_changing_entry_state'
+
+  # Web worker to change state of all current entries in a different thread
+  # A single worker associated with this service runs at all times.
+  worker_multiple_entries = new Worker '<%= asset_path 'workers/change_entries_state_worker' %>'
+  worker_multiple_entries.onmessage = (e) ->
+    # Entry has changed state in the server
+    if e.data.status == 200
+      for entry in $rootScope.entries
+        entry.changing_state = false
+      timerFlagSvc.start 'success_mark_all_read'
       feedsFoldersSvc.reset_refresh_timer()
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
@@ -47,7 +62,7 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
         changeUnreadCountSvc.update_unread_count entry, true
 
       # Change the entry state in a separate thread using a web worker
-      worker.postMessage {token: token, id: entry.id, state: state}
+      worker_single_entry.postMessage {token: token, id: entry.id, state: state}
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Set the feed with the passed ID as the currently selected one, and
@@ -92,15 +107,8 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
       else
         return
 
-      $http.put("/api/entries/update.json", entry: {id: first_entry.id, state: 'read', whole_feed: whole_feed, whole_folder: whole_folder, all_entries: all_entries})
-      .success ->
-        timerFlagSvc.start 'success_mark_all_read'
-        # after marking multiple entries as read, reset the timer that updates feeds every minute
-        feedsFoldersSvc.reset_refresh_timer()
-        for entry in $rootScope.entries
-          entry.changing_state = false
-      .error (data, status)->
-        timerFlagSvc.start 'error_changing_entry_state' if status!=0
+      # Change entries state in a separate thread using a web worker
+      worker_multiple_entries.postMessage {token: token, id: first_entry.id, state: 'read', whole_feed: whole_feed, whole_folder: whole_folder, all_entries: all_entries}
 
   service =
 
