@@ -19,32 +19,27 @@ onmessage = function(e){
     // New state for the entry, "read" or "unread"
     var state = e.data.state
 
-    // ID of the feed, if the user clicked on the feed link in the entry.
-    // Not used in this worker, but returned to the main thread so it knows how to
-    // act when receiving the message callback.
-    var feed_id = e.data.feed_id
-
-    do_post(token, id, state, feed_id, 0);
+    do_post(token, id, state, 0);
 }
 
 // Perform the HTTP POST
-do_post = function(token, id, state, feed_id, retry_count) {
+do_post = function(token, id, state, retry_count) {
     var req = new XMLHttpRequest();
     req.onreadystatechange = function(e) {
         if (req.readyState == XMLHttpRequest.DONE) {
             if (req.status == 0) {
                 // Network error, retry up to max_retries times
                 if (retry_count < max_retries) {
-                    setTimeout(do_post, retry_interval_msec, token, id, state, feed_id, retry_count + 1);
+                    setTimeout(do_post, retry_interval_msec, token, id, state, retry_count + 1);
                 }
                 else {
                     // Unrecoverable failure
-                    postMessage({status: req.status, id: id, feed_id: feed_id});
+                    postMessage({status: req.status, id: id});
                 }
             }
             else {
                 // Success (actual HTTP status may indicate an error response, main thread handles it)
-                postMessage({status: req.status, id: id, feed_id: feed_id});
+                postMessage({status: req.status, id: id});
             }
         }
     };

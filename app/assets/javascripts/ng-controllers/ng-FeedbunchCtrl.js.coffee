@@ -318,11 +318,11 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc)->
 
   #--------------------------------------------
   # Set the feed to which belongs the passed entry as the currently selected feed.
-  # Also the passed entry is marked as unread, so that it's visible in the new list of entries.
   #--------------------------------------------
   $scope.set_current_entry_feed = (entry)->
-    entrySvc.load_entry_feed entry
-    menuCollapseSvc.close()
+    feed = findSvc.find_feed entry.feed_id
+    if feed?
+      currentFeedSvc.set feed
     return
 
   #--------------------------------------------
