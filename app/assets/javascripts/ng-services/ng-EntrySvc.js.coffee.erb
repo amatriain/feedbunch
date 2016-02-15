@@ -5,13 +5,13 @@
 angular.module('feedbunch').service 'entrySvc',
 ['$rootScope', '$http', '$window', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
 'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc', 'feedsFoldersSvc',
-'lazyLoadingSvc', 'tourSvc', 'animationsSvc', 'menuCollapseSvc',
+'lazyLoadingSvc', 'tourSvc', 'animationsSvc', 'menuCollapseSvc', 'csrfTokenSvc',
 ($rootScope, $http, $window, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
 currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc,
-lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc)->
+lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
 
   # CSRF token for POST
-  token = $('meta[name="csrf-token"]').attr 'content'
+  token = csrfTokenSvc.get_token()
 
   # Web worker to change a single entry state in a different thread.
   # A single worker associated with this service runs at all times.
