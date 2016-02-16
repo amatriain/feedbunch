@@ -26,12 +26,6 @@ angular.module('feedbunch').service 'jobStateSvc',
       timerFlagSvc.start 'error_loading_job_states'
 
   #---------------------------------------------
-  # PRIVATE FUNCTION: load list of refresh feed job states via AJAX
-  #---------------------------------------------
-  load_refresh_feed_job_states = ->
-    worker_refresh_feed_jobs_states.postMessage {token: token}
-
-  #---------------------------------------------
   # PRIVATE FUNCTION: load state of a single refresh feed job via AJAX.
   #
   # Receives as argument the id of the job.
@@ -127,7 +121,7 @@ angular.module('feedbunch').service 'jobStateSvc',
     # Load import process state via AJAX into the root scope
     #---------------------------------------------
     load_data: ->
-      load_refresh_feed_job_states()
+      worker_refresh_feed_jobs_states.postMessage {token: token}
       load_subscribe_job_states()
 
     #---------------------------------------------
