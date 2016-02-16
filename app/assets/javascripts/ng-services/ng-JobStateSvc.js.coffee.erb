@@ -83,7 +83,10 @@ angular.module('feedbunch').service 'jobStateSvc',
       timerFlagSvc.start 'error_subscribing'
 
   # Web worker to delete a refresh feed job state
-  worker_delete_refresh_job_state = new Worker '<%= asset_path 'workers/delete_refresh_feed_job_state' %>'
+  worker_delete_refresh_job_state = new Worker '<%= asset_path 'workers/delete_refresh_feed_job_state_worker' %>'
+
+  # Web worker to delete a subscribe job state
+  worker_delete_subscribe_job_state = new Worker '<%= asset_path 'workers/delete_subscribe_job_state_worker' %>'
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load state of a single refresh feed job via AJAX.
@@ -172,7 +175,7 @@ angular.module('feedbunch').service 'jobStateSvc',
           $timeout.cancel timer
           delete $rootScope.subscribe_job_state_timers[job_state.id]
 
-      $http.delete "/api/subscribe_job_states/#{job_state.id}.json"
+      worker_delete_subscribe_job_state.postMessage token: token, id: job_state.id
 
   return service
 ]

@@ -1,0 +1,16 @@
+/**
+ * Web Worker to delete a subscribe job state in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_delete' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+
+  // id of the job state to delete
+  var id = e.data.id;
+
+  do_delete("/api/subscribe_job_states/" + id + ".json", token, 0);
+}
