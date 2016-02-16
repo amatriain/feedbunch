@@ -15,7 +15,26 @@ onmessage = function(e){
   // New state for the entry, "read" or "unread"
   var state = e.data.state;
 
+  // Is user marking a whole feed as read?
+  var whole_feed = e.data.whole_feed;
+
+  // Is user marking a whole folder as read?
+  var whole_folder = e.data.whole_folder;
+
+  // Is user marking all entries in all folders as read?
+  var all_entries = e.data.all_entries;
+
+  // id, state are mandatory; whole_feed, whole_folder and all_entries are not.
   var data = {entry: {id: id, state: state}};
+  if(whole_feed) {
+    data["entry"]["whole_feed"] = whole_feed;
+  }
+  if(whole_folder) {
+    data["entry"]["whole_folder"] = whole_folder;
+  }
+  if(all_entries) {
+    data["entry"]["all_entries"] = all_entries;
+  }
 
   do_put("/api/entries/update.json", token, data, 0);
 }

@@ -28,7 +28,7 @@ do_get = function(url, token, retry_count) {
         // Success (actual HTTP status may indicate an error response, main thread handles it)
         data = {status: req.status};
         if (req.responseText){
-          data['response'] = JSON.parse(req.responseText);
+          data["response"] = JSON.parse(req.responseText);
         }
         postMessage(data);
       }
