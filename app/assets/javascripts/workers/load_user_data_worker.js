@@ -10,9 +10,9 @@ retry_interval_msec = 1000
 
 // Callback for messages from the main thread
 onmessage = function(e){
-    // CSRF token
-    var token = e.data.token
-    do_get(token, 0);
+  // CSRF token
+  var token = e.data.token
+  do_get(token, 0);
 }
 
 // Perform the HTTP GET

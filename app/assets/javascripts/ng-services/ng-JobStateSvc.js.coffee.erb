@@ -1,28 +1,35 @@
 ########################################################
-# AngularJS service to load in the scope the state of background jobs requested by the user
+# AngularJS service to load the state of background jobs requested by the user
 ########################################################
 
 angular.module('feedbunch').service 'jobStateSvc',
-['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'timerFlagSvc', 'findSvc', 'favicoSvc', 'userDataSvc',
-($rootScope, $http, $timeout, feedsFoldersSvc, timerFlagSvc, findSvc, favicoSvc, userDataSvc)->
+['$rootScope', '$http', '$timeout', '$window', 'feedsFoldersSvc', 'timerFlagSvc', 'findSvc', 'favicoSvc', 'userDataSvc',
+($rootScope, $http, $timeout, $window, feedsFoldersSvc, timerFlagSvc, findSvc, favicoSvc, userDataSvc)->
+
+  # CSRF token
+  token = csrfTokenSvc.get_token()
+
+  # Web worker to retrieve the state of all refresh feed jobs of the user
+  # A single worker associated with this service runs at all times.
+  worker_refresh_feed_jobs_states = new Worker '<%= asset_path 'workers/load_refresh_feed_jobs_states_worker' %>'
+  worker_refresh_feed_jobs_states.onmessage = (e) ->
+    if e.data.status == 200
+      $rootScope.refresh_feed_job_states = e.data.response.slice()
+      for job_state in e.data.response
+        # Periodically update the state of any running jobs
+        load_refresh_feed_job_state job_state.id if job_state.state=="RUNNING"
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else if e.data.state == 404
+      $rootScope.refresh_feed_job_states=[]
+    else
+      timerFlagSvc.start 'error_loading_job_states'
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load list of refresh feed job states via AJAX
   #---------------------------------------------
   load_refresh_feed_job_states = ->
-    $http.get("/api/refresh_feed_job_states.json")
-    .success (data)->
-      $rootScope.refresh_feed_job_states = data.slice()
-      for job_state in data
-        # Periodically update the state of any running jobs
-        load_refresh_feed_job_state job_state.id if job_state.state=="RUNNING"
-    .error (data, state)->
-      if state == 404
-        # If no job states are received, clear the array
-        $rootScope.refresh_feed_job_states=[]
-      else if state != 0
-        # if HTTP call has been prematurely cancelled or there's simply no job states, do nothing
-        timerFlagSvc.start 'error_loading_job_states'
+    worker_refresh_feed_jobs_states.postMessage {token: token}
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load state of a single refresh feed job via AJAX.
