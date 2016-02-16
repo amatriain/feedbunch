@@ -1,0 +1,21 @@
+/**
+ * Web Worker to update the state of a single entry in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_put' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+
+  // ID of the entry
+  var id = e.data.id;
+
+  // New state for the entry, "read" or "unread"
+  var state = e.data.state;
+
+  var data = {entry: {id: id, state: state}};
+
+  do_put("/api/entries/update.json", token, data, 0);
+}
