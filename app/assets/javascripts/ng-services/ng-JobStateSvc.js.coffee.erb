@@ -20,7 +20,7 @@ angular.module('feedbunch').service 'jobStateSvc',
         load_refresh_feed_job_state job_state.id if job_state.state=="RUNNING"
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
-    else if e.data.state == 404
+    else if e.data.status == 404
       $rootScope.refresh_feed_job_states=[]
     else
       timerFlagSvc.start 'error_loading_job_states'

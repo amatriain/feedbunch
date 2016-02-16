@@ -33,8 +33,11 @@ do_get = function(token, retry_count) {
       }
       else {
         // Success (actual HTTP status may indicate an error response, main thread handles it)
-        jsonResponse = JSON.parse(req.responseText);
-        postMessage({status: req.status, response: jsonResponse});
+        data = {status: req.status}
+        if (req.responseText){
+          data['response'] = JSON.parse(req.responseText);
+        }
+        postMessage(data);
       }
     }
   };
