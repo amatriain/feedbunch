@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'jobStateSvc',
-['$rootScope', '$http', '$timeout', '$window', 'csrfTokenSvc', 'feedsFoldersSvc', 'timerFlagSvc', 'findSvc', 'favicoSvc', 'userDataSvc',
-($rootScope, $http, $timeout, $window, csrfTokenSvc, feedsFoldersSvc, timerFlagSvc, findSvc, favicoSvc, userDataSvc)->
+['$rootScope', '$timeout', '$window', 'csrfTokenSvc', 'feedsFoldersSvc', 'timerFlagSvc', 'findSvc', 'favicoSvc', 'userDataSvc',
+($rootScope, $timeout, $window, csrfTokenSvc, feedsFoldersSvc, timerFlagSvc, findSvc, favicoSvc, userDataSvc)->
 
   # CSRF token
   token = csrfTokenSvc.get_token()
