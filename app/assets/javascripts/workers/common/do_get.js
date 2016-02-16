@@ -1,30 +1,23 @@
 /**
- * Web Worker to load the state of all refresh feed jobs of the user in a separate thread.
+ * Perform an HTTP GET from a web worker, and return the status and the response JSON object, if any.
+ * Built-in retrying if the network is down
  */
 
 // Maximum number of times the http POST is attempted
-max_retries = 60
+max_retries = 60;
 
 // Interval between HTTP POST retries
-retry_interval_msec = 1000
-
-// Callback for messages from the main thread
-onmessage = function(e){
-  // CSRF token
-  var token = e.data.token
-
-  do_get(token, 0);
-}
+retry_interval_msec = 1000;
 
 // Perform the HTTP GET
-do_get = function(token, retry_count) {
+do_get = function(url, token, retry_count) {
   var req = new XMLHttpRequest();
   req.onreadystatechange = function(e) {
     if (req.readyState == XMLHttpRequest.DONE) {
       if (req.status == 0) {
         // Network error, retry up to max_retries times
         if (retry_count < max_retries) {
-          setTimeout(do_get, retry_interval_msec, token, retry_count + 1);
+          setTimeout(do_get, retry_interval_msec, url, token, retry_count + 1);
         }
         else {
           // Unrecoverable failure
@@ -33,7 +26,7 @@ do_get = function(token, retry_count) {
       }
       else {
         // Success (actual HTTP status may indicate an error response, main thread handles it)
-        data = {status: req.status}
+        data = {status: req.status};
         if (req.responseText){
           data['response'] = JSON.parse(req.responseText);
         }
@@ -41,7 +34,7 @@ do_get = function(token, retry_count) {
       }
     }
   };
-  req.open("GET", "/api/refresh_feed_job_states.json");
+  req.open("GET", url);
   req.setRequestHeader("X-CSRF-Token", token);
   req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   req.send();

@@ -3,21 +3,21 @@
  */
 
 // Maximum number of times the http POST is attempted
-max_retries = 60
+max_retries = 60;
 
 // Interval between HTTP POST retries
-retry_interval_msec = 1000
+retry_interval_msec = 1000;
 
 // Callback for messages from the main thread
 onmessage = function(e){
   // CSRF token
-  var token = e.data.token
+  var token = e.data.token;
 
   // ID of the entry
-  var id = e.data.id
+  var id = e.data.id;
 
   // New state for the entry, "read" or "unread"
-  var state = e.data.state
+  var state = e.data.state;
 
   do_post(token, id, state, 0);
 }
