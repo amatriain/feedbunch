@@ -51,7 +51,7 @@ do_post = function(token, id, state, whole_feed, whole_folder, all_entries, retr
         postMessage({status: req.status});
       }
     }
-};
+  };
   req.open("PUT", "/api/entries/update.json");
   req.setRequestHeader("X-CSRF-Token", token);
   req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
