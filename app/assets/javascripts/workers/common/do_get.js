@@ -3,10 +3,10 @@
  * Built-in retrying if the network is down
  */
 
-// Maximum number of times the http POST is attempted
+// Maximum number of times the http GET is attempted
 max_retries = 60;
 
-// Interval between HTTP POST retries
+// Interval between HTTP GET retries
 retry_interval_msec = 1000;
 
 // Perform the HTTP GET

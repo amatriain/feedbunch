@@ -17,7 +17,7 @@ do_put = function(url, token, data, retry_count) {
       if (req.status == 0) {
         // Network error, retry up to max_retries times
         if (retry_count < max_retries) {
-          setTimeout(do_post, retry_interval_msec, url, token, data, retry_count + 1);
+          setTimeout(do_put, retry_interval_msec, url, token, data, retry_count + 1);
         }
         else {
           // Unrecoverable failure
