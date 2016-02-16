@@ -1,0 +1,12 @@
+/**
+ * Web Worker to load the state of all subscribe jobs of the user in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_get' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+  do_get("/api/subscribe_job_states.json", token, 0);
+}

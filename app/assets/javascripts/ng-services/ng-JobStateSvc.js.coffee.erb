@@ -21,7 +21,23 @@ angular.module('feedbunch').service 'jobStateSvc',
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else if e.data.status == 404
-      $rootScope.refresh_feed_job_states=[]
+      $rootScope.refresh_feed_job_states = []
+    else
+      timerFlagSvc.start 'error_loading_job_states'
+
+  # Web worker to retrieve the state of all subscribe jobs of the user
+  # A single worker associated with this service runs at all times.
+  worker_subscribe_jobs_states = new Worker '<%= asset_path 'workers/load_subscribe_jobs_states_worker' %>'
+  worker_subscribe_jobs_states.onmessage = (e) ->
+    if e.data.status == 200
+      $rootScope.subscribe_job_states = e.data.response.slice()
+      for job_state in e.data.response
+        # Periodically update the state of any running jobs
+        load_subscribe_job_state job_state.id if job_state.state=="RUNNING"
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else if e.data.status == 404
+      $rootScope.subscribe_job_states = []
     else
       timerFlagSvc.start 'error_loading_job_states'
 
@@ -59,24 +75,6 @@ angular.module('feedbunch').service 'jobStateSvc',
       , 5000
       # Store timer so that a second timer for the same job state is not started in the future
       $rootScope.refresh_job_state_timers[job_id] = timer
-
-  #---------------------------------------------
-  # PRIVATE FUNCTION: load list of subscribe job states via AJAX
-  #---------------------------------------------
-  load_subscribe_job_states = ->
-    $http.get("/api/subscribe_job_states.json")
-    .success (data)->
-      $rootScope.subscribe_job_states = data.slice()
-      for job_state in data
-        # Periodically update the state of any running jobs
-        load_subscribe_job_state job_state.id if job_state.state=="RUNNING"
-    .error (data, state)->
-      if state == 404
-        # If no job states are received, clear the array
-        $rootScope.subscribe_job_states = []
-      else if state != 0
-        # if HTTP call has been prematurely cancelled or there's simply no job states, do nothing
-        timerFlagSvc.start 'error_loading_job_states'
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load state of a single subscribe job via AJAX.
@@ -122,7 +120,7 @@ angular.module('feedbunch').service 'jobStateSvc',
     #---------------------------------------------
     load_data: ->
       worker_refresh_feed_jobs_states.postMessage {token: token}
-      load_subscribe_job_states()
+      worker_subscribe_jobs_states.postMessage {token: token}
 
     #---------------------------------------------
     # Hide a refresh feed job state alert and notify the server via AJAX that it should be deleted
