@@ -10,11 +10,10 @@ angular.module('feedbunch').service 'userDataSvc',
   token = csrfTokenSvc.get_token()
 
   # Web worker to retrieve user data.
-  # A single worker associated with this service runs at all times.
   worker = new Worker '<%= asset_path 'workers/load_user_data_worker' %>'
   worker.onmessage = (e) ->
     if e.data.status == 200
-      $rootScope.subscribed_feeds_count = e.data.response["subscribed_feeds_count"]
+      $rootScope.subscribed_feeds_count = e.data.response.subscribed_feeds_count
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else

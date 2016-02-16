@@ -10,7 +10,6 @@ angular.module('feedbunch').service 'jobStateSvc',
   token = csrfTokenSvc.get_token()
 
   # Web worker to retrieve the state of all refresh feed jobs of the user
-  # A single worker associated with this service runs at all times.
   worker_refresh_feed_jobs_states = new Worker '<%= asset_path 'workers/load_refresh_feed_jobs_states_worker' %>'
   worker_refresh_feed_jobs_states.onmessage = (e) ->
     if e.data.status == 200
@@ -25,8 +24,29 @@ angular.module('feedbunch').service 'jobStateSvc',
     else
       timerFlagSvc.start 'error_loading_job_states'
 
+  # Web worker to retrieve the state of a single refresh feed job.
+  worker_single_refresh_job_state = new Worker '<%= asset_path 'workers/load_refresh_feed_jobs_states_worker' %>'
+  worker_single_refresh_job_state.onmessage = (e) ->
+    if e.data.status == 200
+      # Update the current state of the job
+      job = findSvc.find_refresh_feed_job e.data.response.id
+      job.state = e.data.response.state if job?
+      if job.state=="RUNNING"
+        # If job is running, keep periodically updating its state
+        load_refresh_feed_job_state e.data.response.id
+      else if job.state=="ERROR"
+        timerFlagSvc.start 'error_refreshing_feed'
+      else if job.state=="SUCCESS"
+        timerFlagSvc.start 'success_refresh_feed'
+        feedsFoldersSvc.load_feed job.feed_id
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else if e.data.status == 404
+      $rootScope.refresh_feed_job_states = []
+    else
+      timerFlagSvc.start 'error_loading_job_states'
+
   # Web worker to retrieve the state of all subscribe jobs of the user
-  # A single worker associated with this service runs at all times.
   worker_subscribe_jobs_states = new Worker '<%= asset_path 'workers/load_subscribe_jobs_states_worker' %>'
   worker_subscribe_jobs_states.onmessage = (e) ->
     if e.data.status == 200
@@ -56,22 +76,7 @@ angular.module('feedbunch').service 'jobStateSvc',
       timer = $timeout ->
         # Remove this timer from the list so that another update can be scheduled for 5 seconds in the future
         delete $rootScope.refresh_job_state_timers[job_id]
-        $http.get("/api/refresh_feed_job_states/#{job_id}.json")
-        .success (data)->
-          # Update the current state of the job in the root scope
-          job = findSvc.find_refresh_feed_job job_id
-          job.state = data.state if job?
-          if data.state=="RUNNING"
-          # If job is running, keep periodically updating its state
-            load_refresh_feed_job_state job_id
-          else if data.state=="ERROR"
-            timerFlagSvc.start 'error_refreshing_feed'
-          else if data.state=="SUCCESS"
-            timerFlagSvc.start 'success_refresh_feed'
-            feedsFoldersSvc.load_feed job.feed_id
-        .error (data, state)->
-          # if HTTP call has been prematurely cancelled, do nothing
-          timerFlagSvc.start 'error_loading_job_states' if state!=0 && state!=404
+        worker_single_refresh_job_state.postMessage token: token, id: job_id
       , 5000
       # Store timer so that a second timer for the same job state is not started in the future
       $rootScope.refresh_job_state_timers[job_id] = timer

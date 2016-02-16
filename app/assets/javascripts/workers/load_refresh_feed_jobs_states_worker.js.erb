@@ -8,5 +8,17 @@ importScripts('<%= asset_path 'workers/common/do_get' %>');
 onmessage = function(e){
   // CSRF token
   var token = e.data.token;
-  do_get("/api/refresh_feed_job_states.json", token, 0);
+
+  // id of a single job to query its state. Optional; if not present, the state of all refresh jobs will be queries
+  var id = e.data.id
+
+  var url = "";
+  if (id){
+    url = "/api/refresh_feed_job_states/" + id + ".json";
+  }
+  else {
+    url = "/api/refresh_feed_job_states.json";
+  }
+
+  do_get(url, token, 0);
 }

@@ -14,12 +14,11 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
   token = csrfTokenSvc.get_token()
 
   # Web worker to change a single entry state in a different thread.
-  # A single worker associated with this service runs at all times.
   worker_single_entry = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
   worker_single_entry.onmessage = (e) ->
     # Entry has changed state in the server
     if e.data.status == 200
-      entry = findSvc.find_entry e.data.data.entry.id
+      entry = findSvc.find_entry e.data.response.id
       entry.changing_state = false
       feedsFoldersSvc.reset_refresh_timer()
     else if e.data.status == 401 || e.data.status == 422
@@ -28,7 +27,6 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
       timerFlagSvc.start 'error_changing_entry_state'
 
   # Web worker to change state of all current entries in a different thread
-  # A single worker associated with this service runs at all times.
   worker_multiple_entries = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
   worker_multiple_entries.onmessage = (e) ->
     # Entry has changed state in the server
