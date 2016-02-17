@@ -12,7 +12,7 @@ angular.module('feedbunch').service 'userDataSvc',
   # Web worker to retrieve user data.
   worker = new Worker '<%= asset_path 'workers/load_user_data_worker' %>'
   worker.onmessage = (e) ->
-    if e.data.status == 200
+    if e.data.status == 200 || e.data.status == 304
       $rootScope.subscribed_feeds_count = e.data.response.subscribed_feeds_count
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'

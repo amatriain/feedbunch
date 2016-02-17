@@ -15,7 +15,7 @@ angular.module('feedbunch').service 'exportStateSvc',
   # Web worker to retrieve state of export job
   worker_load_export_state = new Worker '<%= asset_path 'workers/load_export_state_worker' %>'
   worker_load_export_state.onmessage = (e) ->
-    if e.data.status == 200
+    if e.data.status == 200 || e.data.status == 304
       $rootScope.show_export_alert = e.data.response.show_alert
       $rootScope.export_date = e.data.response.export_date
       $rootScope.export_state = e.data.response.state

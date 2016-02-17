@@ -12,7 +12,7 @@ angular.module('feedbunch').service 'jobStateSvc',
   # Web worker to retrieve the state of all refresh feed jobs of the user
   worker_refresh_jobs_states = new Worker '<%= asset_path 'workers/load_refresh_feed_jobs_states_worker' %>'
   worker_refresh_jobs_states.onmessage = (e) ->
-    if e.data.status == 200
+    if e.data.status == 200 || e.data.status == 304
       $rootScope.refresh_feed_job_states = e.data.response.slice()
       for job_state in e.data.response
         # Periodically update the state of any running jobs
@@ -27,7 +27,7 @@ angular.module('feedbunch').service 'jobStateSvc',
   # Web worker to retrieve the state of a single refresh feed job
   worker_single_refresh_job_state = new Worker '<%= asset_path 'workers/load_refresh_feed_jobs_states_worker' %>'
   worker_single_refresh_job_state.onmessage = (e) ->
-    if e.data.status == 200
+    if e.data.status == 200 || e.data.status == 304
       # Update the current state of the job
       job = findSvc.find_refresh_feed_job e.data.response.id
       if job?
@@ -48,7 +48,7 @@ angular.module('feedbunch').service 'jobStateSvc',
   # Web worker to retrieve the state of all subscribe jobs of the user
   worker_subscribe_jobs_states = new Worker '<%= asset_path 'workers/load_subscribe_jobs_states_worker' %>'
   worker_subscribe_jobs_states.onmessage = (e) ->
-    if e.data.status == 200
+    if e.data.status == 200 || e.data.status == 304
       $rootScope.subscribe_job_states = e.data.response.slice()
       for job_state in e.data.response
         # Periodically update the state of any running jobs
@@ -63,7 +63,7 @@ angular.module('feedbunch').service 'jobStateSvc',
   # Web worker to retrieve the state of a single subscribe job.
   worker_single_subscribe_job_state = new Worker '<%= asset_path 'workers/load_subscribe_jobs_states_worker' %>'
   worker_single_subscribe_job_state.onmessage = (e) ->
-    if e.data.status == 200
+    if e.data.status == 200 || e.data.status == 304
       job = findSvc.find_subscribe_job e.data.response.id
       if job?
         job.state = e.data.response.state
