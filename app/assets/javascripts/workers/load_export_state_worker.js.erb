@@ -1,0 +1,12 @@
+/**
+ * Web Worker to load state of export job in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_get' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+  do_get("/api/opml_exports.json", token, 0);
+}
