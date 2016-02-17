@@ -3,13 +3,13 @@
  * Built-in retrying if the network is down
  */
 
-// Maximum number of times the http POST is attempted
+// Maximum number of times the http PUT is attempted
 max_retries = 60;
 
-// Interval between HTTP POST retries
+// Interval between HTTP PUT retries
 retry_interval_msec = 1000;
 
-// Perform the HTTP POST
+// Perform the HTTP PUT
 do_put = function(url, token, data, retry_count) {
   var req = new XMLHttpRequest();
   req.onreadystatechange = function(e) {

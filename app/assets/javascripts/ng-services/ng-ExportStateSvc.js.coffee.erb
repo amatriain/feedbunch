@@ -13,8 +13,8 @@ angular.module('feedbunch').service 'exportStateSvc',
   token = csrfTokenSvc.get_token()
 
   # Web worker to retrieve state of export job
-  worker = new Worker '<%= asset_path 'workers/load_export_state_worker' %>'
-  worker.onmessage = (e) ->
+  worker_load_export_state = new Worker '<%= asset_path 'workers/load_export_state_worker' %>'
+  worker_load_export_state.onmessage = (e) ->
     if e.data.status == 200
       $rootScope.show_export_alert = e.data.response.show_alert
       $rootScope.export_date = e.data.response.export_date
@@ -35,6 +35,9 @@ angular.module('feedbunch').service 'exportStateSvc',
     else
       timerFlagSvc.start 'error_exporting'
 
+  # Web worker to hide export state alert
+  worker_hide_export_alert = new Worker '<%= asset_path 'workers/hide_export_alert_worker' %>'
+
   #---------------------------------------------
   # PRIVATE FUNCTION: load export process state via AJAX
   #
@@ -50,7 +53,7 @@ angular.module('feedbunch').service 'exportStateSvc',
   #---------------------------------------------
   load_export_state = (show_message=false)->
     show_finished_message = show_message
-    worker.postMessage {token: token, show_message: show_message}
+    worker_load_export_state.postMessage {token: token, show_message: show_message}
 
   service =
 
@@ -64,7 +67,7 @@ angular.module('feedbunch').service 'exportStateSvc',
     #---------------------------------------------
     hide_alert: ->
       $rootScope.show_export_alert = false
-      $http.put("/api/opml_exports.json", opml_export: {show_alert: 'false'})
+      worker_hide_export_alert.postMessage {token: token}
 
   return service
 ]
