@@ -6,6 +6,9 @@ angular.module('feedbunch').service 'exportStateSvc',
 ['$rootScope', '$http', '$timeout', 'csrfTokenSvc', 'feedsFoldersSvc', 'timerFlagSvc',
 ($rootScope, $http, $timeout, csrfTokenSvc, feedsFoldersSvc, timerFlagSvc)->
 
+  # Flag to indicate if a message should appear when the export job finishes running.
+  show_finished_message = false
+
   # CSRF token
   token = csrfTokenSvc.get_token()
 
@@ -21,9 +24,9 @@ angular.module('feedbunch').service 'exportStateSvc',
         $timeout ->
           load_export_state true
         , 5000
-      else if e.data.response.state == "ERROR" && e.data.response.show_message
+      else if e.data.response.state == "ERROR" && show_finished_message
         timerFlagSvc.start 'error_exporting'
-      else if e.data.response.state == "SUCCESS" && e.data.response.show_message
+      else if e.data.response.state == "SUCCESS" && show_finished_message
         # Automatically load new feeds and folders without needing a refresh
         feedsFoldersSvc.load_data()
         timerFlagSvc.start 'success_exporting'
@@ -46,6 +49,7 @@ angular.module('feedbunch').service 'exportStateSvc',
   # afterwards, then and only then will a message be displayed.
   #---------------------------------------------
   load_export_state = (show_message=false)->
+    show_finished_message = show_message
     worker.postMessage {token: token, show_message: show_message}
 
   service =
