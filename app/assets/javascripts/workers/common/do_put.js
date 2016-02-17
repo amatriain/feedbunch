@@ -21,12 +21,12 @@ do_put = function(url, token, data, retry_count) {
         }
         else {
           // Unrecoverable failure
-          postMessage({status: req.status, data: data});
+          postMessage({status: req.status, params: data});
         }
       }
       else {
         // Success (actual HTTP status may indicate an error response, main thread handles it)
-        postMessage({status: req.status, data: data});
+        postMessage({status: req.status, params: data});
       }
     }
   };
