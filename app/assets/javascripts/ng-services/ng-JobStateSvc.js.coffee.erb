@@ -42,7 +42,7 @@ angular.module('feedbunch').service 'jobStateSvc',
           feedsFoldersSvc.load_feed job.feed_id
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
-    else
+    else if e.data.status != 404
       timerFlagSvc.start 'error_loading_job_states'
 
   # Web worker to retrieve the state of all subscribe jobs of the user
@@ -79,7 +79,7 @@ angular.module('feedbunch').service 'jobStateSvc',
           userDataSvc.load_data()
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
-    else
+    else if e.data.status != 404
       timerFlagSvc.start 'error_subscribing'
 
   # Web worker to delete a refresh feed job state
