@@ -6,6 +6,39 @@ angular.module('feedbunch').service 'importStateSvc',
 ['$rootScope', '$http', '$timeout', 'feedsFoldersSvc', 'userDataSvc', 'timerFlagSvc',
 ($rootScope, $http, $timeout, feedsFoldersSvc, userDataSvc, timerFlagSvc)->
 
+  # Flag to indicate if a message should appear when the import job finishes running.
+  show_finished_message = false
+
+  # CSRF token
+  token = csrfTokenSvc.get_token()
+
+  # Web worker to retrieve state of import job
+  worker_load_import_state = new Worker '<%= asset_path 'workers/load_import_state_worker' %>'
+  worker_load_import_state.onmessage = (e) ->
+    if e.data.status == 200 || e.data.status == 304
+      $rootScope.show_import_alert = e.data.response.show_alert
+      $rootScope.import_state = e.data.response.state
+      if e.data.response.state == "RUNNING"
+        # Update state from the server periodically while import is running
+        $rootScope.import_processed = e.data.response.import.processed
+        $rootScope.import_total = e.data.response.import.total
+        $timeout ->
+          load_import_state true
+        , 5000
+      else if e.data.response.state == "ERROR" && show_finished_message
+        timerFlagSvc.start 'error_importing'
+      else if e.data.response.state == "SUCCESS"
+        $rootScope.import_failures = e.data.response.failures
+        if show_finished_message
+          # Automatically load new feeds and folders without needing a refresh
+          feedsFoldersSvc.load_data()
+          userDataSvc.load_data()
+          timerFlagSvc.start 'success_importing'
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else
+      timerFlagSvc.start 'error_importing'
+
   #---------------------------------------------
   # PRIVATE FUNCTION: load import process state via AJAX
   #
@@ -21,26 +54,8 @@ angular.module('feedbunch').service 'importStateSvc',
   # folders will be inserted in the model automatically.
   #---------------------------------------------
   load_import_state = (show_alerts=false)->
-    $http.get("/api/opml_imports.json")
-    .success (data)->
-      $rootScope.show_import_alert = data["show_alert"]
-      $rootScope.import_state = data["state"]
-      if data["state"] == "RUNNING"
-        # Update state from the server periodically while import is running
-        $rootScope.import_processed = data["import"]["processed"]
-        $rootScope.import_total = data["import"]["total"]
-        $timeout ->
-          load_import_state true
-        , 5000
-      else if data["state"] == "ERROR" && show_alerts
-        timerFlagSvc.start 'error_importing'
-      else if data["state"] == "SUCCESS"
-        $rootScope.import_failures = data["failures"]
-        if show_alerts
-          # Automatically load new feeds and folders without needing a refresh
-          feedsFoldersSvc.load_data()
-          userDataSvc.load_data()
-          timerFlagSvc.start 'success_importing'
+    show_finished_message = show_message
+    worker_load_import_state.postMessage {token: token}
 
   service =
 

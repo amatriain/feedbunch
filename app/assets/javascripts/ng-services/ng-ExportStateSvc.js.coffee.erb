@@ -53,7 +53,7 @@ angular.module('feedbunch').service 'exportStateSvc',
   #---------------------------------------------
   load_export_state = (show_message=false)->
     show_finished_message = show_message
-    worker_load_export_state.postMessage {token: token, show_message: show_message}
+    worker_load_export_state.postMessage {token: token}
 
   service =
 
