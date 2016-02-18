@@ -19,9 +19,13 @@ angular.module('feedbunch').service 'userDataSvc',
     else
       timerFlagSvc.start 'error_loading_user_data'
 
-  #---------------------------------------------
-  # Load user configuration into the root scope
-  #---------------------------------------------
-  load_data: ->
-    worker.postMessage {token: token}
+  service =
+
+    #---------------------------------------------
+    # Load user configuration into the root scope
+    #---------------------------------------------
+    load_data: ->
+      worker.postMessage {token: token}
+
+  return service
 ]
