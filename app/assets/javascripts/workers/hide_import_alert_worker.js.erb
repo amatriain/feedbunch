@@ -1,0 +1,16 @@
+/**
+ * Web Worker to hide the alert with the state of an OPML import job in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_put' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+
+  // Data to send in the PUT
+  var data = {opml_import: {show_alert: 'false'}};
+
+  do_put("/api/opml_imports.json", token, data, 0);
+}

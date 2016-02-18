@@ -39,6 +39,9 @@ angular.module('feedbunch').service 'importStateSvc',
     else
       timerFlagSvc.start 'error_importing'
 
+  # Web worker to hide import state alert
+  worker_hide_import_alert = new Worker '<%= asset_path 'workers/hide_import_alert_worker' %>'
+
   #---------------------------------------------
   # PRIVATE FUNCTION: load import process state via AJAX
   #
@@ -69,7 +72,7 @@ angular.module('feedbunch').service 'importStateSvc',
     #---------------------------------------------
     hide_alert: ->
       $rootScope.show_import_alert = false
-      $http.put("/api/opml_imports.json", opml_import: {show_alert: 'false'})
+      worker_hide_import_alert.postMessage {token: token}
 
   return service
 ]
