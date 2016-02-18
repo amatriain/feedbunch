@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'exportStateSvc',
-['$rootScope', '$http', '$timeout', 'csrfTokenSvc', 'feedsFoldersSvc', 'timerFlagSvc',
-($rootScope, $http, $timeout, csrfTokenSvc, feedsFoldersSvc, timerFlagSvc)->
+['$rootScope', '$timeout', 'csrfTokenSvc', 'feedsFoldersSvc', 'timerFlagSvc',
+($rootScope, $timeout, csrfTokenSvc, feedsFoldersSvc, timerFlagSvc)->
 
   # Flag to indicate if a message should appear when the export job finishes running.
   show_finished_message = false
