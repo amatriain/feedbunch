@@ -1,0 +1,12 @@
+/**
+ * Web Worker to load user config in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_get' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+  do_get("/api/user_config.json", token, 0);
+}
