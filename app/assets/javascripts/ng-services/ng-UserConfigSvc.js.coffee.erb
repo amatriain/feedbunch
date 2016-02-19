@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'userConfigSvc',
-['$rootScope', 'timerFlagSvc', 'quickReadingSvc', 'openAllEntriesSvc', 'tourSvc', 'keyboardShortcutsSvc',
-($rootScope, timerFlagSvc, quickReadingSvc, openAllEntriesSvc, tourSvc, keyboardShortcutsSvc)->
+['$rootScope', 'csrfTokenSvc', 'timerFlagSvc', 'quickReadingSvc', 'openAllEntriesSvc', 'tourSvc', 'keyboardShortcutsSvc',
+($rootScope, csrfTokenSvc, timerFlagSvc, quickReadingSvc, openAllEntriesSvc, tourSvc, keyboardShortcutsSvc)->
 
   # CSRF token
   token = csrfTokenSvc.get_token()

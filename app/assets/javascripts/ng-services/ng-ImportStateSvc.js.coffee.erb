@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'importStateSvc',
-['$rootScope', '$timeout', 'feedsFoldersSvc', 'userDataSvc', 'timerFlagSvc',
-($rootScope, $timeout, feedsFoldersSvc, userDataSvc, timerFlagSvc)->
+['$rootScope', '$timeout', 'csrfTokenSvc', 'feedsFoldersSvc', 'userDataSvc', 'timerFlagSvc',
+($rootScope, $timeout, csrfTokenSvc, feedsFoldersSvc, userDataSvc, timerFlagSvc)->
 
   # Flag to indicate if a message should appear when the import job finishes running.
   show_finished_message = false
@@ -46,17 +46,17 @@ angular.module('feedbunch').service 'importStateSvc',
   # PRIVATE FUNCTION: load import process state via AJAX
   #
   # Note.- The first time this is invoked on page load by the angular controller, passing
-  # a false to the "show_alerts" argument. This means that if the import is not running
+  # a false to the "show_message" argument. This means that if the import is not running
   # (error, success or none, doesn't matter), no alert will be shown.
   #
   # However if the import is found to be running, the function will be called every 5 seconds, with
-  # a true to the "show_alerts" argument.
+  # a true to the "show_message" argument.
   #
   # Basically this means that if when the page is loaded the import is running, and it finishes
   # afterwards, then and only then will an alert be displayed. Also when this happens new feeds and
   # folders will be inserted in the model automatically.
   #---------------------------------------------
-  load_import_state = (show_alerts=false)->
+  load_import_state = (show_message=false)->
     show_finished_message = show_message
     worker_load_import_state.postMessage {token: token}
 
