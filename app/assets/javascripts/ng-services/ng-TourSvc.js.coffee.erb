@@ -3,8 +3,19 @@
 ########################################################
 
 angular.module('feedbunch').service 'tourSvc',
-['$rootScope', '$http', '$timeout', 'timerFlagSvc',
-($rootScope, $http, $timeout, timerFlagSvc)->
+['$rootScope', '$http', '$timeout', 'csrfTokenSvc', 'timerFlagSvc',
+($rootScope, $http, $timeout, csrfTokenSvc, timerFlagSvc)->
+
+  # CSRF token
+  token = csrfTokenSvc.get_token()
+
+  # Web worker to hide a tour
+  worker_hide_tours = new Worker '<%= asset_path 'workers/hide_tour_worker' %>'
+  worker_hide_tours.onmessage = (e) ->
+    if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else if e.data.status != 200 && e.data.status != 304
+      timerFlagSvc.start 'error_changing_show_tour'
 
   #--------------------------------------------
   # Media query to show the main app tour only in screens bigger than a smartphone
@@ -21,45 +32,35 @@ angular.module('feedbunch').service 'tourSvc',
   #--------------------------------------------
   dont_show_main_tour = ->
     $rootScope.show_main_tour = false
-    $http.put("/api/user_config.json", user_config: {show_main_tour: 'false'})
-    .error (data, status)->
-      timerFlagSvc.start 'error_changing_show_tour' if status!=0
+    worker_hide_tours.postMessage {token: token, show_main_tour: 'false'}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_mobile_tour flag for the current user.
   #--------------------------------------------
   dont_show_mobile_tour = ->
     $rootScope.show_mobile_tour = false
-    $http.put("/api/user_config.json", user_config: {show_mobile_tour: 'false'})
-    .error (data, status)->
-      timerFlagSvc.start 'error_changing_show_tour' if status!=0
+    worker_hide_tours.postMessage {token: token, show_mobile_tour: 'false'}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_feed_tour flag for the current user.
   #--------------------------------------------
   dont_show_feed_tour = ->
     $rootScope.show_feed_tour = false
-    $http.put("/api/user_config.json", user_config: {show_feed_tour: 'false'})
-    .error (data, status)->
-      timerFlagSvc.start 'error_changing_show_tour' if status!=0
+    worker_hide_tours.postMessage {token: token, show_feed_tour: 'false'}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_entry_tour flag for the current user.
   #--------------------------------------------
   dont_show_entry_tour = ->
     $rootScope.show_entry_tour = false
-    $http.put("/api/user_config.json", user_config: {show_entry_tour: 'false'})
-    .error (data, status)->
-      timerFlagSvc.start 'error_changing_show_tour' if status!=0
+    worker_hide_tours.postMessage {token: token, show_entry_tour: 'false'}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_kb_shortcuts_tour flag for the current user.
   #--------------------------------------------
   dont_show_kb_shortcuts_tour = ->
     $rootScope.show_kb_shortcuts_tour = false
-    $http.put("/api/user_config.json", user_config: {show_kb_shortcuts_tour: 'false'})
-    .error (data, status)->
-      timerFlagSvc.start 'error_changing_show_tour' if status!=0
+    worker_hide_tours.postMessage {token: token, show_kb_shortcuts_tour: 'false'}
 
   #---------------------------------------------
   # PRIVATE FUNCTION: show the main application tour.
