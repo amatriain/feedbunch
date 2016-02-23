@@ -25,6 +25,7 @@ angular.module('feedbunch').service 'tourSvc',
   worker_load_tours.onmessage = (e) ->
     if e.data.status == 200 || e.data.status == 304
       if e.data.response.tour == TOURS.main_tour
+        delay = 0
         tour =
           id: 'main-tour',
           showCloseButton: true,
@@ -34,7 +35,43 @@ angular.module('feedbunch').service 'tourSvc',
           onClose: main_tour_end,
           i18n: e.data.response.i18n,
           steps: e.data.response.steps
+      else if e.data.response.tour == TOURS.mobile_tour
+        delay = 0
+        tour =
+          id: 'mobile-tour',
+          showCloseButton: true,
+          showPrevButton: false,
+          showNextButton: true,
+          onEnd: dont_show_mobile_tour,
+          onClose: dont_show_mobile_tour,
+          i18n: e.data.response.i18n,
+          steps: e.data.response.steps
+      else if e.data.response.tour == TOURS.feed_tour
+        delay = 0
+        tour =
+          id: 'feed-tour',
+          showCloseButton: true,
+          showPrevButton: false,
+          showNextButton: true,
+          onEnd: dont_show_feed_tour,
+          onClose: dont_show_feed_tour,
+          i18n: e.data.response.i18n,
+          steps: e.data.response.steps
+      else if e.data.response.tour == TOURS.entry_tour
+        # Show entry tour after a 600ms delay, to give entry open/autoscroll
+        # animation time to finish.
+        delay = 600
+        tour =
+          id: 'entry-tour',
+          showCloseButton: true,
+          showPrevButton: false,
+          showNextButton: true,
+          onEnd: dont_show_entry_tour,
+          onClose: dont_show_entry_tour,
+          i18n: e.data.response.i18n,
+          steps: e.data.response.steps
       else if e.data.response.tour == TOURS.kb_shortcuts_tour
+        delay = 0
         tour =
           id: 'kb_shortcuts-tour',
           showCloseButton: true,
@@ -45,7 +82,9 @@ angular.module('feedbunch').service 'tourSvc',
           i18n: e.data.response.i18n,
           steps: e.data.response.steps
 
-      hopscotch.startTour tour
+      $timeout ->
+        hopscotch.startTour tour
+      , delay
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
@@ -123,20 +162,7 @@ angular.module('feedbunch').service 'tourSvc',
     if $rootScope.show_mobile_tour
       # The mobile tour is only shown in smartphone-sized screens
       enquire.register xs_max_media_query, ->
-        $http.get("/api/tours/mobile.json")
-        .success (data)->
-          tour =
-            id: 'mobile-tour',
-            showCloseButton: true,
-            showPrevButton: false,
-            showNextButton: true,
-            onEnd: dont_show_mobile_tour,
-            onClose: dont_show_mobile_tour,
-            i18n: data['i18n'],
-            steps: data['steps']
-          hopscotch.startTour tour
-        .error (data, status)->
-          timerFlagSvc.start 'error_loading_tour' if status!=0
+        worker_load_tours.postMessage {token: token, tour: TOURS.mobile_tour}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: at the end of main tour, mark show_main_tour flag to false so it's not shown again; and if the
@@ -181,47 +207,14 @@ angular.module('feedbunch').service 'tourSvc',
       if $rootScope.show_feed_tour
         # The feed tour is only shown in screens bigger than a smartphone
         enquire.register sm_min_media_query, ->
-          $http.get("/api/tours/feed.json")
-          .success (data)->
-            tour =
-              id: 'feed-tour',
-              showCloseButton: true,
-              showPrevButton: false,
-              showNextButton: true,
-              onEnd: dont_show_feed_tour,
-              onClose: dont_show_feed_tour,
-              i18n: data['i18n'],
-              steps: data['steps']
-            hopscotch.startTour tour
-          .error (data, status)->
-            timerFlagSvc.start 'error_loading_tour' if status!=0
+          worker_load_tours.postMessage {token: token, tour: TOURS.feed_tour}
 
     #---------------------------------------------
     # Show the entry application tour.
     #---------------------------------------------
     show_entry_tour: ->
       if $rootScope.show_entry_tour
-        $http.get("/api/tours/entry.json")
-        .success (data)->
-          tour =
-            id: 'entry-tour',
-            showCloseButton: true,
-            showPrevButton: false,
-            showNextButton: true,
-            onEnd: dont_show_entry_tour,
-            onClose: dont_show_entry_tour,
-            i18n: data['i18n'],
-            steps: data['steps']
-          # Show entry tour after a 600ms delay, to give entry open/autoscroll
-          # animation time to finish.
-          $timeout ->
-            hopscotch.startTour tour
-          , 600
-
-        .error (data, status)->
-          timerFlagSvc.start 'error_loading_tour' if status!=0
-
-
+        worker_load_tours.postMessage {token: token, tour: TOURS.entry_tour}
 
     #---------------------------------------------
     # Reset all application tours, so that they are shown again from the beginning.
