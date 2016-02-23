@@ -28,60 +28,39 @@ angular.module('feedbunch').service 'tourSvc',
         delay = 0
         tour =
           id: 'main-tour',
-          showCloseButton: true,
-          showPrevButton: false,
-          showNextButton: true,
           onEnd: main_tour_end,
-          onClose: main_tour_end,
-          i18n: e.data.response.i18n,
-          steps: e.data.response.steps
+          onClose: main_tour_end
       else if e.data.response.tour == TOURS.mobile_tour
         delay = 0
         tour =
           id: 'mobile-tour',
-          showCloseButton: true,
-          showPrevButton: false,
-          showNextButton: true,
           onEnd: dont_show_mobile_tour,
-          onClose: dont_show_mobile_tour,
-          i18n: e.data.response.i18n,
-          steps: e.data.response.steps
+          onClose: dont_show_mobile_tour
       else if e.data.response.tour == TOURS.feed_tour
         delay = 0
         tour =
           id: 'feed-tour',
-          showCloseButton: true,
-          showPrevButton: false,
-          showNextButton: true,
           onEnd: dont_show_feed_tour,
-          onClose: dont_show_feed_tour,
-          i18n: e.data.response.i18n,
-          steps: e.data.response.steps
+          onClose: dont_show_feed_tour
       else if e.data.response.tour == TOURS.entry_tour
         # Show entry tour after a 600ms delay, to give entry open/autoscroll
         # animation time to finish.
         delay = 600
         tour =
           id: 'entry-tour',
-          showCloseButton: true,
-          showPrevButton: false,
-          showNextButton: true,
           onEnd: dont_show_entry_tour,
-          onClose: dont_show_entry_tour,
-          i18n: e.data.response.i18n,
-          steps: e.data.response.steps
+          onClose: dont_show_entry_tour
       else if e.data.response.tour == TOURS.kb_shortcuts_tour
         delay = 0
         tour =
           id: 'kb_shortcuts-tour',
-          showCloseButton: true,
-          showPrevButton: false,
-          showNextButton: true,
           onEnd: dont_show_kb_shortcuts_tour,
-          onClose: dont_show_kb_shortcuts_tour,
-          i18n: e.data.response.i18n,
-          steps: e.data.response.steps
-
+          onClose: dont_show_kb_shortcuts_tour
+      tour.showCloseButton = true
+      tour.showPrevButton = false
+      tour.showNextButton = true
+      tour.i18n = e.data.response.i18n
+      tour.steps = e.data.response.steps
       $timeout ->
         hopscotch.startTour tour
       , delay
