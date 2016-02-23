@@ -6,6 +6,9 @@ angular.module('feedbunch').service 'tourSvc',
 ['$rootScope', '$http', '$timeout', 'csrfTokenSvc', 'timerFlagSvc',
 ($rootScope, $http, $timeout, csrfTokenSvc, timerFlagSvc)->
 
+  # Constants for the different tour URL fragments
+  TOURS = {main_tour: 'main', mobile_tour: 'mobile', feed_tour: 'feed', entry_tour: 'entry', kb_shortcuts_tour: 'kb_shortcuts'}
+
   # CSRF token
   token = csrfTokenSvc.get_token()
 
@@ -16,6 +19,37 @@ angular.module('feedbunch').service 'tourSvc',
       $window.location.href = '/login'
     else if e.data.status != 200 && e.data.status != 304
       timerFlagSvc.start 'error_changing_show_tour'
+
+  # Web worker to load tour texts
+  worker_load_tours = new Worker '<%= asset_path 'workers/load_tours_worker' %>'
+  worker_load_tours.onmessage = (e) ->
+    if e.data.status == 200 || e.data.status == 304
+      if e.data.response.tour == TOURS.main_tour
+        tour =
+          id: 'main-tour',
+          showCloseButton: true,
+          showPrevButton: false,
+          showNextButton: true,
+          onEnd: main_tour_end,
+          onClose: main_tour_end,
+          i18n: e.data.response.i18n,
+          steps: e.data.response.steps
+      else if e.data.response.tour == TOURS.kb_shortcuts_tour
+        tour =
+          id: 'kb_shortcuts-tour',
+          showCloseButton: true,
+          showPrevButton: false,
+          showNextButton: true,
+          onEnd: dont_show_kb_shortcuts_tour,
+          onClose: dont_show_kb_shortcuts_tour,
+          i18n: e.data.response.i18n,
+          steps: e.data.response.steps
+
+      hopscotch.startTour tour
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else
+      timerFlagSvc.start 'error_loading_tour'
 
   #--------------------------------------------
   # Media query to show the main app tour only in screens bigger than a smartphone
@@ -70,20 +104,7 @@ angular.module('feedbunch').service 'tourSvc',
     if $rootScope.show_main_tour
       # The main tour is only shown in screens bigger than a smartphone
       enquire.register sm_min_media_query, ->
-        $http.get("/api/tours/main.json")
-        .success (data)->
-          tour =
-            id: 'main-tour',
-            showCloseButton: true,
-            showPrevButton: false,
-            showNextButton: true,
-            onEnd: main_tour_end,
-            onClose: main_tour_end,
-            i18n: data['i18n'],
-            steps: data['steps']
-          hopscotch.startTour tour
-        .error (data, status)->
-          timerFlagSvc.start 'error_loading_tour' if status!=0
+        worker_load_tours.postMessage {token: token, tour: TOURS.main_tour}
 
   #---------------------------------------------
   # PRIVATE FUNCTION: show the keyboard shortcuts application tour.
@@ -93,20 +114,7 @@ angular.module('feedbunch').service 'tourSvc',
     if !$rootScope.show_main_tour && $rootScope.show_kb_shortcuts_tour
       # The keyboards shortcuts tour is only shown in screens bigger than a smartphone
       enquire.register sm_min_media_query, ->
-        $http.get("/api/tours/kb_shortcuts.json")
-        .success (data)->
-          tour =
-            id: 'kb_shortcuts-tour',
-            showCloseButton: true,
-            showPrevButton: false,
-            showNextButton: true,
-            onEnd: dont_show_kb_shortcuts_tour,
-            onClose: dont_show_kb_shortcuts_tour,
-            i18n: data['i18n'],
-            steps: data['steps']
-          hopscotch.startTour tour
-        .error (data, status)->
-          timerFlagSvc.start 'error_loading_tour' if status!=0
+        worker_load_tours.postMessage {token: token, tour: TOURS.kb_shortcuts_tour}
 
   #---------------------------------------------
   # PRIVATE FUNCTION: show the mobile application tour.

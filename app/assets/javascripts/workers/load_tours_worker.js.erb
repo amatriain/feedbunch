@@ -1,0 +1,18 @@
+/**
+ * Web Worker to load tour texts in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_get' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+
+  // Which tour to load
+  var tour = e.data.tour
+
+  var url = "/api/tours/" + tour + ".json";
+
+  do_get(url, token, 0);
+}
