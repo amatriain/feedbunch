@@ -1,0 +1,37 @@
+/**
+ * Web Worker to move feeds into or out of folders in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_put' %>');
+importScripts('<%= asset_path 'workers/common/do_post' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+
+  // ID of the feed to move. Mandatory.
+  var feed_id = e.data.feed_id;
+
+  // ID of the folder to move the feed into. It can have the special value "none", in which case
+  // the feed will be moved out of its current folder.
+  // Not mandatory: if a new folder is being created as part of the action, the ID has not yet been asigned.
+  var folder_id = e.data.folder_id;
+
+  // Title of the new feed to be created, if any
+  var title = e.data.title;
+
+  var url = "";
+  var data = {folder: {feed_id: feed_id}};
+
+  if (folder_id){
+    url = "/api/folders/" + folder_id + ".json";
+    data.folder.id = folder_id
+    do_put(url, token, data, 0);
+  }
+  else {
+    url = "/api/folders.json";
+    data.folder.title = title;
+    do_post(url, token, data, 0);
+  }
+}

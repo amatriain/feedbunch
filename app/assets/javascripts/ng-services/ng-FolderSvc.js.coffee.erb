@@ -1,0 +1,110 @@
+########################################################
+# AngularJS service to manage folders
+########################################################
+
+angular.module('feedbunch').service 'folderSvc',
+['$rootScope', 'csrfTokenSvc', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
+'feedsFoldersSvc', 'unreadCountSvc', 'findSvc',
+($rootScope, csrfTokenSvc, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
+feedsFoldersSvc, unreadCountSvc, findSvc)->
+
+  # Constant for the special "no folder" case
+  NO_FOLDER = 'none'
+
+  # CSRF token for POST
+  token = csrfTokenSvc.get_token()
+
+  # Web worker to move feeds into and out of folders in a different thread.
+  worker = new Worker '<%= asset_path 'workers/move_feed_folder_worker' %>'
+  worker.onmessage = (e) ->
+    if e.data.status == 200
+      # success moving feed out of its folder
+      if e.data.params.folder.id && e.data.params.folder.id == NO_FOLDER
+        timerFlagSvc.start 'success_remove_from_folder'
+        feedsFoldersSvc.load_folders()
+      # success moving feed into an existing folder
+      else if e.data.params.folder.id
+        timerFlagSvc.start 'success_move_to_folder'
+        feedsFoldersSvc.load_folders()
+      # success moving feed into a new folder
+      else if e.data.params.folder.title
+        timerFlagSvc.start 'success_move_to_new_folder'
+        feedsFoldersSvc.add_folder e.data.response
+        feed = findSvc.find_feed e.data.params.folder.feed_id
+        feed.folder_id = e.data.response.id
+        feedsFoldersSvc.load_folders()
+        # open the new folder
+        openFolderSvc.set e.data.response
+    else if e.data.status == 304
+      # Tried to create a folder with the same name as another that already exists
+      timerFlagSvc.start 'error_already_existing_folder'
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else
+      # error moving feed into an existing folder or out of its folder
+      if e.data.params.folder.id
+        timerFlagSvc.start 'error_managing_folders'
+      # error moving feed into a new folder
+      else if e.data.params.folder.title
+        timerFlagSvc.start 'error_creating_folder'
+
+  service =
+    #--------------------------------------------
+    # Remove a feed from a folder
+    #--------------------------------------------
+    remove_from_folder: ->
+      current_feed = currentFeedSvc.get()
+      if current_feed
+        current_feed.folder_id = NO_FOLDER
+        worker.postMessage {token: token, feed_id: current_feed.id, folder_id: NO_FOLDER}
+
+    #--------------------------------------------
+    # Move a feed to an already existing folder
+    #--------------------------------------------
+    move_to_folder: (folder)->
+      current_feed = currentFeedSvc.get()
+      if current_feed
+        current_feed.folder_id = folder.id
+        # open the new folder
+        openFolderSvc.set folder
+        worker.postMessage {token: token, feed_id: current_feed.id, folder_id: folder.id}
+
+    #--------------------------------------------
+    # Move a feed to a new folder
+    #--------------------------------------------
+
+    move_to_new_folder: (title)->
+      current_feed = currentFeedSvc.get()
+      if title && current_feed
+        worker.postMessage {token: token, feed_id: current_feed.id, title: title}
+
+    #--------------------------------------------
+    # Function to filter folders which should be visible. Returns a function that returns true if
+    # the folder should be visible, false otherwise.
+    #--------------------------------------------
+    show_folder_filter: (folder)->
+      return (folder)->
+        # If "show_read" flag is set to true, always show all folders
+        if $rootScope.show_read
+          return true
+
+        # Always show the currently selected folder, or the folder of the currently selected feed
+        current_feed = currentFeedSvc.get()
+        current_folder = currentFolderSvc.get()
+        if current_feed?.folder_id == folder.id || current_folder?.id == folder.id
+          return true
+
+        # Always show a folder if any of its feeds has a job state alert in the start page
+        feeds = findSvc.find_folder_feeds folder
+        if feeds?.length > 0
+          for feed in feeds
+            subscribeJobStates = findSvc.find_feed_subscribe_jobs feed.id
+            return true if subscribeJobStates?.length > 0
+            refreshFeedJobStates = findSvc.find_feed_refresh_jobs feed.id
+            return true if refreshFeedJobStates?.length > 0
+
+        # If the folder is not in any of the above cases, show it only if it has unread entries
+        return unreadCountSvc.folder_unread_entries(folder) > 0
+
+  return service
+]
