@@ -6,7 +6,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
 ['$rootScope', '$http', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
 'feedsPaginationSvc', 'cleanupSvc', 'favicoSvc', 'animationsSvc', 'highlightedSidebarLinkSvc',
 ($rootScope, $http, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
- feedsPaginationSvc, cleanupSvc, favicoSvc, animationsSvc, highlightedSidebarLinkSvc)->
+feedsPaginationSvc, cleanupSvc, favicoSvc, animationsSvc, highlightedSidebarLinkSvc)->
 
   # Maximum number of feeds in each page.
   # This MUST match the feeds page size set in the server!
@@ -120,8 +120,7 @@ angular.module('feedbunch').service 'feedsFoldersSvc',
         for folder in $rootScope.folders
           existing_folder = findSvc.find_folder folder.id, data
           if !existing_folder?
-            index = $rootScope.folders.indexOf folder
-            $rootScope.folders.splice index, 1
+            cleanupSvc.remove_folder folder.id
 
       # Add new folders
       if data? && data.length? > 0
