@@ -1,0 +1,69 @@
+########################################################
+# AngularJS service to manage subscribing and unsubscribing from feeds
+########################################################
+
+angular.module('feedbunch').service 'subscriptionSvc',
+['$rootScope', 'csrfTokenSvc', 'timerFlagSvc', 'entriesPaginationSvc', 'feedsFoldersSvc', 'cleanupSvc',
+'favicoSvc', 'startPageSvc',
+($rootScope, csrfTokenSvc, timerFlagSvc, entriesPaginationSvc, feedsFoldersSvc, cleanupSvc,
+favicoSvc, startPageSvc)->
+
+  # CSRF token for POST
+  token = csrfTokenSvc.get_token()
+
+  # Web worker to add and remove subscriptions in a different thread.
+  worker = new Worker '<%= asset_path 'workers/subscriptions_worker' %>'
+  worker.onmessage = (e) ->
+    if e.data.status == 200
+      # Successfully added subscription
+      if e.data.params.feed_url
+        timerFlagSvc.start 'success_subscribe'
+      # Successfully removed subscription
+      else if e.data.params.feed_id
+        cleanupSvc.remove_feed e.data.params.feed_id
+        favicoSvc.update_unread_badge()
+        # Load folders again so that if the folder has been deleted (no more feeds in it), the client is aware and removes
+        # it from the view
+        feedsFoldersSvc.load_folders()
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else if e.data.status == 403 && e.data.params.feed_url
+      # User attempted to subscribe to a blacklisted url
+      timerFlagSvc.start 'blacklisted_url'
+    else
+      # Error adding subscription
+      if e.data.params.feed_url
+        timerFlagSvc.start 'error_subscribing'
+      # Error removing subscription
+      else if e.data.params.feed_id
+        timerFlagSvc.start 'error_unsubscribing'
+
+  service =
+
+    #---------------------------------------------
+    # Add a subscription to a feed
+    #---------------------------------------------
+    subscribe: (url)->
+      # Feed URL
+      if url
+        worker.postMessage {token: token, feed_url: url}
+        startPageSvc.show_start_page()
+
+    unsubscribe: ->
+      current_feed = $rootScope.current_feed
+      if current_feed
+        # Remove feed from feeds list
+        $rootScope.subscribed_feeds_count -= 1
+        cleanupSvc.remove_feed current_feed.id
+        favicoSvc.update_unread_badge()
+
+        # Reset the timer that updates feeds every minute, to give the server time to
+        # actually delete the feed subscription before the next update
+        feedsFoldersSvc.reset_refresh_timer()
+
+        worker.postMessage {token: token, feed_id: current_feed.id}
+        startPageSvc.show_start_page()
+
+  return service
+
+]

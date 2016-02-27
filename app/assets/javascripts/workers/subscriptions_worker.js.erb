@@ -1,0 +1,31 @@
+/**
+ * Web Worker to add or remove subscriptions in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_post' %>');
+importScripts('<%= asset_path 'workers/common/do_delete' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+
+  // URL of the feed to subscribe
+  var feed_url = e.data.feed_url;
+
+  // ID of the feed to unsubscribe
+  var feed_id = e.data.feed_id;
+
+  var url = "";
+  // Add a subscription
+  if (feed_url){
+    url = "/api/feeds.json";
+    var data = {feed: {url: feed_url}};
+    do_post(url, token, data, 0);
+  }
+  // Remove a subscription
+  else if (feed_id){
+    url = "/api/feeds/" + feed_id + ".json";
+    do_delete(url, token, 0);
+  }
+}
