@@ -6,11 +6,14 @@ importScripts('<%= asset_path 'workers/common/do_delete' %>');
 
 // Callback for messages from the main thread
 onmessage = function(e){
+  // Constants for the different operations the web worker can perform
+  var DELETE_REFRESH_FEED_JOB_STATE = "delete_refresh_feed_job_state";
+
   // CSRF token
   var token = e.data.token;
 
   // id of the job state to delete
   var id = e.data.id;
 
-  do_delete("/api/refresh_feed_job_states/" + id + ".json", token, 0);
+  do_delete(DELETE_REFRESH_FEED_JOB_STATE, "/api/refresh_feed_job_states/" + id + ".json", token, 0);
 }

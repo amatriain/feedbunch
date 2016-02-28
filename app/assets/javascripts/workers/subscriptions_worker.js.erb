@@ -7,25 +7,29 @@ importScripts('<%= asset_path 'workers/common/do_delete' %>');
 
 // Callback for messages from the main thread
 onmessage = function(e){
+  // Constants for the different operations the web worker can perform
+  var SUBSCRIBE = "subscribe";
+  var UNSUBSCRIBE = "unsubscribe";
+
+  // Operation to perform: subscribe or unsubscribe
+  var operation = e.data.operation;
+
   // CSRF token
   var token = e.data.token;
 
-  // URL of the feed to subscribe
-  var feed_url = e.data.feed_url;
-
-  // ID of the feed to unsubscribe
-  var feed_id = e.data.feed_id;
-
-  var url = "";
   // Add a subscription
-  if (feed_url){
-    url = "/api/feeds.json";
+  if (operation == SUBSCRIBE){
+    // URL of the feed to subscribe
+    var feed_url = e.data.feed_url;
+    var url = "/api/feeds.json";
     var data = {feed: {url: feed_url}};
     do_post(url, token, data, 0);
   }
   // Remove a subscription
-  else if (feed_id){
-    url = "/api/feeds/" + feed_id + ".json";
-    do_delete(url, token, 0);
+  else if (operation == UNSUBSCRIBE){
+    // ID of the feed to unsubscribe
+    var feed_id = e.data.feed_id;
+    var url = "/api/feeds/" + feed_id + ".json";
+    do_delete(operation, url, token, 0);
   }
 }
