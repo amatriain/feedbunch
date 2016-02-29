@@ -24,7 +24,7 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
   worker.onmessage = (e) ->
     if e.data.status == 200
       # success moving feed out of its folder
-      if if e.data.operation == REMOVE_FROM_FOLDER
+      if e.data.operation == REMOVE_FROM_FOLDER
         timerFlagSvc.start 'success_remove_from_folder'
         feedsFoldersSvc.load_folders()
       # success moving feed into an existing folder
