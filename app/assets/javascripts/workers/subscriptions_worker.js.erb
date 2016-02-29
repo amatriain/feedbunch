@@ -23,7 +23,7 @@ onmessage = function(e){
     var feed_url = e.data.feed_url;
     var url = "/api/feeds.json";
     var data = {feed: {url: feed_url}};
-    do_post(url, token, data, 0);
+    do_post(operation, url, token, data, 0);
   }
   // Remove a subscription
   else if (operation == UNSUBSCRIBE){

@@ -8,6 +8,11 @@ angular.module('feedbunch').service 'folderSvc',
 ($rootScope, csrfTokenSvc, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
 feedsFoldersSvc, unreadCountSvc, findSvc)->
 
+  # Constants for the different operations the web worker can perform
+  MOVE_INTO_NEW_FOLDER = 'move_into_new_folder'
+  MOVE_INTO_EXISTING_FOLDER = 'move_into_existing_folder'
+  REMOVE_FROM_FOLDER = 'remove_from_folder'
+
   # Constant for the special "no folder" case
   NO_FOLDER = 'none'
 
@@ -19,15 +24,15 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
   worker.onmessage = (e) ->
     if e.data.status == 200
       # success moving feed out of its folder
-      if e.data.params.folder.id && e.data.params.folder.id == NO_FOLDER
+      if if e.data.operation == REMOVE_FROM_FOLDER
         timerFlagSvc.start 'success_remove_from_folder'
         feedsFoldersSvc.load_folders()
       # success moving feed into an existing folder
-      else if e.data.params.folder.id
+      else if e.data.operation == MOVE_INTO_EXISTING_FOLDER
         timerFlagSvc.start 'success_move_to_folder'
         feedsFoldersSvc.load_folders()
       # success moving feed into a new folder
-      else if e.data.params.folder.title
+      else if e.data.operation == MOVE_INTO_NEW_FOLDER
         timerFlagSvc.start 'success_move_to_new_folder'
         feedsFoldersSvc.add_folder e.data.response
         feed = findSvc.find_feed e.data.params.folder.feed_id
@@ -35,17 +40,17 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
         feedsFoldersSvc.load_folders()
         # open the new folder
         openFolderSvc.set e.data.response
-    else if e.data.status == 304
+    else if e.data.status == 304 && e.data.operation == MOVE_INTO_NEW_FOLDER
       # Tried to create a folder with the same name as another that already exists
       timerFlagSvc.start 'error_already_existing_folder'
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
       # error moving feed into an existing folder or out of its folder
-      if e.data.params.folder.id
+      if e.data.operation == MOVE_INTO_EXISTING_FOLDER || e.data.operation == REMOVE_FROM_FOLDER
         timerFlagSvc.start 'error_managing_folders'
       # error moving feed into a new folder
-      else if e.data.params.folder.title
+      else if e.data.operation == MOVE_INTO_NEW_FOLDER
         timerFlagSvc.start 'error_creating_folder'
 
   service =
@@ -56,7 +61,7 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
       current_feed = currentFeedSvc.get()
       if current_feed
         current_feed.folder_id = NO_FOLDER
-        worker.postMessage {token: token, feed_id: current_feed.id, folder_id: NO_FOLDER}
+        worker.postMessage {operation: REMOVE_FROM_FOLDER, token: token, feed_id: current_feed.id, folder_id: NO_FOLDER}
 
     #--------------------------------------------
     # Move a feed to an already existing folder
@@ -67,7 +72,7 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
         current_feed.folder_id = folder.id
         # open the new folder
         openFolderSvc.set folder
-        worker.postMessage {token: token, feed_id: current_feed.id, folder_id: folder.id}
+        worker.postMessage {operation: MOVE_INTO_EXISTING_FOLDER, token: token, feed_id: current_feed.id, folder_id: folder.id}
 
     #--------------------------------------------
     # Move a feed to a new folder
@@ -76,7 +81,7 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
     move_to_new_folder: (title)->
       current_feed = currentFeedSvc.get()
       if title && current_feed
-        worker.postMessage {token: token, feed_id: current_feed.id, title: title}
+        worker.postMessage {operation: MOVE_INTO_NEW_FOLDER, token: token, feed_id: current_feed.id, title: title}
 
     #--------------------------------------------
     # Function to filter folders which should be visible. Returns a function that returns true if

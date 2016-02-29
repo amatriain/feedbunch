@@ -36,5 +36,5 @@ onmessage = function(e){
     data["entry"]["all_entries"] = all_entries;
   }
 
-  do_put("/api/entries/update.json", token, data, 0);
+  do_put("change_entry_state", "/api/entries/update.json", token, data, 0);
 }

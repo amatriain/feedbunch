@@ -12,5 +12,5 @@ onmessage = function(e){
   // Data to send in the PUT
   var data = {opml_export: {show_alert: 'false'}};
 
-  do_put("/api/opml_exports.json", token, data, 0);
+  do_put("hide_export_alert", "/api/opml_exports.json", token, data, 0);
 }

@@ -28,5 +28,5 @@ onmessage = function(e){
   var data = {user_config: {show_main_tour: show_main_tour, show_mobile_tour: show_mobile_tour,
     show_feed_tour: show_feed_tour, show_entry_tour: show_entry_tour, show_kb_shortcuts_tour: show_kb_shortcuts_tour}};
 
-  do_put("/api/user_config.json", token, data, 0);
+  do_put("hide_tour", "/api/user_config.json", token, data, 0);
 }

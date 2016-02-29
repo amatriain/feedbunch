@@ -31,7 +31,7 @@ favicoSvc, startPageSvc)->
         feedsFoldersSvc.load_folders()
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
-    else if e.data.status == 403 && e.data.operation == UNSUBSCRIBE
+    else if e.data.status == 403 && e.data.operation == SUBSCRIBE
       # User attempted to subscribe to a blacklisted url
       timerFlagSvc.start 'blacklisted_url'
     else
