@@ -24,7 +24,7 @@ favicoSvc, startPageSvc)->
         timerFlagSvc.start 'success_subscribe'
       # Successfully removed subscription
       else if e.data.operation == UNSUBSCRIBE
-        cleanupSvc.remove_feed e.data.params.feed_id
+        cleanupSvc.remove_feed e.data.params.feed.id
         favicoSvc.update_unread_badge()
         # Load folders again so that if the folder has been deleted (no more feeds in it), the client is aware and removes
         # it from the view

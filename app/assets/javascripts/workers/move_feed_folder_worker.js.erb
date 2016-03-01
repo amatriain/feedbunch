@@ -32,10 +32,10 @@ onmessage = function(e){
   else if (operation == MOVE_INTO_EXISTING_FOLDER){
     var folder_id = e.data.folder_id;
     var url = "/api/folders/" + folder_id + ".json";
-    do_put(url, token, data, 0);
+    do_put(operation, url, token, data, 0);
   }
   else if (operation == REMOVE_FROM_FOLDER){
     var url = "/api/folders/none.json";
-    do_put(url, token, data, 0);
+    do_put(operation, url, token, data, 0);
   }
 }

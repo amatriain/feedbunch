@@ -16,6 +16,11 @@ describe 'unsubscribe from feed', type: :feature do
     @user.folders << @folder
     @folder.feeds << @feed1
 
+    # Process unsubscriptions synchronously, instead of asynchronously with sidekiq
+    allow_any_instance_of(User).to receive :enqueue_unsubscribe_job do |user, feed|
+      user.unsubscribe feed
+    end
+
     login_user_for_feature @user
     visit read_path
   end

@@ -29,7 +29,8 @@ onmessage = function(e){
   else if (operation == UNSUBSCRIBE){
     // ID of the feed to unsubscribe
     var feed_id = e.data.feed_id;
+    var data = {feed: {id: feed_id}};
     var url = "/api/feeds/" + feed_id + ".json";
-    do_delete(operation, url, token, 0);
+    do_delete(operation, url, token, data, 0);
   }
 }

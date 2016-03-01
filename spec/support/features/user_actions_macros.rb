@@ -76,7 +76,11 @@ end
 
 def read_feed(feed, user)
   folder = feed.user_folder user
-  open_folder folder if folder.present?
+  if folder.present?
+    open_folder folder
+    sleep 0.5
+  end
+
   folder_id = folder&.id || 'none'
   within "#folders-list #folder-#{folder_id}" do
     expect(page).to have_css "[data-sidebar-feed][data-feed-id='#{feed.id}']", visible: true

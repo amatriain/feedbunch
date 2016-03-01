@@ -15,5 +15,7 @@ onmessage = function(e){
   // id of the job state to delete
   var id = e.data.id;
 
-  do_delete(DELETE_REFRESH_FEED_JOB_STATE, "/api/refresh_feed_job_states/" + id + ".json", token, 0);
+  var data = {job_state: {id: id}};
+
+  do_delete(DELETE_REFRESH_FEED_JOB_STATE, "/api/refresh_feed_job_states/" + id + ".json", token, data, 0);
 }

@@ -10,23 +10,23 @@ max_retries = 60;
 retry_interval_msec = 1000;
 
 // Perform the HTTP DELETE
-do_delete = function(operation, url, token, retry_count) {
+do_delete = function(operation, url, token, data, retry_count) {
   var req = new XMLHttpRequest();
   req.onreadystatechange = function(e) {
     if (req.readyState == XMLHttpRequest.DONE) {
       if (req.status == 0) {
         // Network error, retry up to max_retries times
         if (retry_count < max_retries) {
-          setTimeout(do_delete, retry_interval_msec, operation, url, token, retry_count + 1);
+          setTimeout(do_delete, retry_interval_msec, operation, url, token, data, retry_count + 1);
         }
         else {
           // Unrecoverable failure
-          postMessage({operation: operation, status: req.status});
+          postMessage({operation: operation, status: req.status, params: data});
         }
       }
       else {
         // Success (actual HTTP status may indicate an error response, main thread handles it)
-        postMessage({operation: operation, status: req.status});
+        postMessage({operation: operation, status: req.status, params: data});
       }
     }
   };
