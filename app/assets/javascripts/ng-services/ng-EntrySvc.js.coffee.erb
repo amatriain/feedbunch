@@ -10,31 +10,28 @@ angular.module('feedbunch').service 'entrySvc',
 currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc,
 lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
 
+  # Constants for the different operations the web worker can perform
+  CHANGE_SINGLE_ENTRY = 'change_single_entry'
+  CHANGE_MULTIPLE_ENTRIES = 'change_multiple_entries'
+
   # CSRF token for POST
   token = csrfTokenSvc.get_token()
 
-  # Web worker to change a single entry state in a different thread.
-  worker_single_entry = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
-  worker_single_entry.onmessage = (e) ->
-    # Entry has changed state in the server
+  # Web worker to change the state of entries in a different thread
+  worker = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
+  worker.onmessage = (e) ->
     if e.data.status == 200
-      entry = findSvc.find_entry e.data.params.entry.id
-      entry.changing_state = false
-      feedsFoldersSvc.reset_refresh_timer()
-    else if e.data.status == 401 || e.data.status == 422
-      $window.location.href = '/login'
-    else
-      timerFlagSvc.start 'error_changing_entry_state'
-
-  # Web worker to change state of all current entries in a different thread
-  worker_multiple_entries = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
-  worker_multiple_entries.onmessage = (e) ->
-    # Entry has changed state in the server
-    if e.data.status == 200
-      for entry in $rootScope.entries
-        entry.changing_state = false
-      timerFlagSvc.start 'success_mark_all_read'
-      feedsFoldersSvc.reset_refresh_timer()
+      # Single entry changed state
+      if e.data.operation == CHANGE_SINGLE_ENTRY
+        entry = findSvc.find_entry e.data.params.entry.id
+        entry.changing_state = false if entry?
+        feedsFoldersSvc.reset_refresh_timer()
+      # All entries in current list changed state
+      else if e.data.operation == CHANGE_MULTIPLE_ENTRIES
+        for entry in $rootScope.entries
+          entry.changing_state = false
+        timerFlagSvc.start 'success_mark_all_read'
+        feedsFoldersSvc.reset_refresh_timer()
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
@@ -60,7 +57,7 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
         changeUnreadCountSvc.update_unread_count entry, true
 
       # Change the entry state in a separate thread using a web worker
-      worker_single_entry.postMessage {token: token, id: entry.id, state: state}
+      worker.postMessage {operation: CHANGE_SINGLE_ENTRY, token: token, id: entry.id, state: state}
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Set the feed with the passed ID as the currently selected one, and
@@ -106,7 +103,7 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
         return
 
       # Change entries state in a separate thread using a web worker
-      worker_multiple_entries.postMessage {token: token, id: first_entry.id, state: 'read', whole_feed: whole_feed, whole_folder: whole_folder, all_entries: all_entries}
+      worker.postMessage {operation: CHANGE_MULTIPLE_ENTRIES, token: token, id: first_entry.id, state: 'read', whole_feed: whole_feed, whole_folder: whole_folder, all_entries: all_entries}
 
   service =
 
