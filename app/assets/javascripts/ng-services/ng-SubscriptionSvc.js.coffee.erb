@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'subscriptionSvc',
 ['$rootScope', 'csrfTokenSvc', 'timerFlagSvc', 'entriesPaginationSvc', 'feedsFoldersSvc', 'cleanupSvc',
-'favicoSvc', 'startPageSvc',
+'favicoSvc', 'startPageSvc', 'jobStateSvc',
 ($rootScope, csrfTokenSvc, timerFlagSvc, entriesPaginationSvc, feedsFoldersSvc, cleanupSvc,
-favicoSvc, startPageSvc)->
+favicoSvc, startPageSvc, jobStateSvc)->
 
   # Constants for the different operations the web worker can perform
   SUBSCRIBE = 'subscribe'
@@ -18,12 +18,9 @@ favicoSvc, startPageSvc)->
   # Web worker to add and remove subscriptions in a different thread.
   worker = new Worker '<%= asset_path 'workers/subscriptions_worker' %>'
   worker.onmessage = (e) ->
+    jobStateSvc.load_data()
     if e.data.status == 200
-      # Successfully added subscription
-      if e.data.operation == SUBSCRIBE
-        timerFlagSvc.start 'success_subscribe'
-      # Successfully removed subscription
-      else if e.data.operation == UNSUBSCRIBE
+      if e.data.operation == UNSUBSCRIBE
         cleanupSvc.remove_feed e.data.params.feed.id
         favicoSvc.update_unread_badge()
         # Load folders again so that if the folder has been deleted (no more feeds in it), the client is aware and removes
@@ -48,10 +45,8 @@ favicoSvc, startPageSvc)->
     # Add a subscription to a feed
     #---------------------------------------------
     subscribe: (url)->
-      # Feed URL
       if url
         worker.postMessage {operation: SUBSCRIBE, token: token, feed_url: url}
-        startPageSvc.show_start_page()
 
     unsubscribe: ->
       current_feed = $rootScope.current_feed

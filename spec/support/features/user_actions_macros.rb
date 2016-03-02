@@ -37,6 +37,7 @@ end
 def open_feeds_menu
   user_should_be_logged_in
   find('#feed-dropdown .dropdown-toggle').click
+  sleep 0.5
   expect(page).to have_css 'a#add-subscription', visible: true
 end
 
