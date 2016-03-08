@@ -9,65 +9,65 @@ angular.module('feedbunch').service 'tourSvc',
   # Constants for the different tour URL fragments
   TOURS = {main_tour: 'main', mobile_tour: 'mobile', feed_tour: 'feed', entry_tour: 'entry', kb_shortcuts_tour: 'kb_shortcuts'}
 
+  # Constants for the different operations the web worker can perform
+  LOAD_TOUR = 'load_tour'
+  HIDE_TOUR = 'hide_tour'
+
   # CSRF token
   token = csrfTokenSvc.get_token()
 
-  # Web worker to hide a tour
-  worker_hide_tours = new Worker '<%= asset_path 'workers/hide_tour_worker' %>'
-  worker_hide_tours.onmessage = (e) ->
-    if e.data.status == 401 || e.data.status == 422
-      $window.location.href = '/login'
-    else if e.data.status != 200 && e.data.status != 304
-      timerFlagSvc.start 'error_changing_show_tour'
-
-  # Web worker to load tour texts
-  worker_load_tours = new Worker '<%= asset_path 'workers/load_tours_worker' %>'
-  worker_load_tours.onmessage = (e) ->
+  # Web worker to load or hide tours
+  worker = new Worker '<%= asset_path 'workers/tours_worker' %>'
+  worker.onmessage = (e) ->
     if e.data.status == 200 || e.data.status == 304
-      if e.data.response.tour == TOURS.main_tour
-        delay = 0
-        tour =
-          id: 'main-tour',
-          onEnd: main_tour_end,
-          onClose: main_tour_end
-      else if e.data.response.tour == TOURS.mobile_tour
-        delay = 0
-        tour =
-          id: 'mobile-tour',
-          onEnd: dont_show_mobile_tour,
-          onClose: dont_show_mobile_tour
-      else if e.data.response.tour == TOURS.feed_tour
-        delay = 0
-        tour =
-          id: 'feed-tour',
-          onEnd: dont_show_feed_tour,
-          onClose: dont_show_feed_tour
-      else if e.data.response.tour == TOURS.entry_tour
-        # Show entry tour after a 600ms delay, to give entry open/autoscroll
-        # animation time to finish.
-        delay = 600
-        tour =
-          id: 'entry-tour',
-          onEnd: dont_show_entry_tour,
-          onClose: dont_show_entry_tour
-      else if e.data.response.tour == TOURS.kb_shortcuts_tour
-        delay = 0
-        tour =
-          id: 'kb_shortcuts-tour',
-          onEnd: dont_show_kb_shortcuts_tour,
-          onClose: dont_show_kb_shortcuts_tour
-      tour.showCloseButton = true
-      tour.showPrevButton = false
-      tour.showNextButton = true
-      tour.i18n = e.data.response.i18n
-      tour.steps = e.data.response.steps
-      $timeout ->
-        hopscotch.startTour tour
-      , delay
+      if e.data.operation == LOAD_TOUR
+        if e.data.response.tour == TOURS.main_tour
+          delay = 0
+          tour =
+            id: 'main-tour',
+            onEnd: main_tour_end,
+            onClose: main_tour_end
+        else if e.data.response.tour == TOURS.mobile_tour
+          delay = 0
+          tour =
+            id: 'mobile-tour',
+            onEnd: hide_mobile_tour,
+            onClose: hide_mobile_tour
+        else if e.data.response.tour == TOURS.feed_tour
+          delay = 0
+          tour =
+            id: 'feed-tour',
+            onEnd: hide_feed_tour,
+            onClose: hide_feed_tour
+        else if e.data.response.tour == TOURS.entry_tour
+          # Show entry tour after a 600ms delay, to give entry open/autoscroll
+          # animation time to finish.
+          delay = 600
+          tour =
+            id: 'entry-tour',
+            onEnd: hide_entry_tour,
+            onClose: hide_entry_tour
+        else if e.data.response.tour == TOURS.kb_shortcuts_tour
+          delay = 0
+          tour =
+            id: 'kb_shortcuts-tour',
+            onEnd: hide_kb_shortcuts_tour,
+            onClose: hide_kb_shortcuts_tour
+        tour.showCloseButton = true
+        tour.showPrevButton = false
+        tour.showNextButton = true
+        tour.i18n = e.data.response.i18n
+        tour.steps = e.data.response.steps
+        $timeout ->
+          hopscotch.startTour tour
+        , delay
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
-      timerFlagSvc.start 'error_loading_tour'
+      if e.data.operation == LOAD_TOUR
+        timerFlagSvc.start 'error_loading_tour'
+      else if e.data.operation == HIDE_TOUR
+        timerFlagSvc.start 'error_changing_show_tour'
 
   #--------------------------------------------
   # Media query to show the main app tour only in screens bigger than a smartphone
@@ -82,37 +82,37 @@ angular.module('feedbunch').service 'tourSvc',
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_main_tour flag for the current user.
   #--------------------------------------------
-  dont_show_main_tour = ->
+  hide_main_tour = ->
     $rootScope.show_main_tour = false
-    worker_hide_tours.postMessage {token: token, show_main_tour: 'false'}
+    worker.postMessage {operation: HIDE_TOUR, token: token, show_main_tour: 'false'}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_mobile_tour flag for the current user.
   #--------------------------------------------
-  dont_show_mobile_tour = ->
+  hide_mobile_tour = ->
     $rootScope.show_mobile_tour = false
-    worker_hide_tours.postMessage {token: token, show_mobile_tour: 'false'}
+    worker.postMessage {operation: HIDE_TOUR, token: token, show_mobile_tour: 'false'}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_feed_tour flag for the current user.
   #--------------------------------------------
-  dont_show_feed_tour = ->
+  hide_feed_tour = ->
     $rootScope.show_feed_tour = false
-    worker_hide_tours.postMessage {token: token, show_feed_tour: 'false'}
+    worker.postMessage {toperation: HIDE_TOUR, oken: token, show_feed_tour: 'false'}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_entry_tour flag for the current user.
   #--------------------------------------------
-  dont_show_entry_tour = ->
+  hide_entry_tour = ->
     $rootScope.show_entry_tour = false
-    worker_hide_tours.postMessage {token: token, show_entry_tour: 'false'}
+    worker.postMessage {operation: HIDE_TOUR, token: token, show_entry_tour: 'false'}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_kb_shortcuts_tour flag for the current user.
   #--------------------------------------------
-  dont_show_kb_shortcuts_tour = ->
+  hide_kb_shortcuts_tour = ->
     $rootScope.show_kb_shortcuts_tour = false
-    worker_hide_tours.postMessage {token: token, show_kb_shortcuts_tour: 'false'}
+    worker.postMessage {operation: HIDE_TOUR, token: token, show_kb_shortcuts_tour: 'false'}
 
   #---------------------------------------------
   # PRIVATE FUNCTION: show the main application tour.
@@ -122,7 +122,7 @@ angular.module('feedbunch').service 'tourSvc',
     if $rootScope.show_main_tour
       # The main tour is only shown in screens bigger than a smartphone
       enquire.register sm_min_media_query, ->
-        worker_load_tours.postMessage {token: token, tour: TOURS.main_tour}
+        worker.postMessage {operation: LOAD_TOUR, token: token, tour: TOURS.main_tour}
 
   #---------------------------------------------
   # PRIVATE FUNCTION: show the keyboard shortcuts application tour.
@@ -132,7 +132,7 @@ angular.module('feedbunch').service 'tourSvc',
     if !$rootScope.show_main_tour && $rootScope.show_kb_shortcuts_tour
       # The keyboards shortcuts tour is only shown in screens bigger than a smartphone
       enquire.register sm_min_media_query, ->
-        worker_load_tours.postMessage {token: token, tour: TOURS.kb_shortcuts_tour}
+        worker.postMessage {operation: LOAD_TOUR, token: token, tour: TOURS.kb_shortcuts_tour}
 
   #---------------------------------------------
   # PRIVATE FUNCTION: show the mobile application tour.
@@ -141,14 +141,14 @@ angular.module('feedbunch').service 'tourSvc',
     if $rootScope.show_mobile_tour
       # The mobile tour is only shown in smartphone-sized screens
       enquire.register xs_max_media_query, ->
-        worker_load_tours.postMessage {token: token, tour: TOURS.mobile_tour}
+        worker.postMessage {operation: LOAD_TOUR, token: token, tour: TOURS.mobile_tour}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: at the end of main tour, mark show_main_tour flag to false so it's not shown again; and if the
   # show_kb_shortcuts_flag is set to true, show the keyboard shortcuts tour
   #--------------------------------------------
   main_tour_end = ->
-    dont_show_main_tour()
+    hide_main_tour()
     show_kb_shortcuts_tour() if $rootScope.show_kb_shortcuts_tour
 
   service =
@@ -186,14 +186,14 @@ angular.module('feedbunch').service 'tourSvc',
       if $rootScope.show_feed_tour
         # The feed tour is only shown in screens bigger than a smartphone
         enquire.register sm_min_media_query, ->
-          worker_load_tours.postMessage {token: token, tour: TOURS.feed_tour}
+          worker.postMessage {operation: LOAD_TOUR, token: token, tour: TOURS.feed_tour}
 
     #---------------------------------------------
     # Show the entry application tour.
     #---------------------------------------------
     show_entry_tour: ->
       if $rootScope.show_entry_tour
-        worker_load_tours.postMessage {token: token, tour: TOURS.entry_tour}
+        worker.postMessage {operation: LOAD_TOUR, token: token, tour: TOURS.entry_tour}
 
     #---------------------------------------------
     # Reset all application tours, so that they are shown again from the beginning.
