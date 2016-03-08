@@ -6,6 +6,16 @@ angular.module('feedbunch').service 'tourSvc',
 ['$rootScope', '$http', '$timeout', 'csrfTokenSvc', 'timerFlagSvc',
 ($rootScope, $http, $timeout, csrfTokenSvc, timerFlagSvc)->
 
+  #--------------------------------------------
+  # Media query to show the main app tour only in screens bigger than a smartphone
+  #--------------------------------------------
+  sm_min_media_query = 'screen and (min-width: 768px)'
+
+  #--------------------------------------------
+  # Media query to show the mobile app tour only in smartphone-sized screens
+  #--------------------------------------------
+  xs_max_media_query = 'screen and (max-width: 768px)'
+
   # Constants for the different tour URL fragments
   TOURS = {main_tour: 'main', mobile_tour: 'mobile', feed_tour: 'feed', entry_tour: 'entry', kb_shortcuts_tour: 'kb_shortcuts'}
 
@@ -21,46 +31,7 @@ angular.module('feedbunch').service 'tourSvc',
   worker.onmessage = (e) ->
     if e.data.status == 200 || e.data.status == 304
       if e.data.operation == LOAD_TOUR
-        if e.data.response.tour == TOURS.main_tour
-          delay = 0
-          tour =
-            id: 'main-tour',
-            onEnd: main_tour_end,
-            onClose: main_tour_end
-        else if e.data.response.tour == TOURS.mobile_tour
-          delay = 0
-          tour =
-            id: 'mobile-tour',
-            onEnd: hide_mobile_tour,
-            onClose: hide_mobile_tour
-        else if e.data.response.tour == TOURS.feed_tour
-          delay = 0
-          tour =
-            id: 'feed-tour',
-            onEnd: hide_feed_tour,
-            onClose: hide_feed_tour
-        else if e.data.response.tour == TOURS.entry_tour
-          # Show entry tour after a 600ms delay, to give entry open/autoscroll
-          # animation time to finish.
-          delay = 600
-          tour =
-            id: 'entry-tour',
-            onEnd: hide_entry_tour,
-            onClose: hide_entry_tour
-        else if e.data.response.tour == TOURS.kb_shortcuts_tour
-          delay = 0
-          tour =
-            id: 'kb_shortcuts-tour',
-            onEnd: hide_kb_shortcuts_tour,
-            onClose: hide_kb_shortcuts_tour
-        tour.showCloseButton = true
-        tour.showPrevButton = false
-        tour.showNextButton = true
-        tour.i18n = e.data.response.i18n
-        tour.steps = e.data.response.steps
-        $timeout ->
-          hopscotch.startTour tour
-        , delay
+        tour_loaded e.data.response
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
@@ -70,14 +41,49 @@ angular.module('feedbunch').service 'tourSvc',
         timerFlagSvc.start 'error_changing_show_tour'
 
   #--------------------------------------------
-  # Media query to show the main app tour only in screens bigger than a smartphone
+  # PRIVATE FUNCTION: Operations after a tour has been loaded
   #--------------------------------------------
-  sm_min_media_query = 'screen and (min-width: 768px)'
-
-  #--------------------------------------------
-  # Media query to show the mobile app tour only in smartphone-sized screens
-  #--------------------------------------------
-  xs_max_media_query = 'screen and (max-width: 768px)'
+  tour_loaded = (response)->
+    if response.tour == TOURS.main_tour
+      delay = 0
+      tour =
+        id: 'main-tour',
+        onEnd: main_tour_end,
+        onClose: main_tour_end
+    else if response.tour == TOURS.mobile_tour
+      delay = 0
+      tour =
+        id: 'mobile-tour',
+        onEnd: hide_mobile_tour,
+        onClose: hide_mobile_tour
+    else if response.tour == TOURS.feed_tour
+      delay = 0
+      tour =
+        id: 'feed-tour',
+        onEnd: hide_feed_tour,
+        onClose: hide_feed_tour
+    else if response.tour == TOURS.entry_tour
+      # Show entry tour after a 600ms delay, to give entry open/autoscroll
+      # animation time to finish.
+      delay = 600
+      tour =
+        id: 'entry-tour',
+        onEnd: hide_entry_tour,
+        onClose: hide_entry_tour
+    else if response.tour == TOURS.kb_shortcuts_tour
+      delay = 0
+      tour =
+        id: 'kb_shortcuts-tour',
+        onEnd: hide_kb_shortcuts_tour,
+        onClose: hide_kb_shortcuts_tour
+    tour.showCloseButton = true
+    tour.showPrevButton = false
+    tour.showNextButton = true
+    tour.i18n = response.i18n
+    tour.steps = response.steps
+    $timeout ->
+      hopscotch.startTour tour
+    , delay
 
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_main_tour flag for the current user.

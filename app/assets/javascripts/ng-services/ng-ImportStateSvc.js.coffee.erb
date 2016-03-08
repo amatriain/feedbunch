@@ -20,29 +20,35 @@ angular.module('feedbunch').service 'importStateSvc',
   worker = new Worker '<%= asset_path 'workers/import_state_worker' %>'
   worker.onmessage = (e) ->
     if (e.data.status == 200 || e.data.status == 304) && e.data.operation == LOAD_JOB_STATE
-      $rootScope.show_import_alert = e.data.response.show_alert
-      $rootScope.import_state = e.data.response.state
-      if e.data.response.state == "RUNNING"
-        # Update state from the server periodically while import is running
-        $rootScope.import_processed = e.data.response.import.processed
-        $rootScope.import_total = e.data.response.import.total
-        $timeout ->
-          load_import_state true
-        , 5000
-      else if e.data.response.state == "ERROR" && show_finished_message
-        timerFlagSvc.start 'error_importing'
-      else if e.data.response.state == "SUCCESS"
-        $rootScope.import_failures = e.data.response.failures
-        if show_finished_message
-          # Automatically load new feeds and folders without needing a refresh
-          feedsFoldersSvc.load_data()
-          userDataSvc.load_data()
-          timerFlagSvc.start 'success_importing'
+      import_state_loaded e.data.response
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
       if e.data.operation == LOAD_JOB_STATE
         timerFlagSvc.start 'error_importing'
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Operations after the import job state has been loaded
+  #---------------------------------------------
+  import_state_loaded = (response)->
+    $rootScope.show_import_alert = response.show_alert
+    $rootScope.import_state = response.state
+    if response.state == "RUNNING"
+      # Update state from the server periodically while import is running
+      $rootScope.import_processed = response.import.processed
+      $rootScope.import_total = response.import.total
+      $timeout ->
+        load_import_state true
+      , 5000
+    else if response.state == "ERROR" && show_finished_message
+      timerFlagSvc.start 'error_importing'
+    else if response.state == "SUCCESS"
+      $rootScope.import_failures = response.failures
+      if show_finished_message
+        # Automatically load new feeds and folders without needing a refresh
+        feedsFoldersSvc.load_data()
+        userDataSvc.load_data()
+        timerFlagSvc.start 'success_importing'
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load import process state via AJAX

@@ -20,25 +20,31 @@ angular.module('feedbunch').service 'exportStateSvc',
   worker = new Worker '<%= asset_path 'workers/export_state_worker' %>'
   worker.onmessage = (e) ->
     if (e.data.status == 200 || e.data.status == 304) && e.data.operation == LOAD_JOB_STATE
-      $rootScope.show_export_alert = e.data.response.show_alert
-      $rootScope.export_date = e.data.response.export_date
-      $rootScope.export_state = e.data.response.state
-      if e.data.response.state == "RUNNING"
-        # Update state from the server periodically while export is running
-        $timeout ->
-          load_export_state true
-        , 5000
-      else if e.data.response.state == "ERROR" && show_finished_message
-        timerFlagSvc.start 'error_exporting'
-      else if e.data.response.state == "SUCCESS" && show_finished_message
-        # Automatically load new feeds and folders without needing a refresh
-        feedsFoldersSvc.load_data()
-        timerFlagSvc.start 'success_exporting'
+      export_state_loaded e.data.response
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
       if e.data.operation == LOAD_JOB_STATE
         timerFlagSvc.start 'error_exporting'
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Operations after the export job state has been loaded
+  #---------------------------------------------
+  export_state_loaded = (response)->
+    $rootScope.show_export_alert = response.show_alert
+    $rootScope.export_date = response.export_date
+    $rootScope.export_state = response.state
+    if response.state == "RUNNING"
+      # Update state from the server periodically while export is running
+      $timeout ->
+        load_export_state true
+      , 5000
+    else if response.state == "ERROR" && show_finished_message
+      timerFlagSvc.start 'error_exporting'
+    else if response.state == "SUCCESS" && show_finished_message
+      # Automatically load new feeds and folders without needing a refresh
+      feedsFoldersSvc.load_data()
+      timerFlagSvc.start 'success_exporting'
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load export process state via AJAX

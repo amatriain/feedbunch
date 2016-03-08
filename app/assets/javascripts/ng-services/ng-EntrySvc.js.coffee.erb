@@ -21,21 +21,30 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
   worker = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
   worker.onmessage = (e) ->
     if e.data.status == 200
-      # Single entry changed state
+      feedsFoldersSvc.reset_refresh_timer()
       if e.data.operation == CHANGE_SINGLE_ENTRY
-        entry = findSvc.find_entry e.data.params.entry.id
-        entry.changing_state = false if entry?
-        feedsFoldersSvc.reset_refresh_timer()
-      # All entries in current list changed state
+        entry_state_changed e.data.params.entry.id
       else if e.data.operation == CHANGE_MULTIPLE_ENTRIES
-        for entry in $rootScope.entries
-          entry.changing_state = false
-        timerFlagSvc.start 'success_mark_all_read'
-        feedsFoldersSvc.reset_refresh_timer()
+        entries_states_changed()
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
       timerFlagSvc.start 'error_changing_entry_state'
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION - Operations to perform after a single entry has changed state
+  #--------------------------------------------
+  entry_state_changed = (id)->
+    entry = findSvc.find_entry id
+    entry.changing_state = false if entry?
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION - Operations to perform after multiple entries have changed state
+  #--------------------------------------------
+  entries_states_changed = ->
+    for entry in $rootScope.entries
+      entry.changing_state = false
+    timerFlagSvc.start 'success_mark_all_read'
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark a single entry as read or unread.

@@ -22,41 +22,13 @@ angular.module('feedbunch').service 'jobStateSvc',
   worker.onmessage = (e) ->
     if e.data.status == 200 || e.data.status == 304
       if e.data.operation == LOAD_ALL_SUBSCRIBE_JOB_STATES
-        $rootScope.subscribe_job_states = e.data.response.slice()
-        for job_state in e.data.response
-          # Periodically update the state of any running jobs
-          load_subscribe_job_state job_state.id if job_state.state=="RUNNING"
+        all_subscribe_job_states_loaded e.data.response
       else if e.data.operation == LOAD_SINGLE_SUBSCRIBE_JOB_STATE
-        job = findSvc.find_subscribe_job e.data.response.id
-        if job?
-          job.state = e.data.response.state
-          if job.state=="RUNNING"
-            # If job is running, keep periodically updating its state
-            load_subscribe_job_state job.id
-          else if job.state=="ERROR"
-            timerFlagSvc.start 'error_subscribing'
-          else if job.state=="SUCCESS"
-            timerFlagSvc.start 'success_subscribe'
-            job.feed_id = e.data.response.feed_id
-            # Update the total subscribed feeds count
-            userDataSvc.load_data()
+        single_subscribe_job_state_loaded e.data.response
       else if e.data.operation == LOAD_ALL_REFRESH_JOB_STATES
-        $rootScope.refresh_feed_job_states = e.data.response.slice()
-        for job_state in e.data.response
-          # Periodically update the state of any running jobs
-          load_refresh_feed_job_state job_state.id if job_state.state=="RUNNING"
+        all_refresh_job_states_loaded e.data.response
       else if e.data.operation == LOAD_SINGLE_REFRESH_JOB_STATE
-        job = findSvc.find_refresh_feed_job e.data.response.id
-        if job?
-          job.state = e.data.response.state
-          if job.state=="RUNNING"
-            # If job is running, keep periodically updating its state
-            load_refresh_feed_job_state job.id
-          else if job.state=="ERROR"
-            timerFlagSvc.start 'error_refreshing_feed'
-          else if job.state=="SUCCESS"
-            timerFlagSvc.start 'success_refresh_feed'
-            feedsFoldersSvc.load_feed job.feed_id
+        single_refresh_job_state_loaded e.data.response
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else if e.data.status == 404
@@ -69,6 +41,58 @@ angular.module('feedbunch').service 'jobStateSvc',
         timerFlagSvc.start 'error_loading_job_states'
       else if e.data.operation == LOAD_SINGLE_SUBSCRIBE_JOB_STATE
         timerFlagSvc.start 'error_subscribing'
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Operations after all subscribe job states have been loaded
+  #---------------------------------------------
+  all_subscribe_job_states_loaded = (response)->
+    $rootScope.subscribe_job_states = response.slice()
+    for job_state in response
+      # Periodically update the state of any running jobs
+      load_subscribe_job_state job_state.id if job_state.state=="RUNNING"
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Operations after a single subscribe job state has been loaded
+  #---------------------------------------------
+  single_subscribe_job_state_loaded = (response)->
+    job = findSvc.find_subscribe_job response.id
+    if job?
+      job.state = response.state
+      if job.state=="RUNNING"
+        # If job is running, keep periodically updating its state
+        load_subscribe_job_state job.id
+      else if job.state=="ERROR"
+        timerFlagSvc.start 'error_subscribing'
+      else if job.state=="SUCCESS"
+        timerFlagSvc.start 'success_subscribe'
+        job.feed_id = response.feed_id
+        # Update the total subscribed feeds count
+        userDataSvc.load_data()
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Operations after all refresh job states have been loaded
+  #---------------------------------------------
+  all_refresh_job_states_loaded = (response)->
+    $rootScope.refresh_feed_job_states = response.slice()
+    for job_state in response
+      # Periodically update the state of any running jobs
+      load_refresh_feed_job_state job_state.id if job_state.state=="RUNNING"
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Operations after a single refresh job state has been loaded
+  #---------------------------------------------
+  single_refresh_job_state_loaded = (response)->
+    job = findSvc.find_refresh_feed_job response.id
+    if job?
+      job.state = response.state
+      if job.state=="RUNNING"
+        # If job is running, keep periodically updating its state
+        load_refresh_feed_job_state job.id
+      else if job.state=="ERROR"
+        timerFlagSvc.start 'error_refreshing_feed'
+      else if job.state=="SUCCESS"
+        timerFlagSvc.start 'success_refresh_feed'
+        feedsFoldersSvc.load_feed job.feed_id
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load state of a single refresh feed job via AJAX.

@@ -23,35 +23,48 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
   worker = new Worker '<%= asset_path 'workers/move_feed_folder_worker' %>'
   worker.onmessage = (e) ->
     if e.data.status == 200
-      # success moving feed out of its folder
       if e.data.operation == REMOVE_FROM_FOLDER
-        timerFlagSvc.start 'success_remove_from_folder'
-        feedsFoldersSvc.load_folders()
-      # success moving feed into an existing folder
+        removed_from_folder()
       else if e.data.operation == MOVE_INTO_EXISTING_FOLDER
-        timerFlagSvc.start 'success_move_to_folder'
-        feedsFoldersSvc.load_folders()
-      # success moving feed into a new folder
+        moved_to_existing_folder()
       else if e.data.operation == MOVE_INTO_NEW_FOLDER
-        timerFlagSvc.start 'success_move_to_new_folder'
-        feedsFoldersSvc.add_folder e.data.response
-        feed = findSvc.find_feed e.data.params.folder.feed_id
-        feed.folder_id = e.data.response.id
-        feedsFoldersSvc.load_folders()
-        # open the new folder
-        openFolderSvc.set e.data.response
+        moved_to_new_folder e.data
     else if e.data.status == 304 && e.data.operation == MOVE_INTO_NEW_FOLDER
       # Tried to create a folder with the same name as another that already exists
       timerFlagSvc.start 'error_already_existing_folder'
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
-      # error moving feed into an existing folder or out of its folder
       if e.data.operation == MOVE_INTO_EXISTING_FOLDER || e.data.operation == REMOVE_FROM_FOLDER
         timerFlagSvc.start 'error_managing_folders'
-      # error moving feed into a new folder
       else if e.data.operation == MOVE_INTO_NEW_FOLDER
         timerFlagSvc.start 'error_creating_folder'
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Operations after a feed has been removed from its folder
+  #---------------------------------------------
+  removed_from_folder = ->
+    timerFlagSvc.start 'success_remove_from_folder'
+    feedsFoldersSvc.load_folders()
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Operations after a feed has been moved into an existing folder
+  #---------------------------------------------
+  moved_to_existing_folder = ->
+    timerFlagSvc.start 'success_move_to_folder'
+    feedsFoldersSvc.load_folders()
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Operations after a feed has been moved into a new folder
+  #---------------------------------------------
+  moved_to_new_folder = (data)->
+    timerFlagSvc.start 'success_move_to_new_folder'
+    feedsFoldersSvc.add_folder data.response
+    feed = findSvc.find_feed data.params.folder.feed_id
+    feed.folder_id = data.response.id
+    feedsFoldersSvc.load_folders()
+    # open the new folder
+    openFolderSvc.set data.response
 
   service =
     #--------------------------------------------

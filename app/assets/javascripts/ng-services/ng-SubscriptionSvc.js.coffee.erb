@@ -21,23 +21,27 @@ favicoSvc, startPageSvc, jobStateSvc)->
     jobStateSvc.load_data()
     if e.data.status == 200
       if e.data.operation == UNSUBSCRIBE
-        cleanupSvc.remove_feed e.data.params.feed.id
-        favicoSvc.update_unread_badge()
-        # Load folders again so that if the folder has been deleted (no more feeds in it), the client is aware and removes
-        # it from the view
-        feedsFoldersSvc.load_folders()
+        feed_unsubscribed e.data.params.feed.id
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else if e.data.status == 403 && e.data.operation == SUBSCRIBE
       # User attempted to subscribe to a blacklisted url
       timerFlagSvc.start 'blacklisted_url'
     else
-      # Error adding subscription
       if e.data.operation == SUBSCRIBE
         timerFlagSvc.start 'error_subscribing'
-      # Error removing subscription
       else if e.data.operation == UNSUBSCRIBE
         timerFlagSvc.start 'error_unsubscribing'
+
+  #---------------------------------------------
+  # PRIVATE FUNCTION: Operations after successfully unbuscribing a feed
+  #---------------------------------------------
+  feed_unsubscribed = (id)->
+    cleanupSvc.remove_feed id
+    favicoSvc.update_unread_badge()
+    # Load folders again so that if the folder has been deleted (no more feeds in it), the client is aware and removes
+    # it from the view
+    feedsFoldersSvc.load_folders()
 
   service =
 
