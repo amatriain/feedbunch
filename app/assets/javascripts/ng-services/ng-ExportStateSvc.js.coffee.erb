@@ -55,7 +55,7 @@ angular.module('feedbunch').service 'exportStateSvc',
   #---------------------------------------------
   load_export_state = (show_message=false)->
     show_finished_message = show_message
-    worker.postMessage {operation: LOAD_JOB_STATE ,token: token}
+    worker.postMessage {operation: LOAD_JOB_STATE, token: token}
 
   service =
 
@@ -69,7 +69,7 @@ angular.module('feedbunch').service 'exportStateSvc',
     #---------------------------------------------
     hide_alert: ->
       $rootScope.show_export_alert = false
-      worker.postMessage {operation: HIDE_JOB_ALERT ,token: token}
+      worker.postMessage {operation: HIDE_JOB_ALERT, token: token}
 
   return service
 ]

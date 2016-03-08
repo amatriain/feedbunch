@@ -12,7 +12,7 @@ onmessage = function(e){
   var MOVE_INTO_EXISTING_FOLDER = "move_into_existing_folder";
   var REMOVE_FROM_FOLDER = "remove_from_folder";
 
-  // Operation to perform: subscribe or unsubscribe
+  // Operation to perform: move feed into existing folder, into new folder, or out of its folder
   var operation = e.data.operation;
 
   // CSRF token
