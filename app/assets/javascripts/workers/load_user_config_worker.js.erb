@@ -8,5 +8,5 @@ importScripts('<%= asset_path 'workers/common/do_get' %>');
 onmessage = function(e){
   // CSRF token
   var token = e.data.token;
-  do_get("/api/user_config.json", token, 0);
+  do_get("load_user_config", "/api/user_config.json", token, 0);
 }

@@ -8,5 +8,5 @@ importScripts('<%= asset_path 'workers/common/do_get' %>');
 onmessage = function(e){
   // CSRF token
   var token = e.data.token;
-  do_get("/api/opml_imports.json", token, 0);
+  do_get("load_import_state", "/api/opml_imports.json", token, 0);
 }

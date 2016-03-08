@@ -14,5 +14,5 @@ onmessage = function(e){
 
   var url = "/api/tours/" + tour + ".json";
 
-  do_get(url, token, 0);
+  do_get("load_tours", url, token, 0);
 }

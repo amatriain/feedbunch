@@ -20,5 +20,5 @@ onmessage = function(e){
     url = "/api/subscribe_job_states.json";
   }
 
-  do_get(url, token, 0);
+  do_get("load_subscribe_jobs_states", url, token, 0);
 }

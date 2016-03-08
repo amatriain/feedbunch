@@ -9,13 +9,17 @@ angular.module('feedbunch').service 'exportStateSvc',
   # Flag to indicate if a message should appear when the export job finishes running.
   show_finished_message = false
 
+  # Constants for the different operations the web worker can perform
+  LOAD_JOB_STATE = 'load_job_state'
+  HIDE_JOB_ALERT = 'hide_job_alert'
+
   # CSRF token
   token = csrfTokenSvc.get_token()
 
-  # Web worker to retrieve state of export job
-  worker_load_export_state = new Worker '<%= asset_path 'workers/load_export_state_worker' %>'
-  worker_load_export_state.onmessage = (e) ->
-    if e.data.status == 200 || e.data.status == 304
+  # Web worker to retrieve state of export job, or permanently hide the export job alert
+  worker = new Worker '<%= asset_path 'workers/export_state_worker' %>'
+  worker.onmessage = (e) ->
+    if (e.data.status == 200 || e.data.status == 304) && e.data.operation == LOAD_JOB_STATE
       $rootScope.show_export_alert = e.data.response.show_alert
       $rootScope.export_date = e.data.response.export_date
       $rootScope.export_state = e.data.response.state
@@ -33,10 +37,8 @@ angular.module('feedbunch').service 'exportStateSvc',
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
-      timerFlagSvc.start 'error_exporting'
-
-  # Web worker to hide export state alert
-  worker_hide_export_alert = new Worker '<%= asset_path 'workers/hide_export_alert_worker' %>'
+      if e.data.operation == LOAD_JOB_STATE
+        timerFlagSvc.start 'error_exporting'
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load export process state via AJAX
@@ -53,7 +55,7 @@ angular.module('feedbunch').service 'exportStateSvc',
   #---------------------------------------------
   load_export_state = (show_message=false)->
     show_finished_message = show_message
-    worker_load_export_state.postMessage {token: token}
+    worker.postMessage {operation: LOAD_JOB_STATE ,token: token}
 
   service =
 
@@ -67,7 +69,7 @@ angular.module('feedbunch').service 'exportStateSvc',
     #---------------------------------------------
     hide_alert: ->
       $rootScope.show_export_alert = false
-      worker_hide_export_alert.postMessage {token: token}
+      worker.postMessage {operation: HIDE_JOB_ALERT ,token: token}
 
   return service
 ]
