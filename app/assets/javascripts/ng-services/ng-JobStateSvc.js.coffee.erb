@@ -6,87 +6,69 @@ angular.module('feedbunch').service 'jobStateSvc',
 ['$rootScope', '$timeout', '$window', 'csrfTokenSvc', 'feedsFoldersSvc', 'timerFlagSvc', 'findSvc', 'favicoSvc', 'userDataSvc',
 ($rootScope, $timeout, $window, csrfTokenSvc, feedsFoldersSvc, timerFlagSvc, findSvc, favicoSvc, userDataSvc)->
 
+  # Constants for the different operations the web worker can perform
+  LOAD_ALL_SUBSCRIBE_JOB_STATES = 'load_all_subscribe_job_states'
+  LOAD_SINGLE_SUBSCRIBE_JOB_STATE = 'load_single_subscribe_job_state'
+  DELETE_SUBSCRIBE_JOB_STATE = 'delete_subscribe_job_state'
+  LOAD_ALL_REFRESH_JOB_STATES = 'load_all_refresh_job_states'
+  LOAD_SINGLE_REFRESH_JOB_STATE = 'load_single_refresh_job_state'
+  DELETE_REFRESH_JOB_STATE = 'delete_refresh_job_state'
+
   # CSRF token
   token = csrfTokenSvc.get_token()
 
-  # Web worker to retrieve the state of all refresh feed jobs of the user
-  worker_refresh_jobs_states = new Worker '<%= asset_path 'workers/load_refresh_feed_jobs_states_worker' %>'
-  worker_refresh_jobs_states.onmessage = (e) ->
+  # Web worker to load or delete the state of  jobs
+  worker = new Worker '<%= asset_path 'workers/job_state_worker' %>'
+  worker.onmessage = (e) ->
     if e.data.status == 200 || e.data.status == 304
-      $rootScope.refresh_feed_job_states = e.data.response.slice()
-      for job_state in e.data.response
-        # Periodically update the state of any running jobs
-        load_refresh_feed_job_state job_state.id if job_state.state=="RUNNING"
+      if e.data.operation == LOAD_ALL_SUBSCRIBE_JOB_STATES
+        $rootScope.subscribe_job_states = e.data.response.slice()
+        for job_state in e.data.response
+          # Periodically update the state of any running jobs
+          load_subscribe_job_state job_state.id if job_state.state=="RUNNING"
+      else if e.data.operation == LOAD_SINGLE_SUBSCRIBE_JOB_STATE
+        job = findSvc.find_subscribe_job e.data.response.id
+        if job?
+          job.state = e.data.response.state
+          if job.state=="RUNNING"
+            # If job is running, keep periodically updating its state
+            load_subscribe_job_state job.id
+          else if job.state=="ERROR"
+            timerFlagSvc.start 'error_subscribing'
+          else if job.state=="SUCCESS"
+            timerFlagSvc.start 'success_subscribe'
+            job.feed_id = e.data.response.feed_id
+            # Update the total subscribed feeds count
+            userDataSvc.load_data()
+      else if e.data.operation == LOAD_ALL_REFRESH_JOB_STATES
+        $rootScope.refresh_feed_job_states = e.data.response.slice()
+        for job_state in e.data.response
+          # Periodically update the state of any running jobs
+          load_refresh_feed_job_state job_state.id if job_state.state=="RUNNING"
+      else if e.data.operation == LOAD_SINGLE_REFRESH_JOB_STATE
+        job = findSvc.find_refresh_feed_job e.data.response.id
+        if job?
+          job.state = e.data.response.state
+          if job.state=="RUNNING"
+            # If job is running, keep periodically updating its state
+            load_refresh_feed_job_state job.id
+          else if job.state=="ERROR"
+            timerFlagSvc.start 'error_refreshing_feed'
+          else if job.state=="SUCCESS"
+            timerFlagSvc.start 'success_refresh_feed'
+            feedsFoldersSvc.load_feed job.feed_id
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else if e.data.status == 404
-      $rootScope.refresh_feed_job_states = []
+      if e.data.operation == LOAD_ALL_SUBSCRIBE_JOB_STATES
+        $rootScope.subscribe_job_states = []
+      else if e.data.operation == LOAD_ALL_REFRESH_JOB_STATES
+        $rootScope.refresh_feed_job_states = []
     else
-      timerFlagSvc.start 'error_loading_job_states'
-
-  # Web worker to retrieve the state of a single refresh feed job
-  worker_single_refresh_job_state = new Worker '<%= asset_path 'workers/load_refresh_feed_jobs_states_worker' %>'
-  worker_single_refresh_job_state.onmessage = (e) ->
-    if e.data.status == 200 || e.data.status == 304
-      # Update the current state of the job
-      job = findSvc.find_refresh_feed_job e.data.response.id
-      if job?
-        job.state = e.data.response.state
-        if job.state=="RUNNING"
-          # If job is running, keep periodically updating its state
-          load_refresh_feed_job_state job.id
-        else if job.state=="ERROR"
-          timerFlagSvc.start 'error_refreshing_feed'
-        else if job.state=="SUCCESS"
-          timerFlagSvc.start 'success_refresh_feed'
-          feedsFoldersSvc.load_feed job.feed_id
-    else if e.data.status == 401 || e.data.status == 422
-      $window.location.href = '/login'
-    else if e.data.status != 404
-      timerFlagSvc.start 'error_loading_job_states'
-
-  # Web worker to retrieve the state of all subscribe jobs of the user
-  worker_subscribe_jobs_states = new Worker '<%= asset_path 'workers/load_subscribe_jobs_states_worker' %>'
-  worker_subscribe_jobs_states.onmessage = (e) ->
-    if e.data.status == 200 || e.data.status == 304
-      $rootScope.subscribe_job_states = e.data.response.slice()
-      for job_state in e.data.response
-        # Periodically update the state of any running jobs
-        load_subscribe_job_state job_state.id if job_state.state=="RUNNING"
-    else if e.data.status == 401 || e.data.status == 422
-      $window.location.href = '/login'
-    else if e.data.status == 404
-      $rootScope.subscribe_job_states = []
-    else
-      timerFlagSvc.start 'error_loading_job_states'
-
-  # Web worker to retrieve the state of a single subscribe job.
-  worker_single_subscribe_job_state = new Worker '<%= asset_path 'workers/load_subscribe_jobs_states_worker' %>'
-  worker_single_subscribe_job_state.onmessage = (e) ->
-    if e.data.status == 200 || e.data.status == 304
-      job = findSvc.find_subscribe_job e.data.response.id
-      if job?
-        job.state = e.data.response.state
-        if job.state=="RUNNING"
-          # If job is running, keep periodically updating its state
-          load_subscribe_job_state job.id
-        else if job.state=="ERROR"
-          timerFlagSvc.start 'error_subscribing'
-        else if job.state=="SUCCESS"
-          timerFlagSvc.start 'success_subscribe'
-          job.feed_id = e.data.response.feed_id
-          # Update the total subscribed feeds count
-          userDataSvc.load_data()
-    else if e.data.status == 401 || e.data.status == 422
-      $window.location.href = '/login'
-    else if e.data.status != 404
-      timerFlagSvc.start 'error_subscribing'
-
-  # Web worker to delete a refresh feed job state
-  worker_delete_refresh_job_state = new Worker '<%= asset_path 'workers/delete_refresh_feed_job_state_worker' %>'
-
-  # Web worker to delete a subscribe job state
-  worker_delete_subscribe_job_state = new Worker '<%= asset_path 'workers/delete_subscribe_job_state_worker' %>'
+      if e.data.operation == LOAD_ALL_SUBSCRIBE_JOB_STATES || e.data.operation == LOAD_ALL_REFRESH_JOB_STATES || e.data.operation == LOAD_SINGLE_REFRESH_JOB_STATE
+        timerFlagSvc.start 'error_loading_job_states'
+      else if e.data.operation == LOAD_SINGLE_SUBSCRIBE_JOB_STATE
+        timerFlagSvc.start 'error_subscribing'
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load state of a single refresh feed job via AJAX.
@@ -103,7 +85,7 @@ angular.module('feedbunch').service 'jobStateSvc',
       timer = $timeout ->
         # Remove this timer from the list so that another update can be scheduled for 5 seconds in the future
         delete $rootScope.refresh_job_state_timers[job_id]
-        worker_single_refresh_job_state.postMessage token: token, id: job_id
+        worker.postMessage {operation: LOAD_SINGLE_REFRESH_JOB_STATE, token: token, id: job_id}
       , 5000
       # Store timer so that a second timer for the same job state is not started in the future
       $rootScope.refresh_job_state_timers[job_id] = timer
@@ -123,7 +105,7 @@ angular.module('feedbunch').service 'jobStateSvc',
       timer = $timeout ->
         # Remove this timer from the list so that another update can be scheduled for 5 seconds in the future
         delete $rootScope.subscribe_job_state_timers[job_id]
-        worker_single_subscribe_job_state.postMessage token: token, id: job_id
+        worker.postMessage {operation: LOAD_SINGLE_SUBSCRIBE_JOB_STATE, token: token, id: job_id}
       , 5000
       # Store timer so that a second timer for the same job state is not started in the future
       $rootScope.subscribe_job_state_timers[job_id] = timer
@@ -131,11 +113,11 @@ angular.module('feedbunch').service 'jobStateSvc',
   service =
 
     #---------------------------------------------
-    # Load import process state via AJAX into the root scope
+    # Load job states via AJAX into the root scope
     #---------------------------------------------
     load_data: ->
-      worker_refresh_jobs_states.postMessage {token: token}
-      worker_subscribe_jobs_states.postMessage {token: token}
+      worker.postMessage {operation: LOAD_ALL_SUBSCRIBE_JOB_STATES, token: token}
+      worker.postMessage {operation: LOAD_ALL_REFRESH_JOB_STATES, token: token}
 
     #---------------------------------------------
     # Hide a refresh feed job state alert and notify the server via AJAX that it should be deleted
@@ -155,7 +137,7 @@ angular.module('feedbunch').service 'jobStateSvc',
           $timeout.cancel timer
           delete $rootScope.refresh_job_state_timers[job_state.id]
 
-      worker_delete_refresh_job_state.postMessage token: token, id: job_state.id
+      worker.postMessage {operation: DELETE_REFRESH_JOB_STATE, token: token, id: job_state.id}
 
     #---------------------------------------------
     # Hide a subscribe job state alert and notify the server via AJAX that it should be deleted
@@ -175,7 +157,7 @@ angular.module('feedbunch').service 'jobStateSvc',
           $timeout.cancel timer
           delete $rootScope.subscribe_job_state_timers[job_state.id]
 
-      worker_delete_subscribe_job_state.postMessage token: token, id: job_state.id
+      worker.postMessage {operation: DELETE_SUBSCRIBE_JOB_STATE, token: token, id: job_state.id}
 
   return service
 ]

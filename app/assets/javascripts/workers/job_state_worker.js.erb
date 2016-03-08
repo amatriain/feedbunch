@@ -1,0 +1,57 @@
+/**
+ * Web Worker to load and delete the state of refresh and subscribe jobs in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_get' %>');
+importScripts('<%= asset_path 'workers/common/do_delete' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // Constants for the different operations the web worker can perform
+  var LOAD_ALL_SUBSCRIBE_JOB_STATES = "load_all_subscribe_job_states";
+  var LOAD_SINGLE_SUBSCRIBE_JOB_STATE = "load_single_subscribe_job_state";
+  var DELETE_SUBSCRIBE_JOB_STATE = "delete_subscribe_job_state";
+  var LOAD_ALL_REFRESH_JOB_STATES = "load_all_refresh_job_states";
+  var LOAD_SINGLE_REFRESH_JOB_STATE = "load_single_refresh_job_state";
+  var DELETE_REFRESH_JOB_STATE = "delete_refresh_job_state";
+
+  // Operation to perform
+  var operation = e.data.operation;
+
+  // CSRF token
+  var token = e.data.token;
+
+  if (operation == LOAD_ALL_SUBSCRIBE_JOB_STATES) {
+    var url = "/api/subscribe_job_states.json";
+    do_get(operation, url, token, 0);
+  }
+  else if (operation == LOAD_SINGLE_SUBSCRIBE_JOB_STATE){
+    // ID of the job to query. Mandatory for this operation.
+    var id = e.data.id;
+    var url = "/api/subscribe_job_states/" + id + ".json";
+    do_get(operation, url, token, 0);
+  }
+  else if (operation == DELETE_SUBSCRIBE_JOB_STATE){
+    // ID of the job state to delete
+    var id = e.data.id;
+    var data = {job_state: {id: id}};
+    do_delete(operation, "/api/subscribe_job_states/" + id + ".json", token, data, 0);
+  }
+  else if (operation == LOAD_ALL_REFRESH_JOB_STATES) {
+    var url = "/api/refresh_feed_job_states.json";
+    do_get(operation, url, token, 0);
+  }
+  else if (operation == LOAD_SINGLE_REFRESH_JOB_STATE){
+    // ID of the job to query. Mandatory for this operation.
+    var id = e.data.id;
+    var url = "/api/refresh_feed_job_states/" + id + ".json";
+    do_get(operation, url, token, 0);
+  }
+  else if (operation == DELETE_REFRESH_JOB_STATE){
+    // ID of the job state to delete
+    var id = e.data.id;
+    var data = {job_state: {id: id}};
+    do_delete(operation, "/api/refresh_feed_job_states/" + id + ".json", token, data, 0);
+  }
+
+}
