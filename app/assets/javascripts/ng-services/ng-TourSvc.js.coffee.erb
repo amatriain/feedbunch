@@ -104,7 +104,7 @@ angular.module('feedbunch').service 'tourSvc',
   #--------------------------------------------
   hide_feed_tour = ->
     $rootScope.show_feed_tour = false
-    worker.postMessage {toperation: HIDE_TOUR, oken: token, show_feed_tour: 'false'}
+    worker.postMessage {operation: HIDE_TOUR, token: token, show_feed_tour: 'false'}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: set to false the show_entry_tour flag for the current user.
