@@ -9,10 +9,10 @@ max_retries = 60;
 // Interval between HTTP POST retries
 retry_interval_msec = 1000;
 
-var req = new XMLHttpRequest();
-
 // Perform the HTTP POST
 do_post = function(operation, url, token, data, retry_count) {
+  var req = new XMLHttpRequest();
+
   req.onreadystatechange = function(e) {
     if (req.readyState == XMLHttpRequest.DONE) {
       if (req.status == 0) {
