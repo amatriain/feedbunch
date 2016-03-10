@@ -185,20 +185,6 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
         load_folder_entries current_folder
 
     #--------------------------------------------
-    # Refresh a feed and load its unread entries
-    #--------------------------------------------
-    refresh_feed: ->
-      entriesPaginationSvc.reset_entries()
-      entriesPaginationSvc.set_busy true
-
-      $http.put("/api/feeds/#{$rootScope.current_feed.id}.json")
-      .success (data)->
-        startPageSvc.show_start_page()
-      .error (data, status)->
-        startPageSvc.show_start_page()
-        timerFlagSvc.start 'error_refreshing_feed' if status!=0
-
-    #--------------------------------------------
     # Toggle open folder in the root scope.
     #--------------------------------------------
     toggle_open_folder: (folder)->
