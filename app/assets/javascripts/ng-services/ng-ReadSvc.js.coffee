@@ -184,15 +184,5 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
       else if current_folder
         load_folder_entries current_folder
 
-    #--------------------------------------------
-    # Toggle open folder in the root scope.
-    #--------------------------------------------
-    toggle_open_folder: (folder)->
-      if openFolderSvc.get()?.id == folder.id
-        # User is closing the open folder
-        openFolderSvc.unset()
-      else
-        openFolderSvc.set folder
-
   return service
 ]
