@@ -19,10 +19,25 @@ onmessage = function(e){
 
   if (operation == LOAD_FEED_ENTRIES){
     // ID of the feed from which entries will be loaded
-    var id = e.data.id;
+    var id = e.data.feed_id;
     var include_read = e.data.include_read;
     var page = e.data.page;
     var url = "/api/feeds/" + id + "/entries.json?include_read=" + include_read + "&page=" + page;
+
+    // Cancel any currently running entries load operation before launching a new one
+    req.abort();
+
+    do_get(operation, url, token, 0);
+  }
+  else if (operation == LOAD_FOLDER_ENTRIES){
+    // ID of the folder from which entries will be loaded
+    var id = e.data.folder_id;
+    var include_read = e.data.include_read;
+    var page = e.data.page;
+    var url = "/api/folders/" + id + "/entries.json?include_read=" + include_read + "&page=" + page;
+
+    // Cancel any currently running entries load operation before launching a new one
+    req.abort();
 
     do_get(operation, url, token, 0);
   }
