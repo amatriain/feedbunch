@@ -3,12 +3,22 @@
 ########################################################
 
 angular.module('feedbunch').service 'loadEntriesSvc',
-['$rootScope', '$http', '$q', '$timeout', 'timerFlagSvc', 'openFolderSvc',
+['$rootScope', '$http', '$q', '$timeout', 'csrfTokenSvc', 'timerFlagSvc', 'openFolderSvc',
 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc', 'lazyLoadingSvc', 'startPageSvc',
 'findSvc', 'changeUnreadCountSvc', 'highlightedEntrySvc',
-($rootScope, $http, $q, $timeout, timerFlagSvc, openFolderSvc,
+($rootScope, $http, $q, $timeout, csrfTokenSvc, timerFlagSvc, openFolderSvc,
 entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc, startPageSvc,
 findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
+
+  # Constants for the different operations the web worker can perform
+  LOAD_FEED_ENTRIES = 'load_feed_entries'
+  LOAD_FOLDER_ENTRIES = 'load_folder_entries'
+
+  # CSRF token
+  token = csrfTokenSvc.get_token()
+
+  # Web worker to load entries
+  worker = new Worker '<%= asset_path 'workers/load_entries_worker' %>'
 
   # Maximum number of entries in each page.
   # This MUST match the entries page size set in the server!
