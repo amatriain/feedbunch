@@ -2,7 +2,7 @@
 # AngularJS service to read entries in a feed or folder
 ########################################################
 
-angular.module('feedbunch').service 'readSvc',
+angular.module('feedbunch').service 'loadEntriesSvc',
 ['$rootScope', '$http', '$q', '$timeout', 'timerFlagSvc', 'openFolderSvc',
 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc', 'lazyLoadingSvc', 'startPageSvc',
 'findSvc', 'changeUnreadCountSvc', 'highlightedEntrySvc',

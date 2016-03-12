@@ -4,10 +4,10 @@
 
 angular.module('feedbunch').service 'entrySvc',
 ['$rootScope', '$window', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
-'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'readSvc', 'feedsFoldersSvc',
+'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'loadEntriesSvc', 'feedsFoldersSvc',
 'lazyLoadingSvc', 'tourSvc', 'animationsSvc', 'menuCollapseSvc', 'csrfTokenSvc',
 ($rootScope, $window, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
-currentFolderSvc, currentFeedSvc, findSvc, readSvc, feedsFoldersSvc,
+currentFolderSvc, currentFeedSvc, findSvc, loadEntriesSvc, feedsFoldersSvc,
 lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
 
   # Constants for the different operations the web worker can perform
@@ -76,7 +76,7 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
     feed = findSvc.find_feed feed_id
     if feed?
       currentFeedSvc.set feed
-      readSvc.read_entries_page()
+      loadEntriesSvc.read_entries_page()
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Mark all entries in the currently selected feed or folder as read.

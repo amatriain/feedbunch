@@ -4,12 +4,12 @@
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'exportStateSvc', 'timerFlagSvc',
-'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'readSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
+'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'loadEntriesSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
 'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'dialogsSvc', 'keyboardShortcutsSvc', 'refreshFeedSvc', 'openFolderSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
-currentFeedSvc, currentFolderSvc, subscriptionSvc, readSvc, folderSvc, entrySvc, entriesPaginationSvc,
+currentFeedSvc, currentFolderSvc, subscriptionSvc, loadEntriesSvc, folderSvc, entrySvc, entriesPaginationSvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
 highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc, refreshFeedSvc, openFolderSvc)->
@@ -107,7 +107,7 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc
   #--------------------------------------------
   $scope.show_read_feeds_entries = ->
     feedsFoldersSvc.show_read()
-    readSvc.read_entries_page()
+    loadEntriesSvc.read_entries_page()
     menuCollapseSvc.close()
     return
 
@@ -116,7 +116,7 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc
   #--------------------------------------------
   $scope.hide_read_feeds_entries = ->
     feedsFoldersSvc.hide_read()
-    readSvc.read_entries_page()
+    loadEntriesSvc.read_entries_page()
     menuCollapseSvc.close()
     return
 
@@ -175,7 +175,7 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc
   # Load a page of entries for the currently selected feed or folder
   #--------------------------------------------
   $scope.read_entries_page = ->
-    readSvc.read_entries_page()
+    loadEntriesSvc.read_entries_page()
     return
 
   #--------------------------------------------

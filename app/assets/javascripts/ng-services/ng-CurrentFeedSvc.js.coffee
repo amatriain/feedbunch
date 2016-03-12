@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'currentFeedSvc',
 ['$rootScope', 'entriesPaginationSvc', 'cleanupSvc', 'findSvc', 'openFolderSvc', 'tooltipSvc', 'feedsFoldersSvc',
-'readSvc', 'menuCollapseSvc', 'sidebarVisibleSvc', 'tourSvc',
+'loadEntriesSvc', 'menuCollapseSvc', 'sidebarVisibleSvc', 'tourSvc',
 ($rootScope, entriesPaginationSvc, cleanupSvc, findSvc, openFolderSvc, tooltipSvc, feedsFoldersSvc,
-readSvc, menuCollapseSvc, sidebarVisibleSvc, tourSvc)->
+loadEntriesSvc, menuCollapseSvc, sidebarVisibleSvc, tourSvc)->
 
   set: (feed)->
     if feed?
@@ -20,7 +20,7 @@ readSvc, menuCollapseSvc, sidebarVisibleSvc, tourSvc)->
         openFolderSvc.set folder
       tooltipSvc.feed_title_tooltip()
       feedsFoldersSvc.load_feed feed.id
-      readSvc.read_entries_page()
+      loadEntriesSvc.read_entries_page()
       menuCollapseSvc.close()
       sidebarVisibleSvc.set false
       tourSvc.show_feed_tour()
