@@ -23,13 +23,13 @@ onmessage = function(e){
 
   if (operation == LOAD_ALL_SUBSCRIBE_JOB_STATES) {
     var url = "/api/subscribe_job_states.json";
-    do_get(operation, url, token, 0);
+    do_get(operation, url, token, {}, 0);
   }
   else if (operation == LOAD_SINGLE_SUBSCRIBE_JOB_STATE){
     // ID of the job to query. Mandatory for this operation.
     var id = e.data.id;
     var url = "/api/subscribe_job_states/" + id + ".json";
-    do_get(operation, url, token, 0);
+    do_get(operation, url, token, {job_id: id}, 0);
   }
   else if (operation == DELETE_SUBSCRIBE_JOB_STATE){
     // ID of the job state to delete
@@ -39,13 +39,13 @@ onmessage = function(e){
   }
   else if (operation == LOAD_ALL_REFRESH_JOB_STATES) {
     var url = "/api/refresh_feed_job_states.json";
-    do_get(operation, url, token, 0);
+    do_get(operation, url, token, {}, 0);
   }
   else if (operation == LOAD_SINGLE_REFRESH_JOB_STATE){
     // ID of the job to query. Mandatory for this operation.
     var id = e.data.id;
     var url = "/api/refresh_feed_job_states/" + id + ".json";
-    do_get(operation, url, token, 0);
+    do_get(operation, url, token, {job_id: id}, 0);
   }
   else if (operation == DELETE_REFRESH_JOB_STATE){
     // ID of the job state to delete

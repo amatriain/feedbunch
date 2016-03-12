@@ -21,7 +21,7 @@ onmessage = function(e){
     // Which tour to load. Mandatory for this operation
     var tour = e.data.tour;
     var url = "/api/tours/" + tour + ".json";
-    do_get(operation, url, token, 0);
+    do_get(operation, url, token, {tour: tour}, 0);
   }
   else if (operation == HIDE_TOUR){
     // Show the main tour?

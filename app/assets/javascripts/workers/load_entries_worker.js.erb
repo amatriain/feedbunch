@@ -37,7 +37,7 @@ onmessage = function(e){
     var page = e.data.page;
     var url = "/api/feeds/" + id + "/entries.json?include_read=" + include_read + "&page=" + page;
 
-    get_data = do_get(operation, url, token, 0);
+    get_data = do_get(operation, url, token, {feed_id: id}, 0);
     req = get_data.req;
     timeout = get_data.timeout;
   }
@@ -48,7 +48,7 @@ onmessage = function(e){
     var page = e.data.page;
     var url = "/api/folders/" + id + "/entries.json?include_read=" + include_read + "&page=" + page;
 
-    get_data = do_get(operation, url, token, 0);
+    get_data = do_get(operation, url, token, {folder_id: id}, 0);
     req = get_data.req;
     timeout = get_data.timeout;
   }

@@ -10,6 +10,10 @@ angular.module('feedbunch').service 'loadEntriesSvc',
 entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc, startPageSvc,
 findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
 
+  # Maximum number of entries in each page.
+  # This MUST match the entries page size set in the server!
+  entries_page_size = 25
+
   # Constants for the different operations the web worker can perform
   LOAD_FEED_ENTRIES = 'load_feed_entries'
   LOAD_FOLDER_ENTRIES = 'load_folder_entries'
@@ -19,10 +23,96 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
 
   # Web worker to load entries
   worker = new Worker '<%= asset_path 'workers/load_entries_worker' %>'
+  worker.onmessage = (e) ->
+    if e.data.status == 200 || e.data.status == 304
+      if e.data.operation == LOAD_FEED_ENTRIES
+        feed_entries_loaded e.data.params, e.data.response
+      else if e.data.operation == LOAD_FOLDER_ENTRIES
+        folder_entries_loaded e.data.params, e.data.response
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else if e.data.status == 404
+      entriesPaginationSvc.set_busy false
+      entriesPaginationSvc.set_more_entries_available false
+      if e.data.operation == LOAD_FEED_ENTRIES
+        feed = findSvc.find_feed e.data.params.feed_id
+        correct_feed_unread_counts feed
+        if entriesPaginationSvc.is_first_page()
+          entriesPaginationSvc.set_error_no_entries true
+          feed.unread_entries = 0
+      else if e.data.operation == LOAD_FOLDER_ENTRIES
+        folder = findSvc.find_folder e.data.params.folder_id
+        correct_folder_unread_counts folder
+        if entriesPaginationSvc.is_first_page()
+          entriesPaginationSvc.set_error_no_entries true
+    else
+      entriesPaginationSvc.set_busy false
+      startPageSvc.show_start_page()
+      timerFlagSvc.start 'error_loading_entries'
 
-  # Maximum number of entries in each page.
-  # This MUST match the entries page size set in the server!
-  entries_page_size = 25
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Operations after entries of a feed have been loaded
+  #--------------------------------------------
+  feed_entries_loaded = (params, response)->
+    entriesPaginationSvc.set_busy false
+
+    # If entries list is empty, populate it with received entries and highlight first entry.
+    # Otherwise concatenate the received page of entries to the list of entries.
+    if !$rootScope.entries || $rootScope.entries?.length == 0
+      $rootScope.entries = response.slice()
+      highlightedEntrySvc.reset()
+    else
+      $rootScope.entries = $rootScope.entries.concat response.slice()
+
+    # Set correct state (open or closed) for new entries, based on user configuration
+    openEntrySvc.add_entries response.slice()
+
+    # If the user has selected the "open all entries by default" option, lazy load images
+    if $rootScope.open_all_entries
+      $timeout ->
+        lazyLoadingSvc.load_viewport_images()
+      , 250
+
+    feed = findSvc.find_feed params.feed_id
+    # If less than a full page of entries is received, this is the last page of entries available.
+    if response.length < entries_page_size
+      entriesPaginationSvc.set_more_entries_available false
+      correct_feed_unread_counts feed
+    else if entriesPaginationSvc.is_first_page()
+      # After loading the first page of entries, load a second one to ensure the list is fully populated
+      load_feed_entries feed
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Operations after entries of a folder have been loaded
+  #--------------------------------------------
+  folder_entries_loaded = (params, response)->
+    entriesPaginationSvc.set_busy false
+
+    # If entries list is empty, populate it with received entries and highlight first entry.
+    # Otherwise concatenate the received page of entries to the list of entries.
+    if !$rootScope.entries || $rootScope.entries?.length == 0
+      $rootScope.entries = response.slice()
+      highlightedEntrySvc.reset()
+    else
+      $rootScope.entries = $rootScope.entries.concat response.slice()
+
+    # Set correct state (open or closed) for new entries, based on user configuration
+    openEntrySvc.add_entries response.slice()
+
+    # If the user has selected the "open all entries by default" option, lazy load images
+    if $rootScope.open_all_entries
+      $timeout ->
+        lazyLoadingSvc.load_viewport_images()
+      , 250
+
+    folder = findSvc.find_folder params.folder_id
+    # If less than a full page of entries is received, this is the last page of entries available.
+    if data.length < entries_page_size
+      entriesPaginationSvc.set_more_entries_available false
+      correct_folder_unread_counts folder
+    else if entriesPaginationSvc.is_first_page()
+      # After loading the first page of entries, load a second one to ensure the list is fully populated
+      load_folder_entries folder
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Validations and setup that runs every time entries are loaded.
@@ -33,9 +123,6 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
     return false if entriesPaginationSvc.is_busy()
     # If a 404 has been received in a previous page (no more entries available), do nothing
     return false if !entriesPaginationSvc.more_entries_available()
-
-    # Cancel any running http request for entries
-    $rootScope.entries_http_canceler.resolve() if $rootScope.entries_http_canceler?
 
     # Reset the timer that updates feeds every minute
     feedsFoldersSvc.reset_refresh_timer()

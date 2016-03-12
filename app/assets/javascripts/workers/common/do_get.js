@@ -10,7 +10,7 @@ max_retries = 60;
 retry_interval_msec = 1000;
 
 // Perform the HTTP GET
-do_get = function(operation, url, token, retry_count) {
+do_get = function(operation, url, token, data, retry_count) {
   var req = new XMLHttpRequest();
   var timeout;
 
@@ -19,16 +19,16 @@ do_get = function(operation, url, token, retry_count) {
       if (req.status == 0) {
         // Network error, retry up to max_retries times
         if (retry_count < max_retries) {
-          timeout = setTimeout(do_get, retry_interval_msec, operation, url, token, retry_count + 1);
+          timeout = setTimeout(do_get, retry_interval_msec, operation, url, token, data, retry_count + 1);
         }
         else {
           // Unrecoverable failure
-          postMessage({operation: operation, status: req.status});
+          postMessage({operation: operation, status: req.status, params: data});
         }
       }
       else {
         // Success (actual HTTP status may indicate an error response, main thread handles it)
-        data = {operation: operation, status: req.status};
+        data = {operation: operation, status: req.status, params: data};
         if (req.responseText){
           data["response"] = JSON.parse(req.responseText);
         }

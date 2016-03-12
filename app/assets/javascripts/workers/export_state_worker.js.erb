@@ -19,7 +19,7 @@ onmessage = function(e){
 
   if (operation == LOAD_JOB_STATE){
     // GET job state
-    do_get(operation, "/api/opml_exports.json", token, 0);
+    do_get(operation, "/api/opml_exports.json", token, {}, 0);
   }
   else if (operation == HIDE_JOB_ALERT) {
     // Hide the alert showing the job state
