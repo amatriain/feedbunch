@@ -49,7 +49,8 @@ onmessage = function(e){
     var page = e.data.page;
     var url = "/api/folders/" + id + "/entries.json?include_read=" + include_read + "&page=" + page;
 
-    req = do_get(operation, url, token, 0);
+    get_data = do_get(operation, url, token, 0);
+    req = get_data.req;
     timeout = get_data.timeout;
   }
 }
