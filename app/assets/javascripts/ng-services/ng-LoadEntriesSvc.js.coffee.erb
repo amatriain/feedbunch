@@ -3,10 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').service 'loadEntriesSvc',
-['$rootScope', '$http', '$q', '$timeout', 'csrfTokenSvc', 'timerFlagSvc', 'openFolderSvc',
+['$rootScope', '$timeout', 'csrfTokenSvc', 'timerFlagSvc', 'openFolderSvc',
 'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc', 'lazyLoadingSvc', 'startPageSvc',
 'findSvc', 'changeUnreadCountSvc', 'highlightedEntrySvc',
-($rootScope, $http, $q, $timeout, csrfTokenSvc, timerFlagSvc, openFolderSvc,
+($rootScope, $timeout, csrfTokenSvc, timerFlagSvc, openFolderSvc,
 entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc, startPageSvc,
 findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
 
@@ -140,55 +140,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
     return if load_entries_setup() == false
 
     url = "/api/feeds/#{feed.id}/entries.json"
-    $rootScope.entries_http_canceler = $q.defer()
-    $http.get("#{url}?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}",
-      {timeout: $rootScope.entries_http_canceler.promise})
-    .success (data)->
-      $rootScope.entries_http_canceler = null
-      entriesPaginationSvc.set_busy false
-
-      # If entries list is empty, populate it with received entries and highlight first entry.
-      # Otherwise concatenate the received page of entries to the list of entries.
-      if !$rootScope.entries || $rootScope.entries?.length == 0
-        $rootScope.entries = data.slice()
-        highlightedEntrySvc.reset()
-      else
-        $rootScope.entries = $rootScope.entries.concat data.slice()
-
-      # Set correct state (open or closed) for new entries, based on user configuration
-      openEntrySvc.add_entries data.slice()
-
-      # If the user has selected the "open all entries by default" option, lazy load images
-      if $rootScope.open_all_entries
-        $timeout ->
-          lazyLoadingSvc.load_viewport_images()
-        , 250
-
-      # If less than a full page of entries is received, this is the last page of entries available.
-      if data.length < entries_page_size
-        entriesPaginationSvc.set_more_entries_available false
-        correct_feed_unread_counts feed
-
-      if entriesPaginationSvc.is_first_page()
-        # After loading the first page of entries, load a second one to ensure the list is fully populated
-        load_feed_entries feed
-
-    .error (data, status)->
-      # if HTTP call has been prematurely cancelled, do nothing
-      if status!=0
-        $rootScope.entries_http_canceler = null
-        entriesPaginationSvc.set_busy false
-        if status == 404
-          # there are no more entries to retrieve
-          entriesPaginationSvc.set_more_entries_available false
-          correct_feed_unread_counts feed
-
-          if entriesPaginationSvc.is_first_page()
-            entriesPaginationSvc.set_error_no_entries true
-            feed.unread_entries = 0
-        else
-          startPageSvc.show_start_page()
-          timerFlagSvc.start 'error_loading_entries'
+    worker.postMessage {operation: LOAD_FEED_ENTRIES, token: token, feed_id: feed.id, include_read: $rootScope.show_read, page: entriesPaginationSvc.get_entries_page()}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: After all entries in a feed have been received, set the unread count for the feed
@@ -208,55 +160,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
     return if load_entries_setup() == false
 
     url = "/api/folders/#{folder.id}/entries.json"
-    $rootScope.entries_http_canceler = $q.defer()
-    $http.get("#{url}?include_read=#{$rootScope.show_read}&page=#{entriesPaginationSvc.get_entries_page()}",
-      {timeout: $rootScope.entries_http_canceler.promise})
-    .success (data)->
-      $rootScope.entries_http_canceler = null
-      entriesPaginationSvc.set_busy false
-
-      # If entries list is empty, populate it with received entries and highlight first entry.
-      # Otherwise concatenate the received page of entries to the list of entries.
-      if !$rootScope.entries || $rootScope.entries?.length == 0
-        $rootScope.entries = data.slice()
-        highlightedEntrySvc.reset()
-      else
-        $rootScope.entries = $rootScope.entries.concat data.slice()
-
-      # Set correct state (open or closed) for new entries, based on user configuration
-      openEntrySvc.add_entries data.slice()
-
-      # If the user has selected the "open all entries by default" option, lazy load images
-      if $rootScope.open_all_entries
-        $timeout ->
-          lazyLoadingSvc.load_viewport_images()
-        , 250
-
-      # If less than a full page of entries is received, this is the last page of entries available.
-      if data.length < entries_page_size
-        entriesPaginationSvc.set_more_entries_available false
-        correct_folder_unread_counts folder
-
-      if entriesPaginationSvc.is_first_page()
-        # After loading the first page of entries, load a second one to ensure the list is fully populated
-        load_folder_entries folder
-
-    .error (data, status)->
-      # if HTTP call has been prematurely cancelled, do nothing
-      if status!=0
-        $rootScope.entries_http_canceler = null
-        entriesPaginationSvc.set_busy false
-        if status == 404
-          # there are no more entries to retrieve
-          entriesPaginationSvc.set_more_entries_available false
-          correct_folder_unread_counts folder
-
-          if entriesPaginationSvc.is_first_page()
-            entriesPaginationSvc.set_error_no_entries true
-            $rootScope.current_feed?.unread_entries = 0
-        else
-          startPageSvc.show_start_page()
-          timerFlagSvc.start 'error_loading_entries'
+    worker.postMessage {operation: LOAD_FOLDER_ENTRIES, token: token, feed_id: feed.id, include_read: $rootScope.show_read, page: entriesPaginationSvc.get_entries_page()}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: After retrieving entries in a folder, set to zero the unread count of
