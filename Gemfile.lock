@@ -331,7 +331,7 @@ GEM
       sexp_processor (~> 4.0)
     ruby_parser (3.7.3)
       sexp_processor (~> 4.1)
-    rubyzip (1.1.7)
+    rubyzip (1.2.0)
     rufus-scheduler (3.1.10)
     safe_yaml (1.0.4)
     sanitize (4.0.1)
