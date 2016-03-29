@@ -325,7 +325,7 @@ GEM
     rspec-retry (0.4.5)
       rspec-core
     rspec-support (3.4.1)
-    ruby-prof (0.15.8)
+    ruby-prof (0.15.9)
     ruby2ruby (2.2.0)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
