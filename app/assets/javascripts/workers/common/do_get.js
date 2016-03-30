@@ -12,14 +12,13 @@ retry_interval_msec = 1000;
 // Perform the HTTP GET
 do_get = function(operation, url, token, data, retry_count) {
   var req = new XMLHttpRequest();
-  var timeout;
 
   req.onreadystatechange = function(e) {
     if (req.readyState == XMLHttpRequest.DONE) {
       if (req.status == 0) {
         // Network error, retry up to max_retries times
         if (retry_count < max_retries) {
-          timeout = setTimeout(do_get, retry_interval_msec, operation, url, token, data, retry_count + 1);
+          setTimeout(do_get, retry_interval_msec, operation, url, token, data, retry_count + 1);
         }
         else {
           // Unrecoverable failure
@@ -40,6 +39,4 @@ do_get = function(operation, url, token, data, retry_count) {
   req.setRequestHeader("X-CSRF-Token", token);
   req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   req.send();
-
-  return {req: req, timeout: timeout};
 }
