@@ -20,7 +20,9 @@ favicoSvc, startPageSvc, jobStateSvc)->
   worker.onmessage = (e) ->
     jobStateSvc.load_data()
     if e.data.status == 200
-      if e.data.operation == UNSUBSCRIBE
+      if e.data.operation == SUBSCRIBE
+        startPageSvc.show_start_page()
+      else if e.data.operation == UNSUBSCRIBE
         feed_unsubscribed e.data.params.feed.id
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'

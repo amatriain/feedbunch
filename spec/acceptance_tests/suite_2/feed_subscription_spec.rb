@@ -38,6 +38,13 @@ describe 'subscription to feeds', type: :feature do
 
   context 'add a feed subscription' do
 
+    it 'goes to start page after adding a subscription', js: true do
+      read_feed @feed1, @user
+      expect(page).to have_no_css '#start-info'
+      subscribe_feed @feed2.fetch_url
+      expect(page).to have_css '#start-info'
+    end
+
     context 'while subscription job is running' do
 
       it 'shows message', js: true do
