@@ -28,11 +28,11 @@ do_get = function(operation, url, token, data, retry_count) {
       }
       else {
         // Success (actual HTTP status may indicate an error response, main thread handles it)
-        data = {operation: operation, status: req.status, params: data};
+        data_callback = {operation: operation, status: req.status, params: data};
         if (req.responseText){
-          data["response"] = JSON.parse(req.responseText);
+          data_callback["response"] = JSON.parse(req.responseText);
         }
-        postMessage(data);
+        postMessage(data_callback);
       }
     }
   };
