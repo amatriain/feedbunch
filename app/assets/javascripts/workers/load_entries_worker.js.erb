@@ -4,12 +4,6 @@
 
 importScripts('<%= asset_path 'workers/common/do_get' %>');
 
-// XmlHttpRequest object of the last HTTP request sent
-var req;
-
-// Timeout set to reattempt loading entries after a failure
-var timeout;
-
 // Callback for messages from the main thread
 onmessage = function(e){
   // Constants for the different operations the web worker can perform
@@ -22,14 +16,6 @@ onmessage = function(e){
   // CSRF token
   var token = e.data.token;
 
-  // Cancel any currently running entries load operation before launching a new one
-  if (req) {
-    req.abort();
-  }
-  if (timeout){
-    clearTimeout(timeout);
-  }
-
   if (operation == LOAD_FEED_ENTRIES){
     // ID of the feed from which entries will be loaded
     var id = e.data.feed_id;
@@ -37,9 +23,7 @@ onmessage = function(e){
     var page = e.data.page;
     var url = "/api/feeds/" + id + "/entries.json?include_read=" + include_read + "&page=" + page;
 
-    get_data = do_get(operation, url, token, {feed_id: id, page: page}, 0);
-    req = get_data.req;
-    timeout = get_data.timeout;
+    do_get(operation, url, token, {feed_id: id, page: page}, 0);
   }
   else if (operation == LOAD_FOLDER_ENTRIES){
     // ID of the folder from which entries will be loaded
@@ -48,8 +32,6 @@ onmessage = function(e){
     var page = e.data.page;
     var url = "/api/folders/" + id + "/entries.json?include_read=" + include_read + "&page=" + page;
 
-    get_data = do_get(operation, url, token, {folder_id: id, page: page}, 0);
-    req = get_data.req;
-    timeout = get_data.timeout;
+    do_get(operation, url, token, {folder_id: id, page: page}, 0);
   }
 }
