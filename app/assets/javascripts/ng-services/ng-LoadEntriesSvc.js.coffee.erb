@@ -107,7 +107,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
 
     folder = findSvc.find_folder params.folder_id
     # If less than a full page of entries is received, this is the last page of entries available.
-    if data.length < entries_page_size
+    if response.length < entries_page_size
       entriesPaginationSvc.set_more_entries_available false
       correct_folder_unread_counts folder
     else if entriesPaginationSvc.is_first_page()
@@ -160,7 +160,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
     return if load_entries_setup() == false
 
     url = "/api/folders/#{folder.id}/entries.json"
-    worker.postMessage {operation: LOAD_FOLDER_ENTRIES, token: token, feed_id: feed.id, include_read: $rootScope.show_read, page: entriesPaginationSvc.get_entries_page()}
+    worker.postMessage {operation: LOAD_FOLDER_ENTRIES, token: token, folder_id: folder.id, include_read: $rootScope.show_read, page: entriesPaginationSvc.get_entries_page()}
 
   #--------------------------------------------
   # PRIVATE FUNCTION: After retrieving entries in a folder, set to zero the unread count of
