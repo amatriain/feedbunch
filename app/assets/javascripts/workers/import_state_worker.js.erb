@@ -23,7 +23,7 @@ onmessage = function(e){
   }
   else if (operation == HIDE_JOB_ALERT) {
     // Hide the alert showing the job state
-    var data = {opml_export: {show_alert: 'false'}};
+    var data = {opml_import: {show_alert: 'false'}};
     do_put(operation, "/api/opml_imports.json", token, data, 0);
   }
 
