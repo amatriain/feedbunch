@@ -335,6 +335,7 @@ angular.module('feedbunch').service 'animationsSvc',
       $('#read-all-button')
         .velocity({backgroundColor: '#e7e7e7'}, {duration: 300, easing: 'ease-out'})
         .velocity({backgroundColorAlpha: 0}, {duration: 300, easing: 'ease-in'})
+        .velocity({backgroundColor: '#f8f8f8', backgroundColorAlpha: 1}, {duration: 0})
 
     #---------------------------------------------
     # Temporarily higlight the "Show read" navbar button when clicked.
@@ -343,6 +344,7 @@ angular.module('feedbunch').service 'animationsSvc',
       $('#show-read')
         .velocity({backgroundColor: '#e7e7e7'}, {duration: 300, easing: 'ease-out'})
         .velocity({backgroundColorAlpha: 0}, {duration: 300, easing: 'ease-in'})
+        .velocity({backgroundColor: '#f8f8f8', backgroundColorAlpha: 1}, {duration: 0})
 
     #---------------------------------------------
     # Temporarily higlight the "Hide read" navbar button when clicked.
@@ -351,7 +353,7 @@ angular.module('feedbunch').service 'animationsSvc',
       $('#hide-read')
       .velocity({backgroundColor: '#e7e7e7'}, {duration: 300, easing: 'ease-out'})
       .velocity({backgroundColorAlpha: 0}, {duration: 300, easing: 'ease-in'})
-
+      .velocity({backgroundColor: '#f8f8f8', backgroundColorAlpha: 1}, {duration: 0})
 
   return service
 ]
