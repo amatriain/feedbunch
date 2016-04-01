@@ -47,6 +47,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
           entriesPaginationSvc.set_error_no_entries true
     else
       entriesPaginationSvc.set_busy false
+      entriesPaginationSvc.set_more_entries_available false
       startPageSvc.show_start_page()
       timerFlagSvc.start 'error_loading_entries'
 
