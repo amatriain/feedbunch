@@ -97,6 +97,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
     # appears only once even if the user clicks rapidly on the folder link.
     page = entriesPaginationSvc.get_entries_page()
     if $rootScope.current_folder?.id == params.folder_id && page == params.page && (page != 1 || $rootScope.entries.length == 0)
+
       entriesPaginationSvc.set_busy false
 
       # If entries list is empty, populate it with received entries and highlight first entry.
@@ -130,8 +131,6 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
   # Returns true if the load process can continue, false if it must be cancelled.
   #--------------------------------------------
   load_entries_setup = ->
-    # If busy, do nothing
-    return false if entriesPaginationSvc.is_busy()
     # If a 404 has been received in a previous page (no more entries available), do nothing
     return false if !entriesPaginationSvc.more_entries_available()
 

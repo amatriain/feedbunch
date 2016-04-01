@@ -15,6 +15,7 @@ sidebarVisibleSvc, jobStateSvc)->
     $rootScope.current_feed = null
     $rootScope.current_folder = null
     entriesPaginationSvc.reset_entries()
+    entriesPaginationSvc.set_busy false
     menuCollapseSvc.close()
     jobStateSvc.load_data()
     sidebarVisibleSvc.set false
