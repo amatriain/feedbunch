@@ -4,12 +4,12 @@
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'exportStateSvc', 'timerFlagSvc',
-'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'loadEntriesSvc', 'folderSvc', 'entrySvc', 'entriesPaginationSvc',
+'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'loadEntriesSvc', 'folderSvc', 'entrySvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
 'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'dialogsSvc', 'keyboardShortcutsSvc', 'refreshFeedSvc', 'openFolderSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
-currentFeedSvc, currentFolderSvc, subscriptionSvc, loadEntriesSvc, folderSvc, entrySvc, entriesPaginationSvc,
+currentFeedSvc, currentFolderSvc, subscriptionSvc, loadEntriesSvc, folderSvc, entrySvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
 highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc, refreshFeedSvc, openFolderSvc)->

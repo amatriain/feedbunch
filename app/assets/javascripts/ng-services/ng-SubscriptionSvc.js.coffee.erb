@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'subscriptionSvc',
-['$rootScope', 'csrfTokenSvc', 'timerFlagSvc', 'entriesPaginationSvc', 'feedsFoldersSvc', 'cleanupSvc',
+['$rootScope', 'csrfTokenSvc', 'timerFlagSvc', 'feedsFoldersSvc', 'cleanupSvc',
 'favicoSvc', 'startPageSvc', 'jobStateSvc',
-($rootScope, csrfTokenSvc, timerFlagSvc, entriesPaginationSvc, feedsFoldersSvc, cleanupSvc,
+($rootScope, csrfTokenSvc, timerFlagSvc, feedsFoldersSvc, cleanupSvc,
 favicoSvc, startPageSvc, jobStateSvc)->
 
   # Constants for the different operations the web worker can perform
