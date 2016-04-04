@@ -1,0 +1,34 @@
+########################################################
+# AngularJS service to refresh feeds
+########################################################
+
+angular.module('feedbunch').service 'refreshFeedSvc',
+['$rootScope', 'csrfTokenSvc', 'timerFlagSvc', 'entriesPaginationSvc', 'startPageSvc', 'currentFeedSvc',
+($rootScope, csrfTokenSvc, timerFlagSvc, entriesPaginationSvc, startPageSvc, currentFeedSvc)->
+
+  # CSRF token for PUT
+  token = csrfTokenSvc.get_token()
+
+  # Web worker to request a feed refresh in a different thread.
+  worker = new Worker '<%= asset_path 'workers/refresh_feed_worker' %>'
+  worker.onmessage = (e) ->
+    if e.data.status == 200
+      startPageSvc.show_start_page()
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else
+      startPageSvc.show_start_page()
+      timerFlagSvc.start 'error_refreshing_feed'
+
+  service =
+
+    #--------------------------------------------
+    # Refresh a feed and load its unread entries
+    #--------------------------------------------
+    refresh_feed: ->
+      entriesPaginationSvc.reset_entries()
+      entriesPaginationSvc.set_busy true
+      worker.postMessage {token: token, feed_id: currentFeedSvc.get().id}
+
+  return service
+]

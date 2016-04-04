@@ -1,0 +1,18 @@
+/**
+ * Web Worker to request a feed refresh in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_put' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+
+  // ID of the feed to refresh
+  var feed_id = e.data.feed_id;
+
+  var url = "/api/feeds/" + feed_id + ".json";
+
+  do_put("refresh_feed", url, token, {}, 0);
+}
