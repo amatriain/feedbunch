@@ -1,4 +1,4 @@
-asset 'jquery', '2.2.2'
+asset 'jquery', '2.2.3'
 asset 'angular', '1.5.3'
 asset 'angular-sanitize', '1.5.3'
 asset 'angular-touch', '1.5.3'
