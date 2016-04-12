@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'currentFeedSvc',
-['$rootScope', 'entriesPaginationSvc', 'cleanupSvc', 'findSvc', 'openFolderSvc', 'tooltipSvc', 'feedsFoldersSvc',
+['$rootScope', 'entriesPaginationSvc', 'cleanupSvc', 'findSvc', 'openFolderSvc', 'tooltipSvc', 'loadFeedsSvc',
 'loadEntriesSvc', 'menuCollapseSvc', 'sidebarVisibleSvc', 'tourSvc',
-($rootScope, entriesPaginationSvc, cleanupSvc, findSvc, openFolderSvc, tooltipSvc, feedsFoldersSvc,
+($rootScope, entriesPaginationSvc, cleanupSvc, findSvc, openFolderSvc, tooltipSvc, loadFeedsSvc,
 loadEntriesSvc, menuCollapseSvc, sidebarVisibleSvc, tourSvc)->
 
   set: (feed)->
@@ -19,7 +19,7 @@ loadEntriesSvc, menuCollapseSvc, sidebarVisibleSvc, tourSvc)->
         folder = findSvc.find_folder feed.folder_id
         openFolderSvc.set folder
       tooltipSvc.feed_title_tooltip()
-      feedsFoldersSvc.load_feed feed.id
+      loadFeedsSvc.load_feed feed.id
       loadEntriesSvc.read_entries_page()
       menuCollapseSvc.close()
       sidebarVisibleSvc.set false
