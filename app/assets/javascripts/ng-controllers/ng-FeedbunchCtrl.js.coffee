@@ -8,11 +8,13 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
 'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'dialogsSvc', 'keyboardShortcutsSvc', 'refreshFeedSvc', 'openFolderSvc',
+'loadFeedsSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, loadEntriesSvc, folderSvc, entrySvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
-highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc, refreshFeedSvc, openFolderSvc)->
+highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc, refreshFeedSvc, openFolderSvc,
+loadFeedsSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -471,7 +473,7 @@ highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc
         return feed.title
       else
         # If the requested feed is not in the scope, try to load it from the server
-        feedsFoldersSvc.load_feed feed_id
+        loadFeedsSvc.load_feed feed_id
         return null
 
   #--------------------------------------------
