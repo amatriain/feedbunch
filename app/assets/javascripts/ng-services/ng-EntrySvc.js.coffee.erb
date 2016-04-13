@@ -4,10 +4,10 @@
 
 angular.module('feedbunch').service 'entrySvc',
 ['$rootScope', '$window', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
-'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'loadEntriesSvc', 'feedsFoldersSvc',
+'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'loadEntriesSvc', 'feedsFoldersSvc', 'loadFeedsSvc',
 'lazyLoadingSvc', 'tourSvc', 'animationsSvc', 'menuCollapseSvc', 'csrfTokenSvc',
 ($rootScope, $window, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
-currentFolderSvc, currentFeedSvc, findSvc, loadEntriesSvc, feedsFoldersSvc,
+currentFolderSvc, currentFeedSvc, findSvc, loadEntriesSvc, feedsFoldersSvc, loadFeedsSvc,
 lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
 
   # Constants for the different operations the web worker can perform
@@ -163,7 +163,7 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
       else
         # If an entry is retrieved without a corresponding feed in the scope,
         # immediately load it from the server
-        feedsFoldersSvc.load_feed entry.feed_id
+        loadFeedsSvc.load_feed entry.feed_id
         return ''
 
   return service

@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'jobStateSvc',
-['$rootScope', '$timeout', '$window', 'csrfTokenSvc', 'feedsFoldersSvc', 'timerFlagSvc', 'findSvc', 'favicoSvc', 'userDataSvc',
-($rootScope, $timeout, $window, csrfTokenSvc, feedsFoldersSvc, timerFlagSvc, findSvc, favicoSvc, userDataSvc)->
+['$rootScope', '$timeout', '$window', 'csrfTokenSvc', 'loadFeedsSvc', 'timerFlagSvc', 'findSvc', 'favicoSvc', 'userDataSvc',
+($rootScope, $timeout, $window, csrfTokenSvc, loadFeedsSvc, timerFlagSvc, findSvc, favicoSvc, userDataSvc)->
 
   # Constants for the different operations the web worker can perform
   LOAD_ALL_SUBSCRIBE_JOB_STATES = 'load_all_subscribe_job_states'
@@ -92,7 +92,7 @@ angular.module('feedbunch').service 'jobStateSvc',
         timerFlagSvc.start 'error_refreshing_feed'
       else if job.state=="SUCCESS"
         timerFlagSvc.start 'success_refresh_feed'
-        feedsFoldersSvc.load_feed job.feed_id
+        loadFeedsSvc.load_feed job.feed_id
 
   #---------------------------------------------
   # PRIVATE FUNCTION: load state of a single refresh feed job via AJAX.
