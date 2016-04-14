@@ -4,11 +4,103 @@
 
 angular.module('feedbunch').service 'loadFeedsSvc',
 ['$rootScope', '$http', 'feedsPaginationSvc', 'favicoSvc', 'animationsSvc', 'timerFlagSvc', 'cleanupSvc', 'findSvc',
-($rootScope, $http, feedsPaginationSvc, favicoSvc, animationsSvc, timerFlagSvc, cleanupSvc, findSvc)->
+'csrfTokenSvc',
+($rootScope, $http, feedsPaginationSvc, favicoSvc, animationsSvc, timerFlagSvc, cleanupSvc, findSvc,
+csrfTokenSvc)->
 
   # Maximum number of feeds in each page.
   # This MUST match the feeds page size set in the server!
   feeds_page_size = 25
+
+  # Constants for the different operations the web worker can perform
+  LOAD_FEED = 'load_feed'
+  LOAD_FEEDS = 'load_feeds'
+  LOAD_FOLDER_FEEDS = 'load_folder_feeds'
+
+  # CSRF token
+  token = csrfTokenSvc.get_token()
+
+  # Web worker to load entries
+  worker = new Worker '<%= asset_path 'workers/load_feeds_worker' %>'
+  worker.onmessage = (e) ->
+    if e.data.status == 200 || e.data.status == 304
+      if e.data.operation == LOAD_FEED
+        feed_loaded e.data.params, e.data.response
+      else if e.data.operation == LOAD_FEEDS
+        feeds_page_loaded e.data.params, e.data.response
+      else if e.data.operation == LOAD_FOLDER_FEEDS
+        folder_feeds_loaded e.data.params, e.data.response
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else if e.data.status == 404
+      if e.data.operation == LOAD_FEED
+        id = e.data.params.feed_id
+        delete $rootScope.loading_single_feed[id]
+        cleanupSvc.remove_feed id
+      else if e.data.operation == LOAD_FEEDS
+        $rootScope.feeds_loaded = true
+        # if a 404 is returned for the first page, there are no feeds at all. Set all unread counts to zero.
+        if e.data.params.page == 1
+          if $rootScope.feeds && $rootScope.feeds?.length > 0
+            for feed in $rootScope.feeds
+              feed.unread_entries = 0
+        # If a 404 is returned in a page >1, there are no more feeds and this is the last page.
+        else
+          feedsPaginationSvc.pagination_finished()
+        favicoSvc.update_unread_badge()
+        animationsSvc.show_stats()
+      else if e.data.operation == LOAD_FOLDER_FEEDS
+        delete $rootScope.loading_single_folder_feeds[e.data.params.folder_id]
+        # If the server returns a 404, there are no feeds to return; set unread count to zero for all feeds in
+        # the folder.
+        folder = findSvc.find_folder e.data.params.folder_id
+        update_folder_feeds folder, null
+    else
+      if e.data.operation == LOAD_FEED
+        delete $rootScope.loading_single_feed[e.data.params.feed_id]
+      else if e.data.operation == LOAD_FEEDS
+        $rootScope.feeds_loaded = true
+      else if e.data.operation == LOAD_FOLDER_FEEDS
+        delete $rootScope.loading_single_folder_feeds[e.data.params.folder_id]
+      timerFlagSvc.start 'error_loading_feeds'
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Operations after a single feed has been loaded
+  #--------------------------------------------
+  feed_loaded = (params, response)->
+    feed_id =  params.feed_id
+    # Remove the flag indicating that this feed is loading
+    delete $rootScope.loading_single_feed[feed_id]
+    add_feed response
+    favicoSvc.update_unread_badge()
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Operations after a page of feeds has been loaded
+  #--------------------------------------------
+  feeds_page_loaded = (params, response)->
+    feedsPaginationSvc.load_feeds_page page, response.slice()
+    feedsPaginationSvc.set_busy false
+
+    # Load the next page of feeds until no more feeds are available
+    if response.length < feeds_page_size
+      # there are no more pages of feeds to retrieve
+      $rootScope.feeds_loaded = true
+      feedsPaginationSvc.pagination_finished()
+      favicoSvc.update_unread_badge()
+      animationsSvc.show_stats()
+    else
+      # There is probably at least one more page of feeds available
+      page = params.page
+      load_feeds page
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Operations after feeds in a folder have been loaded
+  #--------------------------------------------
+  folder_feeds_loaded = (params, response)->
+    delete $rootScope.loading_single_folder_feeds[params.folder_id]
+    # Update unread counts with the received feeds. Set the unread counter for any feed in the folder but
+    # not in the received JSON to zero.
+    update_folder_feeds folder, response.slice()
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds. Depending on the value of the flag "show_read" it
@@ -39,7 +131,7 @@ angular.module('feedbunch').service 'loadFeedsSvc',
         load_feeds page
     .error (data, status)->
       $rootScope.feeds_loaded = true
-      feedsPaginationSvc.set_busy false
+      $rootScope.feeds_loaded = true
       if status == 404
         # if a 404 is returned for the first page, there are no feeds at all. Set all unread counts to zero.
         if page == 1

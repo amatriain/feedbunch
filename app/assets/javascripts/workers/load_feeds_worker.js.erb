@@ -1,0 +1,41 @@
+/**
+ * Web Worker to load feeds in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_get' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // Constants for the different operations the web worker can perform
+  var LOAD_FEED = "load_feed";
+  var LOAD_FEEDS = "load_feeds";
+  var LOAD_FOLDER_FEEDS = "load_folder_feeds";
+
+  // Operation to perform
+  var operation = e.data.operation;
+
+  // CSRF token
+  var token = e.data.token;
+
+  if (operation == LOAD_FEED){
+    // ID of the feed from which entries will be loaded
+    var id = e.data.feed_id;
+    var url = "/api/feeds/" + id;
+
+    do_get(operation, url, token, {feed_id: id}, 0);
+  }
+  else if (operation == LOAD_FEEDS){
+    var show_read = e.data.show_read;
+    var page = e.data.page;
+    var url = "/api/feeds.json?include_read=" + show_read + "&page=" + page;
+
+    do_get(operation, url, token, {show_read: show_read, page: page}, 0);
+  }
+  else if (operation == LOAD_FOLDER_FEEDS){
+    var id = e.data.folder_id;
+    var show_read = e.data.show_read;
+    var url = "/api/folders/" + id + "/feeds.json?include_read=" + show_read;
+
+    do_get(operation, url, token, {folder_id: id, show_read: show_read}, 0);
+  }
+}
