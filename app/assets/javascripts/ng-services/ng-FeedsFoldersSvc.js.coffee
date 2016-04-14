@@ -4,9 +4,11 @@
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
 ['$rootScope', '$http', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
-'feedsPaginationSvc', 'cleanupSvc', 'favicoSvc', 'animationsSvc', 'highlightedSidebarLinkSvc', 'loadFeedsSvc',
+'feedsPaginationSvc', 'cleanupSvc', 'favicoSvc', 'animationsSvc', 'highlightedSidebarLinkSvc',
+'loadFeedsSvc', 'loadFoldersSvc',
 ($rootScope, $http, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
-feedsPaginationSvc, cleanupSvc, favicoSvc, animationsSvc, highlightedSidebarLinkSvc, loadFeedsSvc)->
+feedsPaginationSvc, cleanupSvc, favicoSvc, animationsSvc, highlightedSidebarLinkSvc,
+loadFeedsSvc, loadFoldersSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds and folders every minute.
@@ -34,53 +36,13 @@ feedsPaginationSvc, cleanupSvc, favicoSvc, animationsSvc, highlightedSidebarLink
       $rootScope.last_data_refresh = Date.now() if (Date.now() - $rootScope.last_data_refresh) < 90000
 
   #--------------------------------------------
-  # PRIVATE FUNCTION: Load folders.
-  #--------------------------------------------
-  load_folders = ->
-    $http.get("/api/folders.json")
-    .success (data)->
-      reset_timer()
-
-      # Remove folders no longer existing in the server
-      if $rootScope.folders? && $rootScope.folders?.length > 0
-        for folder in $rootScope.folders
-          existing_folder = findSvc.find_folder folder.id, data
-          if !existing_folder?
-            cleanupSvc.remove_folder folder.id
-
-      # Add new folders
-      if data? && data.length? > 0
-        for folder in data
-          add_folder folder
-
-      $rootScope.folders_loaded = true
-    .error (data, status)->
-      reset_timer()
-      $rootScope.folders_loaded = true
-      timerFlagSvc.start 'error_loading_folders' if status!=0
-
-  #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds and folders.
   #--------------------------------------------
   load_data = ->
     # Reset the 1-minute timer until the next data refresh
     $rootScope.last_data_refresh = Date.now()
     loadFeedsSvc.load_feeds()
-    load_folders()
-
-  #---------------------------------------------
-  # PRIVATE FUNCTION: Push a folder in the folders array if it isn't already present there.
-  #
-  # If the folders array has not been created in the root scope, create it.
-  #
-  # If the folder is already in the folders array, it is ignored
-  #---------------------------------------------
-  add_folder = (folder)->
-    if !$rootScope.folders || $rootScope.folders?.length == 0
-      $rootScope.folders = [folder]
-    else
-      old_folder = findSvc.find_folder folder.id
-      $rootScope.folders.push folder if !old_folder?
+    loadFoldersSvc.load_folders()
 
   service =
 
@@ -137,21 +99,6 @@ feedsPaginationSvc, cleanupSvc, favicoSvc, animationsSvc, highlightedSidebarLink
     # Only feeds with unread entries are retrieved.
     #---------------------------------------------
     load_data: load_data
-
-    #--------------------------------------------
-    # Load folders via AJAX into the root scope.
-    #--------------------------------------------
-    load_folders: load_folders
-
-    #---------------------------------------------
-    # Push a folder in the folders array. If the folders array is empty, create it anew,
-    # ensuring angularjs ng-repeat is triggered.
-    #---------------------------------------------
-    add_folder: (folder)->
-      if !$rootScope.folders || $rootScope.folders?.length == 0
-        $rootScope.folders = [folder]
-      else
-        $rootScope.folders.push folder
 
   return service
 ]

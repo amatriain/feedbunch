@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'folderSvc',
 ['$rootScope', 'csrfTokenSvc', 'currentFeedSvc', 'currentFolderSvc', 'timerFlagSvc', 'openFolderSvc',
-'feedsFoldersSvc', 'unreadCountSvc', 'findSvc',
+'loadFoldersSvc', 'unreadCountSvc', 'findSvc',
 ($rootScope, csrfTokenSvc, currentFeedSvc, currentFolderSvc, timerFlagSvc, openFolderSvc,
-feedsFoldersSvc, unreadCountSvc, findSvc)->
+loadFoldersSvc, unreadCountSvc, findSvc)->
 
   # Constants for the different operations the web worker can perform
   MOVE_INTO_NEW_FOLDER = 'move_into_new_folder'
@@ -45,24 +45,24 @@ feedsFoldersSvc, unreadCountSvc, findSvc)->
   #---------------------------------------------
   removed_from_folder = ->
     timerFlagSvc.start 'success_remove_from_folder'
-    feedsFoldersSvc.load_folders()
+    loadFoldersSvc.load_folders()
 
   #---------------------------------------------
   # PRIVATE FUNCTION: Operations after a feed has been moved into an existing folder
   #---------------------------------------------
   moved_to_existing_folder = ->
     timerFlagSvc.start 'success_move_to_folder'
-    feedsFoldersSvc.load_folders()
+    loadFoldersSvc.load_folders()
 
   #---------------------------------------------
   # PRIVATE FUNCTION: Operations after a feed has been moved into a new folder
   #---------------------------------------------
   moved_to_new_folder = (data)->
     timerFlagSvc.start 'success_move_to_new_folder'
-    feedsFoldersSvc.add_folder data.response
+    loadFoldersSvc.add_folder data.response
     feed = findSvc.find_feed data.params.folder.feed_id
     feed.folder_id = data.response.id
-    feedsFoldersSvc.load_folders()
+    loadFoldersSvc.load_folders()
     # open the new folder
     openFolderSvc.set data.response
 

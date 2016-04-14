@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'subscriptionSvc',
-['$rootScope', 'csrfTokenSvc', 'timerFlagSvc', 'feedsFoldersSvc', 'cleanupSvc',
+['$rootScope', 'csrfTokenSvc', 'timerFlagSvc', 'feedsFoldersSvc', 'loadFoldersSvc', 'cleanupSvc',
 'favicoSvc', 'startPageSvc', 'jobStateSvc',
-($rootScope, csrfTokenSvc, timerFlagSvc, feedsFoldersSvc, cleanupSvc,
+($rootScope, csrfTokenSvc, timerFlagSvc, feedsFoldersSvc, loadFoldersSvc, cleanupSvc,
 favicoSvc, startPageSvc, jobStateSvc)->
 
   # Constants for the different operations the web worker can perform
@@ -43,7 +43,7 @@ favicoSvc, startPageSvc, jobStateSvc)->
     favicoSvc.update_unread_badge()
     # Load folders again so that if the folder has been deleted (no more feeds in it), the client is aware and removes
     # it from the view
-    feedsFoldersSvc.load_folders()
+    loadFoldersSvc.load_folders()
 
   service =
 
