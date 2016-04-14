@@ -4,10 +4,10 @@
 
 angular.module('feedbunch').service 'loadEntriesSvc',
 ['$rootScope', '$timeout', 'csrfTokenSvc', 'timerFlagSvc', 'openFolderSvc',
-'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersSvc', 'favicoSvc', 'lazyLoadingSvc', 'startPageSvc',
+'entriesPaginationSvc', 'openEntrySvc', 'feedsFoldersTimerSvc', 'favicoSvc', 'lazyLoadingSvc', 'startPageSvc',
 'findSvc', 'changeUnreadCountSvc', 'highlightedEntrySvc',
 ($rootScope, $timeout, csrfTokenSvc, timerFlagSvc, openFolderSvc,
-entriesPaginationSvc, openEntrySvc, feedsFoldersSvc, favicoSvc, lazyLoadingSvc, startPageSvc,
+entriesPaginationSvc, openEntrySvc, feedsFoldersTimerSvc, favicoSvc, lazyLoadingSvc, startPageSvc,
 findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
 
   # Maximum number of entries in each page.
@@ -135,7 +135,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
     return false if !entriesPaginationSvc.more_entries_available()
 
     # Reset the timer that updates feeds every minute
-    feedsFoldersSvc.reset_refresh_timer()
+    feedsFoldersTimerSvc.reset_refresh_timer()
     # Increment the results page
     entriesPaginationSvc.increment_entries_page()
     # Indicate that AJAX request/response cycle is busy so no more calls are done until finished

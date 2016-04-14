@@ -3,13 +3,13 @@
 ########################################################
 
 angular.module('feedbunch').controller 'FeedbunchCtrl',
-['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersSvc', 'importStateSvc', 'exportStateSvc', 'timerFlagSvc',
+['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersTimerSvc', 'importStateSvc', 'exportStateSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'loadEntriesSvc', 'folderSvc', 'entrySvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
 'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'dialogsSvc', 'keyboardShortcutsSvc', 'refreshFeedSvc', 'openFolderSvc',
 'loadFeedsSvc', 'showHideReadSvc',
-($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
+($rootScope, $scope, $timeout, $sce, feedsFoldersTimerSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, loadEntriesSvc, folderSvc, entrySvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
@@ -54,7 +54,7 @@ loadFeedsSvc, showHideReadSvc)->
   userDataSvc.load_data()
 
   # Load folders and feeds via AJAX on startup
-  feedsFoldersSvc.start_refresh_timer()
+  feedsFoldersTimerSvc.start_refresh_timer()
 
   # Load state of data export process for the current user
   exportStateSvc.load_data false

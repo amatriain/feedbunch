@@ -4,10 +4,10 @@
 
 angular.module('feedbunch').service 'entrySvc',
 ['$rootScope', '$window', 'openEntrySvc', 'timerFlagSvc', 'changeUnreadCountSvc',
-'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'loadEntriesSvc', 'feedsFoldersSvc', 'loadFeedsSvc',
+'currentFolderSvc', 'currentFeedSvc', 'findSvc', 'loadEntriesSvc', 'feedsFoldersTimerSvc', 'loadFeedsSvc',
 'lazyLoadingSvc', 'tourSvc', 'animationsSvc', 'menuCollapseSvc', 'csrfTokenSvc',
 ($rootScope, $window, openEntrySvc, timerFlagSvc, changeUnreadCountSvc,
-currentFolderSvc, currentFeedSvc, findSvc, loadEntriesSvc, feedsFoldersSvc, loadFeedsSvc,
+currentFolderSvc, currentFeedSvc, findSvc, loadEntriesSvc, feedsFoldersTimerSvc, loadFeedsSvc,
 lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
 
   # Constants for the different operations the web worker can perform
@@ -21,7 +21,7 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
   worker = new Worker '<%= asset_path 'workers/change_entry_state_worker' %>'
   worker.onmessage = (e) ->
     if e.data.status == 200
-      feedsFoldersSvc.reset_refresh_timer()
+      feedsFoldersTimerSvc.reset_refresh_timer()
       if e.data.operation == CHANGE_SINGLE_ENTRY
         entry_state_changed e.data.params.entry.id
       else if e.data.operation == CHANGE_MULTIPLE_ENTRIES

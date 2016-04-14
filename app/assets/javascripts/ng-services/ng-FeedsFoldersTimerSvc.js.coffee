@@ -2,7 +2,7 @@
 # AngularJS service to load feeds and folders data in the root scope
 ########################################################
 
-angular.module('feedbunch').service 'feedsFoldersSvc',
+angular.module('feedbunch').service 'feedsFoldersTimerSvc',
 ['$rootScope', '$timeout', 'feedsPaginationSvc', 'loadFeedsSvc', 'loadFoldersSvc',
 ($rootScope, $timeout, feedsPaginationSvc, loadFeedsSvc, loadFoldersSvc)->
 

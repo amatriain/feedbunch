@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'showHideReadSvc',
 ['$rootScope', 'animationsSvc', 'entriesPaginationSvc', 'feedsPaginationSvc', 'highlightedSidebarLinkSvc',
-'feedsFoldersSvc', 'cleanupSvc',
+'feedsFoldersTimerSvc', 'cleanupSvc',
 ($rootScope, animationsSvc, entriesPaginationSvc, feedsPaginationSvc, highlightedSidebarLinkSvc,
-feedsFoldersSvc, cleanupSvc)->
+feedsFoldersTimerSvc, cleanupSvc)->
 
   service =
 
@@ -21,7 +21,7 @@ feedsFoldersSvc, cleanupSvc)->
       $rootScope.feeds_loaded = false
       feedsPaginationSvc.set_busy false
       highlightedSidebarLinkSvc.reset()
-      feedsFoldersSvc.load_data()
+      feedsFoldersTimerSvc.load_data()
 
     #---------------------------------------------
     # Set to false a flag that makes only feeds with unread entries and
@@ -35,7 +35,7 @@ feedsFoldersSvc, cleanupSvc)->
       cleanupSvc.hide_read_feeds()
       feedsPaginationSvc.set_busy false
       highlightedSidebarLinkSvc.reset()
-      feedsFoldersSvc.load_data()
+      feedsFoldersTimerSvc.load_data()
 
   return service
 ]

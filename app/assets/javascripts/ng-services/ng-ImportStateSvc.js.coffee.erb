@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'importStateSvc',
-['$rootScope', '$timeout', 'csrfTokenSvc', 'feedsFoldersSvc', 'userDataSvc', 'timerFlagSvc',
-($rootScope, $timeout, csrfTokenSvc, feedsFoldersSvc, userDataSvc, timerFlagSvc)->
+['$rootScope', '$timeout', 'csrfTokenSvc', 'feedsFoldersTimerSvc', 'userDataSvc', 'timerFlagSvc',
+($rootScope, $timeout, csrfTokenSvc, feedsFoldersTimerSvc, userDataSvc, timerFlagSvc)->
 
   # Flag to indicate if a message should appear when the import job finishes running.
   show_finished_message = false
@@ -46,7 +46,7 @@ angular.module('feedbunch').service 'importStateSvc',
       $rootScope.import_failures = response.failures
       if show_finished_message
         # Automatically load new feeds and folders without needing a refresh
-        feedsFoldersSvc.load_data()
+        feedsFoldersTimerSvc.load_data()
         userDataSvc.load_data()
         timerFlagSvc.start 'success_importing'
 

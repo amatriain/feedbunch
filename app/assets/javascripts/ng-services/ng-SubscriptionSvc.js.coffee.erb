@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').service 'subscriptionSvc',
-['$rootScope', 'csrfTokenSvc', 'timerFlagSvc', 'feedsFoldersSvc', 'loadFoldersSvc', 'cleanupSvc',
+['$rootScope', 'csrfTokenSvc', 'timerFlagSvc', 'feedsFoldersTimerSvc', 'loadFoldersSvc', 'cleanupSvc',
 'favicoSvc', 'startPageSvc', 'jobStateSvc',
-($rootScope, csrfTokenSvc, timerFlagSvc, feedsFoldersSvc, loadFoldersSvc, cleanupSvc,
+($rootScope, csrfTokenSvc, timerFlagSvc, feedsFoldersTimerSvc, loadFoldersSvc, cleanupSvc,
 favicoSvc, startPageSvc, jobStateSvc)->
 
   # Constants for the different operations the web worker can perform
@@ -64,7 +64,7 @@ favicoSvc, startPageSvc, jobStateSvc)->
 
         # Reset the timer that updates feeds every minute, to give the server time to
         # actually delete the feed subscription before the next update
-        feedsFoldersSvc.reset_refresh_timer()
+        feedsFoldersTimerSvc.reset_refresh_timer()
 
         worker.postMessage {operation: UNSUBSCRIBE, token: token, feed_id: current_feed.id}
         startPageSvc.show_start_page()
