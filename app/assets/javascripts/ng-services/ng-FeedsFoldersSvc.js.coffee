@@ -3,12 +3,10 @@
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$rootScope', '$http', '$timeout', 'timerFlagSvc', 'findSvc', 'entriesPaginationSvc',
-'feedsPaginationSvc', 'cleanupSvc', 'favicoSvc', 'animationsSvc', 'highlightedSidebarLinkSvc',
-'loadFeedsSvc', 'loadFoldersSvc',
-($rootScope, $http, $timeout, timerFlagSvc, findSvc, entriesPaginationSvc,
-feedsPaginationSvc, cleanupSvc, favicoSvc, animationsSvc, highlightedSidebarLinkSvc,
-loadFeedsSvc, loadFoldersSvc)->
+['$rootScope', '$timeout', 'entriesPaginationSvc', 'feedsPaginationSvc', 'cleanupSvc',
+'animationsSvc', 'highlightedSidebarLinkSvc', 'loadFeedsSvc', 'loadFoldersSvc',
+($rootScope, $timeout, entriesPaginationSvc, feedsPaginationSvc, cleanupSvc,
+animationsSvc, highlightedSidebarLinkSvc, loadFeedsSvc, loadFoldersSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds and folders every minute.
