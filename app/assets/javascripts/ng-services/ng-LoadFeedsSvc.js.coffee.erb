@@ -39,6 +39,7 @@ csrfTokenSvc)->
         cleanupSvc.remove_feed id
       else if e.data.operation == LOAD_FEEDS
         $rootScope.feeds_loaded = true
+        feedsPaginationSvc.set_busy false
         # if a 404 is returned for the first page, there are no feeds at all. Set all unread counts to zero.
         if e.data.params.page == 1
           if $rootScope.feeds && $rootScope.feeds?.length > 0
@@ -60,6 +61,7 @@ csrfTokenSvc)->
         delete $rootScope.loading_single_feed[e.data.params.feed_id]
       else if e.data.operation == LOAD_FEEDS
         $rootScope.feeds_loaded = true
+        feedsPaginationSvc.set_busy false
       else if e.data.operation == LOAD_FOLDER_FEEDS
         delete $rootScope.loading_single_folder_feeds[e.data.params.folder_id]
       timerFlagSvc.start 'error_loading_feeds'
@@ -131,7 +133,7 @@ csrfTokenSvc)->
         load_feeds page
     .error (data, status)->
       $rootScope.feeds_loaded = true
-      $rootScope.feeds_loaded = true
+      feedsPaginationSvc.set_busy false
       if status == 404
         # if a 404 is returned for the first page, there are no feeds at all. Set all unread counts to zero.
         if page == 1
