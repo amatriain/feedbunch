@@ -8,13 +8,13 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
 'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
 'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'dialogsSvc', 'keyboardShortcutsSvc', 'refreshFeedSvc', 'openFolderSvc',
-'loadFeedsSvc',
+'loadFeedsSvc', 'showHideReadSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, loadEntriesSvc, folderSvc, entrySvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
 tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
 highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc, refreshFeedSvc, openFolderSvc,
-loadFeedsSvc)->
+loadFeedsSvc, showHideReadSvc)->
 
   #--------------------------------------------
   # APPLICATION INITIALIZATION
@@ -108,7 +108,7 @@ loadFeedsSvc)->
   # and all entries (regardless of whether they are read or not).
   #--------------------------------------------
   $scope.show_read_feeds_entries = ->
-    feedsFoldersSvc.show_read()
+    showHideReadSvc.show_read()
     loadEntriesSvc.read_entries_page()
     menuCollapseSvc.close()
     return
@@ -117,7 +117,7 @@ loadFeedsSvc)->
   # Show only unread entries and feeds with unread entries.
   #--------------------------------------------
   $scope.hide_read_feeds_entries = ->
-    feedsFoldersSvc.hide_read()
+    showHideReadSvc.hide_read()
     loadEntriesSvc.read_entries_page()
     menuCollapseSvc.close()
     return

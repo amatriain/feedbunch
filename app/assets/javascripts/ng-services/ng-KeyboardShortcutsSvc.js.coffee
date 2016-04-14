@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'keyboardShortcutsSvc',
 ['$rootScope', 'highlightedEntrySvc', 'highlightedSidebarLinkSvc','entrySvc', 'startPageSvc', 'currentFeedSvc',
-'currentFolderSvc', 'findSvc', 'feedsFoldersSvc', 'loadEntriesSvc', 'menuCollapseSvc',
+'currentFolderSvc', 'findSvc', 'showHideReadSvc', 'loadEntriesSvc', 'menuCollapseSvc',
 ($rootScope, highlightedEntrySvc, highlightedSidebarLinkSvc, entrySvc, startPageSvc, currentFeedSvc,
-currentFolderSvc, findSvc, feedsFoldersSvc, loadEntriesSvc, menuCollapseSvc)->
+currentFolderSvc, findSvc, showHideReadSvc, loadEntriesSvc, menuCollapseSvc)->
 
   # Boolean flag to indicate whether keyboard shortcuts are currently enabled
   keyboard_shortcuts_running = true
@@ -72,9 +72,9 @@ currentFolderSvc, findSvc, feedsFoldersSvc, loadEntriesSvc, menuCollapseSvc)->
               currentFolderSvc.set folder if folder?
         when $rootScope.kb_shortcuts["toggle_show_read"] # show/hide read entries
           if $rootScope.show_read
-            feedsFoldersSvc.hide_read() # hide read entries
+            showHideReadSvc.hide_read() # hide read entries
           else
-            feedsFoldersSvc.show_read() # show read entries
+            showHideReadSvc.show_read() # show read entries
           loadEntriesSvc.read_entries_page()
           menuCollapseSvc.close()
         else
