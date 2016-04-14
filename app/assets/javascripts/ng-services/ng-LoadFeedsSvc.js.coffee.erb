@@ -32,39 +32,13 @@ csrfTokenSvc)->
         folder_feeds_loaded e.data.params, e.data.response
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
-    else if e.data.status == 404
-      if e.data.operation == LOAD_FEED
-        id = e.data.params.feed_id
-        delete $rootScope.loading_single_feed[id]
-        cleanupSvc.remove_feed id
-      else if e.data.operation == LOAD_FEEDS
-        $rootScope.feeds_loaded = true
-        feedsPaginationSvc.set_busy false
-        # if a 404 is returned for the first page, there are no feeds at all. Set all unread counts to zero.
-        if e.data.params.page == 1
-          if $rootScope.feeds && $rootScope.feeds?.length > 0
-            for feed in $rootScope.feeds
-              feed.unread_entries = 0
-        # If a 404 is returned in a page >1, there are no more feeds and this is the last page.
-        else
-          feedsPaginationSvc.pagination_finished()
-        favicoSvc.update_unread_badge()
-        animationsSvc.show_stats()
-      else if e.data.operation == LOAD_FOLDER_FEEDS
-        delete $rootScope.loading_single_folder_feeds[e.data.params.folder_id]
-        # If the server returns a 404, there are no feeds to return; set unread count to zero for all feeds in
-        # the folder.
-        folder = findSvc.find_folder e.data.params.folder_id
-        update_folder_feeds folder, null
     else
       if e.data.operation == LOAD_FEED
-        delete $rootScope.loading_single_feed[e.data.params.feed_id]
+        feed_loading_error e.data.params, e.data.status
       else if e.data.operation == LOAD_FEEDS
-        $rootScope.feeds_loaded = true
-        feedsPaginationSvc.set_busy false
+        feeds_page_loading_error e.data.params, e.data.status
       else if e.data.operation == LOAD_FOLDER_FEEDS
-        delete $rootScope.loading_single_folder_feeds[e.data.params.folder_id]
-      timerFlagSvc.start 'error_loading_feeds'
+        folder_feeds_loading_error e.data.params, e.data.status
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Operations after a single feed has been loaded
@@ -75,6 +49,17 @@ csrfTokenSvc)->
     delete $rootScope.loading_single_feed[feed_id]
     add_feed response
     favicoSvc.update_unread_badge()
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Operations after loading a single feed finishes with an error
+  #--------------------------------------------
+  feed_loading_error = (params, status)->
+    id = params.feed_id
+    delete $rootScope.loading_single_feed[id]
+    if status == 404
+      cleanupSvc.remove_feed id
+    else
+      timerFlagSvc.start 'error_loading_feeds'
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Operations after a page of feeds has been loaded
@@ -96,6 +81,26 @@ csrfTokenSvc)->
       load_feeds page
 
   #--------------------------------------------
+  # PRIVATE FUNCTION: Operations after loading a page of feeds finishes with an error
+  #--------------------------------------------
+  feeds_page_loading_error = (params, status)->
+    $rootScope.feeds_loaded = true
+    feedsPaginationSvc.set_busy false
+    if status == 404
+      # if a 404 is returned for the first page, there are no feeds at all. Set all unread counts to zero.
+      if e.data.params.page == 1
+        if $rootScope.feeds && $rootScope.feeds?.length > 0
+          for feed in $rootScope.feeds
+            feed.unread_entries = 0
+      # If a 404 is returned in a page >1, there are no more feeds and this is the last page.
+      else
+        feedsPaginationSvc.pagination_finished()
+      favicoSvc.update_unread_badge()
+      animationsSvc.show_stats()
+    else
+      timerFlagSvc.start 'error_loading_feeds'
+
+  #--------------------------------------------
   # PRIVATE FUNCTION: Operations after feeds in a folder have been loaded
   #--------------------------------------------
   folder_feeds_loaded = (params, response)->
@@ -103,6 +108,19 @@ csrfTokenSvc)->
     # Update unread counts with the received feeds. Set the unread counter for any feed in the folder but
     # not in the received JSON to zero.
     update_folder_feeds folder, response.slice()
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Operations after loading feeds in a folder finishes with an error
+  #--------------------------------------------
+  folder_feeds_loading_error = (params, status)->
+    id = params.folder_id
+    delete $rootScope.loading_single_folder_feeds[id]
+    if status == 404
+      # If the server returns a 404, there are no feeds to return; set unread count to zero for all feeds in the folder.
+      folder = findSvc.find_folder id
+      update_folder_feeds folder, null
+    else
+      timerFlagSvc.start 'error_loading_folders'
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds. Depending on the value of the flag "show_read" it
