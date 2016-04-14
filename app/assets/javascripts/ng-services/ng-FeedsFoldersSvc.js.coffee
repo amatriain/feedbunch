@@ -3,10 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'feedsFoldersSvc',
-['$rootScope', '$timeout', 'entriesPaginationSvc', 'feedsPaginationSvc', 'cleanupSvc',
-'animationsSvc', 'highlightedSidebarLinkSvc', 'loadFeedsSvc', 'loadFoldersSvc',
-($rootScope, $timeout, entriesPaginationSvc, feedsPaginationSvc, cleanupSvc,
-animationsSvc, highlightedSidebarLinkSvc, loadFeedsSvc, loadFoldersSvc)->
+['$rootScope', '$timeout', 'feedsPaginationSvc', 'loadFeedsSvc', 'loadFoldersSvc',
+($rootScope, $timeout, feedsPaginationSvc, loadFeedsSvc, loadFoldersSvc)->
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Load feeds and folders every minute.
