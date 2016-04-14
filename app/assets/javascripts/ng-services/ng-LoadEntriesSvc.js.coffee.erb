@@ -31,25 +31,11 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
         folder_entries_loaded e.data.params, e.data.response
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
-    else if e.data.status == 404
-      entriesPaginationSvc.set_busy false
-      entriesPaginationSvc.set_more_entries_available false
-      if e.data.operation == LOAD_FEED_ENTRIES
-        feed = findSvc.find_feed e.data.params.feed_id
-        correct_feed_unread_counts feed
-        if entriesPaginationSvc.is_first_page()
-          entriesPaginationSvc.set_error_no_entries true
-          feed.unread_entries = 0
-      else if e.data.operation == LOAD_FOLDER_ENTRIES
-        folder = findSvc.find_folder e.data.params.folder_id
-        correct_folder_unread_counts folder
-        if entriesPaginationSvc.is_first_page()
-          entriesPaginationSvc.set_error_no_entries true
     else
-      entriesPaginationSvc.set_busy false
-      entriesPaginationSvc.set_more_entries_available false
-      startPageSvc.show_start_page()
-      timerFlagSvc.start 'error_loading_entries'
+      if e.data.operation == LOAD_FEED_ENTRIES
+        feed_entries_loading_error e.data.params, e.data.status
+      else if e.data.operation == LOAD_FOLDER_ENTRIES
+        folder_entries_loading_error e.data.params, e.data.status
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Operations after entries of a feed have been loaded
@@ -89,6 +75,22 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
         load_feed_entries feed
 
   #--------------------------------------------
+  # PRIVATE FUNCTION: Operations after loading entries from a single feed finishes with an error
+  #--------------------------------------------
+  feed_entries_loading_error = (params, status)->
+    entriesPaginationSvc.set_busy false
+    entriesPaginationSvc.set_more_entries_available false
+    if status == 404
+      feed = findSvc.find_feed params.feed_id
+      correct_feed_unread_counts feed
+      if entriesPaginationSvc.is_first_page()
+        entriesPaginationSvc.set_error_no_entries true
+        feed.unread_entries = 0
+    else
+      startPageSvc.show_start_page()
+      timerFlagSvc.start 'error_loading_entries'
+
+  #--------------------------------------------
   # PRIVATE FUNCTION: Operations after entries of a folder have been loaded
   #--------------------------------------------
   folder_entries_loaded = (params, response)->
@@ -125,6 +127,21 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
       else if entriesPaginationSvc.is_first_page()
         # After loading the first page of entries, load a second one to ensure the list is fully populated
         load_folder_entries folder
+
+  #--------------------------------------------
+  # PRIVATE FUNCTION: Operations after loading entries from a folder finishes with an error
+  #--------------------------------------------
+  folder_entries_loading_error = (params, status)->
+    entriesPaginationSvc.set_busy false
+    entriesPaginationSvc.set_more_entries_available false
+    if status == 404
+      folder = findSvc.find_folder params.folder_id
+      correct_folder_unread_counts folder
+      if entriesPaginationSvc.is_first_page()
+        entriesPaginationSvc.set_error_no_entries true
+    else
+      startPageSvc.show_start_page()
+      timerFlagSvc.start 'error_loading_entries'
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Validations and setup that runs every time entries are loaded.
