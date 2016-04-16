@@ -20,7 +20,7 @@ onmessage = function(e){
   if (operation == LOAD_FEED){
     // ID of the feed from which entries will be loaded
     var id = e.data.feed_id;
-    var url = "/api/feeds/" + id;
+    var url = "/api/feeds/" + id + ".json";
 
     do_get(operation, url, token, {feed_id: id}, 0);
   }

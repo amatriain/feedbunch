@@ -88,7 +88,7 @@ csrfTokenSvc)->
     feedsPaginationSvc.set_busy false
     if status == 404
       # if a 404 is returned for the first page, there are no feeds at all. Set all unread counts to zero.
-      if e.data.params.page == 1
+      if params.page == 1
         if $rootScope.feeds && $rootScope.feeds?.length > 0
           for feed in $rootScope.feeds
             feed.unread_entries = 0
