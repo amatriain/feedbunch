@@ -1,0 +1,18 @@
+/**
+ * Web Worker to send invitations in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_post' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  // CSRF token
+  var token = e.data.token;
+
+  // Email to send the invitation to
+  var email = e.data.email;
+
+  var url = "/invitation.json";
+  var data = {user: {email: email}};
+  do_post("send_invitation", url, token, data, 0);
+}
