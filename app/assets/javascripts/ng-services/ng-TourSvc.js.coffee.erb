@@ -35,6 +35,7 @@ angular.module('feedbunch').service 'tourSvc',
         tour_loaded e.data.response
       else if e.data.operation == RESET_TOURS
         timerFlagSvc.start 'success_reset_tours'
+        $rootScope.$digest()
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
