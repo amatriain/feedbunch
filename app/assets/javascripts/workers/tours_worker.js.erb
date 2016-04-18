@@ -10,6 +10,7 @@ onmessage = function(e){
   // Constants for the different operations the web worker can perform
   var LOAD_TOUR = "load_tour";
   var HIDE_TOUR = "hide_tour";
+  var RESET_TOURS = "reset_tours";
 
   // Operation to perform: load or hide
   var operation = e.data.operation;
@@ -43,6 +44,12 @@ onmessage = function(e){
     var data = {user_config: {show_main_tour: show_main_tour, show_mobile_tour: show_mobile_tour,
       show_feed_tour: show_feed_tour, show_entry_tour: show_entry_tour, show_kb_shortcuts_tour: show_kb_shortcuts_tour}};
 
+    do_put(operation, "/api/user_config.json", token, data, 0);
+  }
+  else if (operation == RESET_TOURS){
+    // Compose JSON to send in the HTTP PUT with the new config
+    var data = {user_config: {show_main_tour: true, show_mobile_tour: true,
+      show_feed_tour: true, show_entry_tour: true, show_kb_shortcuts_tour: true}};
     do_put(operation, "/api/user_config.json", token, data, 0);
   }
 

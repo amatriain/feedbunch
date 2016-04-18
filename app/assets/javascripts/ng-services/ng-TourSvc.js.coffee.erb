@@ -22,6 +22,7 @@ angular.module('feedbunch').service 'tourSvc',
   # Constants for the different operations the web worker can perform
   LOAD_TOUR = 'load_tour'
   HIDE_TOUR = 'hide_tour'
+  RESET_TOURS = 'reset_tours'
 
   # CSRF token
   token = csrfTokenSvc.get_token()
@@ -32,12 +33,16 @@ angular.module('feedbunch').service 'tourSvc',
     if e.data.status == 200 || e.data.status == 304
       if e.data.operation == LOAD_TOUR
         tour_loaded e.data.response
+      else if e.data.operation == RESET_TOURS
+        timerFlagSvc.start 'success_reset_tours'
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
       if e.data.operation == LOAD_TOUR
         timerFlagSvc.start 'error_loading_tour'
       else if e.data.operation == HIDE_TOUR
+        timerFlagSvc.start 'error_changing_show_tour'
+      else if e.data.operation == RESET_TOURS
         timerFlagSvc.start 'error_changing_show_tour'
 
   #--------------------------------------------
@@ -210,17 +215,7 @@ angular.module('feedbunch').service 'tourSvc',
       $rootScope.show_feed_tour = true
       $rootScope.show_entry_tour = true
       $rootScope.show_kb_shortcuts_tour = true
-      $http.put "/api/user_config.json",
-        user_config:
-          show_main_tour: 'true',
-          show_mobile_tour: 'true',
-          show_feed_tour: 'true',
-          show_entry_tour: 'true',
-          show_kb_shortcuts_tour: 'true'
-      .success (data)->
-        timerFlagSvc.start 'success_reset_tours'
-      .error (data, status)->
-        timerFlagSvc.start 'error_changing_show_tour' if status!=0
+      worker.postMessage {operation: RESET_TOURS, token: token}
 
   return service
 
