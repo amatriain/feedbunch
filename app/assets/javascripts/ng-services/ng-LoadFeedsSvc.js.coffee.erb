@@ -20,7 +20,7 @@ csrfTokenSvc)->
   # CSRF token
   token = csrfTokenSvc.get_token()
 
-  # Web worker to load entries
+  # Web worker to load feeds
   worker = new Worker '<%= asset_path 'workers/load_feeds_worker' %>'
   worker.onmessage = (e) ->
     if e.data.status == 200 || e.data.status == 304

@@ -3,32 +3,40 @@
 ########################################################
 
 angular.module('feedbunch').service 'loadFoldersSvc',
-['$rootScope', '$http', 'findSvc', 'cleanupSvc', 'timerFlagSvc',
-($rootScope, $http, findSvc, cleanupSvc, timerFlagSvc)->
+['$rootScope', 'csrfTokenSvc', 'findSvc', 'cleanupSvc', 'timerFlagSvc',
+($rootScope, csrfTokenSvc, findSvc, cleanupSvc, timerFlagSvc)->
+
+  # CSRF token
+  token = csrfTokenSvc.get_token()
+
+  # Web worker to load folders
+  worker = new Worker '<%= asset_path 'workers/load_folders_worker' %>'
+  worker.onmessage = (e) ->
+    if e.data.status == 200 || e.data.status == 304
+      folders_loaded e.data.response
+    else if e.data.status == 401 || e.data.status == 422
+      $window.location.href = '/login'
+    else
+      $rootScope.folders_loaded = true
+      timerFlagSvc.start 'error_loading_folders'
 
   #--------------------------------------------
-  # PRIVATE FUNCTION: Load folders.
+  # PRIVATE FUNCTION: Operations after folders have been loaded
   #--------------------------------------------
-  load_folders = ->
-    $http.get("/api/folders.json")
-    .success (data)->
+  folders_loaded = (response)->
+    # Remove folders no longer existing in the server
+    if $rootScope.folders? && $rootScope.folders?.length > 0
+      for folder in $rootScope.folders
+        existing_folder = findSvc.find_folder folder.id, response
+        if !existing_folder?
+          cleanupSvc.remove_folder folder.id
 
-      # Remove folders no longer existing in the server
-      if $rootScope.folders? && $rootScope.folders?.length > 0
-        for folder in $rootScope.folders
-          existing_folder = findSvc.find_folder folder.id, data
-          if !existing_folder?
-            cleanupSvc.remove_folder folder.id
+    # Add new folders
+    if response? && response.length? > 0
+      for folder in response
+        add_folder folder
 
-      # Add new folders
-      if data? && data.length? > 0
-        for folder in data
-          add_folder folder
-
-      $rootScope.folders_loaded = true
-    .error (data, status)->
-      $rootScope.folders_loaded = true
-      timerFlagSvc.start 'error_loading_folders' if status!=0
+    $rootScope.folders_loaded = true
 
   #---------------------------------------------
   # PRIVATE FUNCTION: Push a folder in the folders array if it isn't already present there.
@@ -49,7 +57,8 @@ angular.module('feedbunch').service 'loadFoldersSvc',
     #--------------------------------------------
     # Load folders via AJAX into the root scope.
     #--------------------------------------------
-    load_folders: load_folders
+    load_folders: ->
+      worker.postMessage {token: token}
 
     #---------------------------------------------
     # Push a folder in the folders array.

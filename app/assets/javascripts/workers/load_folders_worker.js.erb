@@ -1,0 +1,12 @@
+/**
+ * Web Worker to load folders in a separate thread.
+ */
+
+importScripts('<%= asset_path 'workers/common/do_get' %>');
+
+// Callback for messages from the main thread
+onmessage = function(e){
+  var token = e.data.token;
+  var url = "/api/folders.json";
+  do_get("load_folders", url, token, {}, 0);
+}
