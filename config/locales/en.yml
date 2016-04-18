@@ -34,21 +34,21 @@ en:
     popups:
       demo_info:
         title: "Demo user"
-        help_1: "To try a free Feedbunch demo click on \"Log in\" and enter this:"
+        help_1: "To try a free FeedBunch demo click on \"Log in\" and enter this:"
         email: "Email: "
         password: "Password: "
         help_2: "IMPORTANT: the demo user resets every hour. You cannot use it for any serious reading!"
         close: "Close"
     about:
       about_feedbunch:
-        title: "About Feedbunch"
-        text_1: "Feedbunch is a feed reader, a web application to subscribe and read RSS and Atom feeds."
+        title: "About FeedBunch"
+        text_1: "FeedBunch is a feed reader, a web application to subscribe and read RSS and Atom feeds."
         text_2: "It aims to be as pleasant to use as possible, with a simple and uncluttered interface. It hides unnecessary complexity from users and it adapts its interface to destkop, tablet and smartphone devices."
-        text_3: "Feedbunch is open source (MIT license) and under active development."
+        text_3: "FeedBunch is open source (MIT license) and under active development."
       about_feeds:
         title: "What is a feed reader? What is a feed?"
         text_1_html: "You can find a simple description of what a feed reader is <a href='http://en.wikipedia.org/wiki/News_aggregator' target='_blank'>in this wikipedia article</a> and a good description of the use and technology behind feeds <a href='https://support.google.com/feedburner/answer/79408?hl=en' target='_blank'>in this Google article</a>."
-        text_2: "Basically, a feed reader is a way to aggregate content from various websites in a single place. Instead of having to visit each of your favorite websites every day to see if there's new content, anything those websites publish will appear in Feedbunch. This way you only have to visit Feedbunch to be up to date with all blogs, newspapers, webcomics etc that you follow. You will create your own personalized newspaper and save a lot of time."
+        text_2: "Basically, a feed reader is a way to aggregate content from various websites in a single place. Instead of having to visit each of your favorite websites every day to see if there's new content, anything those websites publish will appear in FeedBunch. This way you only have to visit FeedBunch to be up to date with all blogs, newspapers, webcomics etc that you follow. You will create your own personalized newspaper and save a lot of time."
         text_3_html: "For this to work, each website has to make available a special document online that gets updated every time new content is published in the website. This document is called the <strong>feed</strong> and every new piece of content that is added to it is called an <strong>entry</strong>. Entries can be news articles in a newspaper's website, new pages in a webcomic, new comments in a blog entry... Most websites nowadays have a feed (or several!)."
       getting_started:
         title: "Getting started"
@@ -59,8 +59,8 @@ en:
         text_1: "You can ask for help or give us feedback through:"
         text_2: "You can use any of them, but generally the github issue tracker is best for discussing bugs and twitter is best for questions that other users can find useful."
     signup_success:
-      text_1: "Thanks for signing up to Feedbunch!"
-      text_2_html: "We have sent an email to the address you provided. Please follow the instructions in that email to <strong>confirm your email address</strong>. You won't be able to access Feedbunch until your email address is confirmed."
+      text_1: "Thanks for signing up to FeedBunch!"
+      text_2_html: "We have sent an email to the address you provided. Please follow the instructions in that email to <strong>confirm your email address</strong>. You won't be able to access FeedBunch until your email address is confirmed."
       text_3: "Please check your spam folder if you don't see the confirmation email in your inbox in a few minutes."
       text_4_html: "If you want us to send the confirmation email again, <a href='%{url}' class='alert-link'>click here</a> and enter your email address."
       text_5: "Happy feed reading!"
@@ -144,7 +144,7 @@ en:
       all_entries: "All subscriptions"
       loading: "Loading..."
     start:
-      welcome: "Welcome to Feedbunch"
+      welcome: "Welcome to FeedBunch"
       stats: "Subscribed to %{feeds} feeds with %{entries} unread entries."
     entries:
       no_entries: "No entries"

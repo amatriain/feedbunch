@@ -40,23 +40,23 @@ es:
       unlocked: 'Tu cuenta ha sido desbloqueada. Inicia sesión para continuar.'
     mailer:
       confirmation_instructions:
-        subject: 'Confirmación de alta en Feedbunch'
-        header: "Bienvenido a Feedbunch, %{name} !"
-        confirmation: "Antes de poder usar Feedbunch tienes que confirmar tu cuenta haciendo click en este botón:"
+        subject: 'Confirmación de alta en FeedBunch'
+        header: "Bienvenido a FeedBunch, %{name} !"
+        confirmation: "Antes de poder usar FeedBunch tienes que confirmar tu cuenta haciendo click en este botón:"
         confirm_link: "Confirmar mi cuenta"
         note_1_html: "Has recibido este email porque alguien ha intentado registrar una cuenta en %{link} usando la dirección de email %{name}."
         note_2_html: "Si no has intentado darte de alta en %{link} por favor ignora este email."
       reset_password_instructions:
-        subject: "Cambio de contraseña en Feedbunch"
+        subject: "Cambio de contraseña en FeedBunch"
         header: "Se ha solicitado un cambio de contraseña"
         hello: "Hola, %{name}"
-        change: "Si deseas cambiar tu contraseña en Feedbunch, haz click en este botón:"
+        change: "Si deseas cambiar tu contraseña en FeedBunch, haz click en este botón:"
         change_link: "Cambiar mi contraseña"
         note_1_html: "Has recibido este email porque alguien ha solicitado un cambio de la contraseña de la cuenta %{name} en %{link}."
         note_2_html: "Si no solicitaste un cambio de contraseña en %{link} por favor ignora este email."
       unlock_instructions:
-        subject: "Desbloqueo de cuenta en Feedbunch"
-        header: "Tu cuenta en Feedbunch ha sido bloqueada"
+        subject: "Desbloqueo de cuenta en FeedBunch"
+        header: "Tu cuenta en FeedBunch ha sido bloqueada"
         hello: "Hola, %{name}."
         locked: "Tu cuenta ha sido bloqueada debido a un número excesivo de intentos de acceso fallidos."
         unlock: "Haz click en este botón para desbloquear tu cuenta:"

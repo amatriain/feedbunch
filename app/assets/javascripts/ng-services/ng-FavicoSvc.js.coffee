@@ -14,6 +14,6 @@ angular.module('feedbunch').service 'favicoSvc',
       $rootScope.favico = new Favico animation: 'none', bgColor: '#428BCA'
     unread_count = unreadCountSvc.total_unread_entries()
     $rootScope.favico.badge unread_count
-    $window.document.title = "(#{unread_count}) Feedbunch"
+    $window.document.title = "(#{unread_count}) FeedBunch"
 
 ]

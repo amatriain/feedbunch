@@ -12,14 +12,14 @@ en:
       invitation_removed: 'Your invitation was removed.'
       edit:
         header: "Accept invitation"
-        instructions_1: "Thanks for accepting the invitation to join Feedbunch."
+        instructions_1: "Thanks for accepting the invitation to join FeedBunch."
         instructions_2: "Please choose a password so that your account can be activated."
         password: "Choose your password"
         submit_button: "Activate account"
     mailer:
       invitation_instructions:
-        subject: 'Invitation to join Feedbunch'
+        subject: 'Invitation to join FeedBunch'
         hello: 'Hello %{email}'
-        someone_invited_you: 'Someone has invited you to join <a href="%{url}">Feedbunch</a>, an open source feed reader. You can accept the invitation clicking on this button:'
+        someone_invited_you: 'Someone has invited you to join <a href="%{url}">FeedBunch</a>, an open source feed reader. You can accept the invitation clicking on this button:'
         accept: 'Accept invitation'
         ignore: "If you don't want to accept the invitation, please ignore this email."

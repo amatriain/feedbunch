@@ -91,7 +91,7 @@ module Feedbunch
     config.destroy_job_states_after = 24.hours
 
     # User-agent that feedbunch will use when fetching feeds
-    config.user_agent = 'Feedbunch/1.0 (+http://www.feedbunch.com)'
+    config.user_agent = 'FeedBunch/1.0 (+http://www.feedbunch.com)'
 
     # Maximum number of entries to keep for each feed.
     config.max_feed_entries = 500

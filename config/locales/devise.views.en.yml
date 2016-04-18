@@ -4,7 +4,7 @@ en:
       sign_in: "Log in"
       sign_in_link: "Log in"
       sign_up_link: "Create new account"
-      open_beta_1: "Feedbunch is in open beta."
+      open_beta_1: "FeedBunch is in open beta."
       open_beta_2: "Please send us your feedback through the email, twitter or github links below."
       sign_up: "Sign up"
       forgot_password_link: "Forgot your password?"
@@ -38,7 +38,7 @@ en:
         submit: "Delete account"
       invite_friend:
         title: "Invite a friend"
-        text: "You can send a friend an invitation to join Feedbunch."
+        text: "You can send a friend an invitation to join FeedBunch."
         close: "Cancel"
         submit: "Send invitation"
       reset_tours:

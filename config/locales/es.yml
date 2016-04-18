@@ -13,21 +13,21 @@ es:
     popups:
       demo_info:
         title: "Usuario de demostración"
-        help_1: "Para probar una demostración gratuita de Feedbunch haz click en \"Entra en tu cuenta\" y escribe esto:"
+        help_1: "Para probar una demostración gratuita de FeedBunch haz click en \"Entra en tu cuenta\" y escribe esto:"
         email: "Email: "
         password: "Contraseña: "
         help_2: "IMPORTANTE: el usuario de demostración se resetea cada hora. ¡No podrás usarlo para leer en serio!"
         close: "Cerrar"
     about:
       about_feedbunch:
-        title: "Acerca de Feedbunch"
-        text_1: "Feedbunch es un lector de feeds, una aplicación web para suscribirse y leer feeds RSS y Atom."
+        title: "Acerca de FeedBunch"
+        text_1: "FeedBunch es un lector de feeds, una aplicación web para suscribirse y leer feeds RSS y Atom."
         text_2: "Pretende ser lo más agradable de usar posible, con una interfaz simple y limpia. Oculta a los usuarios toda complejidad innecesaria y adapta su interfaz automáticamente a tablets, smartphones y navegadores de escritorio."
-        text_3: "Feedbunch es un proyecto de código abierto (licencia MIT) y su desarrollo está activo."
+        text_3: "FeedBunch es un proyecto de código abierto (licencia MIT) y su desarrollo está activo."
       about_feeds:
         title: "¿Qué es un lector de feeds? ¿Qué es un feed?"
         text_1_html: "Puedes leer una descripcion sencilla de qué es un lector de feeds <a href='http://es.wikipedia.org/wiki/Agregador' target='_blank'>en este artículo de la wikipedia</a> y una buena descripción del uso y la tecnología detrás de los feeds <a href='https://support.google.com/feedburner/answer/79408?hl=en' target='_blank'>en este artículo de Google</a>."
-        text_2: "Básicamente, un lector de feeds es un modo de agregar contenido de varios sitios web en un sólo sitio. En vez de tener que visitar cada uno de tus sitios web favoritos cada día para ver si tienen nuevo contenido, cualquier cosa que esos sitios web publiquen aparecerá en Feedbunch. De este modo sólo tienes que visitar Feedbunch para estar al día con todos los blogs, periódicos, webcomics etc que sigas. Crearás tu propio periódico personalizado y ahorrarás mucho tiempo."
+        text_2: "Básicamente, un lector de feeds es un modo de agregar contenido de varios sitios web en un sólo sitio. En vez de tener que visitar cada uno de tus sitios web favoritos cada día para ver si tienen nuevo contenido, cualquier cosa que esos sitios web publiquen aparecerá en FeedBunch. De este modo sólo tienes que visitar FeedBunch para estar al día con todos los blogs, periódicos, webcomics etc que sigas. Crearás tu propio periódico personalizado y ahorrarás mucho tiempo."
         text_3_html: "Para que esto funcione, cada sitio web tiene que poner disponible online un documento especial que se actualiza cada vez que se publica nuevo contenido en el sitio web. Este documento se llama el <strong>feed</strong> y cada nueva pieza de contenido que se le añada se llama una <strong>entrada</strong>. Las entradas pueden ser artículos de noticias en la página web de un periódico, nuevas páginas en un webcomic, nuevos comentarios en una entrada de un blog... Hoy en día la mayoría de sitios web tienen un feed (¡o varios!)."
       getting_started:
         title: "Cómo empezar"
@@ -35,11 +35,11 @@ es:
         text_2: "Una vez hayas accedido con tu cuenta, tómate tu tiempo para completar los tutoriales guiados, te mostrarán lo que puedes hacer con la aplicación. Importa tus suscripciones en formato OPML desde otro agregador de feeds o simplemente empieza a suscribirte a feeds. Muy pronto tendrás un conjunto personalizado de feeds que te interesan."
       getting_help:
         title: "Obtener ayuda"
-        text_1: "Puedes pedir ayuda o decirnos lo que piensas de Feedbunch a traves de:"
+        text_1: "Puedes pedir ayuda o decirnos lo que piensas de FeedBunch a traves de:"
         text_2: "Puedes usar cualquiera de ellos, pero en general el gestor de incidencias de github es lo mejor para discutir errores y twitter es lo mejor para temas que puedan ser útiles a otros usuarios."
     signup_success:
-      text_1: "¡Gracias por darte de alta en Feedbunch!"
-      text_2_html: "Hemos enviado un correo electrónico a la dirección que nos has dado. Por favor sigue las instrucciones en ese correo para <strong>confirmar tu dirección de correo electrónico</strong>. No podrás entrar en Feedbunch hasta que tu dirección de correo electrónico esté confirmada."
+      text_1: "¡Gracias por darte de alta en FeedBunch!"
+      text_2_html: "Hemos enviado un correo electrónico a la dirección que nos has dado. Por favor sigue las instrucciones en ese correo para <strong>confirmar tu dirección de correo electrónico</strong>. No podrás entrar en FeedBunch hasta que tu dirección de correo electrónico esté confirmada."
       text_3: "Por favor comprueba tu carpeta de spam si no ves el correo de confirmación en tu carpeta de entrada en unos minutos."
       text_4_html: "Si quieres que volvamos a enviarte el correo de confirmación, <a href='%{url}' class='alert-link'>haz click aquí</a> e introduce tu dirección de correo electrónico."
       text_5: "¡Que disfrutes leyendo feeds!"
@@ -104,7 +104,7 @@ es:
         text_2: "Puedes habilitar o deshabilitar los atajos de teclado desde la página de tu perfil."
       help:
         title: "Ayuda y Danos tu opinión"
-        text_1: "Puedes pedir ayuda o decirnos lo que piensas de Feedbunch a traves de:"
+        text_1: "Puedes pedir ayuda o decirnos lo que piensas de FeedBunch a traves de:"
         text_2: "Puedes usar cualquiera de ellos, pero en general el gestor de incidencias de github es lo mejor para discutir errores y twitter es lo mejor para temas que puedan ser útiles a otros usuarios."
         close: "Cerrar"
       import_subscriptions:
@@ -123,7 +123,7 @@ es:
       all_entries: "Todas las suscripciones"
       loading: "Cargando..."
     start:
-      welcome: "Bienvenido a Feedbunch"
+      welcome: "Bienvenido a FeedBunch"
       stats: "Suscrito a %{feeds} feeds con %{entries} entradas sin leer."
     entries:
       no_entries: "No hay entradas"

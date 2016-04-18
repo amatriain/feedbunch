@@ -48,7 +48,7 @@ es:
           content_html: '<p>Puedes deslizar tu dedo en vez de pulsar el botón para ver la lista de feeds o las entradas:</p><p><i class=\"fa fa-2x fa-hand-o-left\"></i>&nbsp;Desliza tu dedo a la izquierda para ocultar la lista de feeds.</p><p><i class=\"fa fa-2x fa-hand-o-right\"></i>&nbsp;Desliza a la derecha para mostrar la lista de feeds.</p>'
         step5:
           title: 'Instalar en la pantalla de inicio'
-          content_html: '<p>Puedes instalar Feedbunch en la pantalla de inicio de tu móvil usando el menú del navegador.</p><p>Una vez instalado Feedbunch se mostrará a pantalla completa y será en general más usable.</p>'
+          content_html: '<p>Puedes instalar FeedBunch en la pantalla de inicio de tu móvil usando el menú del navegador.</p><p>Una vez instalado FeedBunch se mostrará a pantalla completa y será en general más usable.</p>'
       feed:
         nextBtn: 'Siguiente'
         doneBtn: 'Terminar'

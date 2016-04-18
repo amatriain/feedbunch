@@ -8,7 +8,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class with default "from" parameter.
   if %{production staging}.include? Rails.env
-    config.mailer_sender = "\"Feedbunch\" <#{Feedbunch::Application.config.admin_email}>"
+    config.mailer_sender = "\"FeedBunch\" <#{Feedbunch::Application.config.admin_email}>"
   else
     config.mailer_sender = 'root@localhost'
   end
@@ -65,7 +65,7 @@ Devise.setup do |config|
   config.http_authenticatable_on_xhr = true
 
   # The realm used in Http Basic Authentication. "Application" by default.
-  config.http_authentication_realm = 'Feedbunch'
+  config.http_authentication_realm = 'FeedBunch'
 
   # It will change confirmation, password recovery and other workflows
   # to behave the same regardless if the e-mail provided was right or wrong.

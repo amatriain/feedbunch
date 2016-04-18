@@ -1,5 +1,5 @@
 class OpmlExportMailer < ActionMailer::Base
-  default from: "\"Feedbunch\" <#{Feedbunch::Application.config.admin_email}>"
+  default from: "\"FeedBunch\" <#{Feedbunch::Application.config.admin_email}>"
 
   ##
   # Send an email when the Export OPML background process is finished successfully.

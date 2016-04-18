@@ -51,7 +51,7 @@ class OPMLExporter
     builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
       xml.opml(version: '1.0') {
         xml.head {
-          xml.title 'RSS subscriptions exported by Feedbunch (feedbunch.com)'
+          xml.title 'RSS subscriptions exported by FeedBunch (feedbunch.com)'
           xml.ownerName user.name
           xml.ownerEmail user.email
           xml.dateCreated Time.zone.now.rfc2822

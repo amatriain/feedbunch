@@ -35,7 +35,7 @@ class FeedbunchAuth::InvitationsController < Devise::InvitationsController
     @invited_user = invite_user invited_email
     # If the created user is invalid, this will raise an error
     @invited_user.save!
-    Rails.logger.info "User #{current_inviter.id} - #{current_inviter.email} sent invitation to join Feedbunch to user #{@invited_user.id} - #{@invited_user.email}"
+    Rails.logger.info "User #{current_inviter.id} - #{current_inviter.email} sent invitation to join FeedBunch to user #{@invited_user.id} - #{@invited_user.email}"
     head status: :ok
 
   rescue => e

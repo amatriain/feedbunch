@@ -4,7 +4,7 @@ es:
       sign_in: "Entrar"
       sign_in_link: "Entrar"
       sign_up_link: "Crear nueva cuenta"
-      open_beta_1: "Feedbunch está en fase de beta abierta."
+      open_beta_1: "FeedBunch está en fase de beta abierta."
       open_beta_2: "Por favor envíanos tus comentarios a traves de los enlaces de email, twitter o github de más abajo."
       sign_up: "Crear cuenta"
       forgot_password_link: "¿Olvidaste tu contraseña?"
@@ -38,7 +38,7 @@ es:
         submit: "Borrar cuenta"
       invite_friend:
         title: "Invitar a un amigo"
-        text: "Puedes enviar a un amigo una invitación para entrar en Feedbunch."
+        text: "Puedes enviar a un amigo una invitación para entrar en FeedBunch."
         close: "Cancelar"
         submit: "Enviar invitación"
       reset_tours:

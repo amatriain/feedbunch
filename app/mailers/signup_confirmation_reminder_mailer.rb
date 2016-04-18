@@ -1,5 +1,5 @@
 class SignupConfirmationReminderMailer < ActionMailer::Base
-  default from: "\"Feedbunch\" <#{Feedbunch::Application.config.admin_email}>"
+  default from: "\"FeedBunch\" <#{Feedbunch::Application.config.admin_email}>"
 
   ##
   # Send an email to remind a signed up user that he stil hasn't confirmed his email address.
