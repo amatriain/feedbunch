@@ -48,8 +48,8 @@ onmessage = function(e){
   }
   else if (operation == RESET_TOURS){
     // Compose JSON to send in the HTTP PUT with the new config
-    var data = {user_config: {show_main_tour: true, show_mobile_tour: true,
-      show_feed_tour: true, show_entry_tour: true, show_kb_shortcuts_tour: true}};
+    var data = {user_config: {show_main_tour: "true", show_mobile_tour: "true",
+      show_feed_tour: "true", show_entry_tour: "true", show_kb_shortcuts_tour: "true"}};
     do_put(operation, "/api/user_config.json", token, data, 0);
   }
 
