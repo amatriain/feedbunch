@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'tourSvc',
-['$rootScope', '$http', '$timeout', 'csrfTokenSvc', 'timerFlagSvc',
-($rootScope, $http, $timeout, csrfTokenSvc, timerFlagSvc)->
+['$rootScope', '$timeout', 'csrfTokenSvc', 'timerFlagSvc',
+($rootScope, $timeout, csrfTokenSvc, timerFlagSvc)->
 
   #--------------------------------------------
   # Media query to show the main app tour only in screens bigger than a smartphone
