@@ -568,7 +568,7 @@ describe 'authentication', type: :feature do
 
         # After relogin, app should be in spanish
         login_user_for_feature @user
-        expect(page).to have_text 'Bienvenido a Feedbunch'
+        expect(page).to have_text 'Bienvenido a FeedBunch'
       end
 
     end
