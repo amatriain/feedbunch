@@ -5,11 +5,9 @@
 <% cache "index_page-#{I18n.locale}" do %>
 
   <div class="jumbotron">
-    <div class="page-header">
-      <div class="row">
-        <div class="col-xs-12 col-md-11 col-md-offset-1">
-          <%= image_tag asset_path('Logo_ColorHoriz_512.png') %>
-        </div>
+    <div class="row">
+      <div class="col-xs-12 col-md-11 col-md-offset-1">
+        <%= image_tag asset_path('Logo_ColorHoriz_512.png'), class: 'logo large' %>
       </div>
     </div>
 

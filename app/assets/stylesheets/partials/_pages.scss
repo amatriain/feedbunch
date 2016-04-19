@@ -46,13 +46,9 @@
 
   .jumbotron {
     background-color: rgba(238, 238, 238, 0.95);
-  
-    .page-header {
-      border: 0;
 
-      img {
-        max-width: 75%;
-      }
+    img.logo.large {
+      max-width: 80%;
     }
 
     .lead {
