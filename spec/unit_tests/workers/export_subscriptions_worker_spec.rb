@@ -34,7 +34,7 @@ describe ExportSubscriptionsWorker do
 <?xml version="1.0" encoding="UTF-8"?>
 <opml version="1.0">
   <head>
-    <title>RSS subscriptions exported by Feedbunch (feedbunch.com)</title>
+    <title>RSS subscriptions exported by FeedBunch (feedbunch.com)</title>
     <ownerName>#{@user.name}</ownerName>
     <ownerEmail>#{@user.email}</ownerEmail>
     <dateCreated>#{time_now.rfc822}</dateCreated>
@@ -118,13 +118,13 @@ OPML_DOCUMENT
 
     it 'sends notification if finished successfully' do
       ExportSubscriptionsWorker.new.perform @user.id
-      mail_should_be_sent 'Your feed subscriptions have been exported by Feedbunch', to: @user.email
+      mail_should_be_sent 'Your feed subscriptions have been exported by FeedBunch', to: @user.email
     end
 
     it 'sends notification if finished with an error' do
       allow(OPMLExporter).to receive(:export).and_raise StandardError.new
       expect {ExportSubscriptionsWorker.new.perform @user.id}.to raise_error StandardError
-      mail_should_be_sent 'There has been an error exporting your feed subscriptions from Feedbunch', to: @user.email
+      mail_should_be_sent 'There has been an error exporting your feed subscriptions from FeedBunch', to: @user.email
     end
   end
 
