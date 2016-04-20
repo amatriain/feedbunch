@@ -5,15 +5,13 @@
 <% cache "signup_success-#{I18n.locale}" do %>
 
   <div class="jumbotron">
-    <div class="page-header">
-      <h1>
-        <%=
-            link_to root_url(locale: I18n.locale), class: 'hidden-xs' do
-              image_tag asset_path('feed128x128.png'), alt: 'FeedBunch'
-            end
-        %>
-        FeedBunch
-      </h1>
+    <div class="row">
+      <div class="hidden-xs col-md-11 col-md-offset-1">
+        <%= image_tag asset_path('Logo_ColorHoriz_large.png'), class: 'logo' %>
+      </div>
+      <div class="visible-xs col-xs-12">
+        <%= image_tag asset_path('Logo_ColorVert_small.png'), class: 'logo' %>
+      </div>
     </div>
 
     <div class="row">
