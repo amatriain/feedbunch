@@ -6,8 +6,11 @@
 
   <div class="jumbotron">
     <div class="row">
-      <div class="col-xs-12 col-md-11 col-md-offset-1">
-        <%= image_tag asset_path('Logo_ColorHoriz_512.png'), class: 'logo large' %>
+      <div class="hidden-xs col-md-11 col-md-offset-1">
+        <%= image_tag asset_path('Logo_ColorHoriz_large.png'), class: 'logo' %>
+      </div>
+      <div class="visible-xs col-xs-12">
+        <%= image_tag asset_path('Logo_ColorVert_small.png'), class: 'logo' %>
       </div>
     </div>
 
