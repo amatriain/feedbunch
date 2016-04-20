@@ -7,10 +7,18 @@
   <div class="jumbotron">
     <div class="row">
       <div class="hidden-xs col-md-11 col-md-offset-1">
-        <%= image_tag asset_path('Logo_ColorHoriz_large.png'), class: 'logo' %>
+        <%=
+          link_to root_url(locale: I18n.locale) do
+            image_tag asset_path('Logo_ColorHoriz_large.png'), alt: 'FeedBunch', class: 'logo'
+          end
+        %>
       </div>
       <div class="visible-xs col-xs-12">
-        <%= image_tag asset_path('Logo_ColorVert_small.png'), class: 'logo' %>
+        <%=
+          link_to root_url(locale: I18n.locale) do
+            image_tag asset_path('Logo_ColorVert_small.png'), alt: 'FeedBunch', class: 'logo'
+          end
+        %>
       </div>
     </div>
 
