@@ -27,15 +27,14 @@
     background-color: rgba(240,240,240,0.9);
 
     #contact-list {
-      font-size: 21px;
-      font-weight: 200;
+      font-family: Ubuntu-medium;
+
+      .fa-li {
+        top: 0;
+      }
 
       li {
         margin-bottom: 15px;
-      }
-
-      .contact {
-        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
       }
     }
   }
