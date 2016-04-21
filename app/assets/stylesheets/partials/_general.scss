@@ -1,3 +1,21 @@
+body {
+  font-family: OpenSans;
+  font-size: 16px;
+}
+
+strong {
+  font-family: OpenSansBold;
+}
+
+em {
+  font-family: OpenSansItalic;
+}
+
+em strong,
+strong em {
+  font-family: OpenSansBoldItalic;
+}
+
 a {
   cursor: hand; cursor: pointer;
 }

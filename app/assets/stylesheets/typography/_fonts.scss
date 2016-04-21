@@ -11,3 +11,31 @@
   font-style: normal;
   src: font-url('Ubuntu-R.ttf') format('truetype');
 }
+
+@font-face {
+  font-family: 'OpenSans';
+  font-weight: 400;
+  font-style: normal;
+  src: font-url('OpenSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'OpenSansBold';
+  font-weight: 400;
+  font-style: normal;
+  src: font-url('OpenSans-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'OpenSansItalic';
+  font-weight: 400;
+  font-style: normal;
+  src: font-url('OpenSans-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'OpenSansBoldItalic';
+  font-weight: 400;
+  font-style: normal;
+  src: font-url('OpenSans-BoldItalic.ttf') format('truetype');
+}
