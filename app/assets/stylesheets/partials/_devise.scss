@@ -40,10 +40,18 @@
 
 #devise-view {
 
-  .jumbotron .lead {
-    font-weight: bold;
-    font-size: 3.5em;
-    text-align: center;
+  .jumbotron {
+    background-color: rgba(238, 238, 238, 0.95);
+
+    img.logo {
+      max-width: 100%;
+    }
+
+    .lead {
+      font-weight: bold;
+      font-size: 3.5em;
+      text-align: center;
+    }
   }
 
   #accept-invitation-message {
