@@ -124,6 +124,10 @@
       vertical-align: middle;
     }
 
+    .entry-feed-title {
+      font-family: Ubuntu-italic;
+    }
+
     .entry-published {
       text-align: right;
       padding-right: 2px;
@@ -169,7 +173,7 @@
 
       .entry-additional-info {
         margin-bottom: 10px;
-        font-style: italic;
+        font-family: Ubuntu-italic;
       }
 
       .entry-content {
