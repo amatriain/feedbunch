@@ -8,6 +8,12 @@
     color: #787878;
   }
 
+  #github-footer-link:hover,
+  #twitter-footer-link:hover,
+  #email-footer-link:hover {
+    color: #404040;
+  }
+
   #github-footer-link, #twitter-footer-link {
     + .tooltip.top {
       margin-top: -15px;
