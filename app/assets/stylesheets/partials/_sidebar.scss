@@ -131,6 +131,15 @@
     }
   }
 
+  .nav-pills > .active > a .badge {
+    background-color: #FFFFFF;
+    color: #428BCA;
+  }
+
+  .badge {
+    font-family: OpenSansBold;
+  }
+
   #folders-list {
     margin-bottom: 1em;
 
