@@ -9,6 +9,8 @@ Rails.application.config.assets.version = '1.0'
 # Add the images path to assets pipeline
 Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'images')
 
+# Add the fonts path to assets pipeline
+Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts', 'ubuntu-font-family-0.83')
 
 #########################################
 # Include NPM front-end modules in assets pipeline
