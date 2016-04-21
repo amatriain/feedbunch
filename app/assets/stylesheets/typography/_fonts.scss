@@ -1,6 +1,13 @@
 @font-face {
-  font-family: 'Ubuntu';
+  font-family: 'Ubuntu-medium';
   font-weight: 500;
   font-style: normal;
   src: font-url('Ubuntu-M.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Ubuntu';
+  font-weight: 400;
+  font-style: normal;
+  src: font-url('Ubuntu-R.ttf') format('truetype');
 }

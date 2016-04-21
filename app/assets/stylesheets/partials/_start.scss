@@ -11,6 +11,11 @@
 }
 
 #start-info {
+  .tagline {
+    font-family: Ubuntu-medium;
+    font-size: 48px;
+  }
+
   .start-list {
     padding: 0;
   }
@@ -24,5 +29,7 @@
   #subscription-stats {
     opacity: 0;
     height: auto;
+    font-family: Ubuntu;
+    font-size: 40px;
   }
 }
