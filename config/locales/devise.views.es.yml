@@ -9,7 +9,7 @@ es:
       sign_up: "Crear cuenta"
       forgot_password_link: "¿Olvidaste tu contraseña?"
       forgot_password: "Cambiar contraseña"
-      new_confirmation: "Volver a confirmar dirección de email"
+      new_confirmation: "Confirmar email"
       unlock: "Desbloquear cuenta"
       sign_in_with: "Entrar con %{provider}"
       remember_me: "Recuérdame"

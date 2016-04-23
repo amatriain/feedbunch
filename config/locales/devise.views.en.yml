@@ -9,7 +9,7 @@ en:
       sign_up: "Sign up"
       forgot_password_link: "Forgot your password?"
       forgot_password: "Reset password"
-      new_confirmation: "Confirm email address again"
+      new_confirmation: "Confirm email address"
       unlock: "Unlock account"
       sign_in_with: "Log in with %{provider}"
       remember_me: "Remember me"
