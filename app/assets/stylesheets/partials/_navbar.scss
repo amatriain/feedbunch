@@ -42,9 +42,13 @@ body.navbar-visible{
     }
   }
 
-
-
   @media (max-width: $screen-sm-min) {
+    /* Larger font in navbar at smartphone resolutions, menu has almost the whole screen width */
+    .nav li a {
+      font-family: OpenSans;
+      font-size: 16px;
+    }
+
     a:active {
       background-color: #E7E7E7 !important;
     }
@@ -65,6 +69,12 @@ body.navbar-visible{
   }
 
   @media (min-width: $screen-sm-min) and (max-width: $screen-md-min) {
+    /* Smaller font in navbar at tablet resolutions, to avoid navbar occupying two lines */
+    .nav li a {
+      font-family: OpenSans;
+      font-size: 14px;
+    }
+
     /* Limit user name width in the navbar at different resolutions */
     #user-dropdown {
       max-width: 130px;
@@ -76,6 +86,12 @@ body.navbar-visible{
   }
 
   @media (min-width: $screen-md-min) {
+    /* Larger font in navbar at larger resolutions, for better usability */
+    .nav li a {
+      font-family: OpenSans;
+      font-size: 16px;
+    }
+
     #user-dropdown {
       max-width: 300px;
 
