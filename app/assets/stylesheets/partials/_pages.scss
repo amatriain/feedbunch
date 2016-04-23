@@ -22,6 +22,11 @@
         left: 1px;
         right: 1px;
       }
+
+      .lead {
+        font-size: 30px;
+        padding-top: 20px;
+      }
     }
   }
 }
@@ -30,6 +35,11 @@
   #landing-page,
   #signup-success {
     padding-top: 50px;
+
+    .lead {
+      font-size: 48px;
+      padding-top: 35px;
+    }
   }
 }
 
@@ -45,7 +55,6 @@
 
     .lead {
       font-family: Ubuntu-medium;
-      font-size: 48px;
     }
   }
 

@@ -24,12 +24,21 @@
         }
       }
     }
+
+    .lead {
+      font-size: 30px;
+      padding-top: 20px;
+    }
   }
 }
 
 @media (min-width: $screen-sm-min) {
   #devise-view {
     padding-top: 50px;
+
+    .lead {
+      font-size: 48px;
+    }
   }
 }
 
@@ -44,7 +53,6 @@
 
     .lead {
       font-family: Ubuntu-medium;
-      font-size: 48px;
       text-align: center;
     }
   }
