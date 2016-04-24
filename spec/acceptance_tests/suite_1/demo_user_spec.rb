@@ -71,7 +71,7 @@ describe 'demo user', type: :feature do
       visit edit_user_registration_path
       new_password = 'new_password'
       fill_in 'New password', with: new_password
-      fill_in 'Confirm password', with: new_password
+      fill_in 'Password (again)', with: new_password
       fill_in 'Current password', with: @demo_user.password
       click_on 'Update account'
       logout_user
