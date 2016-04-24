@@ -27,7 +27,7 @@ describe 'automatically closing notices and alerts', type: :feature do
     visit new_user_registration_path
     fill_in 'Email', with: @user.email
     fill_in 'Password', with: 'password'
-    fill_in 'Confirm password', with: 'different password'
+    fill_in 'Password (again)', with: 'different password'
     click_on 'Sign up'
 
     expect(page).to have_css 'div#devise-error'
