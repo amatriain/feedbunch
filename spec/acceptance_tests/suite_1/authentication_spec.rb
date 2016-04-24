@@ -73,7 +73,7 @@ describe 'authentication', type: :feature do
         user = FactoryGirl.build :user, email: @user.email, password: new_password
         fill_in 'Email', with: @user.email
         fill_in 'Password', with: new_password
-        fill_in 'Confirm password', with: new_password
+        fill_in 'Password (again)', with: new_password
         click_on 'Sign up'
 
         expect(page).to have_text 'Email has already been taken'
@@ -91,7 +91,7 @@ describe 'authentication', type: :feature do
         different_password = 'different_password'
         fill_in 'Email', with: new_email
         fill_in 'Password', with: new_password
-        fill_in 'Confirm password', with: different_password
+        fill_in 'Password (again)', with: different_password
         click_on 'Sign up'
 
         expect(page).to have_text "Password confirmation doesn't match Password"
@@ -127,7 +127,7 @@ describe 'authentication', type: :feature do
         # submit password change form
         new_password = 'new_password'
         fill_in 'New password', with: new_password
-        fill_in 'Confirm password', with: new_password
+        fill_in 'Password (again)', with: new_password
         click_on 'Change your password'
 
         # after password change, user should be logged in
@@ -159,7 +159,7 @@ describe 'authentication', type: :feature do
         new_password = 'new_password'
         different_password = 'different_password'
         fill_in 'New password', with: new_password
-        fill_in 'Confirm password', with: different_password
+        fill_in 'Password (again)', with: different_password
         click_on 'Change your password'
 
         # after submit, user should NOT be logged in
@@ -194,7 +194,7 @@ describe 'authentication', type: :feature do
         user = FactoryGirl.build :user, email: new_email, password: new_password
         fill_in 'Email', with: new_email
         fill_in 'Password', with: new_password
-        fill_in 'Confirm password', with: new_password
+        fill_in 'Password (again)', with: new_password
         click_on 'Sign up'
 
         # Remove confirmation mails sent on signup from mail queue
@@ -227,7 +227,7 @@ describe 'authentication', type: :feature do
         user = FactoryGirl.build :user, email: new_email, password: new_password
         fill_in 'Email', with: new_email
         fill_in 'Password', with: new_password
-        fill_in 'Confirm password', with: new_password
+        fill_in 'Password (again)', with: new_password
         click_on 'Sign up'
 
         # Confirm email
@@ -507,7 +507,7 @@ describe 'authentication', type: :feature do
       it 'allows password change', js: true do
         new_password = 'new_password'
         fill_in 'New password', with: new_password
-        fill_in 'Confirm password', with: new_password
+        fill_in 'Password (again)', with: new_password
         fill_in 'Current password', with: @user.password
         click_on 'Update account'
         logout_user
@@ -523,7 +523,7 @@ describe 'authentication', type: :feature do
       it 'does not allow password change if current password is left blank', js: true do
         new_password = 'new_password'
         fill_in 'New password', with: new_password
-        fill_in 'Confirm password', with: new_password
+        fill_in 'Password (again)', with: new_password
         click_on 'Update account'
         logout_user
 
@@ -534,7 +534,7 @@ describe 'authentication', type: :feature do
       it 'does not allow password change if current password is filled with wrong password', js: true do
         new_password = 'new_password'
         fill_in 'New password', with: new_password
-        fill_in 'Confirm password', with: new_password
+        fill_in 'Password (again)', with: new_password
         fill_in 'Current password', with: 'wrong_password'
         click_on 'Update account'
         logout_user
@@ -546,7 +546,7 @@ describe 'authentication', type: :feature do
       it 'does not allow password change if both password fields do not match', js: true do
         new_password = 'new_password'
         fill_in 'New password', with: new_password
-        fill_in 'Confirm password', with: 'different_new_password'
+        fill_in 'Password (again)', with: 'different_new_password'
         fill_in 'Current password', with: @user.password
         click_on 'Update account'
         logout_user

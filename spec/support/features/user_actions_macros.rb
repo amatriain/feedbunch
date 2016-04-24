@@ -528,7 +528,7 @@ def sign_up(email, password, confirm_account: true)
   visit new_user_registration_path
   fill_in 'Email', with: email
   fill_in 'Password', with: password
-  fill_in 'Confirm password', with: password
+  fill_in 'Password (again)', with: password
   click_on 'Sign up'
   expect(current_path).to eq signup_success_path
 
