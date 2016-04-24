@@ -140,7 +140,7 @@ describe 'invite friend', type: :feature do
       friend_password = 'friend_password'
       fill_in 'Email', with: @friend_email
       fill_in 'Password', with: friend_password
-      fill_in 'Confirm password', with: friend_password
+      fill_in 'Password (again)', with: friend_password
       click_on 'Sign up'
       expect(current_path).to eq signup_success_path
 
@@ -171,7 +171,7 @@ describe 'invite friend', type: :feature do
       visit new_user_registration_path
       fill_in 'Email', with: @friend_email
       fill_in 'Password', with: password
-      fill_in 'Confirm password', with: password
+      fill_in 'Password (again)', with: password
       click_on 'Sign up'
       expect(page).to have_text 'Email has already been taken'
       expect(current_path).to eq new_user_registration_path
@@ -194,7 +194,7 @@ describe 'invite friend', type: :feature do
       visit new_user_registration_path
       fill_in 'Email', with: @friend_email
       fill_in 'Password', with: password
-      fill_in 'Confirm password', with: password
+      fill_in 'Password (again)', with: password
       click_on 'Sign up'
       expect(page).to have_text 'Email has already been taken'
       expect(current_path).to eq new_user_registration_path
@@ -238,7 +238,7 @@ describe 'invite friend', type: :feature do
     it 'accepts invitation', js: true do
       visit @accept_url
       fill_in 'Password', with: @password
-      fill_in 'Confirm password', with: @password
+      fill_in 'Password (again)', with: @password
       click_on 'Activate account'
 
       # User should be immediately logged in
@@ -273,7 +273,7 @@ describe 'invite friend', type: :feature do
       # Accept invitation from second email
       visit resent_accept_url
       fill_in 'Password', with: @password
-      fill_in 'Confirm password', with: @password
+      fill_in 'Password (again)', with: @password
       click_on 'Activate account'
 
       # User should be immediately logged in
@@ -302,7 +302,7 @@ describe 'invite friend', type: :feature do
       visit new_user_registration_path
       fill_in 'Email', with: @friend_email
       fill_in 'Password', with: @password
-      fill_in 'Confirm password', with: @password
+      fill_in 'Password (again)', with: @password
       click_on 'Sign up'
 
       expect(page).to have_text 'Email has already been taken'

@@ -523,7 +523,7 @@ def accept_invitation(password: nil, accept_link: nil, invited_email: nil)
   accept_url = get_accept_invitation_link_from_email accept_link
   visit accept_url
   fill_in 'Password', with: password
-  fill_in 'Confirm password', with: password
+  fill_in 'Password (again)', with: password
   click_on 'Activate account'
   expect(current_path).to eq read_path
   user_should_be_logged_in
