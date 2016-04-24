@@ -5,6 +5,7 @@
 
 def login_user_for_feature(user)
   visit new_user_session_path
+  close_cookies_alert
   fill_in 'Email', with: user.email
   fill_in 'Password', with: user.password
   click_on 'Log in'
@@ -20,6 +21,17 @@ def logout_user
   open_user_menu
   find('a#sign_out').click
   expect(current_path).to eq root_path
+end
+
+##
+# Close the cookies alert
+def close_cookies_alert
+  if page.has_css? '#cookie-notice'
+    within '#cookie-notice' do
+      find('button.close').click
+    end
+    expect(page).not_to have_css '#cookie-notice', visible: true
+  end
 end
 
 ##
