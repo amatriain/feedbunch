@@ -371,6 +371,14 @@ def unsubscribe_feed(feed, user)
 end
 
 ##
+# Scroll the page until the "Update account" button in the edit profile view is visible.
+# Necessary because sometimes it gets overlapped with the navbar and is unclickable during testing.
+def show_update_account_button
+  page.execute_script "document.getElementById('edit-profile-submit').scrollIntoView(true);"
+  page.execute_script "window.scrollBy(0,-100);"
+end
+
+##
 # Enter the edit registration page, check the "enable keyboard shortcuts" checkbox if it isn't already,
 # enter the current password and save the changes.
 # Receives as argument the user performing the action.
@@ -381,6 +389,7 @@ def enable_kb_shortcuts(user)
     page.execute_script('$("#user_kb_shortcuts_enabled").click()')
 
     fill_in 'user_current_password', with: user.password
+    show_update_account_button
     click_on 'Update account'
     expect(current_path).to eq read_path
   end
@@ -398,6 +407,7 @@ def disable_kb_shortcuts(user)
     page.execute_script('$("#user_kb_shortcuts_enabled").click()')
 
     fill_in 'user_current_password', with: user.password
+    show_update_account_button
     click_on 'Update account'
     expect(current_path).to eq read_path
   end
@@ -415,6 +425,7 @@ def enable_quick_reading(user)
     page.execute_script('$("#user_quick_reading").click()')
 
     fill_in 'user_current_password', with: user.password
+    show_update_account_button
     click_on 'Update account'
     expect(current_path).to eq read_path
   end
@@ -432,6 +443,7 @@ def enable_open_all_entries(user)
     page.execute_script('$("#user_open_all_entries").click()')
 
     fill_in 'user_current_password', with: user.password
+    show_update_account_button
     click_on 'Update account'
     expect(current_path).to eq read_path
   end
