@@ -121,6 +121,8 @@ def read_folder(folder)
   expect(page).to have_no_css '#sidebar i.fa-spinner.fa-spin', visible: true
 
   open_folder folder if folder != 'all'
+  # Wait for animation to finish
+  sleep 0.5
   folder_id = (folder == 'all')? 'none' : folder.id
   within "#folders-list #folder-#{folder_id}" do
     find("[data-sidebar-feed][data-feed-id='all']").click

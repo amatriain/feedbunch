@@ -289,6 +289,8 @@ describe 'feeds', type: :feature do
         within "#sidebar #folder-#{@folder1.id}" do
           # Open folder
           find("a#open-folder-#{@folder1.id}").click
+          # Wait for animation to finish
+          sleep 0.5
 
           expect(page).to have_css "li#folder-#{@folder1.id}-all-feeds"
 
