@@ -159,7 +159,6 @@ describe 'feed entries', type: :feature do
     end
 
     it 'shows an alert if it cannot mark entry as read', js: true do
-      skip
       allow_any_instance_of(User).to receive(:change_entries_state).and_raise StandardError.new
       open_entry @entry1
 
