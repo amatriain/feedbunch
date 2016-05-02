@@ -126,7 +126,6 @@ describe 'authorization', type: :feature do
 
     it 'does not allow access to PgHero to non-admin users', js: true do
       skip
-      skip
       login_user_for_feature @normal_user
       visit '/pghero'
       expect(page).to have_content 'No route matches'
