@@ -13,6 +13,9 @@ describe 'keyboard shortcuts', type: :feature do
     @user.subscribe @feed1.fetch_url
 
     login_user_for_feature @user
+
+    # Use a relatively common window size
+    current_window.resize_to(1024, 768)
   end
 
   context 'entries shortcuts' do
