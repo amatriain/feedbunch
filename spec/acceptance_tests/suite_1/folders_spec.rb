@@ -28,7 +28,6 @@ describe 'folders and feeds', type: :feature do
   end
 
   it 'shows an alert if it cannot load folders', js: true do
-    skip
     allow_any_instance_of(User).to receive(:folders).and_raise StandardError.new
     login_user_for_feature @user
     should_show_alert 'problem-loading-folders'

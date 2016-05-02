@@ -15,7 +15,6 @@ describe 'feeds', type: :feature do
   end
 
   it 'shows an alert if it cannot load feeds', js: true do
-    skip
     allow_any_instance_of(User).to receive(:subscribed_feeds).and_raise StandardError.new
     login_user_for_feature @user
     should_show_alert 'problem-loading-feeds'
