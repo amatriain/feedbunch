@@ -9,7 +9,7 @@ describe 'feeds', type: :feature do
     @user = FactoryGirl.create :user
   end
 
-  it 'redirects unauthenticated visitors to login page' do
+  it 'redirects unauthenticated visitors to login page', js: true do
     visit read_path
     expect(current_path).to eq new_user_session_path
   end
