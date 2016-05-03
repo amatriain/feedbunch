@@ -550,7 +550,7 @@ end
 # - password for the new account
 # - optionally, whether to confirm the account clicking on the link sent to the user in an email. Defaults to true.
 
-def sign_up(email, password, confirm_account: true)
+def sign_up_for_feature(email, password, confirm_account: true)
   visit new_user_registration_path
   fill_in 'Email', with: email
   fill_in 'Password', with: password

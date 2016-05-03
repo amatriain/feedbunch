@@ -119,7 +119,7 @@ describe 'invite friend', type: :feature do
       logout_user
 
       friend_password = 'friend_password'
-      sign_up @friend_email, friend_password
+      sign_up_for_feature @friend_email, friend_password
 
       friend = User.find_by_email @friend_email
       # Give value to password (instance attribute) so that user can Log in

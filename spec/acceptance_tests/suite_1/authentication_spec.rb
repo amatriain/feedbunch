@@ -55,7 +55,7 @@ describe 'authentication', type: :feature do
         new_email = 'new_email@test.com'
         new_password = 'new_password'
 
-        sign_up new_email, new_password
+        sign_up_for_feature new_email, new_password
 
         login_user_for_feature @user
         user_should_be_logged_in
@@ -64,7 +64,7 @@ describe 'authentication', type: :feature do
       it 'redirects to signup success view after a successful signup', js: true do
         new_email = 'new_email@test.com'
         new_password = 'new_password'
-        sign_up new_email, new_password, confirm_account: false
+        sign_up_for_feature new_email, new_password, confirm_account: false
         expect(current_path).to eq signup_success_path
       end
 
