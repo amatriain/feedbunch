@@ -18,8 +18,6 @@ describe 'quick reading mode', type: :feature do
       @user.subscribe @feed.fetch_url
 
       login_user_for_feature @user
-
-      current_window.resize_to(800, 600)
     end
 
     it 'does not enable quick reading mode by default', js: true do

@@ -42,7 +42,13 @@ RSpec.configure do |config|
 
   # Clean the database between tests with database_cleaner
   config.before(:suite)  {DatabaseCleaner.strategy = :deletion}
-  config.before(:each) {DatabaseCleaner.start}
+  config.before(:each) do
+    DatabaseCleaner.start
+    if ENV['TEST_SUITE'] != 'unit'
+      # Use a relatively common window size in acceptance tests
+      current_window.resize_to(1024, 768)
+    end
+  end
   config.after(:each) {
     # If database is locked when test is finished (because some database operations are not yet finished),
     # sleep 1 second and try to clean it again. Do it a maximum of 15 times before giving up.

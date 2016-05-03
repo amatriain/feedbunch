@@ -122,7 +122,6 @@ describe 'feed entries', type: :feature do
       @user.change_entries_state @entry1, 'read'
 
       visit read_path
-      current_window.resize_to(800, 600)
       read_folder 'all'
 
       expect(page).not_to have_content @entry1.title
@@ -387,9 +386,6 @@ describe 'feed entries', type: :feature do
 
       @user.folders << @folder
       @folder.feeds << @feed1 << @feed2
-
-      # Use a relatively common window size
-      current_window.resize_to(1024, 768)
       visit read_path
     end
 
