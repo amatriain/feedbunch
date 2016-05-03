@@ -124,7 +124,7 @@ GEM
       tins (~> 1.6.0)
     crass (1.0.2)
     daemons (1.1.9)
-    database_cleaner (1.5.1)
+    database_cleaner (1.5.3)
     debug_inspector (0.0.2)
     devise (4.1.0)
       bcrypt (~> 3.0)
