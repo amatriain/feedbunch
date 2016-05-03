@@ -513,7 +513,7 @@ describe 'authentication', type: :feature do
         logout_user_for_feature
 
         # test that I cannot login with the old password
-        failed_login_user_for_feature @user, @user.password
+        failed_login_user_for_feature @user.email, @user.password
 
         # test that I can login with the new password
         @user.password = new_password

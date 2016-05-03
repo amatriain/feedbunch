@@ -62,7 +62,7 @@ RSpec.configure do |config|
 
   config.before type: 'feature' do
     # Use a relatively common window size in acceptance tests
-    current_window.resize_to(1024, 768)
+    current_window.resize_to(1920, 1200)
   end
 
   # Retry failed tests, show retry status in the output
