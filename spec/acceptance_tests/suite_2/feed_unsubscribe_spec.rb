@@ -119,7 +119,7 @@ describe 'unsubscribe from feed', type: :feature do
 
     # Unsubscribe @user from @feed1 and logout
     unsubscribe_feed @feed1, @user
-    logout_user
+    logout_user_for_feature
 
     # user2 should still see the feed in his own list
     login_user_for_feature user2

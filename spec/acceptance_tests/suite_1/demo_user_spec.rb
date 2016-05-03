@@ -59,7 +59,7 @@ describe 'demo user', type: :feature do
       fill_in 'Email', with: new_email
       fill_in 'Current password', with: @demo_user.password
       click_on 'Update account'
-      logout_user
+      logout_user_for_feature
 
       mail_should_not_be_sent
       # test that demo user can login with the same email
@@ -74,7 +74,7 @@ describe 'demo user', type: :feature do
       fill_in 'Password (again)', with: new_password
       fill_in 'Current password', with: @demo_user.password
       click_on 'Update account'
-      logout_user
+      logout_user_for_feature
 
       # test that demo user can login with the old password
       login_user_for_feature @demo_user

@@ -16,7 +16,7 @@ end
 ##
 # Log out a currently logged in user
 
-def logout_user
+def logout_user_for_feature
   user_should_be_logged_in
   open_user_menu
   find('a#sign_out').click
@@ -502,7 +502,7 @@ end
 #
 # Receives as argument the friend's email address
 
-def send_invitation(invited_email)
+def send_invitation_for_feature(invited_email)
   visit edit_user_registration_path
   find('#send-invitation-button').click
   expect(page).to have_css '#invite-friend-popup', visible: true
@@ -527,7 +527,7 @@ end
 # and parsed in the test, and the accept link must be passed as argument to this function, because the
 # function has no way to retrieve the accept link otherwise.
 
-def accept_invitation(password: nil, accept_link: nil, invited_email: nil)
+def accept_invitation_for_feature(password: nil, accept_link: nil, invited_email: nil)
   password ||= 'some_password'
   if accept_link.nil?
     email_params = {path: '/invitation'}
@@ -607,6 +607,6 @@ end
 # Press the passed key in the keyboard.
 # Receives a numeric key code.
 
-def press_key(key)
+def press_key_for_feature(key)
   page.find('body').native.send_keys key.chr
 end

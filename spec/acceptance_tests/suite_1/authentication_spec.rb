@@ -133,7 +133,7 @@ describe 'authentication', type: :feature do
         # after password change, user should be logged in
         expect(current_path).to eq read_path
         user_should_be_logged_in
-        logout_user
+        logout_user_for_feature
 
         # test that user cannot login with old password
         failed_login_user_for_feature @user.email, @user.password
@@ -167,7 +167,7 @@ describe 'authentication', type: :feature do
 
         # test that user can login with old password
         login_user_for_feature @user
-        logout_user
+        logout_user_for_feature
 
         # test that user cannot login with new password
         failed_login_user_for_feature @user.email, new_password
@@ -456,7 +456,7 @@ describe 'authentication', type: :feature do
         fill_in 'Email', with: new_email
         fill_in 'Current password', with: @user.password
         click_on 'Update account'
-        logout_user
+        logout_user_for_feature
 
         # test that a confirmation email is sent
         confirmation_link = mail_should_be_sent path: confirmation_path, to: new_email
@@ -465,7 +465,7 @@ describe 'authentication', type: :feature do
 
         # test that before confirmation I can login with the old email
         login_user_for_feature @user
-        logout_user
+        logout_user_for_feature
 
         # test that after confirmation I cannot login with the old email
         visit confirmation_url
@@ -480,7 +480,7 @@ describe 'authentication', type: :feature do
         new_email = 'new_email@test.com'
         fill_in 'Email', with: new_email
         click_on 'Update account'
-        logout_user
+        logout_user_for_feature
 
         # test that a confirmation email is not sent
         mail_should_not_be_sent
@@ -494,14 +494,14 @@ describe 'authentication', type: :feature do
         fill_in 'Email', with: new_email
         fill_in 'Current password', with: 'wrong_password'
         click_on 'Update account'
-        logout_user
+        logout_user_for_feature
 
         # test that a confirmation email is not sent
         mail_should_not_be_sent
 
         # test that I can login with the old email
         login_user_for_feature @user
-        logout_user
+        logout_user_for_feature
       end
 
       it 'allows password change', js: true do
@@ -510,7 +510,7 @@ describe 'authentication', type: :feature do
         fill_in 'Password (again)', with: new_password
         fill_in 'Current password', with: @user.password
         click_on 'Update account'
-        logout_user
+        logout_user_for_feature
 
         # test that I cannot login with the old password
         failed_login_user_for_feature @user, @user.password
@@ -525,7 +525,7 @@ describe 'authentication', type: :feature do
         fill_in 'New password', with: new_password
         fill_in 'Password (again)', with: new_password
         click_on 'Update account'
-        logout_user
+        logout_user_for_feature
 
         # test that I can login with the old password
         login_user_for_feature @user
@@ -537,7 +537,7 @@ describe 'authentication', type: :feature do
         fill_in 'Password (again)', with: new_password
         fill_in 'Current password', with: 'wrong_password'
         click_on 'Update account'
-        logout_user
+        logout_user_for_feature
 
         # test that I can login with the old password
         login_user_for_feature @user
@@ -549,7 +549,7 @@ describe 'authentication', type: :feature do
         fill_in 'Password (again)', with: 'different_new_password'
         fill_in 'Current password', with: @user.password
         click_on 'Update account'
-        logout_user
+        logout_user_for_feature
 
         # test that I can login with the old password
         login_user_for_feature @user
@@ -564,7 +564,7 @@ describe 'authentication', type: :feature do
         select 'Español', from: 'Language'
         click_on 'Update account'
         expect(page).to have_text 'Mostrar leídos'
-        logout_user
+        logout_user_for_feature
 
         # After relogin, app should be in spanish
         login_user_for_feature @user

@@ -14,7 +14,7 @@ describe 'invite friend', type: :feature do
     it 'creates user and sends invitation email', js: true do
       expect(User.exists? email: @friend_email).to be false
 
-      send_invitation @friend_email
+      send_invitation_for_feature @friend_email
       should_show_alert 'success-invite-friend'
 
       # test that an invitation email is sent
@@ -41,7 +41,7 @@ describe 'invite friend', type: :feature do
     it 'cannot invite already confirmed user', js: true do
       existing_user = FactoryGirl.create :user, email: @friend_email
 
-      send_invitation @friend_email
+      send_invitation_for_feature @friend_email
       should_show_alert 'problem-invited-user-exists'
 
       mail_should_not_be_sent
@@ -53,16 +53,16 @@ describe 'invite friend', type: :feature do
 
     it 'cannot invite user who accepted an invitation', js: true do
       # friend receives and accepts an invitation
-      send_invitation @friend_email
-      logout_user
+      send_invitation_for_feature @friend_email
+      logout_user_for_feature
       expect(@user.reload.invitations_count).to eq 1
-      accept_invitation invited_email: @friend_email
-      logout_user
+      accept_invitation_for_feature invited_email: @friend_email
+      logout_user_for_feature
       invited_user = User.find_by_email @friend_email
 
       # send invitation again to the same friend
       login_user_for_feature @user
-      send_invitation @friend_email
+      send_invitation_for_feature @friend_email
       should_show_alert 'problem-invited-user-exists'
 
       mail_should_not_be_sent
@@ -73,11 +73,11 @@ describe 'invite friend', type: :feature do
     end
 
     it 'resends invitation to already invited user', js: true do
-      send_invitation @friend_email
+      send_invitation_for_feature @friend_email
       # Delete from the mail queue any email notifications sent when sending invitation
       ActionMailer::Base.deliveries.clear
 
-      send_invitation @friend_email
+      send_invitation_for_feature @friend_email
       should_show_alert 'success-invitation-resend'
 
       # test that an invitation email is sent
@@ -98,7 +98,7 @@ describe 'invite friend', type: :feature do
     it 'cannot send invitation if user has no invitations left', js: true do
       @user.update invitation_limit: 10, invitations_count: 10
 
-      send_invitation @friend_email
+      send_invitation_for_feature @friend_email
       should_show_alert 'problem-no-invitations-left'
 
       mail_should_not_be_sent
@@ -107,16 +107,16 @@ describe 'invite friend', type: :feature do
 
     it 'displays an alert if there is an error sending an invitation', js: true do
       allow(User).to receive(:exists?).and_raise StandardError.new
-      send_invitation @friend_email
+      send_invitation_for_feature @friend_email
       should_show_alert 'problem-sending-invitation'
     end
 
     it 'can sign up instead of accepting an invitation', js: true do
       # Friend is sent an invitation
-      send_invitation @friend_email
+      send_invitation_for_feature @friend_email
       should_show_alert 'success-invite-friend'
       mail_should_be_sent 'Someone has invited you', path: '/invitation', to: @friend_email
-      logout_user
+      logout_user_for_feature
 
       friend_password = 'friend_password'
       sign_up_for_feature @friend_email, friend_password
@@ -130,10 +130,10 @@ describe 'invite friend', type: :feature do
 
     it 'cannot accept invitation after signing up', js: true do
       # Friend is sent an invitation
-      send_invitation @friend_email
+      send_invitation_for_feature @friend_email
       should_show_alert 'success-invite-friend'
       accept_link = mail_should_be_sent 'Someone has invited you', path: '/invitation', to: @friend_email
-      logout_user
+      logout_user_for_feature
 
       # Friend signs up through the sign up view instead of clicking on the "accept invitation" link in the email
       visit new_user_registration_path
@@ -163,7 +163,7 @@ describe 'invite friend', type: :feature do
     it 'does not destroy confirmed user when trying to sign up again', js: true do
       password = 'friend_password'
       existing_user = FactoryGirl.create :user, email: @friend_email, password: password
-      logout_user
+      logout_user_for_feature
 
       expect_any_instance_of(User).not_to receive :destroy
 
@@ -181,11 +181,11 @@ describe 'invite friend', type: :feature do
 
     it 'does not destroy user who accepted an invitation when trying to sign up again', js: true do
       # User is sent and accepts invitation
-      send_invitation @friend_email
-      logout_user
+      send_invitation_for_feature @friend_email
+      logout_user_for_feature
       password = 'invited_password'
-      accept_invitation password: password, invited_email: @friend_email
-      logout_user
+      accept_invitation_for_feature password: password, invited_email: @friend_email
+      logout_user_for_feature
       invited_user = User.find_by_email @friend_email
 
       expect_any_instance_of(User).not_to receive :destroy
@@ -207,8 +207,8 @@ describe 'invite friend', type: :feature do
   context 'accept invitation' do
 
     before :each do
-      send_invitation @friend_email
-      logout_user
+      send_invitation_for_feature @friend_email
+      logout_user_for_feature
       @accept_link = mail_should_be_sent 'Someone has invited you',
                                          path: '/invitation',
                                          to: @friend_email
@@ -246,7 +246,7 @@ describe 'invite friend', type: :feature do
       user_should_be_logged_in
 
       # User should be able to log in with the chosen password
-      logout_user
+      logout_user_for_feature
       visit new_user_session_path
       fill_in 'Email', with: @friend_email
       fill_in 'Password', with: @password
@@ -258,9 +258,9 @@ describe 'invite friend', type: :feature do
     it 'accepts invitation from resent invitation email', js: true do
       login_user_for_feature @user
       # Send second invitation
-      send_invitation @friend_email
+      send_invitation_for_feature @friend_email
       should_show_alert 'success-invitation-resend'
-      logout_user
+      logout_user_for_feature
 
       # Link in second invitation should be the same as in the first
       resent_link = mail_should_be_sent 'Someone has invited you',
@@ -281,7 +281,7 @@ describe 'invite friend', type: :feature do
       user_should_be_logged_in
 
       # User should be able to log in with the chosen password
-      logout_user
+      logout_user_for_feature
       visit new_user_session_path
       fill_in 'Email', with: @friend_email
       fill_in 'Password', with: @password
@@ -291,8 +291,8 @@ describe 'invite friend', type: :feature do
     end
 
     it 'cannot sign up after accepting invitation', js: true do
-      accept_invitation password: @password, accept_link: @accept_link, invited_email: @friend_email
-      logout_user
+      accept_invitation_for_feature password: @password, accept_link: @accept_link, invited_email: @friend_email
+      logout_user_for_feature
 
       invited_user = User.find_by_email @friend_email
 

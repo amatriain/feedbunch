@@ -34,13 +34,13 @@ describe 'keyboard shortcuts', type: :feature do
       entry_should_be_highlighted @entry1
 
       # Move down
-      press_key Feedbunch::Application.config.kb_entries_down
+      press_key_for_feature Feedbunch::Application.config.kb_entries_down
 
       entry_should_not_be_highlighted @entry1
       entry_should_be_highlighted @entry2
 
       # Move up
-      press_key Feedbunch::Application.config.kb_entries_up
+      press_key_for_feature Feedbunch::Application.config.kb_entries_up
 
       entry_should_be_highlighted @entry1
       entry_should_not_be_highlighted @entry2
@@ -52,11 +52,11 @@ describe 'keyboard shortcuts', type: :feature do
       entry_should_be_closed @entry1
 
       # open entry
-      press_key Feedbunch::Application.config.kb_toggle_open_entry
+      press_key_for_feature Feedbunch::Application.config.kb_toggle_open_entry
       entry_should_be_open @entry1
 
       # close entry
-      press_key Feedbunch::Application.config.kb_toggle_open_entry
+      press_key_for_feature Feedbunch::Application.config.kb_toggle_open_entry
       entry_should_be_closed @entry1
     end
   end
@@ -93,7 +93,7 @@ describe 'keyboard shortcuts', type: :feature do
 
     it 'moves up and down the sidebar', js: true do
       # move down to "read all" link
-      press_key Feedbunch::Application.config.kb_sidebar_link_down
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_down
       start_link_should_not_be_highlighted
       folder_link_should_be_highlighted 'none'
       feed_link_should_not_be_highlighted @feed1
@@ -103,7 +103,7 @@ describe 'keyboard shortcuts', type: :feature do
       feed_link_should_not_be_highlighted @feed3
 
       # move down to @feed1 link
-      press_key Feedbunch::Application.config.kb_sidebar_link_down
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_down
       start_link_should_not_be_highlighted
       folder_link_should_not_be_highlighted 'none'
       feed_link_should_be_highlighted @feed1
@@ -113,7 +113,7 @@ describe 'keyboard shortcuts', type: :feature do
       feed_link_should_not_be_highlighted @feed3
 
       # move down to @folder "read all" link
-      press_key Feedbunch::Application.config.kb_sidebar_link_down
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_down
       start_link_should_not_be_highlighted
       folder_link_should_not_be_highlighted 'none'
       feed_link_should_not_be_highlighted @feed1
@@ -123,7 +123,7 @@ describe 'keyboard shortcuts', type: :feature do
       feed_link_should_not_be_highlighted @feed3
 
       # move down to @feed2 link
-      press_key Feedbunch::Application.config.kb_sidebar_link_down
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_down
       start_link_should_not_be_highlighted
       folder_link_should_not_be_highlighted 'none'
       feed_link_should_not_be_highlighted @feed1
@@ -133,7 +133,7 @@ describe 'keyboard shortcuts', type: :feature do
       feed_link_should_not_be_highlighted @feed3
 
       # move up to @folder "read all" link
-      press_key Feedbunch::Application.config.kb_sidebar_link_up
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_up
       start_link_should_not_be_highlighted
       folder_link_should_not_be_highlighted 'none'
       feed_link_should_not_be_highlighted @feed1
@@ -143,7 +143,7 @@ describe 'keyboard shortcuts', type: :feature do
       feed_link_should_not_be_highlighted @feed3
 
       # move up to @feed link
-      press_key Feedbunch::Application.config.kb_sidebar_link_up
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_up
       start_link_should_not_be_highlighted
       folder_link_should_not_be_highlighted 'none'
       feed_link_should_be_highlighted @feed1
@@ -153,7 +153,7 @@ describe 'keyboard shortcuts', type: :feature do
       feed_link_should_not_be_highlighted @feed3
 
       # move up to "read all" link
-      press_key Feedbunch::Application.config.kb_sidebar_link_up
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_up
       start_link_should_not_be_highlighted
       folder_link_should_be_highlighted 'none'
       feed_link_should_not_be_highlighted @feed1
@@ -163,7 +163,7 @@ describe 'keyboard shortcuts', type: :feature do
       feed_link_should_not_be_highlighted @feed3
 
       # move up to "start" link
-      press_key Feedbunch::Application.config.kb_sidebar_link_up
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_up
       start_link_should_be_highlighted
       folder_link_should_not_be_highlighted 'none'
       feed_link_should_not_be_highlighted @feed1
@@ -175,28 +175,28 @@ describe 'keyboard shortcuts', type: :feature do
 
     it 'selects links for reading', js: true do
       # read all entries
-      press_key Feedbunch::Application.config.kb_sidebar_link_down
-      press_key Feedbunch::Application.config.kb_select_sidebar_link
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_down
+      press_key_for_feature Feedbunch::Application.config.kb_select_sidebar_link
       expect(page).to have_text @entry1.title
       expect(page).to have_text @entry2.title
       expect(page).to have_text @entry3.title
       expect(page).to have_text @entry4.title
 
       # show start page
-      press_key Feedbunch::Application.config.kb_sidebar_link_up
-      press_key Feedbunch::Application.config.kb_select_sidebar_link
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_up
+      press_key_for_feature Feedbunch::Application.config.kb_select_sidebar_link
       expect(page).to have_css '#start-info'
 
       # read @feed1
-      press_key Feedbunch::Application.config.kb_sidebar_link_down
-      press_key Feedbunch::Application.config.kb_sidebar_link_down
-      press_key Feedbunch::Application.config.kb_select_sidebar_link
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_down
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_down
+      press_key_for_feature Feedbunch::Application.config.kb_select_sidebar_link
       expect(page).to have_text @entry1.title
       expect(page).to have_text @entry2.title
 
       # read @folder
-      press_key Feedbunch::Application.config.kb_sidebar_link_down
-      press_key Feedbunch::Application.config.kb_select_sidebar_link
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_down
+      press_key_for_feature Feedbunch::Application.config.kb_select_sidebar_link
       expect(page).to have_text @entry3.title
       expect(page).to have_text @entry4.title
     end
@@ -235,14 +235,14 @@ describe 'keyboard shortcuts', type: :feature do
       expect(page).not_to have_text @feed4.title
 
       # show read entries
-      press_key Feedbunch::Application.config.kb_toggle_show_read
+      press_key_for_feature Feedbunch::Application.config.kb_toggle_show_read
       expect(page).to have_text @feed1.title
       expect(page).to have_text @entry1.title
       expect(page).to have_text @entry2.title
       expect(page).to have_text @feed4.title
 
       # Hide read entries
-      press_key Feedbunch::Application.config.kb_toggle_show_read
+      press_key_for_feature Feedbunch::Application.config.kb_toggle_show_read
       expect(page).to have_text @feed1.title
       expect(page).not_to have_text @entry1.title
       expect(page).to have_text @entry2.title
@@ -259,7 +259,7 @@ describe 'keyboard shortcuts', type: :feature do
       expect(page).to have_text @entry2.title
       entry_should_be_marked_unread @entry2
 
-      press_key Feedbunch::Application.config.kb_mark_all_read
+      press_key_for_feature Feedbunch::Application.config.kb_mark_all_read
 
       expect(page).to have_text @entry1.title
       entry_should_be_marked_read @entry1
@@ -282,7 +282,7 @@ describe 'keyboard shortcuts', type: :feature do
       entry_should_be_marked_unread @entry2
 
       # mark @entry1 read
-      press_key Feedbunch::Application.config.kb_toggle_read_entry
+      press_key_for_feature Feedbunch::Application.config.kb_toggle_read_entry
       entry_should_be_marked_read @entry1
 
       read_feed @feed1, @user
@@ -308,7 +308,7 @@ describe 'keyboard shortcuts', type: :feature do
       entry_should_be_marked_unread @entry2
 
       # mark @entry1 unread
-      press_key Feedbunch::Application.config.kb_toggle_read_entry
+      press_key_for_feature Feedbunch::Application.config.kb_toggle_read_entry
       expect(page).to have_text @entry1.title
       entry_should_be_marked_unread @entry1
       expect(page).to have_text @entry2.title
@@ -331,17 +331,17 @@ describe 'keyboard shortcuts', type: :feature do
       # Entry navigation shortcuts should be disabled
       entry_should_be_highlighted @entry1
       entry_should_not_be_highlighted @entry2
-      press_key Feedbunch::Application.config.kb_entries_down
+      press_key_for_feature Feedbunch::Application.config.kb_entries_down
       entry_should_be_highlighted @entry1
       entry_should_not_be_highlighted @entry2
 
       # Sidebar navigation shortcuts should be disabled
       feed_link_should_be_highlighted @feed1
-      press_key Feedbunch::Application.config.kb_sidebar_link_down
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_down
       start_link_should_not_be_highlighted
       folder_link_should_not_be_highlighted 'none'
       feed_link_should_be_highlighted @feed1
-      press_key Feedbunch::Application.config.kb_sidebar_link_up
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_up
       start_link_should_not_be_highlighted
       folder_link_should_not_be_highlighted 'none'
       feed_link_should_be_highlighted @feed1
@@ -351,7 +351,7 @@ describe 'keyboard shortcuts', type: :feature do
       entry_should_be_marked_unread @entry1
       expect(page).to have_text @entry2.title
       entry_should_be_marked_unread @entry2
-      press_key Feedbunch::Application.config.kb_mark_all_read
+      press_key_for_feature Feedbunch::Application.config.kb_mark_all_read
       expect(page).to have_text @entry1.title
       entry_should_be_marked_unread @entry1
       expect(page).to have_text @entry2.title
@@ -365,7 +365,7 @@ describe 'keyboard shortcuts', type: :feature do
       # Shortcuts should be disabled
       entry_should_be_highlighted @entry1
       entry_should_not_be_highlighted @entry2
-      press_key Feedbunch::Application.config.kb_entries_down
+      press_key_for_feature Feedbunch::Application.config.kb_entries_down
       entry_should_be_highlighted @entry1
       entry_should_not_be_highlighted @entry2
 
@@ -375,12 +375,12 @@ describe 'keyboard shortcuts', type: :feature do
       # Shortcuts should be enabled
       entry_should_be_highlighted @entry1
       entry_should_not_be_highlighted @entry2
-      press_key Feedbunch::Application.config.kb_entries_down
+      press_key_for_feature Feedbunch::Application.config.kb_entries_down
       entry_should_not_be_highlighted @entry1
       entry_should_be_highlighted @entry2
 
       feed_link_should_be_highlighted @feed1
-      press_key Feedbunch::Application.config.kb_sidebar_link_up
+      press_key_for_feature Feedbunch::Application.config.kb_sidebar_link_up
       folder_link_should_be_highlighted 'none'
       feed_link_should_not_be_highlighted @feed1
     end

@@ -257,7 +257,7 @@ describe 'feeds', type: :feature do
 
       # Regression test
       it 'shows a link to read all entries even if the user has no folders', js: true do
-        logout_user
+        logout_user_for_feature
 
         user = FactoryGirl.create :user
         feed1 = FactoryGirl.create :feed

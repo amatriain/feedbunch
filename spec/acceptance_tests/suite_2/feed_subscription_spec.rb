@@ -140,7 +140,7 @@ describe 'subscription to feeds', type: :feature do
         go_to_start_page
         expect(page).to have_no_text 'Successfully added subscription to feed'
         # alert should not be present after logout and login
-        logout_user
+        logout_user_for_feature
         login_user_for_feature @user
         go_to_start_page
         expect(page).to have_no_text 'Successfully added subscription to feed'

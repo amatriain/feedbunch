@@ -36,6 +36,7 @@ end
 
 def mail_should_be_sent(*text, path: nil, to: nil)
   email = ActionMailer::Base.deliveries.pop
+
   expect(email.present?).to be true
 
   if to.present?
