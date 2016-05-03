@@ -78,7 +78,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit :sign_up, keys: [:name, :locale, :timezone]
-    devise_parameter_sanitizer.account_update :sign_up, keys: [:name, :locale, :timezone, :kb_shortcuts_enabled,
+    devise_parameter_sanitizer.permit :account_update, keys: [:name, :locale, :timezone, :kb_shortcuts_enabled,
                                                                :quick_reading, :open_all_entries]
   end
 
