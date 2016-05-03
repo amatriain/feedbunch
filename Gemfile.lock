@@ -167,7 +167,7 @@ GEM
     has_scope (0.6.0)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
-    high_voltage (2.4.0)
+    high_voltage (3.0.0)
     highline (1.7.8)
     hiredis (0.4.5)
     http-cookie (1.0.2)
