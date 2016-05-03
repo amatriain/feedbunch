@@ -71,6 +71,9 @@ RSpec.configure do |config|
   # To test controllers protected by Devise authentication
   config.include Devise::TestHelpers, :type => :controller
 
+  # To test routes protected by Devise authentication
+  config.include Warden::Test::Helpers, :type => :request
+
   # Set driver for acceptance tests
   if ENV['TEST_SUITE'] != 'unit'
     Capybara.javascript_driver = :selenium

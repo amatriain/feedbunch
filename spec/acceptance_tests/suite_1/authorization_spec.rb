@@ -1,6 +1,64 @@
 require 'rails_helper'
 
-describe 'authorization', type: :feature do
+describe 'routes', type: :request do
+
+  before :each do
+    Warden.test_mode!
+    @normal_user = FactoryGirl.create :user
+    @admin_user = FactoryGirl.create :user_admin
+  end
+
+  context 'Redmon access' do
+
+    it 'allows access to Redmon to admin users' do
+      login_as @admin_user
+      expect{get '/redmon'}.not_to raise_error
+    end
+
+    it 'does not allow access to Redmon to non-admin users' do
+      login_as @normal_user
+      expect{get '/redmon'}.to raise_error ActionController::RoutingError
+    end
+
+  end
+
+  context 'Sidekiq access' do
+
+    it 'does not allow access to Sidekiq to non-admin users' do
+      login_as @normal_user
+      expect{get '/sidekiq'}.to raise_error ActionController::RoutingError
+    end
+  end
+
+  context 'ActiveAdmin access' do
+
+    it 'allows access to ActiveAdmin to admin users', js: true do
+      login_as @admin_user
+      expect{get '/admin'}.not_to raise_error
+    end
+
+    it 'does not allow access to ActiveAdmin to non-admin users', js: true do
+      login_as @normal_user
+      expect{get '/admin'}.to raise_error ActionController::RoutingError
+    end
+  end
+
+  context 'PgHero access' do
+
+    it 'allows access to PgHero to admin users', js: true do
+      login_as @admin_user
+      expect{get '/pghero'}.not_to raise_error ActionController::RoutingError
+    end
+
+    it 'does not allow access to PgHero to non-admin users', js: true do
+      login_as @normal_user
+      expect{get '/pghero'}.to raise_error ActionController::RoutingError
+    end
+  end
+
+end
+
+describe 'authorized links', type: :feature do
 
   before :each do
     @normal_user = FactoryGirl.create :user
@@ -25,19 +83,6 @@ describe 'authorization', type: :feature do
       expect(page).to have_no_css 'a[href^="/redmon"]'
     end
 
-    it 'allows access to Redmon to admin users', js: true do
-      skip
-      login_user_for_feature @admin_user
-      visit '/redmon'
-      expect(page).not_to have_content 'No route matches'
-    end
-
-    it 'does not allow access to Redmon to non-admin users', js: true do
-      skip
-      login_user_for_feature @normal_user
-      visit '/redmon'
-      expect(page).to have_content 'No route matches'
-    end
   end
 
   context 'Sidekiq access' do
@@ -56,13 +101,6 @@ describe 'authorization', type: :feature do
       open_user_menu
 
       expect(page).to have_no_css 'a[href^="/sidekiq"]'
-    end
-
-    it 'does not allow access to Sidekiq to non-admin users', js: true do
-      skip
-      login_user_for_feature @normal_user
-      visit '/sidekiq'
-      expect(page).to have_content 'No route matches'
     end
 
   end
@@ -85,18 +123,6 @@ describe 'authorization', type: :feature do
       expect(page).to have_no_css 'a[href="/admin"]'
     end
 
-    it 'allows access to ActiveAdmin to admin users', js: true do
-      login_user_for_feature @admin_user
-      visit '/admin'
-      expect(page).not_to have_content 'No route matches'
-    end
-
-    it 'does not allow access to ActiveAdmin to non-admin users', js: true do
-      skip
-      login_user_for_feature @normal_user
-      visit '/admin'
-      expect(page).to have_content 'No route matches'
-    end
   end
 
   context 'PgHero access' do
@@ -117,18 +143,5 @@ describe 'authorization', type: :feature do
       expect(page).to have_no_css 'a[href="/pghero"]'
     end
 
-    it 'allows access to PgHero to admin users', js: true do
-      skip
-      login_user_for_feature @admin_user
-      visit '/pghero'
-      expect(page).not_to have_content 'No route matches'
-    end
-
-    it 'does not allow access to PgHero to non-admin users', js: true do
-      skip
-      login_user_for_feature @normal_user
-      visit '/pghero'
-      expect(page).to have_content 'No route matches'
-    end
   end
 end
