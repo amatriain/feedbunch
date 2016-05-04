@@ -387,6 +387,7 @@ describe 'feed entries', type: :feature do
       @user.folders << @folder
       @folder.feeds << @feed1 << @feed2
       visit read_path
+      current_window.resize_to(1024, 768)
     end
 
     it 'loads entries with infinite scroll', js: true do
