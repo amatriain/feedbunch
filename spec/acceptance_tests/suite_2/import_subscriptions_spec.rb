@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'import subscriptions', type: :feature do
   before :each do
-    @data_file = File.join __dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip'
+    @data_file = File.absolute_path File.join(__dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
 
     @user = FactoryGirl.create :user
     @feed = FactoryGirl.create :feed
