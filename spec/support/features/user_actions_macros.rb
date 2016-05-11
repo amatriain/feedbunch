@@ -608,5 +608,11 @@ end
 # Receives a numeric key code.
 
 def press_key_for_feature(key)
-  page.find('body').native.send_keys key.chr
+  # dirty hack to send an Enter keypress to chrome (cannot be sent directly, have to send :enter symbol)
+  if key == 13
+    send_char = :enter
+  else
+    send_char = key.chr
+  end
+  page.find('body').native.send_keys send_char
 end
