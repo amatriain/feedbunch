@@ -81,7 +81,10 @@ RSpec.configure do |config|
 
   # Set driver for acceptance tests
   if ENV['TEST_SUITE'] != 'unit'
-    Capybara.javascript_driver = :selenium
+    Capybara.register_driver :chrome do |app|
+      Capybara::Selenium::Driver.new app, browser: :chrome
+    end
+    Capybara.javascript_driver = :chrome
   end
 
   # Make capybara wait for a long time for things to appear in the DOM,
