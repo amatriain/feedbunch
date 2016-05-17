@@ -602,6 +602,7 @@ describe 'authentication', type: :feature do
 
         fill_in 'Password', with: @user.password
         page.find('#profile-delete-submit').click
+        sleep 1
         expect(current_path).to eq root_path
         expect(page).to have_text 'Your account was successfully deleted'
 
@@ -614,6 +615,7 @@ describe 'authentication', type: :feature do
       it 'prevents user from logging in again', js: true do
         fill_in 'Password', with: @user.password
         page.find('#profile-delete-submit').click
+        sleep 1
         expect(current_path).to eq root_path
         visit new_user_session_path
         fill_in 'Email', with: @user.email
