@@ -578,10 +578,8 @@ describe 'authentication', type: :feature do
       before :each do
         visit edit_user_registration_path
         page.find('#profile-cancel-button', text: 'Delete account').click
-      end
-
-      it 'shows confirmation popup', js: true do
-        expect(page).to have_css '#profile-delete-popup', visible: true
+        # Wait for confirmation popup to appear
+        expect(page).to have_css '#profile-delete-popup'
       end
 
       it 'does not allow deleting the account without entering a password', js: true do
@@ -591,7 +589,9 @@ describe 'authentication', type: :feature do
       end
 
       it 'shows error message if wrong password is submitted', js: true do
-        fill_in 'Password', with: 'wrong password'
+        within '#profile-delete-popup' do
+          fill_in 'Password', with: 'wrong password'
+        end
         page.find('#profile-delete-submit').click
         expect(page).to have_text 'Invalid password'
         should_show_alert 'alert'
@@ -600,9 +600,10 @@ describe 'authentication', type: :feature do
       it 'enqueues job to delete account if correct password is submitted', js: true do
         expect(DestroyUserWorker.jobs.size).to eq 0
 
-        fill_in 'Password', with: @user.password
+        within '#profile-delete-popup' do
+          fill_in 'Password', with: @user.password
+        end
         page.find('#profile-delete-submit').click
-        sleep 1
         expect(current_path).to eq root_path
         expect(page).to have_text 'Your account was successfully deleted'
 
@@ -613,9 +614,10 @@ describe 'authentication', type: :feature do
       end
 
       it 'prevents user from logging in again', js: true do
-        fill_in 'Password', with: @user.password
+        within '#profile-delete-popup' do
+          fill_in 'Password', with: @user.password
+        end
         page.find('#profile-delete-submit').click
-        sleep 1
         expect(current_path).to eq root_path
         visit new_user_session_path
         fill_in 'Email', with: @user.email
