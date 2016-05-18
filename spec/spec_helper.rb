@@ -82,6 +82,10 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 
+  # Do not warn about false positives when testing like this: expect{..}.not_to raise SomeError
+  # There are some tests that cannot easily be written any other way.
+  RSpec::Expectations.configuration.warn_about_potential_false_positives = false
+
   # methods stubbed in all specs
   config.before :each do
     # Ensure no HTTP calls are made during testing
