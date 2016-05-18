@@ -92,7 +92,7 @@ describe 'folders and feeds', type: :feature do
       feed3 = FactoryGirl.create :feed
       @user.subscribe feed3.fetch_url
       folder3.feeds << feed3
-      subscribe_job_state = FactoryGirl.build SubscribeJobState, state: SubscribeJobState::SUCCESS,
+      subscribe_job_state = FactoryGirl.build :subscribe_job_state, state: SubscribeJobState::SUCCESS,
                                               feed_id: feed3.id, user_id: @user.id
       @user.subscribe_job_states << subscribe_job_state
 
@@ -110,7 +110,7 @@ describe 'folders and feeds', type: :feature do
       feed3 = FactoryGirl.create :feed
       @user.subscribe feed3.fetch_url
       folder3.feeds << feed3
-      refresh_feed_job_state = FactoryGirl.build RefreshFeedJobState, state: SubscribeJobState::SUCCESS,
+      refresh_feed_job_state = FactoryGirl.build :refresh_feed_job_state, state: SubscribeJobState::SUCCESS,
                                                  feed_id: feed3.id, user_id: @user.id
       @user.refresh_feed_job_states << refresh_feed_job_state
 
