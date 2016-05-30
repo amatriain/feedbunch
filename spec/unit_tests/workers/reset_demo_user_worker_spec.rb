@@ -257,6 +257,42 @@ describe ResetDemoUserWorker do
           end
         end
       end
+
+      context 'reset entries' do
+        
+        before :each do
+          default_subscriptions = Feedbunch::Application.config.demo_subscriptions
+          
+          # There are two read entries in one of the demo feeds
+          @demo_feed_url = default_subscriptions.values.flatten.first
+          @demo_feed = FactoryGirl.create :feed, fetch_url: @demo_feed_url
+
+          @entry_1 = FactoryGirl.build :entry, feed_id: @demo_feed.id
+          @entry_2 = FactoryGirl.build :entry, feed_id: @demo_feed.id
+          @demo_feed.entries << @entry_1 << @entry_2
+          @demo_user.subscribe @demo_feed.fetch_url
+          @demo_user.change_entries_state @entry_1, 'read'
+          @demo_user.change_entries_state @entry_2, 'read'
+        end
+
+        it 'marks all entries as unread' do
+          expect(@entry_1.read_by? @demo_user).to be true
+          expect(@entry_2.read_by? @demo_user).to be true
+
+          ResetDemoUserWorker.new.perform
+
+          expect(@entry_1.read_by? @demo_user).to be false
+          expect(@entry_2.read_by? @demo_user).to be false
+        end
+
+        it 'sets correct unread count in subscriptions' do
+          expect(@demo_user.feed_unread_count @demo_feed).to eq 0
+
+          ResetDemoUserWorker.new.perform
+
+          expect(@demo_user.feed_unread_count @demo_feed).to eq 2
+        end
+      end
     end
   end
 

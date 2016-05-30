@@ -124,8 +124,7 @@ class ResetDemoUserWorker
     demo_feed_urls = demo_subscriptions_list
     reset_feed_subscriptions demo_user, demo_feed_urls
 
-    # Mark all entries as unread
-    demo_user.entry_states.update_all read: false
+    reset_entries demo_user, demo_feed_urls
 
     reset_folders demo_user
 
@@ -199,6 +198,22 @@ class ResetDemoUserWorker
     not_subscribed_default_urls.each do |url|
       Rails.logger.debug "Subscribing demo user to missing default feed #{url}"
       demo_user.subscribe url
+    end
+  end
+
+  ##
+  # Mark all entries in all demo feeds as unread for the demo user.
+  # Also update the unread count in the subscription so that the correct count is displayed in the sidebar.
+  # Receives as arguments the demo user and an array with the default feed URLs.
+
+  def reset_entries(demo_user, demo_feed_urls)
+    # Mark all entries as unread
+    demo_user.entry_states.update_all read: false
+
+    # Update unread count in subscriptions where necessary
+    demo_feed_urls.each do |url|
+      feed = Feed.url_variants_feed url
+      SubscriptionsManager.recalculate_unread_count feed, demo_user
     end
   end
 
