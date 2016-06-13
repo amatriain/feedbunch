@@ -194,7 +194,7 @@ GEM
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
     mime-types (2.99.1)
-    mini_portile2 (2.0.0)
+    mini_portile2 (2.1.0)
     minitest (5.8.4)
     mixlib-cli (1.5.0)
     multipart-post (2.0.0)
@@ -203,8 +203,9 @@ GEM
     net-ssh (3.1.1)
     netrc (0.11.0)
     newrelic_rpm (3.15.2.317)
-    nokogiri (1.6.7.2)
-      mini_portile2 (~> 2.0.0.rc2)
+    nokogiri (1.6.8)
+      mini_portile2 (~> 2.1.0)
+      pkg-config (~> 1.1.7)
     nokogumbo (1.4.7)
       nokogiri
     orm_adapter (0.5.0)
@@ -212,6 +213,7 @@ GEM
     pg (0.18.4)
     pghero (1.2.3)
       activerecord
+    pkg-config (1.1.7)
     polyamorous (1.2.0)
       activerecord (>= 3.0)
     puma (3.4.0)
@@ -466,4 +468,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.12.3
+   1.12.5
