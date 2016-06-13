@@ -211,7 +211,7 @@ GEM
     orm_adapter (0.5.0)
     ox (2.4.1)
     pg (0.18.4)
-    pghero (1.2.3)
+    pghero (1.2.4)
       activerecord
     pkg-config (1.1.7)
     polyamorous (1.2.0)
