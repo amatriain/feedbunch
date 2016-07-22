@@ -439,7 +439,7 @@ DEPENDENCIES
   redis-rails
   redmon
   responders
-  rest-client
+  rest-client (= 1.8.0)
   rest-client-components
   rspec
   rspec-rails
