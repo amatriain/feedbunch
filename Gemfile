@@ -48,7 +48,7 @@ gem 'sax-machine'
 gem 'ox'
 
 # HTTP client
-gem 'rest-client', '1.8.0'
+gem 'rest-client'
 
 # HTTP client-side caching
 gem 'rest-client-components'
