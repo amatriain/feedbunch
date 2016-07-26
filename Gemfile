@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.3.1'
 
-gem 'rails', '~> 4.2.0'
+gem 'rails', '~> 5.0.0'
 
 # Sanitizer to replace poorly maintained new rails sanitizer
 gem 'sanitize'
@@ -67,7 +67,8 @@ gem 'sidekiq-superworker'
 gem 'sidekiq-statistic'
 
 # Sinatra required for the Sidekiq web ui
-gem 'sinatra', '>= 1.3.0', :require => nil
+gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git'
+gem 'rack-protection', git: 'https://github.com/sinatra/rack-protection.git'
 
 # Web GUI for Redis instances
 gem 'redmon', require: false
