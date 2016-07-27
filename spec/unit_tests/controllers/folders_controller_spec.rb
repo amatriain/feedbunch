@@ -49,17 +49,17 @@ describe Api::FoldersController, type: :controller do
   context 'GET show' do
 
     it 'assigns the right folder' do
-      get :show, id: @folder1.id
+      get :show, params: {id: @folder1.id}
       expect(assigns(:folder)).to eq @folder1
     end
 
     it 'returns a 404 for a folder that does not belong to the user' do
-      get :show, id: @folder2.id
+      get :show, params: {id: @folder2.id}
       expect(response.status).to eq 404
     end
 
     it 'returns a 404 for a non-existing folder' do
-      get :show, id: 1234567890
+      get :show, params: {id: 1234567890}
       expect(response.status).to eq 404
     end
 
@@ -68,12 +68,12 @@ describe Api::FoldersController, type: :controller do
   context 'PATCH move to folder' do
 
     it 'returns success' do
-      patch :update, id: @folder1.id, folder: {feed_id: @feed3.id}, format: :json
+      patch :update, params: {id: @folder1.id, folder: {feed_id: @feed3.id}}, format: :json
       expect(response).to be_success
     end
 
     it 'returns 404 for a folder that does not belong to the current user' do
-      patch :update, id: @folder2.id, folder: {feed_id: @feed3.id}, format: :json
+      patch :update, params: {id: @folder2.id, folder: {feed_id: @feed3.id}}, format: :json
       expect(response.status).to eq 404
     end
 
@@ -81,28 +81,28 @@ describe Api::FoldersController, type: :controller do
       feed = FactoryGirl.create :feed
       expect(@user.feeds).not_to include feed
 
-      patch :update, id: @folder1.id, folder: {feed_id: feed.id}, format: :json
+      patch :update, params: {id: @folder1.id, folder: {feed_id: feed.id}}, format: :json
       expect(response.status).to eq 404
     end
 
     it 'returns 404 for non-existing folder' do
-      patch :update, id: '1234567890', folder: {feed_id: @feed3.id}, format: :json
+      patch :update, params: {id: '1234567890', folder: {feed_id: @feed3.id}}, format: :json
       expect(response.status).to eq 404
     end
 
     it 'returns 404 for non-existing feed' do
-      patch :update, id: @folder1.id, folder: {feed_id: '1234567890'}, format: :json
+      patch :update, params: {id: @folder1.id, folder: {feed_id: '1234567890'}}, format: :json
       expect(response.status).to eq 404
     end
 
     it 'returns 200 if the feed is already in the folder' do
-      patch :update, id: @folder1.id, folder: {feed_id: @feed1.id}, format: :json
+      patch :update, params: {id: @folder1.id, folder: {feed_id: @feed1.id}}, format: :json
       expect(response.status).to eq 200
     end
 
     it 'returns 500 if there is a problem associating the feed with the folder' do
       allow_any_instance_of(User).to receive(:move_feed_to_folder).and_raise StandardError.new
-      patch :update, id: @folder1.id, folder: {feed_id: @feed3.id}, format: :json
+      patch :update, params: {id: @folder1.id, folder: {feed_id: @feed3.id}}, format: :json
       expect(response.status).to eq 500
     end
   end
@@ -110,18 +110,18 @@ describe Api::FoldersController, type: :controller do
   context 'PATCH remove from folder' do
 
     it 'returns success' do
-      patch :update, id: Folder::NO_FOLDER, folder: {feed_id: @feed1.id}, format: :json
+      patch :update, params: {id: Folder::NO_FOLDER, folder: {feed_id: @feed1.id}}, format: :json
       expect(response).to be_success
     end
 
     it 'returns 404 if the user is not subscribed to the feed' do
       feed = FactoryGirl.create :feed
-      patch :update, id: Folder::NO_FOLDER, folder: {feed_id: feed.id}, format: :json
+      patch :update, params: {id: Folder::NO_FOLDER, folder: {feed_id: feed.id}}, format: :json
       expect(response.status).to eq 404
     end
 
     it 'returns 404 if the feed does not exist' do
-      patch :update, id: Folder::NO_FOLDER, folder: {feed_id: 1234567890}, format: :json
+      patch :update, params: {id: Folder::NO_FOLDER, folder: {feed_id: 1234567890}}, format: :json
       expect(response.status).to eq 404
     end
 
@@ -129,13 +129,13 @@ describe Api::FoldersController, type: :controller do
       # Ensure that @folder1 only has @feed1
       @folder1.feeds.delete @feed2
 
-      patch :update, id: Folder::NO_FOLDER, folder: {feed_id: @feed1.id}, format: :json
+      patch :update, params: {id: Folder::NO_FOLDER, folder: {feed_id: @feed1.id}}, format: :json
       expect(Folder.exists?(@folder1.id)).to be false
     end
 
     it 'returns 500 if there is a problem removing feed from folder' do
       allow_any_instance_of(User).to receive(:move_feed_to_folder).and_raise StandardError.new
-      patch :update, id: Folder::NO_FOLDER, folder: {feed_id: @feed1.id}, format: :json
+      patch :update, params: {id: Folder::NO_FOLDER, folder: {feed_id: @feed1.id}}, format: :json
       expect(response.status).to eq 500
     end
   end
@@ -143,7 +143,7 @@ describe Api::FoldersController, type: :controller do
   context 'POST create' do
 
     it 'returns success if sucessfully created folder' do
-      post :create, folder: {title: 'New folder title', feed_id: @feed1.id}, format: :json
+      post :create, params: {folder: {title: 'New folder title', feed_id: @feed1.id}}, format: :json
       expect(response).to be_success
     end
 
@@ -152,13 +152,13 @@ describe Api::FoldersController, type: :controller do
       folder = FactoryGirl.build :folder, title: title, user_id: @user.id
       @user.folders << folder
 
-      post :create, folder: {title: title, feed_id: @feed1.id}, format: :json
+      post :create, params: {folder: {title: title, feed_id: @feed1.id}}, format: :json
       expect(response.status).to eq 304
     end
 
     it 'assigns the new folder to @folder' do
       title = 'New folder title'
-      post :create, folder: {title: title, feed_id: @feed1.id}, format: :json
+      post :create, params: {folder: {title: title, feed_id: @feed1.id}}, format: :json
       expect(assigns(:folder).title).to eq title
     end
   end
