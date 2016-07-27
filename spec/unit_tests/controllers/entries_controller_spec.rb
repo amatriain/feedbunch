@@ -138,7 +138,7 @@ describe Api::EntriesController, type: :controller do
         context 'all entries' do
 
           it 'returns the first page of entries' do
-            get :index, params: {feed_id: @feed.id, include_read: 'true'}, page: 1, format: :json
+            get :index, params: {feed_id: @feed.id, include_read: 'true', page: 1}, format: :json
             expect(assigns(:entries).count).to eq 25
             assigns(:entries).each_with_index do |entry, index|
               expect(entry).to eq @entries[index]
