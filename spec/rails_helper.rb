@@ -74,7 +74,7 @@ RSpec.configure do |config|
   end
 
   # To test controllers protected by Devise authentication
-  config.include Devise::TestHelpers, :type => :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
 
   # To test routes protected by Devise authentication
   config.include Warden::Test::Helpers, :type => :request
