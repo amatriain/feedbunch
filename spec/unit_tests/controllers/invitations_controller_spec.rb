@@ -14,14 +14,14 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
 
       it 'returns 409 if user already exists and has not been invited' do
         user2 = FactoryGirl.create :user, email: @friend_email
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
         expect(response.status).to eq 409
       end
 
       it 'returns 400 if user has no invitations left' do
         @user.update invitation_limit: 10, invitations_count: 10
 
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
 
         expect(response.status).to eq 400
       end
@@ -29,7 +29,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
       it 'returns success regardless of invitations sent if no invitations limit is set' do
         @user.update invitation_limit: nil, invitations_count: 10
 
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
 
         expect(response).to be_success
       end
@@ -37,7 +37,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
       it 'returns success regardless of invitations limit if user is an admin' do
         @user.update admin: true, invitation_limit: 10, invitations_count: 10
 
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
 
         expect(response).to be_success
       end
@@ -47,14 +47,14 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
     context 'successful invitation' do
 
       it 'returns success' do
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
         expect(response).to be_success
       end
 
       it 'invites user with the passed email' do
         invitations_before = @user.invitations_count
 
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
 
         expect(assigns(:invited_user).email).to eq @friend_email
         expect(assigns(:invited_user).name).to eq @friend_email
@@ -67,7 +67,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
       it 'initially assigns the inviter locale and timezone to the invited' do
         @user.update locale: 'en', timezone: 'UTC'
 
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
 
         invited = User.find_by_email @friend_email
         expect(invited.locale).to eq 'en'
@@ -78,7 +78,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
         @user.update locale: 'es', timezone: 'Madrid'
         login_user_for_unit @user
 
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
 
         invited = User.find_by_email @friend_email
         expect(invited.locale).to eq 'es'
@@ -103,7 +103,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
       it 'returns 202 and resends invitation if user is already invited and unconfirmed' do
         invitations_before = @user.invitations_count
 
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
 
         # Returns HTTP 202
         expect(response.status).to eq 202
@@ -122,7 +122,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
       it 'does not resend invitation if inviter has no invitations left' do
         @user.update invitation_limit: 10, invitations_count: 10
 
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
 
         expect(response.status).to eq 400
         mail_should_not_be_sent
@@ -132,7 +132,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
     it 'returns success regardless of invitations sent if no invitations limit is set' do
         @user.update invitation_limit: nil, invitations_count: 10
 
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
 
         expect(response.status).to eq 202
       end
@@ -140,7 +140,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
       it 'resends invitation regardless of invitations limit if user is an admin' do
         @user.update admin: true, invitation_limit: 10, invitations_count: 10
 
-        post :create, user: {email: @friend_email}, format: :json
+        post :create, params: {user: {email: @friend_email}}, format: :json
 
         expect(response.status).to eq 202
       end
