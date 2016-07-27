@@ -3,7 +3,7 @@
 
 class Api::OpmlExportsController < ApplicationController
 
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   respond_to :html, only: [:create]
   respond_to :json, only: [:show, :update, :download]

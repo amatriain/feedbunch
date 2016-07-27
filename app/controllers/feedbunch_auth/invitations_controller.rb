@@ -6,8 +6,8 @@
 class FeedbunchAuth::InvitationsController < Devise::InvitationsController
   respond_to :json, only: [:create]
 
-  prepend_before_filter :authenticate_inviter!, :only => [:create]
-  prepend_before_filter :has_invitations_left?, :only => [:create]
+  prepend_before_action :authenticate_inviter!, :only => [:create]
+  prepend_before_action :has_invitations_left?, :only => [:create]
 
   ##
   # Send an invitation email to the passed email address.
