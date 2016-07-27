@@ -37,9 +37,6 @@ module Feedbunch
     # if the locale sent by the user does not exist
     config.i18n.fallbacks = true
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
-
     # Use Rack::Deflater middleware to compress server responses when the client supports it.
     config.middleware.use Rack::Deflater
 
