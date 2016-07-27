@@ -125,14 +125,14 @@ class User < ActiveRecord::Base
   attr_reader :raw_invitation_token
 
   has_many :invitations, class_name: self.to_s, as: :invited_by
-  has_many :feed_subscriptions, -> {uniq}, dependent: :destroy,
+  has_many :feed_subscriptions, -> {distinct}, dependent: :destroy,
            after_add: :mark_unread_entries,
            before_remove: :before_remove_feed_subscription,
            after_remove: :removed_feed_subscription
   has_many :feeds, through: :feed_subscriptions
-  has_many :folders, -> {uniq}, dependent: :destroy
+  has_many :folders, -> {distinct}, dependent: :destroy
   has_many :entries, through: :feeds
-  has_many :entry_states, -> {uniq}, dependent: :destroy
+  has_many :entry_states, -> {distinct}, dependent: :destroy
   has_one :opml_import_job_state, dependent: :destroy
   has_one :opml_export_job_state, dependent: :destroy
   has_many :refresh_feed_job_states, dependent: :destroy

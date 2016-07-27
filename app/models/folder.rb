@@ -31,7 +31,7 @@ class Folder < ActiveRecord::Base
 
   belongs_to :user
   validates :user_id, presence: true
-  has_and_belongs_to_many :feeds, -> {uniq},
+  has_and_belongs_to_many :feeds, -> {distinct},
                           before_add: :before_add_feed,
                           after_add: :touch_subscription,
                           before_remove: :touch_subscription,

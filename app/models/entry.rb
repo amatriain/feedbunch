@@ -42,7 +42,7 @@ class Entry < ActiveRecord::Base
   belongs_to :feed
   validates :feed_id, presence: true
 
-  has_many :entry_states, -> {uniq}, dependent: :destroy
+  has_many :entry_states, -> {distinct}, dependent: :destroy
 
   validates :title, presence: true
   validates :url, presence: true, format: {with: URI::regexp(%w{http https})}
