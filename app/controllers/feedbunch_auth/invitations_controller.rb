@@ -21,12 +21,12 @@ class FeedbunchAuth::InvitationsController < Devise::InvitationsController
       if user.invited_to_sign_up?
         # If user was invited and is awaiting confirmation, the invitation email will be resent.
         resend_invitation_email user
-        head status: 202
+        head 202
         return
       else
         # If user already exists (not through an invitation), it cannot be sent an invitation.
         Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} tried to send invitation to #{invited_email} but a user with that email already exists"
-        head status: 409
+        head 409
         return
       end
     end
@@ -36,7 +36,7 @@ class FeedbunchAuth::InvitationsController < Devise::InvitationsController
     # If the created user is invalid, this will raise an error
     @invited_user.save!
     Rails.logger.info "User #{current_inviter.id} - #{current_inviter.email} sent invitation to join FeedBunch to user #{@invited_user.id} - #{@invited_user.email}"
-    head status: :ok
+    head :ok
 
   rescue => e
     handle_error e
@@ -108,7 +108,7 @@ class FeedbunchAuth::InvitationsController < Devise::InvitationsController
 
     if current_inviter.invitations_count >= current_inviter.invitation_limit
       Rails.logger.warn "User #{current_inviter.id} - #{current_inviter.email} tried to send an invitation, but has no invitations left"
-      head status: 400
+      head 400
       return
     end
   end

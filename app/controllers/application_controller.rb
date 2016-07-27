@@ -44,32 +44,32 @@ class ApplicationController < ActionController::Base
 
   def handle_error(error)
     if error.is_a? ActiveRecord::RecordNotFound
-      head status: 404
+      head 404
     elsif error.is_a? AlreadySubscribedError
       # If user is already subscribed to the feed, return 304
-      head status: 304
+      head 304
     elsif error.is_a? NotSubscribedError
       # If user is not subscribed to the feed, return 404
-      head status: 404
+      head 404
     elsif error.is_a? FolderAlreadyExistsError
       # If user already has a folder with the same title, return 304
-      head status: 304
+      head 304
     elsif error.is_a? FolderNotOwnedByUserError
       # If user tries an operation on a folder he doesn't own, return 404
-      head status: 404
+      head 404
     elsif error.is_a? OpmlImportError
       # If an error happens when importing subscription data, redirect to main application page
       redirect_to read_path
     elsif error.is_a? BlacklistedUrlError
       # If user attempts to subscribe to a blacklisted url, return 403
-      head status: 403
+      head 403
     elsif error.is_a? ActionController::UnknownFormat
       # If an unsupported format is requested (e.g. requesting HTML from an API controller) return 406
-      head status: 406
+      head 406
     else
       Rails.logger.error error.message
       Rails.logger.error error.backtrace
-      head status: 500
+      head 500
     end
   end
 

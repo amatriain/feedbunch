@@ -48,7 +48,7 @@ class Api::FeedsController < ApplicationController
       end
     else
       Rails.logger.info "User #{current_user.id} - #{current_user.email} has no feeds to return, returning a 404"
-      head status: 404
+      head 404
     end
   rescue => e
     handle_error e
@@ -79,7 +79,7 @@ class Api::FeedsController < ApplicationController
       head :ok
     else
       Rails.logger.error "Could not subscribe user #{current_user.id} to feed #{feed_url}, returning a 404"
-      head status: 404
+      head 404
     end
 
   rescue => e
@@ -117,7 +117,7 @@ class Api::FeedsController < ApplicationController
       end
     else
       Rails.logger.info "User #{current_user.id} - #{current_user.email} tried to index feeds in folder #{params[:folder_id]} which does not exist or he does not own"
-      head status: 404
+      head 404
     end
 
   end
@@ -169,7 +169,7 @@ class Api::FeedsController < ApplicationController
       respond_with @feeds_data
     else
       Rails.logger.info "User #{current_user.id} - #{current_user.email} has no feeds to return, returning a 404"
-      head status: 404
+      head 404
     end
   end
 end

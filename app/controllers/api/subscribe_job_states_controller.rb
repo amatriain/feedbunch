@@ -19,7 +19,7 @@ class Api::SubscribeJobStatesController < ApplicationController
         Rails.logger.debug "User #{current_user.id} - #{current_user.email} has #{@job_states.count} SubscribeJobState instances"
         respond_with @job_states
       else
-        head status: 404
+        head 404
       end
     end
   rescue => e
@@ -47,7 +47,7 @@ class Api::SubscribeJobStatesController < ApplicationController
     @job_state = current_user.find_subscribe_job_state params[:id]
     Rails.logger.debug "Destroying subscribe_job_state #{@job_state.id} for user #{current_user.id} - #{current_user.email}"
     @job_state.destroy!
-    head status: 200
+    head 200
   rescue => e
     handle_error e
   end

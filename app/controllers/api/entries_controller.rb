@@ -49,7 +49,7 @@ class Api::EntriesController < ApplicationController
       end
     else
       Rails.logger.info "User #{current_user.id} - #{current_user.email} requested entries without specifying a folder or feed id, returning a 404"
-      head status: 404
+      head 404
     end
   rescue => e
     handle_error e
@@ -73,7 +73,7 @@ class Api::EntriesController < ApplicationController
       end
     else
       Rails.logger.info "User #{current_user.id} - #{current_user.email} requested entries for feed #{params[:feed_id]} to which he is not subscribed, returning a 404"
-      head status: 404
+      head 404
     end
   end
 
@@ -116,7 +116,7 @@ class Api::EntriesController < ApplicationController
       respond_with @entries, @user, @include_read
     else
       Rails.logger.info "No entries found for feed_id #{params[:feed_id]} / folder_id #{params[:folder_id]}, returning a 404"
-      head status: 404
+      head 404
     end
   end
 

@@ -38,7 +38,7 @@ class Api::FoldersController < ApplicationController
       end
     else
       Rails.logger.info "Folder #{params[:id]} not found, returning a 404"
-      head status: 404
+      head 404
     end
   rescue => e
     handle_error e
@@ -72,7 +72,7 @@ class Api::FoldersController < ApplicationController
       respond_with @folder
     else
       Rails.logger.error "Could not create folder #{folder_params[:title]} for user #{current_user.id}, returning a 404"
-      head status: 404
+      head 404
     end
 
   rescue => e
