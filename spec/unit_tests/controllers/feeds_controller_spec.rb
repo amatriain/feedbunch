@@ -46,7 +46,7 @@ describe Api::FeedsController, type: :controller do
       end
 
       it 'assigns to @feeds all feeds if requested' do
-        get :index, include_read: 'true', format: :json
+        get :index, params: {include_read: 'true'}, format: :json
         expect(assigns(:feeds)).to eq [@feed1, @feed3]
       end
     end
@@ -54,22 +54,22 @@ describe Api::FeedsController, type: :controller do
     context 'feeds in a folder' do
 
       it 'returns success' do
-        get :index, folder_id: @folder1.id, format: :json
+        get :index, params: {folder_id: @folder1.id}, format: :json
         expect(response).to be_success
       end
 
       it 'assigns to @folder the correct folder' do
-        get :index, folder_id: @folder1.id, format: :json
+        get :index, params: {folder_id: @folder1.id}, format: :json
         expect(assigns(:folder)).to eq @folder1
       end
 
       it 'assigns to @feeds only feeds with unread entries' do
-        get :index, folder_id: @folder1.id, format: :json
+        get :index, params: {folder_id: @folder1.id}, format: :json
         expect(assigns(:feeds)).to eq [@feed1]
       end
 
       it 'assigns to @feeds all feeds if requested' do
-        get :index, folder_id: @folder1.id, include_read: 'true', format: :json
+        get :index, params: {folder_id: @folder1.id, include_read: 'true'}, format: :json
         feeds = assigns(:feeds)
         expect(feeds.count).to eq 2
         expect(feeds).to include @feed1
@@ -77,7 +77,7 @@ describe Api::FeedsController, type: :controller do
       end
 
       it 'returns 404 if user does not own folder' do
-        get :index, folder_id: @folder2.id, format: :json
+        get :index, params: {folder_id: @folder2.id}, format: :json
         expect(response.status).to eq 404
       end
     end
@@ -86,17 +86,17 @@ describe Api::FeedsController, type: :controller do
   context 'GET show' do
 
     it 'assigns to @feed the correct feed' do
-      get :show, id: @feed1.id, format: :json
+      get :show, params: {id: @feed1.id}, format: :json
       expect(assigns(:feed)).to eq @feed1
     end
 
     it 'returns a 404 for a feed the user is not suscribed to' do
-      get :show, id: @feed2.id, format: :json
+      get :show, params: {id: @feed2.id}, format: :json
       expect(response.status).to eq 404
     end
 
     it 'returns a 404 for a non-existing feed' do
-      get :show, id: 1234567890, format: :json
+      get :show, params: {id: 1234567890}, format: :json
       expect(response.status).to eq 404
     end
 
@@ -105,12 +105,12 @@ describe Api::FeedsController, type: :controller do
   context 'PATCH update' do
 
     it 'returns a 404 for a feed the user is not suscribed to' do
-      patch :update, id: @feed2.id
+      patch :update, params: {id: @feed2.id}
       expect(response.status).to eq 404
     end
 
     it 'returns a 404 for a non-existing feed' do
-      patch :update, id: 1234567890
+      patch :update, params: {id: 1234567890}
       expect(response.status).to eq 404
     end
 
@@ -119,14 +119,14 @@ describe Api::FeedsController, type: :controller do
         expect(feed.id).to eq @feed1.id
         expect(user.id).to eq @user.id
       end
-      patch :update, id: @feed1.id
+      patch :update, params: {id: @feed1.id}
     end
   end
 
   context 'POST create' do
 
     it 'assigns to @job_state the new subscribe_job_state' do
-      post :create, feed: {url: @feed2.fetch_url}, format: :json
+      post :create, params: {feed: {url: @feed2.fetch_url}}, format: :json
       expect(response).to  be_success
       job_state = assigns(:job_state)
       expect(job_state.user_id).to eq @user.id
@@ -138,7 +138,7 @@ describe Api::FeedsController, type: :controller do
   context 'DELETE remove' do
 
     it 'returns 200' do
-      delete :destroy, id: @feed1.id, format: :json
+      delete :destroy, params: {id: @feed1.id}, format: :json
       expect(response).to be_success
     end
 
@@ -147,22 +147,22 @@ describe Api::FeedsController, type: :controller do
         expect(feed.id).to eq @feed1.id
         expect(user.id).to eq @user.id
       end
-      delete :destroy, id: @feed1.id, format: :json
+      delete :destroy, params: {id: @feed1.id}, format: :json
     end
 
     it 'returns 404 if the feed does not exist' do
-      delete :destroy, id: 1234567890, format: :json
+      delete :destroy, params: {id: 1234567890}, format: :json
       expect(response.status).to eq 404
     end
 
     it 'returns 404 if the user is not subscribed to the feed' do
-      delete :destroy, id: @feed2.id, format: :json
+      delete :destroy, params: {id: @feed2.id}, format: :json
       expect(response.status).to eq 404
     end
 
     it 'returns 500 if there is a problem unsubscribing' do
       allow_any_instance_of(User).to receive(:enqueue_unsubscribe_job).and_raise StandardError.new
-      delete :destroy, id: @feed1.id, format: :json
+      delete :destroy, params: {id: @feed1.id}, format: :json
       expect(response.status).to eq 500
     end
   end
