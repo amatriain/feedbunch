@@ -17,29 +17,29 @@ describe Api::EntriesController, type: :controller do
     end
 
     it 'assigns the correct entry' do
-      put :update, entry: {id: @entry.id, state: 'read'}, format: :json
+      put :update, params: {entry: {id: @entry.id, state: 'read'}}, format: :json
       expect(assigns(:entry)).to eq @entry
     end
 
     it 'returns success' do
-      put :update, entry: {id: @entry.id, state: 'read', update_older: 'false'}, format: :json
+      put :update, params: {entry: {id: @entry.id, state: 'read', update_older: 'false'}}, format: :json
       expect(response).to be_success
     end
 
     it 'returns 404 if the entry does not exist' do
-      put :update, entry: {id: 1234567890, state: 'read'}, format: :json
+      put :update, params: {entry: {id: 1234567890, state: 'read'}}, format: :json
       expect(response.status).to eq 404
     end
 
     it 'returns 404 if the user is not subscribed to the entries feed' do
       entry2 = FactoryGirl.create :entry
-      put :update, entry: {id: entry2.id, state: 'read'}, format: :json
+      put :update, params: {entry: {id: entry2.id, state: 'read'}}, format: :json
       expect(response.status).to eq 404
     end
 
     it 'returns 500 if there is a problem changing the entry state' do
       allow_any_instance_of(User).to receive(:change_entries_state).and_raise StandardError.new
-      put :update, entry: {id: @entry.id, state: 'read'}, format: :json
+      put :update, params: {entry: {id: @entry.id, state: 'read'}}, format: :json
       expect(response.status).to eq 500
     end
   end
@@ -57,12 +57,12 @@ describe Api::EntriesController, type: :controller do
       end
 
       it 'assigns to @feed the correct feed' do
-        get :index, feed_id: @feed.id, format: :json
+        get :index, params: {feed_id: @feed.id}, format: :json
         expect(assigns(:feed)).to eq @feed
       end
 
       it 'assigns to @entries the entries for a single feed' do
-        get :index, feed_id: @feed.id, format: :json
+        get :index, params: {feed_id: @feed.id}, format: :json
         expect(assigns(:entries).count).to eq 2
         expect(assigns(:entries)).to include @entry_1_1
         expect(assigns(:entries)).to include @entry_1_2
@@ -70,24 +70,24 @@ describe Api::EntriesController, type: :controller do
 
       it 'returns a 404 for a feed the user is not suscribed to' do
         feed2 = FactoryGirl.create :feed
-        get :index, feed_id: feed2.id, format: :json
+        get :index, params: {feed_id: feed2.id}, format: :json
         expect(response.status).to eq 404
       end
 
       it 'returns a 404 for a non-existing feed' do
-        get :index, feed_id: 1234567890, format: :json
+        get :index, params: {feed_id: 1234567890}, format: :json
         expect(response.status).to eq 404
       end
 
       it 'does not fetch new entries in the feed' do
         expect(FeedClient).not_to receive(:fetch).with @feed
-        get :index, feed_id: @feed.id, format: :json
+        get :index, params: {feed_id: @feed.id}, format: :json
       end
 
       it 'assigns to @entries only unread entries by default' do
         @user.change_entries_state @entry_1_1, 'read'
 
-        get :index, feed_id: @feed.id, format: :json
+        get :index, params: {feed_id: @feed.id}, format: :json
         expect(assigns(:entries).count).to eq 1
         expect(assigns(:entries)).to include @entry_1_2
       end
@@ -95,7 +95,7 @@ describe Api::EntriesController, type: :controller do
       it 'assigns to @entries all entries' do
         @user.change_entries_state @entry_1_1, 'read'
 
-        get :index, feed_id: @feed.id, include_read: 'true', format: :json
+        get :index, params: {feed_id: @feed.id, include_read: 'true'}, format: :json
         expect(assigns(:entries).count).to eq 2
         expect(assigns(:entries)).to include @entry_1_1
         expect(assigns(:entries)).to include @entry_1_2
@@ -120,7 +120,7 @@ describe Api::EntriesController, type: :controller do
         context 'unread entries' do
 
           it 'returns the first page of entries' do
-            get :index, feed_id: @feed.id, page: 1, format: :json
+            get :index, params: {feed_id: @feed.id, page: 1}, format: :json
             expect(assigns(:entries).count).to eq 25
             assigns(:entries).each_with_index do |entry, index|
               expect(entry).to eq @entries[index]
@@ -128,7 +128,7 @@ describe Api::EntriesController, type: :controller do
           end
 
           it 'returns the last page of entries' do
-            get :index, feed_id: @feed.id, page: 2, format: :json
+            get :index, params: {feed_id: @feed.id, page: 2}, format: :json
             expect(assigns(:entries).count).to eq 1
             expect(assigns(:entries)[0]).to eq @entries[25]
           end
@@ -138,7 +138,7 @@ describe Api::EntriesController, type: :controller do
         context 'all entries' do
 
           it 'returns the first page of entries' do
-            get :index, feed_id: @feed.id, include_read: 'true', page: 1, format: :json
+            get :index, params: {feed_id: @feed.id, include_read: 'true'}, page: 1, format: :json
             expect(assigns(:entries).count).to eq 25
             assigns(:entries).each_with_index do |entry, index|
               expect(entry).to eq @entries[index]
@@ -146,7 +146,7 @@ describe Api::EntriesController, type: :controller do
           end
 
           it 'returns the last page of entries' do
-            get :index, feed_id: @feed.id, include_read: 'true', page: 2, format: :json
+            get :index, params: {feed_id: @feed.id, include_read: 'true', page: 2}, format: :json
             expect(assigns(:entries).count).to eq 5
             assigns(:entries).each_with_index do |entry, index|
               expect(entry).to eq @entries[25 + index]
@@ -188,7 +188,7 @@ describe Api::EntriesController, type: :controller do
       end
 
       it 'assigns to @entries the entries for all feeds in a single folder' do
-        get :index, folder_id: @folder1.id
+        get :index, params: {folder_id: @folder1.id}
         expect(assigns(:entries).count).to eq 4
         expect(assigns(:entries)).to include @entry1_1
         expect(assigns(:entries)).to include @entry1_2
@@ -197,7 +197,7 @@ describe Api::EntriesController, type: :controller do
       end
 
       it 'assigns to @entries the entries for all subscribed feeds' do
-        get :index, folder_id: 'all'
+        get :index, params: {folder_id: 'all'}
         expect(assigns(:entries).count).to eq 6
         expect(assigns(:entries)).to include @entry1_1
         expect(assigns(:entries)).to include @entry1_2
@@ -209,24 +209,24 @@ describe Api::EntriesController, type: :controller do
 
       it 'returns a 404 for a folder that does not belong to the user' do
         folder2 = FactoryGirl.create :folder
-        get :index, folder_id: folder2.id
+        get :index, params: {folder_id: folder2.id}
         expect(response.status).to eq 404
       end
 
       it 'returns a 404 for a non-existing folder' do
-        get :index, folder_id: 1234567890
+        get :index, params: {folder_id: 1234567890}
         expect(response.status).to eq 404
       end
 
       it 'does not fetch new entries for any feed' do
         expect(FeedClient).not_to receive(:fetch).with @feed1
-        get :index, folder_id: @folder1.id
+        get :index, params: {folder_id: @folder1.id}
       end
 
       it 'assigns to @entries only unread folder entries by default' do
         @user.change_entries_state @entry1_1, 'read'
 
-        get :index, folder_id: @folder1.id, format: :json
+        get :index, params: {folder_id: @folder1.id}, format: :json
         expect(assigns(:entries).count).to eq 3
         expect(assigns(:entries)).to include @entry1_2
         expect(assigns(:entries)).to include @entry2_1
@@ -236,7 +236,7 @@ describe Api::EntriesController, type: :controller do
       it 'assigns to @entries all folder entries' do
         @user.change_entries_state @entry1_1, 'read'
 
-        get :index, folder_id: @folder1.id, include_read: 'true', format: :json
+        get :index, params: {folder_id: @folder1.id, include_read: 'true'}, format: :json
         expect(assigns(:entries).count).to eq 4
         expect(assigns(:entries)).to include @entry1_1
         expect(assigns(:entries)).to include @entry1_2
@@ -247,7 +247,7 @@ describe Api::EntriesController, type: :controller do
       it 'assigns to @entries only all unread entries by default' do
         @user.change_entries_state @entry1_1, 'read'
 
-        get :index, folder_id: 'all', format: :json
+        get :index, params: {folder_id: 'all'}, format: :json
         expect(assigns(:entries).count).to eq 5
         expect(assigns(:entries)).to include @entry1_2
         expect(assigns(:entries)).to include @entry2_1
@@ -259,7 +259,7 @@ describe Api::EntriesController, type: :controller do
       it 'assigns to @entries all entries' do
         @user.change_entries_state @entry1_1, 'read'
 
-        get :index, folder_id: 'all', include_read: 'true', format: :json
+        get :index, params: {folder_id: 'all', include_read: 'true'}, format: :json
         expect(assigns(:entries).count).to eq 6
         expect(assigns(:entries)).to include @entry1_1
         expect(assigns(:entries)).to include @entry1_2
@@ -299,7 +299,7 @@ describe Api::EntriesController, type: :controller do
           context 'unread entries' do
 
             it 'returns the first page of entries' do
-              get :index, folder_id: 'all', page: 1, format: :json
+              get :index, params: {folder_id: 'all', page: 1}, format: :json
               expect(assigns(:entries).count).to eq 25
               assigns(:entries).each_with_index do |entry, index|
                 expect(entry).to eq @entries[index]
@@ -307,7 +307,7 @@ describe Api::EntriesController, type: :controller do
             end
 
             it 'returns the last page of entries' do
-              get :index, folder_id: 'all', page: 2, format: :json
+              get :index, params: {folder_id: 'all', page: 2}, format: :json
               expect(assigns(:entries).count).to eq 2
               # In the second page of entries only one entry from @feed1 and one from @feed3 should appear
               expect(assigns(:entries)[0]).to eq @entries[25]
@@ -318,7 +318,7 @@ describe Api::EntriesController, type: :controller do
           context 'all entries' do
 
             it 'returns the first page of entries' do
-              get :index, folder_id: 'all', include_read: 'true', page: 1, format: :json
+              get :index, params: {folder_id: 'all', include_read: 'true', page: 1}, format: :json
               expect(assigns(:entries).count).to eq 25
               assigns(:entries).each_with_index do |entry, index|
                 expect(entry).to eq @entries[index]
@@ -326,7 +326,7 @@ describe Api::EntriesController, type: :controller do
             end
 
             it 'returns the last page of entries' do
-              get :index, folder_id: 'all', include_read: 'true', page: 2, format: :json
+              get :index, params: {folder_id: 'all', include_read: 'true', page: 2}, format: :json
               expect(assigns(:entries).count).to eq 7
               assigns(:entries).each_with_index do |entry, index|
                 expect(entry).to eq @entries[25+index]
@@ -341,7 +341,7 @@ describe Api::EntriesController, type: :controller do
           context 'unread entries' do
 
             it 'returns the first page of entries' do
-              get :index, folder_id: @folder1.id, page: 1, format: :json
+              get :index, params: {folder_id: @folder1.id, page: 1}, format: :json
               expect(assigns(:entries).count).to eq 25
               assigns(:entries).each_with_index do |entry, index|
                 expect(entry).to eq @entries[index]
@@ -349,7 +349,7 @@ describe Api::EntriesController, type: :controller do
             end
 
             it 'returns the last page of entries' do
-              get :index, folder_id: @folder1.id, page: 2, format: :json
+              get :index, params: {folder_id: @folder1.id, page: 2}, format: :json
               expect(assigns(:entries).count).to eq 1
               expect(assigns(:entries)[0]).to eq @entries[25]
             end
@@ -358,7 +358,7 @@ describe Api::EntriesController, type: :controller do
           context 'all entries' do
 
             it 'returns the first page of entries' do
-              get :index, folder_id: @folder1.id, include_read: 'true', page: 1, format: :json
+              get :index, params: {folder_id: @folder1.id, include_read: 'true', page: 1}, format: :json
               expect(assigns(:entries).count).to eq 25
               assigns(:entries).each_with_index do |entry, index|
                 expect(entry).to eq @entries[index]
@@ -366,7 +366,7 @@ describe Api::EntriesController, type: :controller do
             end
 
             it 'returns the last page of entries' do
-              get :index, folder_id: @folder1.id, include_read: 'true', page: 2, format: :json
+              get :index, params: {folder_id: @folder1.id, include_read: 'true', page: 2}, format: :json
               expect(assigns(:entries).count).to eq 5
               assigns(:entries).each_with_index do |entry, index|
                 expect(entry).to eq @entries[25+index]
