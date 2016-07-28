@@ -393,7 +393,7 @@ class User < ActiveRecord::Base
   def before_destroy_user
     if Feedbunch::Application.config.demo_enabled
       demo_email = Feedbunch::Application.config.demo_email
-      return false if self.email == demo_email
+      throw :abort if self.email == demo_email
     end
     return true
   end
