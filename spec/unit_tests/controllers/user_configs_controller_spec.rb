@@ -23,7 +23,7 @@ describe Api::UserConfigsController, type: :controller do
   context 'PATCH update' do
 
     it 'returns success' do
-      patch :update, {user_config: {show_main_tour: 'false',
+      patch :update, params: {user_config: {show_main_tour: 'false',
                                     show_mobile_tour: 'false',
                                     show_feed_tour: 'false',
                                     show_entry_tour: 'false',
@@ -34,7 +34,7 @@ describe Api::UserConfigsController, type: :controller do
     context 'all flags' do
 
       it 'updates all config flags' do
-        patch :update, {user_config: {show_main_tour: 'false',
+        patch :update, params: {user_config: {show_main_tour: 'false',
                                       show_mobile_tour: 'false',
                                       show_feed_tour: 'false',
                                       show_entry_tour: 'false',
@@ -51,7 +51,7 @@ describe Api::UserConfigsController, type: :controller do
     context 'show_main_tour flag' do
 
       it 'updates flag' do
-        patch :update, {user_config: {show_main_tour: 'false'}}
+        patch :update, params: {user_config: {show_main_tour: 'false'}}
         @user.reload
         expect(@user.show_main_tour).to be false
         expect(@user.show_mobile_tour).to be true
@@ -61,7 +61,7 @@ describe Api::UserConfigsController, type: :controller do
       end
 
       it 'does not update flag if a wrong param value is passed' do
-        patch :update, {user_config: {show_main_tour: 'not_a_boolean'}}
+        patch :update, params: {user_config: {show_main_tour: 'not_a_boolean'}}
         @user.reload
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
@@ -74,7 +74,7 @@ describe Api::UserConfigsController, type: :controller do
     context 'show_mobile_tour flag' do
 
       it 'updates flag' do
-        patch :update, {user_config: {show_mobile_tour: 'false'}}
+        patch :update, params: {user_config: {show_mobile_tour: 'false'}}
         @user.reload
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be false
@@ -84,7 +84,7 @@ describe Api::UserConfigsController, type: :controller do
       end
 
       it 'does not update flag if a wrong param value is passed' do
-        patch :update, {user_config: {show_mobile_tour: 'not_a_boolean'}}
+        patch :update, params: {user_config: {show_mobile_tour: 'not_a_boolean'}}
         @user.reload
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
@@ -97,7 +97,7 @@ describe Api::UserConfigsController, type: :controller do
     context 'show_feed_tour flag' do
 
       it 'updates flag' do
-        patch :update, {user_config: {show_feed_tour: 'false'}}
+        patch :update, params: {user_config: {show_feed_tour: 'false'}}
         @user.reload
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
@@ -107,7 +107,7 @@ describe Api::UserConfigsController, type: :controller do
       end
 
       it 'does not update flag if a wrong param value is passed' do
-        patch :update, {user_config: {show_feed_tour: 'not_a_boolean'}}
+        patch :update, params: {user_config: {show_feed_tour: 'not_a_boolean'}}
         @user.reload
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
@@ -120,7 +120,7 @@ describe Api::UserConfigsController, type: :controller do
     context 'show_entry_tour flag' do
 
       it 'updates flag' do
-        patch :update, {user_config: {show_entry_tour: 'false'}}
+        patch :update, params: {user_config: {show_entry_tour: 'false'}}
         @user.reload
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
@@ -130,7 +130,7 @@ describe Api::UserConfigsController, type: :controller do
       end
 
       it 'does not update flag if a wrong param value is passed' do
-        patch :update, {user_config: {show_entry_tour: 'not_a_boolean'}}
+        patch :update, params: {user_config: {show_entry_tour: 'not_a_boolean'}}
         @user.reload
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
@@ -143,7 +143,7 @@ describe Api::UserConfigsController, type: :controller do
     context 'show_kb_shortcuts_tour flag' do
 
       it 'updates flag' do
-        patch :update, {user_config: {show_kb_shortcuts_tour: 'false'}}
+        patch :update, params: {user_config: {show_kb_shortcuts_tour: 'false'}}
         @user.reload
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true
@@ -153,7 +153,7 @@ describe Api::UserConfigsController, type: :controller do
       end
 
       it 'does not update flag if a wrong param value is passed' do
-        patch :update, {user_config: {show_kb_shortcuts_tour: 'not_a_boolean'}}
+        patch :update, params: {user_config: {show_kb_shortcuts_tour: 'not_a_boolean'}}
         @user.reload
         expect(@user.show_main_tour).to be true
         expect(@user.show_mobile_tour).to be true

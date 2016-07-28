@@ -45,18 +45,18 @@ describe Api::OpmlExportsController, type: :controller do
   context 'PUT update' do
 
     it 'asigns the correct OpmlExportJobState' do
-      put :update, opml_export: {show_alert: 'false'}, format: :json
+      put :update, params: {opml_export: {show_alert: 'false'}}, format: :json
       expect(assigns(:opml_export_job_state)).to eq @user.opml_export_job_state
     end
 
     it 'returns success' do
-      put :update, opml_export: {show_alert: 'false'}, format: :json
+      put :update, params: {opml_export: {show_alert: 'false'}}, format: :json
       expect(response).to be_success
     end
 
     it 'returns 500 if there is a problem changing the alert visibility' do
       allow_any_instance_of(User).to receive(:set_opml_export_job_state_visible).and_raise StandardError.new
-      put :update, opml_export: {show_alert: 'false'}, format: :json
+      put :update, params: {opml_export: {show_alert: 'false'}}, format: :json
       expect(response.status).to eq 500
     end
   end
