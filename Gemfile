@@ -125,7 +125,7 @@ group :test do
   # Testing
   gem 'rspec'
   # "assigns" method for controller tests has been moved to a different gem in rails 5
-  gem 'rails-controller-testing'
+  gem 'rails-controller-testing', require: false
 
   # Retry failed tests
   gem 'rspec-retry'
