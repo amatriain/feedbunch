@@ -22,7 +22,7 @@ class FolderManager
     if folder == Folder::NO_FOLDER
       feeds = Feed.arel_table
       folders = Folder.arel_table
-      feed_subscriptions = Arel::Table.new :feed_subscriptions
+      feed_subscriptions = FeedSubscription.arel_table
       feeds_folders = Arel::Table.new :feeds_folders
 
       feeds_in_folders_condition = feeds_folders.join(folders).on(folders[:id].eq(feeds_folders[:folder_id])).
