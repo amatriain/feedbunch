@@ -117,9 +117,6 @@ group :test, :development do
   # Testing framework
   gem 'rspec-rails'
 
-  # "assigns" method for controller tests has been moved to a different gem in rails 5
-  gem 'rails-controller-testing'
-
   # Factories instead of DB fixtures during testing
   gem 'factory_girl_rails'
 end
@@ -127,6 +124,8 @@ end
 group :test do
   # Testing
   gem 'rspec'
+  # "assigns" method for controller tests has been moved to a different gem in rails 5
+  gem 'rails-controller-testing'
 
   # Retry failed tests
   gem 'rspec-retry'
