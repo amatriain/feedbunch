@@ -51,6 +51,9 @@ module Feedbunch
     # Per-form CSRF tokens, to protect against code injection in forms created by javascript
     config.action_controller.per_form_csrf_tokens = true
 
+    # Check the HTTP Origin header as additional defense against CSRF.
+    config.action_controller.forgery_protection_origin_check = true
+
     # Whitelist of accepted tags and attributes when sanitizing entries, folder titles etc.
     # This list is a more restrictive version of:
     # https://github.com/flavorjones/loofah/blob/master/lib/loofah/html5/whitelist.rb
