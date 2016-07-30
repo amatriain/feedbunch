@@ -2,7 +2,7 @@
 # Main controller of the application. Options set here affect the whole application.
 
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, prepend: true
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_locale
