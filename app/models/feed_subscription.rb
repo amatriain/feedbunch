@@ -18,7 +18,7 @@
 # As entries change state for the user, the attribute decreases (when entries become read) or increases (when entries
 # become unread).
 
-class FeedSubscription < ActiveRecord::Base
+class FeedSubscription < ApplicationRecord
 
   belongs_to :user
   validates :user_id, presence: true, uniqueness: {scope: :feed_id}

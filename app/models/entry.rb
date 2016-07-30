@@ -37,7 +37,7 @@ require 'encoding_manager'
 # All fields except "published" and "feed_id" are sanitized before validation; this is, before saving/updating each
 # instance in the database.
 
-class Entry < ActiveRecord::Base
+class Entry < ApplicationRecord
 
   belongs_to :feed
   validates :feed_id, presence: true

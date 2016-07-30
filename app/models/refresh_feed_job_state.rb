@@ -9,7 +9,7 @@
 # - state: mandatory text that indicates the current state of the import process. Supported values are
 # "RUNNING" (the default), "SUCCESS" and "ERROR".
 
-class RefreshFeedJobState < ActiveRecord::Base
+class RefreshFeedJobState < ApplicationRecord
   # Class constants for the possible states
   RUNNING = 'RUNNING'
   ERROR = 'ERROR'

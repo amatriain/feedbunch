@@ -11,7 +11,7 @@
 # - fetch_url: URL of the feed, entered by the user.
 # - feed_id: id of the subscribed feed; only different from nil if the state is SUCCESS.
 
-class SubscribeJobState < ActiveRecord::Base
+class SubscribeJobState < ApplicationRecord
   # Class constants for the possible states
   RUNNING = 'RUNNING'
   ERROR = 'ERROR'

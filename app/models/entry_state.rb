@@ -23,7 +23,7 @@
 # they are automatically marked as read unless he manually changes their state. By default, only unread entries
 # are shown to the user in the view, unless he manually indicates he wants to also see read entries.
 
-class EntryState < ActiveRecord::Base
+class EntryState < ApplicationRecord
 
   belongs_to :user
   validates :user_id, presence: true, uniqueness: {scope: :entry_id}

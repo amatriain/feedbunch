@@ -112,7 +112,7 @@ require 'etag_calculator'
 # It is not mandatory that a user be suscribed to any feeds (in fact when a user first signs up he won't
 # have any suscriptions).
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,

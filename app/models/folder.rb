@@ -23,7 +23,7 @@
 #   - changing the URL of a feed in the folder
 #   - moving a feed into or out of the folder
 
-class Folder < ActiveRecord::Base
+class Folder < ApplicationRecord
 
   # Class constants for special "no folder" and "all folders" cases
   NO_FOLDER = 'none'

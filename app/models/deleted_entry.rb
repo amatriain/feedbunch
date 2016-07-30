@@ -19,7 +19,7 @@
 # - feed_id: ID of the feed to which the deleted entry belonged.
 # - guid: guid of the deleted entry.
 
-class DeletedEntry < ActiveRecord::Base
+class DeletedEntry < ApplicationRecord
   belongs_to :feed
   validates :feed_id, presence: true
   validates :guid, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}

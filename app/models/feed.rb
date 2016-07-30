@@ -42,7 +42,7 @@ require 'feed_blacklister'
 # Title, fetch_url and url are sanitized (with ActionView::Helpers::SanitizeHelper) before validation; this is,
 # before saving/updating each instance in the database.
 
-class Feed < ActiveRecord::Base
+class Feed < ApplicationRecord
 
   has_many :feed_subscriptions, -> {distinct}, dependent: :destroy
   has_many :users, through: :feed_subscriptions

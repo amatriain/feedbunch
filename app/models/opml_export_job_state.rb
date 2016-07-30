@@ -13,7 +13,7 @@
 # - filename: name of the OPML file exported. It only takes value if the state is "SUCCESS"
 # - export_date: GMT date and time the export was generated. It only takes value if the state is "SUCCESS"
 
-class OpmlExportJobState < ActiveRecord::Base
+class OpmlExportJobState < ApplicationRecord
   # Class constants for the possible states
   NONE = 'NONE'
   RUNNING = 'RUNNING'

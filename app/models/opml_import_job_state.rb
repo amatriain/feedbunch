@@ -17,7 +17,7 @@
 # - show_alert: if true (the default), show an alert in the Start page informing of the data import state. If false,
 # the user has closed the alert related to OPML imports and doesn't want it to be displayed again.
 
-class OpmlImportJobState < ActiveRecord::Base
+class OpmlImportJobState < ApplicationRecord
   # Class constants for the possible states
   NONE = 'NONE'
   RUNNING = 'RUNNING'

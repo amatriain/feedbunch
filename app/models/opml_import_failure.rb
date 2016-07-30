@@ -14,7 +14,7 @@
 # - opml_import_job_state_id: ID of the OpmlImportJobState to which belongs the failure.
 # - url: url present in the OPML file that failed during import.
 
-class OpmlImportFailure < ActiveRecord::Base
+class OpmlImportFailure < ApplicationRecord
   belongs_to :opml_import_job_state
   validates :opml_import_job_state_id, presence: true
   validates :url, presence: true, uniqueness: {case_sensitive: true, scope: :opml_import_job_state_id}
