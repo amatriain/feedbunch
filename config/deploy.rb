@@ -96,7 +96,7 @@ namespace :puma do
   task :phased_restart do
     on roles :app do
       within release_path do
-        execute :bundle, :exec, :pumactl, "-F config/puma/#{fetch :stage}.rb", 'phased-restart'
+        execute :bundle, :exec, :pumactl, '-F config/puma.rb', 'phased-restart'
       end
     end
   end
