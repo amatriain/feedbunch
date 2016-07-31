@@ -45,9 +45,6 @@ module Feedbunch
       g.fixture_replacement :factory_girl
     end
 
-    # Validate that the associated model in a belongs_to association is present, otherwise raise an error.
-    config.active_record.belongs_to_required_by_default = true
-
     # Per-form CSRF tokens, to protect against code injection in forms created by javascript
     config.action_controller.per_form_csrf_tokens = true
 
