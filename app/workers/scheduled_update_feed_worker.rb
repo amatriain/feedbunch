@@ -1,5 +1,6 @@
 require 'subscriptions_manager'
 require 'schedule_manager'
+require 'old_entries_cleaner'
 
 ##
 # Background job for scheduled updates to a feed.
