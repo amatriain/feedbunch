@@ -9,7 +9,7 @@ threads threads_count, threads_count
 
 # Specifies the `environment` that Puma will run in.
 #
-environment ENV.fetch('RAILS_ENV') { 'development' }
+environment = ENV.fetch('RAILS_ENV') { 'development' }
 
 # Specifies the `port` that Puma will listen on to receive requests, default is 3000.
 # In production bind to a unix socket instead
