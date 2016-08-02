@@ -471,4 +471,48 @@ describe Entry, type: :model do
       expect {entry.read_by? user}.to raise_error NotSubscribedError
     end
   end
+
+  context 'special feeds' do
+
+    before :each do
+      @special_feed_url = 'www.demonoid.pw'
+
+      Rails.application.config.special_feeds = {}
+      Rails.application.config.special_feeds[@special_feed_url] = DemonoidFeedHandler.class.to_s
+    end
+
+    context 'feeds that do not match list of special feeds' do
+      before :each do
+        @feed = FactoryGirl.create :feed
+      end
+
+      it 'does not pass entries to a handler' do
+        expect(DemonoidFeedHandler).not_to  receive :handle_entry
+        entry = FactoryGirl.build :entry, feed_id: @feed.id
+        @feed.entries << entry
+      end
+
+      it 'does not change entry guid before saving' do
+        entry = FactoryGirl.build :entry, feed_id: @feed.id
+        guid_before = entry.guid
+
+        @feed.entries << entry
+        entry.reload
+
+        expect(entry.guid).to eq guid_before
+      end
+    end
+
+    context 'url matches list of special feeds' do
+      it 'passes entries from special feeds to the right handler'
+
+      it 'changes entry guid before saving'
+    end
+
+    context 'fetch_url matches list of special feeds' do
+      it 'passes entries from special feeds to the right handler'
+
+      it 'changes entry guid before saving'
+    end
+  end
 end
