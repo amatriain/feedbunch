@@ -24,7 +24,7 @@ class DemonoidFeedHandler
   # Receives as argument the entry to handle.
 
   def self.handle_entry(entry)
-    regex = /\A(http:\/\/www\.demonoid\.pw.*\/)[^\/]+\/\z/
+    regex = /\A(http:\/\/www\.demonoid\.pw\/files\/details\/[^\/]+\/)[^\/]+\/\z/
     if regex =~ entry.guid
       match = regex.match entry.guid
       new_guid = match[1]
