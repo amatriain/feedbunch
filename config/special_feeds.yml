@@ -1,0 +1,3 @@
+# URLs of websites which feeds need special handling.
+# Each line must have the URL of the host and the special handling class for that feed.
+www.demonoid.pw: DemonoidFeedHandler

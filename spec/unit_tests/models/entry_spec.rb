@@ -478,41 +478,70 @@ describe Entry, type: :model do
       @special_feed_url = 'www.demonoid.pw'
 
       Rails.application.config.special_feeds = {}
-      Rails.application.config.special_feeds[@special_feed_url] = DemonoidFeedHandler.class.to_s
+      Rails.application.config.special_feeds[@special_feed_url] = DemonoidFeedHandler
     end
 
     context 'feeds that do not match list of special feeds' do
       before :each do
         @feed = FactoryGirl.create :feed
+        @entry = FactoryGirl.build :entry, feed_id: @feed.id
       end
 
       it 'does not pass entries to a handler' do
-        expect(DemonoidFeedHandler).not_to  receive :handle_entry
-        entry = FactoryGirl.build :entry, feed_id: @feed.id
-        @feed.entries << entry
+        expect(DemonoidFeedHandler).not_to receive :handle_entry
+        @feed.entries << @entry
       end
 
       it 'does not change entry guid before saving' do
-        entry = FactoryGirl.build :entry, feed_id: @feed.id
-        guid_before = entry.guid
+        guid_before = @entry.guid
 
-        @feed.entries << entry
-        entry.reload
+        @feed.entries << @entry
+        @entry.reload
 
-        expect(entry.guid).to eq guid_before
+        expect(@entry.guid).to eq guid_before
       end
     end
 
     context 'url matches list of special feeds' do
-      it 'passes entries from special feeds to the right handler'
+      before :each do
+        @guid_unchanged = 'http://www.demonoid.pw/files/details/3400534/0687950652/'
+        @guid_changed = 'http://www.demonoid.pw/files/details/3400534/'
+        @feed = FactoryGirl.create :feed, url: @special_feed_url
+        @entry = FactoryGirl.build :entry, feed_id: @feed.id, guid: @guid_unchanged
+      end
 
-      it 'changes entry guid before saving'
+      it 'passes entries from special feeds to the right handler' do
+        expect(DemonoidFeedHandler).to receive(:handle_entry).with @entry
+        @feed.entries << @entry
+      end
+
+      it 'changes entry guid before saving' do
+        expect(@entry.guid).to eq @guid_unchanged
+        @feed.entries << @entry
+        @entry.reload
+        expect(@entry.guid).to eq @guid_changed
+      end
     end
 
     context 'fetch_url matches list of special feeds' do
-      it 'passes entries from special feeds to the right handler'
+      before :each do
+        @guid_unchanged = 'http://www.demonoid.pw/files/details/3400534/0687950652/'
+        @guid_changed = 'http://www.demonoid.pw/files/details/3400534/'
+        @feed = FactoryGirl.create :feed, fetch_url: @special_feed_url
+        @entry = FactoryGirl.build :entry, feed_id: @feed.id, guid: @guid_unchanged
+      end
 
-      it 'changes entry guid before saving'
+      it 'passes entries from special feeds to the right handler' do
+        expect(DemonoidFeedHandler).to receive(:handle_entry).with @entry
+        @feed.entries << @entry
+      end
+
+      it 'changes entry guid before saving' do
+        expect(@entry.guid).to eq @guid_unchanged
+        @feed.entries << @entry
+        @entry.reload
+        expect(@entry.guid).to eq @guid_changed
+      end
     end
   end
 end

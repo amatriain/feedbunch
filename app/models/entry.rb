@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'encoding_manager'
+require 'special_feed_handling'
 
 ##
 # Feed entry model. Each instance of this class represents an entry in an RSS or Atom feed.
@@ -50,7 +51,7 @@ class Entry < ApplicationRecord
   validates :guid, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}
   validate :entry_not_deleted
 
-  before_validation :fix_attributes
+  before_validation :before_entry_validation
   after_create :set_unread_state
 
   ##
@@ -80,6 +81,14 @@ class Entry < ApplicationRecord
       Rails.logger.warn "Failed attempt to save already deleted entry - guid: #{self.try :guid}, published: #{self.try :published}, feed_id: #{self.feed_id}, feed title: #{self.feed.title}"
       errors.add :guid, 'entry already deleted'
     end
+  end
+
+  ##
+  # Before_validation callback for the Entry model
+
+  def before_entry_validation
+    fix_attributes
+    special_feed_handling
   end
 
   ##
@@ -229,6 +238,12 @@ class Entry < ApplicationRecord
 
   def fix_url
     self.url = URLNormalizer.normalize_entry_url self.url, self
+  end
+
+  ##
+  # Pass the entry to a special handler if the feed needs special handling
+  def special_feed_handling
+    SpecialFeedHandling.handle_entry self
   end
 
   ##
