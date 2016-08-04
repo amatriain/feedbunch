@@ -32,8 +32,8 @@ Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bo
 Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'favico.js')
 
 # Include Fontawesome assets in assets paths
-Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'font-awesome', 'fonts')
-Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'font-awesome', 'scss')
+Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'fontawesome', 'fonts')
+Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'fontawesome', 'scss')
 
 # Include Hopscotch assets in assets paths
 Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'hopscotch', 'dist', 'css')
