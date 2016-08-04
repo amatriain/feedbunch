@@ -189,6 +189,7 @@ describe 'authentication', type: :feature do
       it 'sends confirmation email to unconfirmed user', js: true do
         # sign up new user
         visit new_user_registration_path
+        close_cookies_alert
         new_email = 'new_email@test.com'
         new_password = 'new_password'
         user = FactoryGirl.build :user, email: new_email, password: new_password
