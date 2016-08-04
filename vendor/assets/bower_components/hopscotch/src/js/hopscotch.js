@@ -728,6 +728,7 @@
           totalStepsI18n,
           nextBtnText,
           isLast,
+          i,
           opts;
 
       // Cache current step information.
@@ -1942,8 +1943,12 @@
      * @returns {Object} Hopscotch
      */
     this.showStep = function(stepNum) {
-      var step = currTour.steps[stepNum];
+      var step = currTour.steps[stepNum],
+          prevStepNum = currStepNum;
       if(!utils.getStepTarget(step)) {
+        currStepNum = stepNum;
+        utils.invokeEventCallbacks('error');
+        currStepNum = prevStepNum;
         return;
       }
 
@@ -2126,7 +2131,7 @@
           len;
 
       for (i = 0, len = evtCallbacks.length; i < len; ++i) {
-        if (evtCallbacks[i] === cb) {
+        if (evtCallbacks[i].cb === cb) {
           evtCallbacks.splice(i, 1);
         }
       }

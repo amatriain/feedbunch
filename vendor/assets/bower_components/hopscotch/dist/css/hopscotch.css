@@ -1,6 +1,6 @@
-/**! hopscotch - v0.2.5
+/**! hopscotch - v0.2.6
 *
-* Copyright 2015 LinkedIn Corp. All rights reserved.
+* Copyright 2016 LinkedIn Corp. All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -405,7 +405,7 @@ div.hopscotch-bubble .hopscotch-bubble-close {
   appearance: none;
   border: 0;
   color: #000;
-  background: transparent url(<%= asset_path 'hopscotch/dist/img/sprite-green.png' %>) -192px -92px no-repeat;
+  background: transparent url(../img/sprite-green.png) -192px -92px no-repeat;
   display: block;
   padding: 8px;
   position: absolute;
@@ -421,7 +421,7 @@ div.hopscotch-bubble .hopscotch-bubble-close.hide-all {
   display: none;
 }
 div.hopscotch-bubble .hopscotch-bubble-number {
-  background: transparent url(<%= asset_path 'hopscotch/dist/img/sprite-green.png' %>) 0 0 no-repeat;
+  background: transparent url(../img/sprite-green.png) 0 0 no-repeat;
   color: #fff;
   display: block;
   float: left;

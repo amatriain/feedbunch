@@ -1,6 +1,6 @@
 {
   "name": "hopscotch",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A framework to make it easy for developers to add product tours to their pages.",
   "main": "dist/js/hopscotch.min.js",
   "directories": {
@@ -13,8 +13,11 @@
     "type": "git",
     "url": "git://github.com/linkedin/hopscotch.git"
   },
-  "author": "Gordon Koo",
-  "license": "Apache 2.0",
+  "author": {
+    "name": "Hopscotch's community of authors and contributors",
+    "url": "https://github.com/linkedin/hopscotch/graphs/contributors"
+  },
+  "license": "Apache-2.0",
   "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/linkedin/hopscotch/issues"
@@ -26,7 +29,7 @@
     "grunt-contrib-compress": "~0.6.0",
     "grunt-contrib-connect": "^0.9.0",
     "grunt-contrib-copy": "~0.5.0",
-    "grunt-contrib-jasmine": "^0.8.1",
+    "grunt-contrib-jasmine": "^0.9.2",
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-jst": "~0.6.0",
     "grunt-contrib-less": "~0.9.0",
