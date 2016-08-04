@@ -35,9 +35,17 @@ end
 # Return value is the href of the link if "path" option is passed, nil otherwise.
 
 def mail_should_be_sent(*text, path: nil, to: nil)
-  email = ActionMailer::Base.deliveries.pop
+  # Check up to 5 times if email has been sent, in case test runs too fast
+  email = nil
+  email_sent = false
+  (1..5).each do
+    email = ActionMailer::Base.deliveries.pop
+    email_sent = email.present?
+    break if email_sent
+    sleep 1
+  end
 
-  expect(email.present?).to be true
+  expect(email_sent).to be true
 
   if to.present?
     expect(email.to.first).to eq to
