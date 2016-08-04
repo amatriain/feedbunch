@@ -1,6 +1,6 @@
 {
   "name": "isInViewport",
-  "version": "2.3.1",
+  "version": "2.4.1",
   "homepage": "https://github.com/zeusdeux/isInViewport",
   "authors": [
     "Mudit Ameta <zeusdeux@gmail.com>"
@@ -28,13 +28,13 @@
     ".git*",
     "/**/*.dmp"
   ],
-  "_release": "2.3.1",
+  "_release": "2.4.1",
   "_resolution": {
     "type": "version",
-    "tag": "2.3.1",
-    "commit": "6f2fc98dc5ba74d3d736656b890a419c9f7e8f8d"
+    "tag": "2.4.1",
+    "commit": "c87096a571b446ae929dd1c45c22e32d4095eca7"
   },
-  "_source": "git://github.com/zeusdeux/isInViewport.git",
-  "_target": "2.3.1",
+  "_source": "https://github.com/zeusdeux/isInViewport.git",
+  "_target": "2.4.1",
   "_originalSource": "isInViewport"
 }
