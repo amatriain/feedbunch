@@ -1,8 +1,9 @@
-angular.module('infinite-scroll', [])
-  .value('THROTTLE_MILLISECONDS', null)
-  .directive 'infiniteScroll', [
-    '$rootScope', '$window', '$interval', 'THROTTLE_MILLISECONDS',
-($rootScope, $window, $interval, THROTTLE_MILLISECONDS) ->
+mod = angular.module('infinite-scroll', [])
+
+mod.value('THROTTLE_MILLISECONDS', null)
+
+mod.directive 'infiniteScroll', ['$rootScope', '$window', '$interval', 'THROTTLE_MILLISECONDS', \
+                                  ($rootScope, $window, $interval, THROTTLE_MILLISECONDS) ->
   scope:
     infiniteScroll: '&'
     infiniteScrollContainer: '='
@@ -88,11 +89,13 @@ angular.module('infinite-scroll', [])
         $interval.cancel(timeout)
         timeout = null
         func.call()
+        context = null
 
       return ->
         now = new Date().getTime()
         remaining = wait - (now - previous)
         if remaining <= 0
+          clearTimeout timeout
           $interval.cancel(timeout)
           timeout = null
           previous = now
@@ -107,8 +110,6 @@ angular.module('infinite-scroll', [])
       if unregisterEventListener?
         unregisterEventListener()
         unregisterEventListener = null
-      if checkInterval
-        $interval.cancel checkInterval
 
     # infinite-scroll-distance specifies how close to the bottom of the page
     # the window is allowed to be before we trigger a new scroll. The value
@@ -173,7 +174,7 @@ angular.module('infinite-scroll', [])
       if (not newContainer?) or newContainer.length == 0
         return
 
-      if newContainer.nodeType && newContainer.nodeType == 1
+      if newContainer instanceof HTMLElement
         newContainer = angular.element newContainer
       else if typeof newContainer.append == 'function'
         newContainer = angular.element newContainer[newContainer.length - 1]
@@ -183,7 +184,7 @@ angular.module('infinite-scroll', [])
       if newContainer?
         changeContainer newContainer
       else
-        throw new Error("invalid infinite-scroll-container attribute.")
+        throw new Exception("invalid infinite-scroll-container attribute.")
 
     scope.$watch 'infiniteScrollContainer', handleInfiniteScrollContainer
     handleInfiniteScrollContainer(scope.infiniteScrollContainer or [])
@@ -202,8 +203,5 @@ angular.module('infinite-scroll', [])
     checkInterval = $interval (->
       if immediateCheck
         handler()
-      $interval.cancel checkInterval
-    )
+    ), 0
 ]
-if typeof module != "undefined" && typeof exports != "undefined" && module.exports == exports
-  module.exports = 'infinite-scroll'

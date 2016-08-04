@@ -1,5 +1,11 @@
-/* ng-infinite-scroll - v1.3.0 - 2016-06-30 */
-angular.module('infinite-scroll', []).value('THROTTLE_MILLISECONDS', null).directive('infiniteScroll', [
+/* ng-infinite-scroll - v1.2.0 - 2015-12-02 */
+var mod;
+
+mod = angular.module('infinite-scroll', []);
+
+mod.value('THROTTLE_MILLISECONDS', null);
+
+mod.directive('infiniteScroll', [
   '$rootScope', '$window', '$interval', 'THROTTLE_MILLISECONDS', function($rootScope, $window, $interval, THROTTLE_MILLISECONDS) {
     return {
       scope: {
@@ -82,16 +88,19 @@ angular.module('infinite-scroll', []).value('THROTTLE_MILLISECONDS', null).direc
           timeout = null;
           previous = 0;
           later = function() {
+            var context;
             previous = new Date().getTime();
             $interval.cancel(timeout);
             timeout = null;
-            return func.call();
+            func.call();
+            return context = null;
           };
           return function() {
             var now, remaining;
             now = new Date().getTime();
             remaining = wait - (now - previous);
             if (remaining <= 0) {
+              clearTimeout(timeout);
               $interval.cancel(timeout);
               timeout = null;
               previous = now;
@@ -110,10 +119,7 @@ angular.module('infinite-scroll', []).value('THROTTLE_MILLISECONDS', null).direc
           container.unbind('scroll', handler);
           if (unregisterEventListener != null) {
             unregisterEventListener();
-            unregisterEventListener = null;
-          }
-          if (checkInterval) {
-            return $interval.cancel(checkInterval);
+            return unregisterEventListener = null;
           }
         });
         handleInfiniteScrollDistance = function(v) {
@@ -152,7 +158,7 @@ angular.module('infinite-scroll', []).value('THROTTLE_MILLISECONDS', null).direc
           if ((newContainer == null) || newContainer.length === 0) {
             return;
           }
-          if (newContainer.nodeType && newContainer.nodeType === 1) {
+          if (newContainer instanceof HTMLElement) {
             newContainer = angular.element(newContainer);
           } else if (typeof newContainer.append === 'function') {
             newContainer = angular.element(newContainer[newContainer.length - 1]);
@@ -162,7 +168,7 @@ angular.module('infinite-scroll', []).value('THROTTLE_MILLISECONDS', null).direc
           if (newContainer != null) {
             return changeContainer(newContainer);
           } else {
-            throw new Error("invalid infinite-scroll-container attribute.");
+            throw new Exception("invalid infinite-scroll-container attribute.");
           }
         };
         scope.$watch('infiniteScrollContainer', handleInfiniteScrollContainer);
@@ -175,15 +181,10 @@ angular.module('infinite-scroll', []).value('THROTTLE_MILLISECONDS', null).direc
         }
         return checkInterval = $interval((function() {
           if (immediateCheck) {
-            handler();
+            return handler();
           }
-          return $interval.cancel(checkInterval);
-        }));
+        }), 0);
       }
     };
   }
 ]);
-
-if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports) {
-  module.exports = 'infinite-scroll';
-}
