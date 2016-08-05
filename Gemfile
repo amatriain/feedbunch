@@ -64,7 +64,6 @@ gem 'nokogiri'
 gem 'sidekiq'
 gem 'sidekiq-cron'
 gem 'sidekiq-superworker'
-gem 'sidekiq-statistic'
 
 # Sinatra required for the Sidekiq web ui
 gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git'

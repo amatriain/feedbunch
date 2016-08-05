@@ -382,8 +382,6 @@ GEM
       redis-namespace (>= 1.5.2)
       rufus-scheduler (>= 2.0.24)
       sidekiq (>= 4.0.0)
-    sidekiq-statistic (1.2.0)
-      sidekiq (>= 3.3.4, < 5)
     sidekiq-superworker (1.2.0)
       activemodel (>= 3.2)
       activesupport (>= 3.2)
@@ -494,7 +492,6 @@ DEPENDENCIES
   show_me_the_cookies
   sidekiq
   sidekiq-cron
-  sidekiq-statistic
   sidekiq-superworker
   simple_form
   sinatra!
