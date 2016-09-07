@@ -177,7 +177,12 @@ class ResetDemoUserWorker
     # Subscribe to missing demo feeds
     not_subscribed_default_feeds.each do |feed|
       Rails.logger.debug "Subscribing demo user to missing default feed #{feed[:url]}"
-      subscribed_feed = demo_user.subscribe feed[:url]
+      begin
+        subscribed_feed = demo_user.subscribe feed[:url]
+      rescue AlreadySubscribedError => e
+        subscribed_feed = Feed.url_variants_feed feed[:url]
+      end
+
       # Insert the URL just subscribed in the array of already subscribed default feeds
       # This is normally the URL read from the config unless the feed has changed URL and a redirect is received
       # when subscribing; in this case the URL inserted in the array is the new URL.
