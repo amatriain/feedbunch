@@ -179,7 +179,7 @@ class SubscriptionsManager
   def self.check_user_unsubscribed (feed, user)
     if user_subscribed? feed, user
       Rails.logger.warn "User #{user.id} - #{user.id} tried to subscribe to feed #{feed.id} - #{feed.fetch_url} to which he is already subscribed"
-      raise AlreadySubscribedError.new
+      raise AlreadySubscribedError.new feed
     end
     return nil
   end

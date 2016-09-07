@@ -112,7 +112,7 @@ class URLSubscriber
       # Check if the user is already subscribed to the feed
       if user.feeds.include? known_feed
         Rails.logger.info "User #{user.id} (#{user.email}) is already subscribed to feed #{known_feed.id} - #{known_feed.fetch_url}"
-        raise AlreadySubscribedError.new
+        raise AlreadySubscribedError.new known_feed
       end
       Rails.logger.info "Subscribing user #{user.id} (#{user.email}) to pre-existing feed #{known_feed.id} - #{known_feed.fetch_url}"
       SubscriptionsManager.add_subscription known_feed, user
@@ -146,7 +146,7 @@ class URLSubscriber
         if user.feeds.include? fetched_feed
           # Only subscribe user to the actually fetched feed if he's not already subscribed
           Rails.logger.info "Fetched feed #{feed_url} was already subscribed by user #{user.id} - #{user.email}"
-          raise AlreadySubscribedError.new
+          raise AlreadySubscribedError.new fetched_feed
         else
           Rails.logger.info "New feed #{feed_url} successfully fetched. Subscribing user #{user.id} - #{user.email}"
           SubscriptionsManager.add_subscription fetched_feed, user

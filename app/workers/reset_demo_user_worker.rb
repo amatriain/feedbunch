@@ -180,7 +180,7 @@ class ResetDemoUserWorker
       begin
         subscribed_feed = demo_user.subscribe feed[:url]
       rescue AlreadySubscribedError => e
-        subscribed_feed = Feed.url_variants_feed feed[:url]
+        subscribed_feed = e.feed
       end
 
       # Insert the URL just subscribed in the array of already subscribed default feeds
