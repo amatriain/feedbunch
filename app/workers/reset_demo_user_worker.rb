@@ -25,7 +25,6 @@ class ResetDemoUserWorker
     @demo_timezone = Feedbunch::Application.config.time_zone
     @demo_quick_reading = Feedbunch::Application.config.demo_quick_reading
     @demo_open_all_entries = Feedbunch::Application.config.demo_open_all_entries
-    @demo_feeds_and_folders = Feedbunch::Application.config.demo_subscriptions
   end
 
   ##
@@ -121,98 +120,94 @@ class ResetDemoUserWorker
   def reset_feeds_and_folders(demo_user)
     Rails.logger.debug 'Resetting feeds and folders for the demo user'
 
-    demo_feed_urls = demo_subscriptions_list
-    reset_feed_subscriptions demo_user, demo_feed_urls
-
-    reset_entries demo_user, demo_feed_urls
-
+    subscribed_feeds = reset_feed_subscriptions demo_user
+    reset_entries demo_user, subscribed_feeds
     reset_folders demo_user
 
     # Finally move feeds to their right folders
-    @demo_feeds_and_folders.keys.each do |folder_title|
-      # the special value "NO FOLDER" is not an actual folder, skip it
-      if folder_title != Folder::NO_FOLDER
-        folder = demo_user.folders.find_by_title folder_title
+    subscribed_feeds.each do |f|
+      feed = Feed.url_variants_feed f[:url]
 
-        @demo_feeds_and_folders[folder_title].each do |feed_url|
-          feed = Feed.url_variants_feed feed_url
-
-          # Only move feed to different folder if necessary
-          current_folder = feed.user_folder demo_user
-          if current_folder != folder
-            Rails.logger.debug "Demo user - moving feed #{feed.id} - #{feed.fetch_url} to folder #{folder_title}"
-            folder.feeds << feed unless folder.blank?
-          else
-            Rails.logger.debug "Demo user - feed #{feed.fetch_url} is already in default folder #{folder_title}"
-          end
-        end
+      if f[:folder] == Folder::NO_FOLDER
+        folder = Folder::NO_FOLDER
+      else
+        folder = demo_user.folders.find_by_title f[:folder]
       end
+
+      demo_user.move_feed_to_folder feed, folder: folder
     end
-  end
-
-  ##
-  # From the feeds/folders hash stored in the @demo_feeds_and_folders variable, returns a flat array with
-  # the feed URLs the demo user should be subscribed to.
-
-  def demo_subscriptions_list
-    return @demo_feeds_and_folders.values.flatten
   end
 
   ##
   # Subscribe demo user to any feeds missing from the defaults, and unsubscribe from any feeds not in the defaults.
-  # Receives as arguments the demo user and an array with the default feed URLs.
+  # Receives as arguments the demo user.
   # After this method is finished, it is guaranteed that the demo user is subscribed exactly to the default feeds.
   # However it is not guaranteed that feeds are in the correct folders.
+  #
+  # Returns the list of feeds actually subscribed by the demo user after resetting; it may not match exactly
+  # the configured list because some feeds may have changed URL (with a redirect to the new URL). In this case
+  # the new URL, which is the one actually subscribed, is in the list instead of the one in the config.
+  # The returned list is an array of hashes of the form {folder: XX, url: XX}, where folder: is the folder in which
+  # the config indicates the feed should be, and url: is the actual subscribed URL for the feed.
 
-  def reset_feed_subscriptions(demo_user, demo_feed_urls)
-    already_subscribed_default_urls = []
-    not_subscribed_default_urls = []
+  def reset_feed_subscriptions(demo_user)
+    already_subscribed_default_feeds = []
+    not_subscribed_default_feeds = []
 
-    # Find out which of the default feed urls are already subscribed by the demo user, and which ones are not
-    demo_feed_urls.each do |url|
-      feed = Feed.url_variants_feed url
-      if feed.present?
-        subscribed_feed = demo_user.feeds.find_by id: feed.id
-        if subscribed_feed.present?
-          Rails.logger.debug "Demo user already subscribed to feed #{url}"
-          already_subscribed_default_urls << subscribed_feed.fetch_url
+    Feedbunch::Application.config.demo_subscriptions.keys.each do |folder|
+      Feedbunch::Application.config.demo_subscriptions[folder].each do |url|
+        # Find out which of the default feed urls are already subscribed by the demo user, and which ones are not
+        feed = Feed.url_variants_feed url
+        if feed.present?
+          subscribed_feed = demo_user.feeds.find_by id: feed.id
+          if subscribed_feed.present?
+            Rails.logger.debug "Demo user already subscribed to feed #{url}"
+            already_subscribed_default_feeds << {folder: folder, url: subscribed_feed.fetch_url}
+          else
+            Rails.logger.debug "Demo user not subscribed to existing feed #{url}"
+            not_subscribed_default_feeds << {folder: folder, url: url}
+          end
         else
-          Rails.logger.debug "Demo user not subscribed to existing feed #{url}"
-          not_subscribed_default_urls << url
+          Rails.logger.debug "Demo feed #{url} does not exist in the database"
+          not_subscribed_default_feeds << {folder: folder, url: url}
         end
-      else
-        Rails.logger.debug "Demo feed #{url} does not exist in the database"
-        not_subscribed_default_urls << url
       end
+    end
+
+    # Subscribe to missing demo feeds
+    not_subscribed_default_feeds.each do |feed|
+      Rails.logger.debug "Subscribing demo user to missing default feed #{feed[:url]}"
+      subscribed_feed = demo_user.subscribe feed[:url]
+      # Insert the URL just subscribed in the array of already subscribed default feeds
+      # This is normally the URL read from the config unless the feed has changed URL and a redirect is received
+      # when subscribing; in this case the URL inserted in the array is the new URL.
+      already_subscribed_default_feeds << {folder: feed[:folder], url: subscribed_feed.fetch_url}
     end
 
     # Unsubscribe feeds not in the list of demo feed urls
     demo_user.feeds.find_each do |feed|
-      unless already_subscribed_default_urls.include? feed.fetch_url
+      unless already_subscribed_default_feeds.map{|f| f[:url]}.include? feed.fetch_url
         Rails.logger.debug "Unsubscribing demo user from feed not in defaults: #{feed.id} - #{feed.fetch_url}"
         demo_user.unsubscribe feed
       end
     end
 
-    # Subscribe to missing demo feeds
-    not_subscribed_default_urls.each do |url|
-      Rails.logger.debug "Subscribing demo user to missing default feed #{url}"
-      demo_user.subscribe url
-    end
+    return already_subscribed_default_feeds
   end
 
   ##
   # Mark all entries in all demo feeds as unread for the demo user.
   # Also update the unread count in the subscription so that the correct count is displayed in the sidebar.
-  # Receives as arguments the demo user and an array with the default feed URLs.
+  # Receives as arguments the demo user and an of hashes with the feeds subscribed by the demo user, in the
+  # form returned by #reset_feed_subscriptions.
 
-  def reset_entries(demo_user, demo_feed_urls)
+  def reset_entries(demo_user, demo_feeds)
     # Mark all entries as unread
     demo_user.entry_states.update_all read: false
 
     # Update unread count in subscriptions where necessary
-    demo_feed_urls.each do |url|
-      feed = Feed.url_variants_feed url
+    demo_feeds.each do |f|
+      feed = Feed.url_variants_feed f[:url]
       SubscriptionsManager.recalculate_unread_count feed, demo_user
     end
   end
@@ -226,7 +221,7 @@ class ResetDemoUserWorker
     not_existing_default_folders = []
 
     # Find out which folders are already created and which ones are not
-    @demo_feeds_and_folders.keys.each do |folder_title|
+    Feedbunch::Application.config.demo_subscriptions.keys.each do |folder_title|
       # the special value "NO FOLDER" is not an actual folder, skip it
       if folder_title != Folder::NO_FOLDER
         if demo_user.folders.find_by(title: folder_title).present?

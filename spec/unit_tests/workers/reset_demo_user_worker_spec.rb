@@ -256,6 +256,37 @@ describe ResetDemoUserWorker do
             expect(@demo_user.folder_feeds(folder, include_read: true).map {|f| f.fetch_url}).to match_array default_subscriptions[folder_title]
           end
         end
+
+        it 'follows redirections in default feeds' do
+          default_subscriptions = Feedbunch::Application.config.demo_subscriptions
+          old_url = default_subscriptions.values.flatten.first
+          new_url = 'http://new.feed.url.com/'
+          @demo_user.subscribe new_url
+
+          # A default feed has changed URL from old_url to new_url, with a redirect in place.
+          # When subscribing to old_url, user ends up subscribed to new_url instead because of the redirect.
+          allow_any_instance_of(User).to receive :subscribe do |user, url|
+            if url == old_url
+              feed = Feed.find_by fetch_url: new_url
+            elsif Feed.exists? fetch_url: url
+              feed = Feed.find_by fetch_url: url
+            else
+              feed = FactoryGirl.create :feed, fetch_url: url
+            end
+            subscription = FactoryGirl.build :feed_subscription,
+                                             user_id: user.id,
+                                             feed_id: feed.id
+            user.feed_subscriptions << subscription
+            feed
+          end
+
+          # Demo user is subscribed to new_url but old_url is in config, after worker runs it should stay
+          # subscribed to new_url
+          ResetDemoUserWorker.new.perform
+          subscribed_urls = @demo_user.feeds.map{|f| f.fetch_url}
+          expect(subscribed_urls).to include new_url
+          expect(subscribed_urls).not_to include old_url
+        end
       end
 
       context 'reset entries' do
