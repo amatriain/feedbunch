@@ -232,7 +232,7 @@ GEM
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
-    nokogumbo (1.4.7)
+    nokogumbo (1.4.9)
       nokogiri
     orm_adapter (0.5.0)
     ox (2.4.5)
@@ -334,7 +334,7 @@ GEM
     ruby-prof (0.16.2)
     rubyzip (1.2.0)
     rufus-scheduler (3.1.10)
-    sanitize (4.1.0)
+    sanitize (4.2.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
       nokogumbo (~> 1.4.1)
