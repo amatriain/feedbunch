@@ -67,7 +67,6 @@ gem 'sidekiq-superworker'
 
 # Sinatra required for the Sidekiq web ui
 gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git'
-gem 'rack-protection', git: 'https://github.com/sinatra/rack-protection.git'
 
 # Web GUI for Redis instances
 gem 'redmon', require: false
