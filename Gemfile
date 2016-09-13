@@ -69,7 +69,7 @@ gem 'sidekiq-superworker'
 gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git'
 
 # Web GUI for Redis instances
-gem 'redmon', require: false
+gem 'redmon', '0.0.10', require: false
 
 # Authorization management
 gem 'cancancan'
