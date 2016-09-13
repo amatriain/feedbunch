@@ -16,7 +16,8 @@ angular.module('feedbunch').service 'socialNetworksSvc',
   # Share an entry on Google+
   #---------------------------------------------
   share_gplus_entry: (entry)->
-    window.open "https://plus.google.com/share?url=#{entry.url}",'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600'
+    newWindow = window.open "https://plus.google.com/share?url=#{entry.url}",'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600'
+    newWindow.opener = null
 
   #---------------------------------------------
   # Share an entry on Linkedin
@@ -40,5 +41,6 @@ angular.module('feedbunch').service 'socialNetworksSvc',
     else
       summary=''
 
-    window.open "http://www.linkedin.com/shareArticle?mini=true&url=#{url}&title=#{title}&summary=#{summary}&source=#{source}",'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=570,width=520'
+    newWindow = window.open "http://www.linkedin.com/shareArticle?mini=true&url=#{url}&title=#{title}&summary=#{summary}&source=#{source}",'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=570,width=520'
+    newWindow.opener = null
 ]
