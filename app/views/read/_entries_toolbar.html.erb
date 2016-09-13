@@ -37,28 +37,28 @@
 
       <li>
         <a href="https://twitter.com/intent/tweet?url={{entry.url}}&via=feedbunch&text={{entry.title}}"
-           target="_blank">
+           target="_blank" rel="noopener noreferrer">
           <i class="fa fa-fw fa-twitter"></i>&nbsp;<%= t 'read.entries.share_twitter' %>
         </a>
       </li>
 
       <li>
         <a ng-click="share_facebook_entry(entry)"
-           target="_blank">
+           target="_blank" rel="noopener noreferrer">
           <i class="fa fa-fw fa-facebook"></i>&nbsp;<%= t 'read.entries.share_facebook' %>
         </a>
       </li>
 
       <li>
         <a ng-click="share_gplus_entry(entry)"
-           target="_blank">
+           target="_blank" rel="noopener noreferrer">
           <i class="fa fa-fw fa-google-plus"></i>&nbsp;<%= t 'read.entries.share_gplus' %>
         </a>
       </li>
 
       <li>
         <a ng-click="share_linkedin_entry(entry)"
-           target="_blank">
+           target="_blank" rel="noopener noreferrer">
           <i class="fa fa-fw fa-linkedin"></i>&nbsp;<%= t 'read.entries.share_linkedin' %>
         </a>
       </li>

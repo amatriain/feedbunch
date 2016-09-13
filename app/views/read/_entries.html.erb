@@ -62,6 +62,7 @@
              ng-class="{entry_open_lead: is_entry_open(entry)}">
           <a href="{{entry.url}}"
              target="_blank"
+             rel="noopener noreferrer"
              data-toggle="tooltip" data-placement="top"
              title="<%= t 'read.entries.title_tooltip' %>"
              ng-bind-html="entry.title">

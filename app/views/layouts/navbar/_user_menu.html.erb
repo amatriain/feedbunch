@@ -20,7 +20,7 @@
 
         <% if can? :manage, ActiveAdmin %>
           <li>
-            <%= link_to '/admin', target: '_blank' do %>
+            <%= link_to '/admin', target: '_blank', rel: 'noopener noreferrer' do %>
               <i class="fa fa-wrench fa-fw"></i>
               <%= t 'layouts.navbar.admin' %>
             <% end %>
@@ -29,7 +29,7 @@
 
         <% if can? :manage, PgHero %>
           <li>
-            <%= link_to '/pghero', target: '_blank' do %>
+            <%= link_to '/pghero', target: '_blank', rel: 'noopener noreferrer' do %>
               <i class="fa fa-database fa-fw"></i>
               <%= t 'layouts.navbar.db_stats' %>
             <% end %>
@@ -38,7 +38,7 @@
 
         <% if can? :manage, Redmon %>
           <li>
-            <%= link_to '/redmon', target: '_blank' do %>
+            <%= link_to '/redmon', target: '_blank', rel: 'noopener noreferrer' do %>
               <i class="fa fa-area-chart fa-fw"></i>
               <%= t 'layouts.navbar.cache_stats' %>
             <% end %>
@@ -47,7 +47,7 @@
 
         <% if can? :manage, Sidekiq %>
           <li>
-            <%= link_to sidekiq_web_path, target: '_blank' do %>
+            <%= link_to sidekiq_web_path, target: '_blank', rel: 'noopener noreferrer' do %>
               <i class="fa fa-code-fork fa-fw"></i>
               <%= t 'layouts.navbar.background_jobs' %>
             <% end %>
