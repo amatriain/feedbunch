@@ -4,7 +4,7 @@
 
 module = angular.module 'feedbunch', ['infinite-scroll', 'ngSanitize', 'ngTouch']
 
-module.config ["$httpProvider", ($httpProvider)->
+module.config ["$httpProvider", "$compileProvider", ($httpProvider, $compileProvider)->
   # Configure $http service to send the CSRF-prevention token expected by rails,
   # otherwise POST, DELETE etc requests will be rejected.
   # Angularjs reads the CSRF token from the "XSRF-TOKEN" cookie by default. It sends it back in the
@@ -21,4 +21,8 @@ module.config ["$httpProvider", ($httpProvider)->
       else
         return $q.reject rejection
   ]
+  
+  # Disable debug info from app. This removes ng-scope and ng-isolated-scope classes needed by some
+  # debuggers, along with the performance hit of adding and removing these clases dynamically.
+  $compileProvider.debugInfoEnabled false
 ]
