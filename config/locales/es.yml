@@ -81,7 +81,7 @@ es:
       img_credit: "Logo"
       by: "por"
       and: "y"
-      bg_image: "Imagen de fondo"
+      bg_image: "imagen de fondo"
       bootstrap_license: "Licencia MIT"
       angularjs_license: "Licencia MIT"
       rails_license: "Licencia MIT"

@@ -102,7 +102,7 @@ en:
       img_credit: "Logo"
       by: "by"
       and: "and"
-      bg_image: "Background image"
+      bg_image: "background image"
       bootstrap_license: "MIT license"
       angularjs_license: "MIT license"
       rails_license: "MIT license"
