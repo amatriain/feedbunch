@@ -20,7 +20,7 @@ Feedbunch::Application.config.demo_open_all_entries = false
 # - each value is an array containing the fetch_urls of the feeds in the folder
 # As a special case, a key can be Folder::NO_FOLDER. In this case the value is an array
 # containing the fetch_urls of the subscribed feeds which aren't in a folder.
-no_folder_feeds = %w(http://google-opensource.blogspot.com/
+no_folder_feeds = %w(http://opensource.googleblog.com/
                       http://clarkesworldmagazine.com/feed/)
 comic_feeds = %w(http://xkcd.com/atom.xml
                   http://pbfcomics.com/feed/feed.xml
