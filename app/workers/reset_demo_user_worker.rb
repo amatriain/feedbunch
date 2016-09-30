@@ -1,3 +1,5 @@
+require 'subscriptions_manager'
+
 ##
 # Background worker to create the demo user (if it doesn't exist yet) and reset its configuration, folders and
 # subscribed feeds.

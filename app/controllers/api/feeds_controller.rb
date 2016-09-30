@@ -1,3 +1,5 @@
+require 'etag_calculator'
+
 ##
 # Controller to access the Feed model.
 

@@ -1,3 +1,5 @@
+require 'etag_calculator'
+
 ##
 # Controller to query the state of RefreshFeedWorker instances enqued for the user.
 

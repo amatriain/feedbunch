@@ -1,3 +1,5 @@
+require 'encoding_manager'
+
 ##
 # Class to save or update in the database a collection of entries fetched from a feed.
 

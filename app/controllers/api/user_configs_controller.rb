@@ -1,3 +1,5 @@
+require 'etag_calculator'
+
 ##
 # Controller to retrieve configuration for the current user
 

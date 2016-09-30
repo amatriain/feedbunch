@@ -1,4 +1,6 @@
 require 'subscriptions_manager'
+require 'feed_blacklister'
+require 'url_normalizer'
 
 ##
 # This class has methods to subscribe a user to a feed.

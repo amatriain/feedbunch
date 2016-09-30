@@ -1,3 +1,5 @@
+require 'url_normalizer'
+
 ##
 # Class to determine if a feed is in the blacklist or not.
 

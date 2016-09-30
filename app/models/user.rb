@@ -5,6 +5,7 @@ require 'entry_state_manager'
 require 'entries_pagination'
 require 'feeds_pagination'
 require 'opml_importer'
+require 'opml_exporter'
 require 'subscriptions_manager'
 require 'etag_calculator'
 

@@ -1,3 +1,5 @@
+require 'opml_exporter'
+
 ##
 # OpmlExportJobState model. Each instance of this class represents an ocurrence of a user exporting subscription data
 # in OPML format.

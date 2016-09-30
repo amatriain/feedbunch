@@ -1,3 +1,5 @@
+require 'url_normalizer'
+
 ##
 # Class to handle feeds that need special handling.
 # The handling for each particular special feed is delegated to a specific class that implements the particular handling.

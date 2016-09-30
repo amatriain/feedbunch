@@ -1,3 +1,5 @@
+require 'subscriptions_manager'
+
 ##
 # Background job for user-requested updates to a feed.
 #

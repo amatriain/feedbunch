@@ -1,3 +1,5 @@
+require 'etag_calculator'
+
 ##
 # Controller to retrieve data for the current user
 

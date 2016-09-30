@@ -1,3 +1,6 @@
+require 'opml_import_notifier'
+require 'opml_importer'
+
 ##
 # Background job to import an OPML data file with subscriptions data for a user.
 # After processing the OPML file it enqueues a superworker (using the sidekiq-superworker gem) to import each feed in

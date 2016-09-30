@@ -3,6 +3,7 @@ require 'addressable/uri'
 require 'encoding_manager'
 require 'schedule_manager'
 require 'feed_blacklister'
+require 'url_normalizer'
 
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which users can be suscribed.

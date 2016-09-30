@@ -1,3 +1,6 @@
+require 'etag_calculator'
+require 'opml_exporter'
+
 ##
 # Controller to export subscriptions data
 

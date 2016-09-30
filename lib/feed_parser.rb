@@ -1,4 +1,5 @@
 require 'entry_manager'
+require 'encoding_manager'
 
 ##
 # Class to parse a fetched feed.

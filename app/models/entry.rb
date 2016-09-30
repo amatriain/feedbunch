@@ -1,6 +1,7 @@
 require 'nokogiri'
 require 'encoding_manager'
 require 'special_feed_handling'
+require 'url_normalizer'
 
 ##
 # Feed entry model. Each instance of this class represents an entry in an RSS or Atom feed.
