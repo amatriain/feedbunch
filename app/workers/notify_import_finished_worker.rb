@@ -1,3 +1,5 @@
+require 'opml_import_notifier'
+
 ##
 # Background job to send a notification email to the user when an opml import finishes.
 #
