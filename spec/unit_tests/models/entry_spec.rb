@@ -152,6 +152,20 @@ describe Entry, type: :model do
       expect(entry.summary).to eq sanitized_summary
     end
 
+    it 'sanitizes content with mismatched style tags' do
+      unsanitized_content = '<p><style>div{background-color: #e1f5fe;}</p><p>div.none {hyphens: none;}</style></p>content'
+      sanitized_content = '<p></p>content'
+      entry = FactoryGirl.create :entry, content: unsanitized_content
+      expect(entry.content).to eq sanitized_content
+    end
+
+    it 'sanitizes summary with mismatched style tags' do
+      unsanitized_summary = '<p><style>div{background-color: #e1f5fe;}</p><p>div.none {hyphens: none;}</style></p>content'
+      sanitized_summary = '<p></p>content'
+      entry = FactoryGirl.create :entry, summary: unsanitized_summary
+      expect(entry.summary).to eq sanitized_summary
+    end
+
     it 'sanitizes guid' do
       unsanitized_guid = '<script>alert("pwned!");</script>guid'
       sanitized_guid = 'guid'

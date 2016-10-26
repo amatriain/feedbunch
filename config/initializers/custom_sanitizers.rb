@@ -8,9 +8,15 @@ require 'sanitize'
 
 # RELAXED SANITIZER
 
-attributes = Sanitize::Config::RELAXED[:attributes]
+# Deep copy of the elements hash, otherwise it cannot be modified (Sanitize freezes the original hash)
+elements = Sanitize::Config::RELAXED[:elements]
+elements = elements.deep_dup
+
+# Style element is not allowed
+elements.delete 'style'
 
 # Deep copy of the attributes hash, otherwise it cannot be modified (Sanitize freezes the original hash)
+attributes = Sanitize::Config::RELAXED[:attributes]
 attributes = attributes.deep_dup
 
 # "style", "class", "hidden" attributes are not allowed for any element
@@ -42,6 +48,7 @@ attributes = attributes.merge({'a' => ['target']}) {|key, oldval, newval| oldval
 
 Feedbunch::Application.config.relaxed_sanitizer = Sanitize::Config.merge Sanitize::Config::RELAXED,
                                         remove_contents: true,
+                                        elements: elements,
                                         attributes: attributes
 
 # RESTRICTED SANITIZER
