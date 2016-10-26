@@ -347,7 +347,7 @@ GEM
     ruby-prof (0.16.2)
     rubyzip (1.2.0)
     rufus-scheduler (3.2.2)
-    sanitize (4.2.0)
+    sanitize (4.4.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
       nokogumbo (~> 1.4.1)
