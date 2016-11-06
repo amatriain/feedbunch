@@ -15,7 +15,7 @@ gem 'uglifier'
 gem 'jquery-rails'
 
 # Integrate bower (frontend package manager) with rails
-gem 'bower-rails', '~> 0.10.0'
+gem 'bower-rails', '~> 0.11.0'
 
 # Ruby profiling
 gem 'ruby-prof'
