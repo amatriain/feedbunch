@@ -34,6 +34,7 @@ favicoSvc, startPageSvc, jobStateSvc)->
         timerFlagSvc.start 'error_subscribing'
       else if e.data.operation == UNSUBSCRIBE
         timerFlagSvc.start 'error_unsubscribing'
+    $rootScope.$digest()
 
   #---------------------------------------------
   # PRIVATE FUNCTION: Operations after successfully unbuscribing a feed

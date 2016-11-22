@@ -35,7 +35,6 @@ angular.module('feedbunch').service 'tourSvc',
         tour_loaded e.data.response
       else if e.data.operation == RESET_TOURS
         timerFlagSvc.start 'success_reset_tours'
-        $rootScope.$digest()
     else if e.data.status == 401 || e.data.status == 422
       $window.location.href = '/login'
     else
@@ -45,6 +44,7 @@ angular.module('feedbunch').service 'tourSvc',
         timerFlagSvc.start 'error_changing_show_tour'
       else if e.data.operation == RESET_TOURS
         timerFlagSvc.start 'error_changing_show_tour'
+    $rootScope.$digest()
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Operations after a tour has been loaded

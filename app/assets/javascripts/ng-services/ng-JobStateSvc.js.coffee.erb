@@ -41,6 +41,7 @@ angular.module('feedbunch').service 'jobStateSvc',
         timerFlagSvc.start 'error_loading_job_states'
       else if e.data.operation == LOAD_SINGLE_SUBSCRIBE_JOB_STATE
         timerFlagSvc.start 'error_subscribing'
+    $rootScope.$digest()
 
   #---------------------------------------------
   # PRIVATE FUNCTION: Operations after all subscribe job states have been loaded

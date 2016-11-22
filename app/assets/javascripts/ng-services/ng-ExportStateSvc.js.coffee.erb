@@ -26,6 +26,7 @@ angular.module('feedbunch').service 'exportStateSvc',
     else
       if e.data.operation == LOAD_JOB_STATE
         timerFlagSvc.start 'error_exporting'
+    $rootScope.$digest()
 
   #---------------------------------------------
   # PRIVATE FUNCTION: Operations after the export job state has been loaded

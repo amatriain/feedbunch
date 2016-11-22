@@ -30,6 +30,7 @@ lazyLoadingSvc, tourSvc, animationsSvc, menuCollapseSvc, csrfTokenSvc)->
       $window.location.href = '/login'
     else
       timerFlagSvc.start 'error_changing_entry_state'
+    $rootScope.$digest()
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Operations to perform after a single entry has changed state

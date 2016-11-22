@@ -19,6 +19,7 @@ angular.module('feedbunch').service 'refreshFeedSvc',
     else
       startPageSvc.show_start_page()
       timerFlagSvc.start 'error_refreshing_feed'
+    $rootScope.$digest()
 
   service =
 

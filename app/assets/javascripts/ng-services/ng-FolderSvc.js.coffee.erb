@@ -39,6 +39,7 @@ loadFoldersSvc, unreadCountSvc, findSvc)->
         timerFlagSvc.start 'error_managing_folders'
       else if e.data.operation == MOVE_INTO_NEW_FOLDER
         timerFlagSvc.start 'error_creating_folder'
+    $rootScope.$digest()
 
   #---------------------------------------------
   # PRIVATE FUNCTION: Operations after a feed has been removed from its folder

@@ -19,6 +19,7 @@ angular.module('feedbunch').service 'loadFoldersSvc',
     else
       $rootScope.folders_loaded = true
       timerFlagSvc.start 'error_loading_folders'
+    $rootScope.$digest()
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Operations after folders have been loaded

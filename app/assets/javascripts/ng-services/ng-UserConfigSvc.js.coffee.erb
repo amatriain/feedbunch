@@ -18,6 +18,7 @@ angular.module('feedbunch').service 'userConfigSvc',
       $window.location.href = '/login'
     else
       timerFlagSvc.start 'error_loading_user_config'
+    $rootScope.$digest()
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Operations after user config has been loaded

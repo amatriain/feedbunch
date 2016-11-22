@@ -18,6 +18,7 @@ angular.module('feedbunch').service 'userDataSvc',
       $window.location.href = '/login'
     else
       timerFlagSvc.start 'error_loading_user_data'
+    $rootScope.$digest()
 
   service =
 

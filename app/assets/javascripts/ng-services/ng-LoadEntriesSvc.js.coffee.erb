@@ -36,6 +36,7 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
         feed_entries_loading_error e.data.params, e.data.status
       else if e.data.operation == LOAD_FOLDER_ENTRIES
         folder_entries_loading_error e.data.params, e.data.status
+    $rootScope.$digest()
 
   #--------------------------------------------
   # PRIVATE FUNCTION: Operations after entries of a feed have been loaded
