@@ -3,8 +3,8 @@
 ########################################################
 
 angular.module('feedbunch').service 'invitationsSvc',
-['csrfTokenSvc', 'timerFlagSvc',
-(csrfTokenSvc, timerFlagSvc)->
+['csrfTokenSvc', 'timerFlagSvc', '$rootScope',
+(csrfTokenSvc, timerFlagSvc, $rootScope)->
 
   # CSRF token for POST
   token = csrfTokenSvc.get_token()
@@ -26,6 +26,7 @@ angular.module('feedbunch').service 'invitationsSvc',
       timerFlagSvc.start 'no_invitations_left'
     else
       timerFlagSvc.start 'error_sending_invitation'
+    $rootScope.$digest()
 
   service =
 
