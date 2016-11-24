@@ -1,8 +1,5 @@
 # Custom sanitizers, saved in config during initialization to avoid rebuilding them every time they are needed.
 # - relaxed sanitizer: lets safe markup pass. Use it for html fragments (e.g. entry contents)
-# - restricted sanitizer: more strict, use it for untrusted content that should not contain html (e.g. feed titles)
-#
-# The content of any tags stripped by the sanitizer is also removed.
 
 require 'sanitize'
 
@@ -50,8 +47,3 @@ Feedbunch::Application.config.relaxed_sanitizer = Sanitize::Config.merge Sanitiz
                                         remove_contents: true,
                                         elements: elements,
                                         attributes: attributes
-
-# RESTRICTED SANITIZER
-
-Feedbunch::Application.config.restricted_sanitizer = Sanitize::Config.merge Sanitize::Config::RESTRICTED,
-                                           :remove_contents => true
