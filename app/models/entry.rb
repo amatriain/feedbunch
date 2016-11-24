@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'encoding_manager'
 require 'special_feed_handling'
 require 'url_normalizer'
+require 'sanitizer'
 
 ##
 # Feed entry model. Each instance of this class represents an entry in an RSS or Atom feed.
@@ -140,18 +141,15 @@ class Entry < ApplicationRecord
   # Better paranoid than sorry!
 
   def sanitize_attributes
-    config_relaxed = Feedbunch::Application.config.relaxed_sanitizer
-    config_restricted = Feedbunch::Application.config.restricted_sanitizer
+    # Summary, content are sanitized with an HTML sanitizer, we want imgs etc to be present.
+    # Other attributes are sanitized by stripping tags, they should be plain text.
+    self.content = Sanitizer.sanitize_html self.content
+    self.summary = Sanitizer.sanitize_html self.summary
 
-    # Summary, content are sanitized with relaxed config, we want imgs etc to be present.
-    # Other attributes are sanitized with restricted config, they should be plain text.
-    self.title = Sanitize.fragment self.title, config_restricted
-    self.author = Sanitize.fragment self.author, config_restricted
-    self.content = Sanitize.fragment self.content, config_relaxed
-    self.summary = Sanitize.fragment self.summary, config_relaxed
-    self.guid = Sanitize.fragment self.guid, config_restricted
-    # Unescape HTML entities in the URL escaped by the sanitizer
-    self.url = CGI.unescapeHTML(Sanitize.fragment self.url, config_restricted)
+    self.title = Sanitizer.sanitize_plaintext self.title
+    self.author = Sanitizer.sanitize_plaintext self.author
+    self.guid = Sanitizer.sanitize_plaintext self.guid
+    self.url = Sanitizer.sanitize_plaintext self.url
   end
 
   ##
