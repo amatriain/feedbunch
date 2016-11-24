@@ -4,6 +4,7 @@ require 'encoding_manager'
 require 'schedule_manager'
 require 'feed_blacklister'
 require 'url_normalizer'
+require 'sanitizer'
 
 ##
 # Feed model. Each instance of this model represents a single feed (Atom, RSS...) to which users can be suscribed.
@@ -199,7 +200,7 @@ class Feed < ApplicationRecord
   # Various operations before each validation:
   # - fix any encoding problems, converting to utf-8 if necessary
   # - set default values for missing attributes
-  # - sanitize values, removing script tags from entry bodies etc.
+  # - sanitize values, removing script tags from titles etc.
   # - encode any invalid characters in url and fetch_url
   # - check if the feed url or fetch_url is blacklisted, and if so a BlacklistedUrlError is raised
 
@@ -242,13 +243,9 @@ class Feed < ApplicationRecord
   # the update only for that attribute and keep the old value.
 
   def sanitize_attributes
-    config = Feedbunch::Application.config.restricted_sanitizer
-
-    self.title = Sanitize.fragment(self.title, config)&.strip
-
-    # Unescape HTML entities in the URL escaped by the sanitizer
-    self.fetch_url = CGI.unescapeHTML(Sanitize.fragment(self.fetch_url, config)&.strip)
-    self.url = CGI.unescapeHTML(Sanitize.fragment(self.url, config)&.strip)
+    self.title = Sanitizer.sanitize_plaintext self.title
+    self.fetch_url = Sanitizer.sanitize_plaintext self.fetch_url
+    self.url = Sanitizer.sanitize_plaintext self.url
 
     # URLs must be valid http or https
     if self.fetch_url_was.present? && (self.fetch_url =~ URI::regexp(%w{http https})).nil?
