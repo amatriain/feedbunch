@@ -1,3 +1,5 @@
+require 'sanitizer'
+
 ##
 # Folder model. Each instance of this class represents a single folder to which a user can add feeds.
 #
@@ -69,9 +71,7 @@ class Folder < ApplicationRecord
   # Better paranoid than sorry!
 
   def sanitize_attributes
-    config = Feedbunch::Application.config.restricted_sanitizer
-
-    self.title = Sanitize.fragment self.title, config
+    self.title = Sanitizer.sanitize_plaintext title
   end
 
   ##
