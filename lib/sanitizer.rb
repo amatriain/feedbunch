@@ -9,20 +9,23 @@ class Sanitizer
   #
   # Receives as argument a string.
   #
-  # If a nil or empty string is passed, returns nil.
+  # If a nil or empty string is passed, returns an empty string.
 
   def self.sanitize_plaintext(unsanitized_text)
     # Check that the passed string contains something
-    return nil if unsanitized_text.blank?
+    return '' if unsanitized_text.blank?
     sanitized_text = ActionController::Base.helpers.strip_tags(unsanitized_text)&.strip
     return sanitized_text
   end
 
   ##
   # Sanitize the passed string by removing dangerous markup (scripts etc) and leaving only markup that can be
-  # displayed safely to the user (images etc)
+  # displayed safely to the user (images etc).
+  #
+  # If a nil or empty string is passed, returns an empty string.
 
   def self.sanitize_html(unsanitized_html)
+    return '' if unsanitized_html.blank?
     config_relaxed = Feedbunch::Application.config.relaxed_sanitizer
     sanitized_html = Sanitize.fragment(unsanitized_html, config_relaxed)&.strip
     return sanitized_html
