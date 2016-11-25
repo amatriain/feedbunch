@@ -460,6 +460,7 @@ DEPENDENCIES
   jquery-rails
   kaminari
   launchy
+  loofah
   newrelic_rpm
   nokogiri
   ox

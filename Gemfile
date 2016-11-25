@@ -6,6 +6,7 @@ gem 'rails', '~> 5.0.0'
 
 # Sanitizer to replace poorly maintained new rails sanitizer
 gem 'sanitize'
+gem 'loofah'
 
 gem 'responders'
 gem 'sass-rails'
