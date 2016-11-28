@@ -4,9 +4,9 @@
 
 angular.module('feedbunch').service 'keyboardShortcutsSvc',
 ['$rootScope', 'highlightedEntrySvc', 'highlightedSidebarLinkSvc','entrySvc', 'startPageSvc', 'currentFeedSvc',
-'currentFolderSvc', 'findSvc', 'showHideReadSvc', 'loadEntriesSvc', 'menuCollapseSvc',
+'currentFolderSvc', 'findSvc', 'showHideReadSvc', 'loadEntriesSvc', 'menuCollapseSvc', 'tooltipSvc',
 ($rootScope, highlightedEntrySvc, highlightedSidebarLinkSvc, entrySvc, startPageSvc, currentFeedSvc,
-currentFolderSvc, findSvc, showHideReadSvc, loadEntriesSvc, menuCollapseSvc)->
+currentFolderSvc, findSvc, showHideReadSvc, loadEntriesSvc, menuCollapseSvc, tooltipSvc)->
 
   # Boolean flag to indicate whether keyboard shortcuts are currently enabled
   keyboard_shortcuts_running = true
@@ -62,6 +62,8 @@ currentFolderSvc, findSvc, showHideReadSvc, loadEntriesSvc, menuCollapseSvc)->
         when $rootScope.kb_shortcuts["select_sidebar_link"] # read current sidebar link
           highlighted_link = highlightedSidebarLinkSvc.get()
           if highlighted_link?
+            # Hide tooltips, to fix bug with entry tooltips staying on the page after entries have gone from the page
+            tooltipSvc.all_entries_tooltips_hide()
             if highlighted_link.id == 'start'
               startPageSvc.show_start_page()
             else if highlighted_link.type == 'feed'
