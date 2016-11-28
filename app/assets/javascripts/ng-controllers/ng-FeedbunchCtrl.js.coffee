@@ -331,6 +331,7 @@ loadFeedsSvc, showHideReadSvc)->
   $scope.set_current_entry_feed = (entry)->
     feed = findSvc.find_feed entry.feed_id
     if feed?
+      tooltipSvc.entry_tooltips_hide entry
       currentFeedSvc.set feed
     return
 
