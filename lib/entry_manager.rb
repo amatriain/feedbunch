@@ -1,4 +1,5 @@
 require 'encoding_manager'
+require 'sanitizer'
 
 ##
 # Class to save or update in the database a collection of entries fetched from a feed.
@@ -33,9 +34,9 @@ class EntryManager
           next
         end
 
-        # Remove excess whitespaces; necessary to check if the entry already exists, because the Entry model
-        # strips the guid (among other attributes) before saving.
-        guid.strip!
+        # Sanitize and trim guid; necessary to check if the entry already exists, because the Entry model
+        # changes the guid this way before saving.
+        guid = Sanitizer.sanitize_plaintext guid
 
         if Entry.exists? guid: guid, feed_id: feed.id
           Rails.logger.debug "Already existing entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}. Ignoring it"
