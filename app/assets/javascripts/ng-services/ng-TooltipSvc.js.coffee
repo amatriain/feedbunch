@@ -45,8 +45,9 @@ angular.module('feedbunch').service 'tooltipSvc',
     # Hide tooltips on some entry buttons and links (all entries)
     #---------------------------------------------
     all_entries_tooltips_hide: ->
-      for e in $rootScope.entries
-        entry_tooltips_hide e
+      if $rootScope.entries && $rootScope.entries.length > 0
+        for e in $rootScope.entries
+          entry_tooltips_hide e
 
     #---------------------------------------------
     # Enable tooltips on navbar buttons
