@@ -100,8 +100,16 @@ class EntryManager
       content = entry.summary
     end
 
+    # Some feeds (e.g. itunes podcasts) do not have a url tag in entries, but an enclosure tag with an url attribute
+    # instead. We use the enclosure url in these cases.
+    if entry.url.blank? && entry.enclosure_url.present?
+      url = entry.enclosure_url
+    else
+      url = entry.url
+    end
+
     entry_hash = {title: entry.title,
-                  url: entry.url,
+                  url: url,
                   author: entry.author,
                   content: content,
                   summary: entry.summary,
