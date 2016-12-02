@@ -323,6 +323,13 @@ describe Entry, type: :model do
         expect(entry.summary).to eq modified_summary
       end
 
+      it 'does not change images with data-uri src' do
+        unmodified_summary = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==">'
+        modified_summary = '<img src="/images/Ajax-loader.gif" data-src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==">'
+        entry = FactoryGirl.create :entry, summary: unmodified_summary
+        expect(entry.summary).to eq modified_summary
+      end
+
       it 'removes html comments' do
         unmodified_summary = '<p><!--This is a comment-->This is some text</p>'
         modified_summary = '<p>This is some text</p>'
@@ -357,6 +364,13 @@ describe Entry, type: :model do
       it 'does not change images with relative scheme' do
         unmodified_content = '<img src="//feeds.feedburner.com/some/image.gif">'
         modified_content = '<img src="/images/Ajax-loader.gif" data-src="//feeds.feedburner.com/some/image.gif">'
+        entry = FactoryGirl.create :entry, content: unmodified_content
+        expect(entry.content).to eq modified_content
+      end
+
+      it 'does not change images with data-uri src' do
+        unmodified_content = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==">'
+        modified_content = '<img src="/images/Ajax-loader.gif" data-src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==">'
         entry = FactoryGirl.create :entry, content: unmodified_content
         expect(entry.content).to eq modified_content
       end

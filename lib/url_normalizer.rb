@@ -64,7 +64,10 @@ class URLNormalizer
     # scheme-relative URIs in entries. So, if URI is scheme-relative, skip the manipulations performed on relative
     # URIs.
     if normalized_url =~ /\A\/\//
-      Rails.logger.info "Value {url} is a scheme relative URI, leaving it unchanged"
+      Rails.logger.info "Value #{url} is a scheme relative URI, leaving it unchanged"
+    # Data-uris do not need to be further manipulated
+    elsif normalized_url =~ /\Adata:/
+      Rails.logger.info "Value #{url} is a data-uri, leaving it unchanged"
     else
       # if the entry url is relative, try to make it absolute using the feed's host
       parsed_uri = Addressable::URI.parse normalized_url
