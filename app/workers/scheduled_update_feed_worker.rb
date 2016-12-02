@@ -121,8 +121,8 @@ class ScheduledUpdateFeedWorker
       end
     end
 
-    Rails.logger.error "Error during scheduled update of feed #{feed_id} - #{feed&.fetch_url}"
-    Rails.logger.error e.message
+    Rails.logger.warn "Error during scheduled update of feed #{feed_id} - #{feed&.fetch_url}"
+    Rails.logger.warn e.message
   ensure
     if feed.present? && Feed.exists?(feed&.id) && feed&.available
       # Update timestamp of the last time the feed was fetched
