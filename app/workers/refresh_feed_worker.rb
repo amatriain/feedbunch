@@ -79,8 +79,7 @@ class RefreshFeedWorker
       FeedAutodiscoveryError,
       FeedFetchError => e
     # all these errors mean the feed cannot be updated, but the job itself has not failed. Do not re-raise the error
-    Rails.logger.error "Error running refresh_feed_job_state #{refresh_feed_job_state_id} for feed #{feed&.id}, user #{user&.id}"
-    Rails.logger.error e.message
+    Rails.logger.warn "Error running refresh_feed_job_state #{refresh_feed_job_state_id} for feed #{feed&.id}, user #{user&.id}: #{e.message}"
     job_state.update state: RefreshFeedJobState::ERROR if job_state.present?
   ensure
     if feed.present? && Feed.exists?(feed&.id)

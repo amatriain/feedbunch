@@ -127,8 +127,7 @@ class ImportSubscriptionWorker
     OpmlImportError => e
 
     # all these errors mean the feed cannot be subscribed, but the job itself has not failed. Do not re-raise the error
-    Rails.logger.error "Controlled error during OPML import subscribing user #{user&.id} - #{user&.email} to feed URL #{url}"
-    Rails.logger.error e.message
+    Rails.logger.warn "Controlled error during OPML import subscribing user #{user&.id} - #{user&.email} to feed URL #{url}: #{e.message}"
     add_failure user, url
     return nil
   rescue BlacklistedUrlError => e
