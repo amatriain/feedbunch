@@ -30,7 +30,7 @@ class EntryManager
         set_entry_encoding entry, encoding
         guid = entry.entry_id || entry.url
         if guid.blank?
-          Rails.logger.error "Received entry without guid or url for feed #{feed.id} - #{feed.title}. Skipping it."
+          Rails.logger.warn "Received entry without guid or url for feed #{feed.id} - #{feed.title}. Skipping it."
           next
         end
 
