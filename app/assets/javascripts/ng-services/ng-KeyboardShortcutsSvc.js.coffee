@@ -62,7 +62,7 @@ currentFolderSvc, findSvc, showHideReadSvc, loadEntriesSvc, menuCollapseSvc, too
         when $rootScope.kb_shortcuts["select_sidebar_link"] # read current sidebar link
           highlighted_link = highlightedSidebarLinkSvc.get()
           if highlighted_link?
-            # Hide tooltips, to fix bug with entry tooltips staying on the page after entries have gone from the page
+            # Force entry tooltips to hide, because entries list will be cleared without a focus change
             tooltipSvc.all_entries_tooltips_hide()
             if highlighted_link.id == 'start'
               startPageSvc.show_start_page()
@@ -73,6 +73,8 @@ currentFolderSvc, findSvc, showHideReadSvc, loadEntriesSvc, menuCollapseSvc, too
               folder = findSvc.find_folder highlighted_link.id
               currentFolderSvc.set folder if folder?
         when $rootScope.kb_shortcuts["toggle_show_read"] # show/hide read entries
+          # Force entry tooltips to hide, because entries list will change without a focus change
+          tooltipSvc.all_entries_tooltips_hide()
           if $rootScope.show_read
             showHideReadSvc.hide_read() # hide read entries
           else
