@@ -48,7 +48,8 @@ class Entry < ApplicationRecord
   has_many :entry_states, -> {distinct}, dependent: :destroy
 
   validates :title, presence: true
-  validates :url, presence: true, format: {with: URI::regexp(%w{http https})}
+  validates :url, presence: true
+  validate :valid_url
   validates :published, presence: true
   validates :guid, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}
   validate :entry_not_deleted
@@ -73,6 +74,17 @@ class Entry < ApplicationRecord
   end
 
   private
+
+  ##
+  # Validate that the entry URL is either an http or https URL, or a protocol-relative URL
+
+  def valid_url
+    unless self.url =~ URI::regexp(%w{http https})
+      unless self.url =~ /\A\/\//
+        errors.add :url, "URL #{self.url} is not a valid http, https or protocol-relative URL"
+      end
+    end
+  end
 
   ##
   # Validate that the entry has not been deleted (there is a deleted_entries record with the

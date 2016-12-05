@@ -20,8 +20,18 @@ describe Entry, type: :model do
       expect(entry_empty).not_to be_valid
     end
 
-    it 'accepts valid URLs' do
+    it 'accepts valid HTTP URLs' do
       entry = FactoryGirl.build :entry, url: 'http://xkcd.com'
+      expect(entry).to be_valid
+    end
+
+    it 'accepts valid HTTPS URLs' do
+      entry = FactoryGirl.build :entry, url: 'https://xkcd.com'
+      expect(entry).to be_valid
+    end
+
+    it 'accepts valid protocol-relative URLs' do
+      entry = FactoryGirl.build :entry, url: '//xkcd.com'
       expect(entry).to be_valid
     end
 
