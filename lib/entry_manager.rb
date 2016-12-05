@@ -102,7 +102,7 @@ class EntryManager
 
     # Some feeds (e.g. itunes podcasts) do not have a url tag in entries, but an enclosure tag with an url attribute
     # instead. We use the enclosure url in these cases.
-    if entry.url.blank? && entry.enclosure_url.present?
+    if entry.url.blank? && entry.respond_to?(:enclosure_url)
       url = entry.enclosure_url
     else
       url = entry.url

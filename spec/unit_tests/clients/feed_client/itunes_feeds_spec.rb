@@ -197,7 +197,7 @@ FEED_XML
     end
   end
 
-  context 'Itunes feed with encosure (e.g. podcast)' do
+  context 'Itunes feed with enclosure (e.g. podcast)' do
 
     before :each do
       @feed = FactoryGirl.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
