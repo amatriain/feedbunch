@@ -68,6 +68,10 @@ class URLNormalizer
     # Data-uris do not need to be further manipulated
     elsif normalized_url =~ /\Adata:/
       Rails.logger.info "Value #{url} is a data-uri, leaving it unchanged"
+    # Object-URLs (pointing to in-memory blobs) are not allowed because of security concerns, they are removed
+    elsif normalized_url =~ /\Ablob:/
+      Rails.logger.info "Value #{url} is an object-url (blob), removing it"
+      normalized_url = ''
     else
       # if the entry url is relative, try to make it absolute using the feed's host
       parsed_uri = Addressable::URI.parse normalized_url

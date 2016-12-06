@@ -340,6 +340,13 @@ describe Entry, type: :model do
         expect(entry.summary).to eq modified_summary
       end
 
+      it 'removes blob object-URLs from images' do
+        unmodified_summary = '<img src="blob:https%3A//mail.google.com/02a6b9f2-6474-4bab-bbf8-72e91e25e157">'
+        modified_summary = '<img src="/images/Ajax-loader.gif" data-src="">'
+        entry = FactoryGirl.create :entry, summary: unmodified_summary
+        expect(entry.summary).to eq modified_summary
+      end
+
       it 'removes html comments' do
         unmodified_summary = '<p><!--This is a comment-->This is some text</p>'
         modified_summary = '<p>This is some text</p>'
@@ -381,6 +388,13 @@ describe Entry, type: :model do
       it 'does not change images with data-uri src' do
         unmodified_content = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==">'
         modified_content = '<img src="/images/Ajax-loader.gif" data-src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==">'
+        entry = FactoryGirl.create :entry, content: unmodified_content
+        expect(entry.content).to eq modified_content
+      end
+
+      it 'removes blob object-URLs from images' do
+        unmodified_content = '<img src="blob:https%3A//mail.google.com/02a6b9f2-6474-4bab-bbf8-72e91e25e157">'
+        modified_content = '<img src="/images/Ajax-loader.gif" data-src="">'
         entry = FactoryGirl.create :entry, content: unmodified_content
         expect(entry.content).to eq modified_content
       end
