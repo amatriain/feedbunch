@@ -1,5 +1,6 @@
 require 'encoding_manager'
 require 'sanitizer'
+require 'url_validator'
 
 ##
 # Class to save or update in the database a collection of entries fetched from a feed.
@@ -102,11 +103,11 @@ class EntryManager
 
     # Some feeds (e.g. itunes podcasts) do not have a url tag in entries, but an enclosure tag with an url attribute
     # instead. We use the enclosure url in these cases.
-    if entry.url.blank? && entry.respond_to?(:enclosure_url)
+    if entry.url.blank? && entry.respond_to?(:enclosure_url) && UrlValidator.valid_entry_url?(entry.enclosure_url)
       url = entry.enclosure_url
     # Some itunes feeds are mistaken by Feedjira as Feedburner feeds. In this case the enclosure tag ends up in the
     # entry.image attribute
-    elsif entry.url.blank? && entry.respond_to?(:image)
+    elsif entry.url.blank? && entry.respond_to?(:image) && UrlValidator.valid_entry_url?(entry.image)
       url = entry.image
     else
       url = entry.url

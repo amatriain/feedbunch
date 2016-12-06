@@ -3,6 +3,7 @@ require 'encoding_manager'
 require 'special_feed_handling'
 require 'url_normalizer'
 require 'sanitizer'
+require 'url_validator'
 
 ##
 # Feed entry model. Each instance of this class represents an entry in an RSS or Atom feed.
@@ -79,10 +80,8 @@ class Entry < ApplicationRecord
   # Validate that the entry URL is either an http or https URL, or a protocol-relative URL
 
   def valid_url
-    unless self.url =~ URI::regexp(%w{http https})
-      unless self.url =~ /\A\/\//
-        errors.add :url, "URL #{self.url} is not a valid http, https or protocol-relative URL"
-      end
+    unless UrlValidator.valid_entry_url? self.url
+      errors.add :url, "URL #{self.url} is not a valid http, https or protocol-relative URL"
     end
   end
 
@@ -234,7 +233,7 @@ class Entry < ApplicationRecord
     self.title = self.url if self.title.blank?
 
     # if the url attr is not actually a valid URL but the guid is, url attr takes the value of the guid attr
-    if (self.url =~ URI::regexp(%w{http https})).nil? && self.guid =~ URI::regexp(%w{http https})
+    if !(UrlValidator.valid_entry_url?(self.url)) && UrlValidator.valid_entry_url?(self.guid)
       self.url = self.guid
       # If the url was blank before but now has taken the value of the guid, default the title to this value
       self.title = self.url if self.title.blank?
