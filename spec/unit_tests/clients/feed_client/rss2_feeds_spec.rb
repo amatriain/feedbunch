@@ -5,28 +5,28 @@ describe FeedClient do
     @original_feed_title = 'Some feed title'
     @original_feed_url = 'http://some.feed.com/'
     @feed = FactoryGirl.create :feed, title: @original_feed_title, url: @original_feed_url
-
-    @feed_title = 'xkcd.com'
-    @feed_url = 'http://xkcd.com/'
-
-    @entry1 = FactoryGirl.build :entry
-    @entry1.title = 'Silence'
-    @entry1.url = 'http://xkcd.com/1199/'
-    @entry1.summary = %{&lt;p&gt;All music is just performances of 4'33" in studios where another band happened to be playing at the time.&lt;/p&gt;}
-    @entry1.published = 'Mon, 15 Apr 2013 04:00:00 -0000'
-    @entry1.guid = 'http://xkcd.com/1199/'
-
-    @entry2 = FactoryGirl.build :entry
-    @entry2.title = 'Geologist'
-    @entry2.url = 'http://xkcd.com/1198/'
-    @entry2.summary = %{&lt;p&gt;'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.';&lt;/p&gt;}
-    @entry2.published = 'Fri, 12 Apr 2013 04:00:00 -0000'
-    @entry2.guid = 'http://xkcd.com/1198/'
   end
 
   context 'RSS 2.0 feed fetching' do
 
     before :each do
+      @feed_title = 'xkcd.com'
+      @feed_url = 'http://xkcd.com/'
+
+      @entry1 = FactoryGirl.build :entry
+      @entry1.title = 'Silence'
+      @entry1.url = 'http://xkcd.com/1199/'
+      @entry1.summary = %{&lt;p&gt;All music is just performances of 4'33" in studios where another band happened to be playing at the time.&lt;/p&gt;}
+      @entry1.published = 'Mon, 15 Apr 2013 04:00:00 -0000'
+      @entry1.guid = 'http://xkcd.com/1199/'
+
+      @entry2 = FactoryGirl.build :entry
+      @entry2.title = 'Geologist'
+      @entry2.url = 'http://xkcd.com/1198/'
+      @entry2.summary = %{&lt;p&gt;'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.';&lt;/p&gt;}
+      @entry2.published = 'Fri, 12 Apr 2013 04:00:00 -0000'
+      @entry2.guid = 'http://xkcd.com/1198/'
+
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
@@ -220,7 +220,98 @@ FEED_XML
     end
   end
 
+  context 'RSS 2.0 feed with enclosure' do
+    before :each do
+      @feed_title = 'The Stream'
+      @feed_url = 'http://stream.aljazeera.com/'
+
+      @entry1 = FactoryGirl.build :entry
+      @entry1.title = 'THE STREAM - #StreamUpdate: A look at the latest news from stories we are still following'
+      @entry1.url = 'http://feeds.aljazeera.net/~r/podcasts/thestream/~5/fOcYtQPdqqg/864352181001_5230037280001_5229992741001.mp4'
+      @entry1.summary = %{&lt;p&gt;This episode’s story:&lt;/p&gt;}
+      @entry1.published = 'Thu, 01 Dec 2016 01:21:59 +0300'
+      @entry1.guid = '5229992741001: THE STREAM - #StreamUpdate: A look at the latest news from stories we are still following'
+
+      @entry2 = FactoryGirl.build :entry
+      @entry2.title = 'Castro’s global legacy'
+      @entry2.url = 'http://feeds.aljazeera.net/~r/podcasts/thestream/~5/LXQq-6RPXpM/864352181001_5231404292001_5231384794001.mp4'
+      @entry2.summary = %{&lt;p&gt;Follow The Stream and join Al Jazeera’s social media community;&lt;/p&gt;}
+      @entry2.published = 'Fri, 02 Dec 2016 01:50:42 +0300'
+      @entry2.guid = '5231384794001: Castro’s global legacy'
+
+      feed_xml = <<FEED_XML
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0" version="2.0">
+  <channel>
+    <title>#{@feed_title}</title>
+    <link>#{@feed_url}</link>
+    <description>xkcd.com: A webcomic of romance and math humor.</description>
+    <language>en</language>
+    <item>
+      <title>#{@entry2.title}</title>
+      <enclosure url="#{@entry2.url}" length="720714544" type="video/mp4" />
+      <description>#{@entry2.summary}</description>
+      <pubDate>#{@entry2.published}</pubDate>
+      <guid>#{@entry2.guid}</guid>
+    </item>
+    <item>
+      <title>#{@entry1.title}</title>
+      <enclosure url="#{@entry1.url}" length="720714544" type="video/mp4" />
+      <description>#{@entry1.summary}</description>
+      <pubDate>#{@entry1.published}</pubDate>
+      <guid>#{@entry1.guid}</guid>
+    </item>
+  </channel>
+</rss>
+FEED_XML
+
+      allow(feed_xml).to receive(:headers).and_return({})
+      allow(RestClient).to receive(:get).and_return feed_xml
+    end
+
+    it 'fetches the right entries and saves them in the database' do
+      FeedClient.fetch @feed
+      @feed.reload
+      expect(@feed.entries.count).to eq 2
+
+      entry1 = @feed.entries[0]
+      expect(entry1.title).to eq @entry1.title
+      expect(entry1.url).to eq @entry1.url
+      expect(entry1.author).to eq @entry1.author
+      expect(entry1.summary).to eq CGI.unescapeHTML(@entry1.summary)
+      expect(entry1.published).to eq @entry1.published
+      expect(entry1.guid).to eq @entry1.guid
+
+      entry2 = @feed.entries[1]
+      expect(entry2.title).to eq @entry2.title
+      expect(entry2.url).to eq @entry2.url
+      expect(entry2.author).to eq @entry2.author
+      expect(entry2.summary).to eq CGI.unescapeHTML(@entry2.summary)
+      expect(entry2.published).to eq @entry2.published
+      expect(entry2.guid).to eq @entry2.guid
+    end
+  end
+
   context 'RSS 2.0 feed autodiscovery' do
+
+    before :each do
+      @feed_title = 'xkcd.com'
+      @feed_url = 'http://xkcd.com/'
+
+      @entry1 = FactoryGirl.build :entry
+      @entry1.title = 'Silence'
+      @entry1.url = 'http://xkcd.com/1199/'
+      @entry1.summary = %{&lt;p&gt;All music is just performances of 4'33" in studios where another band happened to be playing at the time.&lt;/p&gt;}
+      @entry1.published = 'Mon, 15 Apr 2013 04:00:00 -0000'
+      @entry1.guid = 'http://xkcd.com/1199/'
+
+      @entry2 = FactoryGirl.build :entry
+      @entry2.title = 'Geologist'
+      @entry2.url = 'http://xkcd.com/1198/'
+      @entry2.summary = %{&lt;p&gt;'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.';&lt;/p&gt;}
+      @entry2.published = 'Fri, 12 Apr 2013 04:00:00 -0000'
+      @entry2.guid = 'http://xkcd.com/1198/'
+    end
 
     it 'updates fetch_url of the feed with autodiscovery full URL' do
       feed_url = 'http://webpage.com/feed'

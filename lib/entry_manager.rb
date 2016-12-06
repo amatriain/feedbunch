@@ -104,6 +104,10 @@ class EntryManager
     # instead. We use the enclosure url in these cases.
     if entry.url.blank? && entry.respond_to?(:enclosure_url)
       url = entry.enclosure_url
+    # Some itunes feeds are mistaken by Feedjira as Feedburner feeds. In this case the enclosure tag ends up in the
+    # entry.image attribute
+    elsif entry.url.blank? && entry.respond_to?(:image)
+      url = entry.image
     else
       url = entry.url
     end
