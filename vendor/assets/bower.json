@@ -13,7 +13,7 @@
     "hopscotch": "0.2.6",
     "ngInfiniteScroll": "1.2.2",
     "uri.js": "1.18.4",
-    "velocity": "1.2.3",
+    "velocity": "1.4.0",
     "isInViewport": "2.4.1"
   }
 }
