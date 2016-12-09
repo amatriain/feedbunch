@@ -1,5 +1,5 @@
 {
-  "name": "dsl-generated dependencies",
+  "name": "dsl-generated-dependencies",
   "dependencies": {
     "jquery": "3.1.1",
     "angular": "1.5.8",
@@ -12,7 +12,7 @@
     "favico.js": "0.3.10",
     "hopscotch": "0.2.6",
     "ngInfiniteScroll": "1.2.2",
-    "uri.js": "1.18.1",
+    "uri.js": "1.18.4",
     "velocity": "1.2.3",
     "isInViewport": "2.4.1"
   }
