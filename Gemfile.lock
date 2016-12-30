@@ -240,9 +240,15 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (4.1.0)
     netrc (0.11.0)
+<<<<<<< HEAD
     newrelic_rpm (3.18.1.330)
     nio4r (2.0.0)
     nokogiri (1.7.0.1)
+=======
+    newrelic_rpm (3.17.0.325)
+    nio4r (1.2.1)
+    nokogiri (1.7.0)
+>>>>>>> Updated nokogiri 1.6.8.1 -> 1.7.0 to get rid of a deprecation warning in ruby 2.4
       mini_portile2 (~> 2.1.0)
     nokogumbo (1.4.10)
       nokogiri
