@@ -146,7 +146,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.4)
-    connection_pool (2.2.0)
+    connection_pool (2.2.1)
     coveralls (0.8.15)
       json (>= 1.8, < 3)
       simplecov (~> 0.12.0)
@@ -361,7 +361,7 @@ GEM
       websocket (~> 1.0)
     show_me_the_cookies (3.1.0)
       capybara (~> 2.0)
-    sidekiq (4.2.5)
+    sidekiq (4.2.9)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
       rack-protection (>= 1.5.0)
