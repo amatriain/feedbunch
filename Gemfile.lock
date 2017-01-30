@@ -404,7 +404,7 @@ GEM
     tins (1.12.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (3.0.3)
+    uglifier (3.0.4)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
