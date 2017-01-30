@@ -259,7 +259,7 @@ GEM
     public_suffix (2.0.5)
     puma (3.7.0)
     rack (2.0.1)
-    rack-cache (1.6.1)
+    rack-cache (1.7.0)
       rack (>= 0.4)
     rack-test (0.6.3)
       rack (>= 1.0)
