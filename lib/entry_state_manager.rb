@@ -70,8 +70,8 @@ class EntryStateManager
     # Join with entry_states to select only those entries that don't already have the desired state.
     EntryState.joins(:entry).
       where(entry_states: {user_id: user.id, read: !read}).
-      where('entries.feed_id=? AND (entries.published<? OR (entries.published=? AND entries.id<=?))',
-            entry.feed_id, entry.published, entry.published, entry.id).
+      where('entries.feed_id=? AND (entries.published<? OR (entries.published=? AND entries.created_at<?) OR (entries.published=? AND entries.created_at=? AND entries.id<=?))',
+            entry.feed_id, entry.published, entry.published, entry.created_at, entry.published, entry.created_at, entry.id).
       update_all read: read
 
     # Update unread entries count for the feed
@@ -92,8 +92,8 @@ class EntryStateManager
     # Join with entry_states to select only those entries that don't already have the desired state.
     EntryState.joins(entry: {feed: :folders}).
       where(entry_states: {user_id: user.id, read: !read}, folders: {id: folder.id}).
-      where('entries.published<? OR (entries.published=? AND entries.id<=?)',
-            entry.published, entry.published, entry.id).
+      where('entries.published<? OR (entries.published=? AND entries.created_at<?) OR (entries.published=? AND entries.created_at=? AND entries.id<=?)',
+            entry.published, entry.published, entry.created_at, entry.published, entry.created_at, entry.id).
       update_all read: read
 
     # Update unread entries count for the feeds
@@ -114,8 +114,8 @@ class EntryStateManager
   def self.change_all_entries_state(entry, read, user)
     # Join with entry_states to select only those entries that don't already have the desired state.
     EntryState.joins(:entry).where(entry_states: {user_id: user.id, read: !read}).
-      where('entries.published<? OR (entries.published=? AND entries.id<=?)',
-            entry.published, entry.published, entry.id).
+      where('entries.published<? OR (entries.published=? AND entries.created_at<?) OR (entries.published=? AND entries.created_at=? AND entries.id<=?)',
+            entry.published, entry.published, entry.created_at, entry.published, entry.created_at, entry.id).
       update_all read: read
 
     # Update unread entries count for the feeds
