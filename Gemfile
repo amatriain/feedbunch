@@ -70,7 +70,7 @@ gem 'sidekiq-superworker'
 gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git'
 
 # Web GUI for Redis instances
-gem 'redmon'
+gem 'redmon', git: 'https://github.com/steelThread/redmon.git'
 # Authorization management
 
 gem 'cancancan'
