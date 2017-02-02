@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170202180308) do
+ActiveRecord::Schema.define(version: 20170202200926) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
     t.text     "body"
     t.string   "resource_id",   null: false
     t.string   "resource_type", null: false
-    t.integer  "author_id"
     t.string   "author_type"
+    t.integer  "author_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
@@ -59,8 +59,8 @@ ActiveRecord::Schema.define(version: 20170202180308) do
     t.datetime "published",                        null: false
     t.datetime "entry_created_at",                 null: false
     t.index ["entry_id", "user_id"], name: "index_entry_states_on_entry_id_user_id"
+    t.index ["published", "entry_created_at", "entry_id", "user_id"], name: "index_entry_states_on_order_fields"
     t.index ["published", "entry_created_at", "entry_id", "user_id"], name: "index_entry_states_unread_on_order_fields", where: "read = 'false'"
-    t.index ["published", "entry_created_at", "entry_id"], name: "index_entry_states_on_order_fields"
     t.index ["read", "user_id"], name: "index_entry_states_on_read_user_id"
     t.index ["user_id"], name: "index_entry_states_on_user_id"
   end
@@ -191,8 +191,8 @@ ActiveRecord::Schema.define(version: 20170202180308) do
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
-    t.integer  "invited_by_id"
     t.string   "invited_by_type"
+    t.integer  "invited_by_id"
     t.integer  "invitations_count",                 default: 0
     t.string   "unencrypted_invitation_token"
     t.datetime "invitations_count_reset_at"
