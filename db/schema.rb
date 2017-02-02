@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170201222901) do
+ActiveRecord::Schema.define(version: 20170202122606) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
     t.text     "body"
     t.string   "resource_id",   null: false
     t.string   "resource_type", null: false
-    t.string   "author_type"
     t.integer  "author_id"
+    t.string   "author_type"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
@@ -59,7 +59,6 @@ ActiveRecord::Schema.define(version: 20170201222901) do
     t.datetime "published",                        null: false
     t.datetime "entry_created_at",                 null: false
     t.index ["entry_id", "user_id"], name: "index_entry_states_on_entry_id_user_id"
-    t.index ["entry_id"], name: "index_entry_states_on_entry_id"
     t.index ["published", "entry_created_at", "entry_id"], name: "index_entry_states_on_order_fields"
     t.index ["read", "user_id"], name: "index_entry_states_on_read_user_id"
     t.index ["user_id"], name: "index_entry_states_on_user_id"
@@ -72,9 +71,7 @@ ActiveRecord::Schema.define(version: 20170201222901) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.index ["feed_id", "user_id"], name: "index_feed_subscriptions_on_feed_id_user_id"
-    t.index ["feed_id"], name: "index_feed_subscriptions_on_feed_id"
     t.index ["user_id", "unread_entries"], name: "index_feed_subscriptions_on_user_id_unread_entries"
-    t.index ["user_id"], name: "index_feed_subscriptions_on_user_id"
   end
 
   create_table "feeds", force: :cascade do |t|
@@ -109,7 +106,6 @@ ActiveRecord::Schema.define(version: 20170201222901) do
     t.datetime "updated_at",               null: false
     t.datetime "subscriptions_updated_at"
     t.index ["user_id", "title"], name: "index_folders_on_user_id_title"
-    t.index ["user_id"], name: "index_folders_on_user_id"
   end
 
   create_table "opml_export_job_states", force: :cascade do |t|
@@ -194,8 +190,8 @@ ActiveRecord::Schema.define(version: 20170201222901) do
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
-    t.string   "invited_by_type"
     t.integer  "invited_by_id"
+    t.string   "invited_by_type"
     t.integer  "invitations_count",                 default: 0
     t.string   "unencrypted_invitation_token"
     t.datetime "invitations_count_reset_at"
@@ -217,15 +213,12 @@ ActiveRecord::Schema.define(version: 20170201222901) do
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["confirmed_at", "confirmation_sent_at", "first_confirmation_reminder_sent", "invitation_sent_at"], name: "index_users_on_first_reminder_fields"
     t.index ["confirmed_at", "confirmation_sent_at", "second_confirmation_reminder_sent", "invitation_sent_at"], name: "index_users_on_second_reminder_fields"
-    t.index ["confirmed_at", "confirmation_sent_at"], name: "index_users_on_confirmation_fields"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_limit"], name: "index_users_on_invitation_limit"
     t.index ["invitation_token", "invitation_accepted_at", "invitation_sent_at", "first_confirmation_reminder_sent"], name: "index_users_on_first_invitation_reminder_fields"
     t.index ["invitation_token", "invitation_accepted_at", "invitation_sent_at", "second_confirmation_reminder_sent"], name: "index_users_on_second_invitation_reminder_fields"
-    t.index ["invitation_token", "invitation_accepted_at", "invitation_sent_at"], name: "index_users_on_invitation_fields"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count", "invitations_count_reset_at"], name: "index_users_on_invitation_count_fields"
-    t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
