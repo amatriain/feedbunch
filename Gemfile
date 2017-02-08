@@ -83,7 +83,7 @@ gem 'http_accept_language'
 
 # Administration interface
 gem 'activeadmin', git: 'https://github.com/activeadmin/activeadmin.git'
-gem 'inherited_resources', git: 'https://github.com/josevalim/inherited_resources.git'
+gem 'inherited_resources'
 
 # Insight into PostgreSQL database
 gem 'pghero'
