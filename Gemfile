@@ -43,7 +43,7 @@ gem 'simple_form'
 gem 'kaminari'
 
 # RSS/Atom parser
-gem 'feedjira'
+gem 'feedjira', '2.1.0'
 # SAX parser
 gem 'sax-machine'
 gem 'ox'
