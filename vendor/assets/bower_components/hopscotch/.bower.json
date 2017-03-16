@@ -20,14 +20,14 @@
     "test",
     "tests"
   ],
-  "version": "0.2.6",
-  "_release": "0.2.6",
+  "version": "0.2.7",
+  "_release": "0.2.7",
   "_resolution": {
     "type": "version",
-    "tag": "v0.2.6",
-    "commit": "fbbbe34e3adce1fbda711d4a7396e1c8a1a066a4"
+    "tag": "v0.2.7",
+    "commit": "e69f618c1a239baffa22ec685f4f6c0381b89584"
   },
   "_source": "https://github.com/linkedin/hopscotch.git",
-  "_target": "0.2.6",
+  "_target": "0.2.7",
   "_originalSource": "hopscotch"
 }
