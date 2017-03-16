@@ -1,4 +1,4 @@
-/*! VelocityJS.org (1.4.0). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
+/*! VelocityJS.org (1.4.3). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
 
 /*************************
  Velocity jQuery Shim
@@ -498,7 +498,7 @@
 		var performance = (function() {
 			var perf = window.performance || {};
 
-			if (!perf.hasOwnProperty("now")) {
+			if (!Object.prototype.hasOwnProperty.call(perf, "now")) {
 				var nowOffset = perf.timing && perf.timing.domComplete ? perf.timing.domComplete : (new Date()).getTime();
 
 				perf.now = function() {
@@ -525,10 +525,34 @@
 			return result;
 		}
 
+		var _slice = (function() {
+			var slice = Array.prototype.slice;
+
+			try {
+				// Can't be used with DOM elements in IE < 9
+				slice.call(document.documentElement);
+			} catch (e) { // Fails in IE < 9
+				// This will work for genuine arrays, array-like objects, 
+				// NamedNodeMap (attributes, entities, notations),
+				// NodeList (e.g., getElementsByTagName), HTMLCollection (e.g., childNodes),
+				// and will not fail on other DOM objects (as do DOM elements in IE < 9)
+				slice = function() {
+					var i = this.length,
+							clone = [];
+
+					while (--i > 0) {
+						clone[i] = this[i];
+					}
+					return clone;
+				};
+			}
+			return slice;
+		})(); // TODO: IE8, Cache of Array.prototype.slice that works on IE8
+
 		function sanitizeElements(elements) {
 			/* Unwrap jQuery/Zepto objects. */
 			if (Type.isWrapped(elements)) {
-				elements = [].slice.call(elements);
+				elements = _slice.call(elements);
 				/* Wrap a single element in an array so that $.each() can iterate with the element instead of its node's children. */
 			} else if (Type.isNode(elements)) {
 				elements = [elements];
@@ -553,16 +577,15 @@
 			isNode: function(variable) {
 				return variable && variable.nodeType;
 			},
-			/* Copyright Martin Bohm. MIT License: https://gist.github.com/Tomalak/818a78a226a0738eaade */
-			isNodeList: function(variable) {
-				return typeof variable === "object" &&
-						/^\[object (HTMLCollection|NodeList|Object)\]$/.test(Object.prototype.toString.call(variable)) &&
-						variable.length !== undefined &&
-						(variable.length === 0 || (typeof variable[0] === "object" && variable[0].nodeType > 0));
-			},
-			/* Determine if variable is an array-like wrapped jQuery, Zepto or similar element. */
+			/* Determine if variable is an array-like wrapped jQuery, Zepto or similar element, or even a NodeList etc. */
+			/* NOTE: HTMLFormElements also have a length. */
 			isWrapped: function(variable) {
-				return variable && (Type.isArray(variable) || (Type.isNumber(variable.length) && !Type.isString(variable) && !Type.isFunction(variable)));
+				return variable
+						&& Type.isNumber(variable.length)
+						&& !Type.isString(variable)
+						&& !Type.isFunction(variable)
+						&& !Type.isNode(variable)
+						&& (variable.length === 0 || Type.isNode(variable[0]));
 			},
 			isSVG: function(variable) {
 				return window.SVGElement && (variable instanceof window.SVGElement);
@@ -692,7 +715,7 @@
 			hook: null, /* Defined below. */
 			/* Velocity-wide animation time remapping for testing purposes. */
 			mock: false,
-			version: {major: 1, minor: 4, patch: 0},
+			version: {major: 1, minor: 4, patch: 3},
 			/* Set to 1 or 2 (most verbose) to output debug info to console. */
 			debug: false,
 			/* Use rAF high resolution timestamp when available */
@@ -3431,7 +3454,7 @@
 									var cStart = startValue[iStart],
 											cEnd = endValue[iEnd];
 
-									if (/[\d\.]/.test(cStart) && /[\d\.]/.test(cEnd)) {
+									if (/[\d\.-]/.test(cStart) && /[\d\.-]/.test(cEnd)) {
 										var tStart = cStart, // temporary character buffer
 												tEnd = cEnd, // temporary character buffer
 												dotStart = ".", // Make sure we can only ever match a single dot in a decimal
@@ -3479,15 +3502,15 @@
 											pattern += (inCalc < 5 ? "calc" : "") + "("
 													+ (nStart ? "{" + aStart.length + (inRGB ? "!" : "") + "}" : "0") + uStart
 													+ " + "
-													+ (nEnd ? "{" + (aStart.length + 1) + (inRGB ? "!" : "") + "}" : "0") + uEnd
+													+ (nEnd ? "{" + (aStart.length + (nStart ? 1 : 0)) + (inRGB ? "!" : "") + "}" : "0") + uEnd
 													+ ")";
 											if (nStart) {
-												aStart.push(parseFloat(tStart));
-												aStart.push(parseFloat(0));
+												aStart.push(nStart);
+												aEnd.push(0);
 											}
 											if (nEnd) {
-												aEnd.push(parseFloat(0));
-												aEnd.push(parseFloat(tEnd));
+												aStart.push(0);
+												aEnd.push(nEnd);
 											}
 										}
 									} else if (cStart === cEnd) {
