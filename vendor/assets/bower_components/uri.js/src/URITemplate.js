@@ -2,7 +2,7 @@
  * URI.js - Mutating URLs
  * URI Template Support - http://tools.ietf.org/html/rfc6570
  *
- * Version: 1.18.4
+ * Version: 1.18.9
  *
  * Author: Rodney Rehm
  * Web: http://medialize.github.io/URI.js/
@@ -137,10 +137,10 @@
   // pattern to verify variable name integrity
   URITemplate.VARIABLE_NAME_PATTERN = /[^a-zA-Z0-9%_.]/;
   // pattern to verify literal integrity
-  URITemplate.LITERAL_PATTERN = /[<>{}'"`^| \\]/;
+  URITemplate.LITERAL_PATTERN = /[<>{}"`^| \\]/;
 
   // expand parsed expression (expression, not template!)
-  URITemplate.expand = function(expression, data) {
+  URITemplate.expand = function(expression, data, opts) {
     // container for defined options for the given operator
     var options = operators[expression.operator];
     // expansion type (include keys or not)
@@ -154,6 +154,9 @@
     for (i = 0; (variable = variables[i]); i++) {
       // fetch simplified data source
       d = data.get(variable.name);
+      if (d.type === 0 && opts && opts.strict) {
+          throw new Error('Missing expansion value for variable "' + variable.name + '"');
+      }
       if (!d.val.length) {
         if (d.type) {
           // empty variables (empty string)
@@ -320,7 +323,7 @@
   };
 
   // expand template through given data map
-  p.expand = function(data) {
+  p.expand = function(data, opts) {
     var result = '';
 
     if (!this.parts || !this.parts.length) {
@@ -340,7 +343,7 @@
         // literal string
         ? this.parts[i]
         // expression
-        : URITemplate.expand(this.parts[i], data);
+        : URITemplate.expand(this.parts[i], data, opts);
       /*jshint laxbreak: false */
     }
 
