@@ -14,6 +14,6 @@
     "ngInfiniteScroll": "1.2.2",
     "uri.js": "1.18.9",
     "velocity": "1.4.3",
-    "isInViewport": "2.4.2"
+    "isInViewport": "3.0.0"
   }
 }
