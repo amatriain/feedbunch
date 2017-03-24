@@ -99,7 +99,7 @@ GEM
       sass (~> 3.4)
       thor (~> 0.19)
     bower-rails (0.11.0)
-    brakeman (3.5.0)
+    brakeman (3.6.0)
     builder (3.2.3)
     bundler-audit (0.5.0)
       bundler (~> 1.2)
@@ -508,4 +508,4 @@ RUBY VERSION
    ruby 2.4.0p0
 
 BUNDLED WITH
-   1.13.7
+   1.14.6
