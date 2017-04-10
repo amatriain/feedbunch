@@ -55,7 +55,7 @@ gem 'rest-client'
 
 # HTTP client-side caching
 gem 'rest-client-components', git: 'https://github.com/amatriain/rest-client-components.git', branch: 'rest-client-2-compatibility'
-gem 'rack-cache'
+gem 'rack-cache', '1.6.1'
 
 # URI implementation with better support for RFC 3986, RFC 3987, and RFC 6570 (level 4)
 gem 'addressable'
