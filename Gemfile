@@ -7,6 +7,8 @@ gem 'rails', '~> 5.0.2'
 # Sanitizer to replace poorly maintained new rails sanitizer
 gem 'sanitize'
 gem 'loofah'
+# Temporarily pinned nokogumbo version (sanitize dependency) because of a segfault in 1.4.10
+gem 'nokogumbo', '1.4.9'
 
 gem 'responders'
 gem 'sass-rails'
