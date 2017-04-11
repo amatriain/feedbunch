@@ -379,6 +379,14 @@ def show_update_account_button
 end
 
 ##
+# Scroll the page until the "Sign up" button in the signup form is visible.
+# Necessary because sometimes it lays under the viewport or is overlapped by the cookies message.
+def show_sign_up_button
+  page.execute_script "document.getElementById('signup-submit').scrollIntoView(true);"
+  page.execute_script "window.scrollBy(0,100);"
+end
+
+##
 # Enter the edit registration page, check the "enable keyboard shortcuts" checkbox if it isn't already,
 # enter the current password and save the changes.
 # Receives as argument the user performing the action.
@@ -555,6 +563,7 @@ def sign_up_for_feature(email, password, confirm_account: true)
   fill_in 'Email', with: email
   fill_in 'Password', with: password
   fill_in 'Password (again)', with: password
+  show_sign_up_button
   click_on 'Sign up'
   expect(current_path).to eq signup_success_path
 

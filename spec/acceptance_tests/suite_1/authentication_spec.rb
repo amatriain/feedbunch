@@ -74,6 +74,7 @@ describe 'authentication', type: :feature do
         fill_in 'Email', with: @user.email
         fill_in 'Password', with: new_password
         fill_in 'Password (again)', with: new_password
+        show_sign_up_button
         click_on 'Sign up'
 
         expect(page).to have_text 'Email has already been taken'
@@ -92,6 +93,7 @@ describe 'authentication', type: :feature do
         fill_in 'Email', with: new_email
         fill_in 'Password', with: new_password
         fill_in 'Password (again)', with: different_password
+        show_sign_up_button
         click_on 'Sign up'
 
         expect(page).to have_text "Password confirmation doesn't match Password"
@@ -196,6 +198,7 @@ describe 'authentication', type: :feature do
         fill_in 'Email', with: new_email
         fill_in 'Password', with: new_password
         fill_in 'Password (again)', with: new_password
+        show_sign_up_button
         click_on 'Sign up'
 
         # Remove confirmation mails sent on signup from mail queue
@@ -229,6 +232,7 @@ describe 'authentication', type: :feature do
         fill_in 'Email', with: new_email
         fill_in 'Password', with: new_password
         fill_in 'Password (again)', with: new_password
+        show_sign_up_button
         click_on 'Sign up'
 
         # Confirm email
