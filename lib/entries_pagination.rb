@@ -92,12 +92,12 @@ class EntriesPagination
     if page.present?
       entries = Entry.joins(:entry_states, :feed)
                       .where(entry_states: {read: false, user_id: user.id}, feeds: {id: feed.id})
-                      .order('entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc')
+          .order('entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc, entry_states.read')
                       .page page
     else
       entries = Entry.joins(:entry_states, :feed)
                       .where(entry_states: {read: false, user_id: user.id}, feeds: {id: feed.id})
-                      .order 'entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc'
+          .order 'entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc, entry_states.read'
     end
     return entries
   end
@@ -118,12 +118,12 @@ class EntriesPagination
     if page.present?
       entries = Entry.joins(:entry_states, feed: :folders)
                       .where(entry_states: {read: false, user_id: user.id}, folders: {id: folder.id})
-                      .order('entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc')
+          .order('entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc, entry_states.read')
                       .page page
     else
       entries = Entry.joins(:entry_states, feed: :folders)
                       .where(entry_states: {read: false, user_id: user.id}, folders: {id: folder.id})
-                      .order 'entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc'
+          .order 'entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc, entry_states.read'
     end
     return entries
   end
@@ -143,12 +143,12 @@ class EntriesPagination
     if page.present?
       entries = Entry.joins(:entry_states)
                     .where(entry_states: {read: false, user_id: user.id})
-                    .order('entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc')
+          .order('entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc, entry_states.read')
                     .page page
     else
       entries = Entry.joins(:entry_states)
                     .where(entry_states: {read: false, user_id: user.id})
-                    .order 'entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc'
+          .order 'entry_states.published desc, entry_states.entry_created_at desc, entry_states.entry_id desc, entry_states.read'
     end
     return entries
   end
