@@ -49,6 +49,7 @@ set :linked_dirs, %w{
                       uploads
                       public/assets
                       public/system
+                      public/.well-known
                       tmp/cache
                       tmp/pids
                       tmp/sockets
