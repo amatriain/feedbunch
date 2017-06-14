@@ -79,7 +79,7 @@ gem 'rubyzip'
 gem 'http_accept_language'
 
 # Administration interface
-gem 'activeadmin', git: 'https://github.com/activeadmin/activeadmin.git'
+gem 'activeadmin'
 gem 'inherited_resources'
 
 # Insight into PostgreSQL database
