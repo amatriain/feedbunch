@@ -92,7 +92,7 @@ class FeedSubscription < ApplicationRecord
   # If the unread entries count has changed, touch subscriptions
 
   def after_save
-    touch_subscriptions if unread_entries_changed?
+    touch_subscriptions if saved_change_to_unread_entries?
   end
 
   ##

@@ -412,10 +412,10 @@ class User < ApplicationRecord
   #   - kb_shortcuts_enabled
 
   def after_save_user
-    if quick_reading_changed? || open_all_entries_changed? ||
-        show_main_tour_changed? || show_mobile_tour_changed? ||
-        show_feed_tour_changed? || show_entry_tour_changed? ||
-        show_kb_shortcuts_tour_changed? || kb_shortcuts_enabled_changed?
+    if saved_change_to_quick_reading? || saved_change_to_open_all_entries? ||
+        saved_change_to_show_main_tour? || saved_change_to_show_mobile_tour? ||
+        saved_change_to_show_feed_tour? || saved_change_to_show_entry_tour? ||
+        saved_change_to_show_kb_shortcuts_tour? || saved_change_to_kb_shortcuts_enabled?
       update_column :config_updated_at, Time.zone.now
     end
   end

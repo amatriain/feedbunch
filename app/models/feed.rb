@@ -179,7 +179,7 @@ class Feed < ApplicationRecord
   # This is meant to invalidate the HTTP cache and force clients to download this feed again.
 
   def touch_subscriptions
-    if title_changed? || url_changed?
+    if saved_change_to_title? || saved_change_to_url?
       feed_subscriptions.find_each do |s|
         s.touch_subscriptions
       end
