@@ -389,7 +389,7 @@ class User < ApplicationRecord
   end
 
   ##
-  # If the user being destroyed is the demo user, return false. This prevents the demo user from being actually destroyed.
+  # If the user being destroyed is the demo user, throw an error. This prevents the demo user from being actually destroyed.
 
   def before_destroy_user
     if Feedbunch::Application.config.demo_enabled
