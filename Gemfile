@@ -75,9 +75,6 @@ gem 'sidekiq'
 gem 'sidekiq-cron'
 gem 'sidekiq-superworker'
 
-# Sinatra required for the Sidekiq web ui
-gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git'
-
 # Web GUI for Redis instances
 gem 'redmon'
 # Authorization management

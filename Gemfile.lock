@@ -26,18 +26,6 @@ GIT
       rack (>= 1.0.1)
       rest-client (>= 1.6.0)
 
-GIT
-  remote: https://github.com/sinatra/sinatra.git
-  revision: ccd8640d892d7c70234c808136c6f57a3657e753
-  specs:
-    rack-protection (2.0.0.rc1)
-      rack
-    sinatra (2.0.0.rc1)
-      mustermann (= 1.0.0)
-      rack (~> 2.0)
-      rack-protection (= 2.0.0.rc1)
-      tilt (~> 2.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -258,6 +246,8 @@ GEM
     rack (2.0.3)
     rack-cache (1.7.0)
       rack (>= 0.4)
+    rack-protection (2.0.0)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.2)
@@ -393,6 +383,11 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
+    sinatra (2.0.0)
+      mustermann (~> 1.0)
+      rack (~> 2.0)
+      rack-protection (= 2.0.0)
+      tilt (~> 2.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     sprockets (3.7.1)
@@ -414,7 +409,7 @@ GEM
       rack (>= 1, < 3)
     thor (0.19.4)
     thread_safe (0.3.6)
-    tilt (2.0.6)
+    tilt (2.0.7)
     tins (1.13.2)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
@@ -494,7 +489,6 @@ DEPENDENCIES
   sidekiq-cron
   sidekiq-superworker
   simple_form
-  sinatra!
   spring
   sqlite3
   uglifier
