@@ -4,15 +4,6 @@ ruby '2.4.1'
 
 gem 'rails', '~> 5.0.2'
 
-# TEMPORARY update mail gem
-# to fix vulnerability; see 
-# https://github.com/mikel/mail/pull/1097
-# Remove this explicit dependency when 
-# implicit dependency resolution in Gemfile.lock
-# resolves mail to a fixed version (2.5.5.rc1, 2.6.6.rc1, 2.7.0.rc1
-# or higher)
-gem 'mail', '2.6.6.rc1'
-
 # Sanitizer to replace poorly maintained new rails sanitizer
 gem 'sanitize'
 gem 'loofah'
