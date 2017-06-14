@@ -21,9 +21,9 @@ class EntriesPagination
 
   def self.feed_entries(feed, user, include_read: false, page: nil)
     if include_read && !page.present?
-      entries =  feed.entries.order 'published desc, created_at desc, id desc'
+      entries =  feed.entries.order 'entries.published desc, entries.created_at desc, entries.id desc'
     elsif include_read && page.present?
-      entries =  feed.entries.order('published desc, created_at desc, id desc').page page
+      entries =  feed.entries.order('entries.published desc, entries.created_at desc, entries.id desc').page page
     else
       entries = unread_feed_entries feed, user, page: page
     end
@@ -52,17 +52,17 @@ class EntriesPagination
   def self.folder_entries(folder, user, include_read: false, page: nil)
     if folder == Folder::ALL_FOLDERS
       if include_read && !page.present?
-        entries = user.entries.order 'published desc, created_at desc, id desc'
+        entries = user.entries.order 'entries.published desc, entries.created_at desc, entries.id desc'
       elsif include_read && page.present?
-        entries = user.entries.order('published desc, created_at desc, id desc').page page
+        entries = user.entries.order('entries.published desc, entries.created_at desc, entries.id desc').page page
       else
         entries = all_unread_entries user, page: page
       end
     else
       if include_read && !page.present?
-        entries = folder.entries.order 'published desc, created_at desc, id desc'
+        entries = folder.entries.order 'entries.published desc, entries.created_at desc, entries.id desc'
       elsif include_read && page.present?
-        entries = folder.entries.order('published desc, created_at desc, id desc').page page
+        entries = folder.entries.order('entries.published desc, entries.created_at desc, entries.id desc').page page
       else
         entries = unread_folder_entries folder, user, page: page
       end
