@@ -13,7 +13,7 @@ Sidekiq.configure_server do |config|
                             klass: 'CleanupSignupsWorker',
                             queue: :maintenance
 
-  Sidekiq::Cron::Job.create name: 'Cleanup old signups - daily at 4AM',
+  Sidekiq::Cron::Job.create name: 'Destroy old job states - daily at 4AM',
                             cron: '0 4 * * *',
                             klass: 'DestroyOldJobStatesWorker',
                             queue: :maintenance
