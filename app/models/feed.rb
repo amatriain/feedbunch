@@ -46,10 +46,10 @@ require 'sanitizer'
 
 class Feed < ApplicationRecord
 
-  has_many :feed_subscriptions, -> {distinct}, dependent: :destroy
+  has_many :feed_subscriptions, dependent: :destroy
   has_many :users, through: :feed_subscriptions
-  has_and_belongs_to_many :folders, -> {distinct}, before_add: :single_user_folder
-  has_many :entries, -> {distinct}, dependent: :destroy
+  has_and_belongs_to_many :folders, before_add: :single_user_folder
+  has_many :entries, dependent: :destroy
   has_many :deleted_entries, dependent: :delete_all
   has_many :refresh_feed_job_states, dependent: :destroy
   has_many :subscribe_job_states, dependent: :destroy

@@ -46,7 +46,7 @@ class Entry < ApplicationRecord
   belongs_to :feed
   validates :feed_id, presence: true
 
-  has_many :entry_states, -> {distinct}, dependent: :destroy
+  has_many :entry_states, dependent: :destroy
 
   validates :title, presence: true
   validates :url, presence: true
