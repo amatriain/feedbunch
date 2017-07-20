@@ -133,7 +133,7 @@ class User < ApplicationRecord
   has_many :feeds, through: :feed_subscriptions
   has_many :folders, dependent: :destroy
   has_many :entries, through: :feeds
-  has_many :entry_states, dependent: :destroy
+  has_many :entry_states, dependent: :delete_all
   has_one :opml_import_job_state, dependent: :destroy
   has_one :opml_export_job_state, dependent: :destroy
   has_many :refresh_feed_job_states, dependent: :destroy

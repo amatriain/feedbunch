@@ -27,7 +27,7 @@ class OpmlImportJobState < ApplicationRecord
   belongs_to :user
   validates :user_id, presence: true
 
-  has_many :opml_import_failures, dependent: :destroy
+  has_many :opml_import_failures, dependent: :delete_all
 
   validates :state, presence: true, inclusion: {in: [NONE, RUNNING, ERROR, SUCCESS]}
   validates :total_feeds, presence: true
