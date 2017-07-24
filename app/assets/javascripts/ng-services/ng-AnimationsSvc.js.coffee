@@ -106,7 +106,7 @@ angular.module('feedbunch').service 'animationsSvc',
     #---------------------------------------------
     show_sidebar: ->
       enquire.register xs_max_media_query, ->
-        $('#sidebar-column').velocity {translateX: '0'}, {duration: 300, easing: 'swing'}
+        $('#sidebar-column').velocity {translateX: '0%'}, {duration: 300, easing: 'swing'}
 
     #---------------------------------------------
     # If a sidebar link is not in the viewport, scroll the sidebar down until it is completely inside the viewport.

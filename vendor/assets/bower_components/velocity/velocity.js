@@ -1,4 +1,4 @@
-/*! VelocityJS.org (1.4.2). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
+/*! VelocityJS.org (1.5.0). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
 
 /*************************
  Velocity jQuery Shim
@@ -498,8 +498,8 @@
 		var performance = (function() {
 			var perf = window.performance || {};
 
-			if (!Object.prototype.hasOwnProperty.call(perf, "now")) {
-				var nowOffset = perf.timing && perf.timing.domComplete ? perf.timing.domComplete : (new Date()).getTime();
+			if (typeof perf.now !== "function") {
+				var nowOffset = perf.timing && perf.timing.navigationStart ? perf.timing.navigationStart : (new Date()).getTime();
 
 				perf.now = function() {
 					return (new Date()).getTime() - nowOffset;
@@ -525,29 +525,90 @@
 			return result;
 		}
 
+		/**
+		 * Shim for "fixing" IE's lack of support (IE < 9) for applying slice
+		 * on host objects like NamedNodeMap, NodeList, and HTMLCollection
+		 * (technically, since host objects have been implementation-dependent,
+		 * at least before ES2015, IE hasn't needed to work this way).
+		 * Also works on strings, fixes IE < 9 to allow an explicit undefined
+		 * for the 2nd argument (as in Firefox), and prevents errors when
+		 * called on other DOM objects.
+		 */
 		var _slice = (function() {
 			var slice = Array.prototype.slice;
 
 			try {
 				// Can't be used with DOM elements in IE < 9
 				slice.call(document.documentElement);
+				return slice;
 			} catch (e) { // Fails in IE < 9
+
 				// This will work for genuine arrays, array-like objects, 
 				// NamedNodeMap (attributes, entities, notations),
 				// NodeList (e.g., getElementsByTagName), HTMLCollection (e.g., childNodes),
 				// and will not fail on other DOM objects (as do DOM elements in IE < 9)
-				slice = function() {
-					var i = this.length,
-							clone = [];
+				return function(begin, end) {
+					var len = this.length;
 
-					while (--i > 0) {
-						clone[i] = this[i];
+					if (typeof begin !== "number") {
+						begin = 0;
+					}
+					// IE < 9 gets unhappy with an undefined end argument
+					if (typeof end !== "number") {
+						end = len;
+					}
+					// For native Array objects, we use the native slice function
+					if (this.slice) {
+						return slice.call(this, begin, end);
+					}
+					// For array like object we handle it ourselves.
+					var i,
+							cloned = [],
+							// Handle negative value for "begin"
+							start = (begin >= 0) ? begin : Math.max(0, len + begin),
+							// Handle negative value for "end"
+							upTo = end < 0 ? len + end : Math.min(end, len),
+							// Actual expected size of the slice
+							size = upTo - start;
+
+					if (size > 0) {
+						cloned = new Array(size);
+						if (this.charAt) {
+							for (i = 0; i < size; i++) {
+								cloned[i] = this.charAt(start + i);
+							}
+						} else {
+							for (i = 0; i < size; i++) {
+								cloned[i] = this[start + i];
+							}
+						}
 					}
 					return cloned;
 				};
 			}
-			return slice;
-		})(); // TODO: IE8, Cache of Array.prototype.slice that works on IE8
+		})();
+
+		/* .indexOf doesn't exist in IE<9 */
+		var _inArray = (function() {
+			if (Array.prototype.includes) {
+				return function(arr, val) {
+					return arr.includes(val);
+				};
+			}
+			if (Array.prototype.indexOf) {
+				return function(arr, val) {
+					return arr.indexOf(val) >= 0;
+				};
+			}
+			return function(arr, val) {
+				for (var i = 0; i < arr.length; i++) {
+					if (arr[i] === val) {
+						return true;
+					}
+				}
+				return false;
+			};
+		});
 
 		function sanitizeElements(elements) {
 			/* Unwrap jQuery/Zepto objects. */
@@ -581,6 +642,7 @@
 			/* NOTE: HTMLFormElements also have a length. */
 			isWrapped: function(variable) {
 				return variable
+						&& variable !== window
 						&& Type.isNumber(variable.length)
 						&& !Type.isString(variable)
 						&& !Type.isFunction(variable)
@@ -715,7 +777,7 @@
 			hook: null, /* Defined below. */
 			/* Velocity-wide animation time remapping for testing purposes. */
 			mock: false,
-			version: {major: 1, minor: 4, patch: 2},
+			version: {major: 1, minor: 5, patch: 0},
 			/* Set to 1 or 2 (most verbose) to output debug info to console. */
 			debug: false,
 			/* Use rAF high resolution timestamp when available */
@@ -1446,7 +1508,7 @@
 				getUnit: function(str, start) {
 					var unit = (str.substr(start || 0, 5).match(/^[a-z%]+/) || [])[0] || "";
 
-					if (unit && CSS.Lists.units.indexOf(unit) >= 0) {
+					if (unit && _inArray(CSS.Lists.units, unit)) {
 						return unit;
 					}
 					return "";
@@ -2866,7 +2928,7 @@
 
 						if (promiseData.promise) {
 							promiseData.rejecter(new Error(abortError));
-						} else {
+						} else if (window.console) {
 							console.log(abortError);
 						}
 
@@ -3454,7 +3516,7 @@
 									var cStart = startValue[iStart],
 											cEnd = endValue[iEnd];
 
-									if (/[\d\.]/.test(cStart) && /[\d\.]/.test(cEnd)) {
+									if (/[\d\.-]/.test(cStart) && /[\d\.-]/.test(cEnd)) {
 										var tStart = cStart, // temporary character buffer
 												tEnd = cEnd, // temporary character buffer
 												dotStart = ".", // Make sure we can only ever match a single dot in a decimal
@@ -3855,7 +3917,7 @@
 
 							/* Find shorthand color properties that have been passed a hex string. */
 							/* Would be quicker to use CSS.Lists.colors.includes() if possible */
-							if (CSS.Lists.colors.indexOf(propertyName) >= 0) {
+							if (_inArray(CSS.Lists.colors, propertyName)) {
 								/* Parse the value data for each shorthand. */
 								var endValue = valueData[0],
 										easing = valueData[1],
