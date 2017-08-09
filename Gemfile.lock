@@ -173,7 +173,7 @@ GEM
     hiredis (0.6.1)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    http_accept_language (2.1.0)
+    http_accept_language (2.1.1)
     i18n (0.8.6)
     inherited_resources (1.7.2)
       actionpack (>= 3.2, < 5.2.x)
