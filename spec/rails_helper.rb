@@ -63,6 +63,12 @@ RSpec.configure do |config|
     end
   }
 
+  # Wrap tests in Bullet API to help fixing N+1 queries
+  if Bullet.enable?
+    config.before(:each) { Bullet.start_request }
+    config.after(:each)  { Bullet.end_request }
+  end
+
   config.before type: 'feature' do
     # Use a relatively common window size in acceptance tests
     current_window.resize_to(1920, 1200)
@@ -128,7 +134,7 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   #config.infer_spec_type_from_file_location!
 
-  # Enable use of 'assings' helper method in controller tests
+  # Enable use of 'assigns' helper method in controller tests
   [:controller, :view, :request].each do |type|
     config.include ::Rails::Controller::Testing::TestProcess, :type => type
     config.include ::Rails::Controller::Testing::TemplateAssertions, :type => type

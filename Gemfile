@@ -110,6 +110,9 @@ group :test, :development do
   # Check the bundle for exploits
   gem 'bundler-audit'
 
+  # Check for N+1 queries (which should not exist)
+  gem 'bullet'
+
   # Testing framework
   gem 'rspec-rails'
 
