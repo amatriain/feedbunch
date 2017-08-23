@@ -78,7 +78,7 @@ GEM
     bcrypt (3.1.11)
     bindex (0.5.0)
     bower-rails (0.11.0)
-    brakeman (3.7.1)
+    brakeman (3.7.2)
     builder (3.2.3)
     bullet (5.6.1)
       activesupport (>= 3.0.0)
