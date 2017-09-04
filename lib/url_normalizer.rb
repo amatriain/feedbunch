@@ -98,7 +98,13 @@ class URLNormalizer
       end
     end
 
-    normalized_url = Addressable::URI.parse(normalized_url).normalize.to_s
+    begin
+      normalized_url = Addressable::URI.parse(normalized_url).normalize.to_s
+    rescue Addressable::URI::InvalidURIError => e
+      Rails.logger.warn "URL #{normalized_url} cannot be normalized, removing it"
+      normalized_url = ''
+    end
+
     return normalized_url
   end
 
