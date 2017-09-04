@@ -150,6 +150,7 @@ group :staging, :production do
 
   # Access Amazon AWS services
   gem 'aws-sdk-rails'
+  gem 'aws-sdk-resources'
 
   # Analytics
   gem 'newrelic_rpm'
