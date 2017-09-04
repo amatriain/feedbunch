@@ -147,7 +147,7 @@ GEM
     erubi (1.6.1)
     et-orbi (1.0.5)
       tzinfo
-    eventmachine (1.2.3)
+    eventmachine (1.2.5)
     execjs (2.7.0)
     factory_girl (4.8.0)
       activesupport (>= 3.0.0)
