@@ -148,9 +148,8 @@ group :staging, :production do
   # PostgreSQL database for staging and production
   gem 'pg'
 
-  # Access Amazon AWS services
-  gem 'aws-sdk-rails'
-  gem 'aws-sdk-resources'
+  # Access Amazon S3 file services
+  gem 'aws-sdk-s3'
 
   # Analytics
   gem 'newrelic_rpm'

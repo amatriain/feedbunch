@@ -1,4 +1,4 @@
-require 'aws-sdk-resources'
+require 'aws-sdk-s3'
 
 # AWS log level defaults to :info, you can set a different level here
 #Aws.config[:log_level] = :debug
