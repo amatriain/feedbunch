@@ -23,7 +23,15 @@ class URLNormalizer
     # Check that the passed string contains something
     return nil if url.blank?
 
+    # Remove whitespaces at beginning/end of string
     normalized_url = url.strip
+
+    # If the url begins or ends with mismatched " characters, remove them, otherwise Addressable gets confused
+    normalized_url.sub! /\A"+/, ''
+    normalized_url.sub! /"+\Z/, ''
+
+    # If there are whitespaces after a " character at the beginning of before a " at the end, remove them as well
+    normalized_url.strip!
 
     # If the url has the feed:// or feed: uri-schemes, remove them.
     # The order in which these removals happen is critical, don't change it!!!
@@ -39,7 +47,13 @@ class URLNormalizer
       normalized_url = "http://#{normalized_url}"
     end
 
-    normalized_url = Addressable::URI.parse(normalized_url).normalize.to_s
+    begin
+      normalized_url = Addressable::URI.parse(normalized_url).normalize.to_s
+    rescue Addressable::URI::InvalidURIError => e
+      Rails.logger.warn "URL #{normalized_url} cannot be parsed, removing it"
+      normalized_url = ''
+    end
+
     return normalized_url
   end
 
