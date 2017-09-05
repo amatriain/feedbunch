@@ -23,15 +23,7 @@ class URLNormalizer
     # Check that the passed string contains something
     return nil if url.blank?
 
-    # Remove whitespaces at beginning/end of string
-    normalized_url = url.strip
-
-    # If the url begins or ends with mismatched " characters, remove them, otherwise Addressable gets confused
-    normalized_url.sub! /\A"+/, ''
-    normalized_url.sub! /"+\Z/, ''
-
-    # If there are whitespaces after a " character at the beginning of before a " at the end, remove them as well
-    normalized_url.strip!
+    normalized_url = strip_url url
 
     # If the url has the feed:// or feed: uri-schemes, remove them.
     # The order in which these removals happen is critical, don't change it!!!
@@ -72,7 +64,7 @@ class URLNormalizer
     # Check that the passed string contains something
     return nil if url.blank?
 
-    normalized_url = url.strip
+    normalized_url = strip_url url
 
     # Addressable treats scheme-relative URIs as relative URIs, but we do not want to add the feed host etc to
     # scheme-relative URIs in entries. So, if URI is scheme-relative, skip the manipulations performed on relative
@@ -125,6 +117,24 @@ class URLNormalizer
   #############################
   # PRIVATE CLASS METHODS
   #############################
+
+  ##
+  # Strip URL string of leading and trailing whitespaces and double quotes
+
+  def self.strip_url(url)
+    # Remove whitespaces at beginning/end of string
+    stripped_url = url.strip
+
+    # If the url begins or ends with mismatched " characters, remove them, otherwise Addressable gets confused
+    stripped_url.sub! /\A"+/, ''
+    stripped_url.sub! /"+\Z/, ''
+
+    # If there are whitespaces after a " character at the beginning of before a " at the end, remove them as well
+    stripped_url.strip!
+
+    return stripped_url
+  end
+  private_class_method :strip_url
 
   ##
   # Returns an Addressable::URI object with the URI of the feed to which an entry belongs.
