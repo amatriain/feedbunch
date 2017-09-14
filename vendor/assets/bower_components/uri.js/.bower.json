@@ -1,6 +1,6 @@
 {
   "name": "urijs",
-  "version": "1.18.10",
+  "version": "1.18.12",
   "main": "src/URI.js",
   "ignore": [
     ".*",
@@ -14,13 +14,13 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/medialize/URI.js",
-  "_release": "1.18.10",
+  "_release": "1.18.12",
   "_resolution": {
     "type": "version",
-    "tag": "v1.18.10",
-    "commit": "d6f596ce5dd463289ddd0ecf994503461b5f1894"
+    "tag": "v1.18.12",
+    "commit": "61cd727e65b8103110c6e207188e2250f5677213"
   },
   "_source": "https://github.com/medialize/URI.js.git",
-  "_target": "1.18.10",
+  "_target": "1.18.12",
   "_originalSource": "uri.js"
 }

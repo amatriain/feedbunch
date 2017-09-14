@@ -1,7 +1,7 @@
 /*!
  * URI.js - Mutating URLs
  *
- * Version: 1.18.10
+ * Version: 1.18.12
  *
  * Author: Rodney Rehm
  * Web: http://medialize.github.io/URI.js/
@@ -77,7 +77,11 @@
     return this;
   }
 
-  URI.version = '1.18.10';
+  function isInteger(value) {
+    return /^[0-9]+$/.test(value);
+  }
+
+  URI.version = '1.18.12';
 
   var p = URI.prototype;
   var hasOwn = Object.prototype.hasOwnProperty;
@@ -207,7 +211,7 @@
   URI.escapeQuerySpace = true;
   // static properties
   URI.protocol_expression = /^[a-z][a-z0-9.+-]*$/i;
-  URI.idn_expression = /[^a-z0-9\.-]/i;
+  URI.idn_expression = /[^a-z0-9\._-]/i;
   URI.punycode_expression = /(xn--)/i;
   // well, 333.444.555.666 matches, but it sure ain't no IPv4 - do we care?
   URI.ip4_expression = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
@@ -240,10 +244,16 @@
     ws: '80',
     wss: '443'
   };
+  // list of protocols which always require a hostname
+  URI.hostProtocols = [
+    'http',
+    'https'
+  ];
+
   // allowed hostname characters according to RFC 3986
   // ALPHA DIGIT "-" "." "_" "~" "!" "$" "&" "'" "(" ")" "*" "+" "," ";" "=" %encoded
-  // I've never seen a (non-IDN) hostname other than: ALPHA DIGIT . -
-  URI.invalid_hostname_characters = /[^a-zA-Z0-9\.-]/;
+  // I've never seen a (non-IDN) hostname other than: ALPHA DIGIT . - _
+  URI.invalid_hostname_characters = /[^a-zA-Z0-9\.\-:_]/;
   // map DOM Elements to their URI attribute
   URI.domAttributes = {
     'a': 'href',
@@ -573,6 +583,12 @@
     if (parts.hostname && string.substring(pos).charAt(0) !== '/') {
       pos++;
       string = '/' + string;
+    }
+
+    URI.ensureValidHostname(parts.hostname, parts.protocol);
+
+    if (parts.port) {
+      URI.ensureValidPort(parts.port);
     }
 
     return string.substring(pos) || '/';
@@ -1015,20 +1031,42 @@
     return string;
   };
 
-  URI.ensureValidHostname = function(v) {
+  URI.ensureValidHostname = function(v, protocol) {
     // Theoretically URIs allow percent-encoding in Hostnames (according to RFC 3986)
     // they are not part of DNS and therefore ignored by URI.js
 
-    if (v.match(URI.invalid_hostname_characters)) {
+    var hasHostname = !!v; // not null and not an empty string
+    var hasProtocol = !!protocol;
+    var rejectEmptyHostname = false;
+
+    if (hasProtocol) {
+      rejectEmptyHostname = arrayContains(URI.hostProtocols, protocol);
+    }
+
+    if (rejectEmptyHostname && !hasHostname) {
+      throw new TypeError('Hostname cannot be empty, if protocol is ' + protocol);
+    } else if (v && v.match(URI.invalid_hostname_characters)) {
       // test punycode
       if (!punycode) {
-        throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-] and Punycode.js is not available');
+        throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-:_] and Punycode.js is not available');
       }
-
       if (punycode.toASCII(v).match(URI.invalid_hostname_characters)) {
-        throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-]');
+        throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-:_]');
       }
     }
+  };
+
+  URI.ensureValidPort = function (v) {
+    if (!v) {
+      return;
+    }
+
+    var port = Number(v);
+    if (isInteger(port) && (port > 0) && (port < 65536)) {
+      return;
+    }
+
+    throw new TypeError('Port "' + v + '" is not a valid port');
   };
 
   // noConflict
@@ -1288,9 +1326,7 @@
           v = v.substring(1);
         }
 
-        if (v.match(/[^0-9]/)) {
-          throw new TypeError('Port "' + v + '" contains characters other than [0-9]');
-        }
+        URI.ensureValidPort(v);
       }
     }
     return _port.call(this, v, build);
@@ -1308,6 +1344,7 @@
       }
 
       v = x.hostname;
+      URI.ensureValidHostname(v, this._parts.protocol);
     }
     return _hostname.call(this, v, build);
   };
@@ -1426,8 +1463,12 @@
         v += '.';
       }
 
+      if (v.indexOf(':') !== -1) {
+        throw new TypeError('Domains cannot contain colons');
+      }
+
       if (v) {
-        URI.ensureValidHostname(v);
+        URI.ensureValidHostname(v, this._parts.protocol);
       }
 
       this._parts.hostname = this._parts.hostname.replace(replace, v);
@@ -1466,7 +1507,11 @@
         throw new TypeError('cannot set domain empty');
       }
 
-      URI.ensureValidHostname(v);
+      if (v.indexOf(':') !== -1) {
+        throw new TypeError('Domains cannot contain colons');
+      }
+
+      URI.ensureValidHostname(v, this._parts.protocol);
 
       if (!this._parts.hostname || this.is('IP')) {
         this._parts.hostname = v;
