@@ -130,7 +130,7 @@ GEM
       thor (~> 0.19.4)
       tins (~> 1.6)
     crass (1.0.3)
-    daemons (1.2.4)
+    daemons (1.2.5)
     database_cleaner (1.6.2)
     devise (4.3.0)
       bcrypt (~> 3.0)
@@ -170,7 +170,7 @@ GEM
     formtastic_i18n (0.6.0)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
-    haml (5.0.2)
+    haml (5.0.4)
       temple (>= 0.8.0)
       tilt
     has_scope (0.7.1)
