@@ -9,7 +9,7 @@ set :application, 'feedbunch'
 #############################################################
 
 set :rvm_type, :user
-set :rvm_ruby_version, 'ruby-2.4.2'
+set :rvm_ruby_version, 'ruby-2.4.3'
 set :rvm_user_path, '~/.rvm'
 
 #############################################################
