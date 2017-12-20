@@ -67,7 +67,7 @@ gem 'sidekiq-cron'
 gem 'sidekiq-superworker'
 
 # Web GUI for Redis instances
-gem 'redmon'
+gem 'redmon', git: 'https://github.com/amatriain/redmon.git', branch: 'fix-redis-connect'
 # Authorization management
 
 gem 'cancancan'
