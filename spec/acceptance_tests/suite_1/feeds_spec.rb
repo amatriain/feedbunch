@@ -16,7 +16,12 @@ describe 'feeds', type: :feature do
 
   it 'shows an alert if it cannot load feeds', js: true do
     allow_any_instance_of(User).to receive(:subscribed_feeds).and_raise StandardError.new
-    login_user_for_feature @user
+    visit new_user_session_path
+    close_cookies_alert
+    fill_in 'Email', with: @user.email
+    fill_in 'Password', with: @user.password
+    click_on 'Log in'
+    user_should_be_logged_in
     should_show_alert 'problem-loading-feeds'
   end
 
