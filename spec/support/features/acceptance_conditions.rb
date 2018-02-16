@@ -21,6 +21,7 @@ end
 
 def page_should_finish_loading
   expect(page).not_to have_css '.sidebar-spinner'
+  expect(page).to have_css '#subscription-stats'
 end
 
 ##
