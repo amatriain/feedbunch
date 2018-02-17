@@ -163,7 +163,7 @@ GEM
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.7.0)
-    et-orbi (1.0.5)
+    et-orbi (1.0.9)
       tzinfo
     eventmachine (1.2.5)
     execjs (2.7.0)
