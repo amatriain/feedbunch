@@ -1,7 +1,7 @@
 {
   "name": "dsl-generated-dependencies",
   "dependencies": {
-    "jquery": "3.2.1",
+    "jquery": "3.3.1",
     "angular": "1.6.6",
     "angular-sanitize": "1.6.6",
     "angular-touch": "1.6.6",
