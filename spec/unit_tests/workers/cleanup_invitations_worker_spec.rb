@@ -3,7 +3,7 @@ require 'rails_helper'
 describe CleanupInvitationsWorker do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
 
     # During the tests, Time.zone.now will always return "2001-01-01 10:00:00"
     @time_now = Time.zone.parse('2000-01-01 10:00:00')
@@ -149,11 +149,11 @@ describe CleanupInvitationsWorker do
 
     it 'does not destroy users who signed up instead of being invited' do
       time_new_signup = @time_invitations_old + 1.day
-      new_user = FactoryGirl.create :user, created_at:  time_new_signup,
+      new_user = FactoryBot.create :user, created_at:  time_new_signup,
                                     confirmed_at: time_new_signup,
                                     confirmation_sent_at: time_new_signup
       time_old_signup = @time_invitations_old - 1.day
-      old_user = FactoryGirl.create :user, created_at:  time_old_signup,
+      old_user = FactoryBot.create :user, created_at:  time_old_signup,
                                     confirmed_at: time_old_signup,
                                     confirmation_sent_at: time_old_signup
 
@@ -168,11 +168,11 @@ describe CleanupInvitationsWorker do
 
     it 'does not destroy users who signed up but did not confirm their email address' do
       time_new_signup = @time_invitations_old + 1.day
-      new_user = FactoryGirl.create :user, created_at:  time_new_signup,
+      new_user = FactoryBot.create :user, created_at:  time_new_signup,
                                     confirmed_at: nil,
                                     confirmation_sent_at: time_new_signup
       time_old_signup = @time_invitations_old - 1.day
-      old_user = FactoryGirl.create :user, created_at:  time_old_signup,
+      old_user = FactoryBot.create :user, created_at:  time_old_signup,
                                     confirmed_at: nil,
                                     confirmation_sent_at: time_old_signup
 

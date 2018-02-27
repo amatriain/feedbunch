@@ -4,19 +4,19 @@ describe FeedClient do
   before :each do
     @original_feed_title = 'Some feed title'
     @original_feed_url = 'http://some.feed.com/'
-    @feed = FactoryGirl.create :feed, title: @original_feed_title, url: @original_feed_url
+    @feed = FactoryBot.create :feed, title: @original_feed_title, url: @original_feed_url
 
     @feed_title = 'xkcd.com'
     @feed_url = 'http://xkcd.com/'
 
-    @entry1 = FactoryGirl.build :entry
+    @entry1 = FactoryBot.build :entry
     @entry1.title = 'Silence'
     @entry1.url = 'http://xkcd.com/1199/'
     @entry1.summary = %{&lt;p&gt;All music is just performances of 4'33" in studios where another band happened to be playing at the time.&lt;/p&gt;}
     @entry1.published = 'Mon, 15 Apr 2013 04:00:00 -0000'
     @entry1.guid = 'http://xkcd.com/1199/'
 
-    @entry2 = FactoryGirl.build :entry
+    @entry2 = FactoryBot.build :entry
     @entry2.title = 'Geologist'
     @entry2.url = 'http://xkcd.com/1198/'
     @entry2.summary = %{&lt;p&gt;'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.';&lt;/p&gt;}
@@ -85,7 +85,7 @@ FEED_XML
     it 'ignores entry if it is received again' do
       # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
-      entry_before = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
+      entry_before = FactoryBot.create :entry, feed_id: @feed.id, title: 'Original title',
                                         url: 'http://original.url.com', author: 'Original author',
                                         content: 'Original content', summary: 'Original summary',
                                         published: Time.zone.parse('2013-01-01T00:00:00'), guid: @entry1.guid
@@ -105,10 +105,10 @@ FEED_XML
     end
 
     it 'saves entry if another one with the same guid but from a different feed is already in the database' do
-      feed2 = FactoryGirl.create :feed
+      feed2 = FactoryBot.create :feed
       # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
-      entry = FactoryGirl.create :entry, feed_id: feed2.id, title: 'Original title',
+      entry = FactoryBot.create :entry, feed_id: feed2.id, title: 'Original title',
                                  url: 'http://original.url.com/', author: 'Original author',
                                  content: 'Original content', summary: '<p>Original summary</p>',
                                  published: Time.zone.parse('2013-01-01T00:00:00'),
@@ -221,9 +221,9 @@ FEED_XML
       @feed_title = 'ongoing by Tim Bray'
       @feed_url = 'https://www.tbray.org/ongoing/'
       @feed_fetch_url = 'https://www.tbray.org/ongoing/ongoing.atom'
-      @feed = FactoryGirl.create :feed, title: @feed_title, url: @feed_url, fetch_url: @feed_fetch_url
+      @feed = FactoryBot.create :feed, title: @feed_title, url: @feed_url, fetch_url: @feed_fetch_url
 
-      @entry = FactoryGirl.build :entry
+      @entry = FactoryBot.build :entry
       @entry.title = 'Stross&#x2019; (unfinished) Merchant Princes'
       @entry.url = 'https://www.tbray.org/ongoing/When/201x/2014/03/25/Merchant-Princes'
       @entry.summary = "<p>I just finished reading the three volumes of The Merchant Princes Omnibus by Charlie Stross:</p>"
@@ -305,9 +305,9 @@ FEED_XML
       @feed_title = 'Not Invented Here'
       @feed_url = 'http://notinventedhe.re/'
       @feed_fetch_url = 'http://feeds.feedburner.com/NotInventedHere'
-      @feed = FactoryGirl.create :feed, title: @feed_title, url: @feed_url, fetch_url: @feed_fetch_url
+      @feed = FactoryBot.create :feed, title: @feed_title, url: @feed_url, fetch_url: @feed_fetch_url
 
-      @entry = FactoryGirl.build :entry
+      @entry = FactoryBot.build :entry
       @entry.title = 'This strip was Not Invented Here on Thursday, May 29, 2014'
       @entry.url = 'http://notinventedhe.re/on/2014-5-29/comic'
       @entry.summary = ''
@@ -417,7 +417,7 @@ WEBPAGE_HTML
       feed_fetch_url = 'http://webpage.com/feed'
       feed_path = '/feed'
       feed_url = 'http://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -451,7 +451,7 @@ WEBPAGE_HTML
       feed_fetch_url_relative = '//webpage.com/feed'
       feed_fetch_url_absolute = 'http://webpage.com/feed'
       feed_url = 'http://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -485,7 +485,7 @@ WEBPAGE_HTML
       feed_fetch_url_relative = '//webpage.com/feed'
       feed_fetch_url_absolute = 'https://webpage.com/feed'
       feed_url = 'https://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -596,8 +596,8 @@ WEBPAGE_HTML
 FEED_XML
       allow(feed_xml).to receive(:headers).and_return({})
 
-      old_feed = FactoryGirl.create :feed, fetch_url: feed_url
-      new_feed = FactoryGirl.create :feed
+      old_feed = FactoryBot.create :feed, fetch_url: feed_url
+      new_feed = FactoryBot.create :feed
 
       # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
       allow(RestClient).to receive(:get) do |url|

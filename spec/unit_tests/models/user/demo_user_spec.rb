@@ -11,7 +11,7 @@ describe User, type: :model do
       @demo_password = 'feedbunch-demo'
       Feedbunch::Application.config.demo_password = @demo_password
 
-      @demo_user = FactoryGirl.create :user,
+      @demo_user = FactoryBot.create :user,
                                       email: @demo_email,
                                       password: @demo_password,
                                       confirmed_at: Time.zone.now
@@ -60,7 +60,7 @@ describe User, type: :model do
       end
 
       it 'can change email of other users' do
-        user = FactoryGirl.create :user
+        user = FactoryBot.create :user
         expect(user.email).not_to eq @demo_email
 
         user.update email: 'another@email.com'
@@ -73,7 +73,7 @@ describe User, type: :model do
       end
 
       it 'can change password of other users' do
-        user = FactoryGirl.create :user
+        user = FactoryBot.create :user
         encrypted_password = user.encrypted_password
         encrypted_demo_password = @demo_user.encrypted_password
         expect(encrypted_password).not_to eq encrypted_demo_password
@@ -89,7 +89,7 @@ describe User, type: :model do
       end
 
       it 'can lock other users' do
-        user = FactoryGirl.create :user
+        user = FactoryBot.create :user
         expect(user.locked_at).to be nil
 
         user.update locked_at: Time.zone.now, unlock_token: 'aaabbbccc'

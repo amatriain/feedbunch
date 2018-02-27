@@ -3,11 +3,11 @@ require 'rails_helper'
 describe 'keyboard shortcuts', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed1 = FactoryGirl.create :feed
+    @user = FactoryBot.create :user
+    @feed1 = FactoryBot.create :feed
 
-    @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, published: Time.zone.parse('2000-10-10')
-    @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id, published: Time.zone.parse('2000-01-01')
+    @entry1 = FactoryBot.build :entry, feed_id: @feed1.id, published: Time.zone.parse('2000-10-10')
+    @entry2 = FactoryBot.build :entry, feed_id: @feed1.id, published: Time.zone.parse('2000-01-01')
     @feed1.entries << @entry1 << @entry2
 
     @user.subscribe @feed1.fetch_url
@@ -61,18 +61,18 @@ describe 'keyboard shortcuts', type: :feature do
   context 'sidebar shortcuts' do
 
     before :each do
-      @feed2 = FactoryGirl.create :feed
-      @feed3 = FactoryGirl.create :feed
+      @feed2 = FactoryBot.create :feed
+      @feed3 = FactoryBot.create :feed
 
-      @entry3 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @entry3 = FactoryBot.build :entry, feed_id: @feed2.id
       @feed2.entries << @entry3
-      @entry4 = FactoryGirl.build :entry, feed_id: @feed3.id
+      @entry4 = FactoryBot.build :entry, feed_id: @feed3.id
       @feed3.entries << @entry4
 
       @user.subscribe @feed2.fetch_url
       @user.subscribe @feed3.fetch_url
 
-      @folder = FactoryGirl.build :folder, user_id: @user.id
+      @folder = FactoryBot.build :folder, user_id: @user.id
       @user.folders << @folder
 
       @folder.feeds << @feed2 << @feed3
@@ -209,8 +209,8 @@ describe 'keyboard shortcuts', type: :feature do
       s.update unread_entries: 1
 
       # @feed4 has one entry, @entry5 (read)
-      @feed4 = FactoryGirl.create :feed
-      @entry5 = FactoryGirl.build :entry, feed_id: @feed4.id
+      @feed4 = FactoryBot.create :feed
+      @entry5 = FactoryBot.build :entry, feed_id: @feed4.id
       @feed4.entries << @entry5
       @user.subscribe @feed4.fetch_url
       es2 = EntryState.where(entry_id: @entry5.id, user_id: @user.id).first

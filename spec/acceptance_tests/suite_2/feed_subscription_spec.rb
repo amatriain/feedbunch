@@ -3,18 +3,18 @@ require 'rails_helper'
 describe 'subscription to feeds', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed1 = FactoryGirl.create :feed
-    @feed2 = FactoryGirl.create :feed
+    @user = FactoryBot.create :user
+    @feed1 = FactoryBot.create :feed
+    @feed2 = FactoryBot.create :feed
 
-    @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @entry1 = FactoryBot.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry1
-    @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
+    @entry2 = FactoryBot.build :entry, feed_id: @feed2.id
     @feed2.entries << @entry2
 
     @user.subscribe @feed1.fetch_url
 
-    @job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed2.fetch_url
+    @job_state = FactoryBot.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed2.fetch_url
     allow_any_instance_of(User).to receive :enqueue_subscribe_job do |user|
       if user.id == @user.id
         user.subscribe_job_states << @job_state
@@ -209,7 +209,7 @@ describe 'subscription to feeds', type: :feature do
       before :each do
         @blacklisted_url = 'some.aede.bastard.com'
         allow_any_instance_of(User).to receive :enqueue_subscribe_job do |user, url|
-          @job_state_2 = FactoryGirl.build :subscribe_job_state,
+          @job_state_2 = FactoryBot.build :subscribe_job_state,
                                           user_id: @user.id,
                                           fetch_url: @blacklisted_url,
                                           state: SubscribeJobState::ERROR

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'invite friend', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
     @friend_email = 'some_friends_email@domain.com'
 
     login_user_for_feature @user
@@ -39,7 +39,7 @@ describe 'invite friend', type: :feature do
     end
 
     it 'cannot invite already confirmed user', js: true do
-      existing_user = FactoryGirl.create :user, email: @friend_email
+      existing_user = FactoryBot.create :user, email: @friend_email
 
       send_invitation_for_feature @friend_email
       should_show_alert 'problem-invited-user-exists'
@@ -162,7 +162,7 @@ describe 'invite friend', type: :feature do
 
     it 'does not destroy confirmed user when trying to sign up again', js: true do
       password = 'friend_password'
-      existing_user = FactoryGirl.create :user, email: @friend_email, password: password
+      existing_user = FactoryBot.create :user, email: @friend_email, password: password
       logout_user_for_feature
 
       expect_any_instance_of(User).not_to receive :destroy

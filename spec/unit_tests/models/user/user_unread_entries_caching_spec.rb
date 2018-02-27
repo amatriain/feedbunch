@@ -2,14 +2,14 @@ require 'rails_helper'
 
 describe User, type: :model do
   before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
-    @entry1 = FactoryGirl.build :entry, feed_id: @feed.id
-    @entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
+    @entry1 = FactoryBot.build :entry, feed_id: @feed.id
+    @entry2 = FactoryBot.build :entry, feed_id: @feed.id
     @feed.entries << @entry1 << @entry2
     @user.subscribe @feed.fetch_url
     @user.change_entries_state @entry1, 'read'
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @folder = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder
     @folder.feeds << @feed
   end
@@ -40,9 +40,9 @@ describe User, type: :model do
       end
 
       it 'counts all entries as unread when subscribing to a feed' do
-        feed2 = FactoryGirl.create :feed
-        entry1 = FactoryGirl.build :entry, feed_id: feed2.id
-        entry2 = FactoryGirl.build :entry, feed_id: feed2.id
+        feed2 = FactoryBot.create :feed
+        entry1 = FactoryBot.build :entry, feed_id: feed2.id
+        entry2 = FactoryBot.build :entry, feed_id: feed2.id
         feed2.entries << entry1 << entry2
         @user.subscribe feed2.fetch_url
 

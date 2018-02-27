@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'automatically closing notices and alerts', type: :feature do
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
   end
 
   it 'closes rails notices after 5 seconds', js: true do

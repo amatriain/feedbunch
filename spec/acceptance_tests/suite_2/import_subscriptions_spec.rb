@@ -4,9 +4,9 @@ describe 'import subscriptions', type: :feature do
   before :each do
     @data_file = File.absolute_path File.join(__dir__, '..', '..', 'attachments', 'feedbunch@gmail.com-takeout.zip')
 
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
-    @entry = FactoryGirl.build :entry, feed_id: @feed.id
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
+    @entry = FactoryBot.build :entry, feed_id: @feed.id
     @feed.entries << @entry
     @user.subscribe @feed.fetch_url
 
@@ -38,14 +38,14 @@ describe 'import subscriptions', type: :feature do
     end
 
     it 'shows button if user has an errored import', js: true do
-      opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::ERROR
+      opml_import_job_state = FactoryBot.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::ERROR
       @user.opml_import_job_state = opml_import_job_state
       visit edit_user_registration_path
       expect(page).to have_css 'a#opml-import-button', visible: true
     end
 
     it 'does not show button if user has a running import', js: true do
-      opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING
+      opml_import_job_state = FactoryBot.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING
       @user.opml_import_job_state = opml_import_job_state
       visit edit_user_registration_path
       expect(page).to have_no_css 'a#opml-import-button', visible: true
@@ -53,7 +53,7 @@ describe 'import subscriptions', type: :feature do
     end
 
     it 'shows button if user has a successful import', js: true do
-      opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::SUCCESS
+      opml_import_job_state = FactoryBot.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::SUCCESS
       @user.opml_import_job_state = opml_import_job_state
       visit edit_user_registration_path
       expect(page).to have_css 'a#opml-import-button', visible: true
@@ -127,10 +127,10 @@ describe 'import subscriptions', type: :feature do
       failed_url_1 = 'http://failed_url_1.com'
       failed_url_2 = 'http://failed_url_2.com'
       opml_import_job_state = @user.reload.opml_import_job_state
-      import_failure_1 = FactoryGirl.build :opml_import_failure,
+      import_failure_1 = FactoryBot.build :opml_import_failure,
                                            opml_import_job_state_id: opml_import_job_state.id,
                                            url: failed_url_1
-      import_failure_2 = FactoryGirl.build :opml_import_failure,
+      import_failure_2 = FactoryBot.build :opml_import_failure,
                                            opml_import_job_state_id: opml_import_job_state.id,
                                            url: failed_url_2
       opml_import_job_state.opml_import_failures << import_failure_1 << import_failure_2
@@ -149,10 +149,10 @@ describe 'import subscriptions', type: :feature do
 
     it 'shows new feeds and folders when import finishes successfully', js: true do
       read_feed @feed, @user
-      folder = FactoryGirl.build :folder, user_id: @user.id
+      folder = FactoryBot.build :folder, user_id: @user.id
       @user.folders << folder
-      feed = FactoryGirl.create :feed
-      entry = FactoryGirl.build :entry, feed_id: feed.id
+      feed = FactoryBot.create :feed
+      entry = FactoryBot.build :entry, feed_id: feed.id
       feed.entries << entry
       @user.subscribe feed.fetch_url
       folder.feeds << feed
@@ -167,13 +167,13 @@ describe 'import subscriptions', type: :feature do
     end
 
     it 'updates stats in start page when import finishes successfully', js: true do
-      feed1 = FactoryGirl.create :feed
-      entry1 = FactoryGirl.build :entry, feed_id: feed1.id
+      feed1 = FactoryBot.create :feed
+      entry1 = FactoryBot.build :entry, feed_id: feed1.id
       feed1.entries << entry1
 
-      feed2 = FactoryGirl.create :feed
-      entry2 = FactoryGirl.build :entry, feed_id: feed2.id
-      entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+      feed2 = FactoryBot.create :feed
+      entry2 = FactoryBot.build :entry, feed_id: feed2.id
+      entry3 = FactoryBot.build :entry, feed_id: feed2.id
       feed1.entries << entry2 << entry3
 
       @user.subscribe feed1.fetch_url

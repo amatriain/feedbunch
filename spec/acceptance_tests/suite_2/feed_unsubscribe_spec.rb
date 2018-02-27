@@ -3,16 +3,16 @@ require 'rails_helper'
 describe 'unsubscribe from feed', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed1 = FactoryGirl.create :feed
-    @feed2 = FactoryGirl.create :feed
-    @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @user = FactoryBot.create :user
+    @feed1 = FactoryBot.create :feed
+    @feed2 = FactoryBot.create :feed
+    @entry1 = FactoryBot.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry1
-    @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
+    @entry2 = FactoryBot.build :entry, feed_id: @feed2.id
     @feed2.entries << @entry2
     @user.subscribe @feed1.fetch_url
     @user.subscribe @feed2.fetch_url
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @folder = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder
     @folder.feeds << @feed1
 
@@ -59,8 +59,8 @@ describe 'unsubscribe from feed', type: :feature do
 
   it 'hides unsubscribe button when reading a whole folder', js: true do
     # @feed1, feed3 are in @folder
-    feed3 = FactoryGirl.create :feed
-    entry3 = FactoryGirl.build :entry, feed_id: feed3.id
+    feed3 = FactoryBot.create :feed
+    entry3 = FactoryBot.build :entry, feed_id: feed3.id
     feed3.entries << entry3
     @user.subscribe feed3.fetch_url
     @folder.feeds << feed3
@@ -114,7 +114,7 @@ describe 'unsubscribe from feed', type: :feature do
   end
 
   it 'still shows the feed for other subscribed users', js: true do
-    user2 = FactoryGirl.create :user
+    user2 = FactoryBot.create :user
     user2.subscribe @feed1.fetch_url
 
     # Unsubscribe @user from @feed1 and logout
@@ -145,7 +145,7 @@ describe 'unsubscribe from feed', type: :feature do
   end
 
   it 'does not remove folders with other feeds without unread entries', js: true do
-    feed3 = FactoryGirl.create :feed
+    feed3 = FactoryBot.create :feed
     @user.subscribe feed3.fetch_url
     @folder.feeds << feed3
     visit read_path
@@ -202,7 +202,7 @@ describe 'unsubscribe from feed', type: :feature do
     end
 
     it 'removes refresh job state alert for the unsubscribed feed', js: true do
-      job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed1.id
+      job_state = FactoryBot.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed1.id
       @user.refresh_feed_job_states << job_state
       go_to_start_page
       within '#refresh-state-alerts' do
@@ -218,7 +218,7 @@ describe 'unsubscribe from feed', type: :feature do
     end
 
     it 'removes subscribe job state alert for the unsubscribed feed', js: true do
-      job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, feed_id: @feed1.id,
+      job_state = FactoryBot.build :subscribe_job_state, user_id: @user.id, feed_id: @feed1.id,
                                     fetch_url: @feed1.fetch_url, state: SubscribeJobState::SUCCESS
       @user.subscribe_job_states << job_state
       go_to_start_page

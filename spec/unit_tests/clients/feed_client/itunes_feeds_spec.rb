@@ -3,19 +3,19 @@ require 'rails_helper'
 describe FeedClient do
 
   before :each do
-    @feed = FactoryGirl.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
+    @feed = FactoryBot.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
 
     @feed_title = 'Menéame: publicadas'
     @feed_url = 'http://www.meneame.net/'
 
-    @entry1 = FactoryGirl.build :entry
+    @entry1 = FactoryBot.build :entry
     @entry1.title = 'Los correos secretos de Caja Madrid: así celebró Blesa el \'éxito\' de las preferentes'
     @entry1.url = 'http://meneame.feedsportal.com/c/34737/f/639540/s/34adc456/sc/36/l/0L0Smeneame0Bnet0Cstory0Ccorreos0Esecretos0Ecaja0Emadrid0Easi0Ecelebro0Eblesa0Eexito0Epreferentes/story01.htm'
     @entry1.summary = %{&lt;p&gt;Como una fiesta financiera, como un pelotazo empresarial, como un nuevo récord. Así vivió Miguel Blesa, entonces presidente de Caja Madrid, la millonaria emisión de preferentes en 2009, un producto financiero que atrapó a miles de clientes de la entidad y volatilizó sus ahorros. Varios correos del mejor amigo de Aznar en la banca, a los que ha tenido acceso eldiario.es, describen el ambiente de euforia sin vértigo en aquellos días de emisiones millonarias.&lt;/p&gt;}
     @entry1.published = 'Wed, 11 Dec 2013 07:20:04 GMT'
     @entry1.guid = 'http://www.meneame.net/story/correos-secretos-caja-madrid-asi-celebro-blesa-exito-preferentes'
 
-    @entry2 = FactoryGirl.build :entry
+    @entry2 = FactoryBot.build :entry
     @entry2.title = '“La mafia despilfarradora y corrupta no está dispuesta a tocar nada que afecte a su chiringuito”'
     @entry2.url = 'http://meneame.feedsportal.com/c/34737/f/639540/s/34ab2350/sc/36/l/0L0Smeneame0Bnet0Cstory0Cmafia0Edespilfarradora0Ecorrupta0Eno0Eesta0Edispuesta0Etocar0Enada/story01.htm'
     @entry2.summary = %{&lt;p&gt;En EE.UU baja el paro, Gran Bretaña crece ya al 5% y el resto del mundo trabaja sin desmayo para salir de la crisis, pero España sigue empantanada en el fango de la corrupción, el despilfarro público y su consecuencia directa: paro, exilio laboral, miseria y hasta hambre física. Eurostat desmiente las cifras oficiales: sigue habiendo más de 6 millones de parados a causa del creciente gasto de políticos y autonomías.&lt;/p&gt;}
@@ -130,7 +130,7 @@ FEED_XML
     it 'ignores entry if it is received again' do
       # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
-      entry_before = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
+      entry_before = FactoryBot.create :entry, feed_id: @feed.id, title: 'Original title',
                                         url: 'http://original.url.com', author: 'Original author',
                                         content: 'Original content', summary: 'Original summary',
                                         published: Time.zone.parse('2013-01-01T00:00:00'), guid: @entry1.guid
@@ -150,10 +150,10 @@ FEED_XML
     end
 
     it 'saves entry if another one with the same guid but from a different feed is already in the database' do
-      feed2 = FactoryGirl.create :feed
+      feed2 = FactoryBot.create :feed
       # Create an entry for feed feed2 with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
-      entry = FactoryGirl.create :entry, feed_id: feed2.id, title: 'Original title',
+      entry = FactoryBot.create :entry, feed_id: feed2.id, title: 'Original title',
                                  url: 'http://original.url.com/', author: 'Original author',
                                  content: 'Original content', summary: '<p>Original summary</p>',
                                  published: Time.zone.parse('2013-01-01T00:00:00'),
@@ -200,18 +200,18 @@ FEED_XML
   context 'Itunes feed with enclosure (e.g. podcast)' do
 
     before :each do
-      @feed = FactoryGirl.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
+      @feed = FactoryBot.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
       @feed_title = 'Planet Money'
       @feed_url = 'http://www.npr.org/planetmoney'
 
-      @entry1 = FactoryGirl.build :entry
+      @entry1 = FactoryBot.build :entry
       @entry1.title = '#474: The North Korea Files'
       @entry1.url = 'https://play.podtrac.com/npr-510289/npr.mc.tritondigital.com/NPR_510289/media/anon.npr-podcasts/podcast/510289/365828514/npr_365828514.mp3?orgId=1&d=1495&p=510289&story=365828514&t=podcast&e=365828514&ft=pod&f=510289'
       @entry1.summary = %{&lt;p&gt;Note: Today's show is a rerun. It originally ran in July 2013. U.S. citizens who want to buy stuff from North Korea have to write a letter to the U.S. government asking for special permission. As regular listeners know, we're sort of obsessed with North Korea. So we decided to try to get those letters. We filed a Freedom of Information Act request. And we got a stack of heavily redacted letters. On today's show: we try to figure out who sent the letters, why they wanted to do business with North Korea, and what that tells us about the North Korean economy.&lt;/p&gt;}
       @entry1.published = 'Fri, 21 Nov 2014 21:03:42 -0500'
       @entry1.guid = 'http://podcastdownload.npr.org/anon.npr-podcasts/podcast/510289/365828514/npr_365828514.mp3'
 
-      @entry2 = FactoryGirl.build :entry
+      @entry2 = FactoryBot.build :entry
       @entry2.title = '#585: Chasing The Dread Pirate Roberts'
       @entry2.url = 'https://play.podtrac.com/npr-510289/npr.mc.tritondigital.com/NPR_510289/media/anon.npr-mp3/npr/blog/2014/11/20141125_blog_pmoney.mp3?orgId=1&d=1218&p=510289&story=432088483&t=podcast&e=432088483&ft=pod&f=510289'
       @entry2.summary = %{&lt;p&gt;Today on the show, the story of the Dread Pirate Roberts of the internet age. A man who dreamed of setting up a utopian marketplace, a place where you could buy and sell almost anything in secret. The pirate created a market with no contracts, no regulations, and really no government interference. The Dread Pirate believed in total economic freedom, but in order to make his market work, he had to do some very bad things.&lt;/p&gt;}
@@ -310,7 +310,7 @@ FEED_XML
     it 'ignores entry if it is received again' do
       # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
-      entry_before = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
+      entry_before = FactoryBot.create :entry, feed_id: @feed.id, title: 'Original title',
                                         url: 'http://original.url.com', author: 'Original author',
                                         content: 'Original content', summary: 'Original summary',
                                         published: Time.zone.parse('2013-01-01T00:00:00'), guid: @entry1.guid
@@ -330,10 +330,10 @@ FEED_XML
     end
 
     it 'saves entry if another one with the same guid but from a different feed is already in the database' do
-      feed2 = FactoryGirl.create :feed
+      feed2 = FactoryBot.create :feed
       # Create an entry for feed feed2 with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
-      entry = FactoryGirl.create :entry, feed_id: feed2.id, title: 'Original title',
+      entry = FactoryBot.create :entry, feed_id: feed2.id, title: 'Original title',
                                  url: 'http://original.url.com/', author: 'Original author',
                                  content: 'Original content', summary: '<p>Original summary</p>',
                                  published: Time.zone.parse('2013-01-01T00:00:00'),
@@ -413,7 +413,7 @@ WEBPAGE_HTML
       feed_fetch_url = 'http://webpage.com/feed'
       feed_path = '/feed'
       feed_url = 'http://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -447,7 +447,7 @@ WEBPAGE_HTML
       feed_fetch_url_relative = '//webpage.com/feed'
       feed_fetch_url_absolute = 'http://webpage.com/feed'
       feed_url = 'http://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -481,7 +481,7 @@ WEBPAGE_HTML
       feed_fetch_url_relative = '//webpage.com/feed'
       feed_fetch_url_absolute = 'https://webpage.com/feed'
       feed_url = 'https://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -650,8 +650,8 @@ WEBPAGE_HTML
 FEED_XML
       allow(feed_xml).to receive(:headers).and_return({})
 
-      old_feed = FactoryGirl.create :feed, fetch_url: feed_url
-      new_feed = FactoryGirl.create :feed
+      old_feed = FactoryBot.create :feed, fetch_url: feed_url
+      new_feed = FactoryBot.create :feed
 
       # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
       allow(RestClient).to receive :get do |url|

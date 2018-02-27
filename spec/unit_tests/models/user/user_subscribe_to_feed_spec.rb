@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe User, type: :model do
   before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
   end
 
   context 'enqueue a job to subscribe to a feed' do
@@ -276,7 +276,7 @@ describe User, type: :model do
 
     it 'subscribes existing feed' do
       url = 'xkcd.com'
-      existing_feed = FactoryGirl.create :feed
+      existing_feed = FactoryBot.create :feed
       allow(FeedClient).to receive :fetch do
         existing_feed
       end
@@ -304,7 +304,7 @@ describe User, type: :model do
     it 'raises an error if user tries to subscribe twice to a feed, given its fetch_url missing a trailing slash' do
       feed_url = 'http://some.host/feed/'
       url_no_slash = 'http://some.host/feed'
-      feed = FactoryGirl.create :feed, fetch_url: feed_url
+      feed = FactoryBot.create :feed, fetch_url: feed_url
       # User is already subscribed to the feed
       @user.subscribe feed.fetch_url
 
@@ -320,7 +320,7 @@ describe User, type: :model do
     it 'raises an error if user tries to subscribe twice to a feed, given its fetch_url with an added trailing slash' do
       feed_url = 'http://some.host/feed'
       url_slash = 'http://some.host/feed/'
-      feed = FactoryGirl.create :feed, fetch_url: feed_url
+      feed = FactoryBot.create :feed, fetch_url: feed_url
       # User is already subscribed to the feed
       @user.subscribe feed.fetch_url
 
@@ -336,7 +336,7 @@ describe User, type: :model do
     it 'raises an error if user tries to subscribe twice to a feed, given its fetch_url without URI-scheme' do
       feed_url = 'http://some.host/feed/'
       url_no_scheme = 'some.host/feed/'
-      feed = FactoryGirl.create :feed, fetch_url: feed_url
+      feed = FactoryBot.create :feed, fetch_url: feed_url
       # User is already subscribed to the feed
       @user.subscribe feed.fetch_url
 
@@ -368,7 +368,7 @@ describe User, type: :model do
       url = 'http://some.host/feed'
       url_slash = 'http://some.host/feed/'
       # At first the user is not subscribed to the feed
-      feed = FactoryGirl.create :feed, fetch_url: url
+      feed = FactoryBot.create :feed, fetch_url: url
       expect(@user.feeds.where(fetch_url: feed.fetch_url)).to be_blank
 
       # The feed is already in the database, no attempt to save it should happen
@@ -386,7 +386,7 @@ describe User, type: :model do
       url = 'http://some.host/feed/'
       url_no_slash = 'http://some.host/feed'
       # At first the user is not subscribed to the feed
-      feed = FactoryGirl.create :feed, fetch_url: url
+      feed = FactoryBot.create :feed, fetch_url: url
       expect(@user.feeds.where(fetch_url: feed.fetch_url)).to be_blank
 
       # The feed is already in the database, no attempt to save it should happen
@@ -404,7 +404,7 @@ describe User, type: :model do
       url = 'http://some.host/feed/'
       url_no_scheme = 'some.host/feed/'
       # At first the user is not subscribed to the feed
-      feed = FactoryGirl.create :feed, fetch_url: url
+      feed = FactoryBot.create :feed, fetch_url: url
       expect(@user.feeds.where(fetch_url: feed.fetch_url)).to be_blank
 
       # The feed is already in the database, no attempt to save it should happen
@@ -424,7 +424,7 @@ describe User, type: :model do
       alternate_webpage_url = 'http://some.webpage.url/'
       fetch_url = 'http://some.webpage.url/feed.php'
 
-      existing_feed = FactoryGirl.create :feed, url: webpage_url, fetch_url: fetch_url
+      existing_feed = FactoryBot.create :feed, url: webpage_url, fetch_url: fetch_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -490,7 +490,7 @@ FEED_XML
     it 'raises an error if user tries to subscribe twice to a feed, given its url missing a trailing slash' do
       feed_url = 'http://some.host/feed/'
       url_no_slash = 'http://some.host/feed'
-      feed = FactoryGirl.create :feed, url: feed_url
+      feed = FactoryBot.create :feed, url: feed_url
       # User is already subscribed to the feed
       @user.subscribe feed.fetch_url
 
@@ -506,7 +506,7 @@ FEED_XML
     it 'raises an error if user tries to subscribe twice to a feed, given its url with an added trailing slash' do
       feed_url = 'http://some.host/feed'
       url_slash = 'http://some.host/feed/'
-      feed = FactoryGirl.create :feed, url: feed_url
+      feed = FactoryBot.create :feed, url: feed_url
       # User is already subscribed to the feed
       @user.subscribe feed.fetch_url
 
@@ -522,7 +522,7 @@ FEED_XML
     it 'raises an error if user tries to subscribe twice to a feed, given its url without URI-scheme' do
       feed_url = 'http://some.host/feed/'
       url_no_scheme = 'some.host/feed/'
-      feed = FactoryGirl.create :feed, url: feed_url
+      feed = FactoryBot.create :feed, url: feed_url
       # User is already subscribed to the feed
       @user.subscribe feed.fetch_url
 
@@ -541,7 +541,7 @@ FEED_XML
       alternate_webpage_url = 'http://some.webpage.url/'
       fetch_url = 'http://some.webpage.url/feed.php'
 
-      existing_feed = FactoryGirl.create :feed, url: webpage_url, fetch_url: fetch_url
+      existing_feed = FactoryBot.create :feed, url: webpage_url, fetch_url: fetch_url
       @user.subscribe existing_feed.fetch_url
 
       webpage_html = <<WEBPAGE_HTML
@@ -611,7 +611,7 @@ FEED_XML
       url = 'http://some.host/feed'
       url_slash = 'http://some.host/feed/'
       # At first the user is not subscribed to the feed
-      feed = FactoryGirl.create :feed, url: url
+      feed = FactoryBot.create :feed, url: url
       expect(@user.feeds.where(url: feed.fetch_url)).to be_blank
 
       # The feed is already in the database, no attempt to save it should happen
@@ -629,7 +629,7 @@ FEED_XML
       url = 'http://some.host/feed/'
       url_no_slash = 'http://some.host/feed'
       # At first the user is not subscribed to the feed
-      feed = FactoryGirl.create :feed, url: url
+      feed = FactoryBot.create :feed, url: url
       expect(@user.feeds.where(url: feed.fetch_url)).to be_blank
 
       # The feed is already in the database, no attempt to save it should happen
@@ -647,7 +647,7 @@ FEED_XML
       url = 'http://some.host/feed/'
       url_no_scheme = 'some.host/feed/'
       # At first the user is not subscribed to the feed
-      feed = FactoryGirl.create :feed, url: url
+      feed = FactoryBot.create :feed, url: url
       expect(@user.feeds.where(url: feed.fetch_url)).to be_blank
 
       # The feed is already in the database, no attempt to save it should happen
@@ -667,8 +667,8 @@ FEED_XML
       entry_title2 = 'another entry title'
       allow(FeedClient).to receive :fetch do
         feed = Feed.find_by fetch_url: feed_url
-        entry1 = FactoryGirl.build :entry, feed_id: feed.id, title: entry_title1
-        entry2 = FactoryGirl.build :entry, feed_id: feed.id, title: entry_title2
+        entry1 = FactoryBot.build :entry, feed_id: feed.id, title: entry_title1
+        entry2 = FactoryBot.build :entry, feed_id: feed.id, title: entry_title2
         feed.entries << entry1 << entry2
         feed
       end

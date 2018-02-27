@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Api::OpmlExportsController, type: :controller do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
     login_user_for_unit @user
   end
 
@@ -65,23 +65,23 @@ describe Api::OpmlExportsController, type: :controller do
 
     before :each do
       @filename = OPMLExporter::FILENAME
-      @opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      @opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                  state: OpmlExportJobState::SUCCESS,
                                                  filename: @filename,
                                                  export_date: Time.zone.now
       @user.opml_export_job_state = @opml_export_job_state
 
-      @feed1 = FactoryGirl.create :feed
-      @feed2 = FactoryGirl.create :feed
-      @feed3 = FactoryGirl.create :feed
-      @feed4 = FactoryGirl.create :feed
+      @feed1 = FactoryBot.create :feed
+      @feed2 = FactoryBot.create :feed
+      @feed3 = FactoryBot.create :feed
+      @feed4 = FactoryBot.create :feed
 
       @user.subscribe @feed1.fetch_url
       @user.subscribe @feed2.fetch_url
       @user.subscribe @feed3.fetch_url
       @user.subscribe @feed4.fetch_url
 
-      @folder = FactoryGirl.build :folder, user_id: @user.id
+      @folder = FactoryBot.build :folder, user_id: @user.id
       @user.folders << @folder
       @folder.feeds << @feed3 << @feed4
 

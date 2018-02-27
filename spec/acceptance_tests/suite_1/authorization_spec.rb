@@ -4,8 +4,8 @@ describe 'routes', type: :request do
 
   before :each do
     Warden.test_mode!
-    @normal_user = FactoryGirl.create :user
-    @admin_user = FactoryGirl.create :user_admin
+    @normal_user = FactoryBot.create :user
+    @admin_user = FactoryBot.create :user_admin
   end
 
   context 'Redmon access' do
@@ -61,8 +61,8 @@ end
 describe 'authorized links', type: :feature do
 
   before :each do
-    @normal_user = FactoryGirl.create :user
-    @admin_user = FactoryGirl.create :user_admin
+    @normal_user = FactoryBot.create :user
+    @admin_user = FactoryBot.create :user_admin
   end
 
   context 'Redmon access' do

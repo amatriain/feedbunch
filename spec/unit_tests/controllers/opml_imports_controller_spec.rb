@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Api::OpmlImportsController, type: :controller do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
 
     login_user_for_unit @user
   end

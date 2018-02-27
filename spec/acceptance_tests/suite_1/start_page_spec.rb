@@ -3,9 +3,9 @@ require 'rails_helper'
 describe 'start page', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed1 = FactoryGirl.create :feed
-    @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @user = FactoryBot.create :user
+    @feed1 = FactoryBot.create :feed
+    @entry1 = FactoryBot.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry1
     @user.subscribe @feed1.fetch_url
 
@@ -70,11 +70,11 @@ describe 'start page', type: :feature do
     before :each do
       # @user is subscribed to @feed1, @feed2 and @feed3
       # @feed1 has one unread entry, @feed2 has two unread entries, and @feed3 has one read entry
-      @feed2 = FactoryGirl.create :feed
-      @feed3 = FactoryGirl.create :feed
-      @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
-      @entry3 = FactoryGirl.build :entry, feed_id: @feed2.id
-      @entry4 = FactoryGirl.build :entry, feed_id: @feed3.id
+      @feed2 = FactoryBot.create :feed
+      @feed3 = FactoryBot.create :feed
+      @entry2 = FactoryBot.build :entry, feed_id: @feed2.id
+      @entry3 = FactoryBot.build :entry, feed_id: @feed2.id
+      @entry4 = FactoryBot.build :entry, feed_id: @feed3.id
       @feed2.entries << @entry2 << @entry3
       @feed3.entries << @entry4
       @user.subscribe @feed2.fetch_url
@@ -89,8 +89,8 @@ describe 'start page', type: :feature do
     end
 
     it 'updates number of subscribed feeds when subscribing to a feed', js: true do
-      feed4 = FactoryGirl.create :feed
-      job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: feed4.fetch_url
+      feed4 = FactoryBot.create :feed
+      job_state = FactoryBot.build :subscribe_job_state, user_id: @user.id, fetch_url: feed4.fetch_url
       allow_any_instance_of(User).to receive :enqueue_subscribe_job do |user, url|
         if user.id == @user.id
           user.subscribe feed4.fetch_url
@@ -111,7 +111,7 @@ describe 'start page', type: :feature do
     end
 
     it 'updates number of subscribed feeds when unsubscribing from a feed', js: true do
-      feed4 = FactoryGirl.create :feed
+      feed4 = FactoryBot.create :feed
       unsubscribe_feed @feed1, @user
       go_to_start_page
       expect(page).to have_content 'Subscribed to 2 feeds'

@@ -1,6 +1,6 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:entry_title_sequence) {|n| "some_entry_title_#{n}"}
   sequence(:entry_url_sequence) {|n| "http://some.entry.url.#{n}.com"}
   sequence(:entry_summary_sequence) {|n| "some_entry_summary_#{n}"}

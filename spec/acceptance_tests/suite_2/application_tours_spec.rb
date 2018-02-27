@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'application tours', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
   end
 
   context 'main application tour' do
@@ -43,13 +43,13 @@ describe 'application tours', type: :feature do
     before :each do
       @user.update show_feed_tour: true
 
-      @feed1 = FactoryGirl.create :feed
-      @feed2 = FactoryGirl.create :feed
+      @feed1 = FactoryBot.create :feed
+      @feed2 = FactoryBot.create :feed
 
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @entry1 = FactoryBot.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1
 
-      @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @entry2 = FactoryBot.build :entry, feed_id: @feed2.id
       @feed2.entries << @entry2
 
       @user.subscribe @feed1.fetch_url
@@ -103,11 +103,11 @@ describe 'application tours', type: :feature do
     before :each do
       @user.update show_entry_tour: true
 
-      @feed1 = FactoryGirl.create :feed
+      @feed1 = FactoryBot.create :feed
 
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @entry3 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @entry1 = FactoryBot.build :entry, feed_id: @feed1.id
+      @entry2 = FactoryBot.build :entry, feed_id: @feed1.id
+      @entry3 = FactoryBot.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1 << @entry2 << @entry3
 
       @user.subscribe @feed1.fetch_url
@@ -212,8 +212,8 @@ describe 'application tours', type: :feature do
                    show_entry_tour: false,
                    show_kb_shortcuts_tour: false
 
-      @feed1 = FactoryGirl.create :feed
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @feed1 = FactoryBot.create :feed
+      @entry1 = FactoryBot.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1
       @user.subscribe @feed1.fetch_url
 

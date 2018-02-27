@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe User, type: :model do
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
 
     friend_email = 'some_friend@email.com'
     friend_name = 'some friend'
@@ -18,10 +18,10 @@ describe User, type: :model do
     it 'defaults to the currently configured daily limit' do
       limit = Feedbunch::Application.config.daily_invitations_limit
 
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
       expect(user.invitation_limit).to eq limit
 
-      user2 = FactoryGirl.create :user, invitation_limit: nil
+      user2 = FactoryBot.create :user, invitation_limit: nil
       expect(user2.invitation_limit).to eq limit
     end
 

@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe User, type: :model do
   before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
     @user.subscribe @feed.fetch_url
-    @entry1 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2000, 12, 31)
+    @entry1 = FactoryBot.build :entry, feed_id: @feed.id, published: Date.new(2000, 12, 31)
     @feed.entries << @entry1
   end
 
@@ -44,7 +44,7 @@ describe User, type: :model do
       end
 
       it 'does not change state for other users' do
-        user2 = FactoryGirl.create :user
+        user2 = FactoryBot.create :user
         user2.subscribe @feed.fetch_url
 
         @user.change_entries_state @entry1, 'read'
@@ -56,8 +56,8 @@ describe User, type: :model do
     context 'several entries' do
 
       before :each do
-        @entry2 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2000, 01, 01)
-        @entry3 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2000, 12, 31)
+        @entry2 = FactoryBot.build :entry, feed_id: @feed.id, published: Date.new(2000, 01, 01)
+        @entry3 = FactoryBot.build :entry, feed_id: @feed.id, published: Date.new(2000, 12, 31)
         @feed.entries << @entry2 << @entry3
       end
 
@@ -94,8 +94,8 @@ describe User, type: :model do
         end
 
         it 'does not change state of newer entries from the same feed' do
-          entry4 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2010, 01, 01)
-          entry5 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2000, 12, 31)
+          entry4 = FactoryBot.build :entry, feed_id: @feed.id, published: Date.new(2010, 01, 01)
+          entry5 = FactoryBot.build :entry, feed_id: @feed.id, published: Date.new(2000, 12, 31)
           @feed.entries << entry4 << entry5
 
           expect(entry4.read_by?(@user)).to be false
@@ -108,9 +108,9 @@ describe User, type: :model do
         end
 
         it 'does not change state of entries from other feeds' do
-          feed2 = FactoryGirl.create :feed
+          feed2 = FactoryBot.create :feed
           @user.subscribe feed2.fetch_url
-          entry4 = FactoryGirl.build :entry, feed_id: feed2.id, published: Date.new(1975, 01, 01)
+          entry4 = FactoryBot.build :entry, feed_id: feed2.id, published: Date.new(1975, 01, 01)
           feed2.entries << entry4
 
           expect(entry4.read_by?(@user)).to be false
@@ -129,12 +129,12 @@ describe User, type: :model do
       context 'from a single folder' do
 
         before :each do
-          @feed2 = FactoryGirl.create :feed
+          @feed2 = FactoryBot.create :feed
           @user.subscribe @feed2.fetch_url
-          @entry4 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 01, 01)
-          @entry5 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
+          @entry4 = FactoryBot.build :entry, feed_id: @feed2.id, published: Date.new(2000, 01, 01)
+          @entry5 = FactoryBot.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
           @feed2.entries << @entry4 << @entry5
-          @folder = FactoryGirl.build :folder, user_id: @user.id
+          @folder = FactoryBot.build :folder, user_id: @user.id
           @user.folders << @folder
           @folder.feeds << @feed << @feed2
         end
@@ -182,8 +182,8 @@ describe User, type: :model do
         end
 
         it 'does not change state of newer entries in the same folder' do
-          entry6 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2010, 01, 01)
-          entry7 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
+          entry6 = FactoryBot.build :entry, feed_id: @feed.id, published: Date.new(2010, 01, 01)
+          entry7 = FactoryBot.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
           @feed.entries << entry6
           @feed2.entries << entry7
 
@@ -199,16 +199,16 @@ describe User, type: :model do
         it 'does not change state of entries from other folders' do
           # @feed, @feed2 are in @folder. feed2 is in folder2, and feed3 is not in any folder.
           # @user is subscribed to all of them. feed2 and feed3 have one unread entry each.
-          feed2 = FactoryGirl.create :feed
+          feed2 = FactoryBot.create :feed
           @user.subscribe feed2.fetch_url
-          feed3 = FactoryGirl.create :feed
+          feed3 = FactoryBot.create :feed
           @user.subscribe feed3.fetch_url
-          folder2 = FactoryGirl.build :folder, user_id: @user.id
+          folder2 = FactoryBot.build :folder, user_id: @user.id
           @user.folders << folder2
           folder2.feeds << feed2
-          entry6 = FactoryGirl.build :entry, feed_id: feed2.id
+          entry6 = FactoryBot.build :entry, feed_id: feed2.id
           feed2.entries << entry6
-          entry7 = FactoryGirl.build :entry, feed_id: feed3.id
+          entry7 = FactoryBot.build :entry, feed_id: feed3.id
           feed3.entries << entry7
 
           expect(entry6.read_by?(@user)).to be false
@@ -230,12 +230,12 @@ describe User, type: :model do
       context 'from all subscribed feeds' do
 
         before :each do
-          @feed2 = FactoryGirl.create :feed
+          @feed2 = FactoryBot.create :feed
           @user.subscribe @feed2.fetch_url
-          @entry4 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 01, 01)
-          @entry5 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
+          @entry4 = FactoryBot.build :entry, feed_id: @feed2.id, published: Date.new(2000, 01, 01)
+          @entry5 = FactoryBot.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
           @feed2.entries << @entry4 << @entry5
-          @folder = FactoryGirl.build :folder, user_id: @user.id
+          @folder = FactoryBot.build :folder, user_id: @user.id
           @user.folders << @folder
           @folder.feeds << @feed
         end
@@ -278,8 +278,8 @@ describe User, type: :model do
         end
 
         it 'does not change state of newer entries' do
-          entry6 = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2010, 01, 01)
-          entry7 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
+          entry6 = FactoryBot.build :entry, feed_id: @feed.id, published: Date.new(2010, 01, 01)
+          entry7 = FactoryBot.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
           @feed.entries << entry6
           @feed2.entries << entry7
 

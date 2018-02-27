@@ -5,7 +5,7 @@ describe FeedbunchAuth::RegistrationsController, type: :controller do
   context 'POST create' do
 
     before :each do
-      @user = FactoryGirl.build :user
+      @user = FactoryBot.build :user
 
       # Necessary for Devise to be able to detect mappings during testing. Not sure why but these tests fail if this line
       # is removed
@@ -54,7 +54,7 @@ describe FeedbunchAuth::RegistrationsController, type: :controller do
   context 'DELETE destroy' do
 
     before :each do
-      @user = FactoryGirl.create :user
+      @user = FactoryBot.create :user
       login_user_for_unit @user
     end
 

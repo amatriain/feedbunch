@@ -1,6 +1,6 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:export_filename_sequence) {|n| "some_filename_#{n}.opml"}
 
   factory :opml_export_job_state do

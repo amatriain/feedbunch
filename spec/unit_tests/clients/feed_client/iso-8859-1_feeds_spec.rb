@@ -5,19 +5,19 @@ describe FeedClient do
     published = Time.zone.parse('2000-01-01')
     allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return published
 
-    @feed = FactoryGirl.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
+    @feed = FactoryBot.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
 
     @feed_title = 'CRISEI'
     @feed_url = 'http://crisei.blogalia.com/'
 
-    @entry1 = FactoryGirl.build :entry
+    @entry1 = FactoryBot.build :entry
     @entry1.title = 'SIR GAWAIN: GALLARDO Y CALAVERA'
     @entry1.url = 'http://crisei.blogalia.com//historias/74112'
     @entry1.summary = '<p>Hijo de reina hada, aunque el detalle pase por alto en la saga, sobrino del rey Arturo y hermanastro a su pesar del traidor Mordred, escocés de isla pero latino de corazón, el jovial Sir Gawain es el personaje que, sin ser familia directa de Valiente, se convierte en la serie en lo más parecido a un padre, primero, a un hermano mayor, más tarde, y en ocasiones incluso a un atolondrado hermano pequeño.</p>'
     @entry1.published = published
     @entry1.guid = 'http://crisei.blogalia.com//historias/74112'
 
-    @entry2 = FactoryGirl.build :entry
+    @entry2 = FactoryBot.build :entry
     @entry2.title = 'PRÍNCIPE VALIENTE: NUEVA EDICIÓN GIGANTE Y EN COLOR'
     @entry2.url = 'http://crisei.blogalia.com//historias/74115'
     @entry2.summary = '<p>Nueva edición restaurada, y a color, de Príncipe Valiente. A partir de la restauración en blanco y negro de Manuel Caldas y con los colores originales reconstruidos, pero no a partir de los viejos periódicos escaneados.</p>'
@@ -64,7 +64,7 @@ describe FeedClient do
     it 'ignores entry if it is received again' do
       # Create an entry for feed @feed with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
-      entry_before = FactoryGirl.create :entry, feed_id: @feed.id, title: 'Original title',
+      entry_before = FactoryBot.create :entry, feed_id: @feed.id, title: 'Original title',
                                         url: 'http://original.url.com', author: 'Original author',
                                         content: 'Original content', summary: 'Original summary',
                                         published: Time.zone.parse('2013-01-01T00:00:00'), guid: @entry1.guid
@@ -84,10 +84,10 @@ describe FeedClient do
     end
 
     it 'saves entry if another one with the same guid but from a different feed is already in the database' do
-      feed2 = FactoryGirl.create :feed
+      feed2 = FactoryBot.create :feed
       # Create an entry for feed feed2 with the same guid as @entry1 (which is not saved in the DB) but all other
       # fields with different values
-      entry = FactoryGirl.create :entry, feed_id: feed2.id, title: 'Original title',
+      entry = FactoryBot.create :entry, feed_id: feed2.id, title: 'Original title',
                                  url: 'http://original.url.com', author: 'Original author',
                                  content: 'Original content', summary: '<p>Original summary</p>',
                                  published: Time.zone.parse('2013-01-01T00:00:00'),
@@ -167,7 +167,7 @@ WEBPAGE_HTML
       feed_fetch_url = 'http://webpage.com/feed'
       feed_path = '/feed'
       feed_url = 'http://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -201,7 +201,7 @@ WEBPAGE_HTML
       feed_fetch_url_relative = '//webpage.com/feed'
       feed_fetch_url_absolute = 'http://webpage.com/feed'
       feed_url = 'http://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -235,7 +235,7 @@ WEBPAGE_HTML
       feed_fetch_url_relative = '//webpage.com/feed'
       feed_fetch_url_absolute = 'https://webpage.com/feed'
       feed_url = 'https://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -350,8 +350,8 @@ WEBPAGE_HTML
 FEED_XML
       allow(feed_xml).to receive(:headers).and_return({})
 
-      old_feed = FactoryGirl.create :feed, fetch_url: feed_url
-      new_feed = FactoryGirl.create :feed
+      old_feed = FactoryBot.create :feed, fetch_url: feed_url
+      new_feed = FactoryBot.create :feed
 
       # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
       allow(RestClient).to receive :get do |url|

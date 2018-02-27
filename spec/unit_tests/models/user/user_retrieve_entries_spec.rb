@@ -3,12 +3,12 @@ require 'rails_helper'
 describe User, type: :model do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed1 = FactoryGirl.create :feed
-    @feed2 = FactoryGirl.create :feed
+    @user = FactoryBot.create :user
+    @feed1 = FactoryBot.create :feed
+    @feed2 = FactoryBot.create :feed
     @user.subscribe @feed1.fetch_url
     @user.subscribe @feed2.fetch_url
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @folder = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder
     @folder.feeds << @feed1
 
@@ -17,12 +17,12 @@ describe User, type: :model do
   context 'without pagination' do
 
     before :each do
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @entry3 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @entry1 = FactoryBot.build :entry, feed_id: @feed1.id
+      @entry2 = FactoryBot.build :entry, feed_id: @feed1.id
+      @entry3 = FactoryBot.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1 << @entry2 << @entry3
 
-      @entry4 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @entry4 = FactoryBot.build :entry, feed_id: @feed2.id
       @feed2.entries << @entry4
 
       # Mark one of the three @feed1 entries as read by user
@@ -86,7 +86,7 @@ describe User, type: :model do
       # Ensure @feed1 has exactly 26 unread entries and 4 read entries
       Entry.all.each {|e| e.destroy}
       (0..29).each do |i|
-        e = FactoryGirl.build :entry, feed_id: @feed1.id, published: Date.new(2001, 01, 30-i)
+        e = FactoryBot.build :entry, feed_id: @feed1.id, published: Date.new(2001, 01, 30-i)
         @feed1.entries << e
         @entries << e
       end
@@ -95,8 +95,8 @@ describe User, type: :model do
       end
 
       # @feed2 has 1 read and 1 unread entry
-      @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
-      @entry3 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 30)
+      @entry2 = FactoryBot.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 31)
+      @entry3 = FactoryBot.build :entry, feed_id: @feed2.id, published: Date.new(2000, 12, 30)
       @feed2.entries << @entry2 << @entry3
       @user.change_entries_state @entry3, 'read'
       @entries << @entry2 << @entry3

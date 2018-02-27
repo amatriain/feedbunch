@@ -3,14 +3,14 @@ require 'rails_helper'
 describe User, type: :model do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
     @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
   end
 
   context 'touches subscriptions' do
 
     it 'when subscribed to a new feed' do
-      feed = FactoryGirl.create :feed
+      feed = FactoryBot.create :feed
       @user.subscribe feed.fetch_url
       expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
     end
@@ -18,7 +18,7 @@ describe User, type: :model do
     context 'changes to subscribed feeed' do
 
       before :each do
-        @feed = FactoryGirl.create :feed
+        @feed = FactoryBot.create :feed
         @user.subscribe @feed.fetch_url
         @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at
       end
@@ -41,7 +41,7 @@ describe User, type: :model do
       context 'unread entries count' do
 
         before :each do
-          @entry1 = FactoryGirl.build :entry, feed_id: @feed.id
+          @entry1 = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << @entry1
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 1
@@ -49,7 +49,7 @@ describe User, type: :model do
         end
 
         it 'when adding a new entry' do
-          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          entry2 = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry2
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 2
@@ -57,7 +57,7 @@ describe User, type: :model do
         end
 
         it 'when marking an entry as unread' do
-          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          entry2 = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry2
           @user.change_entries_state entry2, 'read'
           SubscriptionsManager.recalculate_unread_count @feed, @user
@@ -70,7 +70,7 @@ describe User, type: :model do
         end
 
         it 'when deleting an entry' do
-          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          entry2 = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry2
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 2
@@ -83,7 +83,7 @@ describe User, type: :model do
         end
 
         it 'when marking an entry as read' do
-          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          entry2 = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry2
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 2
@@ -95,7 +95,7 @@ describe User, type: :model do
         end
 
         it 'when marking all entries as read' do
-          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          entry2 = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry2
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 2
@@ -108,7 +108,7 @@ describe User, type: :model do
         end
 
         it 'when marking all entries in a feed as read' do
-          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          entry2 = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry2
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@user.feed_unread_count @feed).to eq 2
@@ -121,9 +121,9 @@ describe User, type: :model do
         end
 
         it 'when marking all entries in a folder as read' do
-          entry2 = FactoryGirl.build :entry, feed_id: @feed.id
+          entry2 = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry2
-          folder = FactoryGirl.build :folder, user_id: @user.id
+          folder = FactoryBot.build :folder, user_id: @user.id
           @user.folders << folder
           folder.feeds << @feed
           SubscriptionsManager.recalculate_unread_count @feed, @user
@@ -140,13 +140,13 @@ describe User, type: :model do
       context 'folder changes' do
 
         it 'when feed is moved into a folder' do
-          folder = FactoryGirl.build :folder, user_id: @user.id
+          folder = FactoryBot.build :folder, user_id: @user.id
           folder.feeds << @feed
           expect(@user.reload.subscriptions_updated_at).not_to eq @old_subscriptions_updated_at
         end
 
         it 'when feed is moved out of a folder' do
-          folder = FactoryGirl.build :folder, user_id: @user.id
+          folder = FactoryBot.build :folder, user_id: @user.id
           @user.folders << folder
           folder.feeds << @feed
           @old_subscriptions_updated_at = @user.reload.subscriptions_updated_at

@@ -6,7 +6,7 @@ describe 'feeds', type: :feature do
     # Ensure no actual HTTP calls are made
     allow(RestClient).to receive(:get).and_return true
 
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
   end
 
   it 'redirects unauthenticated visitors to login page', js: true do
@@ -28,20 +28,20 @@ describe 'feeds', type: :feature do
   context 'feed reading' do
 
     before :each do
-      @folder1 = FactoryGirl.build :folder, user_id: @user.id
-      @folder2 = FactoryGirl.create :folder
+      @folder1 = FactoryBot.build :folder, user_id: @user.id
+      @folder2 = FactoryBot.create :folder
       @user.folders << @folder1
 
-      @feed1 = FactoryGirl.create :feed
-      @feed2 = FactoryGirl.create :feed
-      @feed3 = FactoryGirl.create :feed
+      @feed1 = FactoryBot.create :feed
+      @feed2 = FactoryBot.create :feed
+      @feed3 = FactoryBot.create :feed
 
-      @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @entry1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @entry2_1 = FactoryGirl.build :entry, feed_id: @feed2.id
-      @entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
-      @entry3_1 = FactoryGirl.build :entry, feed_id: @feed3.id
-      @entry3_2 = FactoryGirl.build :entry, feed_id: @feed3.id
+      @entry1_1 = FactoryBot.build :entry, feed_id: @feed1.id
+      @entry1_2 = FactoryBot.build :entry, feed_id: @feed1.id
+      @entry2_1 = FactoryBot.build :entry, feed_id: @feed2.id
+      @entry2_2 = FactoryBot.build :entry, feed_id: @feed2.id
+      @entry3_1 = FactoryBot.build :entry, feed_id: @feed3.id
+      @entry3_2 = FactoryBot.build :entry, feed_id: @feed3.id
       @feed1.entries << @entry1_1 << @entry1_2
       @feed2.entries << @entry2_1 << @entry2_2
       @feed3.entries << @entry3_1 << @entry3_2
@@ -114,7 +114,7 @@ describe 'feeds', type: :feature do
     end
 
     it 'shows entries without a published date', js: true do
-      entry1_3 = FactoryGirl.build :entry, feed_id: @feed1.id, published: nil
+      entry1_3 = FactoryBot.build :entry, feed_id: @feed1.id, published: nil
       @feed1.entries << entry1_3
       read_feed @feed1, @user
       expect(page).to have_content entry1_3.title
@@ -162,7 +162,7 @@ describe 'feeds', type: :feature do
 
     it 'hides feeds after reading all their entries and clicking on another folder', js: true do
       # @feed1 and @feed2 are in @folder1, @feed3 is in folder2
-      folder2 = FactoryGirl.build :folder, user_id: @user.id
+      folder2 = FactoryBot.build :folder, user_id: @user.id
       @user.folders << folder2
       folder2.feeds << @feed3
 
@@ -196,7 +196,7 @@ describe 'feeds', type: :feature do
     end
 
     it 'shows feeds without unread entries', js: true do
-      feed4 = FactoryGirl.create :feed
+      feed4 = FactoryBot.create :feed
       @user.subscribe feed4.fetch_url
       visit read_path
 
@@ -212,7 +212,7 @@ describe 'feeds', type: :feature do
     end
 
     it 'hides feeds without unread entries again', js: true do
-      feed4 = FactoryGirl.create :feed
+      feed4 = FactoryBot.create :feed
       @user.subscribe feed4.fetch_url
       visit read_path
 
@@ -237,7 +237,7 @@ describe 'feeds', type: :feature do
 
       before :each do
         # @feed1 and @feed2 are in @folder1, @feed3 is in @folder2
-        @folder2 = FactoryGirl.build :folder, user_id: @user.id
+        @folder2 = FactoryBot.build :folder, user_id: @user.id
         @user.folders << @folder2
         @folder2.feeds << @feed3
 
@@ -264,12 +264,12 @@ describe 'feeds', type: :feature do
       it 'shows a link to read all entries even if the user has no folders', js: true do
         logout_user_for_feature
 
-        user = FactoryGirl.create :user
-        feed1 = FactoryGirl.create :feed
-        feed2 = FactoryGirl.create :feed
+        user = FactoryBot.create :user
+        feed1 = FactoryBot.create :feed
+        feed2 = FactoryBot.create :feed
 
-        entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-        entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
+        entry1 = FactoryBot.build :entry, feed_id: @feed1.id
+        entry2 = FactoryBot.build :entry, feed_id: @feed2.id
         feed1.entries << entry1
         feed2.entries << entry2
 
@@ -320,7 +320,7 @@ describe 'feeds', type: :feature do
 
       it 'does not show link to read all subscriptions in a folder if it has several feeds but only one with unread entries', js: true do
         # Add a second feed inside @folder2
-        feed4 = FactoryGirl.create :feed
+        feed4 = FactoryBot.create :feed
         @user.subscribe feed4.fetch_url
         @folder2.feeds << feed4
         visit read_path

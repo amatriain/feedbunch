@@ -3,23 +3,23 @@ require 'rails_helper'
 describe Api::FeedsController, type: :controller do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
 
-    @feed1 = FactoryGirl.create :feed
-    @feed2 = FactoryGirl.create :feed
-    @feed3 = FactoryGirl.create :feed
+    @feed1 = FactoryBot.create :feed
+    @feed2 = FactoryBot.create :feed
+    @feed3 = FactoryBot.create :feed
 
-    @entry_1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @entry_1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @entry_1_1 = FactoryBot.build :entry, feed_id: @feed1.id
+    @entry_1_2 = FactoryBot.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry_1_1 << @entry_1_2
-    @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
+    @entry2 = FactoryBot.build :entry, feed_id: @feed2.id
     @feed2.entries << @entry2
 
     @user.subscribe @feed1.fetch_url
     @user.subscribe @feed3.fetch_url
 
-    @folder1 = FactoryGirl.build :folder, user_id: @user.id
-    @folder2 = FactoryGirl.create :folder
+    @folder1 = FactoryBot.build :folder, user_id: @user.id
+    @folder2 = FactoryBot.create :folder
     @user.folders << @folder1
     @folder1.feeds << @feed1 << @feed3
 

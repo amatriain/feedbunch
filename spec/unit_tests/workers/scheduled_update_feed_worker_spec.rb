@@ -3,7 +3,7 @@ require 'rails_helper'
 describe ScheduledUpdateFeedWorker do
 
   before :each do
-    @feed = FactoryGirl.create :feed
+    @feed = FactoryBot.create :feed
   end
 
   it 'updates feed when the job runs' do
@@ -14,9 +14,9 @@ describe ScheduledUpdateFeedWorker do
 
   it 'recalculates unread entries count in feed' do
     # user is subscribed to @feed with 1 entry
-    user = FactoryGirl.create :user
+    user = FactoryBot.create :user
 
-    entry = FactoryGirl.build :entry, feed_id: @feed.id
+    entry = FactoryBot.build :entry, feed_id: @feed.id
     @feed.entries << entry
 
     user.subscribe @feed.fetch_url
@@ -67,7 +67,7 @@ describe ScheduledUpdateFeedWorker do
 
     it 'decrements a 10% the fetch interval if new entries are fetched' do
       allow(FeedClient).to receive :fetch do
-        entry = FactoryGirl.build :entry, feed_id: @feed.id
+        entry = FactoryBot.build :entry, feed_id: @feed.id
         @feed.entries << entry
       end
 
@@ -98,7 +98,7 @@ describe ScheduledUpdateFeedWorker do
       min_interval = Feedbunch::Application.config.min_update_interval
 
       allow(FeedClient).to receive :fetch do
-        entry = FactoryGirl.build :entry, feed_id: @feed.id
+        entry = FactoryBot.build :entry, feed_id: @feed.id
         @feed.entries << entry
       end
 
@@ -261,7 +261,7 @@ WEBPAGE_HTML
           @new_fetch_url = 'http://new.fetch.url.com/'
           @new_feed_title = 'new feed title'
 
-          @entry = FactoryGirl.build :entry
+          @entry = FactoryBot.build :entry
           @entry.title = 'Silence'
           @entry.url = 'http://xkcd.com/1199/'
           @entry.summary = %{All music is just performances of 4'33" in studios where another band happened to be playing at the time.}
@@ -379,7 +379,7 @@ WEBPAGE_HTML
         end
 
         it 'does not fetch new entries' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
 
           expect(@feed.entries.count).to eq 1
@@ -651,7 +651,7 @@ WEBPAGE_HTML
       time_oldest_entry = Time.zone.parse '2000-01-01'
        # Feed has 498 entries
       (1..498).each do |i|
-        entry = FactoryGirl.build :entry, feed_id: @feed.id, published: time_oldest_entry + i.days
+        entry = FactoryBot.build :entry, feed_id: @feed.id, published: time_oldest_entry + i.days
         @feed.entries << entry
         @entries << entry
       end
@@ -662,8 +662,8 @@ WEBPAGE_HTML
 
     it 'does not delete entries if they are under the limit' do
       allow(FeedClient).to receive :fetch do
-        entry1 = FactoryGirl.build :entry, feed_id: @feed.id, published: @time_now
-        entry2 = FactoryGirl.build :entry, feed_id: @feed.id, published: @time_now + 1.day
+        entry1 = FactoryBot.build :entry, feed_id: @feed.id, published: @time_now
+        entry2 = FactoryBot.build :entry, feed_id: @feed.id, published: @time_now + 1.day
         @feed.entries << entry1 << entry2
       end
 
@@ -675,7 +675,7 @@ WEBPAGE_HTML
     it 'deletes entries above the entries per feed limit, keeping the newer ones' do
       allow(FeedClient).to receive :fetch do
         (1..5).each do |i|
-          entry = FactoryGirl.build :entry, feed_id: @feed.id, published: @time_now + i.days
+          entry = FactoryBot.build :entry, feed_id: @feed.id, published: @time_now + i.days
           @feed.entries << entry
         end
       end
@@ -698,14 +698,14 @@ WEBPAGE_HTML
     end
 
     it 'deletes entries above the per feed limit, keeping newer ones and ignoring already deleted entries' do
-      deleted_entry = FactoryGirl.build :deleted_entry, feed_id: @feed.id
+      deleted_entry = FactoryBot.build :deleted_entry, feed_id: @feed.id
       @feed.deleted_entries << deleted_entry
 
       allow(FeedClient).to receive :fetch do
-        entry = FactoryGirl.build :entry, feed_id: @feed.id, published: @time_now, guid: deleted_entry.guid
+        entry = FactoryBot.build :entry, feed_id: @feed.id, published: @time_now, guid: deleted_entry.guid
         @feed.entries << entry
         (1..5).each do |i|
-          entry = FactoryGirl.build :entry, feed_id: @feed.id, published: @time_now + i.days
+          entry = FactoryBot.build :entry, feed_id: @feed.id, published: @time_now + i.days
           @feed.entries << entry
         end
       end

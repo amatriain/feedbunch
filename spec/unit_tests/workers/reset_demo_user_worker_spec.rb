@@ -20,7 +20,7 @@ describe ResetDemoUserWorker do
     end
 
     it 'destroys demo user if it exists' do
-      demo_user = FactoryGirl.create :user, email: @demo_email, password: @demo_password
+      demo_user = FactoryBot.create :user, email: @demo_email, password: @demo_password
 
       expect(User.find_by_email @demo_email).not_to be nil
       ResetDemoUserWorker.new.perform
@@ -37,9 +37,9 @@ describe ResetDemoUserWorker do
         if Feed.exists? fetch_url: url
           feed = Feed.find_by fetch_url: url
         else
-          feed = FactoryGirl.create :feed, fetch_url: url
+          feed = FactoryBot.create :feed, fetch_url: url
         end
-        subscription = FactoryGirl.build :feed_subscription,
+        subscription = FactoryBot.build :feed_subscription,
                                          user_id: user.id,
                                          feed_id: feed.id
         user.feed_subscriptions << subscription
@@ -54,7 +54,7 @@ describe ResetDemoUserWorker do
     end
 
     it 'does not alter demo user if it exists' do
-      demo_user = FactoryGirl.create :user, email: @demo_email, password: @demo_password
+      demo_user = FactoryBot.create :user, email: @demo_email, password: @demo_password
 
       expect(User.find_by_email @demo_email).not_to be nil
       ResetDemoUserWorker.new.perform
@@ -64,7 +64,7 @@ describe ResetDemoUserWorker do
     context 'reset demo user' do
 
       before :each do
-        @demo_user = FactoryGirl.create :user, email: @demo_email, password: @demo_password
+        @demo_user = FactoryBot.create :user, email: @demo_email, password: @demo_password
       end
 
       it 'resets admin to false' do
@@ -160,7 +160,7 @@ describe ResetDemoUserWorker do
       end
 
       it 'resets OPML import state to NONE' do
-        opml_import = FactoryGirl.build :opml_import_job_state,
+        opml_import = FactoryBot.build :opml_import_job_state,
                                         user_id: @demo_user.id,
                                         state: OpmlImportJobState::SUCCESS,
                                         total_feeds: 10,
@@ -173,7 +173,7 @@ describe ResetDemoUserWorker do
       end
 
       it 'resets OPML export state to NONE' do
-        opml_export = FactoryGirl.build :opml_export_job_state,
+        opml_export = FactoryBot.build :opml_export_job_state,
                                         user_id: @demo_user.id,
                                         state: OpmlExportJobState::ERROR
         @demo_user.opml_export_job_state = opml_export
@@ -184,10 +184,10 @@ describe ResetDemoUserWorker do
       end
 
       it 'destroys subscribe job states' do
-        job_state_1 = FactoryGirl.build :subscribe_job_state,
+        job_state_1 = FactoryBot.build :subscribe_job_state,
                                         user_id: @demo_user.id,
                                         state: SubscribeJobState::SUCCESS
-        job_state_2 = FactoryGirl.build :subscribe_job_state,
+        job_state_2 = FactoryBot.build :subscribe_job_state,
                                         user_id: @demo_user.id,
                                         state: SubscribeJobState::SUCCESS
         @demo_user.subscribe_job_states << job_state_1 << job_state_2
@@ -198,10 +198,10 @@ describe ResetDemoUserWorker do
       end
 
       it 'destroys refresh job states' do
-        job_state_1 = FactoryGirl.build :refresh_feed_job_state,
+        job_state_1 = FactoryBot.build :refresh_feed_job_state,
                                         user_id: @demo_user.id,
                                         state: RefreshFeedJobState::SUCCESS
-        job_state_2 = FactoryGirl.build :refresh_feed_job_state,
+        job_state_2 = FactoryBot.build :refresh_feed_job_state,
                                         user_id: @demo_user.id,
                                         state: RefreshFeedJobState::SUCCESS
         @demo_user.refresh_feed_job_states << job_state_1 << job_state_2
@@ -214,8 +214,8 @@ describe ResetDemoUserWorker do
       context 'reset feeds and folders' do
 
         it 'resets folders' do
-          folder_1 = FactoryGirl.build :folder, user_id: @demo_user.id
-          folder_2 = FactoryGirl.build :folder, user_id: @demo_user.id
+          folder_1 = FactoryBot.build :folder, user_id: @demo_user.id
+          folder_2 = FactoryBot.build :folder, user_id: @demo_user.id
           @demo_user.folders << folder_1 << folder_2
           # remove the special value "NONE" from the list of default folders, it is not an actual folder
           # present for any user
@@ -232,7 +232,7 @@ describe ResetDemoUserWorker do
 
           # One of the default demo feeds exists but the demo user is not subscribed to it
           demo_feed_url = default_subscriptions.values.flatten.first
-          demo_feed = FactoryGirl.create :feed, fetch_url: demo_feed_url
+          demo_feed = FactoryBot.create :feed, fetch_url: demo_feed_url
 
           # The user is subscribed to two feeds not in defaults
           feed_1 = @demo_user.subscribe 'http://some.feed.com'
@@ -271,9 +271,9 @@ describe ResetDemoUserWorker do
             elsif Feed.exists? fetch_url: url
               feed = Feed.find_by fetch_url: url
             else
-              feed = FactoryGirl.create :feed, fetch_url: url
+              feed = FactoryBot.create :feed, fetch_url: url
             end
-            subscription = FactoryGirl.build :feed_subscription,
+            subscription = FactoryBot.build :feed_subscription,
                                              user_id: user.id,
                                              feed_id: feed.id
             user.feed_subscriptions << subscription
@@ -296,10 +296,10 @@ describe ResetDemoUserWorker do
           
           # There are two read entries in one of the demo feeds
           @demo_feed_url = default_subscriptions.values.flatten.first
-          @demo_feed = FactoryGirl.create :feed, fetch_url: @demo_feed_url
+          @demo_feed = FactoryBot.create :feed, fetch_url: @demo_feed_url
 
-          @entry_1 = FactoryGirl.build :entry, feed_id: @demo_feed.id
-          @entry_2 = FactoryGirl.build :entry, feed_id: @demo_feed.id
+          @entry_1 = FactoryBot.build :entry, feed_id: @demo_feed.id
+          @entry_2 = FactoryBot.build :entry, feed_id: @demo_feed.id
           @demo_feed.entries << @entry_1 << @entry_2
           @demo_user.subscribe @demo_feed.fetch_url
           @demo_user.change_entries_state @entry_1, 'read'

@@ -3,16 +3,16 @@ require 'rails_helper'
 describe Api::EntriesController, type: :controller do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
     login_user_for_unit @user
   end
 
   context 'PUT update' do
 
     before :each do
-      @feed = FactoryGirl.create :feed
+      @feed = FactoryBot.create :feed
       @user.subscribe @feed.fetch_url
-      @entry = FactoryGirl.build :entry, feed_id: @feed.id
+      @entry = FactoryBot.build :entry, feed_id: @feed.id
       @feed.entries << @entry
     end
 
@@ -32,7 +32,7 @@ describe Api::EntriesController, type: :controller do
     end
 
     it 'returns 404 if the user is not subscribed to the entries feed' do
-      entry2 = FactoryGirl.create :entry
+      entry2 = FactoryBot.create :entry
       put :update, params: {entry: {id: entry2.id, state: 'read'}}, format: :json
       expect(response.status).to eq 404
     end
@@ -49,9 +49,9 @@ describe Api::EntriesController, type: :controller do
     context 'feed entries' do
 
       before :each do
-        @feed = FactoryGirl.create :feed
-        @entry_1_1 = FactoryGirl.build :entry, feed_id: @feed.id
-        @entry_1_2 = FactoryGirl.build :entry, feed_id: @feed.id
+        @feed = FactoryBot.create :feed
+        @entry_1_1 = FactoryBot.build :entry, feed_id: @feed.id
+        @entry_1_2 = FactoryBot.build :entry, feed_id: @feed.id
         @feed.entries << @entry_1_1 << @entry_1_2
         @user.subscribe @feed.fetch_url
       end
@@ -69,7 +69,7 @@ describe Api::EntriesController, type: :controller do
       end
 
       it 'returns a 404 for a feed the user is not suscribed to' do
-        feed2 = FactoryGirl.create :feed
+        feed2 = FactoryBot.create :feed
         get :index, params: {feed_id: feed2.id}, format: :json
         expect(response.status).to eq 404
       end
@@ -108,7 +108,7 @@ describe Api::EntriesController, type: :controller do
           # Ensure there are exactly 26 unread entries and 4 read entries
           Entry.all.each {|e| e.destroy}
           (0..29).each do |i|
-            e = FactoryGirl.build :entry, feed_id: @feed.id, published: Date.new(2001, 01, 30-i)
+            e = FactoryBot.build :entry, feed_id: @feed.id, published: Date.new(2001, 01, 30-i)
             @feed.entries << e
             @entries << e
           end
@@ -161,26 +161,26 @@ describe Api::EntriesController, type: :controller do
     context 'folder entries' do
       
       before :each do
-        @folder1 = FactoryGirl.build :folder, user_id: @user.id
+        @folder1 = FactoryBot.build :folder, user_id: @user.id
         
-        @feed1 = FactoryGirl.create :feed
-        @feed2 = FactoryGirl.create :feed
-        @feed3 = FactoryGirl.create :feed
+        @feed1 = FactoryBot.create :feed
+        @feed2 = FactoryBot.create :feed
+        @feed3 = FactoryBot.create :feed
   
         @user.subscribe @feed1.fetch_url
         @user.subscribe @feed2.fetch_url
         @user.subscribe @feed3.fetch_url
   
-        @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
-        @entry1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
+        @entry1_1 = FactoryBot.build :entry, feed_id: @feed1.id
+        @entry1_2 = FactoryBot.build :entry, feed_id: @feed1.id
         @feed1.entries << @entry1_1 << @entry1_2
   
-        @entry2_1 = FactoryGirl.build :entry, feed_id: @feed2.id
-        @entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
+        @entry2_1 = FactoryBot.build :entry, feed_id: @feed2.id
+        @entry2_2 = FactoryBot.build :entry, feed_id: @feed2.id
         @feed2.entries << @entry2_1 << @entry2_2
   
-        @entry3_1 = FactoryGirl.build :entry, feed_id: @feed3.id
-        @entry3_2 = FactoryGirl.build :entry, feed_id: @feed3.id
+        @entry3_1 = FactoryBot.build :entry, feed_id: @feed3.id
+        @entry3_2 = FactoryBot.build :entry, feed_id: @feed3.id
         @feed3.entries << @entry3_1 << @entry3_2
   
         @user.folders << @folder1
@@ -208,7 +208,7 @@ describe Api::EntriesController, type: :controller do
       end
 
       it 'returns a 404 for a folder that does not belong to the user' do
-        folder2 = FactoryGirl.create :folder
+        folder2 = FactoryBot.create :folder
         get :index, params: {folder_id: folder2.id}
         expect(response.status).to eq 404
       end
@@ -277,7 +277,7 @@ describe Api::EntriesController, type: :controller do
           # Ensure there are exactly 26 unread and 4 read entries in @folder1
           Entry.all.each {|e| e.destroy}
           (0..29).each do |i|
-            e = FactoryGirl.build :entry, feed_id: @feed1.id, published: Date.new(2001, 03, 30-i)
+            e = FactoryBot.build :entry, feed_id: @feed1.id, published: Date.new(2001, 03, 30-i)
             @feed1.entries << e
             @entries << e
           end
@@ -287,7 +287,7 @@ describe Api::EntriesController, type: :controller do
 
           #Also there are 1 unread and 1 read entries in @feed3. which is not in any folder
           (30..31).each do |i|
-            e = FactoryGirl.build :entry, feed_id: @feed3.id, published: Date.new(2001, 01, 55-i)
+            e = FactoryBot.build :entry, feed_id: @feed3.id, published: Date.new(2001, 01, 55-i)
             @feed3.entries << e
             @entries << e
           end

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe DestroyUserWorker do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
   end
 
   it 'destroys user' do

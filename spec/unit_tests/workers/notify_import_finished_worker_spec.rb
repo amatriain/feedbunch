@@ -3,8 +3,8 @@ require 'rails_helper'
 describe NotifyImportFinishedWorker do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
+    @user = FactoryBot.create :user
+    @opml_import_job_state = FactoryBot.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
                                      total_feeds: 4, processed_feeds: 4
     @user.opml_import_job_state = @opml_import_job_state
 
@@ -56,7 +56,7 @@ describe NotifyImportFinishedWorker do
 
     it 'sends a notification email with failed feeds' do
       failed_url = 'http://some.failed.url.com'
-      import_failure = FactoryGirl.build :opml_import_failure, opml_import_job_state_id: @opml_import_job_state.id,
+      import_failure = FactoryBot.build :opml_import_failure, opml_import_job_state_id: @opml_import_job_state.id,
                                          url: failed_url
       @opml_import_job_state.opml_import_failures << import_failure
 

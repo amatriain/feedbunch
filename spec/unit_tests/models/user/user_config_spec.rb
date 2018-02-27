@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe User, type: :model do
   before :each do
-    @user = FactoryGirl.create :user,
+    @user = FactoryBot.create :user,
                                show_main_tour: true,
                                show_mobile_tour: true,
                                show_feed_tour: true,

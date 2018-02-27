@@ -3,9 +3,9 @@ require 'rails_helper'
 describe 'social sharing', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
-    @entry = FactoryGirl.build :entry, feed_id: @feed.id
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
+    @entry = FactoryBot.build :entry, feed_id: @feed.id
     @feed.entries << @entry
     @user.subscribe @feed.fetch_url
 

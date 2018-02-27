@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe User, type: :model do
   before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
     @user.subscribe @feed.fetch_url
   end
 
@@ -28,7 +28,7 @@ describe User, type: :model do
     end
 
     it 'does not enqueue job if the user is not subscribed to the feed' do
-      feed = FactoryGirl.create :feed
+      feed = FactoryBot.create :feed
       expect(UnsubscribeUserWorker.jobs.size).to eq 0
       expect {@user.enqueue_unsubscribe_job feed}.to raise_error NotSubscribedError
       expect(UnsubscribeUserWorker.jobs.size).to eq 0
@@ -43,7 +43,7 @@ describe User, type: :model do
     end
 
     it 'raises error if the user is not subscribed to the feed' do
-      feed2 = FactoryGirl.create :feed
+      feed2 = FactoryBot.create :feed
       expect {@user.unsubscribe feed2}.to raise_error NotSubscribedError
     end
 
@@ -53,7 +53,7 @@ describe User, type: :model do
     end
 
     it 'does not change subscriptions to the feed by other users' do
-      user2 = FactoryGirl.create :user
+      user2 = FactoryBot.create :user
       user2.subscribe @feed.fetch_url
 
       expect(@user.feeds.exists? @feed.id).to be true
@@ -74,7 +74,7 @@ describe User, type: :model do
     end
 
     it 'does not delete feed if there are more users subscribed' do
-      user2 = FactoryGirl.create :user
+      user2 = FactoryBot.create :user
       user2.subscribe @feed.fetch_url
 
       @user.unsubscribe @feed

@@ -5,12 +5,12 @@ describe 'quick reading mode', type: :feature do
   context 'mark entries open when scrolling' do
 
     before :each do
-      @user = FactoryGirl.create :user
-      @feed = FactoryGirl.create :feed
+      @user = FactoryBot.create :user
+      @feed = FactoryBot.create :feed
 
       @entries = []
       (0..49).each do |i|
-        entry = FactoryGirl.build :entry, feed_id: @feed.id, summary: "entry summary #{i}"
+        entry = FactoryBot.build :entry, feed_id: @feed.id, summary: "entry summary #{i}"
         @feed.entries << entry
         @entries << entry
       end
@@ -76,12 +76,12 @@ describe 'quick reading mode', type: :feature do
   context 'open all entries by default' do
 
     before :each do
-      @user = FactoryGirl.create :user
-      @feed = FactoryGirl.create :feed
+      @user = FactoryBot.create :user
+      @feed = FactoryBot.create :feed
 
       @entries = []
       (0..9).each do |i|
-        entry = FactoryGirl.build :entry, feed_id: @feed.id, summary: "entry summary #{i}<img id=\"entry-image\" src=\"http://feed.com/some_image_#{i}.jpg\" alt=\"some-image\">"
+        entry = FactoryBot.build :entry, feed_id: @feed.id, summary: "entry summary #{i}<img id=\"entry-image\" src=\"http://feed.com/some_image_#{i}.jpg\" alt=\"some-image\">"
         @feed.entries << entry
         @entries << entry
       end

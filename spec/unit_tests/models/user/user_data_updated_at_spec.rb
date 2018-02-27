@@ -3,8 +3,8 @@ require 'rails_helper'
 describe User, type: :model do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
     @old_user_data_updated_at = @user.reload.user_data_updated_at
   end
 

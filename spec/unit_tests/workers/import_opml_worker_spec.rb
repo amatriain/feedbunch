@@ -6,8 +6,8 @@ describe ImportOpmlWorker do
     # Ensure files are not deleted, we will need them for running tests again!
     allow(File).to receive(:delete).and_return 1
 
-    @user = FactoryGirl.create :user
-    @opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
+    @user = FactoryBot.create :user
+    @opml_import_job_state = FactoryBot.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
                                      total_feeds: 0, processed_feeds: 0
     @user.opml_import_job_state = @opml_import_job_state
 
@@ -205,7 +205,7 @@ describe ImportOpmlWorker do
     end
 
     it 'reuses folders already created by the user' do
-      folder_linux = FactoryGirl.build :folder, title: 'Linux', user_id: @user.id
+      folder_linux = FactoryBot.build :folder, title: 'Linux', user_id: @user.id
       @user.folders << folder_linux
       ImportOpmlWorker.new.perform @filename, @user.id
 

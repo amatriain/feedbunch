@@ -3,19 +3,19 @@ require 'rails_helper'
 describe User, type: :model do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
   end
 
   context 'without pagination' do
 
     before :each do
-      @feed1 = FactoryGirl.create :feed
-      @feed2 = FactoryGirl.create :feed
-      @feed3 = FactoryGirl.create :feed
+      @feed1 = FactoryBot.create :feed
+      @feed2 = FactoryBot.create :feed
+      @feed3 = FactoryBot.create :feed
 
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id
-      @entry3 = FactoryGirl.build :entry, feed_id: @feed3.id
+      @entry1 = FactoryBot.build :entry, feed_id: @feed1.id
+      @entry2 = FactoryBot.build :entry, feed_id: @feed2.id
+      @entry3 = FactoryBot.build :entry, feed_id: @feed3.id
       @feed1.entries << @entry1
       @feed2.entries << @entry2
       @feed3.entries << @entry3
@@ -50,15 +50,15 @@ describe User, type: :model do
       @feeds = []
       # There are 26 feeds with unread entries and 4 without unread entries
       (0..25).each do |i|
-        feed = FactoryGirl.create :feed, title: i.to_s.rjust(3,'0')
-        entry = FactoryGirl.build :entry, feed_id: feed.id
+        feed = FactoryBot.create :feed, title: i.to_s.rjust(3,'0')
+        entry = FactoryBot.build :entry, feed_id: feed.id
         feed.entries << entry
         @user.subscribe feed.fetch_url
         @feeds << feed
       end
       (26..29).each do |i|
-        feed = FactoryGirl.create :feed, title: i.to_s.rjust(3,'0')
-        entry = FactoryGirl.build :entry, feed_id: feed.id
+        feed = FactoryBot.create :feed, title: i.to_s.rjust(3,'0')
+        entry = FactoryBot.build :entry, feed_id: feed.id
         feed.entries << entry
         @user.subscribe feed.fetch_url
         @user.change_entries_state entry, 'read'
@@ -106,14 +106,14 @@ describe User, type: :model do
       # @feed3 and @feed4 are not in any folder
       # @feed1 has @entry1, @feed3 has @entry3 (both entries are unread by @user)
       # @feed2 and @feed4 have no unread entries
-      @folder = FactoryGirl.build :folder, user_id: @user.id
+      @folder = FactoryBot.build :folder, user_id: @user.id
       @user.folders << @folder
-      @feed1 = FactoryGirl.create :feed
-      @feed2 = FactoryGirl.create :feed
-      @feed3 = FactoryGirl.create :feed
-      @feed4 = FactoryGirl.create :feed
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-      @entry3 = FactoryGirl.build :entry, feed_id: @feed3.id
+      @feed1 = FactoryBot.create :feed
+      @feed2 = FactoryBot.create :feed
+      @feed3 = FactoryBot.create :feed
+      @feed4 = FactoryBot.create :feed
+      @entry1 = FactoryBot.build :entry, feed_id: @feed1.id
+      @entry3 = FactoryBot.build :entry, feed_id: @feed3.id
       @feed1.entries << @entry1
       @feed3.entries << @entry3
       @user.subscribe @feed1.fetch_url
@@ -150,7 +150,7 @@ describe User, type: :model do
     end
 
     it 'raises an error if user does not own the folder' do
-      folder = FactoryGirl.create :folder
+      folder = FactoryBot.create :folder
       expect {@user.folder_feeds folder}.to raise_error FolderNotOwnedByUserError
     end
 

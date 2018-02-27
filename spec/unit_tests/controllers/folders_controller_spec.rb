@@ -3,28 +3,28 @@ require 'rails_helper'
 describe Api::FoldersController, type: :controller do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @folder1 = FactoryGirl.build :folder, user_id: @user.id
-    @folder2 = FactoryGirl.create :folder
+    @user = FactoryBot.create :user
+    @folder1 = FactoryBot.build :folder, user_id: @user.id
+    @folder2 = FactoryBot.create :folder
 
-    @feed1 = FactoryGirl.create :feed
-    @feed2 = FactoryGirl.create :feed
-    @feed3 = FactoryGirl.create :feed
+    @feed1 = FactoryBot.create :feed
+    @feed2 = FactoryBot.create :feed
+    @feed3 = FactoryBot.create :feed
 
     @user.subscribe @feed1.fetch_url
     @user.subscribe @feed2.fetch_url
     @user.subscribe @feed3.fetch_url
 
-    @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @entry1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
+    @entry1_1 = FactoryBot.build :entry, feed_id: @feed1.id
+    @entry1_2 = FactoryBot.build :entry, feed_id: @feed1.id
     @feed1.entries << @entry1_1 << @entry1_2
 
-    @entry2_1 = FactoryGirl.build :entry, feed_id: @feed2.id
-    @entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
+    @entry2_1 = FactoryBot.build :entry, feed_id: @feed2.id
+    @entry2_2 = FactoryBot.build :entry, feed_id: @feed2.id
     @feed2.entries << @entry2_1 << @entry2_2
 
-    @entry3_1 = FactoryGirl.build :entry, feed_id: @feed3.id
-    @entry3_2 = FactoryGirl.build :entry, feed_id: @feed3.id
+    @entry3_1 = FactoryBot.build :entry, feed_id: @feed3.id
+    @entry3_2 = FactoryBot.build :entry, feed_id: @feed3.id
     @feed3.entries << @entry3_1 << @entry3_2
 
     @user.folders << @folder1
@@ -78,7 +78,7 @@ describe Api::FoldersController, type: :controller do
     end
 
     it 'returns 404 for a feed the current user is not subscribed to' do
-      feed = FactoryGirl.create :feed
+      feed = FactoryBot.create :feed
       expect(@user.feeds).not_to include feed
 
       patch :update, params: {id: @folder1.id, folder: {feed_id: feed.id}}, format: :json
@@ -115,7 +115,7 @@ describe Api::FoldersController, type: :controller do
     end
 
     it 'returns 404 if the user is not subscribed to the feed' do
-      feed = FactoryGirl.create :feed
+      feed = FactoryBot.create :feed
       patch :update, params: {id: Folder::NO_FOLDER, folder: {feed_id: feed.id}}, format: :json
       expect(response.status).to eq 404
     end
@@ -149,7 +149,7 @@ describe Api::FoldersController, type: :controller do
 
     it 'returns 304 if user already has a folder with the same title' do
       title = 'Folder title'
-      folder = FactoryGirl.build :folder, title: title, user_id: @user.id
+      folder = FactoryBot.build :folder, title: title, user_id: @user.id
       @user.folders << folder
 
       post :create, params: {folder: {title: title, feed_id: @feed1.id}}, format: :json

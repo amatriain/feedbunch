@@ -1,6 +1,6 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:deleted_entry_guid_sequence) {|n| "some_entry_guid_#{n}"}
 
   factory :deleted_entry do

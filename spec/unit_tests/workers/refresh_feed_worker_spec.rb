@@ -3,10 +3,10 @@ require 'rails_helper'
 describe RefreshFeedWorker do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
     @user.subscribe @feed.fetch_url
-    @refresh_feed_job_state = FactoryGirl.create :refresh_feed_job_state, user_id: @user.id, feed_id: @feed.id
+    @refresh_feed_job_state = FactoryBot.create :refresh_feed_job_state, user_id: @user.id, feed_id: @feed.id
     allow(FeedClient).to receive :fetch
   end
 
@@ -18,9 +18,9 @@ describe RefreshFeedWorker do
 
   it 'recalculates unread entries count in feed' do
     # user is subscribed to @feed with 1 entry
-    user = FactoryGirl.create :user
+    user = FactoryBot.create :user
 
-    entry = FactoryGirl.build :entry, feed_id: @feed.id
+    entry = FactoryBot.build :entry, feed_id: @feed.id
     @feed.entries << entry
 
     user.subscribe @feed.fetch_url
@@ -46,7 +46,7 @@ describe RefreshFeedWorker do
 
     it 'does not update feed if the user does not exist' do
       # subscribe a second user to the feed so that it is not destroyed when @user unsubscribes
-      user2 = FactoryGirl.create :user
+      user2 = FactoryBot.create :user
       user2.subscribe @feed.fetch_url
       @user.destroy
       expect(FeedClient).not_to receive :fetch

@@ -3,22 +3,22 @@ require 'rails_helper'
 describe 'folders and feeds', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
 
-    @folder1 = FactoryGirl.build :folder, user_id: @user.id
-    @folder2 = FactoryGirl.build :folder, user_id: @user.id
+    @folder1 = FactoryBot.build :folder, user_id: @user.id
+    @folder2 = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder1 << @folder2
 
     # Folder which exists but is not owned by @user
-    @folder3 = FactoryGirl.create :folder
+    @folder3 = FactoryBot.create :folder
 
-    @feed1 = FactoryGirl.create :feed
-    @feed2 = FactoryGirl.create :feed
+    @feed1 = FactoryBot.create :feed
+    @feed2 = FactoryBot.create :feed
 
-    @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @entry1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @entry2_1 = FactoryGirl.build :entry, feed_id: @feed2.id
-    @entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
+    @entry1_1 = FactoryBot.build :entry, feed_id: @feed1.id
+    @entry1_2 = FactoryBot.build :entry, feed_id: @feed1.id
+    @entry2_1 = FactoryBot.build :entry, feed_id: @feed2.id
+    @entry2_2 = FactoryBot.build :entry, feed_id: @feed2.id
     @feed1.entries << @entry1_1 << @entry1_2
     @feed2.entries << @entry2_1 << @entry2_2
 
@@ -73,9 +73,9 @@ describe 'folders and feeds', type: :feature do
 
     it 'only shows folders with unread entries by default', js: true do
       # @user is subscribed to feed3, without unread entries, which is the only feed in folder3
-      folder3 = FactoryGirl.build :folder, user_id: @user.id
+      folder3 = FactoryBot.build :folder, user_id: @user.id
       @user.folders << folder3
-      feed3 = FactoryGirl.create :feed
+      feed3 = FactoryBot.create :feed
       @user.subscribe feed3.fetch_url
       folder3.feeds << feed3
 
@@ -87,12 +87,12 @@ describe 'folders and feeds', type: :feature do
     it 'shows folders without unread entries if a feed in the folder has a subscribe job state alert', js: true do
       # feed3 has a subscribe job state alert in the start page
       # feed3 is the only feed in folder3, and it has no unread entries
-      folder3 = FactoryGirl.build :folder, user_id: @user.id
+      folder3 = FactoryBot.build :folder, user_id: @user.id
       @user.folders << folder3
-      feed3 = FactoryGirl.create :feed
+      feed3 = FactoryBot.create :feed
       @user.subscribe feed3.fetch_url
       folder3.feeds << feed3
-      subscribe_job_state = FactoryGirl.build :subscribe_job_state, state: SubscribeJobState::SUCCESS,
+      subscribe_job_state = FactoryBot.build :subscribe_job_state, state: SubscribeJobState::SUCCESS,
                                               feed_id: feed3.id, user_id: @user.id
       @user.subscribe_job_states << subscribe_job_state
 
@@ -105,12 +105,12 @@ describe 'folders and feeds', type: :feature do
     it 'shows folders without unread entries if a feed in the folder has a refresh job state alert', js: true do
       # feed3 has a refresh job state alert in the start page
       # feed3 is the only feed in folder3, and it has no unread entries
-      folder3 = FactoryGirl.build :folder, user_id: @user.id
+      folder3 = FactoryBot.build :folder, user_id: @user.id
       @user.folders << folder3
-      feed3 = FactoryGirl.create :feed
+      feed3 = FactoryBot.create :feed
       @user.subscribe feed3.fetch_url
       folder3.feeds << feed3
-      refresh_feed_job_state = FactoryGirl.build :refresh_feed_job_state, state: SubscribeJobState::SUCCESS,
+      refresh_feed_job_state = FactoryBot.build :refresh_feed_job_state, state: SubscribeJobState::SUCCESS,
                                                  feed_id: feed3.id, user_id: @user.id
       @user.refresh_feed_job_states << refresh_feed_job_state
 
@@ -122,9 +122,9 @@ describe 'folders and feeds', type: :feature do
 
     it 'shows folders without unread entries and hides them again when clicking on the button', js: true do
       # @user is subscribed to feed3, without unread entries, which is the only feed in folder3
-      folder3 = FactoryGirl.build :folder, user_id: @user.id
+      folder3 = FactoryBot.build :folder, user_id: @user.id
       @user.folders << folder3
-      feed3 = FactoryGirl.create :feed
+      feed3 = FactoryBot.create :feed
       @user.subscribe feed3.fetch_url
       folder3.feeds << feed3
 
@@ -159,8 +159,8 @@ describe 'folders and feeds', type: :feature do
 
     it 'hides folder management button when reading a whole folder', js: true do
       # @feed1 and feed3 are in @folder1
-      feed3 = FactoryGirl.create :feed
-      entry3 = FactoryGirl.build :entry, feed_id: feed3.id
+      feed3 = FactoryBot.create :feed
+      entry3 = FactoryBot.build :entry, feed_id: feed3.id
       feed3.entries << entry3
       @user.subscribe feed3.fetch_url
       @folder1.feeds << feed3
@@ -525,8 +525,8 @@ describe 'folders and feeds', type: :feature do
       end
 
       it 'does not show an alert if another user already has a folder with the same title', js: true do
-        user2 = FactoryGirl.create :user
-        folder = FactoryGirl.build :folder, user_id: user2.id
+        user2 = FactoryBot.create :user
+        folder = FactoryBot.build :folder, user_id: user2.id
         user2.folders << folder
 
         should_hide_alert 'folder-already-exists'

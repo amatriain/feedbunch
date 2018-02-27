@@ -3,10 +3,10 @@ require 'rails_helper'
 describe 'feed entries', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed1 = FactoryGirl.create :feed
-    @feed2 = FactoryGirl.create :feed
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @user = FactoryBot.create :user
+    @feed1 = FactoryBot.create :feed
+    @feed2 = FactoryBot.create :feed
+    @folder = FactoryBot.build :folder, user_id: @user.id
     login_user_for_feature @user
   end
 
@@ -15,10 +15,10 @@ describe 'feed entries', type: :feature do
     before :each do
       @img_url_load = '/images/Ajax-loader.gif'
       @img_url_fail = 'not_valid_image.gif'
-      @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id, summary: "<p>summary for @entry1</p><img id=\"entry-image-1\" src=\"#{@img_url_load}\" alt=\"some-image\"><img id=\"entry-image-2\" src=\"#{@img_url_fail}\" alt=\"some-image\">"
-      @entry2 = FactoryGirl.build :entry, feed_id: @feed1.id
+      @entry1 = FactoryBot.build :entry, feed_id: @feed1.id, summary: "<p>summary for @entry1</p><img id=\"entry-image-1\" src=\"#{@img_url_load}\" alt=\"some-image\"><img id=\"entry-image-2\" src=\"#{@img_url_fail}\" alt=\"some-image\">"
+      @entry2 = FactoryBot.build :entry, feed_id: @feed1.id
       @feed1.entries << @entry1 << @entry2
-      @entry3 = FactoryGirl.build :entry, feed_id: @feed2.id
+      @entry3 = FactoryBot.build :entry, feed_id: @feed2.id
       @feed2.entries << @entry3
 
       @user.subscribe @feed1.fetch_url
@@ -113,8 +113,8 @@ describe 'feed entries', type: :feature do
 
     it 'by default only shows unread entries when reading all subscriptions', js: true do
       # @feed1 and @feed2 are in a folder, feed3 isn't in any folder
-      feed3 = FactoryGirl.create :feed
-      entry4 = FactoryGirl.build :entry, feed_id: feed3.id
+      feed3 = FactoryBot.create :feed
+      entry4 = FactoryBot.build :entry, feed_id: feed3.id
       feed3.entries << entry4
       @user.subscribe feed3.fetch_url
 
@@ -367,7 +367,7 @@ describe 'feed entries', type: :feature do
       # Ensure there are exactly 51 unread entries and 4 read entries in @feed1
       Entry.all.each {|e| e.destroy}
       (0..54).each do |i|
-        e = FactoryGirl.build :entry, feed_id: @feed1.id, published: (Date.new(2001, 01, 30) - i.days)
+        e = FactoryBot.build :entry, feed_id: @feed1.id, published: (Date.new(2001, 01, 30) - i.days)
         @feed1.entries << e
         @entries << e
       end
@@ -379,8 +379,8 @@ describe 'feed entries', type: :feature do
       end
 
       # @feed2 has one unread entry
-      @feed2 = FactoryGirl.create :feed
-      @entry2 = FactoryGirl.build :entry, feed_id: @feed2.id, published: Date.new(1990, 01, 01)
+      @feed2 = FactoryBot.create :feed
+      @entry2 = FactoryBot.build :entry, feed_id: @feed2.id, published: Date.new(1990, 01, 01)
       @feed2.entries << @entry2
       @user.subscribe @feed2.fetch_url
 

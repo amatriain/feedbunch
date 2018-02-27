@@ -3,9 +3,9 @@ require 'rails_helper'
 describe Api::SubscribeJobStatesController, type: :controller do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @job_state_1 = FactoryGirl.build :subscribe_job_state, user_id: @user.id
-    @job_state_2 = FactoryGirl.build :subscribe_job_state, user_id: @user.id
+    @user = FactoryBot.create :user
+    @job_state_1 = FactoryBot.build :subscribe_job_state, user_id: @user.id
+    @job_state_2 = FactoryBot.build :subscribe_job_state, user_id: @user.id
     @user.subscribe_job_states << @job_state_1 << @job_state_2
 
     login_user_for_unit @user
@@ -35,7 +35,7 @@ describe Api::SubscribeJobStatesController, type: :controller do
     end
 
     it 'returns a 404 for a job state that does not belong to the user' do
-      job_state_3 = FactoryGirl.create :subscribe_job_state
+      job_state_3 = FactoryBot.create :subscribe_job_state
       get :show, params: {id: job_state_3.id}, format: :json
       expect(response.status).to eq 404
     end
@@ -64,7 +64,7 @@ describe Api::SubscribeJobStatesController, type: :controller do
     end
 
     it 'returns 404 if the job state does not belong to the current user' do
-      job_state_3 = FactoryGirl.create :subscribe_job_state
+      job_state_3 = FactoryBot.create :subscribe_job_state
       delete :destroy, params: {id: job_state_3.id}, format: :json
       expect(response.status).to eq 404
     end

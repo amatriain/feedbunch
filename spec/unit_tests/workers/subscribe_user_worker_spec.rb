@@ -3,12 +3,12 @@ require 'rails_helper'
 describe SubscribeUserWorker do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @user = FactoryBot.create :user
+    @folder = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder
-    @feed = FactoryGirl.create :feed
+    @feed = FactoryBot.create :feed
     @url = 'http://www.galactanet.com/feed.xml'
-    @job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed.fetch_url
+    @job_state = FactoryBot.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed.fetch_url
     @user.subscribe_job_states << @job_state
 
     # Stub FeedClient.stub so that it does not actually fetch feeds, but returns them untouched
@@ -48,7 +48,7 @@ describe SubscribeUserWorker do
     end
 
     it 'destroys subscribe_job_state if the user does not exist' do
-      subscribe_job_state = FactoryGirl.create :subscribe_job_state, user_id: @user.id, fetch_url: @feed.fetch_url
+      subscribe_job_state = FactoryBot.create :subscribe_job_state, user_id: @user.id, fetch_url: @feed.fetch_url
       @user.delete
 
       expect(SubscribeJobState.count).to eq 2
@@ -62,7 +62,7 @@ describe SubscribeUserWorker do
     end
 
     it 'does nothing if the job_state is not in state RUNNING' do
-      job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed.fetch_url,
+      job_state = FactoryBot.build :subscribe_job_state, user_id: @user.id, fetch_url: @feed.fetch_url,
                                     state: SubscribeJobState::ERROR
       @user.subscribe_job_states << job_state
       expect(@user).not_to receive :subscribe

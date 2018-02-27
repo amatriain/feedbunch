@@ -3,18 +3,18 @@ require 'rails_helper'
 describe ExportSubscriptionsWorker do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+    @user = FactoryBot.create :user
+    @opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                state: OpmlExportJobState::RUNNING
     @user.opml_export_job_state = @opml_export_job_state
 
-    @feed1 = FactoryGirl.create :feed, title: 'feed_1'
-    @feed2 = FactoryGirl.create :feed, title: 'feed_2'
-    @feed3 = FactoryGirl.create :feed, title: 'feed_3'
-    @feed4 = FactoryGirl.create :feed, title: 'feed_4'
+    @feed1 = FactoryBot.create :feed, title: 'feed_1'
+    @feed2 = FactoryBot.create :feed, title: 'feed_2'
+    @feed3 = FactoryBot.create :feed, title: 'feed_3'
+    @feed4 = FactoryBot.create :feed, title: 'feed_4'
 
-    @entry1 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @entry3 = FactoryGirl.build :entry, feed_id: @feed3.id
+    @entry1 = FactoryBot.build :entry, feed_id: @feed1.id
+    @entry3 = FactoryBot.build :entry, feed_id: @feed3.id
     @feed1.entries << @entry1
     @feed3.entries << @entry3
 
@@ -23,7 +23,7 @@ describe ExportSubscriptionsWorker do
     @user.subscribe @feed3.fetch_url
     @user.subscribe @feed4.fetch_url
 
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @folder = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder
     @folder.feeds << @feed3 << @feed4
 

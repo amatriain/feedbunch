@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe User, type: :model do
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
   end
 
   context 'import subscriptions' do
@@ -136,8 +136,8 @@ describe User, type: :model do
 
       before :each do
         @job_state = @user.opml_import_job_state
-        @import_failure_1 = FactoryGirl.build :opml_import_failure, opml_import_job_state_id: @job_state.id
-        @import_failure_2 = FactoryGirl.build :opml_import_failure, opml_import_job_state_id: @job_state.id
+        @import_failure_1 = FactoryBot.build :opml_import_failure, opml_import_job_state_id: @job_state.id
+        @import_failure_2 = FactoryBot.build :opml_import_failure, opml_import_job_state_id: @job_state.id
         @job_state.opml_import_failures << @import_failure_1 << @import_failure_2
       end
 
@@ -157,9 +157,9 @@ describe User, type: :model do
       end
 
       it 'does not destroy import failures data for other users' do
-        job_state_2 = FactoryGirl.create :opml_import_job_state
-        import_failure_3 = FactoryGirl.build :opml_import_failure, opml_import_job_state_id: job_state_2.id
-        import_failure_4 = FactoryGirl.build :opml_import_failure, opml_import_job_state_id: job_state_2.id
+        job_state_2 = FactoryBot.create :opml_import_job_state
+        import_failure_3 = FactoryBot.build :opml_import_failure, opml_import_job_state_id: job_state_2.id
+        import_failure_4 = FactoryBot.build :opml_import_failure, opml_import_job_state_id: job_state_2.id
         job_state_2.opml_import_failures << import_failure_3 << import_failure_4
         expect(OpmlImportFailure.all.count).to eq 4
         @user.import_subscriptions @data_file

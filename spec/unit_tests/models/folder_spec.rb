@@ -2,33 +2,33 @@ require 'rails_helper'
 
 describe Folder, type: :model do
   before :each do
-    @user = FactoryGirl.create :user
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @user = FactoryBot.create :user
+    @folder = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder
     @folder.reload
   end
 
   context 'validations' do
     it 'always belongs to a user' do
-      folder = FactoryGirl.build :folder, user_id: nil
+      folder = FactoryBot.build :folder, user_id: nil
       expect(folder).not_to be_valid
     end
 
     it 'requires a title' do
-      folder_nil = FactoryGirl.build :folder, title: nil
+      folder_nil = FactoryBot.build :folder, title: nil
       expect(folder_nil).not_to be_valid
 
-      folder_empty = FactoryGirl.build :folder, title: ''
+      folder_empty = FactoryBot.build :folder, title: ''
       expect(folder_empty).not_to be_valid
     end
 
     it 'does not accept duplicate titles for the same user' do
-      folder_dupe = FactoryGirl.build :folder, user_id: @folder.user_id, title: @folder.title
+      folder_dupe = FactoryBot.build :folder, user_id: @folder.user_id, title: @folder.title
       expect(folder_dupe).not_to be_valid
     end
 
     it 'accepts duplicate titles for different users' do
-      folder_dupe = FactoryGirl.build :folder, title: @folder.title
+      folder_dupe = FactoryBot.build :folder, title: @folder.title
       expect(folder_dupe.user_id).not_to eq @folder.user_id
       expect(folder_dupe).to be_valid
     end
@@ -37,9 +37,9 @@ describe Folder, type: :model do
   context 'association with feeds' do
 
     before :each do
-      @feed1 = FactoryGirl.create :feed
-      @feed2 = FactoryGirl.create :feed
-      @feed3 = FactoryGirl.create :feed
+      @feed1 = FactoryBot.create :feed
+      @feed2 = FactoryBot.create :feed
+      @feed3 = FactoryBot.create :feed
       @user.subscribe @feed1.fetch_url
       @user.subscribe @feed2.fetch_url
       @user.subscribe @feed3.fetch_url
@@ -66,12 +66,12 @@ describe Folder, type: :model do
 
     it 'allows associating a feed with at most one folder for a single user' do
       # user has two folders, each one with a feed. He's also subscribed to a feed that isn't in any folder
-      user = FactoryGirl.create :user
-      feed = FactoryGirl.create :feed
-      feed2 = FactoryGirl.create :feed
-      feed3 = FactoryGirl.create :feed
-      folder1 = FactoryGirl.build :folder, user_id: user.id
-      folder2 = FactoryGirl.build :folder, user_id: user.id
+      user = FactoryBot.create :user
+      feed = FactoryBot.create :feed
+      feed2 = FactoryBot.create :feed
+      feed3 = FactoryBot.create :feed
+      folder1 = FactoryBot.build :folder, user_id: user.id
+      folder2 = FactoryBot.build :folder, user_id: user.id
       user.folders << folder1 << folder2
       user.subscribe feed.fetch_url
       user.subscribe feed2.fetch_url
@@ -93,9 +93,9 @@ describe Folder, type: :model do
     context 'add feed to folder' do
 
       it 'removes feed from any folders from the same user when associating with the new folder' do
-        folder2 = FactoryGirl.build :folder, user_id: @user.id
+        folder2 = FactoryBot.build :folder, user_id: @user.id
         @user.folders << folder2
-        feed2 = FactoryGirl.create :feed
+        feed2 = FactoryBot.create :feed
         @user.subscribe feed2.fetch_url
         @folder.feeds << feed2
 
@@ -110,12 +110,12 @@ describe Folder, type: :model do
 
       it 'does not change feed association with folders for other users' do
         # folder2 is owned by @user
-        folder2 = FactoryGirl.build :folder, user_id: @user.id
+        folder2 = FactoryBot.build :folder, user_id: @user.id
         @user.folders << folder2
 
         # @user has @feed1 in @folder; user2 has @feed1 in folder3
-        user2 = FactoryGirl.create :user
-        folder3 = FactoryGirl.build :folder, user_id: user2.id
+        user2 = FactoryBot.create :user
+        folder3 = FactoryBot.build :folder, user_id: user2.id
         user2.folders << folder3
         user2.subscribe @feed1.fetch_url
         folder3.feeds << @feed1
@@ -142,7 +142,7 @@ describe Folder, type: :model do
 
       it 'deletes old folder only if it has no more feeds' do
         # @feed3 is in folder2 is owned by @user
-        folder2 = FactoryGirl.build :folder, user_id: @user.id
+        folder2 = FactoryBot.build :folder, user_id: @user.id
         @user.folders << folder2
 
         # Move @feed1 from @folder to folder2. @folder1 should not be deleted because @feed2 is still in it
@@ -174,7 +174,7 @@ describe Folder, type: :model do
       end
 
       it 'does not change feed association with other folders' do
-        folder2 = FactoryGirl.create :folder
+        folder2 = FactoryBot.create :folder
         folder2.user.subscribe @feed1.fetch_url
         folder2.feeds << @feed1
 
@@ -190,14 +190,14 @@ describe Folder, type: :model do
 
   context 'association with entries' do
     it 'retrieves all entries for all feeds in a folder' do
-      feed1 = FactoryGirl.create :feed
-      feed2 = FactoryGirl.create :feed
+      feed1 = FactoryBot.create :feed
+      feed2 = FactoryBot.create :feed
       @user.subscribe feed1.fetch_url
       @user.subscribe feed2.fetch_url
       @folder.feeds << feed1 << feed2
-      entry1 = FactoryGirl.build :entry, feed_id: feed1.id
-      entry2 = FactoryGirl.build :entry, feed_id: feed1.id
-      entry3 = FactoryGirl.build :entry, feed_id: feed2.id
+      entry1 = FactoryBot.build :entry, feed_id: feed1.id
+      entry2 = FactoryBot.build :entry, feed_id: feed1.id
+      entry3 = FactoryBot.build :entry, feed_id: feed2.id
       feed1.entries << entry1 << entry2
       feed2.entries << entry3
 
@@ -212,7 +212,7 @@ describe Folder, type: :model do
     it 'sanitizes title' do
       title_unsanitized = '<script>alert("pwned!");</script>folder_title'
       title_sanitized = 'folder_title'
-      folder = FactoryGirl.create :folder, title: title_unsanitized
+      folder = FactoryBot.create :folder, title: title_unsanitized
       expect(folder.title).to eq title_sanitized
     end
   end
@@ -222,7 +222,7 @@ describe Folder, type: :model do
     it 'defaults to the current date/time' do
       now = Time.zone.parse '2000-01-01'
       allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return now
-      folder = FactoryGirl.build :folder, subscriptions_updated_at: nil
+      folder = FactoryBot.build :folder, subscriptions_updated_at: nil
       @user.folders << folder
       expect(folder.reload.subscriptions_updated_at).to eq now
     end
@@ -230,7 +230,7 @@ describe Folder, type: :model do
     context 'touches subscriptions' do
 
       before :each do
-        @feed = FactoryGirl.create :feed
+        @feed = FactoryBot.create :feed
         @user.subscribe @feed.fetch_url
         @folder.feeds << @feed
         @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -238,7 +238,7 @@ describe Folder, type: :model do
 
       it 'when unsubscribed from a feed in the folder' do
         # Move a second feed into the folder, so that it is not deleted when unsubscribing from @feed
-        feed = FactoryGirl.create :feed
+        feed = FactoryBot.create :feed
         @user.subscribe feed.fetch_url
         @folder.feeds << feed
         @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -260,14 +260,14 @@ describe Folder, type: :model do
       context 'unread entries count' do
 
         it 'when adding a new entry to a feed in the folder' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@folder.reload.subscriptions_updated_at).not_to eq  @old_subscriptions_updated_at
         end
 
         it 'when marking an entry of a feed in the folder as unread' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           @user.change_entries_state entry, 'read'
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -277,7 +277,7 @@ describe Folder, type: :model do
         end
 
         it 'when deleting an entry from a feed in the folder' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -288,7 +288,7 @@ describe Folder, type: :model do
         end
 
         it 'when marking an entry of a feed in the folder as read' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -298,7 +298,7 @@ describe Folder, type: :model do
         end
 
         it 'when marking all entries as read' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -309,7 +309,7 @@ describe Folder, type: :model do
         end
 
         it 'when marking all entries in the folder as read' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -320,7 +320,7 @@ describe Folder, type: :model do
         end
 
         it 'when marking all entries of a feed in the folder as read' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -335,7 +335,7 @@ describe Folder, type: :model do
       context 'moving feeds' do
 
         it 'when feed is moved into the folder' do
-          feed = FactoryGirl.create :feed
+          feed = FactoryBot.create :feed
           @user.subscribe feed.fetch_url
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
 
@@ -345,7 +345,7 @@ describe Folder, type: :model do
 
         it 'when feed is moved out of the folder' do
           # Move a second feed into the folder, so that it is not deleted when unsubscribing from @feed
-          feed = FactoryGirl.create :feed
+          feed = FactoryBot.create :feed
           @user.subscribe feed.fetch_url
           @folder.feeds << feed
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -361,7 +361,7 @@ describe Folder, type: :model do
     context 'does not touch subscriptions' do
 
       before :each do
-        @feed = FactoryGirl.create :feed
+        @feed = FactoryBot.create :feed
         @user.subscribe @feed.fetch_url
         @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
       end
@@ -384,14 +384,14 @@ describe Folder, type: :model do
       context 'unread entries count' do
 
         it 'when adding a new entry to a feed not in the folder' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
           expect(@folder.reload.subscriptions_updated_at).to eq  @old_subscriptions_updated_at
         end
 
         it 'when marking an entry of a feed not in the folder as unread' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           @user.change_entries_state entry, 'read'
           @subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -401,7 +401,7 @@ describe Folder, type: :model do
         end
 
         it 'when deleting an entry from a feed not in the folder' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -412,7 +412,7 @@ describe Folder, type: :model do
         end
 
         it 'when marking an entry of a feed not in the folder as read' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at
@@ -422,7 +422,7 @@ describe Folder, type: :model do
         end
 
         it 'when marking all entries of a feed not in the folder as read' do
-          entry = FactoryGirl.build :entry, feed_id: @feed.id
+          entry = FactoryBot.build :entry, feed_id: @feed.id
           @feed.entries << entry
           SubscriptionsManager.recalculate_unread_count @feed, @user
           @old_subscriptions_updated_at = @folder.reload.subscriptions_updated_at

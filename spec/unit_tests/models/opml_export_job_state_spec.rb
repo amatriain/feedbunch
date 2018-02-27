@@ -3,25 +3,25 @@ require 'rails_helper'
 describe OpmlExportJobState, type: :model do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
     @filename = 'some_filename.opml'
   end
 
   context 'validations' do
 
     it 'always belongs to a user' do
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: nil
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: nil
       expect(opml_export_job_state).not_to be_valid
     end
 
     it 'has filename if it has state SUCCESS' do
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::SUCCESS,
                                                 filename: nil,
                                                 export_date: Time.zone.now
       expect(opml_export_job_state).not_to be_valid
 
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::SUCCESS,
                                                 filename: @filename,
                                                 export_date: Time.zone.now
@@ -29,7 +29,7 @@ describe OpmlExportJobState, type: :model do
     end
 
     it 'does not have a filename if it has state NONE' do
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::NONE,
                                                 filename: @filename
       opml_export_job_state.save!
@@ -37,7 +37,7 @@ describe OpmlExportJobState, type: :model do
     end
 
     it 'does not have a filename if it has state RUNNING' do
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::RUNNING,
                                                 filename: @filename
       opml_export_job_state.save!
@@ -45,7 +45,7 @@ describe OpmlExportJobState, type: :model do
     end
 
     it 'does not have a filename if it has state ERROR' do
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::ERROR,
                                                 filename: @filename
       opml_export_job_state.save!
@@ -53,19 +53,19 @@ describe OpmlExportJobState, type: :model do
     end
 
     it 'has export_date if it has state SUCCESS' do
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::SUCCESS,
                                                 export_date: nil
       expect(opml_export_job_state).not_to be_valid
 
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::SUCCESS,
                                                 export_date: Time.zone.now
       expect(opml_export_job_state).to be_valid
     end
 
     it 'does not have an export_date if it has state NONE' do
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::NONE,
                                                 export_date: Time.zone.now
       opml_export_job_state.save!
@@ -73,7 +73,7 @@ describe OpmlExportJobState, type: :model do
     end
 
     it 'does not have an export_date if it has state RUNNING' do
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::RUNNING,
                                                 export_date: Time.zone.now
       opml_export_job_state.save!
@@ -81,7 +81,7 @@ describe OpmlExportJobState, type: :model do
     end
 
     it 'does not have an export_date if it has state ERROR' do
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, user_id: @user.id,
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                 state: OpmlExportJobState::ERROR,
                                                 export_date: Time.zone.now
       opml_export_job_state.save!
@@ -97,7 +97,7 @@ describe OpmlExportJobState, type: :model do
     end
 
     it 'defaults show_alert to true' do
-      opml_export_job_state = FactoryGirl.build :opml_export_job_state, show_alert: nil
+      opml_export_job_state = FactoryBot.build :opml_export_job_state, show_alert: nil
       opml_export_job_state.save!
       expect(opml_export_job_state.show_alert).to be true
     end

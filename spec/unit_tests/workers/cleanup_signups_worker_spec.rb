@@ -8,7 +8,7 @@ describe CleanupSignupsWorker do
     allow_any_instance_of(ActiveSupport::TimeZone).to receive(:now).and_return @time_now
 
     # @user is an unconfirmed user. The confirmation_sent_at date will be different for different tests.
-    @user = FactoryGirl.create :user, confirmed_at: nil
+    @user = FactoryBot.create :user, confirmed_at: nil
   end
 
   context 'discard old unconfirmed signups' do

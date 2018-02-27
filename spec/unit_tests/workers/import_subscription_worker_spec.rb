@@ -3,15 +3,15 @@ require 'rails_helper'
 describe ImportSubscriptionWorker do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @opml_import_job_state = FactoryGirl.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
+    @user = FactoryBot.create :user
+    @opml_import_job_state = FactoryBot.build :opml_import_job_state, user_id: @user.id, state: OpmlImportJobState::RUNNING,
                                      total_feeds: 10, processed_feeds: 0
     @user.opml_import_job_state = @opml_import_job_state
 
     @url = 'http://some.feed.com/'
-    @feed = FactoryGirl.create :feed, fetch_url: @url
+    @feed = FactoryBot.create :feed, fetch_url: @url
 
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @folder = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder
   end
 
@@ -51,8 +51,8 @@ describe ImportSubscriptionWorker do
     end
 
     it 'ignores folder if it is owned by a different user' do
-      user2 = FactoryGirl.create :user
-      folder2 = FactoryGirl.build :folder, user_id: user2.id
+      user2 = FactoryBot.create :user
+      folder2 = FactoryBot.build :folder, user_id: user2.id
       user2.folders << folder2
 
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url, folder2.id

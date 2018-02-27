@@ -3,7 +3,7 @@ require 'rails_helper'
 describe S3Client do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
     @file_content = 'some_file_content'
     @filename = 'filename.txt'
     @upload_folder = OPMLImporter::FOLDER

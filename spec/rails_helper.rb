@@ -16,7 +16,7 @@ require 'nokogiri'
 require 'show_me_the_cookies'
 
 # Factories instead of database fixtures
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 
 # Use 'assigns' helper method in controller specs
 require 'rails-controller-testing'

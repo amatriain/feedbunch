@@ -1,6 +1,6 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:opml_import_failure_url_sequence) {|n| "http://some.failed.feed_#{n}.com"}
 
   factory :opml_import_failure do

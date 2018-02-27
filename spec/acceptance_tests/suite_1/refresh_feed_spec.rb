@@ -3,16 +3,16 @@ require 'rails_helper'
 describe 'refresh feeds', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
-    @entry = FactoryGirl.build :entry, feed_id: @feed.id
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
+    @entry = FactoryBot.build :entry, feed_id: @feed.id
     @feed.entries << @entry
     @user.subscribe @feed.fetch_url
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @folder = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder
     @folder.feeds << @feed
 
-    @job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed.id
+    @job_state = FactoryBot.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed.id
     allow_any_instance_of(User).to receive :refresh_feed do |user|
       if user.id == @user.id
         @user.refresh_feed_job_states << @job_state

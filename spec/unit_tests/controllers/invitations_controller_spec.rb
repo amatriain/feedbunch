@@ -3,7 +3,7 @@ require 'rails_helper'
 describe FeedbunchAuth::InvitationsController, type: :controller do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
     @friend_email = 'friends.will.be.friends@righttotheend.com'
     login_user_for_unit @user
   end
@@ -13,7 +13,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
     context 'validations' do
 
       it 'returns 409 if user already exists and has not been invited' do
-        user2 = FactoryGirl.create :user, email: @friend_email
+        user2 = FactoryBot.create :user, email: @friend_email
         post :create, params: {user: {email: @friend_email}}, format: :json
         expect(response.status).to eq 409
       end
@@ -92,7 +92,7 @@ describe FeedbunchAuth::InvitationsController, type: :controller do
         @date_now = Time.zone.parse '2000-01-01'
         @invitation_token = 'abc'
         @unencrypted_invitation_token = 'def'
-        @invited_user = FactoryGirl.create :user, email: @friend_email,
+        @invited_user = FactoryBot.create :user, email: @friend_email,
                                           confirmed_at: nil, invitation_token: @invitation_token,
                                           unencrypted_invitation_token: @unencrypted_invitation_token,
                                           invitation_created_at: @date_now, invitation_sent_at: @date_now

@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe User, type: :model do
   before :each do
-    @user = FactoryGirl.create :user
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @user = FactoryBot.create :user
+    @folder = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder
-    @feed = FactoryGirl.create :feed
+    @feed = FactoryBot.create :feed
     @user.subscribe @feed.fetch_url
   end
 
@@ -20,12 +20,12 @@ describe User, type: :model do
     end
 
     it 'removes the feed from its old folder' do
-      feed2 = FactoryGirl.create :feed
+      feed2 = FactoryBot.create :feed
       @user.subscribe feed2.fetch_url
       @folder.feeds << @feed
       @folder.feeds << feed2
 
-      folder2 = FactoryGirl.build :folder, user_id: @user.id
+      folder2 = FactoryBot.build :folder, user_id: @user.id
       @user.folders << folder2
 
       @user.move_feed_to_folder @feed, folder: folder2
@@ -50,7 +50,7 @@ describe User, type: :model do
 
     it 'deletes the old folder if it had no more feeds' do
       @folder.feeds << @feed
-      folder2 = FactoryGirl.build :folder, user_id: @user.id
+      folder2 = FactoryBot.build :folder, user_id: @user.id
       @user.folders << folder2
 
       @user.move_feed_to_folder @feed, folder: folder2
@@ -59,10 +59,10 @@ describe User, type: :model do
     end
 
     it 'does not delete the old folder if it has more feeds' do
-      feed2 = FactoryGirl.create :feed
+      feed2 = FactoryBot.create :feed
       @user.subscribe feed2.fetch_url
       @folder.feeds << @feed << feed2
-      folder2 = FactoryGirl.build :folder, user_id: @user.id
+      folder2 = FactoryBot.build :folder, user_id: @user.id
       @user.folders << folder2
 
       @user.move_feed_to_folder @feed, folder: folder2

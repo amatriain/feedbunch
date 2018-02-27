@@ -6,7 +6,7 @@ describe FileClient do
     @file_content = 'some_file_content'
     @filename = 'filename.txt'
     @upload_folder = OPMLImporter::FOLDER
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
     @filepath = File.join Rails.root, @upload_folder, @user.id.to_s, @filename
   end
 

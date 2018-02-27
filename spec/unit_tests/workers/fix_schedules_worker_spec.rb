@@ -3,7 +3,7 @@ require 'rails_helper'
 describe FixSchedulesWorker do
 
   before :each do
-    @feed = FactoryGirl.create :feed
+    @feed = FactoryBot.create :feed
 
     # @feed has a scheduled update
     @job = double 'job', klass: 'ScheduledUpdateFeedWorker', args: [@feed.id]
@@ -11,7 +11,7 @@ describe FixSchedulesWorker do
   end
 
   it 'adds missing scheduled feed updates' do
-    feed_unscheduled = FactoryGirl.create :feed
+    feed_unscheduled = FactoryBot.create :feed
     # @feed has a scheduled update, feed_unscheduled does not
 
     expect(ScheduledUpdateFeedWorker).to receive(:perform_at).once do |perform_time, feed_id|

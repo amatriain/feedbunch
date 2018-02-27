@@ -2,19 +2,19 @@ require 'rails_helper'
 
 describe FeedClient do
   before :each do
-    @feed = FactoryGirl.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
+    @feed = FactoryBot.create :feed, title: 'Some feed title', url: 'http://some.feed.com'
 
     @feed_title = 'xkcd.com'
     @feed_url = 'http://xkcd.com/'
 
-    @entry1 = FactoryGirl.build :entry
+    @entry1 = FactoryBot.build :entry
     @entry1.title = 'Silence'
     @entry1.url = 'http://xkcd.com/1199/'
     @entry1.summary = %{&lt;p&gt;All music is just performances of 4'33" in studios where another band happened to be playing at the time.&lt;/p&gt;}
     @entry1.published = 'Mon, 15 Apr 2013 04:00:00 -0000'
     @entry1.guid = 'http://xkcd.com/1199/'
 
-    @entry2 = FactoryGirl.build :entry
+    @entry2 = FactoryBot.build :entry
     @entry2.title = 'Geologist'
     @entry2.url = 'http://xkcd.com/1198/'
     @entry2.summary = %{&lt;p&gt;'It seems like it's still alive, Professor.' 'Yeah, a big one like this can keep running around for a few billion years after you remove the head.';&lt;/p&gt;}
@@ -63,7 +63,7 @@ WEBPAGE_HTML
       feed_fetch_url = 'http://webpage.com/feed'
       feed_path = '/feed'
       feed_url = 'http://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -97,7 +97,7 @@ WEBPAGE_HTML
       feed_fetch_url_relative = '//webpage.com/feed'
       feed_fetch_url_absolute = 'http://webpage.com/feed'
       feed_url = 'http://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -131,7 +131,7 @@ WEBPAGE_HTML
       feed_fetch_url_relative = '//webpage.com/feed/'
       feed_fetch_url_absolute = 'https://webpage.com/feed/'
       feed_url = 'https://webpage.com'
-      feed = FactoryGirl.create :feed, title: feed_url, url: feed_url, fetch_url: feed_url
+      feed = FactoryBot.create :feed, title: feed_url, url: feed_url, fetch_url: feed_url
 
       webpage_html = <<WEBPAGE_HTML
 <!DOCTYPE html>
@@ -272,11 +272,11 @@ WEBPAGE_HTML
 FEED_XML
       allow(feed_xml).to receive(:headers).and_return({})
 
-      old_feed = FactoryGirl.create :feed, fetch_url: feed_url
-      new_feed = FactoryGirl.create :feed
+      old_feed = FactoryBot.create :feed, fetch_url: feed_url
+      new_feed = FactoryBot.create :feed
 
       # user is subscribed to the feed being updated
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
       user.subscribe new_feed.fetch_url
 
       # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
@@ -338,8 +338,8 @@ WEBPAGE_HTML
 FEED_XML
       allow(feed_xml).to receive(:headers).and_return({})
 
-      old_feed = FactoryGirl.create :feed, fetch_url: feed_url
-      new_feed = FactoryGirl.create :feed
+      old_feed = FactoryBot.create :feed, fetch_url: feed_url
+      new_feed = FactoryBot.create :feed
 
       # First fetch the webpage; then, when fetching the actual feed URL, return an Atom XML with one entry
       allow(RestClient).to receive :get do |url|

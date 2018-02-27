@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe User, type: :model do
   before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
     @user.subscribe @feed.fetch_url
-    @folder = FactoryGirl.build :folder, user_id: @user.id
+    @folder = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder
     @folder.feeds << @feed
   end
@@ -24,7 +24,7 @@ describe User, type: :model do
     end
 
     it 'does not delete the folder if it is not empty' do
-      feed2 = FactoryGirl.create :feed
+      feed2 = FactoryBot.create :feed
       @user.subscribe feed2.fetch_url
       @folder.feeds << feed2
 

@@ -3,20 +3,20 @@ require 'rails_helper'
 describe 'unread entries count', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
 
     # @user has @folder1
-    @folder1 = FactoryGirl.build :folder, user_id: @user.id
+    @folder1 = FactoryBot.build :folder, user_id: @user.id
     @user.folders << @folder1
 
-    @feed1 = FactoryGirl.create :feed
-    @feed2 = FactoryGirl.create :feed
+    @feed1 = FactoryBot.create :feed
+    @feed2 = FactoryBot.create :feed
 
     # @feed1 has 3 unread entries, @feed2 has 1 unread entry
-    @entry1_1 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @entry1_2 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @entry1_3 = FactoryGirl.build :entry, feed_id: @feed1.id
-    @entry2_1 = FactoryGirl.build :entry, feed_id: @feed2.id
+    @entry1_1 = FactoryBot.build :entry, feed_id: @feed1.id
+    @entry1_2 = FactoryBot.build :entry, feed_id: @feed1.id
+    @entry1_3 = FactoryBot.build :entry, feed_id: @feed1.id
+    @entry2_1 = FactoryBot.build :entry, feed_id: @feed2.id
     @feed1.entries << @entry1_1 << @entry1_2 << @entry1_3
     @feed2.entries << @entry2_1
 
@@ -61,9 +61,9 @@ describe 'unread entries count', type: :feature do
     end
 
     it 'updates number of unread entries when moving a feed into an existing folder', js: true do
-      folder2 = FactoryGirl.build :folder, user_id: @user.id
+      folder2 = FactoryBot.build :folder, user_id: @user.id
       @user.folders << folder2
-      feed3 = FactoryGirl.create :feed
+      feed3 = FactoryBot.create :feed
       @user.subscribe feed3.fetch_url
       folder2.feeds << feed3
 
@@ -87,11 +87,11 @@ describe 'unread entries count', type: :feature do
   context 'subscribing, unsubscribing, refreshing feeds' do
 
     it 'updates number of unread entries when subscribing to a feed', js: true do
-      feed = FactoryGirl.create :feed
-      entry1 = FactoryGirl.build :entry, feed_id: feed.id
-      entry2 = FactoryGirl.build :entry, feed_id: feed.id
+      feed = FactoryBot.create :feed
+      entry1 = FactoryBot.build :entry, feed_id: feed.id
+      entry2 = FactoryBot.build :entry, feed_id: feed.id
       feed.entries << entry1 << entry2
-      job_state = FactoryGirl.build :subscribe_job_state, user_id: @user.id, fetch_url: feed.fetch_url
+      job_state = FactoryBot.build :subscribe_job_state, user_id: @user.id, fetch_url: feed.fetch_url
 
       allow_any_instance_of(User).to receive :enqueue_subscribe_job do |user|
         if user.id == @user.id
@@ -122,7 +122,7 @@ describe 'unread entries count', type: :feature do
       read_feed @feed1, @user
       allow_any_instance_of(User).to receive :refresh_feed do |user|
         if user.id == @user.id
-          job_state = FactoryGirl.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed1.id
+          job_state = FactoryBot.build :refresh_feed_job_state, user_id: @user.id, feed_id: @feed1.id
           user.refresh_feed_job_states << job_state
         end
       end
@@ -229,11 +229,11 @@ describe 'unread entries count', type: :feature do
         unread_folder_entries_should_eq @folder1, 4
 
         # Add 1 entry to @feed1 and another entry to @feed2
-        entry1_4 = FactoryGirl.build :entry, feed_id: @feed1.id
+        entry1_4 = FactoryBot.build :entry, feed_id: @feed1.id
         @feed1.entries << entry1_4
         feed_subscription_1 = FeedSubscription.find_by user_id: @user.id, feed_id: @feed1.id
         feed_subscription_1.update unread_entries: (feed_subscription_1.unread_entries + 1)
-        entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
+        entry2_2 = FactoryBot.build :entry, feed_id: @feed2.id
         @feed2.entries << entry2_2
         feed_subscription_2= FeedSubscription.find_by user_id: @user.id, feed_id: @feed2.id
         feed_subscription_2.update unread_entries: (feed_subscription_2.unread_entries + 1)
@@ -280,11 +280,11 @@ describe 'unread entries count', type: :feature do
         unread_folder_entries_should_eq @folder1, 1
 
         # Add 1 entry to @feed1 and another entry to @feed2
-        entry1_4 = FactoryGirl.build :entry, feed_id: @feed1.id
+        entry1_4 = FactoryBot.build :entry, feed_id: @feed1.id
         @feed1.entries << entry1_4
         feed_subscription_1 = FeedSubscription.find_by user_id: @user.id, feed_id: @feed1.id
         feed_subscription_1.update unread_entries: (feed_subscription_1.unread_entries + 1)
-        entry2_2 = FactoryGirl.build :entry, feed_id: @feed2.id
+        entry2_2 = FactoryBot.build :entry, feed_id: @feed2.id
         @feed2.entries << entry2_2
         feed_subscription_2= FeedSubscription.find_by user_id: @user.id, feed_id: @feed2.id
         feed_subscription_2.update unread_entries: (feed_subscription_2.unread_entries + 1)

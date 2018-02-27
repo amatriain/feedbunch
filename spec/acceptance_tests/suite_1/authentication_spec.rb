@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'authentication', type: :feature do
 
   before :each do
-    @user = FactoryGirl.create :user
+    @user = FactoryBot.create :user
     # Remove emails stil in the mail queue
     ActionMailer::Base.deliveries.clear
   end
@@ -70,7 +70,7 @@ describe 'authentication', type: :feature do
 
       it 'does not sign up user if email already registered', js: true do
         new_password = 'new_password'
-        user = FactoryGirl.build :user, email: @user.email, password: new_password
+        user = FactoryBot.build :user, email: @user.email, password: new_password
         fill_in 'Email', with: @user.email
         fill_in 'Password', with: new_password
         fill_in 'Password (again)', with: new_password
@@ -194,7 +194,7 @@ describe 'authentication', type: :feature do
         close_cookies_alert
         new_email = 'new_email@test.com'
         new_password = 'new_password'
-        user = FactoryGirl.build :user, email: new_email, password: new_password
+        user = FactoryBot.build :user, email: new_email, password: new_password
         fill_in 'Email', with: new_email
         fill_in 'Password', with: new_password
         fill_in 'Password (again)', with: new_password
@@ -228,7 +228,7 @@ describe 'authentication', type: :feature do
         visit new_user_registration_path
         new_email = 'new_email@test.com'
         new_password = 'new_password'
-        user = FactoryGirl.build :user, email: new_email, password: new_password
+        user = FactoryBot.build :user, email: new_email, password: new_password
         fill_in 'Email', with: new_email
         fill_in 'Password', with: new_password
         fill_in 'Password (again)', with: new_password

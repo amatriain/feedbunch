@@ -117,7 +117,7 @@ group :test, :development do
   gem 'rspec-rails'
 
   # Factories instead of DB fixtures during testing
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
 end
 
 group :test do

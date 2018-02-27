@@ -3,8 +3,8 @@ require 'rails_helper'
 describe UnsubscribeUserWorker do
 
   before :each do
-    @user = FactoryGirl.create :user
-    @feed = FactoryGirl.create :feed
+    @user = FactoryBot.create :user
+    @feed = FactoryBot.create :feed
     @user.subscribe @feed.fetch_url
   end
 
@@ -28,7 +28,7 @@ describe UnsubscribeUserWorker do
     end
 
     it 'does nothing if the feed is not subscribed by the user' do
-      feed2 = FactoryGirl.create :feed
+      feed2 = FactoryBot.create :feed
       expect(@user).not_to receive :unsubscribe
       UnsubscribeUserWorker.new.perform @user.id, feed2.id
     end

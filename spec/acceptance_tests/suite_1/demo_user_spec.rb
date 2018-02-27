@@ -9,7 +9,7 @@ describe 'demo user', type: :feature do
     @demo_password = 'feedbunch-demo'
     Feedbunch::Application.config.demo_password = @demo_password
 
-    @demo_user = FactoryGirl.create :user,
+    @demo_user = FactoryBot.create :user,
                                     email: @demo_email,
                                     password: @demo_password,
                                     confirmed_at: Time.zone.now
