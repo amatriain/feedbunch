@@ -38,14 +38,14 @@
     "type": "git",
     "url": "http://github.com/julianshapiro/velocity.git"
   },
-  "version": "1.5.0",
-  "_release": "1.5.0",
+  "version": "1.5.1",
+  "_release": "1.5.1",
   "_resolution": {
     "type": "version",
-    "tag": "1.5.0",
-    "commit": "526de70df9ba74c56b1a01338ac2fb541c5a7d27"
+    "tag": "1.5.1",
+    "commit": "6dd28a2a6b7ec87257bb8e5b54a3355bd766e027"
   },
   "_source": "https://github.com/julianshapiro/velocity.git",
-  "_target": "1.5.0",
+  "_target": "1.5.1",
   "_originalSource": "velocity"
 }
