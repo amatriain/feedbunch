@@ -85,6 +85,9 @@ gem 'inherited_resources'
 # Insight into PostgreSQL database
 gem 'pghero'
 
+# Faster startup
+gem 'bootsnap', require: false
+
 group :development do
   # Automate deployments
   gem 'capistrano-rails', require: false
