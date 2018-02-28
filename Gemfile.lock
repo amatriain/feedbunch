@@ -15,15 +15,6 @@ GIT
       sinatra
       thin
 
-GIT
-  remote: https://github.com/amatriain/rest-client-components.git
-  revision: 236ac31ed1a061d479332ff179bf78fcb11edb74
-  branch: rest-client-2-compatibility
-  specs:
-    rest-client-components (1.4.0)
-      rack (>= 1.0.1)
-      rest-client (>= 1.6.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -327,6 +318,9 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    rest-client-components (1.5.0)
+      rack (>= 1.0.1)
+      rest-client (>= 1.6.0)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
@@ -488,7 +482,7 @@ DEPENDENCIES
   redmon!
   responders
   rest-client
-  rest-client-components!
+  rest-client-components
   rspec
   rspec-rails
   rspec-retry
