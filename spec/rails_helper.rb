@@ -95,6 +95,9 @@ RSpec.configure do |config|
     Capybara.javascript_driver = :selenium
   end
 
+  # Use puma as server for capybara, with logs on to help debugging
+  Capybara.server = :puma
+
   # Make capybara wait for a long time for things to appear in the DOM,
   # in case there's a long-running AJAX call running which changes the DOM after a few seconds
   # (or we're just running in a slow CI environment)
