@@ -68,11 +68,6 @@ RSpec.configure do |config|
     config.after(:each)  { Bullet.end_request }
   end
 
-  config.before type: 'feature' do
-    # Use a relatively common window size in acceptance tests
-    current_window.resize_to(1920, 1200)
-  end
-
   # Retry failed tests, show retry status in the output
   config.verbose_retry = true
   if Rails.env == 'ci'
@@ -89,10 +84,15 @@ RSpec.configure do |config|
 
   # Set driver for acceptance tests
   if ENV['TEST_SUITE'] != 'unit'
-    Capybara.register_driver :selenium do |app|
-      Capybara::Selenium::Driver.new app, browser: :chrome
+    Capybara.register_driver :firefox_headless do |app|
+      options = ::Selenium::WebDriver::Firefox::Options.new
+      options.args << '--headless'
+      options.args << '--window-size=1920, 1200'
+
+      Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
     end
-    Capybara.javascript_driver = :selenium
+
+    Capybara.javascript_driver = :firefox_headless
   end
 
   # Use puma as server for capybara, with logs on to help debugging
@@ -120,6 +120,7 @@ RSpec.configure do |config|
 
   # Include ShowMeTheCookies to manipulate cookies in acceptance tests
   config.include ShowMeTheCookies, type: :feature
+  ShowMeTheCookies.register_adapter :firefox_headless, ShowMeTheCookies::Selenium
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
