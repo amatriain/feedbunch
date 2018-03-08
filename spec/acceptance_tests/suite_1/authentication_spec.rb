@@ -358,17 +358,8 @@ describe 'authentication', type: :feature do
     end
 
     it 'redirects to login page if an AJAX request is returned an HTTP 401 Unauthorized', js: true do
-      # try to expire cookies up to 15 times at 100ms intervals. Webkit doesn't always immediately obey, it seems.
-      retries = 0
-      for i in 1..16
-        retries += 1
-        expire_cookies
-        sleep 0.1
-        cookie = get_me_the_cookie '_feedbunch_session'
-        break if cookie.blank?
-      end
-      expect(retries).to be <= 15
-
+      # clear session cookies to force a 401 response
+      clear_cookies
       go_to_start_page
 
       expect(page).to have_text 'Log in'

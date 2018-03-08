@@ -12,7 +12,6 @@ require 'capybara/rspec'
 require 'selenium-webdriver'
 require 'database_cleaner'
 require 'nokogiri'
-require 'show_me_the_cookies'
 
 # Factories instead of database fixtures
 require 'factory_bot_rails'
@@ -84,15 +83,18 @@ RSpec.configure do |config|
 
   # Set driver for acceptance tests
   if ENV['TEST_SUITE'] != 'unit'
-    Capybara.register_driver :firefox_headless do |app|
-      options = ::Selenium::WebDriver::Firefox::Options.new
-      options.args << '--headless'
-      options.args << '--window-size=1920, 1200'
 
-      Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
+    Capybara.register_driver :chrome_headless do |app|
+      Capybara::Selenium::Driver.new(app,
+                                     browser: :chrome,
+                                     desired_capabilities: Selenium::WebDriver::Remote::Capabilities.chrome(
+                                         'chromeOptions' => {
+                                             'args' => ['window-size=1920,1200', 'headless', 'lang=en-US,en']
+                                         }
+                                     )
+      )
     end
-
-    Capybara.javascript_driver = :firefox_headless
+    Capybara.javascript_driver = :chrome_headless
   end
 
   # Use puma as server for capybara, with logs on to help debugging
@@ -117,10 +119,6 @@ RSpec.configure do |config|
     page.driver.allow_url 'ajax.googleapis.com'
   end
 =end
-
-  # Include ShowMeTheCookies to manipulate cookies in acceptance tests
-  config.include ShowMeTheCookies, type: :feature
-  ShowMeTheCookies.register_adapter :firefox_headless, ShowMeTheCookies::Selenium
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and

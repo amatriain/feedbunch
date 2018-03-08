@@ -625,3 +625,18 @@ def press_key_for_feature(key)
   end
   page.find('body').native.send_keys send_char
 end
+
+##
+# Clear all cookies from browser
+def clear_cookies
+  browser = Capybara.current_session.driver.browser
+  if browser.respond_to?(:clear_cookies)
+    # Rack::MockSession
+    browser.clear_cookies
+  elsif browser.respond_to?(:manage) and browser.manage.respond_to?(:delete_all_cookies)
+    # Selenium::WebDriver
+    browser.manage.delete_all_cookies
+  else
+    raise "Don't know how to clear cookies. Weird driver?"
+  end
+end
