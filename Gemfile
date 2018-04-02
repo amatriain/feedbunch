@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.5.0'
 
-gem 'rails', '~> 5.1.5'
+gem 'rails', '~> 5.1.6'
 
 # Sanitizer to replace poorly maintained new rails sanitizer
 gem 'sanitize'
