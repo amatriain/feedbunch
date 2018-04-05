@@ -51,6 +51,9 @@ gem 'ox'
 # HTTP client
 gem 'rest-client'
 
+# headless browser, to fetch some websites behing cloudflare DDOS protection
+gem 'selenium-webdriver'
+
 # HTTP client-side caching
 gem 'rest-client-components'
 gem 'rack-cache'
@@ -137,7 +140,6 @@ group :test do
 
   # To simulate a user's browser during acceptance testing
   gem 'capybara'
-  gem 'selenium-webdriver'
 
   # To be able to open the browser during debugging of acceptance tests
   gem 'launchy'

@@ -99,10 +99,40 @@ class FeedClient
       RestClient.disable Rack::Cache
     end
 
-    # GET the feed
-    Rails.logger.info "Fetching from URL #{url}"
-
-    feed_response = RestClient.get url, user_agent: user_agent
+    begin
+      # try to GET the feed with a simple HTTP client (js not enabled)
+      Rails.logger.info "Fetching from URL #{url}"
+      feed_response = RestClient.get url, user_agent: user_agent
+    rescue RestClient::ServiceUnavailable => e
+      # try to overcome Cloudflare DDoS protection with a full-featured headless browser
+      # Cloudflare sends a 503 error but with a js in the page that after a delay redirects to the actual requested page
+      if e.http_code == 503 && e.response.match?(/Cloudflare/i)
+        begin
+          Rails.logger.info "URL #{url} is behind Cloudflare DDoS protection, using a full browser to fetch it"
+          opts = Selenium::WebDriver::Chrome::Options.new
+          opts.add_argument '--headless'
+          browser = Selenium::WebDriver.for :chrome, options: opts
+          browser.get url
+          wait = Selenium::WebDriver::Wait.new timeout: 20
+          wait.until {
+            # wait until the page in the browser is an RSS or Atom feed, or a timeout happens
+            browser.find_element :xpath, '//rss|//feed'
+          }
+          feed_response = browser.page_source
+          # some methods necessary later, to emulate a RestClient response
+          feed_response.define_singleton_method :headers do
+            return []
+          end
+        rescue Selenium::WebDriver::Error::TimeOutError => eTimeout
+          Rails.logger.info "Cannot access URL #{url} behind Cloudflare DDoS protection even with a full browser"
+          # if after all the full browser cannot get the feed, raise the original error returned to RestClient
+          raise e
+        end
+      else
+        # if a HTTP 503 error is received but the page is not a Cloudflare DDoS protection page, raise the error as usual
+        raise e
+      end
+    end
 
     # If the response was retrieved from the cache, do not process it (entries are already in the db)
     if http_caching
