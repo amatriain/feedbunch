@@ -127,6 +127,9 @@ class FeedClient
           Rails.logger.info "Cannot access URL #{url} behind Cloudflare DDoS protection even with a full browser"
           # if after all the full browser cannot get the feed, raise the original error returned to RestClient
           raise e
+        ensure
+          # close browser explicitly, otherwise it stays running even after worker stops
+          browser.quit
         end
       else
         # if a HTTP 503 error is received but the page is not a Cloudflare DDoS protection page, raise the error as usual
