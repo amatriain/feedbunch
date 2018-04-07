@@ -296,14 +296,6 @@ loadFeedsSvc, showHideReadSvc)->
     return
 
   #--------------------------------------------
-  # Share an entry on Facebook
-  #--------------------------------------------
-  $scope.share_facebook_entry = (entry)->
-    socialNetworksSvc.share_facebook_entry entry
-    menuCollapseSvc.close()
-    return
-
-  #--------------------------------------------
   # Share an entry on Google+
   #--------------------------------------------
   $scope.share_gplus_entry = (entry)->

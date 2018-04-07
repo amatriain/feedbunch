@@ -7,12 +7,6 @@ angular.module('feedbunch').service 'socialNetworksSvc',
 ($rootScope, entrySvc)->
 
   #---------------------------------------------
-  # Share an entry on Facebook
-  #---------------------------------------------
-  share_facebook_entry: (entry)->
-    FB.ui method: 'share', href: entry.url
-
-  #---------------------------------------------
   # Share an entry on Google+
   #---------------------------------------------
   share_gplus_entry: (entry)->
