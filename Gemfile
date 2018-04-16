@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.5.1'
 
-gem 'rails', '~> 5.1.6'
+gem 'rails', '~> 5.2.0'
 
 # Sanitizer to replace poorly maintained new rails sanitizer
 gem 'sanitize'
@@ -82,7 +82,7 @@ gem 'rubyzip'
 gem 'http_accept_language'
 
 # Administration interface
-gem 'activeadmin'
+gem 'activeadmin', git: 'https://github.com/activeadmin/activeadmin', branch: 'master'
 gem 'inherited_resources'
 
 # Insight into PostgreSQL database
