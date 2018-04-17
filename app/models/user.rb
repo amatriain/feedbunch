@@ -342,23 +342,9 @@ class User < ApplicationRecord
   ##
   # Operations necessary before saving a User in the database:
   # - ensure that the encrypted_password is encoded as utf-8
-  # - create a new OpmlImportJobState instance for the user with state "NONE" if it doesn't already exist (to indicate that
-  # the user has never ran an OPML import).
-  # - create a new OpmlExportJobState instance for the user with state "NONE" if it doesn't already exist (to indicate that
-  # the user has never ran an OPML export).
 
   def before_save_user
     self.encrypted_password.encode! 'utf-8'
-
-    if self.opml_import_job_state.blank?
-      self.create_opml_import_job_state state: OpmlImportJobState::NONE
-      Rails.logger.debug "User #{self.email} has no OpmlImportJobState, creating one with state NONE"
-    end
-
-    if self.opml_export_job_state.blank?
-      self.create_opml_export_job_state state: OpmlExportJobState::NONE
-      Rails.logger.debug "User #{self.email} has no OpmlExportJobState, creating one with state NONE"
-    end
 
     # If demo is enabled, demo user cannot change email or password nor be locked
     if Feedbunch::Application.config.demo_enabled
@@ -401,6 +387,10 @@ class User < ApplicationRecord
 
   ##
   # Operations after saving a user in the db:
+  # - create a new OpmlImportJobState instance for the user with state "NONE" if it doesn't already exist (to indicate that
+  # the user has never ran an OPML import).
+  # - create a new OpmlExportJobState instance for the user with state "NONE" if it doesn't already exist (to indicate that
+  # the user has never ran an OPML export).
   # - update the config_updated_at attribute to the current datetime if one of these attributes has changed value:
   #   - quick_reading
   #   - open_all_entries
@@ -412,6 +402,16 @@ class User < ApplicationRecord
   #   - kb_shortcuts_enabled
 
   def after_save_user
+    if self.opml_import_job_state.blank?
+      self.create_opml_import_job_state state: OpmlImportJobState::NONE
+      Rails.logger.debug "User #{self.email} has no OpmlImportJobState, creating one with state NONE"
+    end
+
+    if self.opml_export_job_state.blank?
+      self.create_opml_export_job_state state: OpmlExportJobState::NONE
+      Rails.logger.debug "User #{self.email} has no OpmlExportJobState, creating one with state NONE"
+    end
+
     if saved_change_to_quick_reading? || saved_change_to_open_all_entries? ||
         saved_change_to_show_main_tour? || saved_change_to_show_mobile_tour? ||
         saved_change_to_show_feed_tour? || saved_change_to_show_entry_tour? ||
