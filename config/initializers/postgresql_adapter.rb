@@ -10,5 +10,4 @@
       false
     end
   end
-  endclass
 #end
