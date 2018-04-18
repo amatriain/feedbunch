@@ -4,6 +4,9 @@
 #
 # Since https://github.com/rails/rails/pull/22122 (rails 5.2) migrations cannot be run through pgbouncer in
 # transaction pooling mode unless this patch is applied
+
+require 'active_record/connection_adapters/postgresql_adapter'
+
 #if ENV['DISABLE_MIGRATION_ADVISORY_LOCK']
   class ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
     def supports_advisory_locks?
