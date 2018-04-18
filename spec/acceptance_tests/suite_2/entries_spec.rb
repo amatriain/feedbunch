@@ -53,10 +53,10 @@ describe 'feed entries', type: :feature do
 
     it 'opens an entry', js: true do
       # Entry summary should not be visible
-      expect(page).not_to have_content @entry1.summary
+      expect(page).not_to have_text @entry1.summary
 
       read_entry @entry1
-      expect(page).to have_content Nokogiri::HTML(@entry1.summary).text
+      expect(page).to have_text Nokogiri::HTML(@entry1.summary).text.strip
     end
 
     it 'opens title link in a new tab', js: true do
@@ -70,12 +70,12 @@ describe 'feed entries', type: :feature do
     it 'closes other entries when opening an entry', js: true do
       read_entry @entry1
       # Only summary of first entry should be visible
-      expect(page).to have_content Nokogiri::HTML(@entry1.summary).text
-      expect(page).not_to have_content Nokogiri::HTML(@entry2.summary).text
+      expect(page).to have_text Nokogiri::HTML(@entry1.summary).text.strip
+      expect(page).not_to have_text Nokogiri::HTML(@entry2.summary).text.strip
       read_entry @entry2
       # Only summary of second entry should be visible
-      expect(page).not_to have_content Nokogiri::HTML(@entry1.summary).text
-      expect(page).to have_content Nokogiri::HTML(@entry2.summary).text
+      expect(page).not_to have_text Nokogiri::HTML(@entry1.summary).text.strip
+      expect(page).to have_text Nokogiri::HTML(@entry2.summary).text.strip
     end
 
     it 'by default only shows unread entries in a feed', js: true do
