@@ -1,6 +1,6 @@
 require 'nokogiri'
 require 'encoding_manager'
-require 'special_feed_handling'
+require 'special_feed_manager'
 require 'url_normalizer'
 require 'sanitizer'
 require 'url_validator'
@@ -253,7 +253,8 @@ class Entry < ApplicationRecord
   ##
   # Pass the entry to a special handler if the feed needs special handling
   def special_feed_handling
-    SpecialFeedHandling.handle_entry self
+    special_handler = SpecialFeedManager.get_special_handler self
+    special_handler.handle_entry self if special_handler.present?
   end
 
   ##

@@ -4,22 +4,23 @@ require 'url_normalizer'
 # Class to handle feeds that need special handling.
 # The handling for each particular special feed is delegated to a specific class that implements the particular handling.
 
-class SpecialFeedHandling
+class SpecialFeedManager
 
   ##
-  # Check if the entry belongs to a feed in the configured list of feeds that need special handling. In this case,
-  # pass it to the configured handler for this particular feed, that may change the entry or even prevent it from
-  # being saved.
+  # Check configuration to see if the entry belongs to a feed that needs special handling. In this case,
+  # return the handler class; this class implements the handle_entry method, that may change the entry or even prevent
+  # it from being saved.
   #
-  # If the feed associated with the entry is not present, returns nil immediately.
+  # If the entry does not belong to a feed that needs special handling, returns nil.
+  # If the feed associated with the entry is not present, returns nil.
   #
   # Receives as argument the entry to check.
 
-  def self.handle_entry(entry)
+  def self.get_special_handler(entry)
     if entry.feed.present?
       handler = handler_for_feed entry.feed
       if handler.present?
-        handler.handle_entry entry
+        return handler
       end
     end
 
