@@ -11,6 +11,7 @@ list = YAML.load_file 'config/special_feeds.yml'
 # during app startup.
 special_feeds_fetchers = {}
 special_feeds_handlers = {}
+
 list.keys.each do |url|
   special_url = URLNormalizer.normalize_feed_url(url).strip.downcase
   special_host = Addressable::URI.parse(special_url).host
