@@ -77,9 +77,6 @@ class FeedClient
   # If the feed is successfully fetched and parsed, returns nil.
 
   def self.fetch_valid_feed(feed, http_caching, perform_autodiscovery)
-    # User-agent used by feedbunch when fetching feeds
-    user_agent = Feedbunch::Application.config.user_agent
-
     if perform_autodiscovery
       Rails.logger.info "Performing autodiscovery on feed #{feed.id} - URL #{feed.url}"
       url = feed.url
@@ -143,15 +140,18 @@ class FeedClient
 
   def self.default_fetch(url, http_caching)
     if http_caching
-      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} using HTTP caching if possible"
+      Rails.logger.info "Fetching URL #{url} using HTTP caching if possible"
       RestClient.enable Rack::Cache,
                         verbose: false,
                         metastore: "file:#{Rails.root.join('rack_cache', 'metastore').to_s}",
                         entitystore: "file:#{Rails.root.join('rack_cache', 'entitystore').to_s}"
     else
-      Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} without HTTP caching"
+      Rails.logger.info "Fetching URL #{url} without HTTP caching"
       RestClient.disable Rack::Cache
     end
+
+    # User-agent used by feedbunch when fetching feeds
+    user_agent = Feedbunch::Application.config.user_agent
 
     begin
       # try to GET the feed with a simple HTTP client (js not enabled)
