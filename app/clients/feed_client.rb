@@ -88,6 +88,60 @@ class FeedClient
       url = feed.fetch_url
     end
 
+    # Use a special class for fetching this particular feed if configured; otherwise use the default HTTP client
+    special_fetcher = SpecialFeedManager.get_special_fetcher feed
+    if special_fetcher.present?
+      feed_response = special_fetcher.fetch_feed url
+    else
+      feed_response = default_fetch url, http_caching
+    end
+
+    # If the response was retrieved from the cache, do not process it (entries are already in the db)
+    if http_caching
+      headers = feed_response&.headers
+      if headers.present?
+        x_rack_cache = headers[:x_rack_cache]
+        if x_rack_cache.present?
+          if x_rack_cache.include?('fresh') || (x_rack_cache.include?('valid') && !x_rack_cache.include?('invalid'))
+            Rails.logger.info "Feed #{feed.id} - #{feed.fetch_url} cached response is valid, there are no new entries. Skipping response processing."
+            return nil
+          end
+        end
+      end
+    end
+
+    feed_response = fix_encoding feed_response
+
+    if feed_response.nil? || feed_response&.size == 0
+      Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
+      raise EmptyResponseError.new
+    end
+
+    begin
+      # Try to parse the response as a feed
+      FeedParser.parse feed, feed_response, feed_response.encoding
+      return nil
+    rescue
+      return feed_response
+    end
+  rescue RestClient::NotModified => e
+    Rails.logger.info "Feed #{feed.fetch_url} returned 304 - not modified"
+    return nil
+  end
+  private_class_method :fetch_valid_feed
+
+  ##
+  # Default fetching of a URL. Attempts to fetch it with a simple HTTP client (RestClient). If this fails because
+  # the URL is behind CloudFlare's DDoS protection, retry with a full headless browser.
+  #
+  # Receives as arguments:
+  # - url to fetch
+  # - http_caching: boolean indicating whether to use client-side HTTP caching.
+  #
+  # Returns a RestClient::Response object with the response, which may be the feed XML or an HTML document that
+  # will be handled by other methods. It also may have response headers that give information about caching.
+
+  def self.default_fetch(url, http_caching)
     if http_caching
       Rails.logger.info "Fetching feed #{feed.id} - fetch_URL #{feed.fetch_url} using HTTP caching if possible"
       RestClient.enable Rack::Cache,
@@ -137,39 +191,9 @@ class FeedClient
       end
     end
 
-    # If the response was retrieved from the cache, do not process it (entries are already in the db)
-    if http_caching
-      headers = feed_response&.headers
-      if headers.present?
-        x_rack_cache = headers[:x_rack_cache]
-        if x_rack_cache.present?
-          if x_rack_cache.include?('fresh') || (x_rack_cache.include?('valid') && !x_rack_cache.include?('invalid'))
-            Rails.logger.info "Feed #{feed.id} - #{feed.fetch_url} cached response is valid, there are no new entries. Skipping response processing."
-            return nil
-          end
-        end
-        end
-    end
-
-    feed_response = fix_encoding feed_response
-
-    if feed_response.nil? || feed_response&.size == 0
-      Rails.logger.warn "Could not download feed from URL: #{feed.fetch_url}"
-      raise EmptyResponseError.new
-    end
-
-    begin
-      # Try to parse the response as a feed
-      FeedParser.parse feed, feed_response, feed_response.encoding
-      return nil
-    rescue
-      return feed_response
-    end
-  rescue RestClient::NotModified => e
-    Rails.logger.info "Feed #{feed.fetch_url} returned 304 - not modified"
-    return nil
+    return feed_response
   end
-  private_class_method :fetch_valid_feed
+  private_class_method :default_fetch
 
   ##
   # Handle an HTTP response assuming it's not a valid feed but probably an HTML document,
