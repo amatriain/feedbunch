@@ -1,3 +1,22 @@
-# URLs of websites which feeds need special handling.
-# Each line must have the URL of the host and the special handling class for that feed.
-www.demonoid.pw: DemonoidFeedHandler
+# URLs of websites which feeds need special treatment.
+# This file must have a list of URLs. For each URL a handler class and a fetcher class may be specified like this:
+#
+# special_url.com:
+#   fetcher: SpecialUrlFetcher
+#   handler: SpecialUrlHandler
+#
+# In the above example, any feeds fetched from the special_url.com domain need special treatment. "handler" and "fetcher"
+# are reserved words that must be used without change. SpecialUrlFetcher and SpecialUrlHandler are classes that must
+# exist and implement the "fetch_feed" and "handle_entry" methods respectively.
+#
+# handler and fetcher lines are optional for each URL. Each URL may have a fetcher, a handler or both. If one of them
+# is not present in this file, the default classes for regular feeds will be used.
+#
+# Using a special fetcher means that a feed XML cannot be retrieved by the usual HTTP client, but some special measures must
+# be taken first; usually some processing of the server response before being able to actually download the feed.
+#
+# Using a special handler means that after fetching and parsing the feed, each entry must be processed ("handled") somehow
+# before saving it to the database; e.g. by fixing incorrect entry GUIDs to avoid duplicate entries.
+
+www.demonoid.pw:
+  handler: DemonoidFeedHandler

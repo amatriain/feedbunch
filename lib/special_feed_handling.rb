@@ -70,12 +70,12 @@ class SpecialFeedHandling
     compare_url = URLNormalizer.normalize_feed_url(url).strip.downcase
     compare_host = Addressable::URI.parse(compare_url).host
 
-    specials_list = Rails.application.config.special_feeds.keys
+    specials_list = Rails.application.config.special_feeds_handlers.keys
     handler = nil
     specials_list.each do |s|
       # Use regex to see if passed host matches or is subdomain of the blacklisted url's host
       if /\A(.+\.)*#{s}\z/ =~ compare_host
-        handler = Rails.application.config.special_feeds[s]
+        handler = Rails.application.config.special_feeds_handlers[s]
         Rails.logger.info "URL #{url} matches special host #{s}, special handler class #{handler}"
         break
       end
