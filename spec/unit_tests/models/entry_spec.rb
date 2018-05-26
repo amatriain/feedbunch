@@ -543,6 +543,7 @@ describe Entry, type: :model do
     before :each do
       @special_feed_url = 'www.demonoid.pw'
 
+      Rails.application.config.special_feeds_fetchers = {}
       Rails.application.config.special_feeds_handlers = {}
       Rails.application.config.special_feeds_handlers[@special_feed_url] = DemonoidFeedHandler
     end

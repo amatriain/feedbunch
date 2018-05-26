@@ -150,7 +150,7 @@ class FeedClient
       RestClient.disable Rack::Cache
     end
 
-    # User-agent used by feedbunch when fetching feeds
+    # User-agent used by RestClient when fetching feeds
     user_agent = Feedbunch::Application.config.user_agent
 
     begin

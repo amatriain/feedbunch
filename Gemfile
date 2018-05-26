@@ -53,6 +53,8 @@ gem 'rest-client'
 
 # headless browser, to fetch some websites behing cloudflare DDOS protection
 gem 'selenium-webdriver'
+# helper gem to install chromedriver in the gem path, to solve problems with system chromedriver versions
+gem 'chromedriver-helper'
 
 # HTTP client-side caching
 gem 'rest-client-components'

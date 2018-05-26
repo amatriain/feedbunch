@@ -20,3 +20,5 @@
 
 www.demonoid.pw:
   handler: DemonoidFeedHandler
+tumblr.com:
+  fetcher: TumblrFeedFetcher
