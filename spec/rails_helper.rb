@@ -89,7 +89,8 @@ RSpec.configure do |config|
                                      browser: :chrome,
                                      desired_capabilities: Selenium::WebDriver::Remote::Capabilities.chrome(
                                          'chromeOptions' => {
-                                             'args' => ['window-size=1920,1200', 'headless', 'lang=en-US,en']
+                                             #'args' => ['window-size=1920,1200', 'headless', 'lang=en-US,en']
+                                             'args' => ['window-size=1920,1200', 'lang=en-US,en']
                                          }
                                      )
       )
