@@ -10,9 +10,13 @@ angular.module('feedbunch').service 'openEntrySvc',
   # PRIVATE FUNCTION - Set an entry as closed.
   # Receives as arguments:
   # - entry to close
+  # - boolean that controls if the closing animation runs fast (true) or not (false)
   #--------------------------------------------
-  close = (entry)->
-    animationsSvc.close_entry entry
+  close = (entry, fast)->
+    if fast
+      animationsSvc.close_entry_fast entry
+    else
+      animationsSvc.close_entry_slow entry
     tooltipSvc.entry_tooltips_hide entry
     index = $rootScope.open_entries.indexOf entry
     $rootScope.open_entries.splice index, 1 if index != -1
@@ -25,12 +29,12 @@ angular.module('feedbunch').service 'openEntrySvc',
     # - entry to open
     #---------------------------------------------
     open: (entry)->
-      animationsSvc.open_entry entry
-
       # Close any other open entry, unless the user has selected the "open all entries by default" config option
       if $rootScope.open_entries && !$rootScope.open_all_entries
         for e in $rootScope.open_entries
-          close e
+          close e, true
+
+      animationsSvc.open_entry entry
 
       # If user has selected to open all entries by default, add the entry to the list of open entries
       if $rootScope.open_entries && $rootScope.open_all_entries
@@ -42,7 +46,8 @@ angular.module('feedbunch').service 'openEntrySvc',
     #---------------------------------------------
     # Set an entry as closed
     #---------------------------------------------
-    close: close
+    close: (entry)->
+      close entry, false
 
     #---------------------------------------------
     # Clear the list of currently open entries. This method does not perform any closing animation;

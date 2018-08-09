@@ -19,8 +19,8 @@ angular.module('feedbunch').service 'animationsSvc',
   #--------------------------------------------
   # PRIVATE FUNCTION - Remove the CSS class that identifies entry as open.
   #--------------------------------------------
-  remove_entry_open_class = ->
-    $(this).removeClass 'entry_open'
+  remove_entry_open_class = (entry)->
+    entry.removeClass 'entry_open'
 
   #--------------------------------------------
   # PRIVATE FUNCTION - Add a CSS class that identifies folder as open.
@@ -184,19 +184,30 @@ angular.module('feedbunch').service 'animationsSvc',
       topOffset = -120
       entry_summary
         .css('height', '0')
+        .velocity 'scroll', {offset: topOffset, duration: 250, delay: 50}
         .velocity({height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
           {duration: 300, easing: 'swing', complete: add_entry_open_class})
-        .velocity 'scroll', {offset: topOffset, duration: 250, delay: 50}
+
+    #---------------------------------------------
+    # Close an entry immediately.
+    # Receives as arguments:
+    # - entry to be closed
+    #---------------------------------------------
+    close_entry_fast: (entry)->
+      entry_element = $("#entry-#{entry.id}-summary")
+      entry_element.css('height': 0, 'padding-top': 0, 'padding-bottom': 0)
+      remove_entry_open_class entry_element
 
     #---------------------------------------------
     # Animate closing an entry, by transitioning its height from its current value to zero.
     # Receives as arguments:
     # - entry to be closed
     #---------------------------------------------
-    close_entry: (entry)->
-      $("#entry-#{entry.id}-summary")
-        .velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
-          {duration: 300, easing: 'swing', complete: remove_entry_open_class}
+    close_entry_slow: (entry)->
+      entry_element = $("#entry-#{entry.id}-summary")
+      entry_element.velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
+          {duration: 300, easing: 'swing'}
+      remove_entry_open_class entry_element
 
     #---------------------------------------------
     # Animate opening a folder, by transitioning its height from zero to its final value.
