@@ -178,16 +178,23 @@ angular.module('feedbunch').service 'animationsSvc',
       entry_summary.css('height', 'auto')
       height_auto = entry_summary.outerHeight() + padding_top + padding_bottom
 
-      # Set height back to 0px and animate the transition to its final height
-      # After finishing opening animation, scroll to show as much of the entry content as possible.
-      # We leave an offset so that navbar doesn't overlap the entry.
+      # Set height back to 0px and scroll to show entry at the top of the list (without overlapping the navbar)
       entry_link = $("#entry-#{entry.id}-link")
       topOffset = -1 * ($("#navbar").height() + entry_link.outerHeight(true) + 2)
-
       entry_summary
         .css('height', '0')
-        .velocity 'scroll', {offset: topOffset, duration: 0}
-        .velocity({height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
+        .velocity 'scroll', {offset: topOffset, duration: 0, complete: ()->
+          # If entry is not at the top of the entries list (e.g. it's one of the last elements of the list) add
+          # blank space below enough to put it at the top
+          #TODO not yet working as intended
+          if entry_link.offset().top - $(window).scrollTop() > $("#navbar").height() + 3
+            console.log "entry not at the top!"
+          else
+            console.log "everything OK"
+        }
+
+      # Animate the transition to its final height
+      entry_summary.velocity({height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
           {duration: 200, easing: 'swing', complete: add_entry_open_class})
 
     #---------------------------------------------
