@@ -206,6 +206,11 @@ findSvc, changeUnreadCountSvc, highlightedEntrySvc)->
     # Load a page of entries for the currently selected feed or folder
     #---------------------------------------------
     read_entries_page: ->
+      # The fill block is reset to zero height on each entries page load. This fill block is only
+      # necessary for the autoscroll when opening an entry to work correctly (positioning the open entry at the top of
+      # the list), the rest of the time its height should be zero.
+      $('#entries-fill-block').height 0
+
       current_feed = $rootScope.current_feed
       current_folder = $rootScope.current_folder
       if current_feed

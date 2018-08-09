@@ -185,12 +185,11 @@ angular.module('feedbunch').service 'animationsSvc',
         .css('height', '0')
         .velocity 'scroll', {offset: topOffset, duration: 0, complete: ()->
           # If entry is not at the top of the entries list (e.g. it's one of the last elements of the list) add
-          # blank space below enough to put it at the top
-          #TODO not yet working as intended
+          # enough blank space below to put it at the top
           if entry_link.offset().top - $(window).scrollTop() > $("#navbar").height() + 3
-            console.log "entry not at the top!"
-          else
-            console.log "everything OK"
+            missing_height = entry_link.offset().top - $(window).scrollTop() - height_auto - $("#navbar").height() - 3
+            $('#entries-fill-block').height missing_height
+            entry_summary.velocity 'scroll', {offset: topOffset, duration: 0}
         }
 
       # Animate the transition to its final height
@@ -203,6 +202,7 @@ angular.module('feedbunch').service 'animationsSvc',
     # - entry to be closed
     #---------------------------------------------
     close_entry_fast: (entry)->
+      $('#entries-fill-block').height 0
       entry_element = $("#entry-#{entry.id}-summary")
       entry_element.css('height': 0, 'padding-top': 0, 'padding-bottom': 0)
       remove_entry_open_class entry_element
@@ -213,6 +213,7 @@ angular.module('feedbunch').service 'animationsSvc',
     # - entry to be closed
     #---------------------------------------------
     close_entry_slow: (entry)->
+      $('#entries-fill-block').height 0
       entry_element = $("#entry-#{entry.id}-summary")
       entry_element.velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
           {duration: 200, easing: 'swing'}
