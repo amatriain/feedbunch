@@ -180,8 +180,10 @@ angular.module('feedbunch').service 'animationsSvc',
 
       # Set height back to 0px and animate the transition to its final height
       # After finishing opening animation, scroll to show as much of the entry content as possible.
-      # We leave an offset so that part of the entry above is still visible under the navbar.
-      topOffset = -120
+      # We leave an offset so that navbar doesn't overlap the entry.
+      entry_link = $("#entry-#{entry.id}-link")
+      topOffset = -1 * ($("#navbar").height() + entry_link.outerHeight(true) + 2)
+
       entry_summary
         .css('height', '0')
         .velocity 'scroll', {offset: topOffset, duration: 0}

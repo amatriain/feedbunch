@@ -22,7 +22,8 @@
          id="entry-{{entry.id}}"
          class="entry">
 
-      <a data-entry-id="{{entry.id}}"
+      <a id="entry-{{entry.id}}-link"
+         data-entry-id="{{entry.id}}"
          class="list-group-item open-entry-link"
          ng-class="{'highlighted-entry':$first, 'entry-read':entry.read && !entry.changing_state, 'entry-unread': !entry.read && !entry.changing_state, 'entry-becoming-read':entry.read && entry.changing_state, 'entry-becoming-unread':!entry.read && entry.changing_state}"
          ng-mouseover="highlight_entry(entry)"
