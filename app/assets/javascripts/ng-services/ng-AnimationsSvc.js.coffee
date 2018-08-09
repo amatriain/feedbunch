@@ -184,9 +184,9 @@ angular.module('feedbunch').service 'animationsSvc',
       topOffset = -120
       entry_summary
         .css('height', '0')
-        .velocity 'scroll', {offset: topOffset, duration: 250, delay: 50}
+        .velocity 'scroll', {offset: topOffset, duration: 0}
         .velocity({height: height_auto, 'padding-top': padding_top, 'padding-bottom': padding_bottom},
-          {duration: 300, easing: 'swing', complete: add_entry_open_class})
+          {duration: 200, easing: 'swing', complete: add_entry_open_class})
 
     #---------------------------------------------
     # Close an entry immediately.
@@ -206,7 +206,7 @@ angular.module('feedbunch').service 'animationsSvc',
     close_entry_slow: (entry)->
       entry_element = $("#entry-#{entry.id}-summary")
       entry_element.velocity {height: 0, 'padding-top': 0, 'padding-bottom': 0},
-          {duration: 300, easing: 'swing'}
+          {duration: 200, easing: 'swing'}
       remove_entry_open_class entry_element
 
     #---------------------------------------------
