@@ -3,11 +3,6 @@
 # cron format: (minute hour day-of-month month day-of-week)
 
 Sidekiq.configure_server do |config|
-  Sidekiq::Cron::Job.create name: 'Cleanup old invitations - daily at 2AM',
-                            cron: '0 2 * * *',
-                            klass: 'CleanupInvitationsWorker',
-                            queue: :maintenance
-
   Sidekiq::Cron::Job.create name: 'Cleanup old signups - daily at 3AM',
                             cron: '0 3 * * *',
                             klass: 'CleanupSignupsWorker',
