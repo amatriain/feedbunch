@@ -53,7 +53,7 @@ class SignupsManager
     Rails.logger.info "Sending first confirmation reminder to unconfirmed users signed up before #{signups_older_than}"
 
     old_unconfirmed_signups = User.
-        where 'confirmed_at is null AND confirmation_sent_at < ? AND first_confirmation_reminder_sent = ? AND invitation_sent_at is null',
+        where 'confirmed_at is null AND confirmation_sent_at < ? AND first_confirmation_reminder_sent = ?',
               signups_older_than, false
 
     if old_unconfirmed_signups.empty?
@@ -81,7 +81,7 @@ class SignupsManager
     Rails.logger.info "Sending second confirmation reminder to unconfirmed users signed up before #{signups_older_than}"
 
     old_unconfirmed_signups = User.
-        where 'confirmed_at is null AND confirmation_sent_at < ? AND second_confirmation_reminder_sent = ? AND invitation_sent_at is null',
+        where 'confirmed_at is null AND confirmation_sent_at < ? AND second_confirmation_reminder_sent = ?',
               signups_older_than, false
 
     if old_unconfirmed_signups.empty?
