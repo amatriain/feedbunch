@@ -91,7 +91,6 @@ class ResetDemoUserWorker
     demo_user.timezone = @demo_timezone
     demo_user.quick_reading = @demo_quick_reading
     demo_user.open_all_entries = @demo_open_all_entries
-    demo_user.invitation_limit = 0
     demo_user.show_main_tour = true
     demo_user.show_mobile_tour = true
     demo_user.show_feed_tour = true

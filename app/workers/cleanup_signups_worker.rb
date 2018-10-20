@@ -13,7 +13,8 @@ class CleanupSignupsWorker
 
   ##
   # Clean up outdated signup data in the db:
-  # - old unconfirmed signups are removed from the db. The interval after which invitations are discarded
+  # - reminder emails are sent for unconfirmed users
+  # - old unconfirmed registrations are removed from the db. The interval after which unconfirmed registrations are discarded
   # is configurable
   #
   # This method is intended to be invoked from Sidekiq, which means it is performed in the background.
