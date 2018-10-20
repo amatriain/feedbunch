@@ -506,52 +506,6 @@ def export_subscriptions
 end
 
 ##
-# Send an invitation to a friend.
-#
-# Receives as argument the friend's email address
-
-def send_invitation_for_feature(invited_email)
-  visit edit_user_registration_path
-  find('#send-invitation-button').click
-  expect(page).to have_css '#invite-friend-popup', visible: true
-  fill_in 'user_invitation_email', with: invited_email
-  click_on 'Send invitation'
-  expect(page).to have_no_css '#invite-friend-popup', visible: true
-end
-
-##
-# Accept an invitation to join Feedbunch.
-# Optional arguments:
-# - the password to set for the user. If not passed, the default string "some_password" will be used.
-# - the accept link present in the sent email. If the accept link is not passed, the invitation email
-# is popped from the ActionMailer deliveries queue.
-# - email address to which the invitation is sent. This argument is only used if the accept_link argument
-# is not passed; in this case, if the invited_email argument is passed, the method validates that the
-# invitation email is sent to this email address. If neither accept_invitation nor invited_email are passed,
-# the email address to which the invitation is sent will not be validated.
-#
-# Important: an email can be popped from the deliveries queue only once. This means that if the test that
-# invokes this function needs to do some validation on the invitation email, the email must be popped
-# and parsed in the test, and the accept link must be passed as argument to this function, because the
-# function has no way to retrieve the accept link otherwise.
-
-def accept_invitation_for_feature(password: nil, accept_link: nil, invited_email: nil)
-  password ||= 'some_password'
-  if accept_link.nil?
-    email_params = {path: '/invitation'}
-    email_params.merge!({to: invited_email}) if invited_email.present?
-    accept_link = mail_should_be_sent 'Someone has invited you', email_params
-  end
-  accept_url = get_accept_invitation_link_from_email accept_link
-  visit accept_url
-  fill_in 'Password', with: password
-  fill_in 'Password (again)', with: password
-  click_on 'Activate account'
-  expect(current_path).to eq read_path
-  user_should_be_logged_in
-end
-
-##
 # Sign up a new user account.
 # Receives as arguments:
 # - email address for the new account

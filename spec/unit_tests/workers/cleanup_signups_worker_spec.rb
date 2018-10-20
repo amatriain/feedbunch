@@ -68,70 +68,6 @@ describe CleanupSignupsWorker do
 
       expect(User.exists? @user.id).to be true
     end
-
-    it 'does not destroy users who were sent an invitation' do
-      invitation_params_old = {email: 'friend_1@email.com',
-                             name: 'friend_1',
-                             locale: @user.locale,
-                             timezone: @user.timezone}
-      old_accepted_invitation = User.invite! invitation_params_old, @user
-      time_invitation_old = @time_signups_old - 1.day
-      old_accepted_invitation.update invitation_created_at: time_invitation_old,
-                                     invitation_sent_at: time_invitation_old,
-                                     invitation_accepted_at: nil,
-                                     confirmed_at: nil
-
-      invitation_params_new = {email: 'friend_2@email.com',
-                               name: 'friend_2',
-                               locale: @user.locale,
-                               timezone: @user.timezone}
-      new_accepted_invitation = User.invite! invitation_params_new, @user
-      time_invitation_new = @time_signups_old + 1.day
-      new_accepted_invitation.update invitation_created_at: time_invitation_new,
-                                     invitation_sent_at: time_invitation_new,
-                                     invitation_accepted_at: nil,
-                                     confirmed_at: nil
-
-      expect(User.exists? old_accepted_invitation.id).to be true
-      expect(User.exists? new_accepted_invitation.id).to be true
-
-      CleanupSignupsWorker.new.perform
-
-      expect(User.exists? old_accepted_invitation.id).to be true
-      expect(User.exists? new_accepted_invitation.id).to be true
-    end
-
-    it 'does not destroy users who accepted an invitation' do
-      invitation_params_old = {email: 'friend_1@email.com',
-                               name: 'friend_1',
-                               locale: @user.locale,
-                               timezone: @user.timezone}
-      old_accepted_invitation = User.invite! invitation_params_old, @user
-      time_invitation_old = @time_signups_old - 1.day
-      old_accepted_invitation.update invitation_created_at: time_invitation_old,
-                                     invitation_sent_at: time_invitation_old,
-                                     invitation_accepted_at: time_invitation_old,
-                                     confirmed_at: time_invitation_old
-
-      invitation_params_new = {email: 'friend_2@email.com',
-                               name: 'friend_2',
-                               locale: @user.locale,
-                               timezone: @user.timezone}
-      new_accepted_invitation = User.invite! invitation_params_new, @user
-      time_invitation_new = @time_signups_old + 1.day
-      new_accepted_invitation.update invitation_created_at: time_invitation_new,
-                                     invitation_sent_at: time_invitation_new,
-                                     invitation_accepted_at: time_invitation_new,
-                                     confirmed_at: time_invitation_new
-
-      expect(User.exists? old_accepted_invitation.id).to be true
-      expect(User.exists? new_accepted_invitation.id).to be true
-
-      CleanupSignupsWorker.new.perform
-
-      expect(User.exists? old_accepted_invitation.id).to be true
-      expect(User.exists? new_accepted_invitation.id).to be true
-    end
   end
 
   context 'confirmation reminder emails' do
@@ -185,20 +121,6 @@ describe CleanupSignupsWorker do
         time_signup = @time_first_confirmation_reminder - 1.hour
         # signup is 1 hour older than the interval to be considered for sending a reminder
         @user.update confirmation_sent_at: time_signup, confirmed_at: Time.zone.now
-        # Clear the email delivery queue
-        ActionMailer::Base.deliveries.clear
-
-        CleanupSignupsWorker.new.perform
-
-        mail_should_not_be_sent
-      end
-
-      it 'does not send reminder to invited users' do
-        time_signup = @time_first_confirmation_reminder - 1.hour
-        # signup is 1 hour older than the interval to be considered for sending a reminder
-        @user.update confirmation_sent_at: time_signup,
-                     invitation_sent_at: Time.zone.now - 1.hour
-
         # Clear the email delivery queue
         ActionMailer::Base.deliveries.clear
 
@@ -267,19 +189,6 @@ describe CleanupSignupsWorker do
         mail_should_not_be_sent
       end
 
-      it 'does not send reminder to invited users' do
-        time_signup = @time_second_confirmation_reminder - 1.hour
-        # signup is 1 hour older than the interval to be considered for sending a reminder
-        @user.update confirmation_sent_at: time_signup,
-                     invitation_sent_at: Time.zone.now - 1.hour
-
-        # Clear the email delivery queue
-        ActionMailer::Base.deliveries.clear
-
-        CleanupSignupsWorker.new.perform
-
-        mail_should_not_be_sent
-      end
     end
   end
 end

@@ -124,14 +124,6 @@ describe ResetDemoUserWorker do
         expect(@demo_user.reload.name).to eq default_name
       end
 
-      it 'resets invitation limit to zero' do
-        @demo_user.update invitation_limit: 1000
-
-        expect(@demo_user.invitation_limit).not_to eq 0
-        ResetDemoUserWorker.new.perform
-        expect(@demo_user.reload.invitation_limit).to eq 0
-      end
-
       it 'resets all tours' do
         @demo_user.update show_main_tour: false,
                           show_mobile_tour: false,
