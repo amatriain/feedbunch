@@ -13,8 +13,6 @@ context.instance_eval  do
     column :open_all_entries
     column :confirmed_at
     column :confirmation_sent_at
-    column :invitation_sent_at
-    column :invitation_accepted_at
     column :current_sign_in_at
     column :last_sign_in_at
     column :sign_in_count

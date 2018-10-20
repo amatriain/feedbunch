@@ -36,23 +36,11 @@ context.instance_eval  do
     row :failed_attempts
     row :locked_at
     row :unlock_token
-    row :invited_by_id
-    row :invitation_token
-    row :invitation_created_at
-    row :invitation_sent_at
-    row :invitation_accepted_at
-    row :invitation_limit
-    row :invitations_count
-    row :invitations_count_reset_at
     row :show_main_tour
     row :show_mobile_tour
     row :show_feed_tour
     row :show_entry_tour
   end
-
-  br
-
-  render 'admin/invitations/index', invitations: user.invitations, context: self
 
   br
 

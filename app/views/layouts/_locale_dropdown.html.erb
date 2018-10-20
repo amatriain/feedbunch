@@ -13,11 +13,9 @@
   </a>
   <ul class="dropdown-menu text-left">
 
-    <% invitation_token = params[:invitation_token] %>
-
     <li>
       <%
-         url_en = url_for UriHelpers.params_keep_invitation_token(params, locale: 'en')
+         url_en = url_for(locale: 'en')
       %>
       <%= link_to url_en do %>
         <%= image_tag asset_path('flags/us.png'), class: 'locale-flag' %>
@@ -27,7 +25,7 @@
 
     <li>
       <%
-         url_es = url_for UriHelpers.params_keep_invitation_token(params, locale: 'es')
+         url_es = url_for(locale: 'es')
       %>
       <%= link_to url_es do %>
         <%= image_tag asset_path('flags/es.png'), class: 'locale-flag' %>
