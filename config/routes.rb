@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     get code, :to => 'errors#show', :code => code
   end
 
-  devise_for :users, skip: [:sessions, :passwords, :registrations, :confirmations, :unlocks, :invitations]
+  devise_for :users, skip: [:sessions, :passwords, :registrations, :confirmations, :unlocks]
 
   # Customize login, logout etc routes instead of the Devise defaults.
   # See this[https://github.com/plataformatec/devise/wiki/How-To:-Change-the-default-sign_in-and-sign_out-routes].
@@ -41,12 +41,6 @@ Rails.application.routes.draw do
     get '/unlock' => 'devise/unlocks#new', as: :new_user_unlock
     post '/unlock' => 'devise/unlocks#create', as: :user_unlock
     get '/unlock_account' => 'devise/unlocks#show'
-
-    # invitations
-    post '/invitation' => 'feedbunch_auth/invitations#create', as: :user_invitation
-    patch '/invitation' => 'devise/invitations#update'
-    put '/invitation' => 'devise/invitations#update'
-    get '/invitation' => 'devise/invitations#edit', as: :accept_user_invitation
   end
 
   # Redirect authenticated users that access the root URL to '/read'
