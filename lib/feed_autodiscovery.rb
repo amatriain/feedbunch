@@ -2,7 +2,6 @@
 # Class to performs feed autodiscovery on an HTML document.
 
 class FeedAutodiscovery
-  extend UriHelpers
 
   ##
   # Try to perform feed autodiscovery on an HTTP response, with the assumption that it's an HTML document.
