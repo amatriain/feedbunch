@@ -71,20 +71,11 @@ ActiveAdmin.register_page "Dashboard" do
       column do
        panel 'Recent signed up unconfirmed users' do
          ul do
-           User.where('confirmed_at is null AND invitation_created_at is null').order('created_at DESC').limit(10).map do |user|
+           User.where('confirmed_at is null').order('created_at DESC').limit(10).map do |user|
              li link_to("#{user.name} (#{user.email})", admin_user_path(user))
            end
          end
        end
-      end
-      column do
-        panel 'Recent invited unconfirmed users' do
-          ul do
-            User.where('confirmed_at is null AND invitation_created_at is not null').order('created_at DESC').limit(10).map do |user|
-              li link_to("#{user.name} (#{user.email})", admin_user_path(user))
-            end
-          end
-        end
       end
     end
 
