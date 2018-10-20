@@ -36,11 +36,6 @@ en:
         confirm: "Are you sure you want to delete your account? This will delete ALL your data!"
         close: "Cancel"
         submit: "Delete account"
-      invite_friend:
-        title: "Invite a friend"
-        text: "You can send a friend an invitation to join FeedBunch."
-        close: "Cancel"
-        submit: "Send invitation"
       reset_tours:
         title: "Reset tutorial"
         text: "You can reset the application tutorial. It will be shown again from the beginning."

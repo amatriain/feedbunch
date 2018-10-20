@@ -36,11 +36,6 @@ es:
         confirm: "¿Estás seguro de que quieres borrar tu cuenta? ¡Esto borrará TODOS tus datos!"
         close: "Cancelar"
         submit: "Borrar cuenta"
-      invite_friend:
-        title: "Invitar a un amigo"
-        text: "Puedes enviar a un amigo una invitación para entrar en FeedBunch."
-        close: "Cancelar"
-        submit: "Enviar invitación"
       reset_tours:
         title: "Reiniciar tutorial"
         text: "Puedes reiniciar el tutorial de la aplicación. Se mostrará de nuevo desde el principio."
