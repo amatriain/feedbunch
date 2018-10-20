@@ -3,9 +3,9 @@
 ########################################################
 
 angular.module('feedbunch').controller 'DeviseCtrl',
-['$scope', '$window', 'timerFlagSvc', 'sidebarVisibleSvc', 'tooltipSvc', 'invitationsSvc', 'cookiesSvc',
+['$scope', '$window', 'timerFlagSvc', 'sidebarVisibleSvc', 'tooltipSvc', 'cookiesSvc',
 'animationsSvc', 'tourSvc', 'dialogsSvc',
-($scope, $window, timerFlagSvc, sidebarVisibleSvc, tooltipSvc, invitationsSvc, cookiesSvc,
+($scope, $window, timerFlagSvc, sidebarVisibleSvc, tooltipSvc, cookiesSvc,
 animationsSvc, tourSvc, dialogsSvc)->
 
   #--------------------------------------------
@@ -36,16 +36,6 @@ animationsSvc, tourSvc, dialogsSvc)->
   #--------------------------------------------
   $scope.toggle_sidebar_visible = ->
     $window.location.href = '/read'
-    return
-
-  #--------------------------------------------
-  # Send a friend an invitation to join Feedbunch
-  #--------------------------------------------
-  $scope.send_invitation = (e)->
-    $("#invite-friend-popup").modal 'hide'
-    invitationsSvc.send_invitation $scope.invitation_email
-    $scope.invitation_email = null
-    e.preventDefault()
     return
 
   #--------------------------------------------

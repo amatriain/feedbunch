@@ -119,12 +119,6 @@ angular.module('feedbunch').service 'dialogsSvc',
       $("#profile-delete-cancel", this).focus()
 
     #-------------------------------------------------------
-    # Give focus to the email field when showing the "Send invitation" modal.
-    #-------------------------------------------------------
-    $("body").on "shown.bs.modal", "#invite-friend-popup",  ->
-      $("#user_invitation_email", this).focus()
-
-    #-------------------------------------------------------
     # Give focus to the close button when showing the "Demo user info" modal.
     #-------------------------------------------------------
     $("body").on "shown.bs.modal", "#demo-info-popup",  ->
