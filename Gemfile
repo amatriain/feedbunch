@@ -33,9 +33,6 @@ gem 'high_voltage'
 # User authentication
 gem 'devise'
 
-# App is invitation-only while in beta stage!
-gem 'devise_invitable'
-
 # Form generator compatible with Bootstrap
 gem 'simple_form'
 

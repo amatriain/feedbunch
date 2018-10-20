@@ -105,12 +105,6 @@ module Feedbunch
     # Admin email
     config.admin_email = 'admin@feedbunch.com'
 
-    # Daily invitations limit for each user
-    config.daily_invitations_limit = 50
-
-    # Interval after which an unaccepted invitation will be discarded
-    config.discard_unaccepted_invitations_after = 1.month
-
     # Interval after which an unconfirmed signup will be discarded
     config.discard_unconfirmed_signups_after = 1.month
     # Intervals to send reminders to unconfirmed users

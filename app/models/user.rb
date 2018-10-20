@@ -118,14 +118,10 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
-  devise :invitable, :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :timeoutable
 
-  # Accessor to the unencrypted invitation token, to be able to resend invitations.
-  attr_reader :raw_invitation_token
-
-  has_many :invitations, class_name: self.to_s, as: :invited_by
   has_many :feed_subscriptions, dependent: :destroy,
            after_add: :mark_unread_entries,
            before_remove: :before_remove_feed_subscription,
@@ -430,7 +426,6 @@ class User < ApplicationRecord
   # - open_all_entries: false
   # - show_main_tour, show_mobile_tour, show_feed_tour: show_entry_tour, show_kb_shortcuts_tour: true
   # - name: defaults to the value of the "email" attribute
-  # - invitation_limit: the value configured in Feedbunch::Application.config.daily_invitations_limit (in config/application.rb)
   # - subscriptions_updated_at: current date/time
   # - first_confirmation_reminder_sent, second_confirmation_reminder_sent: false
 
@@ -499,13 +494,6 @@ class User < ApplicationRecord
     if self.name.blank?
       Rails.logger.info "User #{self.email} has no name set. Using the email by default."
       self.name = self.email
-    end
-
-    # By default each user has the daily invitations limit set in application.rb
-    if self.invitation_limit.blank?
-      limit = Feedbunch::Application.config.daily_invitations_limit
-      Rails.logger.info "User #{self.email} has no invitation limit set. Using #{limit} by default."
-      self.invitation_limit = limit
     end
 
     if self.subscriptions_updated_at == nil
