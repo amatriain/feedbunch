@@ -205,7 +205,9 @@ ActiveRecord::Schema.define(version: 2018_10_20_084829) do
     t.index ["confirmed_at", "confirmation_sent_at", "first_confirmation_reminder_sent"], name: "index_users_on_first_reminder_fields"
     t.index ["confirmed_at", "confirmation_sent_at", "second_confirmation_reminder_sent"], name: "index_users_on_second_reminder_fields"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["first_confirmation_reminder_sent"], name: "index_users_on_first_invitation_reminder_fields"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["second_confirmation_reminder_sent"], name: "index_users_on_second_invitation_reminder_fields"
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 

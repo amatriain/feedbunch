@@ -6,8 +6,8 @@ class RemoveEmailInvitations < ActiveRecord::Migration[5.2]
                :unencrypted_invitation_token, :invitations_count_reset_at
     end
 
-    remove_index :users, name: 'index_users_on_first_invitation_reminder_fields'
-    remove_index :users, name: 'index_users_on_second_invitation_reminder_fields'
+    remove_index :users, name: 'index_users_on_first_invitation_reminder_fields' if index_exists? :users, name: 'index_users_on_first_invitation_reminder_fields'
+    remove_index :users, name: 'index_users_on_second_invitation_reminder_fields' if index_exists? :users, name: 'index_users_on_second_invitation_reminder_fields'
 
     change_column_null    :users, :encrypted_password, false
   end
@@ -27,8 +27,8 @@ class RemoveEmailInvitations < ActiveRecord::Migration[5.2]
       t.index      :invited_by_id
       t.index      :invitation_limit
       t.index      [:invitations_count, :invitations_count_reset_at], name: 'index_users_on_invitation_count_fields'
-      t.remove_index name: 'index_users_on_first_invitation_reminder_fields'
-      t.remove_index name: 'index_users_on_second_invitation_reminder_fields'
+      t.remove_index name: 'index_users_on_first_invitation_reminder_fields' if index_exists? :users, name: 'index_users_on_first_invitation_reminder_fields'
+      t.remove_index name: 'index_users_on_second_invitation_reminder_fields' if index_exists? :users, name: 'index_users_on_second_invitation_reminder_fields'
       t.index      [:invitation_token, :invitation_accepted_at, :invitation_sent_at, :first_confirmation_reminder_sent], name: 'index_users_on_first_invitation_reminder_fields'
       t.index      [:invitation_token, :invitation_accepted_at, :invitation_sent_at, :second_confirmation_reminder_sent], name: 'index_users_on_second_invitation_reminder_fields'
       t.remove_index name: 'index_users_on_first_reminder_fields'
