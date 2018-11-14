@@ -21,7 +21,7 @@ class SpecialFeedManager
 
   def self.get_special_handler(entry)
     if entry.feed.present?
-      handler = class_for_feed entry.feed, HANDLER
+      handler = class_for_url entry.feed.url, HANDLER
       if handler.present?
         return handler
       end
@@ -50,35 +50,6 @@ class SpecialFeedManager
   #############################
   # PRIVATE CLASS METHODS
   #############################
-
-  ##
-  # Check if the passed feed is one of the special feeds from the special_feeds.yml config file.
-  # In this case, return either the special fetcher class or the special handler class for this URL depending
-  # on the second argument.
-  #
-  # Returns nil if the passed url's host does not match a special feed from the configuration.
-  #
-  # Receives as argument:
-  # - feed to check against the list
-  # - type of the special class to be retrieved, either HANDLER or FETCHER
-
-  def self.class_for_feed(feed, type)
-    special_class = class_for_url feed.url, type
-
-    if special_class.present?
-      # feed.url matches a special feed, no need to look at feed.fetch_url as well
-      Rails.logger.info "Feed #{feed.id} - #{feed.title} with url #{feed.url} is a feed with special #{type} class #{special_class}"
-    else
-      special_class = class_for_url feed.fetch_url, type
-      if special_class.present?
-        # feed.fetch_url matches a special feed
-        Rails.logger.info "Feed #{feed.id} - #{feed.title} with fetch_url #{feed.fetch_url} is a feed with special #{type} class #{special_class}"
-      end
-    end
-
-    return special_class
-  end
-  private_class_method :class_for_feed
 
   ##
   # Check if the host of the passed url matches or is a subdomain of one of the special feeds from the special_feeds.yml

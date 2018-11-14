@@ -589,26 +589,5 @@ describe Entry, type: :model do
         expect(@entry.guid).to eq @guid_changed
       end
     end
-
-    context 'fetch_url matches list of special feeds' do
-      before :each do
-        @guid_unchanged = 'http://www.demonoid.pw/files/details/3400534/0687950652/'
-        @guid_changed = 'http://www.demonoid.pw/files/details/3400534/'
-        @feed = FactoryBot.create :feed, fetch_url: @special_feed_url
-        @entry = FactoryBot.build :entry, feed_id: @feed.id, guid: @guid_unchanged
-      end
-
-      it 'passes entries from special feeds to the right handler' do
-        expect(DemonoidFeedHandler).to receive(:handle_entry).with @entry
-        @feed.entries << @entry
-      end
-
-      it 'changes entry guid before saving' do
-        expect(@entry.guid).to eq @guid_unchanged
-        @feed.entries << @entry
-        @entry.reload
-        expect(@entry.guid).to eq @guid_changed
-      end
-    end
   end
 end
