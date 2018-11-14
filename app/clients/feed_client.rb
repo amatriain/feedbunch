@@ -85,8 +85,8 @@ class FeedClient
       url = feed.fetch_url
     end
 
-    # Use a special class for fetching this particular feed if configured; otherwise use the default HTTP client
-    special_fetcher = SpecialFeedManager.get_special_fetcher feed
+    # Use a special class for fetching this particular URL if configured; otherwise use the default HTTP client
+    special_fetcher = SpecialFeedManager.get_special_fetcher url
     if special_fetcher.present?
       feed_response = special_fetcher.fetch_feed url
     else

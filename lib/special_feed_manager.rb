@@ -31,15 +31,15 @@ class SpecialFeedManager
   end
 
   ##
-  # Check configuration to see if the feed needs special fetching. In this case, return the fetcher class; this class
-  # implements the fetch_feed method, that does whatever is necessary to fetch the feed and returns the response.
+  # Check configuration to see if the URL needs special fetching. In this case, return the fetcher class; this class
+  # implements the fetch_feed method, that does whatever is necessary to fetch the URL and returns the response.
   #
-  # If the feed does not need special handling, returns nil.
+  # If the URL does not need special handling, returns nil.
   #
-  # Receives as argument the feed to check.
+  # Receives as argument the URL to check.
 
-  def self.get_special_fetcher(feed)
-    fetcher = class_for_feed feed, FETCHER
+  def self.get_special_fetcher(url)
+    fetcher = class_for_url url, FETCHER
     if fetcher.present?
       return fetcher
     end
