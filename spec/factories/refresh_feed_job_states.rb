@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :refresh_feed_job_state do
-    state 'RUNNING'
+    state {'RUNNING'}
     user
     feed
   end

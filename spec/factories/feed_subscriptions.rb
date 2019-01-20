@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :feed_subscription do
     user
     feed
-    unread_entries 0
+    unread_entries {0}
   end
 end
