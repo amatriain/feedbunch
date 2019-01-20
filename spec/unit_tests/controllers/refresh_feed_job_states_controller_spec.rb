@@ -50,7 +50,7 @@ describe Api::RefreshFeedJobStatesController, type: :controller do
 
     it 'returns 200' do
       delete :destroy, params: {id: @job_state_1.id}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'deletes the job state' do

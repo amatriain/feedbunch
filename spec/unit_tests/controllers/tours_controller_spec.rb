@@ -11,7 +11,7 @@ describe Api::ToursController, type: :controller do
 
     it 'returns success' do
       get :show_main, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -19,7 +19,7 @@ describe Api::ToursController, type: :controller do
 
     it 'returns success' do
       get :show_mobile, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

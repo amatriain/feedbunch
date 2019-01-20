@@ -32,7 +32,7 @@ describe Api::FeedsController, type: :controller do
 
       it 'returns success' do
         get :index, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'assigns to @feeds only feeds owned by the user' do
@@ -55,7 +55,7 @@ describe Api::FeedsController, type: :controller do
 
       it 'returns success' do
         get :index, params: {folder_id: @folder1.id}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'assigns to @folder the correct folder' do
@@ -127,7 +127,7 @@ describe Api::FeedsController, type: :controller do
 
     it 'assigns to @job_state the new subscribe_job_state' do
       post :create, params: {feed: {url: @feed2.fetch_url}}, format: :json
-      expect(response).to  be_success
+      expect(response).to  be_successful
       job_state = assigns(:job_state)
       expect(job_state.user_id).to eq @user.id
       expect(job_state.fetch_url).to eq @feed2.fetch_url
@@ -139,7 +139,7 @@ describe Api::FeedsController, type: :controller do
 
     it 'returns 200' do
       delete :destroy, params: {id: @feed1.id}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'enqueues job to unsubscribe from feed' do

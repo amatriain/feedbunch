@@ -16,7 +16,7 @@ describe Api::UserConfigsController, type: :controller do
 
     it 'returns success' do
       get :show, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -28,7 +28,7 @@ describe Api::UserConfigsController, type: :controller do
                                     show_feed_tour: 'false',
                                     show_entry_tour: 'false',
                                     show_kb_shortcuts_tour: 'false'}}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     context 'all flags' do

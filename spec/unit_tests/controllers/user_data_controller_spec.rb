@@ -11,7 +11,7 @@ describe Api::UserDataController, type: :controller do
 
     it 'returns success' do
       get :show, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

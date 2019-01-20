@@ -37,7 +37,7 @@ describe Api::FoldersController, type: :controller do
 
     it 'returns success' do
       get :index, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'assigns to @folders only folders owned by the user' do
@@ -69,7 +69,7 @@ describe Api::FoldersController, type: :controller do
 
     it 'returns success' do
       patch :update, params: {id: @folder1.id, folder: {feed_id: @feed3.id}}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'returns 404 for a folder that does not belong to the current user' do
@@ -111,7 +111,7 @@ describe Api::FoldersController, type: :controller do
 
     it 'returns success' do
       patch :update, params: {id: Folder::NO_FOLDER, folder: {feed_id: @feed1.id}}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'returns 404 if the user is not subscribed to the feed' do
@@ -144,7 +144,7 @@ describe Api::FoldersController, type: :controller do
 
     it 'returns success if sucessfully created folder' do
       post :create, params: {folder: {title: 'New folder title', feed_id: @feed1.id}}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'returns 304 if user already has a folder with the same title' do

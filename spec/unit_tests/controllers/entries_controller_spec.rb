@@ -23,7 +23,7 @@ describe Api::EntriesController, type: :controller do
 
     it 'returns success' do
       put :update, params: {entry: {id: @entry.id, state: 'read', update_older: 'false'}}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'returns 404 if the entry does not exist' do

@@ -25,7 +25,7 @@ describe FeedbunchAuth::RegistrationsController, type: :controller do
       post :create, params: {'user' => {'email'=>@user.email, 'name'=>@user.name, 'password'=>@user.password,
                                'password_confirmation'=>@user.password, 'locale'=>@user.locale,
                                'timezone'=>@user.timezone}}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
   end

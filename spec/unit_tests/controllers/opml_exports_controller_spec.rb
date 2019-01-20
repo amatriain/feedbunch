@@ -51,7 +51,7 @@ describe Api::OpmlExportsController, type: :controller do
 
     it 'returns success' do
       put :update, params: {opml_export: {show_alert: 'false'}}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'returns 500 if there is a problem changing the alert visibility' do
