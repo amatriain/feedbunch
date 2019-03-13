@@ -35,7 +35,7 @@ module Feedbunch
 
     # Fall back to the default locale ("en" if config.i18n.default_locale is not configured)
     # if the locale sent by the user does not exist
-    config.i18n.fallbacks = true
+    config.i18n.fallbacks = [I18n.default_locale]
 
     # Use Rack::Deflater middleware to compress server responses when the client supports it.
     config.middleware.use Rack::Deflater
