@@ -163,9 +163,9 @@ class FeedClient
       if e.http_code == 503 && e.response.match?(/Cloudflare/i)
         begin
           Rails.logger.info "URL #{url} is behind Cloudflare DDoS protection, using a full browser to fetch it"
-          opts = Selenium::WebDriver::Chrome::Options.new
-          opts.add_argument '--headless'
-          browser = Selenium::WebDriver.for :chrome, options: opts
+          opts = Selenium::WebDriver::Firefox::Options.new
+          opts.add_argument '-headless'
+          browser = Selenium::WebDriver.for :firefox, options: opts
           browser.get url
           wait = Selenium::WebDriver::Wait.new timeout: 20
           wait.until {
