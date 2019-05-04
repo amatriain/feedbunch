@@ -83,19 +83,14 @@ RSpec.configure do |config|
 
   # Set driver for acceptance tests
   if ENV['TEST_SUITE'] != 'unit'
-
-    Capybara.register_driver :chrome_headless do |app|
-      Capybara::Selenium::Driver.new(app,
-                                     browser: :chrome,
-                                     desired_capabilities: Selenium::WebDriver::Remote::Capabilities.chrome(
-                                         'chromeOptions' => {
-                                             'args' => ['window-size=1920,1200', 'headless', 'lang=en-US,en']
-                                             #'args' => ['window-size=1920,1200', 'lang=en-US,en']
-                                         }
-                                     )
-      )
+    Capybara.register_driver :firefox_headless do |app|
+      options = Selenium::WebDriver::Firefox::Options.new
+      options.add_argument '--headless'
+      options.add_argument '--window-size 1920,1200'
+      options.add_argument '--lang en-US,en'
+      Capybara::Selenium::Driver.new(app, options: options)
     end
-    Capybara.javascript_driver = :chrome_headless
+    Capybara.javascript_driver = :firefox_headless
   end
 
   # Use puma as server for capybara, with logs on to help debugging
