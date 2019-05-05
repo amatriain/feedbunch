@@ -78,6 +78,7 @@ describe 'keyboard shortcuts', type: :feature do
       @folder.feeds << @feed2 << @feed3
 
       visit read_path
+      sleep 0.5
     end
 
     it 'highlights start link by default', js: true do
