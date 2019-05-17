@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_20_084829) do
+ActiveRecord::Schema.define(version: 2019_05_17_135902) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
@@ -59,8 +59,6 @@ ActiveRecord::Schema.define(version: 2018_10_20_084829) do
     t.datetime "published", null: false
     t.datetime "entry_created_at", null: false
     t.index ["entry_id", "user_id"], name: "index_entry_states_on_entry_id_user_id"
-    t.index ["published", "entry_created_at", "entry_id", "user_id"], name: "index_entry_states_on_order_fields"
-    t.index ["published", "entry_created_at", "entry_id", "user_id"], name: "index_entry_states_unread_on_order_fields", where: "read = 'false'"
     t.index ["read", "user_id"], name: "index_entry_states_on_read_user_id"
     t.index ["user_id"], name: "index_entry_states_on_user_id"
   end
