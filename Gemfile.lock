@@ -363,7 +363,7 @@ GEM
     rspec-retry (0.6.1)
       rspec-core (> 3.3)
     rspec-support (3.8.0)
-    ruby-prof (0.17.0)
+    ruby-prof (0.18.0)
     rubyzip (1.2.2)
     sanitize (5.0.0)
       crass (~> 1.0.2)
