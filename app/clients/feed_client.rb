@@ -1,4 +1,3 @@
-require 'feedjira'
 require 'rest_client'
 require 'restclient/components'
 require 'rack/cache'

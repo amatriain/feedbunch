@@ -33,7 +33,7 @@ class FeedParser
     Feedjira::Parser::AtomFeedBurner.preprocess_xml = true
     # Use Ox for SAX parsing
     SAXMachine.handler = :ox
-    feed_parsed = Feedjira::Feed.parse feed_response
+    feed_parsed = Feedjira.parse feed_response
     Rails.logger.info "Correctly parsed feed from url #{feed.fetch_url}"
 
     # Save the feed title and url.
