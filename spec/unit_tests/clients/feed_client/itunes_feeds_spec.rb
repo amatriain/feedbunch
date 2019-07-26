@@ -14,6 +14,7 @@ describe FeedClient do
     @entry1.summary = %{&lt;p&gt;Como una fiesta financiera, como un pelotazo empresarial, como un nuevo récord. Así vivió Miguel Blesa, entonces presidente de Caja Madrid, la millonaria emisión de preferentes en 2009, un producto financiero que atrapó a miles de clientes de la entidad y volatilizó sus ahorros. Varios correos del mejor amigo de Aznar en la banca, a los que ha tenido acceso eldiario.es, describen el ambiente de euforia sin vértigo en aquellos días de emisiones millonarias.&lt;/p&gt;}
     @entry1.published = 'Wed, 11 Dec 2013 07:20:04 GMT'
     @entry1.guid = 'http://www.meneame.net/story/correos-secretos-caja-madrid-asi-celebro-blesa-exito-preferentes'
+    @entry1.author = 'inconformistadesdeel67'
 
     @entry2 = FactoryBot.build :entry
     @entry2.title = '“La mafia despilfarradora y corrupta no está dispuesta a tocar nada que afecte a su chiringuito”'
@@ -21,6 +22,7 @@ describe FeedClient do
     @entry2.summary = %{&lt;p&gt;En EE.UU baja el paro, Gran Bretaña crece ya al 5% y el resto del mundo trabaja sin desmayo para salir de la crisis, pero España sigue empantanada en el fango de la corrupción, el despilfarro público y su consecuencia directa: paro, exilio laboral, miseria y hasta hambre física. Eurostat desmiente las cifras oficiales: sigue habiendo más de 6 millones de parados a causa del creciente gasto de políticos y autonomías.&lt;/p&gt;}
     @entry2.published = 'Wed, 11 Dec 2013 00:30:04 GMT'
     @entry2.guid = 'http://www.meneame.net/story/mafia-despilfarradora-corrupta-no-esta-dispuesta-tocar-nada'
+    @entry2.author = 'Arc'
   end
 
   context 'Itunes feed fetching' do
@@ -57,7 +59,7 @@ describe FeedClient do
       <comments>http://www.meneame.net/story/correos-secretos-caja-madrid-asi-celebro-blesa-exito-preferentes</comments>
       <guid isPermaLink="false">#{@entry2.guid}</guid>
       <wfw:commentRss>http://www.meneame.net/comments_rss2.php?id=2074219</wfw:commentRss>
-      <dc:creator>Arc</dc:creator>
+      <dc:creator>#{@entry2.author}</dc:creator>
       <media:thumbnail url="http://mnmstatic.net/cache/1f/a6/thumb-2074219.jpg" width="60" height="60"/>
       <meneame:link_id>2074219</meneame:link_id>
       <meneame:status>published</meneame:status>
@@ -81,7 +83,7 @@ describe FeedClient do
       <comments>http://www.meneame.net/story/mafia-despilfarradora-corrupta-no-esta-dispuesta-tocar-nada</comments>
       <guid isPermaLink="false">#{@entry1.guid}</guid>
       <wfw:commentRss>http://www.meneame.net/comments_rss2.php?id=2073682</wfw:commentRss>
-      <dc:creator>inconformistadesdeel67</dc:creator>
+      <dc:creator>#{@entry1.author}</dc:creator>
       <media:thumbnail url="http://mnmstatic.net/cache/1f/a4/thumb-2073682.jpg" width="60" height="60"/>
       <meneame:link_id>2073682</meneame:link_id>
       <meneame:status>published</meneame:status>
@@ -210,6 +212,7 @@ FEED_XML
       @entry1.summary = %{&lt;p&gt;Note: Today's show is a rerun. It originally ran in July 2013. U.S. citizens who want to buy stuff from North Korea have to write a letter to the U.S. government asking for special permission. As regular listeners know, we're sort of obsessed with North Korea. So we decided to try to get those letters. We filed a Freedom of Information Act request. And we got a stack of heavily redacted letters. On today's show: we try to figure out who sent the letters, why they wanted to do business with North Korea, and what that tells us about the North Korean economy.&lt;/p&gt;}
       @entry1.published = 'Fri, 21 Nov 2014 21:03:42 -0500'
       @entry1.guid = 'http://podcastdownload.npr.org/anon.npr-podcasts/podcast/510289/365828514/npr_365828514.mp3'
+      @entry1.author = 'NPR'
 
       @entry2 = FactoryBot.build :entry
       @entry2.title = '#585: Chasing The Dread Pirate Roberts'
@@ -217,6 +220,7 @@ FEED_XML
       @entry2.summary = %{&lt;p&gt;Today on the show, the story of the Dread Pirate Roberts of the internet age. A man who dreamed of setting up a utopian marketplace, a place where you could buy and sell almost anything in secret. The pirate created a market with no contracts, no regulations, and really no government interference. The Dread Pirate believed in total economic freedom, but in order to make his market work, he had to do some very bad things.&lt;/p&gt;}
       @entry2.published = 'Wed, 26 Nov 2014 12:13:00 -0500'
       @entry2.guid = '7fb07b53-60b4-4b71-ae7b-09f4564498ea'
+      @entry2.author = 'NPR'
 
       feed_xml = <<FEED_XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -252,7 +256,7 @@ FEED_XML
       <pubDate>#{@entry2.published}</pubDate>
       <copyright>2015 National Public Radio</copyright>
       <guid>#{@entry2.guid}</guid>
-      <itunes:author>NPR</itunes:author>
+      <itunes:author>#{@entry2.author}</itunes:author>
       <itunes:summary>#{@entry2.summary}</itunes:summary>
       <itunes:subtitle><![CDATA[Today on the show, the story of the Dread Pirate Roberts of the internet age. A man who dreamed of setting up a utopian marketplace, a place where you could buy and sell almost anything in secret. The pirate created a market with no contracts, no regulations, and really no government interference. The Dread Pirate believed in total economic freedom, but in order to make his market work, he had to do some very bad things.]]></itunes:subtitle>
       <itunes:duration>1218</itunes:duration>
@@ -265,7 +269,7 @@ FEED_XML
       <pubDate>#{@entry1.published}</pubDate>
       <copyright>2015 National Public Radio</copyright>
       <guid>#{@entry1.guid}</guid>
-      <itunes:author>NPR</itunes:author>
+      <itunes:author>#{@entry1.author}</itunes:author>
       <itunes:summary>#{@entry1.summary}</itunes:summary>
       <itunes:subtitle><![CDATA[Note: Today's show is a rerun. It originally ran in July 2013. U.S. citizens who want to buy stuff from North Korea have to write a letter to the U.S. government asking for special permission. As regular listeners know, we're sort of obsessed with North Korea. So we decided to try to get those letters. We filed a Freedom of Information Act request. And we got a stack of heavily redacted letters. On today's show: we try to figure out who sent the letters, why they wanted to do business with North Korea, and what that tells us about the North Korean economy.]]></itunes:subtitle>
       <itunes:duration>1495</itunes:duration>
@@ -293,7 +297,6 @@ FEED_XML
       entry1 = @feed.entries[0]
       expect(entry1.title).to eq @entry1.title
       expect(entry1.url).to eq @entry1.url
-      expect(entry1.author).to eq @entry1.author
       expect(entry1.summary).to eq CGI.unescapeHTML(@entry1.summary)
       expect(entry1.published).to eq @entry1.published
       expect(entry1.guid).to eq @entry1.guid
@@ -301,7 +304,6 @@ FEED_XML
       entry2 = @feed.entries[1]
       expect(entry2.title).to eq @entry2.title
       expect(entry2.url).to eq @entry2.url
-      expect(entry2.author).to eq @entry2.author
       expect(entry2.summary).to eq CGI.unescapeHTML(@entry2.summary)
       expect(entry2.published).to eq @entry2.published
       expect(entry2.guid).to eq @entry2.guid
@@ -358,7 +360,6 @@ FEED_XML
       expect(fetched_entry.feed_id).to eq @feed.id
       expect(fetched_entry.title).to eq @entry1.title
       expect(fetched_entry.url).to eq @entry1.url
-      expect(fetched_entry.author).to eq @entry1.author
       expect(fetched_entry.summary).to eq CGI.unescapeHTML(@entry1.summary)
       expect(fetched_entry.published).to eq @entry1.published
       expect(fetched_entry.guid).to eq @entry1.guid
