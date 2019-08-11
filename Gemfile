@@ -86,7 +86,7 @@ gem 'inherited_resources'
 gem 'pghero'
 
 # Faster startup
-#gem 'bootsnap', require: false
+gem 'bootsnap', require: false
 
 group :development do
   # Automate deployments

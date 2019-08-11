@@ -100,6 +100,8 @@ GEM
       execjs (~> 2.0)
     bcrypt (3.1.12)
     bindex (0.5.0)
+    bootsnap (1.4.4)
+      msgpack (~> 1.0)
     bower-rails (0.11.0)
     brakeman (4.6.1)
     builder (3.2.3)
@@ -238,6 +240,7 @@ GEM
     mini_portile2 (2.4.0)
     minitest (5.11.3)
     mixlib-cli (1.7.0)
+    msgpack (1.2.10)
     mustermann (1.0.2)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -464,6 +467,7 @@ DEPENDENCIES
   activeadmin
   addressable
   aws-sdk-s3
+  bootsnap
   bower-rails (~> 0.11.0)
   brakeman
   bullet
