@@ -113,9 +113,21 @@ Este será al que más espacio se dedique en los distintos textos que componen e
         expect(entry_dupe).to be_valid
       end
 
+      it 'accepts entries with no content and non-duplicated guid for the same feed'
+
+      it 'does not accept entries with no content and duplicated guid for the same feed'
+
+      it 'accepts entries with no content and duplicated guid for different feeds'
+
       it 'does not accept the same entry content as a deleted entry from the same feed'
 
       it 'accepts the same entry content as a deleted entry from another feed'
+
+      it 'accepts entries with no content and non-duplicated guid in deleted entries of the same feed'
+
+      it 'does not accept entries with no content and the same guid as a deleted entry of the same feed'
+
+      it 'accepts entries with no content and the same guid as a deleted entry from another feed'
     end
   end
 
