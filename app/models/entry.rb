@@ -37,7 +37,7 @@ require 'url_validator'
 # - summary
 # - published
 # - guid
-# - content_hash
+# - unique_hash
 #
 # All fields except "published" and "feed_id" are sanitized before validation; this is, before saving/updating each
 # instance in the database.
@@ -54,7 +54,7 @@ class Entry < ApplicationRecord
   validate :valid_url
   validates :published, presence: true
   validates :guid, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}
-  validates :content_hash, uniqueness: {case_sensitive: true, allow_nil: true, scope: :feed_id}
+  validates :unique_hash, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}
   validate :entry_not_deleted
 
   before_validation :before_entry_validation
@@ -119,6 +119,7 @@ class Entry < ApplicationRecord
     sanitize_attributes
     default_attribute_values
     fix_url
+    calculate_unique_hash
   end
 
   ##
@@ -245,9 +246,6 @@ class Entry < ApplicationRecord
 
     # published defaults to the current datetime
     self.published = Time.zone.now if self.published.blank?
-
-    # calculate content_hash as MD5 hash of entry content
-    self.content_hash = Digest::MD5.hexdigest self.content if self.content.present?
   end
 
   ##
@@ -255,6 +253,25 @@ class Entry < ApplicationRecord
 
   def fix_url
     self.url = URLNormalizer.normalize_entry_url self.url, self
+  end
+
+  ##
+  # Calculate the hash that uniquely identifies an entry in its feed. Multiple entries with the same hash in the same
+  # feed are not allowed.
+  #
+  # The hash is an MD5 hex-digest of the concatenation of:
+  # - the entry content (if present)
+  # - the entry summary (if present)
+  # - the entry title
+  #
+  # Note that the entry title is a mandatory attribute, which guarantees that all entries have a unique_hash.
+
+  def calculate_unique_hash
+    unique = ''
+    unique += self.content if self.content.present?
+    unique += self.summary if self.summary.present?
+    unique += self.title
+    self.unique_hash = Digest::MD5.hexdigest unique
   end
 
   ##

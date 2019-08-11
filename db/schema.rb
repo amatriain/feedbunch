@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 2019_08_23_081551) do
     t.integer "feed_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "content_hash"
+    t.text "unique_hash", default: "", null: false
     t.index ["feed_id"], name: "index_entries_on_feed_id"
     t.index ["guid", "feed_id"], name: "index_entries_on_guid_feed_id"
     t.index ["published", "created_at", "id"], name: "index_entries_on_published_created_at_id", order: :desc
