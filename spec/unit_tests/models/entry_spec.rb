@@ -43,29 +43,79 @@ describe Entry, type: :model do
       feed.entries << entry
       expect(entry.url).to eq "http://#{host}#{relative_url}"
     end
+  end
 
-    it 'does not accept duplicate guids for the same feed' do
-      entry_dupe = FactoryBot.build :entry, guid: @entry.guid, feed_id: @entry.feed.id
-      expect(entry_dupe).not_to be_valid
+  context 'duplicate entries' do
+    context 'duplicate guid' do
+      it 'does not accept duplicate guids for the same feed' do
+        entry_dupe = FactoryBot.build :entry, guid: @entry.guid, feed_id: @entry.feed.id
+        expect(entry_dupe).not_to be_valid
+      end
+
+      it 'accepts duplicate guids for different feeds' do
+        feed2 = FactoryBot.create :feed
+        entry_dupe = FactoryBot.build :entry, guid: @entry.guid, feed_id: feed2.id
+        expect(entry_dupe).to be_valid
+      end
+
+      it 'does not accept the same guid as a deleted entry from the same feed' do
+        deleted_entry = FactoryBot.create :deleted_entry
+        entry = FactoryBot.build :entry, guid: deleted_entry.guid, feed_id: deleted_entry.feed_id
+        expect(entry).not_to be_valid
+      end
+
+      it 'accepts the same guid as a deleted entry from another feed' do
+        feed2 = FactoryBot.create :feed
+        deleted_entry = FactoryBot.create :deleted_entry
+        entry = FactoryBot.build :entry, guid: deleted_entry.guid, feed_id: feed2.id
+        expect(entry).to be_valid
+      end
     end
 
-    it 'does accept duplicate guids for different feeds' do
-      feed2 = FactoryBot.create :feed
-      entry_dupe = FactoryBot.build :entry, guid: @entry.guid, feed_id: feed2.id
-      expect(entry_dupe).to be_valid
-    end
+    context 'duplicate content' do
+      before :each do
+        @title = 'Qué es Daegon? I'
+        @url = 'https://www.daegon.net/portal/que_es_daegon_i'
+        @content = '&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot; property=&quot;content:encoded&quot;&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;
+&lt;center&gt;&lt;span class=&quot;flickr-wrap&quot; style=&quot;width:640px;&quot;&gt;&lt;span class=&quot;flickr-image&quot;&gt;&lt;a href=&quot;https://www.flickr.com/photos/42971039@N00/9020155328&quot; title=&quot;daegon_v002 - 6 años ago ago by Javi. - &quot; class=&quot; flickr-img-wrap&quot; rel=&quot;&quot; target=&quot;_blank&quot;&gt;&lt;img class=&quot;flickr-photo-img&quot; typeof=&quot;foaf:Image&quot; src=&quot;https://live.staticflickr.com/3744/9020155328_78dbfea59f_z.jpg&quot; alt=&quot;Mar, 06/11/2013 - 14:04 - daegon_v002&quot; title=&quot;Mar, 06/11/2013 - 14:04 - daegon_v002&quot; /&gt;&lt;/a&gt; &lt;span class=&quot;flickr-copyright&quot;&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Copyright&quot; title=&quot;All Rights Reserved&quot; target=&quot;_blank&quot;&gt;©&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;flickr-credit&quot;&gt;&lt;a href=&quot;https://www.flickr.com/photos/42971039@N00/9020155328&quot; title=&quot;View on Flickr. To enlarge click image.&quot; target=&quot;_blank&quot;&gt;&lt;span class=&quot;flickr-title&quot;&gt;daegon_v002&lt;/span&gt;&lt;br /&gt;&lt;/a&gt;&lt;span class=&quot;flickr-metadata&quot;&gt;&lt;a title=&quot;Martes, Junio 11, 2013 - 14:04&quot;&gt;6 años ago&lt;/a&gt; ago by &lt;a href=&quot;https://www.flickr.com/people/42971039@N00/&quot; title=&quot;View user on Flickr.&quot; target=&quot;_blank&quot;&gt;Javi&lt;/a&gt;.&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/center&gt;&lt;br /&gt;
+Daegon es una suma. El cúmulo de una sucesión incontable de instantes y situaciones, un punto indeterminado dentro de una espiral finita.
+&lt;p&gt;Tras tu viaje a través de los textos que preceden a este, a buen seguro aún te seguirás preguntando ¿Qué es Daegon?&lt;br /&gt;
+Y esa es una muy buena pregunta. Una que trataremos de comenzar a responder a continuación, pero cuya resolución no es sencilla.&lt;/p&gt;
+Este será al que más espacio se dedique en los distintos textos que componen este portal y, en gran medida, la escala para la que está pensado su reglamento.
+&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;  &lt;div id=&quot;book-navigation-114&quot; class=&quot;book-navigation&quot;&gt;
 
-    it 'does not accept the same guid as a deleted entry from the same feed' do
-      deleted_entry = FactoryBot.create :deleted_entry
-      entry = FactoryBot.build :entry, guid: deleted_entry.guid, feed_id: deleted_entry.feed_id
-      expect(entry).not_to be_valid
-    end
+        &lt;div class=&quot;page-links clearfix&quot;&gt;
+              &lt;a href=&quot;/portal/que_es_un_juego_de_rol&quot; class=&quot;page-previous&quot; title=&quot;Ir a la página anterior&quot;&gt;‹ ¿Qué es un juego de rol?&lt;/a&gt;
+                    &lt;a href=&quot;/portal/introduccion&quot; class=&quot;page-up&quot; title=&quot;Ir a la página madre&quot;&gt;arriba&lt;/a&gt;
+                    &lt;a href=&quot;/portal/que_es_daegon_ii&quot; class=&quot;page-next&quot; title=&quot;Ir a la página siguiente&quot;&gt;¿Qué es Daegon? II: El Hoy ›&lt;/a&gt;
+          &lt;/div&gt;
 
-    it 'accepts the same guid as a deleted entry from another feed' do
-      feed = FactoryBot.create :feed
-      deleted_entry = FactoryBot.create :deleted_entry
-      entry = FactoryBot.build :entry, guid: deleted_entry.guid, feed_id: feed.id
-      expect(entry).to be_valid
+  &lt;/div&gt;'
+        @guid_orig = '1 at https://www.daegon.net/portal'
+        @guid_another = '1 at http://www.daegon.net/portal'
+
+        @entry.title = @title
+        @entry.url = @url
+        @entry.content = @content
+        @entry.guid = @guid_orig
+        @entry.save
+      end
+
+      it 'does not accept duplicate entry contents for the same feed' do
+        entry_dupe = FactoryBot.build :entry, guid: @guid_another, feed_id: @entry.feed.id, content: @content
+        expect(entry_dupe).not_to be_valid
+      end
+
+      it 'accepts duplicate entry contents for different feeds' do
+        feed2 = FactoryBot.create :feed
+        entry_dupe = FactoryBot.build :entry, guid: @guid_another, feed_id: feed2.id, content: @content
+        expect(entry_dupe).to be_valid
+      end
+
+      it 'does not accept the same entry content as a deleted entry from the same feed'
+
+      it 'accepts the same entry content as a deleted entry from another feed'
     end
   end
 
@@ -122,6 +172,18 @@ describe Entry, type: :model do
       published = Time.zone.parse '2000-01-01'
       entry = FactoryBot.create :entry, published: published
       expect(entry.published).to eq published
+    end
+
+    it 'calculates md5 hash of content' do
+      content = '<p>some entry content</p>'
+      hash = Digest::MD5.hexdigest content
+      entry = FactoryBot.create :entry, content: content
+      expect(entry.content_hash).to eq hash
+    end
+
+    it 'does not calculate md5 hash of content if entry has no content' do
+      entry = FactoryBot.create :entry, content: nil
+      expect(entry.content_hash).to be_nil
     end
   end
 

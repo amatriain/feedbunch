@@ -37,6 +37,7 @@ require 'url_validator'
 # - summary
 # - published
 # - guid
+# - content_hash
 #
 # All fields except "published" and "feed_id" are sanitized before validation; this is, before saving/updating each
 # instance in the database.
@@ -53,6 +54,7 @@ class Entry < ApplicationRecord
   validate :valid_url
   validates :published, presence: true
   validates :guid, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}
+  validates :content_hash, uniqueness: {case_sensitive: true, allow_nil: true, scope: :feed_id}
   validate :entry_not_deleted
 
   before_validation :before_entry_validation
@@ -224,6 +226,8 @@ class Entry < ApplicationRecord
   # If the publish date is not present, assume the current datetime as default value. This means
   # entries will be shown as published in the moment they are fetched unless the feed specifies
   # otherwise. This ensures all entries have a publish date which avoids major headaches when ordering.
+  #
+  # Calculate the MD5 hash of the entry content.
 
   def default_attribute_values
     # GUID defaults to the url attribute
@@ -241,6 +245,9 @@ class Entry < ApplicationRecord
 
     # published defaults to the current datetime
     self.published = Time.zone.now if self.published.blank?
+
+    # calculate content_hash as MD5 hash of entry content
+    self.content_hash = Digest::MD5.hexdigest self.content if self.content.present?
   end
 
   ##
