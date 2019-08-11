@@ -74,8 +74,8 @@ describe Entry, type: :model do
 
     context 'duplicate content' do
       before :each do
-        @title = 'Qué es Daegon? I'
-        @url = 'https://www.daegon.net/portal/que_es_daegon_i'
+        title = 'Qué es Daegon? I'
+        url = 'https://www.daegon.net/portal/que_es_daegon_i'
         @content = '&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot; property=&quot;content:encoded&quot;&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;
 &lt;center&gt;&lt;span class=&quot;flickr-wrap&quot; style=&quot;width:640px;&quot;&gt;&lt;span class=&quot;flickr-image&quot;&gt;&lt;a href=&quot;https://www.flickr.com/photos/42971039@N00/9020155328&quot; title=&quot;daegon_v002 - 6 años ago ago by Javi. - &quot; class=&quot; flickr-img-wrap&quot; rel=&quot;&quot; target=&quot;_blank&quot;&gt;&lt;img class=&quot;flickr-photo-img&quot; typeof=&quot;foaf:Image&quot; src=&quot;https://live.staticflickr.com/3744/9020155328_78dbfea59f_z.jpg&quot; alt=&quot;Mar, 06/11/2013 - 14:04 - daegon_v002&quot; title=&quot;Mar, 06/11/2013 - 14:04 - daegon_v002&quot; /&gt;&lt;/a&gt; &lt;span class=&quot;flickr-copyright&quot;&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Copyright&quot; title=&quot;All Rights Reserved&quot; target=&quot;_blank&quot;&gt;©&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;flickr-credit&quot;&gt;&lt;a href=&quot;https://www.flickr.com/photos/42971039@N00/9020155328&quot; title=&quot;View on Flickr. To enlarge click image.&quot; target=&quot;_blank&quot;&gt;&lt;span class=&quot;flickr-title&quot;&gt;daegon_v002&lt;/span&gt;&lt;br /&gt;&lt;/a&gt;&lt;span class=&quot;flickr-metadata&quot;&gt;&lt;a title=&quot;Martes, Junio 11, 2013 - 14:04&quot;&gt;6 años ago&lt;/a&gt; ago by &lt;a href=&quot;https://www.flickr.com/people/42971039@N00/&quot; title=&quot;View user on Flickr.&quot; target=&quot;_blank&quot;&gt;Javi&lt;/a&gt;.&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/center&gt;&lt;br /&gt;
 Daegon es una suma. El cúmulo de una sucesión incontable de instantes y situaciones, un punto indeterminado dentro de una espiral finita.
@@ -92,13 +92,13 @@ Este será al que más espacio se dedique en los distintos textos que componen e
           &lt;/div&gt;
 
   &lt;/div&gt;'
-        @guid_orig = '1 at https://www.daegon.net/portal'
+        guid_orig = '1 at https://www.daegon.net/portal'
         @guid_another = '1 at http://www.daegon.net/portal'
 
-        @entry.title = @title
-        @entry.url = @url
+        @entry.title = title
+        @entry.url = url
         @entry.content = @content
-        @entry.guid = @guid_orig
+        @entry.guid = guid_orig
         @entry.save
       end
 
