@@ -89,11 +89,11 @@ class Entry < ApplicationRecord
 
   ##
   # Validate that the entry has not been deleted (there is a deleted_entries record with the
-  # same feed_id and guid)
+  # same feed_id and either guid or unique_hash)
 
   def entry_not_deleted
-    if DeletedEntry.exists? feed_id: self.feed_id, guid: self.guid
-      Rails.logger.warn "Failed attempt to save already deleted entry - guid: #{self.try :guid}, published: #{self.try :published}, feed_id: #{self.feed_id}, feed title: #{self.feed.title}"
+    if DeletedEntry.where('feed_id = ? AND (guid = ? OR unique_hash = ?)', self.feed_id, self.guid, self.unique_hash).exists?
+      Rails.logger.warn "Failed attempt to save already deleted entry - guid: #{self.try :guid}, unique_hash: #{self.try :unique_hash}, published: #{self.try :published}, feed_id: #{self.feed_id}, feed title: #{self.feed.title}"
       errors.add :guid, 'entry already deleted'
     end
   end

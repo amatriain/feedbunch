@@ -189,11 +189,17 @@ Este será al que más espacio se dedique en los distintos textos que componen e
         expect(entry_dupe).to be_valid
       end
 
-      it 'does not accept duplicate of deleted entry with different guid from the same feed'
+      it 'does not accept duplicate of deleted entry with different guid from the same feed' do
+        deleted_entry = FactoryBot.create :deleted_entry, guid: @guid_another
+        entry = FactoryBot.build :entry, guid: (@guid_another + "blablabla"), unique_hash: deleted_entry.unique_hash, feed_id: deleted_entry.feed_id
+        expect(entry).not_to be_valid
+      end
 
       it 'does not accept duplicate of deleted entry with the same guid from the same feed'
 
       it 'accepts non-duplicate of deleted entries with non-duplicate guid for the same feed'
+
+      it 'accepts entry when there is a deleted entry with nil hash for the same feed'
 
       it 'accepts duplicate of deleted entry with different guid from another feed'
 
