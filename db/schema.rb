@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2019_08_23_081551) do
     t.text "guid", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "unique_hash"
     t.index ["feed_id"], name: "index_feed_id_on_deleted_entries"
     t.index ["guid", "feed_id"], name: "index_deleted_entries_on_guid_feed_id"
   end

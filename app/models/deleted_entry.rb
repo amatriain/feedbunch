@@ -18,22 +18,27 @@
 # Attributes of the model:
 # - feed_id: ID of the feed to which the deleted entry belonged.
 # - guid: guid of the deleted entry.
+# - unique_hash: MD5 hash of the content+summary+title of the deleted entry
+#
+# The unique_hash attribute is not mandatory (can be nil) for backwards compatibility reasons: we cannot know calculate
+# the unique hash for already deleted entries, so the attribute is left nil for older deleted entries.
 
 class DeletedEntry < ApplicationRecord
   belongs_to :feed
   validates :feed_id, presence: true
   validates :guid, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}
+  validates :unique_hash, uniqueness: {case_sensitive: true, scope: :feed_id}
   validate :entry_deleted
 
   private
 
   ##
   # Validate that the entry has been deleted (there isn't an entry record with the
-  # same feed_id and guid)
+  # same feed_id and either guid or unique_hash)
 
   def entry_deleted
-    if Entry.exists? feed_id: self.feed_id, guid: self.guid
-      Rails.logger.warn "Failed attempt to mark as deleted existing entry - guid: #{self.try :guid}, published: #{self.try :published}, feed_id: #{self.feed_id}, feed title: #{self.feed.title}"
+    if Entry.where('feed_id = ? AND (guid = ? OR unique_hash = ?)', self.feed_id, self.guid, self.unique_hash).exists?
+      Rails.logger.warn "Failed attempt to mark as deleted existing entry - guid: #{self.try :guid}, unique_hash: #{self.unique_hash}, published: #{self.try :published}, feed_id: #{self.feed_id}, feed title: #{self.feed.title}"
       errors.add :guid, 'entry not deleted'
     end
   end
