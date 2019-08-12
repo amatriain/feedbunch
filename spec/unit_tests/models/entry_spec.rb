@@ -78,25 +78,25 @@ describe Entry, type: :model do
         @title_orig = 'Qué es Daegon? I'
         @title_another = 'I dont really care much what Daegon is'
         @url = 'https://www.daegon.net/portal/que_es_daegon_i'
-        @content_orig = '&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot; property=&quot;content:encoded&quot;&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;
-&lt;center&gt;&lt;span class=&quot;flickr-wrap&quot; style=&quot;width:640px;&quot;&gt;&lt;span class=&quot;flickr-image&quot;&gt;&lt;a href=&quot;https://www.flickr.com/photos/42971039@N00/9020155328&quot; title=&quot;daegon_v002 - 6 años ago ago by Javi. - &quot; class=&quot; flickr-img-wrap&quot; rel=&quot;&quot; target=&quot;_blank&quot;&gt;&lt;img class=&quot;flickr-photo-img&quot; typeof=&quot;foaf:Image&quot; src=&quot;https://live.staticflickr.com/3744/9020155328_78dbfea59f_z.jpg&quot; alt=&quot;Mar, 06/11/2013 - 14:04 - daegon_v002&quot; title=&quot;Mar, 06/11/2013 - 14:04 - daegon_v002&quot; /&gt;&lt;/a&gt; &lt;span class=&quot;flickr-copyright&quot;&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Copyright&quot; title=&quot;All Rights Reserved&quot; target=&quot;_blank&quot;&gt;©&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;flickr-credit&quot;&gt;&lt;a href=&quot;https://www.flickr.com/photos/42971039@N00/9020155328&quot; title=&quot;View on Flickr. To enlarge click image.&quot; target=&quot;_blank&quot;&gt;&lt;span class=&quot;flickr-title&quot;&gt;daegon_v002&lt;/span&gt;&lt;br /&gt;&lt;/a&gt;&lt;span class=&quot;flickr-metadata&quot;&gt;&lt;a title=&quot;Martes, Junio 11, 2013 - 14:04&quot;&gt;6 años ago&lt;/a&gt; ago by &lt;a href=&quot;https://www.flickr.com/people/42971039@N00/&quot; title=&quot;View user on Flickr.&quot; target=&quot;_blank&quot;&gt;Javi&lt;/a&gt;.&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/center&gt;&lt;br /&gt;
+        @content_orig = '<p>&lt;div class="field field-name-body field-type-text-with-summary field-label-hidden"&gt;&lt;div class="field-items"&gt;&lt;div class="field-item even" property="content:encoded"&gt;&lt;div style="text-align: justify;"&gt;
+&lt;center&gt;&lt;span class="flickr-wrap" style="width:640px;"&gt;&lt;span class="flickr-image"&gt;&lt;a href="https://www.flickr.com/photos/42971039@N00/9020155328" title="daegon_v002 - 6 años ago ago by Javi. - " class=" flickr-img-wrap" rel="" target="_blank"&gt;&lt;img class="flickr-photo-img" typeof="foaf:Image" src="https://live.staticflickr.com/3744/9020155328_78dbfea59f_z.jpg" alt="Mar, 06/11/2013 - 14:04 - daegon_v002" title="Mar, 06/11/2013 - 14:04 - daegon_v002" /&gt;&lt;/a&gt; &lt;span class="flickr-copyright"&gt;&lt;a href="https://en.wikipedia.org/wiki/Copyright" title="All Rights Reserved" target="_blank"&gt;©&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="flickr-credit"&gt;&lt;a href="https://www.flickr.com/photos/42971039@N00/9020155328" title="View on Flickr. To enlarge click image." target="_blank"&gt;&lt;span class="flickr-title"&gt;daegon_v002&lt;/span&gt;&lt;br /&gt;&lt;/a&gt;&lt;span class="flickr-metadata"&gt;&lt;a title="Martes, Junio 11, 2013 - 14:04"&gt;6 años ago&lt;/a&gt; ago by &lt;a href="https://www.flickr.com/people/42971039@N00/" title="View user on Flickr." target="_blank"&gt;Javi&lt;/a&gt;.&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/center&gt;&lt;br /&gt;
 Daegon es una suma. El cúmulo de una sucesión incontable de instantes y situaciones, un punto indeterminado dentro de una espiral finita.
 &lt;p&gt;Tras tu viaje a través de los textos que preceden a este, a buen seguro aún te seguirás preguntando ¿Qué es Daegon?&lt;br /&gt;
 Y esa es una muy buena pregunta. Una que trataremos de comenzar a responder a continuación, pero cuya resolución no es sencilla.&lt;/p&gt;
 Este será al que más espacio se dedique en los distintos textos que componen este portal y, en gran medida, la escala para la que está pensado su reglamento.
 &lt;/p&gt;&lt;/div&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;  &lt;div id=&quot;book-navigation-114&quot; class=&quot;book-navigation&quot;&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;  &lt;div id="book-navigation-114" class="book-navigation"&gt;
 
-        &lt;div class=&quot;page-links clearfix&quot;&gt;
-              &lt;a href=&quot;/portal/que_es_un_juego_de_rol&quot; class=&quot;page-previous&quot; title=&quot;Ir a la página anterior&quot;&gt;‹ ¿Qué es un juego de rol?&lt;/a&gt;
-                    &lt;a href=&quot;/portal/introduccion&quot; class=&quot;page-up&quot; title=&quot;Ir a la página madre&quot;&gt;arriba&lt;/a&gt;
-                    &lt;a href=&quot;/portal/que_es_daegon_ii&quot; class=&quot;page-next&quot; title=&quot;Ir a la página siguiente&quot;&gt;¿Qué es Daegon? II: El Hoy ›&lt;/a&gt;
+        &lt;div class="page-links clearfix"&gt;
+              &lt;a href="/portal/que_es_un_juego_de_rol" class="page-previous" title="Ir a la página anterior"&gt;‹ ¿Qué es un juego de rol?&lt;/a&gt;
+                    &lt;a href="/portal/introduccion" class="page-up" title="Ir a la página madre"&gt;arriba&lt;/a&gt;
+                    &lt;a href="/portal/que_es_daegon_ii" class="page-next" title="Ir a la página siguiente"&gt;¿Qué es Daegon? II: El Hoy ›&lt;/a&gt;
           &lt;/div&gt;
 
-  &lt;/div&gt;'
-        @content_another = 'Another entry content'
-        @summary_orig = 'Introduccion a Daegon'
-        @summary_another = 'Another entry summary'
+  &lt;/div&gt;</p>'
+        @content_another = '<p>Another entry content</p>'
+        @summary_orig = '<p>Introduccion a Daegon</p>'
+        @summary_another = '<p>Another entry summary</p>'
         @guid_orig = '1 at https://www.daegon.net/portal'
         @guid_another = '1 at http://www.daegon.net/portal'
 
@@ -190,20 +190,58 @@ Este será al que más espacio se dedique en los distintos textos que componen e
       end
 
       it 'does not accept duplicate of deleted entry with different guid from the same feed' do
-        deleted_entry = FactoryBot.create :deleted_entry, guid: @guid_another
-        entry = FactoryBot.build :entry, guid: (@guid_another + "blablabla"), unique_hash: deleted_entry.unique_hash, feed_id: deleted_entry.feed_id
+        # Calculate the unique hash of the entry before creating it, so we can first create a DeletedEntry with the same hash
+        hash = Digest::MD5.hexdigest @content_orig + @summary_orig + @title_orig
+        deleted_entry = FactoryBot.create :deleted_entry, guid: @guid_another, unique_hash: hash
+        entry = FactoryBot.build :entry, guid: (@guid_another + "blablabla"), feed_id: deleted_entry.feed_id,
+                                 content: @content_orig, summary: @summary_orig, title: @title_orig
         expect(entry).not_to be_valid
       end
 
-      it 'does not accept duplicate of deleted entry with the same guid from the same feed'
+      it 'does not accept duplicate of deleted entry with the same guid from the same feed' do
+        # Calculate the unique hash of the entry before creating it, so we can first create a DeletedEntry with the same hash
+        hash = Digest::MD5.hexdigest @content_orig + @summary_orig + @title_orig
+        deleted_entry = FactoryBot.create :deleted_entry, guid: @guid_another, unique_hash: hash
+        entry = FactoryBot.build :entry, guid: @guid_another, feed_id: deleted_entry.feed_id,
+                                 content: @content_orig, summary: @summary_orig, title: @title_orig
+        expect(entry).not_to be_valid
+      end
 
-      it 'accepts non-duplicate of deleted entries with non-duplicate guid for the same feed'
+      it 'accepts non-duplicate of deleted entries with non-duplicate guid for the same feed' do
+        # Calculate the unique hash of the entry before creating it, so we can first create a DeletedEntry with a different hash
+        hash = Digest::MD5.hexdigest @content_orig + @summary_orig + @title_orig
+        deleted_entry = FactoryBot.create :deleted_entry, guid: @guid_another, unique_hash: (hash + "blablabla")
+        entry = FactoryBot.build :entry, guid: (@guid_another + "blablabla"), feed_id: deleted_entry.feed_id,
+                                 content: @content_orig, summary: @summary_orig, title: @title_orig
+        expect(entry).to be_valid
+      end
 
-      it 'accepts entry when there is a deleted entry with nil hash for the same feed'
+      it 'accepts entry when there is a deleted entry with nil hash for the same feed' do
+        deleted_entry = FactoryBot.create :deleted_entry, guid: @guid_another, unique_hash: nil
+        entry = FactoryBot.build :entry, guid: (@guid_another + "blablabla"), feed_id: deleted_entry.feed_id,
+                                 content: @content_orig, summary: @summary_orig, title: @title_orig
+        expect(entry).to be_valid
+      end
 
-      it 'accepts duplicate of deleted entry with different guid from another feed'
+      it 'accepts duplicate of deleted entry with different guid from another feed' do
+        feed2 = FactoryBot.create :feed
+        # Calculate the unique hash of the entry before creating it, so we can first create a DeletedEntry with the same hash
+        hash = Digest::MD5.hexdigest @content_orig + @summary_orig + @title_orig
+        deleted_entry = FactoryBot.create :deleted_entry, guid: @guid_another, unique_hash: hash
+        entry = FactoryBot.build :entry, guid: (@guid_another + "blablabla"), feed_id: feed2.id,
+                                 content: @content_orig, summary: @summary_orig, title: @title_orig
+        expect(entry).to be_valid
+      end
 
-      it 'accepts duplicate of deleted entry with the same guid from another feed'
+      it 'accepts duplicate of deleted entry with the same guid from another feed' do
+        feed2 = FactoryBot.create :feed
+        # Calculate the unique hash of the entry before creating it, so we can first create a DeletedEntry with the same hash
+        hash = Digest::MD5.hexdigest @content_orig + @summary_orig + @title_orig
+        deleted_entry = FactoryBot.create :deleted_entry, guid: @guid_another, unique_hash: hash
+        entry = FactoryBot.build :entry, guid: @guid_another, feed_id: feed2.id,
+                                 content: @content_orig, summary: @summary_orig, title: @title_orig
+        expect(entry).to be_valid
+      end
     end
   end
 
