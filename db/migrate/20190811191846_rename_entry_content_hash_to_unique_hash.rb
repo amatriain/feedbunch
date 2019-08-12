@@ -4,7 +4,7 @@ class RenameEntryContentHashToUniqueHash < ActiveRecord::Migration[5.2]
     change_column_default :entries, :unique_hash, ''
 
     # Calculate unique_hash for older entries
-    Entry.all.order(published: :asc).each do |e|
+    Entry.all.order(published: :asc, created_at: :asc).each do |e|
       unique = ''
       unique += e.content if e.content.present?
       unique += e.summary if e.summary.present?
