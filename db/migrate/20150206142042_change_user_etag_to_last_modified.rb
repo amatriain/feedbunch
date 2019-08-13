@@ -1,4 +1,4 @@
-class ChangeUserEtagToLastModified < ActiveRecord::Migration
+class ChangeUserEtagToLastModified < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :subscriptions_updated_at, :datetime, null: true
 

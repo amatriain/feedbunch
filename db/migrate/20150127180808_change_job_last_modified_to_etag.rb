@@ -1,4 +1,4 @@
-class ChangeJobLastModifiedToEtag < ActiveRecord::Migration
+class ChangeJobLastModifiedToEtag < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :subscribe_jobs_etag, :text, null: true
     add_column :users, :refresh_feed_jobs_etag, :text, null: true

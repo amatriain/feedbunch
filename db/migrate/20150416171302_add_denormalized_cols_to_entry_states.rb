@@ -1,4 +1,4 @@
-class AddDenormalizedColsToEntryStates < ActiveRecord::Migration
+class AddDenormalizedColsToEntryStates < ActiveRecord::Migration[5.2]
   def up
     add_column :entry_states, :published, :datetime, null: true
     add_column :entry_states, :entry_created_at, :datetime, null: true

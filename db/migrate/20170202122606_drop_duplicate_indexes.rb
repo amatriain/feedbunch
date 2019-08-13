@@ -1,4 +1,4 @@
-class DropDuplicateIndexes < ActiveRecord::Migration[5.0]
+class DropDuplicateIndexes < ActiveRecord::Migration[5.2]
   def change
     remove_index :entry_states, name: 'index_entry_states_on_entry_id'
     remove_index :feed_subscriptions, name: 'index_feed_subscriptions_on_feed_id'

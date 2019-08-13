@@ -1,4 +1,4 @@
-class AddSubscriptionsUpdatedAtToUsers < ActiveRecord::Migration
+class AddSubscriptionsUpdatedAtToUsers < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :subscriptions_updated_at, :datetime, null: true
 

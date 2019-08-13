@@ -1,4 +1,4 @@
-class ChangeIndexOrder < ActiveRecord::Migration[5.0]
+class ChangeIndexOrder < ActiveRecord::Migration[5.2]
   def up
     remove_index :entries, name: 'index_entries_on_published_created_at_id'
     add_index :entries, [:published, :created_at, :id],

@@ -1,4 +1,4 @@
-class CreateDataImports < ActiveRecord::Migration
+class CreateDataImports < ActiveRecord::Migration[5.2]
   def change
     create_table :data_imports do |t|
       t.integer :user_id

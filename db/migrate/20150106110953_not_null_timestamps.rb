@@ -1,4 +1,4 @@
-class NotNullTimestamps < ActiveRecord::Migration
+class NotNullTimestamps < ActiveRecord::Migration[5.2]
   def change
     change_column_null :active_admin_comments, :created_at, false, Time.zone.now
     change_column_null :active_admin_comments, :updated_at, false

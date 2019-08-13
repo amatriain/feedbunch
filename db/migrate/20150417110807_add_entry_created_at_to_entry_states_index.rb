@@ -1,4 +1,4 @@
-class AddEntryCreatedAtToEntryStatesIndex < ActiveRecord::Migration
+class AddEntryCreatedAtToEntryStatesIndex < ActiveRecord::Migration[5.2]
   def up
     add_index :entry_states, [:published, :entry_created_at, :entry_id], name: 'index_entry_states_on_order_fields'
   end

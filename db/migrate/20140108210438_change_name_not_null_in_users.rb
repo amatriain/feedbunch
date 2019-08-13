@@ -1,4 +1,4 @@
-class ChangeNameNotNullInUsers < ActiveRecord::Migration
+class ChangeNameNotNullInUsers < ActiveRecord::Migration[5.2]
   def up
     User.where(name: nil).each do |user|
       user.update name: user.email

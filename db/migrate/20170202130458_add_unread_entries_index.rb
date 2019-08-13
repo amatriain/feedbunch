@@ -1,4 +1,4 @@
-class AddUnreadEntriesIndex < ActiveRecord::Migration[5.0]
+class AddUnreadEntriesIndex < ActiveRecord::Migration[5.2]
   def change
     add_index :entry_states, [:published, :entry_created_at, :entry_id],
               order: {published: :desc, entry_created_at: :desc, entry_id: :desc},

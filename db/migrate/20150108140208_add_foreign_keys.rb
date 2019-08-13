@@ -1,4 +1,4 @@
-class AddForeignKeys < ActiveRecord::Migration
+class AddForeignKeys < ActiveRecord::Migration[5.2]
   def change
     add_foreign_key :deleted_entries, :feeds
     add_foreign_key :entries, :feeds

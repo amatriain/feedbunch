@@ -1,4 +1,4 @@
-class ChangeUserFoldersEtagToLastModified < ActiveRecord::Migration
+class ChangeUserFoldersEtagToLastModified < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :folders_updated_at, :datetime, null: true
 

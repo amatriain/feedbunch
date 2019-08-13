@@ -1,4 +1,4 @@
-class AddShowReadAllTourToUser < ActiveRecord::Migration
+class AddShowReadAllTourToUser < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :show_read_all_tour, :boolean, default: true, null: true
 

@@ -1,4 +1,4 @@
-class ChangeFolderLastModifiedToEtag < ActiveRecord::Migration
+class ChangeFolderLastModifiedToEtag < ActiveRecord::Migration[5.2]
   def up
     add_column :folders, :subscriptions_etag, :text, null: true
 

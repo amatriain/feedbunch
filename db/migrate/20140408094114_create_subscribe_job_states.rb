@@ -1,4 +1,4 @@
-class CreateSubscribeJobStates < ActiveRecord::Migration
+class CreateSubscribeJobStates < ActiveRecord::Migration[5.2]
   def change
     create_table :subscribe_job_states do |t|
       t.integer :user_id, null: false

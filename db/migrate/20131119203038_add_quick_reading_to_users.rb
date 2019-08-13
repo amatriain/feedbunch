@@ -1,4 +1,4 @@
-class AddQuickReadingToUsers < ActiveRecord::Migration
+class AddQuickReadingToUsers < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :quick_reading, :boolean
 

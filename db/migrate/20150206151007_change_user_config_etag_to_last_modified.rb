@@ -1,4 +1,4 @@
-class ChangeUserConfigEtagToLastModified < ActiveRecord::Migration
+class ChangeUserConfigEtagToLastModified < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :config_updated_at, :datetime, null: true
 

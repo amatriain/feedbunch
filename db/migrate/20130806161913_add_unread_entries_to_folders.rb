@@ -1,4 +1,4 @@
-class AddUnreadEntriesToFolders < ActiveRecord::Migration
+class AddUnreadEntriesToFolders < ActiveRecord::Migration[5.2]
   def change
     add_column :folders, :unread_entries, :integer
 

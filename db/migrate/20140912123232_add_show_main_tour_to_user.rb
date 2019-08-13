@@ -1,4 +1,4 @@
-class AddShowMainTourToUser < ActiveRecord::Migration
+class AddShowMainTourToUser < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :show_main_tour, :boolean, default: true, null: true
 

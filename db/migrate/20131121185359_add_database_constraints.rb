@@ -1,4 +1,4 @@
-class AddDatabaseConstraints < ActiveRecord::Migration
+class AddDatabaseConstraints < ActiveRecord::Migration[5.2]
   def up
     # changes to data_imports table
     change_column :data_imports, :user_id, :integer, null: false

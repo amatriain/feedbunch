@@ -1,4 +1,4 @@
-class TrimEntryStrings < ActiveRecord::Migration
+class TrimEntryStrings < ActiveRecord::Migration[5.2]
   def change
     Entry.all.find_each do |entry|
       begin

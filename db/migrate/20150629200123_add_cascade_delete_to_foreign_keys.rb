@@ -1,4 +1,4 @@
-class AddCascadeDeleteToForeignKeys < ActiveRecord::Migration
+class AddCascadeDeleteToForeignKeys < ActiveRecord::Migration[5.2]
   def change
     remove_foreign_key :deleted_entries, :feeds
     remove_foreign_key :entries, :feeds

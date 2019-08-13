@@ -1,4 +1,4 @@
-class ChangeUserFoldersLastModifiedToEtag < ActiveRecord::Migration
+class ChangeUserFoldersLastModifiedToEtag < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :folders_etag, :text, null: true
 

@@ -1,4 +1,4 @@
-class CreateRefreshJobs < ActiveRecord::Migration
+class CreateRefreshJobs < ActiveRecord::Migration[5.2]
   def change
     create_table :refresh_jobs do |t|
       t.integer :user_id, null: false

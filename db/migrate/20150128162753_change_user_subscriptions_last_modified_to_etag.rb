@@ -1,4 +1,4 @@
-class ChangeUserSubscriptionsLastModifiedToEtag < ActiveRecord::Migration
+class ChangeUserSubscriptionsLastModifiedToEtag < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :subscriptions_etag, :text, null: true
 

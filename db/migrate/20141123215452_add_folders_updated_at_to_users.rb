@@ -1,4 +1,4 @@
-class AddFoldersUpdatedAtToUsers < ActiveRecord::Migration
+class AddFoldersUpdatedAtToUsers < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :folders_updated_at, :datetime, null: true
 

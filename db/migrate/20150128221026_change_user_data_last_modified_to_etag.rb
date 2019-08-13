@@ -1,4 +1,4 @@
-class ChangeUserDataLastModifiedToEtag < ActiveRecord::Migration
+class ChangeUserDataLastModifiedToEtag < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :user_data_etag, :text, null: true
 

@@ -1,4 +1,4 @@
-class AddShowMobileTourToUser < ActiveRecord::Migration
+class AddShowMobileTourToUser < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :show_mobile_tour, :boolean, default: true, null: true
 

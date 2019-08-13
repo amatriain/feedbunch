@@ -1,4 +1,4 @@
-class AddOpenAllEntriesToUsers < ActiveRecord::Migration
+class AddOpenAllEntriesToUsers < ActiveRecord::Migration[5.2]
   def up
     add_column :users, :open_all_entries, :boolean, null: false, default: false
 
