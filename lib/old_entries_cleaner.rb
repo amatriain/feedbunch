@@ -26,7 +26,7 @@ class OldEntriesCleaner
       old_entries = feed.entries.order(published: :asc, created_at: :asc, id: :asc).limit entries_deleted_count
       old_entries.each do |entry|
         entry.destroy
-        feed.deleted_entries.create guid: entry.guid
+        feed.deleted_entries.create guid: entry.guid, unique_hash: entry.unique_hash
       end
     end
   end

@@ -670,6 +670,7 @@ WEBPAGE_HTML
       expect(@feed.entries.count).to eq 498
       ScheduledUpdateFeedWorker.new.perform @feed.id
       expect(@feed.entries.count).to eq 500
+      expect(DeletedEntry.count).to eq 0
     end
 
     it 'deletes entries above the entries per feed limit, keeping the newer ones' do
@@ -687,13 +688,13 @@ WEBPAGE_HTML
       # 3 oldest entries should be deleted
       (0..2).each do |i|
         expect(Entry.exists?(@entries[i].id)).to be false
-        expect(DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid)).to be true
+        expect(DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid, unique_hash: @entries[i].unique_hash)).to be true
       end
 
       # the rest of entries, which are newer, should not be deleted
       (3..497).each do |i|
         expect(Entry.exists?(@entries[i].id)).to be true
-        expect(DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid)).to be false
+        expect(DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid, unique_hash: @entries[i].unique_hash)).to be false
       end
     end
 
@@ -717,13 +718,13 @@ WEBPAGE_HTML
       # 3 oldest entries should be deleted
       (0..2).each do |i|
         expect(Entry.exists?(@entries[i].id)).to be false
-        expect(DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid)).to be true
+        expect(DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid, unique_hash: @entries[i].unique_hash)).to be true
       end
 
       # the rest of entries, which are newer, should not be deleted
       (3..497).each do |i|
         expect(Entry.exists?(@entries[i].id)).to be true
-        expect(DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid)).to be false
+        expect(DeletedEntry.exists?(feed_id: @feed.id, guid: @entries[i].guid, unique_hash: @entries[i].unique_hash)).to be false
       end
     end
   end
