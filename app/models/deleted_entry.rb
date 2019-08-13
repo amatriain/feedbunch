@@ -27,7 +27,7 @@ class DeletedEntry < ApplicationRecord
   belongs_to :feed
   validates :feed_id, presence: true
   validates :guid, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}
-  validates :unique_hash, uniqueness: {case_sensitive: true, scope: :feed_id}
+  validates :unique_hash, uniqueness: {case_sensitive: true, scope: :feed_id, allow_nil: true}
   validate :entry_deleted
 
   private

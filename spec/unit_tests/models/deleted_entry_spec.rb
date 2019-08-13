@@ -41,7 +41,7 @@ describe DeletedEntry, type: :model do
 
     context 'unique_hash' do
       it 'accepts deleted entries for the same feed with nil hash' do
-        deleted_entry_nil_1 = FactoryBot.build :deleted_entry, unique_hash: nil
+        deleted_entry_nil_1 = FactoryBot.create :deleted_entry, unique_hash: nil
         expect(deleted_entry_nil_1).to be_valid
 
         deleted_entry_nil_2 = FactoryBot.build :deleted_entry, unique_hash: nil, feed_id: deleted_entry_nil_1.feed.id
