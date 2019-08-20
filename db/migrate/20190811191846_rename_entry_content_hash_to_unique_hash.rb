@@ -4,7 +4,7 @@ class RenameEntryContentHashToUniqueHash < ActiveRecord::Migration[5.2]
     change_column_default :entries, :unique_hash, ''
 
     # Calculate unique_hash for older entries
-    Entry.all.order(published: :asc, created_at: :asc, id: :asc).each do |e|
+    Entry.find_each do |e|
       unique = ''
       unique += e.content if e.content.present?
       unique += e.summary if e.summary.present?
@@ -15,10 +15,11 @@ class RenameEntryContentHashToUniqueHash < ActiveRecord::Migration[5.2]
       # If this entry has the same hash as an older entry (note that entries are processed in ascending order
       # by ther publish date) from the same feed, this entry is a duplicate. Delete it.
       if Entry.where('feed_id = ? AND unique_hash = ? AND id != ?', e.feed_id, hash, e.id).exists?
-        e.destroy
+        e.delete
+        DeletedEntry.where(entry_id: e.id).delete_all
       else
         # The entry is not a duplicate, save its unique hash in the DB
-        e.update unique_hash: hash
+        e.update_attribute :unique_hash, hash
       end
     end
 
