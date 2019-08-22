@@ -31,6 +31,7 @@ class FeedSubscription < ApplicationRecord
   before_validation :default_values
   after_create :after_create
   before_destroy :before_destroy, prepend: true
+  after_destroy :after_destroy
   after_save :after_save
 
   ##
@@ -42,7 +43,7 @@ class FeedSubscription < ApplicationRecord
 
   def touch_subscriptions
     Rails.logger.info "Touching subscription of user #{user_id} to feed #{feed_id}"
-    self.touch if !destroyed?
+    self.touch unless destroyed?
     if user.present?
       user.update subscriptions_updated_at: Time.zone.now
       folder = feed.user_folder user
@@ -72,13 +73,36 @@ class FeedSubscription < ApplicationRecord
   end
 
   ##
-  # After destroying a subscription:
+  # Before destroying a subscription:
+  # - remove dangling jobs and entry states
+  # - remove feed from user folder, if any
   # - update the date/time of change of subscriptions
   # - update the date/time of change of user data
 
   def before_destroy
-    touch_subscriptions
-    touch_user_data
+    self.feed.entry_states.where(user_id: self.user.id).delete_all
+    self.feed.refresh_feed_job_states.where(user_id: self.user.id).destroy_all
+    self.feed.subscribe_job_states.where(user_id: self.user.id).destroy_all
+
+    folder = self.feed.user_folder self.user
+    folder.feeds.delete self.feed if folder.present?
+
+    # If triggered by the destruction of user or feed, do not update timestamps, there's no need
+    unless destroyed_by_association
+      touch_subscriptions
+      touch_user_data
+    end
+  end
+
+  ##
+  # After destroying a subscription, check if there are other users still subscribed to the feed, and if there
+  # are no more subscribed users destroy the feed.
+
+  def after_destroy
+    if self.feed.users.count == 0
+      Rails.logger.warn "no more users subscribed to feed #{self.feed.id} - #{self.feed.fetch_url} . Removing it from the database"
+      self.feed.destroy
+    end
   end
 
   ##
@@ -92,7 +116,9 @@ class FeedSubscription < ApplicationRecord
   # If the unread entries count has changed, touch subscriptions
 
   def after_save
-    touch_subscriptions if saved_change_to_unread_entries?
+    unless destroyed_by_association
+      touch_subscriptions if saved_change_to_unread_entries?
+    end
   end
 
   ##

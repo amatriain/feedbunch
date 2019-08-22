@@ -123,9 +123,7 @@ class User < ApplicationRecord
          :confirmable, :lockable, :timeoutable
 
   has_many :feed_subscriptions, dependent: :destroy,
-           after_add: :mark_unread_entries,
-           before_remove: :before_remove_feed_subscription,
-           after_remove: :removed_feed_subscription
+           after_add: :mark_unread_entries
   has_many :feeds, through: :feed_subscriptions
   has_many :folders, dependent: :destroy
   has_many :entries, through: :feeds
@@ -371,9 +369,31 @@ class User < ApplicationRecord
   end
 
   ##
-  # If the user being destroyed is the demo user, throw an error. This prevents the demo user from being actually destroyed.
+  # Do not destroy demo user.
+  # When destroying user, mass-destroy objects that depend on it (feed subscriptions etc) bypassing validations
+  # and callbacks for performance.
 
   def before_destroy_user
+    indestructible_demo_user
+
+    self.opml_import_job_state.opml_import_failures.delete_all
+    self.opml_import_job_state.delete
+    self.opml_export_job_state.delete
+    self.refresh_feed_job_states.delete_all
+    self.subscribe_job_states.delete_all
+
+    self.folders.delete_all
+    self.entry_states.delete_all
+
+    # feed subscriptions are deleted WITH callbacks, to take care of the possible deletion of feeds with no more
+    # subscribed users
+    self.feed_subscriptions.destroy_all
+  end
+
+  ##
+  # If the user being destroyed is the demo user, throw an error. This prevents the demo user from being actually destroyed.
+
+  def indestructible_demo_user
     if Feedbunch::Application.config.demo_enabled
       demo_email = Feedbunch::Application.config.demo_email
       throw :abort if self.email == demo_email
@@ -555,61 +575,4 @@ class User < ApplicationRecord
       end
     end
   end
-
-  ##
-  # Before removing a feed subscription:
-  # - remove the feed from its current folder, if any. If this means the folder is now empty, a deletion of the folder is triggered.
-  # - delete all state information (read/unread) for this user and for all entries of the feed.
-  # - delete all instances of RefreshFeedJobState associated with this feed and user.
-  # - delete all instances of SubscribeJobState associated with this feed and user.
-
-  def before_remove_feed_subscription(feed_subscription)
-    feed = feed_subscription.feed
-
-    if feed.present?
-      folder = feed.user_folder self
-      folder.feeds.delete feed if folder.present?
-
-      remove_entry_states feed
-      remove_refresh_feed_job_states feed
-      remove_subscribe_job_states feed
-    end
-  end
-
-  ##
-  # When a feed is removed from a user's subscriptions, check if there are other users still subscribed to the feed
-  # and if there are no subscribed users, delete the feed. This triggers the deletion of all its entries and entry-states.
-
-  def removed_feed_subscription(feed_subscription)
-    feed = feed_subscription.feed
-    if feed.users.count == 0
-      Rails.logger.warn "no more users subscribed to feed #{feed.id} - #{feed.fetch_url} . Removing it from the database"
-      feed.destroy
-    end
-  end
-
-  ##
-  # Remove al read/unread entry information for this user, for all entries of the feed passed as argument.
-
-  def remove_entry_states(feed)
-    feed.entries.find_each do |entry|
-      entry_state = EntryState.find_by user_id: self.id, entry_id: entry.id
-      self.entry_states.delete entry_state if entry_state.present?
-    end
-  end
-
-  ##
-  # Remove al RefreshFeedJobState instances associated with this user and the feed passed as argument
-
-  def remove_refresh_feed_job_states(feed)
-    self.refresh_feed_job_states.where(feed_id: feed.id).destroy_all
-  end
-
-  ##
-  # Remove al SubscribeJobState instances associated with this user and the feed passed as argument
-
-  def remove_subscribe_job_states(feed)
-    self.subscribe_job_states.where(feed_id: feed.id).destroy_all
-  end
-
 end

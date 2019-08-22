@@ -50,7 +50,8 @@ class Feed < ApplicationRecord
   has_many :users, through: :feed_subscriptions
   has_and_belongs_to_many :folders, before_add: :single_user_folder
   has_many :entries, dependent: :destroy
-  has_many :deleted_entries, dependent: :delete_all
+  has_many :entry_states, through: :entries
+  has_many :deleted_entries, dependent: :destroy
   has_many :refresh_feed_job_states, dependent: :destroy
   has_many :subscribe_job_states, dependent: :destroy
 
@@ -63,6 +64,7 @@ class Feed < ApplicationRecord
   before_validation :before_validation
 
   after_create :schedule_update
+  before_destroy :before_destroy_feed, prepend: true
   after_destroy :unschedule_updates
   before_save :unschedule_unavailable
   after_save :touch_subscriptions
@@ -152,6 +154,18 @@ class Feed < ApplicationRecord
 
   def schedule_update
     ScheduleManager.schedule_first_update self.id
+  end
+
+  ##
+  # Before destroying a feed, delete dangling objects without validations nor callbacks for performance:
+  # - delete all entries
+  # - delete all entry_states
+  # - delete all deleted_entries
+
+  def before_destroy_feed
+    self.entries.delete_all
+    self.entry_states.delete_all
+    self.deleted_entries.delete_all
   end
 
   ##
