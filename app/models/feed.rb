@@ -163,8 +163,8 @@ class Feed < ApplicationRecord
   # - delete all deleted_entries
 
   def before_destroy_feed
-    self.entries.delete_all
     self.entry_states.delete_all
+    self.entries.delete_all
     self.deleted_entries.delete_all
   end
 
