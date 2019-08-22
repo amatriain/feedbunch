@@ -80,7 +80,7 @@ class FeedSubscription < ApplicationRecord
   # - update the date/time of change of user data
 
   def before_destroy
-    self.feed.entry_states.where(user_id: self.user.id).delete_all
+    self.user.entry_states.where(entry_id: self.feed.entries).delete_all
     self.feed.refresh_feed_job_states.where(user_id: self.user.id).destroy_all
     self.feed.subscribe_job_states.where(user_id: self.user.id).destroy_all
 
