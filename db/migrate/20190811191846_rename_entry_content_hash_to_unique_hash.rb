@@ -6,7 +6,7 @@ class RenameEntryContentHashToUniqueHash < ActiveRecord::Migration[5.2]
     add_index :entries, [:feed_id, :unique_hash, :guid], name: 'index_feedid_guid_hash_on_entries'
 
     # Calculate unique_hash for older entries
-    Entry.find_each do |e|
+    Entry.where(unique_hash: nil).find_each do |e|
       unique = ''
       unique += e.content if e.content.present?
       unique += e.summary if e.summary.present?
@@ -31,7 +31,7 @@ class RenameEntryContentHashToUniqueHash < ActiveRecord::Migration[5.2]
   def down
     change_column_null :entries, :unique_hash, true
     Entry.update_all unique_hash: nil
-    remove_index :entries, name: "index_feedid_hash_on_entries"
+    remove_index :entries, name: "index_feedid_guid_hash_on_entries"
     add_index :entries, [:feed_id, :guid], name: 'index_entries_on_guid_feed_id'
     change_column_default :entries, :unique_hash, nil
     rename_column :entries, :unique_hash, :content_hash
