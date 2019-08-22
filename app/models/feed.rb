@@ -50,7 +50,6 @@ class Feed < ApplicationRecord
   has_many :users, through: :feed_subscriptions
   has_and_belongs_to_many :folders, before_add: :single_user_folder
   has_many :entries, dependent: :destroy
-  has_many :entry_states, through: :entries
   has_many :deleted_entries, dependent: :destroy
   has_many :refresh_feed_job_states, dependent: :destroy
   has_many :subscribe_job_states, dependent: :destroy
@@ -163,7 +162,7 @@ class Feed < ApplicationRecord
   # - delete all deleted_entries
 
   def before_destroy_feed
-    self.entry_states.delete_all
+    EntryState.where(entry_id: self.entries).delete_all
     self.entries.delete_all
     self.deleted_entries.delete_all
   end
