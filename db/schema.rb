@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_17_135902) do
+ActiveRecord::Schema.define(version: 2019_08_23_081551) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_135902) do
     t.text "guid", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["feed_id"], name: "index_feed_id_on_deleted_entries"
     t.index ["guid", "feed_id"], name: "index_deleted_entries_on_guid_feed_id"
   end
 
@@ -47,7 +48,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_135902) do
     t.datetime "updated_at", null: false
     t.index ["feed_id"], name: "index_entries_on_feed_id"
     t.index ["guid", "feed_id"], name: "index_entries_on_guid_feed_id"
-    t.index ["published", "created_at", "id"], name: "index_entries_on_published_created_at_id"
+    t.index ["published", "created_at", "id"], name: "index_entries_on_published_created_at_id", order: :desc
   end
 
   create_table "entry_states", force: :cascade do |t|
