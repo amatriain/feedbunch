@@ -14,7 +14,7 @@ class OldEntriesCleaner
   #
   # Deleting an entry implies destroying the Entry instance (which removes the record from the
   # entries table, as well as associated EntryState instances etc) and creating a new DeletedEntry
-  # instance with the same guid and feed_id (to ensure that deleted entries won't be saved in the
+  # instance with the same guid, unique_hash and feed_id (to ensure that deleted entries won't be saved in the
   # database again, even if they are present in a feed xml retrieved in the future).
 
   def self.cleanup(feed)

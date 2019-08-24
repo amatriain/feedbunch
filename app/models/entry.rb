@@ -20,12 +20,12 @@ require 'url_validator'
 # its feed (by saving as many entry_state instances as subscribed users into the database, all of them with the attribute
 # "read" set to false).
 #
-# Each entry is uniquely identified by its guid within the scope of a given feed.
-# Duplicate guids are not allowed for the same feed.
+# Each entry is uniquely identified by its guid and its unique_hash within the scope of a given feed.
+# Duplicate guids are not allowed for the same feed. Duplicate unique_hashes are not allowed for the same feed
 #
-# When entries are deleted by an automated cleanup (because they are too old or the feed had too many entries),
-# a new DeletedEntry instance is saved in the database with the same feed_id and guid as the deleted entry.
-# An entry with the same guid and feed_id as an already existing DeletedEntry is not valid and won't be
+# When entries are deleted by an automated cleanup (because the feed had too many entries),
+# a new DeletedEntry instance is saved in the database with the same feed_id, guid and unique_hash as the deleted entry.
+# An entry with the same feed_id and either guid or unique_hash as an already existing DeletedEntry is not valid and won't be
 # saved in the database (it would indicate an entry that is at once deleted and not deleted).
 #
 # Attributes of the model:

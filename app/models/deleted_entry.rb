@@ -5,14 +5,16 @@
 # Each deleted_entry belongs to exactly one feed.
 #
 # When an entry is deleted during an automated cleanup, a new record is inserted in the deleted_entries table.
-# The "feed_id" and "guid" attributes of the new deleted_entry record are the same as those of the deleted
+# The "feed_id", "guid" and "unique_hash" attributes of the new deleted_entry record are the same as those of the deleted
 # entry. This means that deleted entries still occupy some space in the database, but much less because the
 # entry content is not kept.
 #
-# Each deleted_entry is uniquely identified by its guid within the scope of a given feed.
-# Duplicate guids are not allowed for a given feed.
+# Each deleted_entry is uniquely identified by its guid and unique_hash within the scope of a given feed.
+# Duplicate guids are not allowed for a given feed. Duplicate unique_hashes are not allowed for a given feed,
+# with the exception that multiple deleted_entries with nil unique_hash are allowed for a given feed (for backward
+# compatibility reasons).
 #
-# A deleted_entry with the same guid and feed_id as an already existing entry is not valid and won't be
+# A deleted_entry with the same feed_id and either guid or unique_hash as an already existing entry is not valid and won't be
 # saved in the database (it would indicate an entry which is at once deleted and not deleted).
 #
 # Attributes of the model:
