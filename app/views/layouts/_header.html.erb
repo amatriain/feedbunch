@@ -11,10 +11,11 @@
 <% end %>
     <%= stylesheet_link_tag    'application', :media => 'all' %>
 
-    <link rel="icon" sizes="192x192" href="<%= image_path 'logo192x192.png' %>">
+    <link rel="icon" type="image/png" sizes="192x192" href="<%= image_path 'logo192x192.png' %>">
     <link rel="manifest" href="<%= page_path 'manifest.json' %>">
     <meta name="theme-color" content="#99cc33">
     <%= csrf_meta_tags %>
     <%# favicon must be the last element with rel="icon", otherwise favico.js won't work %>
+    <%= favicon_link_tag 'logo192x192.png', rel: 'apple-touch-icon', type: 'image/png' %>
     <%= favicon_link_tag 'favicon.ico' %>
   </head>
