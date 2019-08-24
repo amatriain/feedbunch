@@ -43,7 +43,7 @@ class EncodingManager
   def self.fix_utf8(text)
     fixed_text = text
 
-    if !text.nil?
+    unless text.nil?
       if text.encoding != Encoding::UTF_8
         utf8_text = text.dup
         utf8_text.force_encoding 'utf-8'

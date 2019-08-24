@@ -57,7 +57,8 @@ class Entry < ApplicationRecord
   validates :unique_hash, presence: true, uniqueness: {case_sensitive: true, scope: :feed_id}
   validate :entry_not_deleted
 
-  before_validation :before_entry_validation
+  after_initialize :initialize_entry_attributes, if: :new_record?
+  before_validation :initialize_entry_attributes, if: :changed?
   after_create :set_unread_state
 
   ##
@@ -74,6 +75,46 @@ class Entry < ApplicationRecord
       raise NotSubscribedError.new
     end
     return state.read
+  end
+
+  ##
+  # Return a boolean that indicates if an Entry with the same guid and feed as this one is already in the database.
+  #
+  # It only makes sense to invoke this method on unsaved entries. If an attempt is made to save an Entry with the
+  # same feed and guid as an already saved one, a validation will fail and an error will be raised
+
+  def guid_already_exists?
+    return Entry.where(feed_id: self.feed_id, guid: self.guid).exists?
+  end
+
+  ##
+  # Return a boolean that indicates if an Entry with the same unique_hash and feed as this one is already in the database.
+  #
+  # It only makes sense to invoke this method on unsaved entries. If an attempt is made to save an Entry with the
+  # same feed and unique_hash as an already saved one, a validation will fail and an error will be raised
+
+  def unique_hash_already_exists?
+    return Entry.where(feed_id: self.feed_id, unique_hash: self.unique_hash).exists?
+  end
+
+  ##
+  # Return a boolean that indicates if a DeletedEntry with the same guid and feed as this one is already in the database.
+  #
+  # It only makes sense to invoke this method on unsaved entries. If an attempt is made to save an Entry with the
+  # same feed and guid as an already deleted one, a validation will fail and an error will be raised
+
+  def guid_already_deleted?
+    return DeletedEntry.where(feed_id: self.feed_id, guid: self.guid).exists?
+  end
+
+  ##
+  # Return a boolean that indicates if a DeletedEntry with the same unique_hash and feed as this one is already in the database.
+  #
+  # It only makes sense to invoke this method on unsaved entries. If an attempt is made to save an Entry with the
+  # same feed and unique_hash as an already deleted one, a validation will fail and an error will be raised
+
+  def unique_hash_already_deleted?
+    return DeletedEntry.where(feed_id: self.feed_id, unique_hash: self.unique_hash).exists?
   end
 
   private
@@ -99,9 +140,9 @@ class Entry < ApplicationRecord
   end
 
   ##
-  # Before_validation callback for the Entry model
+  # Initialize and massage several Entry attributes when a new entry record is created
 
-  def before_entry_validation
+  def initialize_entry_attributes
     fix_attributes
     special_feed_handling
   end
@@ -270,7 +311,7 @@ class Entry < ApplicationRecord
     unique = ''
     unique += self.content if self.content.present?
     unique += self.summary if self.summary.present?
-    unique += self.title
+    unique += self.title if self.title.present?
     self.unique_hash = Digest::MD5.hexdigest unique
   end
 

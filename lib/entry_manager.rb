@@ -25,28 +25,30 @@ class EntryManager
   # instead of failing the whole process.
 
   def self.save_new_entries(feed, entries, encoding)
-    entries.reverse_each do |entry|
+    entries.reverse_each do |entry_parsed|
 
       begin
-        set_entry_encoding entry, encoding
-        guid = entry.entry_id || entry.url
+        set_entry_encoding entry_parsed, encoding
+        guid = entry_parsed.entry_id || entry_parsed.url
         if guid.blank?
           Rails.logger.warn "Received entry without guid or url for feed #{feed.id} - #{feed.title}. Skipping it."
           next
         end
 
-        # Sanitize and trim guid; necessary to check if the entry already exists, because the Entry model
-        # changes the guid this way before saving.
-        guid = Sanitizer.sanitize_plaintext guid
+        entry_hash = entry_to_hash entry_parsed, guid
+        entry = feed.entries.build entry_hash
 
-        if Entry.exists? guid: guid, feed_id: feed.id
-          Rails.logger.debug "Already existing entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}. Ignoring it"
-        elsif DeletedEntry.exists? guid: guid, feed_id: feed.id
-          Rails.logger.debug "Already deleted entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}. Ignoring it"
+        if entry.guid_already_exists?
+          Rails.logger.debug "Already existing entry (duplicated guid) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+        elsif entry.unique_hash_already_exists?
+          Rails.logger.debug "Already existing entry (duplicated unique_hash) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+        elsif entry.guid_already_deleted?
+          Rails.logger.debug "Already deleted entry (duplicated guid) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+        elsif entry.unique_hash_already_deleted?
+          Rails.logger.debug "Already deleted entry (duplicated unique_hash) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
         else
-          Rails.logger.debug "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.entry_id}"
-          entry_hash = entry_to_hash entry, guid
-          feed.entries.create! entry_hash
+          Rails.logger.debug "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}"
+          entry.save!
         end
 
       rescue => e
