@@ -25,7 +25,7 @@ no_folder_feeds = %w(http://opensource.googleblog.com/
 comic_feeds = %w(http://xkcd.com/atom.xml
                   http://pbfcomics.com/feed/feed.xml
                   http://feeds.penny-arcade.com/pa-mainsite/)
-webdev_feeds = %w(http://angularjs.blogspot.com/
+webdev_feeds = %w(https://blog.angular.io/
                   http://blog.getbootstrap.com/
                   http://weblog.rubyonrails.org/)
 Feedbunch::Application.config.demo_subscriptions = {Folder::NO_FOLDER => no_folder_feeds,
