@@ -35,17 +35,26 @@ class EntryManager
           next
         end
 
+        # Convert the values from the parsed XML into a hash suitable for creating a new Entry in the database
         entry_hash = entry_to_hash entry_parsed, guid
+        # create new entry associated with the feed. If it ends up being saved, the feed.entries association will be updated as well.
+        # If it ends up not being saved (e.g. an entry already exists in the feed with the same guid), we must reload the feed
+        # object, otherwise this discarded entry would stay in the feed.entries association and any subsequent attempt to save the feed
+        # (e.g. feed.save or feed.update) would fail.
         entry = feed.entries.build entry_hash
 
         if entry.guid_already_exists?
           Rails.logger.debug "Already existing entry (duplicated guid) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+          feed.reload
         elsif entry.unique_hash_already_exists?
           Rails.logger.debug "Already existing entry (duplicated unique_hash) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+          feed.reload
         elsif entry.guid_already_deleted?
           Rails.logger.debug "Already deleted entry (duplicated guid) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+          feed.reload
         elsif entry.unique_hash_already_deleted?
           Rails.logger.debug "Already deleted entry (duplicated unique_hash) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+          feed.reload
         else
           Rails.logger.debug "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}"
           feed.save!
@@ -56,6 +65,7 @@ class EntryManager
         Rails.logger.error e.message
         # Do not print backtrace for AR validation errors, it's just white noise
         Rails.logger.error e.backtrace unless e.is_a? ActiveRecord::RecordInvalid
+        feed.reload
         next
       end
     end
