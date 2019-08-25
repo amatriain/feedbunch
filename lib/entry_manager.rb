@@ -48,7 +48,7 @@ class EntryManager
           Rails.logger.debug "Already deleted entry (duplicated unique_hash) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
         else
           Rails.logger.debug "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}"
-          entry.save!
+          feed.save!
         end
 
       rescue => e
