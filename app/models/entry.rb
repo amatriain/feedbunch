@@ -44,6 +44,8 @@ require 'url_validator'
 
 class Entry < ApplicationRecord
 
+  LOADING_IMAGE_GIF = '/images/Ajax-loader.gif'
+
   belongs_to :feed
   validates :feed_id, presence: true
 
@@ -250,9 +252,11 @@ class Entry < ApplicationRecord
   def image_manipulations(html_doc)
     html_doc.css('img').each do |img|
       # prepare image for lazy loading
-      src = URLNormalizer.normalize_entry_url img['src'], self
-      img['src'] = '/images/Ajax-loader.gif'
-      img['data-src'] = src
+      unless img['src'] == LOADING_IMAGE_GIF
+        src = URLNormalizer.normalize_entry_url img['src'], self
+        img['src'] = LOADING_IMAGE_GIF
+        img['data-src'] = src
+      end
     end
     return html_doc
   end
