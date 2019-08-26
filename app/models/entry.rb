@@ -136,7 +136,7 @@ class Entry < ApplicationRecord
 
   def entry_not_deleted
     if DeletedEntry.where('feed_id = ? AND (guid = ? OR unique_hash = ?)', self.feed_id, self.guid, self.unique_hash).exists?
-      Rails.logger.warn "Failed attempt to save already deleted entry - guid: #{self.try :guid}, unique_hash: #{self.try :unique_hash}, published: #{self.try :published}, feed_id: #{self.feed_id}, feed title: #{self.feed.title}"
+      Rails.logger.debug "Entry not valid: already deleted entry - guid: #{self.try :guid}, unique_hash: #{self.try :unique_hash}, published: #{self.try :published}, feed_id: #{self.feed_id}, feed title: #{self.feed.title}"
       errors.add :base, 'entry already deleted'
     end
   end
