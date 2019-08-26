@@ -43,23 +43,23 @@ class EntryManager
         # (e.g. feed.save or feed.update) would fail.
         entry = feed.entries.build entry_hash
 
-        if entry.guid_already_exists?
-          Rails.logger.debug "Already existing entry (duplicated guid) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
-          feed.reload
-        elsif entry.unique_hash_already_exists?
-          Rails.logger.debug "Already existing entry (duplicated unique_hash) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
-          feed.reload
-        elsif entry.guid_already_deleted?
-          Rails.logger.debug "Already deleted entry (duplicated guid) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
-          feed.reload
-        elsif entry.unique_hash_already_deleted?
-          Rails.logger.debug "Already deleted entry (duplicated unique_hash) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
-          feed.reload
-        else
+        if entry.valid?
           Rails.logger.debug "Saving in the database new entry for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}"
           feed.save!
+        else
+          if entry.guid_already_exists?
+            Rails.logger.debug "Already existing entry (duplicated guid) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+          elsif entry.unique_hash_already_exists?
+            Rails.logger.debug "Already existing entry (duplicated unique_hash) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+          elsif entry.guid_already_deleted?
+            Rails.logger.debug "Already deleted entry (duplicated guid) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+          elsif entry.unique_hash_already_deleted?
+            Rails.logger.debug "Already deleted entry (duplicated unique_hash) fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Ignoring it"
+          else
+            Rails.logger.debug "Invalid entry fetched for feed #{feed.fetch_url} - title: #{entry.title} - guid: #{entry.guid} - unique_hash: #{entry.unique_hash}. Error: #{entry.errors.messages}. Ignoring it"
+          end
+          feed.reload
         end
-
       rescue => e
         Rails.logger.error "There's been a problem processing a fetched entry from feed #{feed.id} - #{feed.title}. Skipping entry."
         Rails.logger.error e.message
