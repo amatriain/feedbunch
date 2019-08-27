@@ -13,7 +13,7 @@ describe 'feed entries', type: :feature do
   context 'without pagination' do
 
     before :each do
-      @img_url_load = '/images/Ajax-loader.gif'
+      @img_url_load = '/images/logo192x192.png'
       @img_url_fail = 'not_valid_image.gif'
       @entry1 = FactoryBot.build :entry, feed_id: @feed1.id, summary: "<p>summary for @entry1</p><img id=\"entry-image-1\" src=\"#{@img_url_load}\" alt=\"some-image\"><img id=\"entry-image-2\" src=\"#{@img_url_fail}\" alt=\"some-image\">"
       @entry2 = FactoryBot.build :entry, feed_id: @feed1.id
@@ -345,7 +345,7 @@ describe 'feed entries', type: :feature do
 
       it 'displays images not prepared for lazy loading', js: true do
         # image in @entry1 is not prepared for lazy loading (no data-src attribute)
-        @entry1.update_column :content, "<img id=\"entry-image\" src=\"#{@img_url}\" alt=\"some-image\">"
+        @entry1.update_column :content, "<img id=\"entry-image\" src=\"#{@img_url_load}\" alt=\"some-image\">"
         # touch subscription update datetime, to avoid the server sending an http 304
         subscription = FeedSubscription.find_by feed_id: @feed1.id, user_id: @user.id
         subscription.touch_subscriptions
@@ -353,9 +353,9 @@ describe 'feed entries', type: :feature do
         visit read_path
         read_feed @feed1, @user
 
-        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: false
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_load}']", visible: false
         read_entry @entry1
-        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url}']", visible: true
+        expect(page).to have_css "#entry-#{@entry1.id}-summary .entry-content img[src='#{@img_url_load}']", visible: true
       end
     end
   end
