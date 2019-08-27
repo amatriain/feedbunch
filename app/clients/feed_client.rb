@@ -155,7 +155,7 @@ class FeedClient
     begin
       # try to GET the feed with a simple HTTP client (js not enabled)
       Rails.logger.info "Fetching from URL #{url}"
-      feed_response = RestClient.get url, user_agent: user_agent
+      feed_response = RestClient.get url, user_agent: user_agent, max_redirects: 10
     rescue RestClient::ServiceUnavailable => e
       # try to overcome Cloudflare DDoS protection with a full-featured headless browser
       # Cloudflare sends a 503 error but with a js in the page that after a delay redirects to the actual requested page
