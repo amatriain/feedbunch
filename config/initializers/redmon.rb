@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'redmon/config'
 require 'redmon/redis'
 require 'redmon/app'

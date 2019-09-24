@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Entry-state model. Each instance of this class represents the state (read or unread) of a single entry for a
 # single user.

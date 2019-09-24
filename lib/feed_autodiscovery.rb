@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Class to performs feed autodiscovery on an HTML document.
 

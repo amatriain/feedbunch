@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Configuration for the demo user. It is reset every hour by the ResetDemoUserWorker sidekiq worker.
 
 # If this config is not set to true, the demo user will be disabled. In fact each run of ResetDemoUserWorker will

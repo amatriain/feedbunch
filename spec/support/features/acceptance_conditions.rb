@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Test that a user is logged in, during an acceptance test.
 #

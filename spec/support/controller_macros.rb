@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Login a user using Devise helpers
 #

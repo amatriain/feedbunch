@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Background job to subscribe a user to a feed.
 #

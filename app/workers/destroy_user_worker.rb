@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Background job to destroy a user. This may trigger other destructions in the database
 # (e.g. feeds to which only this user was subscribed).

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # All application models inherit from this class.
 

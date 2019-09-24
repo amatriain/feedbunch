@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # High Voltage gem initializer
 # Used to serve static pages
 

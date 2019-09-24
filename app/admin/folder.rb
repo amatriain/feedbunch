@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ActiveAdmin.register Folder do
   belongs_to :user
   permit_params :title

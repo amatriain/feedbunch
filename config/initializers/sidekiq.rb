@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Replace libc-based DNS resolution with pure Ruby DNS resolution, to avoid locking the ruby interpreter
 require 'resolv-replace'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 context.instance_eval  do
   h2 'Subscribe jobs'
   table_for(jobs, :sortable => true, :class => 'index_table') do |job|

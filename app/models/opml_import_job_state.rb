@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # OpmlImportJobState model. Each instance of this class represents an ocurrence of a user importing subscription data
 # (e.g. from Google Reader).

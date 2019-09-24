@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Background job to import a single feed subscription for a user.
 #

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Special handling of the feeds from www.demonoid.pw
 

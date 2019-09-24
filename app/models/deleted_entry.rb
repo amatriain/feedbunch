@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Deleted Entry model. Each instance of this class represents a feed entry that has been deleted from the
 # database during an automated cleanup.

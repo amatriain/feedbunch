@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Controller to retrieve i18n strings for application tours.
 

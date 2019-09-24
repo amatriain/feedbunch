@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # RefreshFeedJobState model. Each instance of this class represents an ocurrence of a user manually requesting
 # a refresh of a feed

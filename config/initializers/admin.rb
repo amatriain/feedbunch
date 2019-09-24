@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Class to restrict access to Sidekiq web ui to admin users.
 

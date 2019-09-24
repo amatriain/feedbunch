@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # This class has methods related to sending emails to notify a user that an opml import process has finished
 

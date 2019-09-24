@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Class with methods related to managing data created when a user signs up.
 

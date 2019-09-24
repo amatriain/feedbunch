@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Custom sanitizers, saved in config during initialization to avoid rebuilding them every time they are needed.
 # - relaxed sanitizer: lets safe markup pass. Use it for html fragments (e.g. entry contents)
 

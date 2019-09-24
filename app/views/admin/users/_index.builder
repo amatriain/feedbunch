@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 context.instance_eval  do
   table_for(users, :sortable => true, :class => 'index_table') do |folder|
     selectable_column

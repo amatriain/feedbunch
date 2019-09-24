@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Customized version of Devise::RegistrationsController.
 #

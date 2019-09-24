@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Load blacklisted hosts from the YAML config file.
 # If the config file changes the server must be restarted to pick up changes.
 

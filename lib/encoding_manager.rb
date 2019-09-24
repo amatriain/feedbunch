@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Class to manage changes in text encoding.
 

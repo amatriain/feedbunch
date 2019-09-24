@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Output HTML for a locale select form field.
 #

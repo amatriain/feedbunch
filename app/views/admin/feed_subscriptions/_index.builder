@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 context.instance_eval  do
   h2 'Feed subscriptions'
   table_for(feeds, :sortable => true, :class => 'index_table') do |feed_subscription|

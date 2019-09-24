@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Destroy instances of RefreshFeedJobState and SubscribeJobState older than 24 hours.
 # After 24 hours, probably the user is no longer interested in the state of those jobs.

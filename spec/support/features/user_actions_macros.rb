@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Perform the actions a user would do to login.
 #

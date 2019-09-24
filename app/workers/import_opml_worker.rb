@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'opml_import_notifier'
 require 'opml_importer'
 

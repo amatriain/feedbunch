@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 require 'encoding_manager'
 require 'special_feed_manager'

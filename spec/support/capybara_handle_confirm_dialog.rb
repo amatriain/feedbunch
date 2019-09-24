@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Automatically click accept on browser dialogs during acceptance testing.
 #

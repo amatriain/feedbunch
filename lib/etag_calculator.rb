@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # This class has methods to calculate etags based on time.
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'encoding_manager'
 require 'sanitizer'
 require 'url_validator'

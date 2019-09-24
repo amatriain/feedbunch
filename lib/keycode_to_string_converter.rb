@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # This class has methods to convert keycodes to a string representation suitable for displaying to a user.
 

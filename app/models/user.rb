@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'folder_manager'
 require 'url_subscriber'
 require 'feed_refresh_manager'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'entry_manager'
 require 'encoding_manager'
 

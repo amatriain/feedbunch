@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Define superworkers for the sidekiq-superworker gem.
 
 # If subworkers die, superworker is never notified. Setting this option makes the superworker expire

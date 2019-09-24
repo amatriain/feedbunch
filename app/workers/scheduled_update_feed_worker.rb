@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'subscriptions_manager'
 require 'schedule_manager'
 require 'old_entries_cleaner'

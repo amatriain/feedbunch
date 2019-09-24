@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OpmlExportMailer < ActionMailer::Base
   default from: "\"FeedBunch\" <#{Feedbunch::Application.config.admin_email}>"
 

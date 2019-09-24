@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Main controller of the application. Options set here affect the whole application.
 

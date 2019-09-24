@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Declare sidekiq-cron jobs (sidekiq workers that must be run periodically)
 #
 # cron format: (minute hour day-of-month month day-of-week)

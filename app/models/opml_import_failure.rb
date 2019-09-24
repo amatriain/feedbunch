@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # OPML Import Failure model. Each instance of this class represents a feed URL present in the OPML file uploaded
 # by the user but which couldn't be imported (because the feed is unavailable, HTTP error returned, etc).

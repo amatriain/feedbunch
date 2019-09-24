@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Background job to unsubscribe a user from a feed
 #

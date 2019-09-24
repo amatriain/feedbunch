@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Default keyboard shortcuts
 Rails.application.configure do
 

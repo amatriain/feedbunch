@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Output HTML for an email input form field.
 #

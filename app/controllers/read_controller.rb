@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Controller to access the main application page
 

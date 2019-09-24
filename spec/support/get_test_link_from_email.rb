@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Methods to convert absolute URLs in links into relative URLs.
 # This is necessary because the URLs in emails sent during testing have host: localhost and port: 3000,
 # but port 3000 in localhost is not really made available by Capybara. We need to use a relative

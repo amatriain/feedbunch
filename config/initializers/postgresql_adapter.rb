@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copied from https://github.com/discourse/discourse/blob/master/lib/freedom_patches/postgresql_adapter.rb
 #
 # Awaiting decision on https://github.com/rails/rails/issues/31190

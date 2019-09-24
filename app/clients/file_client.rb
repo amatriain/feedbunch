@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Class to manage saving and deleting files from the filesystem.
 # Files are uploaded and deleted from the "uploads" folder under the Rails root.

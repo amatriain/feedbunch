@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # SubscribeJobState model. Each instance of this class represents an ocurrence of a user trying to
 # subscribe to a feed.

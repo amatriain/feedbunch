@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # Class with methods related to deleting old entries from the database.
 
