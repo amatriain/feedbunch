@@ -4,6 +4,10 @@ ruby '2.6.5'
 
 gem 'rails', '~> 5.2.0'
 
+# Avoid updating to sprockets 4 for now
+# It completely breaks the asset pipeline in this project
+gem 'sprockets', '~> 3.7.2'
+
 # Sanitizer to replace poorly maintained new rails sanitizer
 gem 'sanitize'
 gem 'loofah'
