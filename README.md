@@ -7,6 +7,10 @@ A simple and elegant feed reader.
 [![Code Climate](https://codeclimate.com/github/amatriain/feedbunch.png)](https://codeclimate.com/github/amatriain/feedbunch)
 [![Inline docs](http://inch-ci.org/github/amatriain/feedbunch.png)](http://inch-ci.org/github/amatriain/feedbunch)
 
+## Important
+This project is now hosted in [Gitlab](https://gitlab.com/amatriain/feedbunch). If you're reading this somewhere else
+(e.g. in Github) be aware that it is a read-only mirror.
+
 ## Overview
 
 Feedbunch is a feed reader, a web application that allows users to subscribe and read Atom and RSS feeds. It is offered
