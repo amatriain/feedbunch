@@ -68,7 +68,7 @@ class EncodingManager
     converted_text = text
 
     unless text.nil?
-      converted_text = text.encode 'UTF-8', {:invalid => :replace, :undef => :replace, :replace => '?'}
+      converted_text = text.encode 'UTF-8', :invalid => :replace, :undef => :replace, :replace => '?'
     end
 
     return converted_text
