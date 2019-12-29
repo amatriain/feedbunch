@@ -353,7 +353,7 @@ GEM
       rspec-expectations (~> 3.8.0)
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
-    rspec-retry (0.6.1)
+    rspec-retry (0.6.2)
       rspec-core (> 3.3)
     rspec-support (3.8.3)
     ruby-prof (1.0.0)
