@@ -211,7 +211,7 @@ FEED_XML
       @entry1.url = 'https://play.podtrac.com/npr-510289/npr.mc.tritondigital.com/NPR_510289/media/anon.npr-podcasts/podcast/510289/365828514/npr_365828514.mp3?orgId=1&d=1495&p=510289&story=365828514&t=podcast&e=365828514&ft=pod&f=510289'
       @entry1.summary = %{&lt;p&gt;Note: Today's show is a rerun. It originally ran in July 2013. U.S. citizens who want to buy stuff from North Korea have to write a letter to the U.S. government asking for special permission. As regular listeners know, we're sort of obsessed with North Korea. So we decided to try to get those letters. We filed a Freedom of Information Act request. And we got a stack of heavily redacted letters. On today's show: we try to figure out who sent the letters, why they wanted to do business with North Korea, and what that tells us about the North Korean economy.&lt;/p&gt;}
       @entry1.published = 'Fri, 21 Nov 2014 21:03:42 -0500'
-      @entry1.guid = 'http://podcastdownload.npr.org/anon.npr-podcasts/podcast/510289/365828514/npr_365828514.mp3'
+      @entry1.guid = '510289/365828514/npr_365828514.mp3'
       @entry1.author = 'NPR'
 
       @entry2 = FactoryBot.build :entry
