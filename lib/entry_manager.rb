@@ -30,8 +30,8 @@ class EntryManager
     entries.reverse_each do |entry_parsed|
 
       begin
-        set_entry_encoding entry_parsed, encoding
         guid = entry_parsed.entry_id || entry_parsed.url
+        set_entry_encoding entry_parsed, encoding
         if guid.blank?
           Rails.logger.warn "Received entry without guid or url for feed #{feed.id} - #{feed.title}. Skipping it."
           next
@@ -117,11 +117,15 @@ class EntryManager
 
     # Some feeds (e.g. itunes podcasts) do not have a url tag in entries, but an enclosure tag with an url attribute
     # instead. We use the enclosure url in these cases.
-    if entry.url.blank? && entry.respond_to?(:enclosure_url) && UrlValidator.valid_entry_url?(entry.enclosure_url)
+    if (entry.url.blank? || !UrlValidator.valid_entry_url?(entry.url)) &&
+        entry.respond_to?(:enclosure_url) &&
+        UrlValidator.valid_entry_url?(entry.enclosure_url)
       url = entry.enclosure_url
     # Some itunes feeds are mistaken by Feedjira as Feedburner feeds. In this case the enclosure tag ends up in the
     # entry.image attribute
-    elsif entry.url.blank? && entry.respond_to?(:image) && UrlValidator.valid_entry_url?(entry.image)
+    elsif (entry.url.blank? || !UrlValidator.valid_entry_url?(entry.url)) &&
+        entry.respond_to?(:image) &&
+        UrlValidator.valid_entry_url?(entry.image)
       url = entry.image
     else
       url = entry.url
