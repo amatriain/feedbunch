@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+#
+require "capistrano/scm/git"
+install_plugin Capistrano::SCM::Git
 
 #############################################################
 #	Application
@@ -63,7 +66,6 @@ set :linked_dirs, %w{
 #	Git
 #############################################################
 
-set :scm, :git
 set :repo_url,  'git@gitlab.com:amatriain/feedbunch.git'
 # Default is to deploy master, but it can be overriden with REVISION or BRANCH_NAME env variables
 set :branch, ENV['REVISION'] || ENV['BRANCH_NAME'] || 'master'
@@ -228,7 +230,4 @@ namespace :deploy do
 
   # after deploying, restart the app
   after 'deploy:publishing', 'deploy:restart'
-
-  # clean up old releases on each deploy, keep only 5 most recent releases
-  after 'deploy:restart', 'deploy:cleanup'
 end
