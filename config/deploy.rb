@@ -1,7 +1,4 @@
 # frozen_string_literal: true
-#
-require "capistrano/scm/git"
-install_plugin Capistrano::SCM::Git
 
 #############################################################
 #	Application
