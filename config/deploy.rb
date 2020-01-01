@@ -7,12 +7,13 @@
 set :application, 'feedbunch'
 
 #############################################################
-#	RVM
+#	Rbenv
 #############################################################
 
-set :rvm_type, :user
-set :rvm_ruby_version, 'ruby-2.7.0'
-set :rvm_user_path, '~/.rvm'
+set :rbenv_type, :user
+set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
+set :rbenv_map_bins, %w{rake gem bundle ruby rails}
+set :rbenv_roles, :all # default value
 
 #############################################################
 #	Settings
