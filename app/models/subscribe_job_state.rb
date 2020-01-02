@@ -22,7 +22,7 @@ class SubscribeJobState < ApplicationRecord
   belongs_to :user
   validates :user_id, presence: true
 
-  belongs_to :feed
+  belongs_to :feed, optional: true
   validate :feed_id_present_only_if_job_successful
 
   validates :state, presence: true, inclusion: {in: [RUNNING, ERROR, SUCCESS]}

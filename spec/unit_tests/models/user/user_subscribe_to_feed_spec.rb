@@ -124,6 +124,7 @@ describe User, type: :model do
         expect(SubscribeUserWorker.jobs.size).to eq 0
 
         # a job state ERROR is created
+        expect(SubscribeJobState.count).to eq 1
         job_state = SubscribeJobState.first
         expect(job_state.user_id).to eq @user.id
         expect(job_state.fetch_url).to eq blacklisted_url
