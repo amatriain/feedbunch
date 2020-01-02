@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Switched from RVM to Rbenv to manage Ruby versions.
+- Use built-in redis cache for rails view fragments instead of redis-rails gem
 
 ## [1.0.1] - 2019-12-31
 ### Changed
