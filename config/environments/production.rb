@@ -62,7 +62,7 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "feedbunch_#{Rails.env}"
 
   # Use Redis as cache backend.
-  config.cache_store = :redis_store, Rails.application.secrets.redis_cache, {compress: true}
+  config.cache_store = :redis_cache_store, {url: Rails.application.secrets.redis_cache, compress: true}
 
   config.action_mailer.perform_caching = false
 

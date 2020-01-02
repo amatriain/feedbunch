@@ -28,9 +28,6 @@ gem 'ruby-prof'
 # Serve the app with Puma
 gem 'puma'
 
-# Use Redis for Rails caching
-gem 'redis-rails'
-
 # To more easily serve static pages
 gem 'high_voltage'
 
