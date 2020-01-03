@@ -20,14 +20,12 @@ list.keys.each do |url|
 
   fetcher = list[url]['fetcher']
   if fetcher.present?
-    fetcher_class = fetcher.constantize
-    special_feeds_fetchers[special_host] = fetcher_class
+    special_feeds_fetchers[special_host] = fetcher
   end
 
   handler = list[url]['handler']
   if handler.present?
-    handler_class = handler.constantize
-    special_feeds_handlers[special_host] = handler_class
+    special_feeds_handlers[special_host] = handler
   end
 end
 
