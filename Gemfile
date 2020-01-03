@@ -122,7 +122,7 @@ group :test, :development do
   gem 'bullet'
 
   # Testing framework
-  gem 'rspec-rails'
+  gem 'rspec-rails',  '~> 4.0.0.beta3'
 
   # Factories instead of DB fixtures during testing
   gem 'factory_bot_rails'
