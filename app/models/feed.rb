@@ -130,7 +130,7 @@ class Feed < ApplicationRecord
 
   def self.url_variants_feed(feed_url)
     # Ensure that the passed url has an http:/// or https:// uri-scheme
-    url = URLNormalizer.normalize_feed_url feed_url
+    url = UrlNormalizer.normalize_feed_url feed_url
     # Remove leading and trailing whitespace, to avoid confusion when detecting trailing slashes
     stripped_url = url.strip
     Rails.logger.info "Searching for matching feeds for url #{stripped_url}"
@@ -282,8 +282,8 @@ class Feed < ApplicationRecord
   # Fix problems with URLs, by URL-encoding any illegal characters.
 
   def fix_urls
-    self.url = URLNormalizer.normalize_feed_url self.url if self.url.present?
-    self.fetch_url = URLNormalizer.normalize_feed_url self.fetch_url if self.fetch_url.present?
+    self.url = UrlNormalizer.normalize_feed_url self.url if self.url.present?
+    self.fetch_url = UrlNormalizer.normalize_feed_url self.fetch_url if self.fetch_url.present?
   end
 
   ##

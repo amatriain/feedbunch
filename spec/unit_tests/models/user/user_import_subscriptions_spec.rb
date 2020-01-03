@@ -48,7 +48,7 @@ describe User, type: :model do
       end
 
       it 'saves timestamped file in uploads folder' do
-        expect(Feedbunch::Application.config.uploads_manager).to receive(:save).with @user.id, OPMLImporter::FOLDER, @filename, @opml_data
+        expect(Feedbunch::Application.config.uploads_manager).to receive(:save).with @user.id, OpmlImporter::FOLDER, @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 
@@ -72,7 +72,7 @@ describe User, type: :model do
       end
 
       it 'saves timestamped file in uploads folder' do
-        expect(Feedbunch::Application.config.uploads_manager).to receive(:save).with @user.id, OPMLImporter::FOLDER, @filename, @opml_data
+        expect(Feedbunch::Application.config.uploads_manager).to receive(:save).with @user.id, OpmlImporter::FOLDER, @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 
@@ -95,7 +95,7 @@ describe User, type: :model do
       end
 
       it 'saves timestamped file in uploads folder' do
-        expect(Feedbunch::Application.config.uploads_manager).to receive(:save).with @user.id, OPMLImporter::FOLDER, @filename, @opml_data
+        expect(Feedbunch::Application.config.uploads_manager).to receive(:save).with @user.id, OpmlImporter::FOLDER, @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 
@@ -118,7 +118,7 @@ describe User, type: :model do
       end
 
       it 'saves timestamped file in uploads folder' do
-        expect(Feedbunch::Application.config.uploads_manager).to receive(:save).with @user.id, OPMLImporter::FOLDER, @filename, @opml_data
+        expect(Feedbunch::Application.config.uploads_manager).to receive(:save).with @user.id, OpmlImporter::FOLDER, @filename, @opml_data
         @user.import_subscriptions @data_file
       end
 

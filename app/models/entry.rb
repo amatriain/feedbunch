@@ -255,7 +255,7 @@ class Entry < ApplicationRecord
     html_doc.css('img').each do |img|
       # prepare image for lazy loading
       unless img['src'] == LOADING_IMAGE_GIF
-        src = URLNormalizer.normalize_entry_url img['src'], self
+        src = UrlNormalizer.normalize_entry_url img['src'], self
         img['src'] = LOADING_IMAGE_GIF
         img['data-src'] = src
       end
@@ -299,7 +299,7 @@ class Entry < ApplicationRecord
   # Fix problems with the entry URL, by normalizing the URL and converting relative URLs to absolute ones.
 
   def fix_url
-    self.url = URLNormalizer.normalize_entry_url self.url, self
+    self.url = UrlNormalizer.normalize_entry_url self.url, self
   end
 
   ##

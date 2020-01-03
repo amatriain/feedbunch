@@ -35,11 +35,11 @@ class ExportSubscriptionsWorker
     end
 
     # Export and save the OPML file (actually XML)
-    opml = OPMLExporter.export user
+    opml = OpmlExporter.export user
 
-    filename = OPMLExporter::FILENAME
+    filename = OpmlExporter::FILENAME
     # Save the OPML file in permanent storage for later retrieval.
-    Feedbunch::Application.config.uploads_manager.save user_id, OPMLExporter::FOLDER, filename, opml
+    Feedbunch::Application.config.uploads_manager.save user_id, OpmlExporter::FOLDER, filename, opml
 
     # Update job state
     user.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,

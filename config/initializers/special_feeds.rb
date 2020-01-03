@@ -15,7 +15,7 @@ special_feeds_fetchers = {}
 special_feeds_handlers = {}
 
 list.keys.each do |url|
-  special_url = URLNormalizer.normalize_feed_url(url).strip.downcase
+  special_url = UrlNormalizer.normalize_feed_url(url).strip.downcase
   special_host = Addressable::URI.parse(special_url).host
 
   fetcher = list[url]['fetcher']

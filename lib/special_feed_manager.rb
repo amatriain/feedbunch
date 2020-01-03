@@ -72,7 +72,7 @@ class SpecialFeedManager
 
     # Add uri-scheme if missing, convert to downcase and remove extra whitespaces so that it can be parsed
     # to extract the host
-    compare_url = URLNormalizer.normalize_feed_url(url).strip.downcase
+    compare_url = UrlNormalizer.normalize_feed_url(url).strip.downcase
     compare_host = Addressable::URI.parse(compare_url).host
 
     if type == FETCHER

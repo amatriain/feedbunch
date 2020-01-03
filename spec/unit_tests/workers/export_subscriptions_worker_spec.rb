@@ -98,15 +98,15 @@ OPML_DOCUMENT
   it 'uploads correct OPML file' do
     expect(Feedbunch::Application.config.uploads_manager).to receive(:save) do |user_id, folder, filename, content|
       expect(user_id).to eq @user.id
-      expect(folder).to eq OPMLExporter::FOLDER
-      expect(filename).to eq OPMLExporter::FILENAME
+      expect(folder).to eq OpmlExporter::FOLDER
+      expect(filename).to eq OpmlExporter::FILENAME
       expect(content).to eq @opml
     end
     ExportSubscriptionsWorker.new.perform @user.id
   end
 
   it 'sets data export state to ERROR if there is a problem doing the export' do
-    allow(OPMLExporter).to receive(:export).and_raise StandardError.new
+    allow(OpmlExporter).to receive(:export).and_raise StandardError.new
     expect {ExportSubscriptionsWorker.new.perform @user.id}.to raise_error StandardError
     expect(@user.reload.opml_export_job_state.state).to eq OpmlExportJobState::ERROR
   end
@@ -124,7 +124,7 @@ OPML_DOCUMENT
     end
 
     it 'sends notification if finished with an error' do
-      allow(OPMLExporter).to receive(:export).and_raise StandardError.new
+      allow(OpmlExporter).to receive(:export).and_raise StandardError.new
       expect {ExportSubscriptionsWorker.new.perform @user.id}.to raise_error StandardError
       mail_should_be_sent 'There has been an error exporting your feed subscriptions from FeedBunch', to: @user.email
     end

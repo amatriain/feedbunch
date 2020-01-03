@@ -20,25 +20,25 @@ describe ImportSubscriptionWorker do
   context 'validations' do
 
     it 'does nothing if the job state does not exist' do
-      expect(URLSubscriber).not_to receive :subscribe
+      expect(UrlSubscriber).not_to receive :subscribe
       ImportSubscriptionWorker.new.perform 1234567890, @url
     end
 
     it 'does nothing if the opml_import_job_state has state NONE' do
       @opml_import_job_state.update state: OpmlImportJobState::NONE
-      expect(URLSubscriber).not_to receive :subscribe
+      expect(UrlSubscriber).not_to receive :subscribe
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
     end
 
     it 'does nothing if the opml_import_job_state has state ERROR' do
       @opml_import_job_state.update state: OpmlImportJobState::ERROR
-      expect(URLSubscriber).not_to receive :subscribe
+      expect(UrlSubscriber).not_to receive :subscribe
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
     end
 
     it 'does nothing if the opml_import_job_state has state SUCCESS' do
       @opml_import_job_state.update state: OpmlImportJobState::SUCCESS
-      expect(URLSubscriber).not_to receive :subscribe
+      expect(UrlSubscriber).not_to receive :subscribe
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
     end
 
@@ -77,7 +77,7 @@ describe ImportSubscriptionWorker do
     end
 
     it 'increments count when finishes with an error' do
-      allow(URLSubscriber).to receive(:subscribe).and_raise StandardError.new
+      allow(UrlSubscriber).to receive(:subscribe).and_raise StandardError.new
       expect(@opml_import_job_state.processed_feeds).to eq 0
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
       expect(@opml_import_job_state.reload.processed_feeds).to eq 1
@@ -134,7 +134,7 @@ describe ImportSubscriptionWorker do
   context 'failed URLs during import' do
 
     it 'creates OpmlImportFailure instance if an error is raised' do
-      allow(URLSubscriber).to receive(:subscribe).and_raise StandardError.new
+      allow(UrlSubscriber).to receive(:subscribe).and_raise StandardError.new
       expect(OpmlImportFailure.all.count).to eq 0
       ImportSubscriptionWorker.new.perform @opml_import_job_state.id, @url
       expect(OpmlImportFailure.all.count).to eq 1

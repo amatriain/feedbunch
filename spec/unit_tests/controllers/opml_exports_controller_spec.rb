@@ -66,7 +66,7 @@ describe Api::OpmlExportsController, type: :controller do
   context 'GET download' do
 
     before :each do
-      @filename = OPMLExporter::FILENAME
+      @filename = OpmlExporter::FILENAME
       @opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                  state: OpmlExportJobState::SUCCESS,
                                                  filename: @filename,

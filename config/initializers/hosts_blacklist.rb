@@ -10,7 +10,7 @@ list = YAML.load_file 'config/url_blacklist.yml'
 # We actually store the host for each URL in the blacklist, which is what we're actually interested in
 blacklist = []
 list['aede_urls'].each do |url|
-  blacklisted_url = URLNormalizer.normalize_feed_url(url).strip.downcase
+  blacklisted_url = UrlNormalizer.normalize_feed_url(url).strip.downcase
   blacklisted_host = Addressable::URI.parse(blacklisted_url).host
   blacklist << blacklisted_host
 end

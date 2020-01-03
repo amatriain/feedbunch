@@ -7,7 +7,7 @@ require 'nokogiri'
 ##
 # This class manages import of subscription data from another feed aggregator into Feedbunch
 
-class OPMLImporter
+class OpmlImporter
 
   # Class constant for the directory in which OPML export files will be saved.
   FOLDER = 'opml_imports'

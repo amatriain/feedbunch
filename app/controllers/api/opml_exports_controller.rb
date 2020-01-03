@@ -73,7 +73,7 @@ class Api::OpmlExportsController < ApplicationController
 
   def download
     @data = current_user.get_opml_export
-    send_data @data, filename: OPMLExporter::FILENAME, type: 'application/xml', disposition: 'attachment', status: '200'
+    send_data @data, filename: OpmlExporter::FILENAME, type: 'application/xml', disposition: 'attachment', status: '200'
   rescue => e
     Rails.logger.error "Error downloading OPML export file for user #{current_user.email} - #{current_user.name}"
     Rails.logger.error e.message

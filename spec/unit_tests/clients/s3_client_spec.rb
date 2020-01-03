@@ -8,7 +8,7 @@ describe S3Client do
     @user = FactoryBot.create :user
     @file_content = 'some_file_content'
     @filename = 'filename.txt'
-    @upload_folder = OPMLImporter::FOLDER
+    @upload_folder = OpmlImporter::FOLDER
     @s3_key = "#{@upload_folder}/#{@user.id.to_s}/#{@filename}"
 
     # Substitute the AWS S3 object that makes the call to the AWS API with

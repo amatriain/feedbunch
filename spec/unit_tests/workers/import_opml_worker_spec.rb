@@ -94,18 +94,18 @@ describe ImportOpmlWorker do
   context 'OPML file management' do
 
     it 'reads uploaded file' do
-      expect(Feedbunch::Application.config.uploads_manager).to receive(:read).with @user.id, OPMLImporter::FOLDER, @filename
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:read).with @user.id, OpmlImporter::FOLDER, @filename
       ImportOpmlWorker.new.perform @filename, @user.id
     end
 
     it 'deletes file after finishing successfully' do
-      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user.id, OPMLImporter::FOLDER, @filename
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user.id, OpmlImporter::FOLDER, @filename
       ImportOpmlWorker.new.perform @filename, @user.id
     end
 
     it 'deletes file after finishing with an error' do
       allow_any_instance_of(User).to receive(:opml_import_job_state).and_raise StandardError.new
-      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user.id, OPMLImporter::FOLDER, @filename
+      expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).with @user.id, OpmlImporter::FOLDER, @filename
 
       expect {ImportOpmlWorker.new.perform @filename, @user.id}.to raise_error StandardError
     end

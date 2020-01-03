@@ -60,7 +60,7 @@ describe 'export subscriptions', type: :feature do
 
     it 'shows success message', js: true do
       @user.reload.opml_export_job_state.update! state: OpmlExportJobState::SUCCESS,
-                                                 filename: OPMLExporter::FILENAME,
+                                                 filename: OpmlExporter::FILENAME,
                                                  export_date: Time.zone.now
 
       visit read_path
@@ -69,7 +69,7 @@ describe 'export subscriptions', type: :feature do
 
     it 'changes message when export finishes successfully', js: true do
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
-                                                filename: OPMLExporter::FILENAME,
+                                                filename: OpmlExporter::FILENAME,
                                                 export_date: Time.zone.now
       expect(page).to have_content 'Your feed subscriptions have been successfully exported'
     end
@@ -77,7 +77,7 @@ describe 'export subscriptions', type: :feature do
     it 'shows alert when export finishes successfully', js: true do
       read_feed @feed, @user
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
-                                                filename: OPMLExporter::FILENAME,
+                                                filename: OpmlExporter::FILENAME,
                                                 export_date: Time.zone.now
       should_show_alert 'export-process-success'
     end
@@ -117,7 +117,7 @@ describe 'export subscriptions', type: :feature do
 
     it 'hides import data alert when the export finished successfully', js: true do
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
-                                                filename: OPMLExporter::FILENAME,
+                                                filename: OpmlExporter::FILENAME,
                                                 export_date: Time.zone.now
       visit read_path
       expect(page).to have_content 'Your feed subscriptions were successfully exported'
@@ -148,7 +148,7 @@ describe 'export subscriptions', type: :feature do
       allow(Feedbunch::Application.config.uploads_manager).to receive(:read).and_return @opml_data
       allow(Feedbunch::Application.config.uploads_manager).to receive(:exists?).and_return true
       @user.reload.opml_export_job_state.update state: OpmlExportJobState::SUCCESS,
-                                                filename: OPMLExporter::FILENAME,
+                                                filename: OpmlExporter::FILENAME,
                                                 export_date: Time.zone.now
     end
 

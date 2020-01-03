@@ -3,7 +3,7 @@
 ##
 # Class with methods related to normalizing URLs.
 
-class URLNormalizer
+class UrlNormalizer
 
   ##
   # Normalize the passed URL:

@@ -49,11 +49,11 @@ class ImportOpmlWorker
       return
     end
 
-    OPMLImporter.process_opml filename, user
+    OpmlImporter.process_opml filename, user
   rescue => e
     OPMLImportNotifier.notify_error user, e
   ensure
-    Feedbunch::Application.config.uploads_manager.delete user_id, OPMLImporter::FOLDER, filename
+    Feedbunch::Application.config.uploads_manager.delete user_id, OpmlImporter::FOLDER, filename
   end
 
 end

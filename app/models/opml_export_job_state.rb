@@ -76,7 +76,7 @@ class OpmlExportJobState < ApplicationRecord
 
   def delete_opml_file
     if self.filename.present?
-      Feedbunch::Application.config.uploads_manager.delete self.user_id, OPMLExporter::FOLDER, self.filename
+      Feedbunch::Application.config.uploads_manager.delete self.user_id, OpmlExporter::FOLDER, self.filename
     end
   end
 end

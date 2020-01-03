@@ -214,10 +214,10 @@ class User < ApplicationRecord
   end
 
   ##
-  # Subscribe to a feed. See URLSubscriber#subscribe
+  # Subscribe to a feed. See UrlSubscriber#subscribe
 
   def subscribe(url)
-    subscribed_feed = URLSubscriber.subscribe url, self
+    subscribed_feed = UrlSubscriber.subscribe url, self
   end
 
   ##
@@ -228,10 +228,10 @@ class User < ApplicationRecord
   end
 
   ##
-  # Enqueue a job to subscribe to a feed. See URLSubscriber#enqueue_subscribe_job
+  # Enqueue a job to subscribe to a feed. See UrlSubscriber#enqueue_subscribe_job
 
   def enqueue_subscribe_job(url)
-    URLSubscriber.enqueue_subscribe_job url, self
+    UrlSubscriber.enqueue_subscribe_job url, self
   end
 
   ##
@@ -242,7 +242,7 @@ class User < ApplicationRecord
   end
 
   ##
-  # Enqueue a job to unsubscribe from a feed. See URLSubscriber#enqueue_unsubscribe_job
+  # Enqueue a job to unsubscribe from a feed. See UrlSubscriber#enqueue_unsubscribe_job
 
   def enqueue_unsubscribe_job(feed)
     SubscriptionsManager.enqueue_unsubscribe_job feed, self
@@ -257,26 +257,26 @@ class User < ApplicationRecord
 
   ##
   # Import an OPML (optionally zipped) with subscription data, and subscribe the user to the feeds
-  # in it. See OPMLImporter#enqueue_import_job
+  # in it. See OpmlImporter#enqueue_import_job
 
   def import_subscriptions(file)
-    OPMLImporter.enqueue_import_job file, self
+    OpmlImporter.enqueue_import_job file, self
   end
 
   ##
   # Export an OPML file with the user's subscriptions.
-  # See OPMLExporter#enqueue_export_job
+  # See OpmlExporter#enqueue_export_job
 
   def export_subscriptions
-    OPMLExporter.enqueue_export_job self
+    OpmlExporter.enqueue_export_job self
   end
 
   ##
   # Get a previously exported OPML file.
-  # See OPMLExporter.get_export
+  # See OpmlExporter.get_export
 
   def get_opml_export
-    OPMLExporter.get_export self
+    OpmlExporter.get_export self
   end
 
   ##

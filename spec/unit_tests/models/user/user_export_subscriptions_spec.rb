@@ -32,7 +32,7 @@ describe User, type: :model do
       allow(Feedbunch::Application.config.uploads_manager).to receive(:exists?).and_return true
       expect(Feedbunch::Application.config.uploads_manager).to receive(:delete).once do |user_id, folder, file|
         expect(user_id).to eq @user.id
-        expect(folder).to eq OPMLExporter::FOLDER
+        expect(folder).to eq OpmlExporter::FOLDER
         expect(file).to eq filename
       end
 
@@ -67,7 +67,7 @@ describe User, type: :model do
   context 'return export file' do
 
     before :each do
-      @filename = OPMLExporter::FILENAME
+      @filename = OpmlExporter::FILENAME
       @opml_export_job_state = FactoryBot.build :opml_export_job_state, user_id: @user.id,
                                                  state: OpmlExportJobState::SUCCESS,
                                                  filename: @filename,
