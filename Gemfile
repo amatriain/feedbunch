@@ -101,6 +101,8 @@ group :development do
 
   # Irb-like console in error pages, new in Rails 4.2
   gem 'web-console'
+
+  gem 'listen'
 end
 
 group :test, :development do
