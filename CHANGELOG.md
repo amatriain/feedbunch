@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Updated to Rails 6
 - Switched from RVM to Rbenv to manage Ruby versions.
 - Use built-in redis cache for rails view fragments instead of redis-rails gem
 
