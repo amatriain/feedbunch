@@ -15,10 +15,7 @@ environment = ENV.fetch('RAILS_ENV') { 'development' }
 #
 if environment != 'production'
   port        ENV.fetch('PORT') { 3000 }
-end
-
-# Configuration only for production environment
-if environment == 'production'
+else
   # Bind to a unix socket instead of opening a port (a nginx server opens the port instead)
   bind 'unix:///tmp/feedbunch-puma.sock'
 
@@ -31,9 +28,6 @@ if environment == 'production'
   # Save a pidfile so init system can manage service
   pidfile '/tmp/feedbunch-puma.pid'
 end
-
-# Specifies the `pidfile` that Puma will use.
-pidfile '/tmp/feedbunch-puma.pid'
 
 # Specifies the number of `workers` to boot in clustered mode.
 # Workers are forked web server processes. If using threads and workers together
