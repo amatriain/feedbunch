@@ -46,9 +46,6 @@ module Feedbunch
     # Use Rack::Deflater middleware to compress server responses when the client supports it.
     config.middleware.use Rack::Deflater
 
-    # In SQLite represent booleans as 1/0 integers instead of t/f strings (which is deprecated)
-    config.active_record.sqlite3.represent_boolean_as_integer = true
-
     # Rails generators generate FactoryGirl factories instead of fixtures
     config.generators do |g|
       g.fixture_replacement :factory_girl
