@@ -2,8 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.7.0'
 
-#gem 'rails', '~> 5.2.0'
-gem 'rails', '6.0.0'
+gem 'rails', '~> 6.0.0'
 
 # Avoid updating to sprockets 4 for now
 # It completely breaks the asset pipeline in this project
