@@ -5,10 +5,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+Nothing so far.
+
+## [1.1.1] - 2020-01-06
 ### Changed
-- Updated to Rails 6
-- Switched from RVM to Rbenv to manage Ruby versions.
-- Use built-in redis cache for rails view fragments instead of redis-rails gem
+- Updated config files to align with Rails 6 defaults.
+
+## [1.1.0] - 2020-01-06
+### Changed
+- Updated Rails to 6.0.0.
+
+## [1.0.3] - 2020-01-02
+### Changed
+- Use built-in redis cache store, instead of redis-rails gem.
+
+## [1.0.2] - 2020-01-02
+### Changed
+- Use rbenv instead of rvm to manage project rubies.
+- Updated Rails to 5.2.4.1.
 
 ## [1.0.1] - 2019-12-31
 ### Changed
