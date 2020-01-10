@@ -1,5 +1,4 @@
-# frozen_string_literal: true
-
+require 'file_client'
 require 'bullet'
 
 Rails.application.configure do

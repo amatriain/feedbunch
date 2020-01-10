@@ -1,3 +1,4 @@
+require 'file_client'
 require 'bullet'
 
 Rails.application.configure do

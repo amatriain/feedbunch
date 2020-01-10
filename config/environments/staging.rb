@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+require 's3_client'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
