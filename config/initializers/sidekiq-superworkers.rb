@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'import_subscription_worker'
+require 'notify_import_finished_worker'
+
 # Define superworkers for the sidekiq-superworker gem.
 
 # If subworkers die, superworker is never notified. Setting this option makes the superworker expire
