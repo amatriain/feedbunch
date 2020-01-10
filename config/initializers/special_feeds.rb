@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'url_normalizer'
+
 # Load feeds that need special fetching and handling from the YAML config file.
 # If the config file changes the server must be restarted to pick up changes.
 
@@ -15,7 +17,7 @@ special_feeds_fetchers = {}
 special_feeds_handlers = {}
 
 list.keys.each do |url|
-  special_url = UrlNormalizer.normalize_feed_url(url).strip.downcase
+  special_url = UrlNormalizer.normalize_feed_url(url).downcase
   special_host = Addressable::URI.parse(special_url).host
 
   fetcher = list[url]['fetcher']
