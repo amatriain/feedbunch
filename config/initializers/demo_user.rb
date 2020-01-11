@@ -30,6 +30,6 @@ comic_feeds = %w(http://xkcd.com/atom.xml
 webdev_feeds = %w(https://blog.angular.io/
                   http://blog.getbootstrap.com/
                   http://weblog.rubyonrails.org/)
-Feedbunch::Application.config.demo_subscriptions = {Folder::NO_FOLDER => no_folder_feeds,
+Feedbunch::Application.config.demo_subscriptions = {'none' => no_folder_feeds,
                                                     'comics' => comic_feeds,
                                                     'web development' => webdev_feeds}
