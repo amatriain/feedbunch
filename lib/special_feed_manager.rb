@@ -86,8 +86,8 @@ class SpecialFeedManager
     special_urls.each do |s|
       # Use regex to see if passed host matches or is subdomain of the blacklisted url's host
       if /\A(.+\.)*#{s}\z/ =~ compare_host
-        special_class = specials_list[s]
-        Rails.logger.info "URL #{url} matches special host #{s}, special #{type} class #{special_class}"
+        special_class = specials_list[s].constantize
+        Rails.logger.info "URL #{url} matches special host #{s}, special #{type} class #{special_class.to_s}"
         break
       end
     end
