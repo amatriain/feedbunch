@@ -96,7 +96,7 @@ class FeedClient
 
     # If the response was retrieved from the cache, do not process it (entries are already in the db)
     if http_caching
-      headers = feed_response&.headers
+      headers = feed_response.try :headers
       if headers.present?
         x_rack_cache = headers[:x_rack_cache]
         if x_rack_cache.present?
@@ -174,10 +174,6 @@ class FeedClient
             browser.find_element :xpath, '//rss|//feed'
           }
           feed_response = browser.page_source
-          # some methods necessary later, to emulate a RestClient response
-          feed_response.define_singleton_method :headers do
-            return []
-          end
         rescue Selenium::WebDriver::Error::TimeOutError => eTimeout
           Rails.logger.info "Cannot access URL #{url} behind Cloudflare DDoS protection even with a full browser"
           # if after all the full browser cannot get the feed, raise the original error returned to RestClient
@@ -250,7 +246,7 @@ class FeedClient
     return nil if feed_response.nil?
 
     # Detect encoding from HTTP content-type header, in case RestClient has detected the wrong encoding
-    headers = feed_response&.headers
+    headers = feed_response.try :headers
     content_type = headers[:content_type] unless headers.blank?
     charset_http = content_type.to_s[/\bcharset[ ]*=[ '"]*([^ '";]+)['";]*/, 1] unless content_type.blank?
 

@@ -5,11 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-Nothing so far.
+### Fixed
+- Intermittent error (undefined method 'headers' for Array) when subscribing to a feed.
 
 ## [1.1.3] - 2020-01-23
 ### Fixed
-- Error when fetching special feeds (String was used instead of the actual class)
+- Error when fetching special feeds (String was used instead of the actual class).
 
 ## [1.1.2] - 2020-01-12
 ### Changed
