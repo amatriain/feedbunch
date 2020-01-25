@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Nothing so far.
 
+## [1.1.3] - 2020-01-23
 ### Fixed
 - Error when fetching special feeds (String was used instead of the actual class)
 
-## [1.1.1] - 2020-01-12
+## [1.1.2] - 2020-01-12
+### Changed
 - Upgraded to Rails 6.0.2.1.
 - Removed warnings during app initialization related to Zeitwerk.
 
