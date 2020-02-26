@@ -265,7 +265,7 @@ GEM
       nokogiri (~> 1.8, >= 1.8.4)
     orm_adapter (0.5.0)
     ox (2.13.2)
-    pg (1.2.0)
+    pg (1.2.2)
     pghero (2.4.1)
       activerecord (>= 5)
     polyamorous (2.3.2)
