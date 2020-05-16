@@ -261,7 +261,7 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
-    nokogumbo (2.0.1)
+    nokogumbo (2.0.2)
       nokogiri (~> 1.8, >= 1.8.4)
     orm_adapter (0.5.0)
     ox (2.13.2)
