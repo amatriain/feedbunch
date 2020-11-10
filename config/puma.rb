@@ -20,7 +20,7 @@ else
   bind 'unix:///tmp/feedbunch-puma.sock'
 
   # Set release directory so puma can pick up changes when running phased restarts
-  directory '/var/rails/feedbunch/current'
+  directory ENV.fetch('APP_DIR') { '/var/rails/feedbunch/current' }
 
   # Redirect output to logfile in production
   stdout_redirect '/var/log/feedbunch-puma.log'
