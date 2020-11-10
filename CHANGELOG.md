@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Nothing so far
 
+## [1.3.0] - 2020-10-08
+### Changed
+- Updated ruby version to 2.7.2
+- Updated rails to 6.0.3.2
+
+## [1.2.1] - 2020-06-09
+### Changed
+- Updated rails to 6.0.3
+
+## [1.2.0] - 2020-04-15
+### Changed
+- Updated ruby version to 2.7.1
+- Updated rails to 6.0.2.2
+
 ## [1.1.4] - 2020-01-26
 ### Fixed
 - Intermittent error (undefined method 'headers' for Array) when subscribing to a feed.
