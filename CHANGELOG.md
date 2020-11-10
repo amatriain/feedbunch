@@ -5,7 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-Nothing so far
+Nothing
+
+## [1.3.1] - 2020-11-10
+### Changed
+- Allow the release path used by Puma to be configured via the APP_DIR env variable. 
+The default is the same path as before.
 
 ## [1.3.0] - 2020-10-08
 ### Changed
