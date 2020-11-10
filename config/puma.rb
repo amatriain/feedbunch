@@ -23,7 +23,9 @@ else
   directory ENV.fetch('APP_DIR') { '/var/rails/feedbunch/current' }
 
   # Redirect output to logfile in production
-  stdout_redirect '/var/log/feedbunch-puma.log'
+  stdout_file = ENV.fetch('STDOUT_FILE') { '/var/log/feedbunch-puma.log' }
+  stderr_file = ENV.fetch('STDERR_FILE') { '/var/log/feedbunch-puma-error.log' }
+  stdout_redirect stdout_file, stderr_file, true
 
   # Save a pidfile so init system can manage service
   pidfile '/tmp/feedbunch-puma.pid'
