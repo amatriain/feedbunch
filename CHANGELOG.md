@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Nothing
 
+## [1.3.2] - 2020-11-10
+### Changed
+- Allow the log file where Puma writes to be configured via the STDOUT_FILE and STDERR_FILE env variables. 
+The default is the same path as before.
+
 ## [1.3.1] - 2020-11-10
 ### Changed
 - Allow the release path used by Puma to be configured via the APP_DIR env variable. 
