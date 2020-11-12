@@ -16,13 +16,20 @@ environment = ENV.fetch('RAILS_ENV') { 'development' }
 if environment != 'production'
   port        ENV.fetch('PORT') { 3000 }
 else
-  # Bind to a unix socket instead of opening a port (a nginx server opens the port instead)
-  bind 'unix:///tmp/feedbunch-puma.sock'
+  # Bind to a local port if the PORT env variable is set.
+  # If PORT is not set, bind to a local unix socket (needs a web server frontend)
+  if ENV.has_key? 'PORT'
+    port ENV.fetch('PORT')
+  else
+    bind 'unix:///tmp/feedbunch-puma.sock'
+  end
 
   # Set release directory so puma can pick up changes when running phased restarts
+  # Can be set with the APP_DIR env variable (optional)
   directory ENV.fetch('APP_DIR') { '/var/rails/feedbunch/current' }
 
-  # Redirect output to logfile in production
+  # Redirect output to log files
+  # Can be set with the STDOUT_FILE and STDERR_FILE env variables (optional)
   stdout_file = ENV.fetch('STDOUT_FILE') { '/var/log/feedbunch-puma.log' }
   stderr_file = ENV.fetch('STDERR_FILE') { '/var/log/feedbunch-puma-error.log' }
   stdout_redirect stdout_file, stderr_file, true

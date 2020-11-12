@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Nothing
 
+## [1.3.3] - 2020-11-12
+### Changed
+- If the PORT env variable is set, FeedBunch binds to that TCP port in all network interfaces. 
+If it's not set, FeedBunch binds to a local unix socket and will need a webserver frontend (e.g. nginx) to 
+accept requests.
+
 ## [1.3.2] - 2020-11-10
 ### Changed
 - Allow the log file where Puma writes to be configured via the STDOUT_FILE and STDERR_FILE env variables. 
