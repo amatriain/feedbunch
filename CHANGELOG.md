@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Nothing
 
+## [1.3.4] - 2020-11-15
+### Changed
+- The FORCE_SSL env variable can be used to control the force_ssl rails flag, forcing connections, 
+cookies etc to use secure connections only. This behavior is enabled by default.
+
 ## [1.3.3] - 2020-11-12
 ### Changed
 - If the PORT env variable is set, FeedBunch binds to that TCP port in all network interfaces. 
