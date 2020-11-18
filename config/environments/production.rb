@@ -48,7 +48,9 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # The FORCE_SECURE can be used to enable or disable this behavior (enabled by default)
-  force_secure = ENV.fetch("FORCE_SECURE") { true }
+  force_secure_str = ENV.fetch("FORCE_SECURE") { "true" }
+  force_secure_str = force_secure_str.downcase.strip
+  force_secure = ActiveRecord::Type::Boolean.new.cast force_secure_str
   config.force_ssl = force_secure
   if !force_secure
     config.ssl_options = { redirect: false, secure_cookies: false, hsts: false }
