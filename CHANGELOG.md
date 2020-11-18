@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Nothing
 
+## [1.3.5] - 2020-11-18
+### Changed
+- Use FORCE_SECURE env variable instead of FORCE_SSL. It not only controls forcing SSL, but also forcing
+the use of secure cookies and HSTS.
+
 ## [1.3.4] - 2020-11-15
 ### Changed
 - The FORCE_SSL env variable can be used to control the force_ssl rails flag, forcing connections, 
