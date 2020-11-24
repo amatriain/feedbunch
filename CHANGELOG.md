@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Nothing
 
+## [1.3.6] - 2020-11-24
+### Changed
+- The FEEDBUNCH_LOG_LEVEL env variable can be used to control the log level in production. By default
+it takes the value "warn".
+
 ## [1.3.5] - 2020-11-18
 ### Changed
 - Use FORCE_SECURE env variable instead of FORCE_SSL. It not only controls forcing SSL, but also forcing
