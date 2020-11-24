@@ -136,6 +136,10 @@ Rails.application.configure do
   # Use sidekiq as backend for ActiveJob jobs
   config.active_job.queue_adapter = :sidekiq
 
-  # Set to :debug to see everything in the log.
-  config.log_level = :warn
+  # Log level can be controlled with the FEEDBUNCH_LOG_LEVEL env variable.
+  # It is "warn" by default. Set it to "debug" to see everything in the log.
+  log_level_str = ENV.fetch("FEEDBUNCH_LOG_LEVEL") { "warn" }
+  log_level_str = log_level_str.downcase.strip
+  log_level = log_level_str.to_sym
+  config.log_level = log_level
 end
