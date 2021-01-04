@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Nothing
 
+## [1.3.7] - 2021-01-04
+### Changed
+- The port and authentication method of the external SMTP server used to send emails is parametrizable
+with the ```smtp_port``` and  ``smtp_authentication``` values in ```secrets.yml```.
+
 ## [1.3.6] - 2020-11-24
 ### Changed
 - The FEEDBUNCH_LOG_LEVEL env variable can be used to control the log level in production. By default
