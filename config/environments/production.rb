@@ -124,9 +124,10 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { :host => 'www.feedbunch.com', protocol: 'https' }
   config.action_mailer.smtp_settings = {
       address: Rails.application.secrets.smtp_address,
+      port: Rails.application.secrets.smtp_port,
       user_name: Rails.application.secrets.smtp_user_name,
       password: Rails.application.secrets.smtp_password,
-      authentication: :login,
+      authentication: Rails.application.secrets.smtp_authentication.to_sym,
       enable_starttls_auto: true
   }
 
