@@ -9,7 +9,10 @@ require 'aws-sdk-s3'
 access_key = Rails.application.secrets.aws_access_key_id
 secret = Rails.application.secrets.aws_secret_access_key
 Aws.config[:credentials] = Aws::Credentials.new access_key, secret
-Aws.config[:region] = 'eu-west-1'
+Aws.config[:region] = Rails.application.secrets.aws_region
 
-# Name of the S3 bucket for storing objects. Different for each environment.
-Feedbunch::Application.config.s3_bucket = "feedbunch-#{Rails.env}"
+# Name of the S3 bucket for storing objects. Can be changed with the AWS_S3_BUCKET
+# environment variable, by default takes the value "feedbunch-<environment>", 
+# e.g. "feedbunch-production" in the production environment
+s3_bucket = ENV.fetch("AWS_S3_BUCKET") { "feedbunch-#{Rails.env}" }
+Feedbunch::Application.config.s3_bucket = s3_bucket

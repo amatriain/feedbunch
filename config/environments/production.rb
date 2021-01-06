@@ -47,7 +47,7 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # The FORCE_SECURE can be used to enable or disable this behavior (enabled by default)
+  # The FORCE_SECURE environment variable can be used to enable or disable this behavior (enabled by default)
   force_secure_str = ENV.fetch("FORCE_SECURE") { "true" }
   force_secure_str = force_secure_str.downcase.strip
   force_secure = ActiveRecord::Type::Boolean.new.cast force_secure_str
@@ -131,8 +131,21 @@ Rails.application.configure do
       enable_starttls_auto: true
   }
 
-  # Upload files to Amazon S3
-  Feedbunch::Application.config.uploads_manager = S3Client
+  # UPLOADS_LOCATION enviroment variable controls the location for file uploads and downloads. 
+  # The options here are "s3" (the default), which stores files in the cloud (AWS S3) 
+  # and "local", which stores files locally in an uploads folder.
+  uploads_location = ENV.fetch("UPLOADS_LOCATION") { "s3" }
+  uploads_location = uploads_location.downcase.strip
+
+  case uploads_location
+  when "s3"
+    Feedbunch::Application.config.uploads_manager = S3Client
+  when "local"
+    Feedbunch::Application.config.uploads_manager = FileClient
+  else
+    # if an unrecognized value is passed in UPLOADS_LOCATION, use AWS S3 by default
+    Feedbunch::Application.config.uploads_manager = S3Client
+  end
 
   # Use sidekiq as backend for ActiveJob jobs
   config.active_job.queue_adapter = :sidekiq
