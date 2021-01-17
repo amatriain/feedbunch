@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed 
 Nothing yet
 
+## [1.3.10] - 2021-01-17
+### Changed
+- Add script in script/create_user.rb to create users non-interactively. Can be used e.g. to populate the first 
+admin user in a new installation.
+
+## [1.3.9] - 2021-01-14
+### Fixed
+- Allow Sidekiq server to connect to a Redis instance in a different host/port than localhost/6379. The
+problem was that two invocations to Sidekiq.configure_server were made (once to set Redis host and port, and
+a second time to configure Cron jobs), and it seems Sidekiqs resets all server config to its default values
+every time configure_server is invoked, discarding the changes in the first invokation.
+
 ## [1.3.8] - 2021-01-06
 ### Changed
 - Removed facebook app ID from configuration, it's not been used for years.
