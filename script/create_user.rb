@@ -51,10 +51,7 @@ elsif User.exists? name: name
     exit
 end
 
-# Disable sending signup confirmation email
-Rails.application.config.action_mailer.delivery_method = :test
-
 # Create new user
 user = User.new email: email, password: password, name: name, admin: admin
+user.skip_confirmation!
 user.save!
-User.update confirmed_at: Time.zone.now
