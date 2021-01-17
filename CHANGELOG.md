@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed 
 Nothing yet
 
+## [1.3.11] - 2021-01-17
+### Fixed
+- Disable sending a confirmation email when a user is created non-interactively with script/create_user.rb
+The right way to do it is the .skip_confirmation! method, not trying to disable ActiveMailer email delivery.
+
 ## [1.3.10] - 2021-01-17
 ### Changed
 - Add script in script/create_user.rb to create users non-interactively. Can be used e.g. to populate the first 
