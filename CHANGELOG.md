@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed 
 
+## [1.3.15] - 2021-01-22
+### Fixed
+- Fixed a bug that crashed the app when displaying certain pages if the demo user was disabled.
+
 ## [1.3.14] - 2021-01-21
 ### Changed 
 - The DEMO_USER_ENABLED env variable controls whether the demo user is enabled or not. Enabled by default.
