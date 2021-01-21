@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed 
-Nothing yet
+- The DEMO_USER_ENABLED env variable controls whether the demo user is enabled or not. Enabled by default.
 
 ## [1.3.13] - 2021-01-21
 ### Fixed
