@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed 
+
+## [1.3.14] - 2021-01-21
+### Changed 
 - The DEMO_USER_ENABLED env variable controls whether the demo user is enabled or not. Enabled by default.
 - The demo user is fully configured only if it's actually enabled.
 - The ResetDemoUserWorker sidekiq worker is scheduled to run hourly only if the demo user is enabled. If
