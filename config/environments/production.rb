@@ -127,9 +127,9 @@ Rails.application.configure do
   # if the app is running in a different host.
   email_links_url = ENV.fetch("EMAIL_LINKS_URL") {"https://www.feedbunch.com"}
   email_uri = URI email_links_url
-  email_link_scheme = email_uri.scheme
   email_link_host = email_uri.host
-  config.action_mailer.default_url_options = { :host => email_link_scheme, protocol: email_link_host }
+  email_link_scheme = email_uri.scheme
+  config.action_mailer.default_url_options = { :host => email_link_host, protocol: email_link_scheme }
 
   config.action_mailer.smtp_settings = {
       address: Rails.application.secrets.smtp_address,
