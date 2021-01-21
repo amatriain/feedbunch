@@ -121,7 +121,16 @@ Rails.application.configure do
 
   # Email configuration
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.default_url_options = { :host => 'www.feedbunch.com', protocol: 'https' }
+  
+  # EMAIL_LINKS_URL environment variable controls the base url for links in emails sent by the app.
+  # It uses the value "https://www.feedbunch.com" by default, but should be set to a different value
+  # if the app is running in a different host.
+  email_links_url = ENV.fetch("EMAIL_LINKS_URL") {"https://www.feedbunch.com"}
+  email_uri = URI email_links_url
+  email_link_scheme = URI.scheme
+  email_link_host = URI.host
+  config.action_mailer.default_url_options = { :host => email_link_scheme, protocol: email_link_host }
+
   config.action_mailer.smtp_settings = {
       address: Rails.application.secrets.smtp_address,
       port: Rails.application.secrets.smtp_port,
