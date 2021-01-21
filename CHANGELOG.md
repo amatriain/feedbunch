@@ -39,7 +39,7 @@ an AWS S3 bucket.
 ## [1.3.7] - 2021-01-04
 ### Changed
 - The port and authentication method of the external SMTP server used to send emails is parametrizable
-with the ```smtp_port``` and  ``smtp_authentication``` values in ```secrets.yml```.
+with the ```smtp_port``` and  ```smtp_authentication``` values in ```secrets.yml```.
 
 ## [1.3.6] - 2020-11-24
 ### Changed
