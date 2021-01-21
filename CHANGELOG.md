@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed 
 Nothing yet
 
+## [1.3.12] - 2021-01-21
+### Changed
+- The EMAIL_LINKS_URL env variable can be used to control base URL in links inside emails sent by the app.
+By default it takes the value "https://www.feedbunch.com".
+
 ## [1.3.11] - 2021-01-17
 ### Fixed
 - Disable sending a confirmation email when a user is created non-interactively with script/create_user.rb
