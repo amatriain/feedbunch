@@ -2,9 +2,6 @@
 
 # Configuration for the demo user. If enabled, it is reset every hour by the ResetDemoUserWorker sidekiq worker.
 
-# If this config is not set to true, the demo user will be disabled. In fact each run of ResetDemoUserWorker will
-# delete it if it exists.
-
 # The DEMO_USER_ENABLED environment variable can be used to enable or disable the demo user (enabled by default).
 # If set to "true" or the env variable is unset, the demo user is enabled. If set to "false" the demo user is disabled.
 # If the demo user is disabled the rest of options in this file will be ignored.

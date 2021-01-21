@@ -30,10 +30,17 @@ Sidekiq.configure_server do |config|
                             klass: 'FixSchedulesWorker',
                             queue: :maintenance
 
-  Sidekiq::Cron::Job.create name: 'Reset the demo user - hourly',
-                            cron: '0 * * * *',
-                            klass: 'ResetDemoUserWorker',
-                            queue: :maintenance
+  # The ResetDemoUserWorker only is scheduled if the demo user is enabled.
+  # See config/initializers/demo_user.rb for demo user details.
+  demo_enabled_str = ENV.fetch("DEMO_USER_ENABLED") { "true" }
+  demo_enabled_str = demo_enabled_str.downcase.strip
+  demo_enabled = ActiveRecord::Type::Boolean.new.cast demo_enabled_str
+  if demo_enabled
+    Sidekiq::Cron::Job.create name: 'Reset the demo user - hourly',
+                              cron: '0 * * * *',
+                              klass: 'ResetDemoUserWorker',
+                              queue: :maintenance
+  end
 
   Sidekiq::Cron::Job.create name: 'Update the statistics of the Rails cache - every 10 minutes',
                             cron: '*/10 * * * *',
