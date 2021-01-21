@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed 
 Nothing yet
 
+## [1.3.13] - 2021-01-21
+### Fixed
+- Fixed setting default scheme and host for links inside emails sent by the app with the EMAIL_LINKS_URL
+env variable. 
+
 ## [1.3.12] - 2021-01-21
 ### Changed
 - The EMAIL_LINKS_URL env variable can be used to control base URL in links inside emails sent by the app.
