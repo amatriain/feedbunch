@@ -47,9 +47,6 @@ require 'etag_calculator'
 #
 # - admin: Boolean that indicates whether the user is an administrator. This attribute is used to restrict access to certain
 # functionality, like ActiveAdmin and Sidekiq administration.
-# - free: Boolean that indicates if the user has been granted free access to the app (if true) or if he's a paying user (if false).
-# Note that regular users have this attribute set to false, even during any unpaid trial period. Only users who are never
-# required to pay anything have this attribute set to true.
 # - name: text with the username, to be displayed in the app. Usernames are unique. Defaults to the value of the "email" attribute.
 # - locale: locale (en, es etc) in which the user wants to see the application. By default "en".
 # - timezone: name of the timezone (Europe/Madrid, UTC etc) to which the user wants to see times localized. By default "UTC".
@@ -136,7 +133,6 @@ class User < ApplicationRecord
   has_many :subscribe_job_states, dependent: :destroy
 
   validates :admin, inclusion: {in: [true, false]}
-  validates :free, inclusion: {in: [true, false]}
   validates :name, presence: true, uniqueness: {case_sensitive: true}
   validates :locale, presence: true
   validates :timezone, presence: true
@@ -443,7 +439,6 @@ class User < ApplicationRecord
   # - locale: 'en'
   # - timezone: 'UTC'
   # - admin: false
-  # - free: false
   # - quick_reading: false
   # - open_all_entries: false
   # - show_main_tour, show_mobile_tour, show_feed_tour: show_entry_tour, show_kb_shortcuts_tour: true
@@ -471,11 +466,6 @@ class User < ApplicationRecord
     if self.admin == nil
       Rails.logger.info "User #{self.email} has unsupported admin #{self.admin}. Defaulting to admin 'false' instead"
       self.admin = false
-    end
-
-    if self.free == nil
-      Rails.logger.info "User #{self.email} has unsupported free #{self.free}. Defaulting to free 'false' instead"
-      self.free = false
     end
 
     if self.quick_reading == nil

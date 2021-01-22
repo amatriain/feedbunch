@@ -73,8 +73,7 @@ class ResetDemoUserWorker
     else
       demo_user = User.new email: @demo_email,
                            password: @demo_password,
-                           confirmed_at: Time.zone.now,
-                           free: true
+                           confirmed_at: Time.zone.now
       Rails.logger.debug 'Demo user does not exist, creating it'
       demo_user.save!
     end
@@ -98,7 +97,6 @@ class ResetDemoUserWorker
     demo_user.show_feed_tour = true
     demo_user.show_entry_tour = true
     demo_user.show_kb_shortcuts_tour = true
-    demo_user.free = true
     demo_user.save!
   end
 

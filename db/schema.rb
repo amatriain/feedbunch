@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_06_204929) do
+ActiveRecord::Schema.define(version: 2021_01_22_225804) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
@@ -197,7 +197,6 @@ ActiveRecord::Schema.define(version: 2020_01_06_204929) do
     t.datetime "refresh_feed_jobs_updated_at"
     t.datetime "config_updated_at"
     t.datetime "user_data_updated_at"
-    t.boolean "free", default: false, null: false
     t.boolean "first_confirmation_reminder_sent", default: false, null: false
     t.boolean "second_confirmation_reminder_sent", default: false, null: false
     t.boolean "kb_shortcuts_enabled", default: true, null: false
@@ -212,4 +211,19 @@ ActiveRecord::Schema.define(version: 2020_01_06_204929) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "deleted_entries", "feeds", on_delete: :cascade
+  add_foreign_key "entries", "feeds", on_delete: :cascade
+  add_foreign_key "entry_states", "entries", on_delete: :cascade
+  add_foreign_key "entry_states", "users", on_delete: :cascade
+  add_foreign_key "feed_subscriptions", "feeds", on_delete: :cascade
+  add_foreign_key "feed_subscriptions", "users", on_delete: :cascade
+  add_foreign_key "feeds_folders", "feeds", on_delete: :cascade
+  add_foreign_key "feeds_folders", "folders", on_delete: :cascade
+  add_foreign_key "folders", "users", on_delete: :cascade
+  add_foreign_key "opml_export_job_states", "users", on_delete: :cascade
+  add_foreign_key "opml_import_failures", "opml_import_job_states", on_delete: :cascade
+  add_foreign_key "opml_import_job_states", "users", on_delete: :cascade
+  add_foreign_key "refresh_feed_job_states", "feeds", on_delete: :cascade
+  add_foreign_key "refresh_feed_job_states", "users", on_delete: :cascade
+  add_foreign_key "subscribe_job_states", "users", on_delete: :cascade
 end

@@ -145,14 +145,6 @@ describe ResetDemoUserWorker do
         expect(@demo_user.show_kb_shortcuts_tour).to be true
       end
 
-      it 'resets free to true' do
-        @demo_user.update free: false
-
-        expect(@demo_user.free).not_to be true
-        ResetDemoUserWorker.new.perform
-        expect(@demo_user.reload.free).to be true
-      end
-
       it 'resets OPML import state to NONE' do
         opml_import = FactoryBot.build :opml_import_job_state,
                                         user_id: @demo_user.id,

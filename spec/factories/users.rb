@@ -14,7 +14,6 @@ FactoryBot.define do
     remember_me {true}
     confirmed_at {Time.zone.now}
     admin {false}
-    free {false}
     locale {'en'}
     timezone {'UTC'}
     quick_reading {false}
