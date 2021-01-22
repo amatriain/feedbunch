@@ -15,11 +15,19 @@ Sidekiq.configure_server do |config|
 
   # Declare sidekiq-cron jobs (sidekiq workers that must be run periodically)
   # cron format: (minute hour day-of-month month day-of-week)
-  Sidekiq::Cron::Job.create name: 'Cleanup old signups - daily at 3AM',
-                            cron: '0 3 * * *',
-                            klass: 'CleanupSignupsWorker',
-                            queue: :maintenance
 
+  # The CleanupSignupsWorker only is scheduled if self-signups are enabled.
+  # If disabled users cannot register and this worker is not necessary.
+  signups_enabled_str = ENV.fetch("SIGNUPS_ENABLED") { "true" }
+  signups_enabled_str = signups_enabled_str.downcase.strip
+  signups_enabled = ActiveRecord::Type::Boolean.new.cast signups_enabled_str
+  if signups_enabled
+    Sidekiq::Cron::Job.create name: 'Cleanup old signups - daily at 3AM',
+                              cron: '0 3 * * *',
+                              klass: 'CleanupSignupsWorker',
+                              queue: :maintenance
+  end
+  
   Sidekiq::Cron::Job.create name: 'Destroy old job states - daily at 4AM',
                             cron: '0 4 * * *',
                             klass: 'DestroyOldJobStatesWorker',

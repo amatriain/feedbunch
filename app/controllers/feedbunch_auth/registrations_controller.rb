@@ -3,7 +3,8 @@
 ##
 # Customized version of Devise::RegistrationsController.
 #
-# Before accepting an account deletion (RegistrationsController#destroy method), it
+# - New registrations are accepted only if signups are enabled in the application.
+# - Before accepting an account deletion (RegistrationsController#destroy method), it
 # validates that the user-submitted password is correct. Only if the password is correct
 # RegistrationsController#destroy is invoked to actually delete the account.
 
@@ -12,6 +13,19 @@ class FeedbunchAuth::RegistrationsController < Devise::RegistrationsController
   before_action :authenticate_user!, except: [:create]
 
   respond_to :html
+
+  ##
+  # Create a new user registration.
+  # Signups must be enabled in the application config, otherwise the user is redirected
+  # to the landing page instead.
+  def create
+    if Feedbunch::Application.config.signups_enabled
+      super
+    else
+      Rails.logger.warn "Creation of new user attempted, but signups are disabled"
+      redirect_to root_path
+    end
+  end
 
   ##
   # Delete a user's profile.
@@ -32,8 +46,6 @@ class FeedbunchAuth::RegistrationsController < Devise::RegistrationsController
       redirect_to edit_user_registration_path
     end
   end
-
-
 
   protected
 
