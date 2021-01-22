@@ -1,0 +1,2 @@
+# blacklisted hosts. FeedBunch won't allow subscribing to a feed hosted in one of these hosts.
+hosts:
