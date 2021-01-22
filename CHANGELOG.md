@@ -6,13 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed 
+Nothing so far
+
+## [1.3.16] - 2021-01-22
+### Changed
+- Email used to send admin emails (OPML import/export failure notifications, Devise emails...) is parametrizable
+with the ADMIN_EMAIL env var. It takes the value admin@feedbunch.com by default.
 
 ## [1.3.15] - 2021-01-22
 ### Fixed
 - Fixed a bug that crashed the app when displaying certain pages if the demo user was disabled.
 
 ## [1.3.14] - 2021-01-21
-### Changed 
+### Changed
 - The DEMO_USER_ENABLED env variable controls whether the demo user is enabled or not. Enabled by default.
 - The demo user is fully configured only if it's actually enabled.
 - The ResetDemoUserWorker sidekiq worker is scheduled to run hourly only if the demo user is enabled. If
