@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed 
+Nothing yet
+
+## [1.3.18] - 2021-01-22
+### Changed 
 - Removed the unused "staging" environment.
 - Removed blacklisted hosts. The capability for FeedBunch to blacklist hosts, keeping users from 
 subscribing to feeds in those hosts, is still implemented, but the list is empty in the default
