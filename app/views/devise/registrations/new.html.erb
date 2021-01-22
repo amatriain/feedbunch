@@ -7,20 +7,6 @@
   <%# Show registration form only if signups are enabled %>
   <% if Feedbunch::Application.config.signups_enabled %>
 
-  <%# TODO delete this div when open beta stage ends %>
-  <div id="open-beta-warning" class="alert alert-warning">
-    <div class="row">
-      <div class="col-xs-3 col-sm-2 text-center">
-        <i class="fa fa-flask fa-4x"></i>
-      </div>
-
-      <div class="col-xs-9 col-sm-10">
-        <p><%= t 'devise.views.open_beta_1' %></p>
-      </div>
-    </div>
-    <p class="text-center"><%= t 'devise.views.open_beta_2' %></p>
-  </div>
-
   <div class="row">
 
     <div class="col-xs-12 col-md-8">

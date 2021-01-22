@@ -6,7 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed 
-Nothing so far
+Nothing yet
+
+## [1.3.17] - 2021-01-22
+### Changed 
+- Public signup of new users can be enabled or disabled with the SIGNUPS_ENABLED environment variable.
+They are enabled by default.
+- Removed the message about FeedBunch being an open beta.
 
 ## [1.3.16] - 2021-01-22
 ### Changed

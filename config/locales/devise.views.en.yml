@@ -4,8 +4,6 @@ en:
       sign_in: "Log in"
       sign_in_link: "Log in"
       sign_up_link: "Create new account"
-      open_beta_1: "FeedBunch is in open beta."
-      open_beta_2: "Please send us your feedback through the email, twitter or github links below."
       signups_disabled_1: "Public registration of new users is disabled."
       signups_disabled_2: "Please contact an administrator to register a new account."
       sign_up: "Sign up"
