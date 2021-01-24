@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed 
+Nothing yet.
+
+## [1.3.21] - 2021-01-24
+### Changed
 - Removed monkeypatch that disable advisory locking in postgresql during migrations. This was necessary when
 connecting to postgresql through pgbouncer, but it's no longer necessary in a dockerized environment.
 - Removed travis-ci config file.
