@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed 
-Nothing yet.
+- Removed monkeypatch that disable advisory locking in postgresql during migrations. This was necessary when
+connecting to postgresql through pgbouncer, but it's no longer necessary in a dockerized environment.
 
 ## [1.3.20] - 2021-01-24
 ### Changed
