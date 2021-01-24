@@ -29,3 +29,4 @@ doc/
 config/newrelic.yml
 rack_cache/metastore/*/*
 rack_cache/entitystore/*/*
+.project
