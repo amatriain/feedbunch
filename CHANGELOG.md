@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed 
 Nothing yet
+### Fixed
+- Rails env is not unconditionally set to production by the devise initializer anymore.
 
 ## [1.3.18] - 2021-01-22
 ### Changed 

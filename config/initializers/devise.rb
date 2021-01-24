@@ -14,7 +14,7 @@ Devise.setup do |config|
     # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class with default "from" parameter.
-  if Rails.env = 'production'
+  if Rails.env == 'production'
     config.mailer_sender = "\"FeedBunch\" <#{Feedbunch::Application.config.admin_email}>"
   else
     config.mailer_sender = 'root@localhost'
