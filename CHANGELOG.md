@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed 
+Nothing yet.
+
+## [1.3.19] - 2021-01-24
 - Removed distinction between "free" and "paid" users. Users have never had to pay.
 ### Fixed
 - Rails env is not unconditionally set to production by the devise initializer anymore.
