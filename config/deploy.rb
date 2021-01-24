@@ -42,7 +42,6 @@ set :keep_releases, 5
 set :linked_files, %w{
                       config/database.yml
                       config/secrets.yml
-                      config/newrelic.yml
                       redis-cache/redis.conf
                       redis-sidekiq/redis.conf
                   }

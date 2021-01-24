@@ -155,7 +155,4 @@ group :staging, :production do
 
   # Access Amazon S3 file services
   gem 'aws-sdk-s3'
-
-  # Analytics
-  gem 'newrelic_rpm'
 end
