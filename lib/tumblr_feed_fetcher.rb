@@ -27,7 +27,7 @@ class TumblrFeedFetcher
       uri.host = Feedbunch::Application.config.headless_browser_host
       uri.scheme = 'http'
       uri.port = Feedbunch::Application.config.headless_browser_port
-      uri.path = '/webdriver'
+      uri.path = '/wd/hub'
       browser_url = uri.to_s
       browser = Selenium::WebDriver.for :remote, url: browser_url, desired_capabilities: :chrome
     else

@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed 
 Nothing yet.
 
+## [1.3.24] - 2021-01-24
+### Fixed
+- Correct path to connect to remote browser.
+
 ## [1.3.23] - 2021-01-24
 ### Fixed
 - When opening selenium connection to a remote browser, set the uri scheme after setting the uri host, otherwise
