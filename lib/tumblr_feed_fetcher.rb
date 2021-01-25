@@ -20,9 +20,23 @@ class TumblrFeedFetcher
 
   def self.fetch_feed(url)
     Rails.logger.info "URL #{url} belongs to a Tumblr domain possibly with a GDPR interstitial page, using a full browser to fetch it"
-    opts = Selenium::WebDriver::Chrome::Options.new
-    opts.add_argument '--headless'
-    browser = Selenium::WebDriver.for :chrome, options: opts
+
+    if Feedbunch::Application.config.headless_browser_location == 'remote'
+      Rails.logger.info "Using a remote browser in host #{Feedbunch::Application.config.headless_browser_host}, port #{Feedbunch::Application.config.headless_browser_port}"
+      uri = Addressable::URI.new
+      uri.scheme = 'http'
+      uri.host = Feedbunch::Application.config.headless_browser_host
+      uri.port = Feedbunch::Application.config.headless_browser_port
+      uri.path = '/webdriver'
+      browser_url = uri.to_s
+      browser = Selenium::WebDriver.for :remote, url: browser_url, desired_capabilities: :chrome
+    else
+      Rails.logger.info "Using a local browser"
+      opts = Selenium::WebDriver::Chrome::Options.new
+      opts.add_argument '--headless'
+      browser = Selenium::WebDriver.for :chrome, options: opts
+    end
+
     browser.get url
 
     # Check if we've fetched the GDPR interstitial page
@@ -57,7 +71,7 @@ class TumblrFeedFetcher
     # if after all the full browser cannot get the feed, raise a RestClient error
     raise RestClient::ServiceUnavailable.new
   ensure
-    # close browser explicitly, otherwise it stays running even after worker stops
+    # Close the browser (if running locally) or the remote webdriver session (if using a remote browser)
     browser.quit
   end
 end
