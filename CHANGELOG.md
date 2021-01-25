@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed 
 Nothing yet.
 
+## [1.3.22] - 2021-01-24
+### Changed
+- FeedBunch can use a remote browser instance that is listening for Selenium connections instead of a local
+Chromium instance. A full browser is used for fetching certain feeds that cannot be fetched with a simple HTTP
+client. This behavior is controlled by the HEADLESS_BROWSER_LOCATION env variable: if "local" (the default) a 
+local Chromium instance is used, if "remote" a remote browser is used instead. If using a remote browser the
+HEADLESS_BROWSER_HOST ("127.0.0.1" by default) and HEADLESS_BROWSER_PORT (4444 by default) can be used to set
+the host/port where the browser is listening for remote Selenium connections. 
+
 ## [1.3.21] - 2021-01-24
 ### Changed
 - Removed monkeypatch that disable advisory locking in postgresql during migrations. This was necessary when
