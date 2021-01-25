@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed 
 Nothing yet.
 
+## [1.3.23] - 2021-01-24
+### Fixed
+- When opening selenium connection to a remote browser, set the uri scheme after setting the uri host, otherwise
+an error is raised.
+
 ## [1.3.22] - 2021-01-24
 ### Changed
 - FeedBunch can use a remote browser instance that is listening for Selenium connections instead of a local

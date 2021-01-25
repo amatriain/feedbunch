@@ -24,8 +24,8 @@ class TumblrFeedFetcher
     if Feedbunch::Application.config.headless_browser_location == 'remote'
       Rails.logger.info "Using a remote browser in host #{Feedbunch::Application.config.headless_browser_host}, port #{Feedbunch::Application.config.headless_browser_port}"
       uri = Addressable::URI.new
-      uri.scheme = 'http'
       uri.host = Feedbunch::Application.config.headless_browser_host
+      uri.scheme = 'http'
       uri.port = Feedbunch::Application.config.headless_browser_port
       uri.path = '/webdriver'
       browser_url = uri.to_s
