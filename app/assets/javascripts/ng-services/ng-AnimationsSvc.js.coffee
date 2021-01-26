@@ -297,20 +297,6 @@ angular.module('feedbunch').service 'animationsSvc',
         open_menu menu_wrapper, menu_link, event_namespace
 
     #---------------------------------------------
-    # Animate toggling (open/close) an entry social sharing menu.
-    # Receives the entry as argument.
-    #---------------------------------------------
-    toggle_entry_social_menu: (entry)->
-      menu_wrapper = $("#entry-#{entry.id}-social-menu")
-      menu_link = $("#entry-#{entry.id}-social")
-      event_namespace = 'click.outside_social_menu'
-
-      if menu_wrapper.hasClass 'open'
-        close_menu menu_wrapper, menu_link, event_namespace
-      else
-        open_menu menu_wrapper, menu_link, event_namespace
-
-    #---------------------------------------------
     # Animate toggling (open/close) the switch locale menu.
     #---------------------------------------------
     toggle_locale_menu: ->

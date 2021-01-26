@@ -6,13 +6,13 @@ angular.module('feedbunch').controller 'FeedbunchCtrl',
 ['$rootScope', '$scope', '$timeout', '$sce', 'feedsFoldersTimerSvc', 'importStateSvc', 'exportStateSvc', 'timerFlagSvc',
 'currentFeedSvc', 'currentFolderSvc', 'subscriptionSvc', 'loadEntriesSvc', 'folderSvc', 'entrySvc',
 'findSvc', 'userDataSvc', 'userConfigSvc', 'openEntrySvc', 'unreadCountSvc', 'sidebarVisibleSvc', 'menuCollapseSvc',
-'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'socialNetworksSvc', 'cookiesSvc', 'animationsSvc',
+'tooltipSvc', 'startPageSvc', 'jobStateSvc', 'cookiesSvc', 'animationsSvc',
 'highlightedEntrySvc', 'highlightedSidebarLinkSvc', 'dialogsSvc', 'keyboardShortcutsSvc', 'refreshFeedSvc', 'openFolderSvc',
 'loadFeedsSvc', 'showHideReadSvc',
 ($rootScope, $scope, $timeout, $sce, feedsFoldersTimerSvc, importStateSvc, exportStateSvc, timerFlagSvc,
 currentFeedSvc, currentFolderSvc, subscriptionSvc, loadEntriesSvc, folderSvc, entrySvc,
 findSvc, userDataSvc, userConfigSvc, openEntrySvc, unreadCountSvc, sidebarVisibleSvc, menuCollapseSvc,
-tooltipSvc, startPageSvc, jobStateSvc, socialNetworksSvc, cookiesSvc, animationsSvc,
+tooltipSvc, startPageSvc, jobStateSvc, cookiesSvc, animationsSvc,
 highlightedEntrySvc, highlightedSidebarLinkSvc, dialogsSvc, keyboardShortcutsSvc, refreshFeedSvc, openFolderSvc,
 loadFeedsSvc, showHideReadSvc)->
 
@@ -296,22 +296,6 @@ loadFeedsSvc, showHideReadSvc)->
     return
 
   #--------------------------------------------
-  # Share an entry on Google+
-  #--------------------------------------------
-  $scope.share_gplus_entry = (entry)->
-    socialNetworksSvc.share_gplus_entry entry
-    menuCollapseSvc.close()
-    return
-
-  #--------------------------------------------
-  # Share an entry on Linkedin
-  #--------------------------------------------
-  $scope.share_linkedin_entry = (entry)->
-    socialNetworksSvc.share_linkedin_entry entry
-    menuCollapseSvc.close()
-    return
-
-  #--------------------------------------------
   # Return the title of the feed to which an entry belongs
   #--------------------------------------------
   $scope.entry_feed_title = (entry)->
@@ -446,14 +430,6 @@ loadFeedsSvc, showHideReadSvc)->
   #--------------------------------------------
   $scope.toggle_user_menu = ->
     animationsSvc.toggle_user_menu()
-    return
-
-  #--------------------------------------------
-  # Toggle (open/close) an entry social sharing menu with an animation.
-  # Receives as argument the entry.
-  #--------------------------------------------
-  $scope.toggle_entry_social_menu = (entry)->
-    animationsSvc.toggle_entry_social_menu entry
     return
 
   #--------------------------------------------

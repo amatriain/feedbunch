@@ -20,43 +20,4 @@
     </a>
   </div>
 
-  <div id="entry-{{entry.id}}-social-menu"
-       ng-class="{entry_open_social: is_entry_open(entry)}"
-       class="btn-group dropdown pull-right">
-
-    <a id="entry-{{entry.id}}-social"
-       class="btn btn-default btn-sm dropdown-toggle"
-       ng-click="toggle_entry_social_menu(entry)"
-       data-share-entry-dropdown
-       data-placement="top"
-       title="<%= t 'read.entries.share_tooltip' %>">
-      <i class="fa fa-fw fa-share-alt"></i> <%= t 'read.entries.share' %>  <i class="fa fa-fw fa-caret-down"></i>
-    </a>
-
-    <ul class="dropdown-menu">
-
-      <li>
-        <a href="https://twitter.com/intent/tweet?url={{entry.url}}&via=feedbunch&text={{entry.title}}"
-           target="_blank" rel="noopener noreferrer">
-          <i class="fa fa-fw fa-twitter"></i>&nbsp;<%= t 'read.entries.share_twitter' %>
-        </a>
-      </li>
-
-      <li>
-        <a ng-click="share_gplus_entry(entry)"
-           target="_blank" rel="noopener noreferrer">
-          <i class="fa fa-fw fa-google-plus"></i>&nbsp;<%= t 'read.entries.share_gplus' %>
-        </a>
-      </li>
-
-      <li>
-        <a ng-click="share_linkedin_entry(entry)"
-           target="_blank" rel="noopener noreferrer">
-          <i class="fa fa-fw fa-linkedin"></i>&nbsp;<%= t 'read.entries.share_linkedin' %>
-        </a>
-      </li>
-
-    </ul>
-  </div>
-
 </div>
