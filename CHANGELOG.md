@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed 
-Nothing yet.
+- Removed all functionality related to sharing in social networks. Integration with social networks is now considered
+out of scope for this project.
 
 ## [1.3.24] - 2021-01-24
 ### Fixed
