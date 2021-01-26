@@ -5,7 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Changed 
+### Changed
+Nothing
+ 
+## [1.3.25] - 2021-01-26
+### Changed
 - Removed all functionality related to sharing in social networks. Integration with social networks is now considered
 out of scope for this project.
 
