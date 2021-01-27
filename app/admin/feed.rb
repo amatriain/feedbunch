@@ -2,6 +2,7 @@
 
 ActiveAdmin.register Feed do
   permit_params :title, :url, :fetch_url, :available, :fetch_interval_secs
+  actions :all, :except => [:new]
 
   menu priority: 2
 
