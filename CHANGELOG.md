@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-Nothing
+- Cleaned activeadmin views.
  
 ## [1.3.25] - 2021-01-26
 ### Changed
