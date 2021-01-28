@@ -2,7 +2,7 @@ default:
   image: ruby:2.7.2
 
 variables:
-  - RAILS_ENV=ci
+  RAILS_ENV: ci
 
 stages:
   - setup_gems
@@ -45,20 +45,20 @@ load_db:
 unit_tests:
   stage: test
   variables:
-    - TEST_SUITE=unit
+    TEST_SUITE: unit
   script:
     - bundle exec rake spec:ci
 
 acceptance_tests_1:
   stage: test
   variables:
-    - TEST_SUITE=acceptance_1
+    TEST_SUITE: acceptance_1
   script:
     - bundle exec rake spec:ci
 
 acceptance_tests_2:
   stage: test
   variables:
-    - TEST_SUITE=acceptance_2
+    TEST_SUITE: acceptance_2
   script:
     - bundle exec rake spec:ci
