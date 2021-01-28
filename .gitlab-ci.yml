@@ -7,7 +7,7 @@ variables:
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - FeedBunch-app/vendor/bundle
+    - vendor/bundle
 
 stages:
   - setup_gems
