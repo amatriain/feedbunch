@@ -4,6 +4,11 @@ default:
 variables:
   RAILS_ENV: ci
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - FeedBunch-app/vendor/bundle
+
 stages:
   - setup_gems
   - static_analysis
