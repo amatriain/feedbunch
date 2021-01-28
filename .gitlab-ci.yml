@@ -1,13 +1,64 @@
 default:
   image: ruby:2.7.2
 
+variables:
+  - RAILS_ENV=ci
+
 stages:
-  - setup
+  - setup_gems
   - static_analysis
+  - configure_tests
+  - setup_database
   - test
 
-install_bundler:
-  stage: setup
+install_gems:
+  stage: setup_gems
   script:
     - cd FeedBunch-app
     - gem install bundler --no-document
+    - bundle config set deployment 'true'
+    - bundle config set path 'vendor/bundle'
+    - bundle install
+
+bundle_audit:
+  stage: static_analysis
+  script:
+    - bundle exec bundle-audit update
+    - bundle exec bundle-audit check
+
+brakeman:
+  stage: static_analysis
+  script:
+    - bundle exec brakeman -z --no-pager
+
+copy_configuration:
+  stage: configure_tests
+  script:
+    - cp config/secrets_ci.yml config/secrets.yml
+    - cp config/database.yml.ci config/database.yml
+
+load_db:
+  stage: setup_database
+  script:
+    - bundle exec rake db:schema:load
+
+unit_tests:
+  stage: test
+  variables:
+    - TEST_SUITE=unit
+  script:
+    - bundle exec rake spec:ci
+
+acceptance_tests_1:
+  stage: test
+  variables:
+    - TEST_SUITE=acceptance_1
+  script:
+    - bundle exec rake spec:ci
+
+acceptance_tests_2:
+  stage: test
+  variables:
+    - TEST_SUITE=acceptance_2
+  script:
+    - bundle exec rake spec:ci
