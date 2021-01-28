@@ -60,12 +60,6 @@ RSpec.configure do |config|
     end
   }
 
-  # Wrap tests in Bullet API to help fixing N+1 queries
-  if Bullet.enable?
-    config.before(:each) { Bullet.start_request }
-    config.after(:each)  { Bullet.end_request }
-  end
-
   # Retry failed tests, show retry status in the output
   config.verbose_retry = true
   if Rails.env == 'ci'
