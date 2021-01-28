@@ -30,3 +30,4 @@
 **/rack_cache/metastore/*/*
 **/rack_cache/entitystore/*/*
 **/.project
+**/.generators
