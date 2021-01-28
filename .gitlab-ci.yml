@@ -1,10 +1,16 @@
 default:
   image: ruby:2.7.2
 
-build-job:
-  stage: build
+stages:
+  - setup
+  - static_analysis
+  - test
+
+install_bundler:
+  stage: setup
   script:
-    - echo "Hello, $GITLAB_USER_LOGIN!"
+    - cd FeedBunch-app
+    - gem install bundler --no-document
 
 test-job1:
   stage: test
