@@ -23,23 +23,27 @@ install_gems:
 bundle_audit:
   stage: static_analysis
   script:
+    - cd FeedBunch-app
     - bundle exec bundle-audit update
     - bundle exec bundle-audit check
 
 brakeman:
   stage: static_analysis
   script:
+    - cd FeedBunch-app
     - bundle exec brakeman -z --no-pager
 
 copy_configuration:
   stage: configure_tests
   script:
+    - cd FeedBunch-app
     - cp config/secrets_ci.yml config/secrets.yml
     - cp config/database.yml.ci config/database.yml
 
 load_db:
   stage: setup_database
   script:
+    - cd FeedBunch-app
     - bundle exec rake db:schema:load
 
 unit_tests:
@@ -47,6 +51,7 @@ unit_tests:
   variables:
     TEST_SUITE: unit
   script:
+    - cd FeedBunch-app
     - bundle exec rake spec:ci
 
 acceptance_tests_1:
@@ -54,6 +59,7 @@ acceptance_tests_1:
   variables:
     TEST_SUITE: acceptance_1
   script:
+    - cd FeedBunch-app
     - bundle exec rake spec:ci
 
 acceptance_tests_2:
@@ -61,4 +67,5 @@ acceptance_tests_2:
   variables:
     TEST_SUITE: acceptance_2
   script:
+    - cd FeedBunch-app
     - bundle exec rake spec:ci
