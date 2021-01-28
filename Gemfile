@@ -22,9 +22,6 @@ gem 'jquery-rails'
 # Integrate bower (frontend package manager) with rails
 gem 'bower-rails', '~> 0.11.0'
 
-# Ruby profiling
-gem 'ruby-prof'
-
 # Serve the app with Puma
 gem 'puma'
 
@@ -92,11 +89,6 @@ gem 'bootsnap', require: false
 group :development do
   # App preloader to speed up tests, new in Rails 4.1.0
   gem 'spring'
-
-  # Irb-like console in error pages, new in Rails 4.2
-  gem 'web-console'
-
-  gem 'listen'
 end
 
 group :test, :development do
@@ -111,9 +103,6 @@ group :test, :development do
 
   # Check the bundle for exploits
   gem 'bundler-audit'
-
-  # Check for N+1 queries (which should not exist)
-  gem 'bullet'
 
   # Testing framework
   gem 'rspec-rails',  '~> 4.0.0.beta3'
@@ -130,9 +119,6 @@ group :test do
 
   # Retry failed tests
   gem 'rspec-retry'
-
-  # Code coverage
-  gem 'coveralls', require: false
 
   # To simulate a user's browser during acceptance testing
   gem 'capybara'
