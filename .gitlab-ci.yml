@@ -4,6 +4,7 @@ default:
     - bundle config set deployment 'true'
     - bundle config set path 'FeedBunch-app/vendor/bundle'
     - cd FeedBunch-app
+    - bundle install --without test development production
 
 variables:
   RAILS_ENV: ci
@@ -14,16 +15,10 @@ cache:
     - 'FeedBunch-app/vendor/bundle'
 
 stages:
-  - setup_gems
   - static_analysis
   - configure_tests
   - setup_database
   - test
-
-install_gems:
-  stage: setup_gems
-  script:
-    - bundle install
 
 bundle_audit:
   stage: static_analysis
