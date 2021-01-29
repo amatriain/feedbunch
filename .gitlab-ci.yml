@@ -1,73 +1,104 @@
+# TODO delete
+# Some tests to see how the poorly documented gitlab-ci cache works
 default:
   image: ruby:2.7.2
   before_script:
     - cd FeedBunch-app
     - bundle config set deployment 'true'
-    - bundle config set path '/cache/gems'
+    - bundle config set path 'vendor/ruby'
     - bundle config set without 'development production'
-    - mkdir -p /cache/gems
-    - ls -l /cache/gems
-
-variables:
-  RAILS_ENV: ci
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - '/cache/gems'
+    - FeedBunch-app/vendor/ruby
 
 stages:
-  - install_dependencies
-  - static_analysis
-  - configure_tests
-  - setup_database
-  - test
+  - stage_1
+  - stage_2
 
-install_gems:
-  stage: install_dependencies
+install:
+  stage: stage_1
   script:
+    - ls -l vendor/ruby
     - bundle install
-    - ls -l /cache/gems
 
-bundle_audit:
-  stage: static_analysis
+use:
+  stage: stage_2
   script:
-    - bundle exec bundle-audit update
-    - bundle exec bundle-audit check
-
-brakeman:
-  stage: static_analysis
-  script:
+    - ls -l vendor/ruby
     - bundle exec brakeman -z --no-pager
 
-copy_configuration:
-  stage: configure_tests
-  script:
-    - cp config/secrets_ci.yml config/secrets.yml
-    - cp config/database.yml.ci config/database.yml
-
-load_db:
-  stage: setup_database
-  script:
-    - bundle exec rake db:schema:load
-
-unit_tests:
-  stage: test
-  variables:
-    TEST_SUITE: unit
-  script:
-    - bundle exec rake spec:ci
-
-acceptance_tests_1:
-  stage: test
-  variables:
-    TEST_SUITE: acceptance_1
-  script:
-    - bundle exec rake spec:ci
-
-acceptance_tests_2:
-  stage: test
-  variables:
-    TEST_SUITE: acceptance_2
-  script:
-    - bundle exec rake spec:ci
+#default:
+#  image: ruby:2.7.2
+#  before_script:
+#    - cd FeedBunch-app
+#    - bundle config set deployment 'true'
+#    - bundle config set path '/cache/gems'
+#    - bundle config set without 'development production'
+#    - mkdir -p /cache/gems
+#    - ls -l /cache/gems
+#
+#variables:
+#  RAILS_ENV: ci
+#
+#cache:
+#  key: ${CI_COMMIT_REF_SLUG}
+#  paths:
+#    - '/cache/gems'
+#
+#stages:
+#  - install_dependencies
+#  - static_analysis
+#  - configure_tests
+#  - setup_database
+#  - test
+#
+#install_gems:
+#  stage: install_dependencies
+#  script:
+#    - bundle install
+#    - ls -l /cache/gems
+#
+#bundle_audit:
+#  stage: static_analysis
+#  script:
+#    - bundle exec bundle-audit update
+#    - bundle exec bundle-audit check
+#
+#brakeman:
+#  stage: static_analysis
+#  script:
+#    - bundle exec brakeman -z --no-pager
+#
+#copy_configuration:
+#  stage: configure_tests
+#  script:
+#    - cp config/secrets_ci.yml config/secrets.yml
+#    - cp config/database.yml.ci config/database.yml
+#
+#load_db:
+#  stage: setup_database
+#  script:
+#    - bundle exec rake db:schema:load
+#
+#unit_tests:
+#  stage: test
+#  variables:
+#    TEST_SUITE: unit
+#  script:
+#    - bundle exec rake spec:ci
+#
+#acceptance_tests_1:
+#  stage: test
+#  variables:
+#    TEST_SUITE: acceptance_1
+#  script:
+#    - bundle exec rake spec:ci
+#
+#acceptance_tests_2:
+#  stage: test
+#  variables:
+#    TEST_SUITE: acceptance_2
+#  script:
+#    - bundle exec rake spec:ci
