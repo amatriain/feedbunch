@@ -5,6 +5,7 @@ default:
     - bundle config set deployment 'true'
     - bundle config set path '/cache/gems'
     - bundle config set without 'development production'
+    - ls -l /cache/gems
 
 variables:
   RAILS_ENV: ci
@@ -25,6 +26,7 @@ install_gems:
   stage: install_dependencies
   script:
     - bundle install
+    - ls -l /cache/gems
 
 bundle_audit:
   stage: static_analysis
