@@ -130,8 +130,8 @@ group :test do
   gem 'database_cleaner'
 end
 
-group :staging, :production do
-  # PostgreSQL database for staging and production
+group :production do
+  # PostgreSQL database for production
   gem 'pg'
 
   # Access Amazon S3 file services
