@@ -1,10 +1,11 @@
 default:
   image: ruby:2.7.2
   before_script:
-    - bundle config set deployment 'true'
-    - bundle config set path 'FeedBunch-app/vendor/bundle'
     - cd FeedBunch-app
-    - bundle install --without development production
+    - bundle config set deployment 'true'
+    - bundle config set path '/cache/gems'
+    - bundle config set without 'development production'
+    - bundle install
 
 variables:
   RAILS_ENV: ci
@@ -12,7 +13,7 @@ variables:
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - 'FeedBunch-app/vendor/bundle'
+    - '/cache/gems'
 
 stages:
   - install_dependencies
