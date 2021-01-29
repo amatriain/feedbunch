@@ -31,3 +31,4 @@
 **/rack_cache/entitystore/*/*
 **/.project
 **/.generators
+**/.rakeTasks
