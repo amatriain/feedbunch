@@ -15,10 +15,16 @@ cache:
     - 'FeedBunch-app/vendor/bundle'
 
 stages:
+  - install_dependencies
   - static_analysis
   - configure_tests
   - setup_database
   - test
+
+install_gems:
+  stage: install_dependencies
+  script:
+    - echo "Gems installed in cache"
 
 bundle_audit:
   stage: static_analysis
