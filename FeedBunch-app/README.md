@@ -2,7 +2,7 @@
 
 A simple and elegant feed reader.
 
-[![Build Status](https://semaphoreci.com/api/v1/projects/fb7ea494-699a-4733-a494-b806ae6fb249/396842/badge.svg)](https://semaphoreci.com/amatriain/feedbunch)
+[![Build Status](https://gitlab.com/amatriain/feedbunch/badges/master/pipeline.svg)](https://gitlab.com/amatriain/feedbunch/-/commits/master)
 
 ## Important
 This project is now hosted in [Gitlab](https://gitlab.com/amatriain/feedbunch). If you're reading this somewhere else

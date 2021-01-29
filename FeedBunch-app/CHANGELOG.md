@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 Nothing yet.
 
+## [1.3.27] - 2021-01-29
+### Changed
+- Run tests in Gitlab CI/CD instead of Semaphore CI.
+
 ## [1.3.26] - 2021-01-28
 ### Changed
 - Cleaned activeadmin views.
