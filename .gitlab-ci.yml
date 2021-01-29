@@ -16,7 +16,7 @@ default:
     # Install gems in bundle
     - cd ../FeedBunch-app
     - bundle config set deployment 'true'
-    - bundle config set path 'vendor'
+    - bundle config set path 'vendor/gems'
     - bundle config set without 'development production'
     - bundle install
 
@@ -26,7 +26,7 @@ variables:
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - 'FeedBunch-app/vendor'
+    - 'FeedBunch-app/vendor/gems'
     - 'apt-cache'
     - 'geckodriver-cache'
 
