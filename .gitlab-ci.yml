@@ -1,10 +1,13 @@
 default:
   image: ruby:2.7.2
   before_script:
+    - apt-get update -qy
+    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs
     - cd FeedBunch-app
     - bundle config set deployment 'true'
     - bundle config set path 'vendor'
     - bundle config set without 'development production'
+    - bundle install
 
 variables:
   RAILS_ENV: ci
@@ -13,6 +16,7 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - 'FeedBunch-app/vendor'
+    - 'apt-cache'
 
 stages:
   - install_dependencies
@@ -21,10 +25,10 @@ stages:
   - setup_database
   - test
 
-install_gems:
+install_deps:
   stage: install_dependencies
   script:
-    - bundle install
+    - echo "Installed dependencies"
 
 bundle_audit:
   stage: static_analysis
