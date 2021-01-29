@@ -20,8 +20,8 @@ stages:
 install:
   stage: stage_1
   script:
-    - ls -l vendor/ruby
     - bundle install
+    - ls -l vendor/ruby
 
 use:
   stage: stage_2
