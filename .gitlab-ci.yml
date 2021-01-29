@@ -6,7 +6,7 @@ default:
     - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
 
     # Install geckodriver
-    - mkdir geckodriver-cache
+    - mkdir -p geckodriver-cache
     - cd geckodriver-cache
     - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
     - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
