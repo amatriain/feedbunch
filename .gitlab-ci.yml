@@ -43,6 +43,8 @@ brakeman:
 
 copy_configuration:
   stage: configure_rails
+  before_script:
+    - cd FeedBunch-app
   script:
     - cp config/secrets_ci.yml config/secrets.yml
     - cp config/database.yml.ci config/database.yml
@@ -50,6 +52,8 @@ copy_configuration:
 load_db:
   stage: setup_database
   script:
+    - cp config/secrets_ci.yml config/secrets.yml
+    - cp config/database.yml.ci config/database.yml
     - bundle exec rake db:schema:load
 
 unit_tests:
@@ -57,6 +61,8 @@ unit_tests:
   variables:
     TEST_SUITE: unit
   script:
+    - cp config/secrets_ci.yml config/secrets.yml
+    - cp config/database.yml.ci config/database.yml
     - bundle exec rake spec:ci
 
 acceptance_tests_1:
@@ -64,6 +70,8 @@ acceptance_tests_1:
   variables:
     TEST_SUITE: acceptance_1
   script:
+    - cp config/secrets_ci.yml config/secrets.yml
+    - cp config/database.yml.ci config/database.yml
     - bundle exec rake spec:ci
 
 acceptance_tests_2:
@@ -71,4 +79,6 @@ acceptance_tests_2:
   variables:
     TEST_SUITE: acceptance_2
   script:
+    - cp config/secrets_ci.yml config/secrets.yml
+    - cp config/database.yml.ci config/database.yml
     - bundle exec rake spec:ci
