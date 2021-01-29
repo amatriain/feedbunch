@@ -86,6 +86,9 @@ gem 'pghero'
 # Faster startup
 gem 'bootsnap', require: false
 
+# Access Amazon S3 file services
+gem 'aws-sdk-s3'
+
 group :development do
   # App preloader to speed up tests, new in Rails 4.1.0
   gem 'spring'
@@ -133,7 +136,4 @@ end
 group :production do
   # PostgreSQL database for production
   gem 'pg'
-
-  # Access Amazon S3 file services
-  gem 'aws-sdk-s3'
 end
