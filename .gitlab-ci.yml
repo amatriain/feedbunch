@@ -1,9 +1,19 @@
 default:
   image: ruby:2.7.2
   before_script:
+    # Install nodejs and firefox
     - apt-get update -qy
-    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel geckodriver
-    - cd FeedBunch-app
+    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+
+    # Install geckodriver
+    - cd geckodriver-cache
+    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+    - chmod +x /usr/local/bin/geckodriver
+
+    # Install gems in bundle
+    - cd ../FeedBunch-app
     - bundle config set deployment 'true'
     - bundle config set path 'vendor'
     - bundle config set without 'development production'
@@ -17,6 +27,7 @@ cache:
   paths:
     - 'FeedBunch-app/vendor'
     - 'apt-cache'
+    - 'geckodriver-cache'
 
 stages:
   - install_dependencies
