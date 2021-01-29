@@ -2,7 +2,7 @@ default:
   image: ruby:2.7.2
   before_script:
     - apt-get update -qy
-    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel geckodriver
     - cd FeedBunch-app
     - bundle config set deployment 'true'
     - bundle config set path 'vendor'
