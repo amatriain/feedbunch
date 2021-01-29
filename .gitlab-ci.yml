@@ -5,6 +5,7 @@ default:
     - bundle config set deployment 'true'
     - bundle config set path '/cache/gems'
     - bundle config set without 'development production'
+    - mkdir /cache/gems
     - ls -l /cache/gems
 
 variables:
