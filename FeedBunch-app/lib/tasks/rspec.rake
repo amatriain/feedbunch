@@ -9,6 +9,8 @@ if Rails.env=='ci'
       unit_tests = FileList['spec/unit_tests/**/*_spec.rb']
       acceptance_tests_1 = FileList['spec/acceptance_tests/suite_1/**/*_spec.rb']
       acceptance_tests_2 = FileList['spec/acceptance_tests/suite_2/**/*_spec.rb']
+      acceptance_tests_3 = FileList['spec/acceptance_tests/suite_3/**/*_spec.rb']
+      acceptance_tests_4 = FileList['spec/acceptance_tests/suite_4/**/*_spec.rb']
 
       if ENV['TEST_SUITE'] == 'unit'
         # Include only unit tests
@@ -19,6 +21,12 @@ if Rails.env=='ci'
       elsif ENV['TEST_SUITE'] == 'acceptance_2'
         # Include some feature tests
         file_list = acceptance_tests_2
+      elsif ENV['TEST_SUITE'] == 'acceptance_3'
+        # Include some feature tests
+        file_list = acceptance_tests_3
+      elsif ENV['TEST_SUITE'] == 'acceptance_4'
+        # Include some feature tests
+        file_list = acceptance_tests_4
       else
         # Run all tests
         file_list = all_tests

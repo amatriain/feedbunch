@@ -94,3 +94,21 @@ acceptance_tests_2:
     - cp config/secrets_ci.yml config/secrets.yml
     - cp config/database.yml.ci config/database.yml
     - bundle exec rake spec:ci
+
+acceptance_tests_3:
+  stage: test
+  variables:
+    TEST_SUITE: acceptance_3
+  script:
+    - cp config/secrets_ci.yml config/secrets.yml
+    - cp config/database.yml.ci config/database.yml
+    - bundle exec rake spec:ci
+
+acceptance_tests_4:
+  stage: test
+  variables:
+    TEST_SUITE: acceptance_4
+  script:
+    - cp config/secrets_ci.yml config/secrets.yml
+    - cp config/database.yml.ci config/database.yml
+    - bundle exec rake spec:ci
