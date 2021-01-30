@@ -1,24 +1,5 @@
 default:
   image: ruby:2.7.2
-  before_script:
-    # Install nodejs and firefox
-    - apt-get update -qy
-    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
-
-    # Install geckodriver
-    - mkdir -p geckodriver-cache
-    - cd geckodriver-cache
-    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
-    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
-    - chmod +x /usr/local/bin/geckodriver
-
-    # Install gems in bundle
-    - cd ../FeedBunch-app
-    - bundle config set deployment 'true'
-    - bundle config set path 'vendor/gems'
-    - bundle config set without 'development production'
-    - bundle install
 
 variables:
   RAILS_ENV: ci
@@ -39,24 +20,71 @@ stages:
 install_deps:
   stage: install_dependencies
   script:
-    - echo "Installed dependencies"
+    # Install nodejs and firefox
+    - apt-get update -qy
+    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+
+    # Install geckodriver
+    - mkdir -p geckodriver-cache
+    - cd geckodriver-cache
+    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+    - chmod +x /usr/local/bin/geckodriver
+
+    # Install gems in bundle
+    - cd ../FeedBunch-app
+    - bundle config set deployment 'true'
+    - bundle config set path 'vendor/gems'
+    - bundle config set without 'development production'
+    - bundle install
 
 bundle_audit:
   stage: static_analysis
   script:
+    # Install gems in bundle
+    - cd FeedBunch-app
+    - bundle config set deployment 'true'
+    - bundle config set path 'vendor/gems'
+    - bundle config set without 'development production'
+    - bundle install
+
+    # Run bundle-audit
     - bundle exec bundle-audit update
     - bundle exec bundle-audit check
 
 brakeman:
   stage: static_analysis
   script:
+    # Install gems in bundle
+    - cd FeedBunch-app
+    - bundle config set deployment 'true'
+    - bundle config set path 'vendor/gems'
+    - bundle config set without 'development production'
+    - bundle install
+
+    # Run brakeman
     - bundle exec brakeman -z --no-pager
 
 load_db:
   stage: setup_database
   script:
+    # Install nodejs
+    - apt-get update -qy
+    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs
+
+    # Install gems in bundle
+    - cd FeedBunch-app
+    - bundle config set deployment 'true'
+    - bundle config set path 'vendor/gems'
+    - bundle config set without 'development production'
+    - bundle install
+
+    # Copy config files
     - cp config/secrets_ci.yml config/secrets.yml
     - cp config/database.yml.ci config/database.yml
+
+    # Load database
     - bundle exec rake db:schema:load
 
 unit_tests:
@@ -64,8 +92,22 @@ unit_tests:
   variables:
     TEST_SUITE: unit
   script:
+    # Install nodejs
+    - apt-get update -qy
+    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs
+
+    # Install gems in bundle
+    - cd FeedBunch-app
+    - bundle config set deployment 'true'
+    - bundle config set path 'vendor/gems'
+    - bundle config set without 'development production'
+    - bundle install
+
+    # Copy config files
     - cp config/secrets_ci.yml config/secrets.yml
     - cp config/database.yml.ci config/database.yml
+
+    # Run unit tests
     - bundle exec rake spec:ci
 
 acceptance_tests_1:
@@ -73,8 +115,30 @@ acceptance_tests_1:
   variables:
     TEST_SUITE: acceptance_1
   script:
+    # Install nodejs and firefox
+    - apt-get update -qy
+    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+
+    # Install geckodriver
+    - mkdir -p geckodriver-cache
+    - cd geckodriver-cache
+    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+    - chmod +x /usr/local/bin/geckodriver
+
+    # Install gems in bundle
+    - cd ../FeedBunch-app
+    - bundle config set deployment 'true'
+    - bundle config set path 'vendor/gems'
+    - bundle config set without 'development production'
+    - bundle install
+
+    # Copy config files
     - cp config/secrets_ci.yml config/secrets.yml
     - cp config/database.yml.ci config/database.yml
+
+    # Run acceptance tests
     - bundle exec rake spec:ci
 
 acceptance_tests_2:
@@ -82,8 +146,30 @@ acceptance_tests_2:
   variables:
     TEST_SUITE: acceptance_2
   script:
+    # Install nodejs and firefox
+    - apt-get update -qy
+    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+
+    # Install geckodriver
+    - mkdir -p geckodriver-cache
+    - cd geckodriver-cache
+    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+    - chmod +x /usr/local/bin/geckodriver
+
+    # Install gems in bundle
+    - cd ../FeedBunch-app
+    - bundle config set deployment 'true'
+    - bundle config set path 'vendor/gems'
+    - bundle config set without 'development production'
+    - bundle install
+
+    # Copy config files
     - cp config/secrets_ci.yml config/secrets.yml
     - cp config/database.yml.ci config/database.yml
+
+    # Run acceptance tests
     - bundle exec rake spec:ci
 
 acceptance_tests_3:
@@ -91,8 +177,30 @@ acceptance_tests_3:
   variables:
     TEST_SUITE: acceptance_3
   script:
+    # Install nodejs and firefox
+    - apt-get update -qy
+    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+
+    # Install geckodriver
+    - mkdir -p geckodriver-cache
+    - cd geckodriver-cache
+    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+    - chmod +x /usr/local/bin/geckodriver
+
+    # Install gems in bundle
+    - cd ../FeedBunch-app
+    - bundle config set deployment 'true'
+    - bundle config set path 'vendor/gems'
+    - bundle config set without 'development production'
+    - bundle install
+
+    # Copy config files
     - cp config/secrets_ci.yml config/secrets.yml
     - cp config/database.yml.ci config/database.yml
+
+    # Run acceptance tests
     - bundle exec rake spec:ci
 
 acceptance_tests_4:
@@ -100,6 +208,28 @@ acceptance_tests_4:
   variables:
     TEST_SUITE: acceptance_4
   script:
+    # Install nodejs and firefox
+    - apt-get update -qy
+    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+
+    # Install geckodriver
+    - mkdir -p geckodriver-cache
+    - cd geckodriver-cache
+    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+    - chmod +x /usr/local/bin/geckodriver
+
+    # Install gems in bundle
+    - cd ../FeedBunch-app
+    - bundle config set deployment 'true'
+    - bundle config set path 'vendor/gems'
+    - bundle config set without 'development production'
+    - bundle install
+
+    # Copy config files
     - cp config/secrets_ci.yml config/secrets.yml
     - cp config/database.yml.ci config/database.yml
+
+    # Run acceptance tests
     - bundle exec rake spec:ci
