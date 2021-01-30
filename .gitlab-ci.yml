@@ -30,6 +30,13 @@ cache:
     - 'apt-cache'
     - 'geckodriver-cache'
 
+stages:
+  - install_dependencies
+  - static_analysis
+  - configure_rails
+  - setup_database
+  - test
+
 install_deps:
   stage: install_dependencies
   script:
@@ -45,6 +52,14 @@ brakeman:
   stage: static_analysis
   script:
     - bundle exec brakeman -z --no-pager
+
+copy_configuration:
+  stage: configure_rails
+  before_script:
+    - cd FeedBunch-app
+  script:
+    - cp config/secrets_ci.yml config/secrets.yml
+    - cp config/database.yml.ci config/database.yml
 
 load_db:
   stage: setup_database
