@@ -1,0 +1,113 @@
+version: '3.7'
+services:
+    webapp: 
+        image: amatriain/feedbunch-webapp:latest
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: any
+        ports:
+            - '9292:9292'
+        volumes:
+            - type: volume
+              source: 'opml_imports'
+              target: '/home/feedbunch_webapp/feedbunch/opml_imports'
+            - type: volume
+              source: 'opml_exports'
+              target: '/home/feedbunch_webapp/feedbunch/opml_exports'
+        networks:
+            - net
+        environment:
+            ADMIN_EMAIL: some@email.com
+            ADMIN_USERNAME: admin
+            ADMIN_PASSWORD: feedbunch_admin
+            DEMO_USER_ENABLED: 'false'
+            SIGNUPS_ENABLED: 'false'
+            SMTP_USER_NAME: gmail_user
+            SMTP_PASSWORD: gmail_password
+            EMAIL_LINKS_URL: 'https://www.feedbunch.com'
+            REDIS_SIDEKIQ_HOST: redis-sidekiq
+            REDIS_CACHE_HOST: redis-cache
+            POSTGRES_HOST: db
+    background: 
+        image: amatriain/feedbunch-background:latest
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: any
+        volumes:
+            - type: volume
+              source: 'opml_imports'
+              target: '/home/feedbunch_background/feedbunch/opml_imports'
+            - type: volume
+              source: 'opml_exports'
+              target: '/home/feedbunch_background/feedbunch/opml_exports'
+        networks:
+            - net
+        environment:
+            ADMIN_EMAIL: some@email.com
+            DEMO_USER_ENABLED: 'false'
+            SIGNUPS_ENABLED: 'false'
+            SMTP_USER_NAME: gmail_user
+            SMTP_PASSWORD: gmail_password
+            EMAIL_LINKS_URL: 'https://www.feedbunch.com'
+            REDIS_SIDEKIQ_HOST: redis-sidekiq
+            POSTGRES_HOST: db
+            HEADLESS_BROWSER_HOST: browser
+            HEADLESS_BROWSER_PORT: 4444
+    db:
+        image: postgres:12.5
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: any
+        volumes:
+            - type: volume
+              source: 'db_data'
+              target: '/var/lib/postgresql/data'
+        networks:
+            - net
+        environment:
+            POSTGRES_DB: 'feedbunch'
+            POSTGRES_USER: 'feedbunch'
+            POSTGRES_PASSWORD: 'feedbunch'
+    redis-cache:
+        image: amatriain/feedbunch-redis-cache:latest
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: any
+        volumes:
+            - type: volume
+              source: 'redis_cache_data'
+              target: '/data'
+        networks:
+            - net
+    redis-sidekiq:
+        image: amatriain/feedbunch-redis-sidekiq:latest
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: any
+        volumes:
+            - type: volume
+              source: 'redis_sidekiq_data'
+              target: '/data'
+        networks:
+            - net
+    browser: 
+        image: selenium/standalone-chrome:latest
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: any
+        networks:
+            - net
+networks:
+    net:
+volumes:
+    db_data:
+    redis_cache_data:
+    redis_sidekiq_data:
+    opml_imports:
+    opml_exports:

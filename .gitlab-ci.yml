@@ -16,6 +16,7 @@ stages:
   - static_analysis
   - setup_database
   - test
+  - build_images
 
 install_deps:
   stage: install_dependencies
@@ -233,3 +234,43 @@ acceptance_tests_4:
 
     # Run acceptance tests
     - bundle exec rake spec:ci
+
+build_webapp_image:
+  stage: build_images
+  variables:
+    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
+  script:
+    - cd FeedBunch-docker/FeedBunch-webapp
+    - docker build --tag=amatriain/feedbunch-webapp:${CI_COMMIT_TAG} .
+  rules:
+    - if: $CI_COMMIT_TAG
+
+build_background_image:
+  stage: build_images
+  variables:
+    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
+  script:
+    - cd FeedBunch-docker/FeedBunch-background
+    - docker build --tag=amatriain/feedbunch-background:${CI_COMMIT_TAG} .
+  rules:
+    - if: $CI_COMMIT_TAG
+
+build_redis-cache_image:
+  stage: build_images
+  variables:
+    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
+  script:
+    - cd FeedBunch-docker/FeedBunch-redis-cache
+    - docker build --tag=amatriain/feedbunch-redis-cache:${CI_COMMIT_TAG} .
+  rules:
+    - if: $CI_COMMIT_TAG
+
+build_redis-sidekiq_image:
+  stage: build_images
+  variables:
+    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
+  script:
+    - cd FeedBunch-docker/FeedBunch-redis-sidekiq
+    - docker build --tag=amatriain/feedbunch-redis-sidekiq:${CI_COMMIT_TAG} .
+  rules:
+    - if: $CI_COMMIT_TAG

@@ -1,0 +1,8 @@
+production:
+  adapter: postgresql
+  encoding: utf8
+  host: POSTGRES_HOST 
+  port: POSTGRES_PORT
+  database: DB_NAME
+  username: DB_USER
+  password: DB_PASSWORD
