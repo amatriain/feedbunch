@@ -11,10 +11,10 @@ services:
         volumes:
             - type: volume
               source: 'opml_imports'
-              target: '/home/feedbunch_webapp/feedbunch/opml_imports'
+              target: '/home/feedbunch_webapp/feedbunch/FeedBunch-app/opml_imports'
             - type: volume
               source: 'opml_exports'
-              target: '/home/feedbunch_webapp/feedbunch/opml_exports'
+              target: '/home/feedbunch_webapp/feedbunch/FeedBunch-app/opml_exports'
         networks:
             - net
         environment:
@@ -38,10 +38,10 @@ services:
         volumes:
             - type: volume
               source: 'opml_imports'
-              target: '/home/feedbunch_background/feedbunch/opml_imports'
+              target: '/home/feedbunch_background/feedbunch/FeedBunch-app/opml_imports'
             - type: volume
               source: 'opml_exports'
-              target: '/home/feedbunch_background/feedbunch/opml_exports'
+              target: '/home/feedbunch_background/feedbunch/FeedBunch-app/opml_exports'
         networks:
             - net
         environment:

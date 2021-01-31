@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 Nothing
 
+## [1.3.31] - 2021-01-31
+### Changed
+- Push "latest" tag to docker hub on each build.
+
+## [1.3.30] - 2021-01-31
+### Changed
+- Fixed paths in Dockerfiles and docker-compose.yml
+
 ## [1.3.29] - 2021-01-31
 ### Changed
 - Push images to docker hub from gitlab-ci.
