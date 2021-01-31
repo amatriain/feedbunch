@@ -5,7 +5,7 @@ variables:
   RAILS_ENV: ci
 
 cache:
-  key: ${CI_COMMIT_REF_SLUG}
+  key: default
   paths:
     - 'FeedBunch-app/vendor/gems'
     - 'apt-cache'
