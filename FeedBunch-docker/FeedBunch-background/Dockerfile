@@ -79,6 +79,9 @@ VOLUME $APP_DIR/opml_imports
 # Volume shared with the feedbunch-webapp container, for local OPML downloads
 VOLUME $APP_DIR/opml_exports
 
+# Volume for files cached by rack-cache
+VOLUME $APP_DIR/rack_cache
+
 # Install gems
 USER feedbunch_background
 RUN bundle config --global frozen 1

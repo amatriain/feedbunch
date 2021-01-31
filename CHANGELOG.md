@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 Nothing
 
+## [1.3.32] - 2021-01-31
+### Changed
+- Added image that runs cron scripts. For not it only runs a script that deletes old files cached by rack-cache.
+
 ## [1.3.31] - 2021-01-31
 ### Changed
 - Push "latest" tag to docker hub on each build.

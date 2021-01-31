@@ -306,3 +306,21 @@ build_redis-sidekiq_image:
     - docker push amatriain/feedbunch-redis-sidekiq:latest
   rules:
     - if: $CI_COMMIT_TAG
+
+build_cron_image:
+  image: docker:19.03.12
+  stage: build_images
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+    IMAGE_TAG: "1.0.0"
+  services:
+    - docker:19.03.12-dind
+  before_script:
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
+  script:
+    - cd FeedBunch-docker/FeedBunch-cron
+    - docker build --tag=amatriain/feedbunch-cron:$IMAGE_TAG --tag=amatriain/feedbunch-cron:latest .
+    - docker push amatriain/feedbunch-cron:$IMAGE_TAG
+    - docker push amatriain/feedbunch-cron:latest
+  rules:
+    - if: $CI_COMMIT_TAG

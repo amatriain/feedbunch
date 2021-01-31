@@ -42,6 +42,9 @@ services:
             - type: volume
               source: 'opml_exports'
               target: '/home/feedbunch_background/feedbunch/FeedBunch-app/opml_exports'
+            - type: volume
+              source: 'rack_cache'
+              target: '/home/feedbunch_background/feedbunch/FeedBunch-app/rack_cache'
         networks:
             - net
         environment:
@@ -95,6 +98,18 @@ services:
               target: '/data'
         networks:
             - net
+    redis-cron:
+        image: amatriain/feedbunch-cron:latest
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: any
+        volumes:
+            - type: volume
+              source: 'rack_cache'
+              target: '/rack_cache'
+        networks:
+            - net
     browser: 
         image: selenium/standalone-chrome:latest
         deploy:
@@ -111,3 +126,4 @@ volumes:
     redis_sidekiq_data:
     opml_imports:
     opml_exports:
+    rack_cache:
