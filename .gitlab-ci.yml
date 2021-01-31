@@ -236,6 +236,7 @@ acceptance_tests_4:
     - bundle exec rake spec:ci
 
 build_webapp_image:
+  image: docker:latest
   stage: build_images
   variables:
     FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
@@ -246,6 +247,7 @@ build_webapp_image:
     - if: $CI_COMMIT_TAG
 
 build_background_image:
+  image: docker:latest
   stage: build_images
   variables:
     FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
@@ -256,6 +258,7 @@ build_background_image:
     - if: $CI_COMMIT_TAG
 
 build_redis-cache_image:
+  image: docker:latest
   stage: build_images
   variables:
     FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
@@ -266,6 +269,7 @@ build_redis-cache_image:
     - if: $CI_COMMIT_TAG
 
 build_redis-sidekiq_image:
+  image: docker:latest
   stage: build_images
   variables:
     FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
