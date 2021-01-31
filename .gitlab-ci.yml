@@ -247,7 +247,7 @@ build_webapp_image:
     - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
   script:
     - cd FeedBunch-docker/FeedBunch-webapp
-    - docker build --tag=amatriain/feedbunch-webapp:$CI_COMMIT_TAG .
+    - docker build --tag=amatriain/feedbunch-webapp:$CI_COMMIT_TAG --tag=amatriain/feedbunch-webapp:latest .
     - docker push amatriain/feedbunch-webapp:$CI_COMMIT_TAG
     - docker push amatriain/feedbunch-webapp:latest
   rules:
@@ -265,7 +265,7 @@ build_background_image:
     - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
   script:
     - cd FeedBunch-docker/FeedBunch-background
-    - docker build --tag=amatriain/feedbunch-background:$CI_COMMIT_TAG .
+    - docker build --tag=amatriain/feedbunch-background:$CI_COMMIT_TAG --tag=amatriain/feedbunch-background:latest .
     - docker push amatriain/feedbunch-background:$CI_COMMIT_TAG
     - docker push amatriain/feedbunch-background:latest
   rules:
@@ -283,7 +283,7 @@ build_redis-cache_image:
     - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
   script:
     - cd FeedBunch-docker/FeedBunch-redis-cache
-    - docker build --tag=amatriain/feedbunch-redis-cache:$IMAGE_TAG .
+    - docker build --tag=amatriain/feedbunch-redis-cache:$IMAGE_TAG --tag=amatriain/feedbunch-redis-cache:latest .
     - docker push amatriain/feedbunch-redis-cache:$IMAGE_TAG
     - docker push amatriain/feedbunch-redis-cache:latest
   rules:
@@ -301,7 +301,7 @@ build_redis-sidekiq_image:
     - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
   script:
     - cd FeedBunch-docker/FeedBunch-redis-sidekiq
-    - docker build --tag=amatriain/feedbunch-redis-sidekiq:$IMAGE_TAG .
+    - docker build --tag=amatriain/feedbunch-redis-sidekiq:$IMAGE_TAG --tag=amatriain/feedbunch-redis-sidekiq:latest .
     - docker push amatriain/feedbunch-redis-sidekiq:$IMAGE_TAG
     - docker push amatriain/feedbunch-redis-sidekiq:latest
   rules:
