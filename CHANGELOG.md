@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 Nothing
 
+## [1.3.29] - 2021-01-31
+### Changed
+- Push images to docker hub from gitlab-ci.
+
 ## [1.3.28] - 2021-01-31
 ### Changed
 - Added subproject to build images to run feedbunch in Docker.
