@@ -18,263 +18,268 @@ stages:
   - test
   - build_images
 
-install_deps:
-  stage: install_dependencies
-  script:
-    # Install nodejs and firefox
-    - apt-get update -qy
-    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
-
-    # Install geckodriver
-    - mkdir -p geckodriver-cache
-    - cd geckodriver-cache
-    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
-    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
-    - chmod +x /usr/local/bin/geckodriver
-
-    # Install gems in bundle
-    - cd ../FeedBunch-app
-    - bundle config set deployment 'true'
-    - bundle config set path 'vendor/gems'
-    - bundle config set without 'development production'
-    - bundle install
-
-bundle_audit:
-  stage: static_analysis
-  script:
-    # Install gems in bundle
-    - cd FeedBunch-app
-    - bundle config set deployment 'true'
-    - bundle config set path 'vendor/gems'
-    - bundle config set without 'development production'
-    - bundle install
-
-    # Run bundle-audit
-    - bundle exec bundle-audit update
-    - bundle exec bundle-audit check
-
-brakeman:
-  stage: static_analysis
-  script:
-    # Install gems in bundle
-    - cd FeedBunch-app
-    - bundle config set deployment 'true'
-    - bundle config set path 'vendor/gems'
-    - bundle config set without 'development production'
-    - bundle install
-
-    # Run brakeman
-    - bundle exec brakeman -z --no-pager
-
-load_db:
-  stage: setup_database
-  script:
-    # Install nodejs
-    - apt-get update -qy
-    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs
-
-    # Install gems in bundle
-    - cd FeedBunch-app
-    - bundle config set deployment 'true'
-    - bundle config set path 'vendor/gems'
-    - bundle config set without 'development production'
-    - bundle install
-
-    # Copy config files
-    - cp config/secrets_ci.yml config/secrets.yml
-    - cp config/database.yml.ci config/database.yml
-
-    # Load database
-    - bundle exec rake db:schema:load
-
-unit_tests:
-  stage: test
-  variables:
-    TEST_SUITE: unit
-  script:
-    # Install nodejs
-    - apt-get update -qy
-    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs
-
-    # Install gems in bundle
-    - cd FeedBunch-app
-    - bundle config set deployment 'true'
-    - bundle config set path 'vendor/gems'
-    - bundle config set without 'development production'
-    - bundle install
-
-    # Copy config files
-    - cp config/secrets_ci.yml config/secrets.yml
-    - cp config/database.yml.ci config/database.yml
-
-    # Run unit tests
-    - bundle exec rake spec:ci
-
-acceptance_tests_1:
-  stage: test
-  variables:
-    TEST_SUITE: acceptance_1
-  script:
-    # Install nodejs and firefox
-    - apt-get update -qy
-    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
-
-    # Install geckodriver
-    - mkdir -p geckodriver-cache
-    - cd geckodriver-cache
-    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
-    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
-    - chmod +x /usr/local/bin/geckodriver
-
-    # Install gems in bundle
-    - cd ../FeedBunch-app
-    - bundle config set deployment 'true'
-    - bundle config set path 'vendor/gems'
-    - bundle config set without 'development production'
-    - bundle install
-
-    # Copy config files
-    - cp config/secrets_ci.yml config/secrets.yml
-    - cp config/database.yml.ci config/database.yml
-
-    # Run acceptance tests
-    - bundle exec rake spec:ci
-
-acceptance_tests_2:
-  stage: test
-  variables:
-    TEST_SUITE: acceptance_2
-  script:
-    # Install nodejs and firefox
-    - apt-get update -qy
-    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
-
-    # Install geckodriver
-    - mkdir -p geckodriver-cache
-    - cd geckodriver-cache
-    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
-    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
-    - chmod +x /usr/local/bin/geckodriver
-
-    # Install gems in bundle
-    - cd ../FeedBunch-app
-    - bundle config set deployment 'true'
-    - bundle config set path 'vendor/gems'
-    - bundle config set without 'development production'
-    - bundle install
-
-    # Copy config files
-    - cp config/secrets_ci.yml config/secrets.yml
-    - cp config/database.yml.ci config/database.yml
-
-    # Run acceptance tests
-    - bundle exec rake spec:ci
-
-acceptance_tests_3:
-  stage: test
-  variables:
-    TEST_SUITE: acceptance_3
-  script:
-    # Install nodejs and firefox
-    - apt-get update -qy
-    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
-
-    # Install geckodriver
-    - mkdir -p geckodriver-cache
-    - cd geckodriver-cache
-    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
-    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
-    - chmod +x /usr/local/bin/geckodriver
-
-    # Install gems in bundle
-    - cd ../FeedBunch-app
-    - bundle config set deployment 'true'
-    - bundle config set path 'vendor/gems'
-    - bundle config set without 'development production'
-    - bundle install
-
-    # Copy config files
-    - cp config/secrets_ci.yml config/secrets.yml
-    - cp config/database.yml.ci config/database.yml
-
-    # Run acceptance tests
-    - bundle exec rake spec:ci
-
-acceptance_tests_4:
-  stage: test
-  variables:
-    TEST_SUITE: acceptance_4
-  script:
-    # Install nodejs and firefox
-    - apt-get update -qy
-    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
-
-    # Install geckodriver
-    - mkdir -p geckodriver-cache
-    - cd geckodriver-cache
-    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
-    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
-    - chmod +x /usr/local/bin/geckodriver
-
-    # Install gems in bundle
-    - cd ../FeedBunch-app
-    - bundle config set deployment 'true'
-    - bundle config set path 'vendor/gems'
-    - bundle config set without 'development production'
-    - bundle install
-
-    # Copy config files
-    - cp config/secrets_ci.yml config/secrets.yml
-    - cp config/database.yml.ci config/database.yml
-
-    # Run acceptance tests
-    - bundle exec rake spec:ci
-
-build_webapp_image:
-  image: docker:latest
-  stage: build_images
-  variables:
-    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
-  script:
-    - cd FeedBunch-docker/FeedBunch-webapp
-    - docker build --tag=amatriain/feedbunch-webapp:${CI_COMMIT_TAG} .
-  rules:
-    - if: $CI_COMMIT_TAG
-
-build_background_image:
-  image: docker:latest
-  stage: build_images
-  variables:
-    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
-  script:
-    - cd FeedBunch-docker/FeedBunch-background
-    - docker build --tag=amatriain/feedbunch-background:${CI_COMMIT_TAG} .
-  rules:
-    - if: $CI_COMMIT_TAG
-
-build_redis-cache_image:
-  image: docker:latest
-  stage: build_images
-  variables:
-    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
-  script:
-    - cd FeedBunch-docker/FeedBunch-redis-cache
-    - docker build --tag=amatriain/feedbunch-redis-cache:${CI_COMMIT_TAG} .
-  rules:
-    - if: $CI_COMMIT_TAG
+#install_deps:
+#  stage: install_dependencies
+#  script:
+#    # Install nodejs and firefox
+#    - apt-get update -qy
+#    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+#
+#    # Install geckodriver
+#    - mkdir -p geckodriver-cache
+#    - cd geckodriver-cache
+#    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+#    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+#    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+#    - chmod +x /usr/local/bin/geckodriver
+#
+#    # Install gems in bundle
+#    - cd ../FeedBunch-app
+#    - bundle config set deployment 'true'
+#    - bundle config set path 'vendor/gems'
+#    - bundle config set without 'development production'
+#    - bundle install
+#
+#bundle_audit:
+#  stage: static_analysis
+#  script:
+#    # Install gems in bundle
+#    - cd FeedBunch-app
+#    - bundle config set deployment 'true'
+#    - bundle config set path 'vendor/gems'
+#    - bundle config set without 'development production'
+#    - bundle install
+#
+#    # Run bundle-audit
+#    - bundle exec bundle-audit update
+#    - bundle exec bundle-audit check
+#
+#brakeman:
+#  stage: static_analysis
+#  script:
+#    # Install gems in bundle
+#    - cd FeedBunch-app
+#    - bundle config set deployment 'true'
+#    - bundle config set path 'vendor/gems'
+#    - bundle config set without 'development production'
+#    - bundle install
+#
+#    # Run brakeman
+#    - bundle exec brakeman -z --no-pager
+#
+#load_db:
+#  stage: setup_database
+#  script:
+#    # Install nodejs
+#    - apt-get update -qy
+#    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs
+#
+#    # Install gems in bundle
+#    - cd FeedBunch-app
+#    - bundle config set deployment 'true'
+#    - bundle config set path 'vendor/gems'
+#    - bundle config set without 'development production'
+#    - bundle install
+#
+#    # Copy config files
+#    - cp config/secrets_ci.yml config/secrets.yml
+#    - cp config/database.yml.ci config/database.yml
+#
+#    # Load database
+#    - bundle exec rake db:schema:load
+#
+#unit_tests:
+#  stage: test
+#  variables:
+#    TEST_SUITE: unit
+#  script:
+#    # Install nodejs
+#    - apt-get update -qy
+#    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs
+#
+#    # Install gems in bundle
+#    - cd FeedBunch-app
+#    - bundle config set deployment 'true'
+#    - bundle config set path 'vendor/gems'
+#    - bundle config set without 'development production'
+#    - bundle install
+#
+#    # Copy config files
+#    - cp config/secrets_ci.yml config/secrets.yml
+#    - cp config/database.yml.ci config/database.yml
+#
+#    # Run unit tests
+#    - bundle exec rake spec:ci
+#
+#acceptance_tests_1:
+#  stage: test
+#  variables:
+#    TEST_SUITE: acceptance_1
+#  script:
+#    # Install nodejs and firefox
+#    - apt-get update -qy
+#    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+#
+#    # Install geckodriver
+#    - mkdir -p geckodriver-cache
+#    - cd geckodriver-cache
+#    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+#    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+#    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+#    - chmod +x /usr/local/bin/geckodriver
+#
+#    # Install gems in bundle
+#    - cd ../FeedBunch-app
+#    - bundle config set deployment 'true'
+#    - bundle config set path 'vendor/gems'
+#    - bundle config set without 'development production'
+#    - bundle install
+#
+#    # Copy config files
+#    - cp config/secrets_ci.yml config/secrets.yml
+#    - cp config/database.yml.ci config/database.yml
+#
+#    # Run acceptance tests
+#    - bundle exec rake spec:ci
+#
+#acceptance_tests_2:
+#  stage: test
+#  variables:
+#    TEST_SUITE: acceptance_2
+#  script:
+#    # Install nodejs and firefox
+#    - apt-get update -qy
+#    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+#
+#    # Install geckodriver
+#    - mkdir -p geckodriver-cache
+#    - cd geckodriver-cache
+#    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+#    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+#    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+#    - chmod +x /usr/local/bin/geckodriver
+#
+#    # Install gems in bundle
+#    - cd ../FeedBunch-app
+#    - bundle config set deployment 'true'
+#    - bundle config set path 'vendor/gems'
+#    - bundle config set without 'development production'
+#    - bundle install
+#
+#    # Copy config files
+#    - cp config/secrets_ci.yml config/secrets.yml
+#    - cp config/database.yml.ci config/database.yml
+#
+#    # Run acceptance tests
+#    - bundle exec rake spec:ci
+#
+#acceptance_tests_3:
+#  stage: test
+#  variables:
+#    TEST_SUITE: acceptance_3
+#  script:
+#    # Install nodejs and firefox
+#    - apt-get update -qy
+#    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+#
+#    # Install geckodriver
+#    - mkdir -p geckodriver-cache
+#    - cd geckodriver-cache
+#    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+#    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+#    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+#    - chmod +x /usr/local/bin/geckodriver
+#
+#    # Install gems in bundle
+#    - cd ../FeedBunch-app
+#    - bundle config set deployment 'true'
+#    - bundle config set path 'vendor/gems'
+#    - bundle config set without 'development production'
+#    - bundle install
+#
+#    # Copy config files
+#    - cp config/secrets_ci.yml config/secrets.yml
+#    - cp config/database.yml.ci config/database.yml
+#
+#    # Run acceptance tests
+#    - bundle exec rake spec:ci
+#
+#acceptance_tests_4:
+#  stage: test
+#  variables:
+#    TEST_SUITE: acceptance_4
+#  script:
+#    # Install nodejs and firefox
+#    - apt-get update -qy
+#    - apt-get -o dir::cache::archives="apt-cache" install -y nodejs iceweasel
+#
+#    # Install geckodriver
+#    - mkdir -p geckodriver-cache
+#    - cd geckodriver-cache
+#    - GECKODRIVER_VERSION=$(curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+')
+#    - wget --no-clobber https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+#    - tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin
+#    - chmod +x /usr/local/bin/geckodriver
+#
+#    # Install gems in bundle
+#    - cd ../FeedBunch-app
+#    - bundle config set deployment 'true'
+#    - bundle config set path 'vendor/gems'
+#    - bundle config set without 'development production'
+#    - bundle install
+#
+#    # Copy config files
+#    - cp config/secrets_ci.yml config/secrets.yml
+#    - cp config/database.yml.ci config/database.yml
+#
+#    # Run acceptance tests
+#    - bundle exec rake spec:ci
+#
+#build_webapp_image:
+#  image: docker:latest
+#  stage: build_images
+#  variables:
+#    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
+#  script:
+#    - cd FeedBunch-docker/FeedBunch-webapp
+#    - docker build --tag=amatriain/feedbunch-webapp:${CI_COMMIT_TAG} .
+#  rules:
+#    - if: $CI_COMMIT_TAG
+#
+#build_background_image:
+#  image: docker:latest
+#  stage: build_images
+#  variables:
+#    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
+#  script:
+#    - cd FeedBunch-docker/FeedBunch-background
+#    - docker build --tag=amatriain/feedbunch-background:${CI_COMMIT_TAG} .
+#  rules:
+#    - if: $CI_COMMIT_TAG
+#
+#build_redis-cache_image:
+#  image: docker:latest
+#  stage: build_images
+#  variables:
+#    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
+#  script:
+#    - cd FeedBunch-docker/FeedBunch-redis-cache
+#    - docker build --tag=amatriain/feedbunch-redis-cache:${CI_COMMIT_TAG} .
+#  rules:
+#    - if: $CI_COMMIT_TAG
 
 build_redis-sidekiq_image:
   image: docker:latest
   stage: build_images
   variables:
-    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
+    DOCKER_TLS_CERTDIR: "/certs"
+#    FEEDBUNCH_TAG: ${CI_COMMIT_TAG}
+  services:
+    - docker:19.03.12-dind
+  before_script:
+    - docker info
   script:
     - cd FeedBunch-docker/FeedBunch-redis-sidekiq
     - docker build --tag=amatriain/feedbunch-redis-sidekiq:${CI_COMMIT_TAG} .
-  rules:
-    - if: $CI_COMMIT_TAG
+#  rules:
+#    - if: $CI_COMMIT_TAG
