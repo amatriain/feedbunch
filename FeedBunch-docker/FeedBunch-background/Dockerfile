@@ -34,7 +34,7 @@ ENV HEADLESS_BROWSER_PORT=4444
 ENV LANG C.UTF-8
 ENV RAILS_ENV=production
 ENV FEEDBUNCH_LOG_LEVEL=debug
-ENV APP_DIR=/home/feedbunch_background/feedbunch
+ENV APP_DIR=/home/feedbunch_background/feedbunch/FeedBunch-app
 ENV STDOUT_FILE=/dev/stdout
 ENV STDERR_FILE=/dev/stderr
 ENV RAILS_LOG_TO_STDOUT=true

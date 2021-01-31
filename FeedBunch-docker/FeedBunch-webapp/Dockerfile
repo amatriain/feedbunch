@@ -38,7 +38,7 @@ ENV LANG C.UTF-8
 ENV FORCE_SECURE=false
 ENV RAILS_ENV=production
 ENV FEEDBUNCH_LOG_LEVEL=debug
-ENV APP_DIR=/home/feedbunch_webapp/feedbunch
+ENV APP_DIR=/home/feedbunch_webapp/feedbunch/FeedBunch-app
 ENV STDOUT_FILE=/dev/stdout
 ENV STDERR_FILE=/dev/stderr
 ENV RAILS_LOG_TO_STDOUT=true
