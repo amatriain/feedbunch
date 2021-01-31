@@ -277,10 +277,11 @@ build_redis-sidekiq_image:
   services:
     - docker:19.03.12-dind
   before_script:
-    - docker info
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username $DOCKER_REGISTRY_USER --password-stdin
   script:
     - cd FeedBunch-docker/FeedBunch-redis-sidekiq
 #    - docker build --tag=amatriain/feedbunch-redis-sidekiq:$CI_COMMIT_TAG .
     - docker build --tag=amatriain/feedbunch-redis-sidekiq:test .
+    - docker push amatriain/feedbunch-redis-sidekiq:test
 #  rules:
 #    - if: $CI_COMMIT_TAG
