@@ -31,12 +31,12 @@ es:
         text_3_html: "Para que esto funcione, cada sitio web tiene que poner disponible online un documento especial que se actualiza cada vez que se publica nuevo contenido en el sitio web. Este documento se llama el <strong>feed</strong> y cada nueva pieza de contenido que se le añada se llama una <strong>entrada</strong>. Las entradas pueden ser artículos de noticias en la página web de un periódico, nuevas páginas en un webcomic, nuevos comentarios en una entrada de un blog... Hoy en día la mayoría de sitios web tienen un feed (¡o varios!)."
       getting_started:
         title: "Cómo empezar"
-        text_1: "Crea una nueva cuenta usando el botón de más arriba (necesitarás una dirección válida de correo electrónico)."
-        text_2: "Una vez hayas accedido con tu cuenta, tómate tu tiempo para completar los tutoriales guiados, te mostrarán lo que puedes hacer con la aplicación. Importa tus suscripciones en formato OPML desde otro agregador de feeds o simplemente empieza a suscribirte a feeds. Muy pronto tendrás un conjunto personalizado de feeds que te interesan."
+        text_1: "Si fuiste tú quien instaló FeedBunch, se creó un usuario administrador con las credenciales que proporcionaste. Un administrador también puede crear otros usuarios."
+        text_2: "La primera vez que accedas con tu cuenta, tómate tu tiempo para completar los tutoriales guiados, te mostrarán lo que puedes hacer con la aplicación. Importa tus suscripciones en formato OPML desde otro agregador de feeds o simplemente empieza a suscribirte a feeds. Muy pronto tendrás un conjunto personalizado de feeds que te interesan."
       getting_help:
         title: "Obtener ayuda"
-        text_1: "Puedes pedir ayuda o decirnos lo que piensas de FeedBunch a traves de:"
-        text_2: "Puedes usar cualquiera de ellos, pero en general el gestor de incidencias de github es lo mejor para discutir errores y twitter es lo mejor para temas que puedan ser útiles a otros usuarios."
+        text_1: "Puedes pedir ayuda o decirme lo que piensas de FeedBunch a traves de:"
+        text_2: "En general utiliza gitlab para discusiones públicas y el correo electrónico para comunicaciones privadas."
     signup_success:
       text_1: "¡Gracias por darte de alta en FeedBunch!"
       text_2_html: "Hemos enviado un correo electrónico a la dirección que nos has dado. Por favor sigue las instrucciones en ese correo para <strong>confirmar tu dirección de correo electrónico</strong>. No podrás entrar en FeedBunch hasta que tu dirección de correo electrónico esté confirmada."
@@ -102,8 +102,8 @@ es:
         text_2: "Puedes habilitar o deshabilitar los atajos de teclado desde la página de tu perfil."
       help:
         title: "Ayuda y Danos tu opinión"
-        text_1: "Puedes pedir ayuda o decirnos lo que piensas de FeedBunch a traves de:"
-        text_2: "Puedes usar cualquiera de ellos, pero en general el gestor de incidencias de github es lo mejor para discutir errores y twitter es lo mejor para temas que puedan ser útiles a otros usuarios."
+        text_1: "Puedes pedir ayuda o decirme lo que piensas de FeedBunch a traves de:"
+        text_2: "En general utiliza gitlab para discusiones públicas y el correo electrónico para comunicaciones privadas."
         close: "Cerrar"
       import_subscriptions:
         title: "Importar suscripciones"

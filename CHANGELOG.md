@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 Nothing
 
+## [1.3.33] - 2021-01-31
+### Changed
+- Replaced references to github with references to gitlab. Update outdated twitter and email links. Removed references
+to FeedBunch being a free to use SaaS.
+
 ## [1.3.32] - 2021-01-31
 ### Changed
 - Added image that runs cron scripts. For not it only runs a script that deletes old files cached by rack-cache.

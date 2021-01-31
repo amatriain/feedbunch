@@ -48,16 +48,16 @@ en:
       about_feeds:
         title: "What is a feed reader? What is a feed?"
         text_1_html: "You can find a simple description of what a feed reader is <a href='http://en.wikipedia.org/wiki/News_aggregator' target='_blank'>in this wikipedia article</a> and a good description of the use and technology behind feeds <a href='https://support.google.com/feedburner/answer/79408?hl=en' target='_blank'>in this Google article</a>."
-        text_2: "Basically, a feed reader is a way to aggregate content from various websites in a single place. Instead of having to visit each of your favorite websites every day to see if there's new content, anything those websites publish will appear in FeedBunch. This way you only have to visit FeedBunch to be up to date with all blogs, newspapers, webcomics etc that you follow. You will create your own personalized newspaper and save a lot of time."
+        text_2: "Basically a feed reader is a way to aggregate content from various websites in a single place. Instead of having to visit each of your favorite websites every day to see if there's new content, anything those websites publish will appear in FeedBunch. This way you only have to visit FeedBunch to be up to date with all blogs, newspapers, webcomics etc that you follow. You will create your own personalized newspaper and save a lot of time."
         text_3_html: "For this to work, each website has to make available a special document online that gets updated every time new content is published in the website. This document is called the <strong>feed</strong> and every new piece of content that is added to it is called an <strong>entry</strong>. Entries can be news articles in a newspaper's website, new pages in a webcomic, new comments in a blog entry... Most websites nowadays have a feed (or several!)."
       getting_started:
         title: "Getting started"
-        text_1: "Sign up for a new account using the button above (you will need a valid email address)."
-        text_2: "Once signed in, take some time to follow the interactive tours, they will show you what you can do with the application. Import your subscriptions in OPML format from another feed aggregator or just start subscribing to feeds. Pretty soon you will have a personalized set of feeds that interest you."
+        text_1: "If you installed FeedBunch, a user with administration permissions was created with the credentials you provided. An administrator can create other users as well."
+        text_2: "The first time you sign in take some time to follow the interactive tours, they will show you what you can do with the application. Import your subscriptions in OPML format from another feed aggregator or just start subscribing to feeds. Pretty soon you will have a personalized set of feeds that interest you."
       getting_help:
         title: "Getting help"
-        text_1: "You can ask for help or give us feedback through:"
-        text_2: "You can use any of them, but generally the github issue tracker is best for discussing bugs and twitter is best for questions that other users can find useful."
+        text_1: "You can ask for help or give me feedback through:"
+        text_2: "Generally use gitlab for public discussions and email for private ones."
     signup_success:
       text_1: "Thanks for signing up to FeedBunch!"
       text_2_html: "We have sent an email to the address you provided. Please follow the instructions in that email to <strong>confirm your email address</strong>. You won't be able to access FeedBunch until your email address is confirmed."
@@ -123,8 +123,8 @@ en:
         text_2: "You can enable or disable keyboard shortcuts from your profile page."
       help:
         title: "Help and Feedback"
-        text_1: "You can ask for help or give us feedback through:"
-        text_2: "You can use any of them, but generally the github issue tracker is best for discussing bugs and twitter is best for questions that other users can find useful."
+        text_1: "You can ask for help or give me feedback through:"
+        text_2: "Generally use gitlab for public discussions and email for private ones."
         close: "Close"
       import_subscriptions:
         title: "Import subscriptions"
