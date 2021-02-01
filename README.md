@@ -8,6 +8,18 @@ A simple and elegant feed reader.
 This project is now hosted in [Gitlab](https://gitlab.com/amatriain/feedbunch). If you're reading this somewhere else
 (e.g. in Github) be aware that it is a read-only mirror.
 
+This project automatically builds Docker images and pushes them to Docker Hub every time a release is tagged in the 
+main branch. You can find these images here: 
+
+- [FeedBunch-background](https://hub.docker.com/repository/docker/amatriain/feedbunch-background)
+- [FeedBunch-webapp](https://hub.docker.com/repository/docker/amatriain/feedbunch-webapp)
+- [FeedBunch-cron](https://hub.docker.com/repository/docker/amatriain/feedbunch-cron)
+- [FeedBunch-redis-sidekiq](https://hub.docker.com/repository/docker/amatriain/feedbunch-redis-sidekiq)
+- [FeedBunch-redis-cache](https://hub.docker.com/repository/docker/amatriain/feedbunch-redis-cache)
+
+All of these images are required simultaneously to run FeedBunch. For information about how to deploy to Docker using
+docker-compose see the [installation instructions](INSTALLATION.md).
+
 ## Overview
 
 FeedBunch is a feed reader, a web application that allows users to subscribe and read Atom and RSS feeds. It can be 
@@ -77,6 +89,28 @@ to ```Administration / Users / New User``` (click on ```New User``` button).
 The first time you sign in take some time to follow the interactive tours, they will show you what you can do with the 
 application. Import your subscriptions in OPML format from another feed aggregator or just start subscribing to feeds. 
 Pretty soon you will have a personalized set of feeds that interest you.
+
+## Project structure
+
+There are two main directories in the project: 
+
+- ```FeedBunch-app```: contains the main Ruby on Rails application. It can be tested and deployed like any other 
+Rails app, but the supported deployment method uses docker-compose.
+- ```FeedBunch-docker```: contains the Dockerfiles and other files necessary to build Docker images for the app, 
+as well as a sample docker-compose.yml that can be customized and used to deploy FeedBunch as explained in the
+[installation instructions](INSTALLATION.md).
+
+Inside the ```FeedBunch-docker``` directory there are several directories, each one with a Dockerfile and files
+necessary to build a different Docker image:
+- ```FeedBunch-background```:  image that runs a Sidekiq job queue and runs asynchronous jobs, most importantly 
+refreshing feeds periodically.
+- ```FeedBunch-cron```: image that runs periodically a script to clean up old files from the cache that
+accelerates refreshing feeds, so that disk usage does not grow too much.
+- ```FeedBunch-redis-cache```: image that runs a Redis database that serves as backend for the Rails HTML fragment
+cache, accelerating the generation of dynamic pages for users.
+- ```FeedBunch-redis-sidekiq```: image that runs a Redis database that serves as a backend for the Sidekiq job
+queue (see ```FeedBunch-background```).
+- ```FeedBunch-webapp```: main Rails app that serves HTML pages to users.
 
 ## Getting help
 

@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-Nothing
+Nothing.
+
+## [1.3.34] - 2021-01-31
+### Changed
+- Added installation instructions using docker-compose.
 
 ## [1.3.33] - 2021-01-31
 ### Changed
