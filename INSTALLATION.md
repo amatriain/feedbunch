@@ -4,6 +4,10 @@ Currently the only supported method to install FeedBunch is using [docker-compos
 You will need a computer with [Docker](https://www.docker.com/) up and running and docker-compose installed. You can 
 also run it in a [docker-swarm](https://docs.docker.com/engine/swarm/) cluster.
 
+**Warning**: after each deployment FeedBunch will take some time (up to a few minutes) to be available, because the 
+feedbunch-webapp service has to recompile assets every time a new container is created. You can follow this process
+in the feedbunch-webapp service logs.
+
 ## The docker-compose.yml file
 
 You can find a [sample docker-compose.yml file here](FeedBunch-docker/docker-compose.yml). You should customize some
