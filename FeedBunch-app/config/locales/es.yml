@@ -75,8 +75,8 @@ es:
       read_feeds: "Leer feeds"
     footer:
       gitlab: "Código fuente disponible en Gitlab"
-      twitter: "Síguenos en Twitter"
-      email: "Envíanos un email"
+      twitter: "Sígueme en Twitter"
+      email: "Envíame un email"
       acknowledgements: "Agradecimientos:"
       img_credit: "Logo"
       by: "por"
