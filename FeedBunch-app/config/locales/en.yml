@@ -95,7 +95,7 @@ en:
       my_account: "My account"
       read_feeds: "Read feeds"
     footer:
-      github: "Source code available on Github"
+      gitlab: "Source code available on Gitlab"
       twitter: "Follow us on Twitter"
       email: "Send us an email"
       acknowledgements: "Acknowledgements:"

@@ -74,7 +74,7 @@ es:
       my_account: "Mi cuenta"
       read_feeds: "Leer feeds"
     footer:
-      github: "Código fuente disponible en Github"
+      gitlab: "Código fuente disponible en Gitlab"
       twitter: "Síguenos en Twitter"
       email: "Envíanos un email"
       acknowledgements: "Agradecimientos:"
