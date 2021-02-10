@@ -107,7 +107,7 @@ GEM
     bootsnap (1.7.0)
       msgpack (~> 1.0)
     bower-rails (0.11.0)
-    brakeman (4.10.0)
+    brakeman (5.0.0)
     builder (3.2.4)
     bundler-audit (0.7.0.1)
       bundler (>= 1.2.0, < 3)
