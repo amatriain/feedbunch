@@ -1,4 +1,4 @@
-require 'file_client'
+require "#{Rails.root}/app/clients/file_client"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.

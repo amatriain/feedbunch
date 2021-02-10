@@ -213,6 +213,9 @@ GEM
     kaminari-core (1.2.1)
     launchy (2.5.0)
       addressable (~> 2.7)
+    listen (3.4.1)
+      rb-fsevent (~> 0.10, >= 0.10.3)
+      rb-inotify (~> 0.9, >= 0.9.10)
     loofah (2.9.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -291,6 +294,9 @@ GEM
       activerecord (>= 5.2.4)
       activesupport (>= 5.2.4)
       i18n
+    rb-fsevent (0.10.4)
+    rb-inotify (0.10.1)
+      ffi (~> 1.0)
     redis (4.2.5)
     regexp_parser (2.0.3)
     responders (3.0.1)
@@ -423,6 +429,7 @@ DEPENDENCIES
   jquery-rails
   kaminari
   launchy
+  listen
   loofah
   nokogiri
   ox

@@ -92,6 +92,9 @@ gem 'aws-sdk-s3'
 group :development do
   # App preloader to speed up tests, new in Rails 4.1.0
   gem 'spring'
+
+  # Asynchronously detect changes in project files to reload them
+  gem 'listen'
 end
 
 group :test, :development do
