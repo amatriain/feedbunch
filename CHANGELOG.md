@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+Nothing yet
+
+## [1.3.35] - 2021-02-11
+### Changed
+- Upgrade to Rails 6.1.x
 - Fixed bug in loading classes since upgrading to Rails 6.1
 
 ## [1.3.34] - 2021-01-31
