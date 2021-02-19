@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 Nothing yet
 
+## [1.3.38] - 2021-02-19
+### Changed
+- Upgrade to Rails 6.1.3
+
 ## [1.3.37] - 2021-02-12
 ### Fixed
 Fixed bug requiring file that crashed the app on startup.
