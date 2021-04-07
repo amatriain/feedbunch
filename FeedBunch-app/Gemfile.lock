@@ -243,7 +243,7 @@ GEM
     orm_adapter (0.5.0)
     ox (2.14.4)
     pg (1.2.3)
-    pghero (2.7.4)
+    pghero (2.8.1)
       activerecord (>= 5)
     public_suffix (4.0.6)
     puma (5.2.1)
