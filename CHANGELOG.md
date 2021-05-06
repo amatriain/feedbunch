@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 Nothing yet
 
+## [1.3.40] - 2021-05-06
+### Changed
+- Upgrade to Rails 6.1.3.2
+
 ## [1.3.39] - 2021-04-07
 ### Changed
 - Upgrade to Rails 6.1.3.1
