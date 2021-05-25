@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 Nothing yet
 
+## [1.3.42] - 2021-05-25
+### Changed
+- Bump bundler to 2.2.17
+
 ## [1.3.41] - 2021-05-18
 ### Changed
 - Bump puma gem to 5.3.1 to fix a severe vulnerability.
