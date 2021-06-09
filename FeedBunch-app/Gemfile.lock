@@ -241,7 +241,7 @@ GEM
     nokogumbo (2.0.4)
       nokogiri (~> 1.8, >= 1.8.4)
     orm_adapter (0.5.0)
-    ox (2.14.4)
+    ox (2.14.5)
     pg (1.2.3)
     pghero (2.8.1)
       activerecord (>= 5)
