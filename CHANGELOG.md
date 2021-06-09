@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 Nothing yet
 
+## [1.3.43] - 2021-06-09
+### Changed
+- Bumped several third-party gems
+
 ## [1.3.42] - 2021-05-25
 ### Changed
 - Bump bundler to 2.2.17
