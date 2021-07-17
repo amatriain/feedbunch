@@ -244,7 +244,7 @@ build_webapp_image:
   services:
     - docker:19.03.12-dind
   before_script:
-    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username="$DOCKER_REGISTRY_USER" --password-stdin
   script:
     - cd FeedBunch-docker/FeedBunch-webapp
     - docker build --tag=amatriain/feedbunch-webapp:$CI_COMMIT_TAG --tag=amatriain/feedbunch-webapp:latest .
@@ -262,7 +262,7 @@ build_background_image:
   services:
     - docker:19.03.12-dind
   before_script:
-    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username="$DOCKER_REGISTRY_USER" --password-stdin
   script:
     - cd FeedBunch-docker/FeedBunch-background
     - docker build --tag=amatriain/feedbunch-background:$CI_COMMIT_TAG --tag=amatriain/feedbunch-background:latest .
@@ -280,7 +280,7 @@ build_redis-cache_image:
   services:
     - docker:19.03.12-dind
   before_script:
-    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username="$DOCKER_REGISTRY_USER" --password-stdin
   script:
     - cd FeedBunch-docker/FeedBunch-redis-cache
     - docker build --tag=amatriain/feedbunch-redis-cache:$IMAGE_TAG --tag=amatriain/feedbunch-redis-cache:latest .
@@ -298,7 +298,7 @@ build_redis-sidekiq_image:
   services:
     - docker:19.03.12-dind
   before_script:
-    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username="$DOCKER_REGISTRY_USER" --password-stdin
   script:
     - cd FeedBunch-docker/FeedBunch-redis-sidekiq
     - docker build --tag=amatriain/feedbunch-redis-sidekiq:$IMAGE_TAG --tag=amatriain/feedbunch-redis-sidekiq:latest .
@@ -316,7 +316,7 @@ build_cron_image:
   services:
     - docker:19.03.12-dind
   before_script:
-    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username="$DOCKER_REGISTRY_USER" --password-stdin
   script:
     - cd FeedBunch-docker/FeedBunch-cron
     - docker build --tag=amatriain/feedbunch-cron:$IMAGE_TAG --tag=amatriain/feedbunch-cron:latest .
