@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-Nothing yet
+- Bumped rails to 6.1.4
+- Bumped several third-party gems
 
 ## [1.3.43] - 2021-06-09
 ### Changed
