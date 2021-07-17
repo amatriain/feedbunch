@@ -332,7 +332,7 @@ GEM
       rspec-core (> 3.3)
     rspec-support (3.10.2)
     ruby2_keywords (0.0.4)
-    rubyzip (2.3.0)
+    rubyzip (2.3.2)
     sanitize (5.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
