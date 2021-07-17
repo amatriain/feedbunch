@@ -111,7 +111,7 @@ group :test, :development do
   gem 'bundler-audit'
 
   # Testing framework
-  gem 'rspec-rails',  '~> 4.0.0.beta3'
+  gem 'rspec-rails'
 
   # Factories instead of DB fixtures during testing
   gem 'factory_bot_rails'
