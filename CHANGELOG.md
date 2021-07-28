@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+
+## [1.3.45] - 2021-07-28
+### Changed
 - Bumped brakeman gem to 5.1.1
 
 ## [1.3.44] - 2021-07-17
